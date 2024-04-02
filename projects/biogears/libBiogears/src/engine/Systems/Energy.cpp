@@ -442,27 +442,43 @@ void Energy::CalculateVitalSigns()
   std::stringstream ss;
 
   //Hypothermia check
-  double coreTempIrreversible_degC = 20.0; /// \cite Stocks2004HumanPhysiologicalResponseCold
-  if (coreTemperature_degC < 35.0) /// \cite mallet2001hypothermia
+  double coreTempIrreversible_degC = 15.0; /// \cite Stocks2004HumanPhysiologicalResponseCold
+
+  if (coreTemperature_degC > 32.0 && coreTemperature_degC < 35.0 ) /// \cite mallet2001hypothermia
   {
     /// \event Patient: Core temperature has fallen below 35 degrees Celsius. Patient is hypothermic.
-    m_Patient->SetEvent(CDM::enumPatientEvent::Hypothermia, true, m_data.GetSimulationTime());
-
-    /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
-    if (coreTemperature_degC < coreTempIrreversible_degC) {
-      ss << "Core temperature is " << coreTemperature_degC << ". This is below 20 degrees C, patient is experiencing extreme hypothermia.";
-      Warning(ss);
-      if (!m_PatientActions->HasOverride()) {
+    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, false, m_data.GetSimulationTime());
+  }
+  if (coreTemperature_degC > 28.2 && coreTemperature_degC < 31.5) /// \cite mallet2001hypothermia
+  {
+    /// \event Patient: Core temperature has fallen below 35 degrees Celsius. Patient is hypothermic.
+    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, true, m_data.GetSimulationTime());
+  } 
+  if (coreTemperature_degC < 28.0) /// \cite mallet2001hypothermia
+  {
+    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, true, m_data.GetSimulationTime());
+  } 
+      /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
+  if (coreTemperature_degC < coreTempIrreversible_degC) {
+    ss << "Core temperature is " << coreTemperature_degC << ". This is below 15 degrees C, patient is experiencing extreme hypothermia.";
+    Warning(ss);
+    if (!m_PatientActions->HasOverride()) {
+      m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+    } else {
+      if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
         m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
-      } else {
-        if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
-        }
       }
     }
-
-  } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hypothermia) && coreTemperature_degC > 35.2) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::Hypothermia, false, m_data.GetSimulationTime());
+  } 
+  
+  if (m_Patient->IsEventActive(CDM::enumPatientEvent::MildHypothermia) && coreTemperature_degC > 35.2) {
+    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
   }
   //Hyperthermia check
   if (coreTemperature_degC > 38.8) // Note: Hyperthermia threshold varies; we'll use 38.8
@@ -560,16 +576,29 @@ void Energy::CalculateMetabolicHeatGeneration()
   double summitMetabolism_W = 21.0 * std::pow(m_Patient->GetWeight(MassUnit::kg), 0.75); /// \cite herman2008physics
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
+  double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::W);
 
   if (coreTemperature_degC < 34.0) //Hypothermic state inducing metabolic depression (decline of metabolic heat generation)
   {
-    totalMetabolicRateNew_W = summitMetabolism_W * std::pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
+    double tot_W = GetTotalMetabolicRate().GetValue(PowerUnit::W);
+    double scaleMR = 0.00001;    // need the scaling factor to reduce the rate of decrease 
+    totalMetabolicRateNew_W = tot_W - tot_W * scaleMR * (1 - std::pow(0.94, 34.0 - coreTemperature_degC));
+
+    // if we are below basal rate, then the rate of decrease needs to dimish much slower
+    if (totalMetabolicRateNew_W < basalMetabolicRate_W) {
+      scaleMR = 0.0000001;
+      totalMetabolicRateNew_W = tot_W - tot_W * scaleMR * (1 - std::pow(0.94, 34.0 - coreTemperature_degC));
+    }
+
+    //tot_W *= std::pow(0.94, 34.0 - coreTemperature_degC);
+    //totalMetabolicRateNew_W = summitMetabolism_W * std::pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W); /// \cite mallet2002hypothermia
   } else if (coreTemperature_degC >= 34.0 && coreTemperature_degC < 36.8) //Patient is increasing heat generation via shivering. This caps out at the summit metabolism
   {
-    //Todo: Add an event for shivering
+    m_Patient->SetEvent(CDM::enumPatientEvent::Shivering, true, m_data.GetSimulationTime());
     double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W);
-    totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
+    double scaleMR = 0.1;   //scaling factor to validate metabolic rate during shivering, the old model was far too rapid
+    totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * scaleMR * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
     totalMetabolicRateNew_W = std::min(totalMetabolicRateNew_W, summitMetabolism_W); //Bounded at the summit metabolism so further heat generation doesn't continue for continue drops below 34 C.
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W);
   } else if (coreTemperature_degC >= 36.8 && coreTemperature_degC < 40 && !m_PatientActions->HasExercise()) //Basic Metabolic rate
@@ -739,7 +768,6 @@ void Energy::UpdateHeatResistance()
     double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * segmentedSkinBloodFlows[index]);
     
     coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
-    m_Test = coreToSkinResistance_K_Per_W;
     coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
     index += 1;
   }

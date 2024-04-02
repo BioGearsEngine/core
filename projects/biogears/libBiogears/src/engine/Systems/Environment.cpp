@@ -639,7 +639,11 @@ void Environment::CalculateRadiation()
     }
 
     auto max_result = std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
-    m_ClothingToEnclosurePath->GetNextResistance().SetValue(max_result, HeatResistanceUnit::K_Per_W);
+    auto clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
+    if (clo < 0.1) {
+      clo = 0.1; //something stupid to lock in clo
+    }
+    m_ClothingToEnclosurePath->GetNextResistance().SetValue(clo * max_result, HeatResistanceUnit::K_Per_W);
 
     //Set the source
     dMeanRadiantTemperature_K = GetConditions().GetMeanRadiantTemperature(TemperatureUnit::K);
@@ -697,8 +701,11 @@ void Environment::CalculateConvection()
   }
 
   auto max_result = std::max(dResistance_K_Per_W, m_data.GetConfiguration().GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W));
-  m_ClothingToEnvironmentPath->GetNextResistance().SetValue(max_result, HeatResistanceUnit::K_Per_W);
-
+  auto clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo);
+  if (clo < 0.1) {
+    clo = 0.1;  //something stupid to lock in clo
+  }
+  m_ClothingToEnvironmentPath->GetNextResistance().SetValue(clo*max_result, HeatResistanceUnit::K_Per_W);
   //Set the source
   double dAmbientTemperature_K = GetConditions().GetAmbientTemperature(TemperatureUnit::K);
   m_GroundToEnvironmentPath->GetNextTemperatureSource().SetValue(dAmbientTemperature_K, TemperatureUnit::K);
@@ -745,7 +752,7 @@ void Environment::CalculateEvaporation()
 
     for (SEThermalCircuitPath* envSkinToGround : m_EnvironmentSkinToGroundPaths) {
       double dClothingResistance_clo = GetConditions().GetClothingResistance(HeatResistanceAreaUnit::clo) * m_cloSegmentation[index];
-      double dClothingResistance_m2_kPa_Per_W = clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
+      double dClothingResistance_m2_kPa_Per_W = 100000*clo_To_m2_K_Per_W * dClothingResistance_clo / (iCl * dLewisRelation_K_Per_kPa);
       double fCl = 1.0 + 0.3 * dClothingResistance_clo;
       double skinWettednessDiffusion = 0.06;
 
