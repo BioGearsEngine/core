@@ -200,6 +200,10 @@ public:
   SEScalarFlowResistance& GetSystemicVascularResistance();
   double GetSystemicVascularResistance(const FlowResistanceUnit& unit) const;
 
+  bool HasTotalBloodVolumeLost() const;
+  SEScalarVolume& GetTotalBloodVolumeLost();
+  double GetTotalBloodVolumeLost(const VolumeUnit& unit) const;
+
 protected:
   SEScalarPressure* m_ArterialPressure;
   SEScalarVolume* m_BloodVolume;
@@ -235,5 +239,6 @@ protected:
   SEScalarPressure* m_PulsePressure;
   SEScalarPressure* m_SystolicArterialPressure;
   SEScalarFlowResistance* m_SystemicVascularResistance;
+  SEScalarVolume* m_TotalBloodVolumeLost;
 };
 }
