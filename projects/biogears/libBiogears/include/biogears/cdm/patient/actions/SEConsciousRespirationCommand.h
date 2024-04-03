@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
@@ -28,7 +29,7 @@ public:
   SEConsciousRespirationCommand();
   virtual ~SEConsciousRespirationCommand();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
@@ -45,12 +46,11 @@ public:
 
   virtual void ToString(std::ostream& str) const = 0;
 
-  bool operator==( const SEConsciousRespirationCommand& rhs) const;
-  bool operator!=( const SEConsciousRespirationCommand& rhs) const;
+  bool operator==(const SEConsciousRespirationCommand& rhs) const;
+  bool operator!=(const SEConsciousRespirationCommand& rhs) const;
 
 protected:
   virtual void Unload(CDM::ConsciousRespirationCommandData& data) const;
-
 
   std::string m_Comment;
 };

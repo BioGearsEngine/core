@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEPatientAction::SEPatientAction()
   : SEAction()
@@ -35,13 +36,13 @@ bool SEPatientAction::IsValid() const
 //-------------------------------------------------------------------------------
 bool SEPatientAction::Load(const CDM::PatientActionData& in)
 {
-  SEAction::Load(in);
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
 void SEPatientAction::Unload(CDM::PatientActionData& data) const
 {
-  SEAction::Unload(data);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientAction::operator==(const SEPatientAction& rhs) const

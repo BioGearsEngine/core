@@ -21,6 +21,8 @@
 #include <gtest/gtest.h>
 
 #include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/BiogearsEnums.h>
+
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/Logger.h>
 
@@ -69,8 +71,8 @@ void TEST_FIXTURE_NAME::TearDown()
 
 // class SEPupillaryResponse
 //! TYPE PupillaryResponse
-//! static void Marshall(const CDM::PupillaryResponseData& in, SEPupillaryResponse& out);
-//! static void UnMarshall(const SEPupillaryResponse& in, CDM::PupillaryResponseData& out);
+//! static void UnMarshall(const CDM::PupillaryResponseData& in, SEPupillaryResponse& out);
+//! static void Marshall(const SEPupillaryResponse& in, CDM::PupillaryResponseData& out);
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 TEST_F(TEST_FIXTURE_NAME, PupillaryResponse)
 {
@@ -90,16 +92,16 @@ TEST_F(TEST_FIXTURE_NAME, PupillaryResponse)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEInflammatoryResponse
 //! TYPE InflammatoryResponse
-//! static void Marshall(const CDM::InflammatoryResponseData& in, SEInflammatoryResponse& out);
-//! static void UnMarshall(const SEInflammatoryResponse& in, CDM::InflammatoryResponseData& out);
+//! static void UnMarshall(const CDM::InflammatoryResponseData& in, SEInflammatoryResponse& out);
+//! static void Marshall(const SEInflammatoryResponse& in, CDM::InflammatoryResponseData& out);
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 TEST_F(TEST_FIXTURE_NAME, InflammatoryResponse)
 {
@@ -118,7 +120,7 @@ TEST_F(TEST_FIXTURE_NAME, InflammatoryResponse)
   source.GetLocalMacrophage().SetValue(0.13);
   source.GetLocalNeutrophil().SetValue(0.12);
   source.GetLocalBarrier().SetValue(0.11);
-  source.SetActiveTLR(CDM::enumOnOff::Off);
+  source.SetActiveTLR(biogears::SEOnOff::Off);
   source.GetAutonomicResponseLevel().SetValue(0.34);
   source.GetCatecholamines().SetValue(0.33);
   source.GetConstitutiveNOS().SetValue(0.32);
@@ -138,20 +140,20 @@ TEST_F(TEST_FIXTURE_NAME, InflammatoryResponse)
   source.GetTrauma().SetValue(0.98);
   source.GetTumorNecrosisFactor().SetValue(0.97);
   source.GetInflammationTime().SetValue(0.9, biogears::TimeUnit::s);
-  source.GetInflammationSources().push_back(CDM::enumInflammationSource::Hemorrhage);
+  source.GetInflammationSources().push_back(biogears::SEInflammationSource::Hemorrhage);
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEBloodChemistrySystem
 //! TYPE BloodChemistrySystem
-//! static void Marshall(const CDM::BloodChemistrySystemData& in, SEBloodChemistrySystem& out);
-//! static void UnMarshall(const SEBloodChemistrySystem& in, CDM::BloodChemistrySystemData& out);
+//! static void UnMarshall(const CDM::BloodChemistrySystemData& in, SEBloodChemistrySystem& out);
+//! static void Marshall(const SEBloodChemistrySystem& in, CDM::BloodChemistrySystemData& out);
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 TEST_F(TEST_FIXTURE_NAME, BloodChemistrySystem)
 {
@@ -207,7 +209,7 @@ TEST_F(TEST_FIXTURE_NAME, BloodChemistrySystem)
   source.GetInflammatoryResponse().GetLocalMacrophage().SetValue(0.13);
   source.GetInflammatoryResponse().GetLocalNeutrophil().SetValue(0.12);
   source.GetInflammatoryResponse().GetLocalBarrier().SetValue(0.11);
-  source.GetInflammatoryResponse().SetActiveTLR(CDM::enumOnOff::Off);
+  source.GetInflammatoryResponse().SetActiveTLR(biogears::SEOnOff::Off);
   source.GetInflammatoryResponse().GetAutonomicResponseLevel().SetValue(0.34);
   source.GetInflammatoryResponse().GetCatecholamines().SetValue(0.33);
   source.GetInflammatoryResponse().GetConstitutiveNOS().SetValue(0.32);
@@ -227,20 +229,20 @@ TEST_F(TEST_FIXTURE_NAME, BloodChemistrySystem)
   source.GetInflammatoryResponse().GetTrauma().SetValue(0.98);
   source.GetInflammatoryResponse().GetTumorNecrosisFactor().SetValue(0.97);
   source.GetInflammatoryResponse().GetInflammationTime().SetValue(0.9, biogears::TimeUnit::s);
-  source.GetInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Hemorrhage);
+  source.GetInflammatoryResponse().GetInflammationSources().push_back(biogears::SEInflammationSource::Hemorrhage);
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SECardiovascularSystem
 //! TYPE CardiovascularSystem
-//! static void Marshall(const CDM::CardiovascularSystemData& in, SECardiovascularSystem& out);
-//! static void UnMarshall(const SECardiovascularSystem& in, CDM::CardiovascularSystemData& out);
+//! static void UnMarshall(const CDM::CardiovascularSystemData& in, SECardiovascularSystem& out);
+//! static void Marshall(const SECardiovascularSystem& in, CDM::CardiovascularSystemData& out);
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 TEST_F(TEST_FIXTURE_NAME, CardiovascularSystem)
 {
@@ -254,12 +256,12 @@ TEST_F(TEST_FIXTURE_NAME, CardiovascularSystem)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetHeartRhythm(CDM::enumHeartRhythm::NormalSinus);
+  source.SetHeartRhythm(biogears::SEHeartRhythm::NormalSinus);
   source.GetBloodVolume().SetValue(3.0, biogears::VolumeUnit::L);
 
   source.GetCardiacIndex().SetValue(4., biogears::VolumePerTimeAreaUnit::mL_Per_min_m2);
 
-  source.GetCardiacOutput().SetValue(3.0,biogears::VolumePerTimeUnit::L_Per_day);
+  source.GetCardiacOutput().SetValue(3.0, biogears::VolumePerTimeUnit::L_Per_day);
 
   source.GetHeartEjectionFraction().SetValue(1.0);
 
@@ -300,16 +302,16 @@ TEST_F(TEST_FIXTURE_NAME, CardiovascularSystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEDrugSystem
 //! TYPE DrugSystem
-//! static void Marshall(const CDM::DrugSystemData& in, SEDrugSystem& out);
-//! static void UnMarshall(const SEDrugSystem& in, CDM::DrugSystemData& out);
+//! static void UnMarshall(const CDM::DrugSystemData& in, SEDrugSystem& out);
+//! static void Marshall(const SEDrugSystem& in, CDM::DrugSystemData& out);
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 TEST_F(TEST_FIXTURE_NAME, DrugSystem)
 {
@@ -345,16 +347,16 @@ TEST_F(TEST_FIXTURE_NAME, DrugSystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEEndocrineSystem
 //! TYPE EndocrineSystem
-//! static void Marshall(const CDM::EndocrineSystemData& in, SEEndocrineSystem& out);
-//! static void UnMarshall(const SEEndocrineSystem& in, CDM::EndocrineSystemData& out);
+//! static void UnMarshall(const CDM::EndocrineSystemData& in, SEEndocrineSystem& out);
+//! static void Marshall(const SEEndocrineSystem& in, CDM::EndocrineSystemData& out);
 #include <biogears/cdm/system/physiology/SEEndocrineSystem.h>
 TEST_F(TEST_FIXTURE_NAME, EndocrineSystem)
 {
@@ -373,16 +375,16 @@ TEST_F(TEST_FIXTURE_NAME, EndocrineSystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEEnergySystem
 //! TYPE EnergySystem
-//! static void Marshall(const CDM::EnergySystemData& in, SEEnergySystem& out);
-//! static void UnMarshall(const SEEnergySystem& in, CDM::EnergySystemData& out);
+//! static void UnMarshall(const CDM::EnergySystemData& in, SEEnergySystem& out);
+//! static void Marshall(const SEEnergySystem& in, CDM::EnergySystemData& out);
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 TEST_F(TEST_FIXTURE_NAME, EnergySystem)
 {
@@ -420,16 +422,16 @@ TEST_F(TEST_FIXTURE_NAME, EnergySystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEGastrointestinalSystem
 //! TYPE GastrointestinalSystem
-//! static void Marshall(const CDM::GastrointestinalSystemData& in, SEGastrointestinalSystem& out);
-//! static void UnMarshall(const SEGastrointestinalSystem& in, CDM::GastrointestinalSystemData& out);
+//! static void UnMarshall(const CDM::GastrointestinalSystemData& in, SEGastrointestinalSystem& out);
+//! static void Marshall(const SEGastrointestinalSystem& in, CDM::GastrointestinalSystemData& out);
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 TEST_F(TEST_FIXTURE_NAME, GastrointestinalSystem)
@@ -473,16 +475,16 @@ TEST_F(TEST_FIXTURE_NAME, GastrointestinalSystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEHepaticSystem
 //! TYPE HepaticSystem
-//! static void Marshall(const CDM::HepaticSystemData& in, SEHepaticSystem& out);
-//! static void UnMarshall(const SEHepaticSystem& in, CDM::HepaticSystemData& out);
+//! static void UnMarshall(const CDM::HepaticSystemData& in, SEHepaticSystem& out);
+//! static void Marshall(const SEHepaticSystem& in, CDM::HepaticSystemData& out);
 #include <biogears/cdm/system/physiology/SEHepaticSystem.h>
 TEST_F(TEST_FIXTURE_NAME, HepaticSystem)
 {
@@ -501,16 +503,16 @@ TEST_F(TEST_FIXTURE_NAME, HepaticSystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SENervousSystem
 //! TYPE NervousSystem
-//! static void Marshall(const CDM::NervousSystemData& in, SENervousSystem& out);
-//! static void UnMarshall(const SENervousSystem& in, CDM::NervousSystemData& out);
+//! static void UnMarshall(const CDM::NervousSystemData& in, SENervousSystem& out);
+//! static void Marshall(const SENervousSystem& in, CDM::NervousSystemData& out);
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 TEST_F(TEST_FIXTURE_NAME, NervousSystem)
@@ -525,7 +527,7 @@ TEST_F(TEST_FIXTURE_NAME, NervousSystem)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetSleepState(CDM::enumSleepState::Asleep);
+  source.SetSleepState(biogears::SESleepState::Sleeping);
 
   source.GetComplianceScale().SetValue(1.0);
   source.GetHeartRateScale().SetValue(2.0);
@@ -555,16 +557,16 @@ TEST_F(TEST_FIXTURE_NAME, NervousSystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SERenalSystem
 //! TYPE RenalSystem
-//! static void Marshall(const CDM::RenalSystemData& in, SERenalSystem& out);
-//! static void UnMarshall(const SERenalSystem& in, CDM::RenalSystemData& out);
+//! static void UnMarshall(const CDM::RenalSystemData& in, SERenalSystem& out);
+//! static void Marshall(const SERenalSystem& in, CDM::RenalSystemData& out);
 #include <biogears/cdm/system/physiology/SERenalSystem.h>
 TEST_F(TEST_FIXTURE_NAME, RenalSystem)
 {
@@ -648,16 +650,16 @@ TEST_F(TEST_FIXTURE_NAME, RenalSystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SERenalSystem
 //! TYPE RenalSystem
-//! static void Marshall(const CDM::RespiratorySystemData& in, SERespiratorySystem& out);
-//! static void UnMarshall(const SERespiratorySystem& in, CDM::RespiratorySystemData& out);
+//! static void UnMarshall(const CDM::RespiratorySystemData& in, SERespiratorySystem& out);
+//! static void Marshall(const SERespiratorySystem& in, CDM::RespiratorySystemData& out);
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 TEST_F(TEST_FIXTURE_NAME, RespiratorySystem)
 {
@@ -703,16 +705,16 @@ TEST_F(TEST_FIXTURE_NAME, RespiratorySystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SETissueSystem
 //! TYPE TissueSystem
-//! static void Marshall(const CDM::TissueSystemData& in, SETissueSystem& out);
-//! static void UnMarshall(const SETissueSystem& in, CDM::TissueSystemData& out);
+//! static void UnMarshall(const CDM::TissueSystemData& in, SETissueSystem& out);
+//! static void Marshall(const SETissueSystem& in, CDM::TissueSystemData& out);
 
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 TEST_F(TEST_FIXTURE_NAME, TissueSystem)
@@ -755,8 +757,8 @@ TEST_F(TEST_FIXTURE_NAME, TissueSystem)
 
   EXPECT_NE(source, sink);
 
-  Physiology::UnMarshall(source, data);
-  Physiology::Marshall(data, sink);
+  Physiology::Marshall(source, data);
+  Physiology::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

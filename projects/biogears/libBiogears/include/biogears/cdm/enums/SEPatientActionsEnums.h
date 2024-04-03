@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
-
 enum class SEBrainInjuryType {
   Invalid = -1,
   Diffuse = 0,
@@ -31,11 +30,20 @@ enum class SEBolusAdministration {
   Intravenous
 };
 
+enum class SEBurnDegree {
+  Invalid = -1,
+  First = 0,
+  Second,
+  Third
+};
+
 enum class SEInfectionSeverity {
-  Eliminated,
+  Invalid = -1,
+  Eliminated = 0,
   Mild,
   Moderate,
-  Severe
+  Severe,
+
 };
 
 enum class SEIntubationType {
@@ -49,9 +57,13 @@ enum class SEIntubationType {
 
 enum class SEPatientAssessmentType {
   Invalid = -1,
-  PulmonaryFunctionTest = 0,
+  ArterialBloodGasAnalysis = 0,
+  PulmonaryFunctionTest,
+  ProthrombinTime,
+  PsychomotorVigilanceTask,
   CompleteBloodCount,
   ComprehensiveMetabolicPanel,
+  SequentialOrganFailureAssessment,
   Urinalysis
 };
 
@@ -100,6 +112,22 @@ inline std::string ToString(const SEBolusAdministration& ba)
     return "Invalid";
   }
 }
+
+inline std::string ToString(const SEBurnDegree& bd)
+{
+  switch (bd) {
+
+  case SEBurnDegree ::First:
+    return "First";
+  case SEBurnDegree::Second:
+    return "Second";
+  case SEBurnDegree::Third:
+    return "Third";
+  default:
+    return "Invalid";
+  }
+}
+
 inline std::string ToString(const SEInfectionSeverity& ba)
 {
   switch (ba) {
@@ -135,12 +163,20 @@ inline std::string ToString(const SEIntubationType& it)
 inline std::string ToString(const SEPatientAssessmentType& pa)
 {
   switch (pa) {
+  case SEPatientAssessmentType::ArterialBloodGasAnalysis:
+    return "ArterialBloodGasAnalysis";
   case SEPatientAssessmentType::PulmonaryFunctionTest:
     return "PulmonaryFunctionTest";
+  case SEPatientAssessmentType::ProthrombinTime:
+    return "ProthrombinTime";
+  case SEPatientAssessmentType::PsychomotorVigilanceTask:
+    return "PsychomotorVigilanceTask";
   case SEPatientAssessmentType::CompleteBloodCount:
     return "CompleteBloodCount";
   case SEPatientAssessmentType::ComprehensiveMetabolicPanel:
     return "ComprehensiveMetabolicPanel";
+  case SEPatientAssessmentType::SequentialOrganFailureAssessment:
+    return "SequentialOrganFailureAssessment";
   case SEPatientAssessmentType::Urinalysis:
     return "Urinalysis";
   default:
@@ -193,6 +229,11 @@ inline std::ostream& operator<<(std::ostream& os, const SEBolusAdministration& b
   os << ToString(ba);
   return os;
 }
+inline std::ostream& operator<<(std::ostream& os, const SEBurnDegree& bd)
+{
+  os << ToString(bd);
+  return os;
+}
 inline std::ostream& operator<<(std::ostream& os, const SEInfectionSeverity& is)
 {
   os << ToString(is);
@@ -223,5 +264,4 @@ inline std::ostream& operator<<(std::ostream& os, const SETourniquetApplicationT
   os << ToString(pt);
   return os;
 }
-
 }

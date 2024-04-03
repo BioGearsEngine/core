@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
 namespace biogears {
@@ -40,13 +41,13 @@ bool SESubstanceAdministration::IsActive() const
 //-------------------------------------------------------------------------------
 bool SESubstanceAdministration::Load(const CDM::SubstanceAdministrationData& in)
 {
-  SEPatientAction::Load(in);
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
 void SESubstanceAdministration::Unload(CDM::SubstanceAdministrationData& data) const
 {
-  SEPatientAction::Unload(data);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceAdministration::operator==(const SESubstanceAdministration& rhs) const

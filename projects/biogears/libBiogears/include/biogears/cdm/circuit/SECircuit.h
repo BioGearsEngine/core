@@ -34,13 +34,12 @@ public:
   SECircuit(const std::string& name, Logger* logger);
   virtual ~SECircuit();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
-  virtual bool Load(const CircuitBindType& in, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths);
   virtual CircuitBindType* Unload() const;
 
 protected:
-  virtual void Unload(CircuitBindType& data) const;
+  virtual void Unload(CircuitBindType& data) const = 0;
 
 public:
   virtual std::string GetName() const;
@@ -105,5 +104,5 @@ protected:
   std::vector<PathType*> m_PolarizedElementPaths;
   std::map<const NodeType*, size_t> m_CalculatorIndex; // A unique id (starting at 0) for all nodes except the reference node
 };
+
 }
-#include <biogears/cdm/circuit/SECircuit.inl>

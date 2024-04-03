@@ -13,9 +13,13 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/exports.h>
+
+#include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
+
+#include <biogears/cdm/properties/SEScalarPressure.h>
 
 #include <random>
 
@@ -26,6 +30,7 @@ namespace io {
 }
 class BIOGEARS_API SEInfection : public SEPatientAction {
   friend io::PatientActions;
+
 public:
   SEInfection();
   virtual ~SEInfection() override;
@@ -33,12 +38,12 @@ public:
   static constexpr const char* TypeTag() { return "SEInfection"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::InfectionData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::InfectionData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::InfectionData* Unload() const override;
 
   virtual const char* GetLocation_cStr() const;
@@ -49,8 +54,8 @@ public:
   virtual void InvalidateLocation();
 
   virtual bool HasSeverity() const;
-  virtual CDM::enumInfectionSeverity::value GetSeverity() const;
-  virtual void SetSeverity(CDM::enumInfectionSeverity::value t);
+  virtual SEInfectionSeverity GetSeverity() const;
+  virtual void SetSeverity(SEInfectionSeverity t);
   virtual void InvalidateSeverity();
 
   virtual bool HasMinimumInhibitoryConcentration() const;
@@ -58,15 +63,15 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
-  bool operator==( const SEInfection& rhs) const;
-  bool operator!=( const SEInfection& rhs) const;
+  bool operator==(const SEInfection& rhs) const;
+  bool operator!=(const SEInfection& rhs) const;
 
 protected:
   virtual void Unload(CDM::InfectionData& data) const;
 
 protected:
   std::string m_Location;
-  CDM::enumInfectionSeverity::value m_Severity;
+  SEInfectionSeverity m_Severity;
   SEScalarMassPerVolume* m_MinimumInhibitoryConcentration;
 };
 }

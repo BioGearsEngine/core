@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveObstruction.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -44,8 +47,7 @@ bool SEExpiratoryValveObstruction::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEExpiratoryValveObstruction::Load(const CDM::ExpiratoryValveObstructionData& in, std::default_random_engine *rd)
 {
-  SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
+  io::AnesthesiaActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------

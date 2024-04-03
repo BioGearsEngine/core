@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
@@ -41,13 +42,13 @@ public:
 
   static constexpr const char* TypeTag() { return "SEBurnWound"; };
   const char* classname() const override { return TypeTag(); }
-
+  
   virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::BurnWoundData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::BurnWoundData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::BurnWoundData* Unload() const override;
 
   bool HasTotalBodySurfaceArea() const;
@@ -55,8 +56,8 @@ public:
   void SetTotalBodySurfaceArea(double);
 
   bool HasDegreeOfBurn() const;
-  CDM::enumBurnDegree::value GetDegreeOfBurn() const;
-  void SetDegreeOfBurn(CDM::enumBurnDegree::value value);
+  SEBurnDegree GetDegreeOfBurn() const;
+  void SetDegreeOfBurn(SEBurnDegree value);
   void SetTimeOfBurn(double burnTime);
   double GetTimeOfBurn() const;
 
@@ -101,7 +102,7 @@ private:
   bool m_Inflammation;
   double m_DegreeModifier;
   double m_burnInitiationTime;
-  CDM::enumBurnDegree::value m_DegreeOfBurn;
+  SEBurnDegree m_DegreeOfBurn;
   SEScalar0To1* m_TBSA;
   std::vector<SEScalar0To1> m_compartments;
 

@@ -10,6 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include "io/cdm/Compartment.h"
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/schema/cdm/Compartment.hxx>
@@ -37,13 +38,13 @@ void SECompartment::Clear()
 //-----------------------------------------------------------------------------
 bool SECompartment::Load(const CDM::CompartmentData& in, SECircuitManager* circuits)
 {
-  Clear();
+  io::Compartment::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
 void SECompartment::Unload(CDM::CompartmentData& data)
 {
-  data.Name(m_Name);
+  io::Compartment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 std::string SECompartment::GetName() const

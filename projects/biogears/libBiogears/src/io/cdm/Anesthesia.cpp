@@ -12,118 +12,119 @@
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/enums/SEAnesthesiaEnums.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
+
 namespace biogears {
 namespace io {
   //----------------------------------------------------------------------------------
-  //class SEAnesthesiaMachine
-  void Anesthesia::Marshall(const CDM::AnesthesiaMachineData& in, SEAnesthesiaMachine& out)
+  // class SEAnesthesiaMachine
+  void Anesthesia::UnMarshall(const CDM::AnesthesiaMachineData& in, SEAnesthesiaMachine& out)
   {
-    System::Marshall(static_cast<const CDM::SystemData&>(in), static_cast<SESystem&>(out));
+    System::UnMarshall(static_cast<const CDM::SystemData&>(in), static_cast<SESystem&>(out));
 
-    if (in.Connection().present()) {
-      out.m_Connection = in.Connection().get();
-    }
+    UnMarshall(in.Connection(), out.m_Connection);
+
     if (in.InletFlow().present()) {
-      io::Property::Marshall(in.InletFlow(), out.GetInletFlow());
+      io::Property::UnMarshall(in.InletFlow(), out.GetInletFlow());
     }
     if (in.InspiratoryExpiratoryRatio().present()) {
-      io::Property::Marshall(in.InspiratoryExpiratoryRatio(), out.GetInspiratoryExpiratoryRatio());
+      io::Property::UnMarshall(in.InspiratoryExpiratoryRatio(), out.GetInspiratoryExpiratoryRatio());
     }
     if (in.OxygenFraction().present()) {
-      io::Property::Marshall(in.OxygenFraction(), out.GetOxygenFraction());
+      io::Property::UnMarshall(in.OxygenFraction(), out.GetOxygenFraction());
     }
 
-    if (in.OxygenSource().present()) {
-      out.SetOxygenSource(in.OxygenSource().get());
-    }
+    UnMarshall(in.OxygenSource(), out.m_OxygenSource);
+
     if (in.PositiveEndExpiredPressure().present()) {
-      io::Property::Marshall(in.PositiveEndExpiredPressure(), out.GetPositiveEndExpiredPressure());
+      io::Property::UnMarshall(in.PositiveEndExpiredPressure(), out.GetPositiveEndExpiredPressure());
     }
-    if (in.PrimaryGas().present()) {
-      out.SetPrimaryGas(in.PrimaryGas().get());
-    }
+
+    UnMarshall(in.PrimaryGas(), out.m_PrimaryGas);
 
     if (in.RespiratoryRate().present()) {
-      io::Property::Marshall(in.RespiratoryRate(), out.GetRespiratoryRate());
+      io::Property::UnMarshall(in.RespiratoryRate(), out.GetRespiratoryRate());
     }
     if (in.ReliefValvePressure().present()) {
-      io::Property::Marshall(in.ReliefValvePressure(), out.GetReliefValvePressure());
+      io::Property::UnMarshall(in.ReliefValvePressure(), out.GetReliefValvePressure());
     }
     if (in.VentilatorPressure().present()) {
-      io::Property::Marshall(in.VentilatorPressure(), out.GetVentilatorPressure());
+      io::Property::UnMarshall(in.VentilatorPressure(), out.GetVentilatorPressure());
     }
     if (in.LeftChamber().present()) {
-      Marshall(in.LeftChamber(), out.GetLeftChamber());
+      UnMarshall(in.LeftChamber(), out.GetLeftChamber());
     }
     if (in.RightChamber().present()) {
-      Marshall(in.RightChamber(), out.GetRightChamber());
+      UnMarshall(in.RightChamber(), out.GetRightChamber());
     }
     if (in.OxygenBottleOne().present()) {
-      Marshall(in.OxygenBottleOne(), out.GetOxygenBottleOne());
+      UnMarshall(in.OxygenBottleOne(), out.GetOxygenBottleOne());
     }
     if (in.OxygenBottleTwo().present()) {
-      Marshall(in.OxygenBottleTwo(), out.GetOxygenBottleTwo());
+      UnMarshall(in.OxygenBottleTwo(), out.GetOxygenBottleTwo());
     }
 
     SEScalarTime time;
+    SEAnesthesiaMachineEvent event;
     for (auto e : in.ActiveEvent()) {
-      io::Property::Marshall(e.Duration(), time);
-      out.m_EventState[e.Event()] = true;
-      out.m_EventDuration_s[e.Event()] = time.GetValue(TimeUnit::s);
+      io::Property::UnMarshall(e.Duration(), time);
+      UnMarshall(e.Event(), event);
+
+      out.m_EventState[event] = true;
+      out.m_EventDuration_s[event] = time.GetValue(TimeUnit::s);
     }
 
     out.StateChange();
     ;
   }
   //----------------------------------------------------------------------------------
-  void Anesthesia::UnMarshall(const SEAnesthesiaMachine& in, CDM::AnesthesiaMachineData& out)
+  void Anesthesia::Marshall(const SEAnesthesiaMachine& in, CDM::AnesthesiaMachineData& out)
   {
-    System::UnMarshall(static_cast<const SESystem&>(in), static_cast<CDM::AnesthesiaMachineData&>(out));
-    if (in.HasConnection()) {
-      out.Connection(in.m_Connection);
-    }
+    System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::AnesthesiaMachineData&>(out));
+
+    SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, Connection)
+
     if (in.m_InletFlow != nullptr) {
-      io::Property::UnMarshall(*in.m_InletFlow, out.InletFlow());
+      io::Property::Marshall(*in.m_InletFlow, out.InletFlow());
     }
     if (in.m_InspiratoryExpiratoryRatio != nullptr) {
-      io::Property::UnMarshall(*in.m_InspiratoryExpiratoryRatio, out.InspiratoryExpiratoryRatio());
+      io::Property::Marshall(*in.m_InspiratoryExpiratoryRatio, out.InspiratoryExpiratoryRatio());
     }
     if (in.m_OxygenFraction != nullptr) {
-      io::Property::UnMarshall(*in.m_OxygenFraction, out.OxygenFraction());
-    }
-    if (in.HasOxygenSource()) {
-      out.OxygenSource(in.m_OxygenSource);
-    }
-    if (in.m_PositiveEndExpiredPressure != nullptr) {
-      io::Property::UnMarshall(*in.m_PositiveEndExpiredPressure, out.PositiveEndExpiredPressure());
-    }
-    if (in.HasPrimaryGas()) {
-      out.PrimaryGas(in.m_PrimaryGas);
+      io::Property::Marshall(*in.m_OxygenFraction, out.OxygenFraction());
     }
 
+    SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, OxygenSource)
+
+    if (in.m_PositiveEndExpiredPressure != nullptr) {
+      io::Property::Marshall(*in.m_PositiveEndExpiredPressure, out.PositiveEndExpiredPressure());
+    }
+
+    SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, PrimaryGas)
+
     if (in.m_RespiratoryRate != nullptr) {
-      io::Property::UnMarshall(*in.m_RespiratoryRate, out.RespiratoryRate());
+      io::Property::Marshall(*in.m_RespiratoryRate, out.RespiratoryRate());
     }
     if (in.m_ReliefValvePressure != nullptr) {
-      io::Property::UnMarshall(*in.m_ReliefValvePressure, out.ReliefValvePressure());
+      io::Property::Marshall(*in.m_ReliefValvePressure, out.ReliefValvePressure());
     }
     if (in.m_VentilatorPressure != nullptr) {
-      io::Property::UnMarshall(*in.m_VentilatorPressure, out.VentilatorPressure());
+      io::Property::Marshall(*in.m_VentilatorPressure, out.VentilatorPressure());
     }
     if (in.HasLeftChamber()) {
-      UnMarshall(*in.m_LeftChamber, out.LeftChamber());
+      Marshall(*in.m_LeftChamber, out.LeftChamber());
     }
     if (in.HasRightChamber()) {
-      UnMarshall(*in.m_RightChamber, out.RightChamber());
+      Marshall(*in.m_RightChamber, out.RightChamber());
     }
     if (in.HasOxygenBottleOne()) {
-      UnMarshall(*in.m_OxygenBottleOne, out.OxygenBottleOne());
+      Marshall(*in.m_OxygenBottleOne, out.OxygenBottleOne());
     }
     if (in.HasOxygenBottleTwo()) {
-      UnMarshall(*in.m_OxygenBottleTwo, out.OxygenBottleTwo());
+      Marshall(*in.m_OxygenBottleTwo, out.OxygenBottleTwo());
     }
 
     SEScalarTime time;
@@ -136,20 +137,30 @@ namespace io {
       }
 
       CDM::ActiveAnesthesiaMachineEventData* eData = new CDM::ActiveAnesthesiaMachineEventData();
-      eData->Event(itr.first);
-      io::Property::UnMarshall(time, eData->Duration());
+
+      eData->Event(std::make_unique<std::remove_reference<decltype(eData->Event())>::type>());
+      io::Anesthesia::Marshall(itr.first, eData->Event());
+
+      // ::mil::tatrc::physiology::datamodel::enumAnesthesiaMachineEvent
+      Anesthesia::Marshall(itr.first, eData->Event());
+
+      eData->Duration(std::make_unique<std::remove_reference<decltype(eData->Duration())>::type>());
+      io::Property::Marshall(time, eData->Duration());
+
       out.ActiveEvent().push_back(std::unique_ptr<CDM::ActiveAnesthesiaMachineEventData>(eData));
     }
   }
   //----------------------------------------------------------------------------------
-  //class SEAnesthesiaMachineChamber
-  void Anesthesia::Marshall(const CDM::AnesthesiaMachineChamberData& in, SEAnesthesiaMachineChamber& out)
+  // class SEAnesthesiaMachineChamber
+  void Anesthesia::UnMarshall(const CDM::AnesthesiaMachineChamberData& in, SEAnesthesiaMachineChamber& out)
   {
     if (in.State().present()) {
-      out.SetState(in.State().get());
+      auto state = out.GetState();
+      Property::UnMarshall(in.State(), state);
+      out.SetState(state);
     }
     if (in.SubstanceFraction().present()) {
-      io::Property::Marshall(in.SubstanceFraction(), out.GetSubstanceFraction());
+      io::Property::UnMarshall(in.SubstanceFraction(), out.GetSubstanceFraction());
     }
     if (in.Substance().present()) {
       out.m_Substance = out.m_Substances.GetSubstance(in.Substance().get());
@@ -161,33 +172,227 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
-  void Anesthesia::UnMarshall(const SEAnesthesiaMachineChamber& in, CDM::AnesthesiaMachineChamberData& out)
-  {
-    if (in.HasState()) {
-      out.State(in.m_State);
-    }
+  void Anesthesia::Marshall(const SEAnesthesiaMachineChamber& in, CDM::AnesthesiaMachineChamberData& out)
+  { 
+    io::Property::Marshall(in.GetState(), out.State());
+
     if (in.m_SubstanceFraction != nullptr) {
-      io::Property::UnMarshall(*in.m_SubstanceFraction, out.SubstanceFraction());
+      io::Property::Marshall(*in.m_SubstanceFraction, out.SubstanceFraction());
     }
     if (in.HasSubstance()) {
       out.Substance(in.m_Substance->GetName());
     }
   }
   //----------------------------------------------------------------------------------
-  //class SEAnesthesiaMachineOxygenBottle
-  void Anesthesia::Marshall(const CDM::AnesthesiaMachineOxygenBottleData& in, SEAnesthesiaMachineOxygenBottle& out)
+  // class SEAnesthesiaMachineOxygenBottle
+  void Anesthesia::UnMarshall(const CDM::AnesthesiaMachineOxygenBottleData& in, SEAnesthesiaMachineOxygenBottle& out)
   {
     if (in.Volume().present()) {
-      io::Property::Marshall(in.Volume(), out.GetVolume());
+      io::Property::UnMarshall(in.Volume(), out.GetVolume());
     }
   }
   //----------------------------------------------------------------------------------
-  void Anesthesia::UnMarshall(const SEAnesthesiaMachineOxygenBottle& in, CDM::AnesthesiaMachineOxygenBottleData& out)
+  void Anesthesia::Marshall(const SEAnesthesiaMachineOxygenBottle& in, CDM::AnesthesiaMachineOxygenBottleData& out)
   {
     if (in.m_Volume != nullptr) {
-      io::Property::UnMarshall(*in.m_Volume, out.Volume());
+      io::Property::Marshall(*in.m_Volume, out.Volume());
     }
   }
   //----------------------------------------------------------------------------------
+  // SEAnesthesiaMachineEvent
+  void Anesthesia::UnMarshall(const CDM::enumAnesthesiaMachineEvent& in, SEAnesthesiaMachineEvent& out)
+  {
+    switch (in) {
+    case CDM::enumAnesthesiaMachineEvent::OxygenBottle1Exhausted:
+      out = SEAnesthesiaMachineEvent::OxygenBottle1Exhausted;
+      break;
+    case CDM::enumAnesthesiaMachineEvent::OxygenBottle2Exhausted:
+      out = SEAnesthesiaMachineEvent::OxygenBottle2Exhausted;
+      break;
+    case CDM::enumAnesthesiaMachineEvent::ReliefValveActive:
+      out = SEAnesthesiaMachineEvent::ReliefValveActive;
+      break;
+    default:
+      out = SEAnesthesiaMachineEvent::Invalid;
+      break;
+    }
+  }
+  void Anesthesia::Marshall(const SEAnesthesiaMachineEvent& in, CDM::enumAnesthesiaMachineEvent& out)
+  {
+    switch (in) {
+    case SEAnesthesiaMachineEvent::OxygenBottle1Exhausted:
+      out = CDM::enumAnesthesiaMachineEvent::OxygenBottle1Exhausted;
+      break;
+    case SEAnesthesiaMachineEvent::OxygenBottle2Exhausted:
+      out = CDM::enumAnesthesiaMachineEvent::OxygenBottle2Exhausted;
+      break;
+    case SEAnesthesiaMachineEvent::ReliefValveActive:
+      out = CDM::enumAnesthesiaMachineEvent::ReliefValveActive;
+      break;
+
+    default:
+      out = (CDM::enumAnesthesiaMachineEvent::value)-1;
+      break;
+    }
+  }
+  // SEAnesthesiaMachineOxygenSource
+  void Anesthesia::UnMarshall(const CDM::enumAnesthesiaMachineOxygenSource& in, SEAnesthesiaMachineOxygenSource& out)
+  {
+    switch (in) {
+    case CDM::enumAnesthesiaMachineOxygenSource::BottleOne:
+      out = SEAnesthesiaMachineOxygenSource::BottleOne;
+      break;
+    case CDM::enumAnesthesiaMachineOxygenSource::BottleTwo:
+      out = SEAnesthesiaMachineOxygenSource::BottleTwo;
+      break;
+    case CDM::enumAnesthesiaMachineOxygenSource::Wall:
+      out = SEAnesthesiaMachineOxygenSource::Wall;
+      break;
+    default:
+      out = SEAnesthesiaMachineOxygenSource::Invalid;
+      break;
+    }
+  }
+  void Anesthesia::Marshall(const SEAnesthesiaMachineOxygenSource& in, CDM::enumAnesthesiaMachineOxygenSource& out)
+  {
+    switch (in) {
+    case SEAnesthesiaMachineOxygenSource::BottleOne:
+      out = CDM::enumAnesthesiaMachineOxygenSource::BottleOne;
+      break;
+    case SEAnesthesiaMachineOxygenSource::BottleTwo:
+      out = CDM::enumAnesthesiaMachineOxygenSource::BottleTwo;
+      break;
+    case SEAnesthesiaMachineOxygenSource::Wall:
+      out = CDM::enumAnesthesiaMachineOxygenSource::Wall;
+      break;
+    default:
+      out = (CDM::enumAnesthesiaMachineOxygenSource::value)-1;
+      break;
+    }
+  }
+  // SEAnesthesiaMachinePrimaryGas
+  void Anesthesia::UnMarshall(const CDM::enumAnesthesiaMachinePrimaryGas& in, SEAnesthesiaMachinePrimaryGas& out)
+  {
+    switch (in) {
+    case CDM::enumAnesthesiaMachinePrimaryGas::Air:
+      out = SEAnesthesiaMachinePrimaryGas::Air;
+      break;
+    case CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen:
+      out = SEAnesthesiaMachinePrimaryGas::Nitrogen;
+      break;
+    default:
+      out = SEAnesthesiaMachinePrimaryGas::Invalid;
+      break;
+    }
+  }
+  void Anesthesia::Marshall(const SEAnesthesiaMachinePrimaryGas& in, CDM::enumAnesthesiaMachinePrimaryGas& out)
+  {
+    switch (in) {
+    case SEAnesthesiaMachinePrimaryGas::Air:
+      out = CDM::enumAnesthesiaMachinePrimaryGas::Air;
+      break;
+    case SEAnesthesiaMachinePrimaryGas::Nitrogen:
+      out = CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen;
+      break;
+    default:
+      out = (CDM::enumAnesthesiaMachinePrimaryGas::value)-1;
+      break;
+    }
+  }
+  // SEAnesthesiaMachineConnection
+  void Anesthesia::UnMarshall(const CDM::enumAnesthesiaMachineConnection& in, SEAnesthesiaMachineConnection& out)
+  {
+    switch (in) {
+    case CDM::enumAnesthesiaMachineConnection::Mask:
+      out = SEAnesthesiaMachineConnection::Mask;
+      break;
+    case CDM::enumAnesthesiaMachineConnection::Off:
+      out = SEAnesthesiaMachineConnection::Off;
+      break;
+    case CDM::enumAnesthesiaMachineConnection::Tube:
+      out = SEAnesthesiaMachineConnection::Tube;
+      break;
+    default:
+      out = SEAnesthesiaMachineConnection::Invalid;
+      break;
+    }
+  }
+  void Anesthesia::Marshall(const SEAnesthesiaMachineConnection& in, CDM::enumAnesthesiaMachineConnection& out)
+  {
+    switch (in) {
+    case SEAnesthesiaMachineConnection::Off:
+      out = CDM::enumAnesthesiaMachineConnection::Off;
+      break;
+    case SEAnesthesiaMachineConnection::Mask:
+      out = CDM::enumAnesthesiaMachineConnection::Mask;
+      break;
+    case SEAnesthesiaMachineConnection::Tube:
+      out = CDM::enumAnesthesiaMachineConnection::Tube;
+      break;
+    default:
+      out = (CDM::enumAnesthesiaMachineConnection::value)-1;
+      break;
+    }
+  }
 }
+
+bool operator==(CDM::enumAnesthesiaMachineEvent const& lhs, SEAnesthesiaMachineEvent const& rhs)
+{
+  switch (rhs) {
+  case SEAnesthesiaMachineEvent::OxygenBottle1Exhausted:
+    return (CDM::enumAnesthesiaMachineEvent::OxygenBottle1Exhausted == lhs);
+  case SEAnesthesiaMachineEvent::OxygenBottle2Exhausted:
+    return (CDM::enumAnesthesiaMachineEvent::OxygenBottle2Exhausted == lhs);
+  case SEAnesthesiaMachineEvent::ReliefValveActive:
+    return (CDM::enumAnesthesiaMachineEvent::ReliefValveActive == lhs);
+  case SEAnesthesiaMachineEvent::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
+  }
+}
+bool operator==(CDM::enumAnesthesiaMachineOxygenSource const& lhs, SEAnesthesiaMachineOxygenSource const& rhs)
+{
+  switch (rhs) {
+  case SEAnesthesiaMachineOxygenSource::BottleOne:
+    return (CDM::enumAnesthesiaMachineOxygenSource::BottleOne == lhs);
+  case SEAnesthesiaMachineOxygenSource::BottleTwo:
+    return (CDM::enumAnesthesiaMachineOxygenSource::BottleTwo == lhs);
+  case SEAnesthesiaMachineOxygenSource::Wall:
+    return (CDM::enumAnesthesiaMachineOxygenSource::Wall == lhs);
+  case SEAnesthesiaMachineOxygenSource::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
+  }
+}
+bool operator==(CDM::enumAnesthesiaMachinePrimaryGas const& lhs, SEAnesthesiaMachinePrimaryGas const& rhs)
+{
+  switch (rhs) {
+  case SEAnesthesiaMachinePrimaryGas::Air:
+    return (CDM::enumAnesthesiaMachinePrimaryGas::Air == lhs);
+  case SEAnesthesiaMachinePrimaryGas::Nitrogen:
+    return (CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen == lhs);
+  case SEAnesthesiaMachinePrimaryGas::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
+  }
+}
+bool operator==(CDM::enumAnesthesiaMachineConnection const& lhs, SEAnesthesiaMachineConnection const& rhs)
+{
+  switch (rhs) {
+  case SEAnesthesiaMachineConnection::Off:
+    return (CDM::enumAnesthesiaMachineConnection::Off == lhs);
+  case SEAnesthesiaMachineConnection::Mask:
+    return (CDM::enumAnesthesiaMachineConnection::Mask == lhs);
+  case SEAnesthesiaMachineConnection::Tube:
+    return (CDM::enumAnesthesiaMachineConnection::Tube == lhs);
+  case SEAnesthesiaMachineConnection::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
+  }
+}
+
 }

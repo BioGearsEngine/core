@@ -316,27 +316,27 @@ SELiquidCompartmentGraph& BioGearsCompartments::GetRenalGraph()
 SEGasCompartmentGraph& BioGearsCompartments::GetActiveRespiratoryGraph()
 {
   switch (m_data.GetAirwayMode()) {
-  case CDM::enumBioGearsAirwayMode::Free:
+  case SEBioGearsAirwayMode::Free:
     if (m_UpdateActiveAirwayGraph)
       m_data.GetCompartments().UpdateLinks(*m_RespiratoryGraph);
     m_UpdateActiveAirwayGraph = false;
     return *m_RespiratoryGraph;
-  case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
+  case SEBioGearsAirwayMode::AnesthesiaMachine:
     if (m_UpdateActiveAirwayGraph)
       m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryAnesthesiaGraph);
     m_UpdateActiveAirwayGraph = false;
     return *m_CombinedRespiratoryAnesthesiaGraph;
-  case CDM::enumBioGearsAirwayMode::Inhaler:
+  case SEBioGearsAirwayMode::Inhaler:
     if (m_UpdateActiveAirwayGraph)
       m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryInhalerGraph);
     m_UpdateActiveAirwayGraph = false;
     return *m_CombinedRespiratoryInhalerGraph;
-  case CDM::enumBioGearsAirwayMode::NasalCannula:
+  case SEBioGearsAirwayMode::NasalCannula:
     if (m_UpdateActiveAirwayGraph)
       m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryNasalCannulaGraph);
     m_UpdateActiveAirwayGraph = false;
     return *m_CombinedRespiratoryNasalCannulaGraph;
-  case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
+  case SEBioGearsAirwayMode::MechanicalVentilator:
     if (m_UpdateActiveAirwayGraph)
       m_data.GetCompartments().UpdateLinks(*m_CombinedRespiratoryMechanicalVentilatorGraph);
     m_UpdateActiveAirwayGraph = false;
@@ -380,15 +380,15 @@ SEGasCompartmentGraph& BioGearsCompartments::GetRespiratoryAndNasalCannulaGraph(
 SELiquidCompartmentGraph& BioGearsCompartments::GetActiveAerosolGraph()
 {
   switch (m_data.GetAirwayMode()) {
-  case CDM::enumBioGearsAirwayMode::Free:
-  case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
-  case CDM::enumBioGearsAirwayMode::NasalCannula:
-  case CDM::enumBioGearsAirwayMode::MechanicalVentilator: // Just use the regular graph
+  case SEBioGearsAirwayMode::Free:
+  case SEBioGearsAirwayMode::AnesthesiaMachine:
+  case SEBioGearsAirwayMode::NasalCannula:
+  case SEBioGearsAirwayMode::MechanicalVentilator: // Just use the regular graph
     if (m_UpdateActiveAerosolGraph)
       m_data.GetCompartments().UpdateLinks(*m_AerosolGraph);
     m_UpdateActiveAerosolGraph = false;
     return *m_AerosolGraph;
-  case CDM::enumBioGearsAirwayMode::Inhaler:
+  case SEBioGearsAirwayMode::Inhaler:
     if (m_UpdateActiveAerosolGraph)
       m_data.GetCompartments().UpdateLinks(*m_CombinedAerosolInhalerGraph);
     m_UpdateActiveAerosolGraph = true;

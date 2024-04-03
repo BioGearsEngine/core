@@ -14,7 +14,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
@@ -93,10 +96,9 @@ protected:
   void CheckViralSymptoms();
   void CheckBloodSubstanceLevels();
   void InflammatoryResponse();
-  void ManageSIRS();		//SIRS = Systemic Inflammatory Response Syndrome
+  void ManageSIRS(); // SIRS = Systemic Inflammatory Response Syndrome
 
-
-  //Override
+  // Override
   void ProcessOverride();
   void OverrideControlLoop();
 
@@ -108,7 +110,7 @@ protected:
   SEPatient* m_Patient;
   SEPatientActionCollection* m_PatientActions;
 
-  //substances
+  // substances
   SESubstance* m_Ondansetron;
 
   // Stateless member variable (Set in SetUp())
@@ -152,7 +154,7 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
   SELiquidSubstanceQuantity* m_venaCavaUrea;
 
-  //radiation model parameters, first sets are growing within the marrow and thymus
+  // radiation model parameters, first sets are growing within the marrow and thymus
   double m_progenitorLymphocytes_ct;
   double m_progenitorLymphocytes_wd_ct;
   double m_progenitorLymphocytes_d_ct;
@@ -162,14 +164,14 @@ protected:
   double m_maturingLymphocytes_d_ct;
   double m_maturingLymphocytes_hd_ct;
 
-  //circulating counts
+  // circulating counts
   double m_Lymphocytes_ct;
   double m_Lymphocytes_d_ct;
   double m_Lymphocytes_hd_ct;
-  //track radiation
+  // track radiation
   double m_radAbsorbed_Gy;
 
-  //Initialize HTR concentrations
+  // Initialize HTR concentrations
   double m_donorRBC_ct;
   double m_patientRBC_ct;
   double m_2Agglutinate_ct;

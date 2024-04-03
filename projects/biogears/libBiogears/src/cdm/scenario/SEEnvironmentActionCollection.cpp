@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEEnvironmentActionCollection.h>
 
+#include "io/cdm/Scenario.h"
+
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/schema/cdm/EnvironmentActions.hxx>

@@ -34,6 +34,7 @@
 #include <strstream>
 #include <vector>
 
+#include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/string/manipulation.h>
 
 namespace mil {

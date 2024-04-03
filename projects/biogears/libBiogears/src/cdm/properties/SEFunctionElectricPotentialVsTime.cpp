@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/utils/GeneralMath.h>
@@ -38,10 +40,7 @@ void SEFunctionElectricPotentialVsTime::Clear()
 
 bool SEFunctionElectricPotentialVsTime::Load(const CDM::FunctionElectricPotentialVsTimeData& in)
 {
-  if (!SEFunction::Load(in))
-    return false;
-  m_TimeUnit = &TimeUnit::GetCompoundUnit(in.IndependentUnit().get());
-  m_ElectricPotentialUnit = &ElectricPotentialUnit::GetCompoundUnit(in.DependentUnit().get());
+  io::Property::UnMarshall(in, *this);
   return IsValid();
 }
 
@@ -56,9 +55,7 @@ CDM::FunctionElectricPotentialVsTimeData* SEFunctionElectricPotentialVsTime::Unl
 
 void SEFunctionElectricPotentialVsTime::Unload(CDM::FunctionElectricPotentialVsTimeData& data) const
 {
-  SEFunction::Unload(data);
-  data.IndependentUnit(m_TimeUnit->GetString());
-  data.DependentUnit(m_ElectricPotentialUnit->GetString());
+  io::Property::Marshall(*this, data);
 }
 
 double SEFunctionElectricPotentialVsTime::GetTimeValue(unsigned int index, const TimeUnit& unit)

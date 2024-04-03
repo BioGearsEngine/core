@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -45,8 +46,7 @@ bool SEPulmonaryShunt::IsActive() const
 
 bool SEPulmonaryShunt::Load(const CDM::PulmonaryShuntData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  GetFlowRateScale().Load(in.FlowRateScaling(), rd);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 
@@ -59,9 +59,7 @@ CDM::PulmonaryShuntData* SEPulmonaryShunt::Unload() const
 
 void SEPulmonaryShunt::Unload(CDM::PulmonaryShuntData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_FlowRateScaling != nullptr)
-    data.FlowRateScaling(std::unique_ptr<CDM::Scalar0To1Data>(m_FlowRateScaling->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 
 bool SEPulmonaryShunt::HasFlowRateScale() const

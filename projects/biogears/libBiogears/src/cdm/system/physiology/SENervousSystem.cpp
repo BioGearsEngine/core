@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 
+#include "io/cdm/Physiology.h"
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
 #include <biogears/cdm/properties/SEScalarPressurePerVolume.h>
@@ -57,7 +58,7 @@ SENervousSystem::SENervousSystem(Logger* logger)
   m_ResistanceScaleMuscle = nullptr;
   m_ResistanceScaleMyocardium = nullptr;
   m_SleepTime = nullptr;
-  m_SleepState = (CDM::enumSleepState::value)-1;
+  m_SleepState = (SESleepState)-1;
   m_WakeTime = nullptr;
   m_RichmondAgitationSedationScale = nullptr;
 }
@@ -88,7 +89,7 @@ void SENervousSystem::Clear()
   SAFE_DELETE(m_RightEyePupillaryResponse);
   SAFE_DELETE(m_PainVisualAnalogueScale);
   SAFE_DELETE(m_SleepTime);
-  m_SleepState = (CDM::enumSleepState::value)-1;
+  m_SleepState = (SESleepState)-1;
   SAFE_DELETE(m_WakeTime);
   SAFE_DELETE(m_RichmondAgitationSedationScale);
 }
@@ -148,45 +149,7 @@ const SEScalar* SENervousSystem::GetScalar(const std::string& name)
 
 bool SENervousSystem::Load(const CDM::NervousSystemData& in)
 {
-  SESystem::Load(in);
-  if (in.AttentionLapses().present())
-    GetAttentionLapses().Load(in.AttentionLapses().get());
-  if (in.BiologicalDebt().present())
-    GetBiologicalDebt().Load(in.BiologicalDebt().get());
-  if (in.HeartRateScale().present())
-    GetHeartRateScale().Load(in.HeartRateScale().get());
-  if (in.HeartElastanceScale().present())
-    GetHeartElastanceScale().Load(in.HeartElastanceScale().get());
-  if (in.MentalStatus().present())
-    GetMentalStatus().Load(in.MentalStatus().get());
-  if (in.ReactionTime().present())
-    GetReactionTime().Load(in.ReactionTime().get());
-  if (in.ResistanceScaleExtrasplanchnic().present())
-    GetResistanceScaleExtrasplanchnic().Load(in.ResistanceScaleExtrasplanchnic().get());
-  if (in.ResistanceScaleMuscle().present())
-    GetResistanceScaleMuscle().Load(in.ResistanceScaleMuscle().get());
-  if (in.ResistanceScaleMyocardium().present())
-    GetResistanceScaleMyocardium().Load(in.ResistanceScaleMyocardium().get());
-  if (in.ResistanceScaleSplanchnic().present())
-    GetResistanceScaleSplanchnic().Load(in.ResistanceScaleSplanchnic().get());
-  if (in.ComplianceScale().present())
-    GetComplianceScale().Load(in.ComplianceScale().get());
-  if (in.PainVisualAnalogueScale().present())
-    GetPainVisualAnalogueScale().Load(in.PainVisualAnalogueScale().get());
-  if (in.GlasgowComaScalar().present())
-    GetGlasgowComaScalar().Load(in.GlasgowComaScalar().get());
-  if (in.LeftEyePupillaryResponse().present())
-    GetLeftEyePupillaryResponse().Load(in.LeftEyePupillaryResponse().get());
-  if (in.RichmondAgitationSedationScale().present())
-    GetRichmondAgitationSedationScale().Load(in.RichmondAgitationSedationScale().get());
-  if (in.RightEyePupillaryResponse().present())
-    GetRightEyePupillaryResponse().Load(in.RightEyePupillaryResponse().get());
-  if (in.SleepTime().present())
-    GetSleepTime().Load(in.SleepTime().get());
-  if (in.SleepState().present())
-    SetSleepState(in.SleepState().get());
-  if (in.WakeTime().present())
-    GetWakeTime().Load(in.WakeTime().get());
+  io::Physiology::UnMarshall(in,  *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -201,45 +164,7 @@ CDM::NervousSystemData* SENervousSystem::Unload() const
 
 void SENervousSystem::Unload(CDM::NervousSystemData& data) const
 {
-  SESystem::Unload(data);
-  if (m_AttentionLapses != nullptr)
-    data.AttentionLapses(std::unique_ptr<CDM::ScalarData>(m_AttentionLapses->Unload()));
-  if (m_BiologicalDebt != nullptr)
-    data.BiologicalDebt(std::unique_ptr<CDM::ScalarData>(m_BiologicalDebt->Unload()));
-  if (m_HeartRateScale != nullptr)
-    data.HeartRateScale(std::unique_ptr<CDM::ScalarData>(m_HeartRateScale->Unload()));
-  if (m_HeartElastanceScale != nullptr)
-    data.HeartElastanceScale(std::unique_ptr<CDM::ScalarData>(m_HeartElastanceScale->Unload()));
-  if (m_MentalStatus != nullptr)
-    data.MentalStatus(std::unique_ptr<CDM::ScalarData>(m_MentalStatus->Unload()));
-  if (m_ReactionTime != nullptr)
-    data.ReactionTime(std::unique_ptr<CDM::ScalarTimeData>(m_ReactionTime->Unload()));
-  if (m_ResistanceScaleExtrasplanchnic != nullptr)
-    data.ResistanceScaleExtrasplanchnic(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleExtrasplanchnic->Unload()));
-  if (m_ResistanceScaleMuscle != nullptr)
-    data.ResistanceScaleMuscle(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleMuscle->Unload()));
-  if (m_ResistanceScaleMyocardium != nullptr)
-    data.ResistanceScaleMyocardium(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleMyocardium->Unload()));
-  if (m_ResistanceScaleSplanchnic != nullptr)
-    data.ResistanceScaleSplanchnic(std::unique_ptr<CDM::ScalarData>(m_ResistanceScaleSplanchnic->Unload()));
-  if (m_ComplianceScale != nullptr)
-    data.ComplianceScale(std::unique_ptr<CDM::ScalarData>(m_ComplianceScale->Unload()));
-  if (m_PainVisualAnalogueScale != nullptr)
-    data.PainVisualAnalogueScale(std::unique_ptr<CDM::ScalarData>(m_PainVisualAnalogueScale->Unload()));
-  if (m_GlasgowComaScalar != nullptr)
-    data.GlasgowComaScalar(std::unique_ptr<CDM::ScalarData>(m_GlasgowComaScalar->Unload()));
-  if (m_LeftEyePupillaryResponse != nullptr)
-    data.LeftEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_LeftEyePupillaryResponse->Unload()));
-  if (m_RichmondAgitationSedationScale != nullptr)
-    data.RichmondAgitationSedationScale(std::unique_ptr<CDM::ScalarData>(m_RichmondAgitationSedationScale->Unload()));
-  if (m_RightEyePupillaryResponse != nullptr)
-    data.RightEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_RightEyePupillaryResponse->Unload()));
-  if (m_SleepTime != nullptr)
-    data.SleepTime(std::unique_ptr<CDM::ScalarTimeData>(m_SleepTime->Unload()));
-  if (HasSleepState())
-    data.SleepState(m_SleepState);
-  if (m_WakeTime != nullptr)
-    data.WakeTime(std::unique_ptr<CDM::ScalarTimeData>(m_WakeTime->Unload()));
+  io::Physiology::Marshall(*this, data);
 }
 
 //-------------------------------------------------------------------------------
@@ -557,7 +482,7 @@ double SENervousSystem::GetReactionTime(const TimeUnit& unit) const
 //-------------------------------------------------------------------------------
 bool SENervousSystem::IsAsleep() const
 {
-  return m_SleepState == ((CDM::enumSleepState::Asleep)) ? true : false;
+  return m_SleepState == ((SESleepState::Sleeping)) ? true : false;
 }
 //-------------------------------------------------------------------------------
 SEScalarTime& SENervousSystem::GetSleepTime()
@@ -575,29 +500,29 @@ double SENervousSystem::GetSleepTime(const TimeUnit& unit) const
 }
 //-------------------------------------------------------------------------------
 
-CDM::enumSleepState::value SENervousSystem::GetSleepState() const
+SESleepState SENervousSystem::GetSleepState() const
 {
   return m_SleepState;
 }
 //-------------------------------------------------------------------------------
-void SENervousSystem::SetSleepState(CDM::enumSleepState::value sleep)
+void SENervousSystem::SetSleepState(SESleepState sleep)
 {
   m_SleepState = sleep;
 }
 //-------------------------------------------------------------------------------
 void SENervousSystem::InvalidateSleepState()
 {
-  m_SleepState = (CDM::enumSleepState::value)-1;
+  m_SleepState = (SESleepState)-1;
 }
 //-------------------------------------------------------------------------------
 bool SENervousSystem::HasSleepState() const
 {
-  return m_SleepState == ((CDM::enumSleepState::value)-1) ? false : true;
+  return m_SleepState == ((SESleepState)-1) ? false : true;
 }
 //-------------------------------------------------------------------------------
 bool SENervousSystem::IsAwake() const
 {
-  return m_SleepState == ((CDM::enumSleepState::Awake)) ? true : false;
+  return m_SleepState == ((SESleepState::Awake)) ? true : false;
 }
 //-------------------------------------------------------------------------------
 SEScalarTime& SENervousSystem::GetWakeTime()

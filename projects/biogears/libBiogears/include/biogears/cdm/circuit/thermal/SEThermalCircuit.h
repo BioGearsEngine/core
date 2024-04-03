@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <map>
 
 #include <biogears/cdm/circuit/SECircuit.h>
+#include <biogears/cdm/circuit/SECircuitLedger.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
 
@@ -25,6 +26,9 @@ BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCircuitPath*>;
 BG_EXT template class BIOGEARS_API map<const biogears::SEThermalCircuitNode*, vector<biogears::SEThermalCircuitPath*>*>;
 BG_EXT template class BIOGEARS_API map<const biogears::SEThermalCircuitNode*, size_t>;
 }
+
+#define THERMAL_CIRCUIT_TYPES CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData;
+#define THERMAL_LEDGER_TYPES SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit
 
 namespace biogears {
 class SECircuitManager;
@@ -37,6 +41,9 @@ class BIOGEARS_API SEThermalCircuit : public SECircuit<CDM::ThermalCircuitData, 
 protected:
   SEThermalCircuit(const char* name, SECircuitManager& mgr);
   SEThermalCircuit(const std::string& name, SECircuitManager& mgr);
+
+  void Unload(CDM::ThermalCircuitData& data) const override;
+  bool Load(const CDM::ThermalCircuitData& in, SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit> const& ledger);
 
 public:
   virtual ~SEThermalCircuit() override;
@@ -51,4 +58,6 @@ public:
 protected:
   SECircuitManager& m_Mgr;
 };
+
+BG_EXT template class BIOGEARS_API SECircuitLedger<THERMAL_LEDGER_TYPES>;
 }

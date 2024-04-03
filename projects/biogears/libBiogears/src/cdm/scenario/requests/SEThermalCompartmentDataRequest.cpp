@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
 
@@ -27,7 +29,7 @@ SEThermalCompartmentDataRequest::~SEThermalCompartmentDataRequest()
 
 bool SEThermalCompartmentDataRequest::Load(const CDM::ThermalCompartmentDataRequestData& in)
 {
-  SECompartmentDataRequest::Load(in);
+  io::DataRequests::UnMarshall(in, *this);
   return true;
 }
 
@@ -40,7 +42,7 @@ CDM::ThermalCompartmentDataRequestData* SEThermalCompartmentDataRequest::Unload(
 
 void SEThermalCompartmentDataRequest::Unload(CDM::ThermalCompartmentDataRequestData& data) const
 {
-  SECompartmentDataRequest::Unload(data);
+  io::DataRequests::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEThermalCompartmentDataRequest ::operator==(SEThermalCompartmentDataRequest const& rhs) const

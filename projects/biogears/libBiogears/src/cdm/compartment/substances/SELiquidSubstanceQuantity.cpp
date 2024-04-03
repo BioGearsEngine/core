@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 
+#include "io/cdm/SubstanceQuantity.h"
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
@@ -22,6 +23,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/utils/GeneralMath.h>
 
 namespace biogears {
 SELiquidSubstanceQuantity::SELiquidSubstanceQuantity(SESubstance& sub, SELiquidCompartment& compartment)
@@ -53,7 +57,7 @@ SELiquidSubstanceQuantity::SELiquidSubstanceQuantity(SESubstance& sub, SELiquidC
   else if (sub.GetName() == "CarbonDioxide")
     m_isCO2 = true;
 
-  if (m_Substance.GetState() != CDM::enumSubstanceState::Gas)
+  if (m_Substance.GetState() != SESubstanceState::Gas)
     GetPartialPressure().SetReadOnly(true); // Cannot have a partial pressure of a non gas
 }
 //-----------------------------------------------------------------------------
@@ -74,7 +78,7 @@ void SELiquidSubstanceQuantity::Invalidate()
     m_MassDeposited->Invalidate();
   if (m_MassExcreted != nullptr)
     m_MassExcreted->Invalidate();
-  if (m_PartialPressure != nullptr && m_Substance.GetState() == CDM::enumSubstanceState::Gas)
+  if (m_PartialPressure != nullptr && m_Substance.GetState() == SESubstanceState::Gas)
     m_PartialPressure->Invalidate();
   if (m_Saturation != nullptr)
     m_Saturation->Invalidate();
@@ -95,25 +99,7 @@ void SELiquidSubstanceQuantity::Clear()
 //-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::Load(const CDM::LiquidSubstanceQuantityData& in)
 {
-  SESubstanceQuantity::Load(in);
-  if (!m_Compartment.HasChildren()) {
-    if (in.Concentration().present())
-      GetConcentration().Load(in.Concentration().get());
-    if (in.Mass().present())
-      GetMass().Load(in.Mass().get());
-    if (in.MassCleared().present())
-      GetMassCleared().Load(in.MassCleared().get());
-    if (in.MassDeposited().present())
-      GetMassDeposited().Load(in.MassDeposited().get());
-    if (in.MassExcreted().present())
-      GetMassExcreted().Load(in.MassExcreted().get());
-    if (in.Molarity().present())
-      GetMolarity().Load(in.Molarity().get());
-    if (in.PartialPressure().present())
-      GetPartialPressure().Load(in.PartialPressure().get());
-    if (in.Saturation().present())
-      GetSaturation().Load(in.Saturation().get());
-  }
+  io::SubstanceQuantity::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -126,24 +112,7 @@ CDM::LiquidSubstanceQuantityData* SELiquidSubstanceQuantity::Unload()
 //-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::Unload(CDM::LiquidSubstanceQuantityData& data)
 {
-  SESubstanceQuantity::Unload(data);
-  // Even if you have children, I am unloading everything, this makes the xml actually usefull...
-  if (HasConcentration())
-    data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(GetConcentration().Unload()));
-  if (HasMass())
-    data.Mass(std::unique_ptr<CDM::ScalarMassData>(GetMass().Unload()));
-  if (m_MassCleared != nullptr)
-    data.MassCleared(std::unique_ptr<CDM::ScalarMassData>(m_MassCleared->Unload()));
-  if (m_MassDeposited != nullptr)
-    data.MassDeposited(std::unique_ptr<CDM::ScalarMassData>(m_MassDeposited->Unload()));
-  if (m_MassExcreted != nullptr)
-    data.MassExcreted(std::unique_ptr<CDM::ScalarMassData>(m_MassExcreted->Unload()));
-  if (HasMolarity())
-    data.Molarity(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(GetMolarity().Unload()));
-  if (HasPartialPressure())
-    data.PartialPressure(std::unique_ptr<CDM::ScalarPressureData>(GetPartialPressure().Unload()));
-  if (HasSaturation())
-    data.Saturation(std::unique_ptr<CDM::ScalarFractionData>(GetSaturation().Unload()));
+  io::SubstanceQuantity::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::SetToZero()
@@ -151,7 +120,7 @@ void SELiquidSubstanceQuantity::SetToZero()
   GetConcentration().SetValue(0, MassPerVolumeUnit::mg_Per_mL);
   GetMass().SetValue(0, MassUnit::mg);
   GetMolarity().SetValue(0, AmountPerVolumeUnit::mmol_Per_mL);
-  if (m_Substance.GetState() == CDM::enumSubstanceState::Gas)
+  if (m_Substance.GetState() == SESubstanceState::Gas)
     GetPartialPressure().SetValue(0, PressureUnit::mmHg);
   if (m_isO2 || m_isCO || m_isCO2)
     GetSaturation().SetValue(0);
@@ -206,7 +175,7 @@ void SELiquidSubstanceQuantity::Balance(BalanceLiquidBy by)
       GetMass().SetValue(std::numeric_limits<double>::infinity(), MassUnit::ug);
     else
       GeneralMath::CalculateMass(volume, GetConcentration(), GetMass(), m_Logger);
-    if (m_Substance.GetState() == CDM::enumSubstanceState::Gas)
+    if (m_Substance.GetState() == SESubstanceState::Gas)
       GeneralMath::CalculatePartialPressureInLiquid(m_Substance, GetConcentration(), GetPartialPressure(), m_Logger);
     double molarity_mmol_Per_mL = GetMass(MassUnit::ug) / m_Substance.GetMolarMass(MassPerAmountUnit::ug_Per_mmol) / volume.GetValue(VolumeUnit::mL);
     GetMolarity().SetValue(molarity_mmol_Per_mL, AmountPerVolumeUnit::mmol_Per_mL);
@@ -216,7 +185,7 @@ void SELiquidSubstanceQuantity::Balance(BalanceLiquidBy by)
     if (!volume.IsValid() || volume.IsInfinity() || !GetMass().IsValid() || GetMass().IsInfinity())
       Fatal("Cannot balance by Mass if volume or mass is invalid or set to Infinity", "SELiquidSubstanceQuantity::Balance");
     GeneralMath::CalculateConcentration(GetMass(), volume, GetConcentration(), m_Logger);
-    if (m_Substance.GetState() == CDM::enumSubstanceState::Gas)
+    if (m_Substance.GetState() == SESubstanceState::Gas)
       GeneralMath::CalculatePartialPressureInLiquid(m_Substance, GetConcentration(), GetPartialPressure(), m_Logger);
     double molarity_mmol_Per_mL = GetMass(MassUnit::ug) / m_Substance.GetMolarMass(MassPerAmountUnit::ug_Per_mmol) / volume.GetValue(VolumeUnit::mL);
     GetMolarity().SetValue(molarity_mmol_Per_mL, AmountPerVolumeUnit::mmol_Per_mL);
@@ -228,12 +197,12 @@ void SELiquidSubstanceQuantity::Balance(BalanceLiquidBy by)
     double mass_ug = GetMolarity(AmountPerVolumeUnit::mmol_Per_mL) * m_Substance.GetMolarMass(MassPerAmountUnit::ug_Per_mmol) * volume.GetValue(VolumeUnit::mL);
     GetMass().SetValue(mass_ug, MassUnit::ug);
     GeneralMath::CalculateConcentration(GetMass(), volume, GetConcentration(), m_Logger);
-    if (m_Substance.GetState() == CDM::enumSubstanceState::Gas)
+    if (m_Substance.GetState() == SESubstanceState::Gas)
       GeneralMath::CalculatePartialPressureInLiquid(m_Substance, GetConcentration(), GetPartialPressure(), m_Logger);
     break;
   }
   case BalanceLiquidBy::PartialPressure: {
-    if (m_Substance.GetState() != CDM::enumSubstanceState::Gas)
+    if (m_Substance.GetState() != SESubstanceState::Gas)
       Fatal("Cannot balance by Partial Pressure if substance is not a gas", "SELiquidSubstanceQuantity::Balance");
     if (!volume.IsValid() || volume.IsInfinity() || !GetPartialPressure().IsValid() || GetPartialPressure().IsInfinity())
       Fatal("Cannot balance by Partial Pressure if volume or partial pressure is invalid or set to Infinity", "SELiquidSubstanceQuantity::Balance");
@@ -596,32 +565,33 @@ bool SELiquidSubstanceQuantity::operator==(SELiquidSubstanceQuantity const& rhs)
   if (this == &rhs)
     return true;
 
-  bool equivilant = ((m_Concentration && rhs.m_Concentration) ? m_Concentration->operator==(*rhs.m_Concentration) : m_Concentration == rhs.m_Concentration)
-    && ((m_Mass && rhs.m_Mass) ? m_Mass->operator==(*rhs.m_Mass) : m_Mass == rhs.m_Mass)
-    && ((m_MassCleared && rhs.m_MassCleared) ? m_MassCleared->operator==(*rhs.m_MassCleared) : m_MassCleared == rhs.m_MassCleared)
-    && ((m_MassDeposited && rhs.m_MassDeposited) ? m_MassDeposited->operator==(*rhs.m_MassDeposited) : m_MassDeposited == rhs.m_MassDeposited)
-    && ((m_MassExcreted && rhs.m_MassExcreted) ? m_MassExcreted->operator==(*rhs.m_MassExcreted) : m_MassExcreted == rhs.m_MassExcreted)
-    && ((m_Molarity && rhs.m_Molarity) ? m_Molarity->operator==(*rhs.m_Molarity) : m_Molarity == rhs.m_Molarity)
-    && ((m_PartialPressure && rhs.m_PartialPressure) ? m_PartialPressure->operator==(*rhs.m_PartialPressure) : m_PartialPressure == rhs.m_PartialPressure)
-    && ((m_Saturation && rhs.m_Saturation) ? m_Saturation->operator==(*rhs.m_Saturation) : m_Saturation == rhs.m_Saturation)   
-    && m_Compartment.operator==(rhs.m_Compartment);
+  bool equivilant = ((m_Concentration && rhs.m_Concentration) ? m_Concentration->operator==(*rhs.m_Concentration) : m_Concentration == rhs.m_Concentration);
+  equivilant &= ((m_Mass && rhs.m_Mass) ? m_Mass->operator==(*rhs.m_Mass) : m_Mass == rhs.m_Mass);
+  equivilant &= ((m_MassCleared && rhs.m_MassCleared) ? m_MassCleared->operator==(*rhs.m_MassCleared) : m_MassCleared == rhs.m_MassCleared);
+  equivilant &= ((m_MassDeposited && rhs.m_MassDeposited) ? m_MassDeposited->operator==(*rhs.m_MassDeposited) : m_MassDeposited == rhs.m_MassDeposited);
+  equivilant &= ((m_MassExcreted && rhs.m_MassExcreted) ? m_MassExcreted->operator==(*rhs.m_MassExcreted) : m_MassExcreted == rhs.m_MassExcreted);
+  equivilant &= ((m_Molarity && rhs.m_Molarity) ? m_Molarity->operator==(*rhs.m_Molarity) : m_Molarity == rhs.m_Molarity);
+  equivilant &= ((m_PartialPressure && rhs.m_PartialPressure) ? m_PartialPressure->operator==(*rhs.m_PartialPressure) : m_PartialPressure == rhs.m_PartialPressure);
+  equivilant &= ((m_Saturation && rhs.m_Saturation) ? m_Saturation->operator==(*rhs.m_Saturation) : m_Saturation == rhs.m_Saturation);
+  equivilant &= m_Compartment.operator==(rhs.m_Compartment);
 
-  //m_Children is not part of the serializtion of SELiquidSubstanceQuantity so we will not 
-  //           concider it as part of the equivilance
-  //if (equivilant) {
-  //  for (auto i = 0; i < m_Children.size(); ++i) {
-  //    equivilant &= (m_Children[i] && rhs.m_Children[i])
-  //      ? m_Children[i]->operator==(*rhs.m_Children[i])
-  //      : m_Children[i] == rhs.m_Children[i];
-  //  }
-  //}
-  equivilant &= m_isO2 == rhs.m_isO2 && m_isCO == rhs.m_isCO && m_isCO2 == rhs.m_isCO2
-    // Inorder to caluclate a hierarchical saturation, we need these substances
-    && ((m_Hb && rhs.m_Hb) ? m_Hb->operator==(*rhs.m_Hb) : m_Hb == rhs.m_Hb)
-    && ((m_HbO2 && rhs.m_HbO2) ? m_HbO2->operator==(*rhs.m_HbO2) : m_HbO2 == rhs.m_HbO2)
-    && ((m_HbCO2 && rhs.m_HbCO2) ? m_HbCO2->operator==(*rhs.m_HbCO2) : m_HbCO2 == rhs.m_HbCO2)
-    && ((m_HbO2CO2 && rhs.m_HbO2CO2) ? m_HbO2CO2->operator==(*rhs.m_HbO2CO2) : m_HbO2CO2 == rhs.m_HbO2CO2)
-    && ((m_HbCO && rhs.m_HbCO) ? m_HbCO->operator==(*rhs.m_HbCO) : m_HbCO == rhs.m_HbCO);
+  // m_Children is not part of the serializtion of SELiquidSubstanceQuantity so we will not
+  //            concider it as part of the equivilance
+  // if (equivilant) {
+  //   for (auto i = 0; i < m_Children.size(); ++i) {
+  //     equivilant &= (m_Children[i] && rhs.m_Children[i])
+  //       ? m_Children[i]->operator==(*rhs.m_Children[i])
+  //       : m_Children[i] == rhs.m_Children[i];
+  //   }
+  // }
+  equivilant &= m_isO2 == rhs.m_isO2 && m_isCO == rhs.m_isCO && m_isCO2 == rhs.m_isCO2;
+  // Inorder to caluclate a hierarchical saturation, we need these substances
+
+  equivilant &= ((m_Hb && rhs.m_Hb) ? m_Hb->operator==(*rhs.m_Hb) : m_Hb == rhs.m_Hb);
+  equivilant &= ((m_HbO2 && rhs.m_HbO2) ? m_HbO2->operator==(*rhs.m_HbO2) : m_HbO2 == rhs.m_HbO2);
+  equivilant &= ((m_HbCO2 && rhs.m_HbCO2) ? m_HbCO2->operator==(*rhs.m_HbCO2) : m_HbCO2 == rhs.m_HbCO2);
+  equivilant &= ((m_HbO2CO2 && rhs.m_HbO2CO2) ? m_HbO2CO2->operator==(*rhs.m_HbO2CO2) : m_HbO2CO2 == rhs.m_HbO2CO2);
+  equivilant &= ((m_HbCO && rhs.m_HbCO) ? m_HbCO->operator==(*rhs.m_HbCO) : m_HbCO == rhs.m_HbCO);
 
   return equivilant;
 }

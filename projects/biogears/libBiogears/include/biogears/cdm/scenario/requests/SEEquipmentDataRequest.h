@@ -19,11 +19,11 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEDataRequestManager;
 namespace io {
-  class Scenario;
+  class DataRequests;
 }
 class BIOGEARS_API SEEquipmentDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
-  friend io::Scenario;
+  friend io::DataRequests;
 
 public:
   SEEquipmentDataRequest(const SEDecimalFormat* dfault = nullptr);

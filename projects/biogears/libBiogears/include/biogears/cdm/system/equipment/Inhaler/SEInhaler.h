@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/schema/biogears/BioGearsEquipment.hxx>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
@@ -75,8 +76,8 @@ protected:
 public:
   bool Load(const std::string& file);
 
-  CDM::enumOnOff::value GetState() const;
-  void SetState(CDM::enumOnOff::value name);
+  SEOnOff GetState() const;
+  void SetState(SEOnOff name);
   bool HasState() const;
   void InvalidateState();
 
@@ -102,7 +103,7 @@ public:
 protected:
   std::stringstream m_ss;
 
-  CDM::enumOnOff::value m_State;
+  SEOnOff m_State;
   SEScalarMass* m_MeteredDose;
   SEScalarFraction* m_NozzleLoss;
   SEScalarVolume* m_SpacerVolume;

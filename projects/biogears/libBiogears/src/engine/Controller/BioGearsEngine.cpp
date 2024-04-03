@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/filesystem/path.h>
 #include <biogears/string/manipulation.h>
 
+#include "io/biogears/BioGears.h"
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
@@ -26,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 #include <biogears/cdm/patient/assessments/SEProthrombinTime.h>
 #include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
@@ -39,8 +42,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.tci.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
+#include <biogears/engine/Controller/BioGearsEnums.h>
 #include <biogears/engine/Equipment/ECG.h>
 #include <biogears/io/io-manager.h>
+#include <io/cdm/Property.h>
+
 #if defined(BIOGEARS_IO_PRESENT) && defined(BIOGEARS_IO_EMBED_STATES)
 #include <biogears/io/directories/states.h>
 #endif
@@ -226,8 +232,9 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
       m_SimulationTime->SetValue(0, TimeUnit::s);
     }
   }
-  m_AirwayMode = bgState->AirwayMode();
-  m_Intubation = bgState->Intubation();
+
+  io::BioGears::UnMarshall(bgState->AirwayMode(), m_AirwayMode);
+  io::Property::UnMarshall(bgState->Intubation(), m_Intubation);
 
   /// Patient //
   if (!bgState->Patient().present()) {
@@ -509,8 +516,8 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
     state->DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(m_EngineTrack.GetDataRequestManager().Unload()));
   }
 
-  ((CDM::BioGearsStateData*)state.get())->AirwayMode(m_AirwayMode);
-  ((CDM::BioGearsStateData*)state.get())->Intubation(m_Intubation);
+  io::BioGears::Marshall(m_AirwayMode, ((CDM::BioGearsStateData*)state.get())->AirwayMode());
+  io::Property::Marshall(m_Intubation, ((CDM::BioGearsStateData*)state.get())->Intubation());
   // Patient
   state->Patient(std::unique_ptr<CDM::PatientData>(m_Patient->Unload()));
   // Conditions
@@ -707,7 +714,7 @@ bool BioGearsEngine::AdvanceModelTime(bool appendDataTrack)
   if (!IsReady()) {
     return false;
   }
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::IrreversibleState)) {
+  if (m_Patient->IsEventActive(SEPatientEventType::IrreversibleState)) {
     return false;
   }
 
@@ -763,7 +770,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
   m_ss.str("");
   const SESerializeState* serialize = dynamic_cast<const SESerializeState*>(&action);
   if (serialize != nullptr) {
-    if (serialize->GetType() == CDM::enumSerializationType::Save) {
+    if (serialize->GetType() == SESerializationType::Save) {
       if (serialize->HasFilename()) {
         if (filesystem::is_directory(serialize->GetFilename()) || (filesystem::is_directory("states/" + serialize->GetFilename()))) {
           SaveStateToFile(asprintf("%s%s@%.0fs.xml", serialize->GetFilename().c_str(), m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));
@@ -787,7 +794,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
 
     switch (assessment->GetType()) {
-    case CDM::enumPatientAssessment::ArterialBloodGasAnalysis: {
+    case SEPatientAssessmentType::ArterialBloodGasAnalysis: {
       SEArterialBloodGasAnalysis abga;
       GetPatientAssessment(abga);
       if (results_filepath.empty()) {
@@ -804,7 +811,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::PulmonaryFunctionTest: {
+    case SEPatientAssessmentType::PulmonaryFunctionTest: {
       SEPulmonaryFunctionTest pft;
       GetPatientAssessment(pft);
       if (results_filepath.empty()) {
@@ -822,7 +829,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::ProthrombinTime: {
+    case SEPatientAssessmentType::ProthrombinTime: {
       SEProthrombinTime ptt;
       GetPatientAssessment(ptt);
       if (results_filepath.empty()) {
@@ -840,7 +847,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::PsychomotorVigilanceTask: {
+    case SEPatientAssessmentType::PsychomotorVigilanceTask: {
       SEPsychomotorVigilanceTask pvt;
       GetPatientAssessment(pvt);
       if (results_filepath.empty()) {
@@ -858,7 +865,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::Urinalysis: {
+    case SEPatientAssessmentType::Urinalysis: {
       SEUrinalysis upan;
       GetPatientAssessment(upan);
       if (results_filepath.empty()) {
@@ -875,7 +882,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::CompleteBloodCount: {
+    case SEPatientAssessmentType::CompleteBloodCount: {
       SECompleteBloodCount cbc;
       GetPatientAssessment(cbc);
       if (results_filepath.empty()) {
@@ -892,7 +899,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::ComprehensiveMetabolicPanel: {
+    case SEPatientAssessmentType::ComprehensiveMetabolicPanel: {
       SEComprehensiveMetabolicPanel mp;
       GetPatientAssessment(mp);
       if (results_filepath.empty()) {
@@ -908,7 +915,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       stream.close();
       break;
     }
-    case CDM::enumPatientAssessment::SequentialOrganFailureAssessment: {
+    case SEPatientAssessmentType::SequentialOrganFailureAssessment: {
       SESequentialOrganFailureAssessment sofa;
       GetPatientAssessment(sofa);
       if (results_filepath.empty()) {

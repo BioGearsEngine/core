@@ -75,7 +75,7 @@ int HowToBolusDrug()
   SESubstanceBolus bolus(*succs);
   bolus.GetConcentration().SetValue(4820, MassPerVolumeUnit::ug_Per_mL);
   bolus.GetDose().SetValue(20, VolumeUnit::mL);
-  bolus.SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  bolus.SetAdminRoute(SEBolusAdministration::Intravenous);
   // BioGears also supports Intramuscular as an admin route as well
   bg->ProcessAction(bolus);
   bg->GetLogger()->Info("Giving the patient Succinylcholine.");

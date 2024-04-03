@@ -12,15 +12,21 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/circuit/SECircuit.h>
+#include <biogears/cdm/circuit/SECircuitLedger.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEElectricalCircuitNode*>;
+
 BG_EXT template class BIOGEARS_API vector<biogears::SEElectricalCircuitPath*>;
 BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
 BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, size_t>;
 }
+
+
+#define ELECTRICAL_CIRCUIT_TYPES CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData;
+#define ELECTRICAL_LEDGER_TYPES SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit
+
 namespace biogears {
 class SECircuitManager;
 
@@ -36,6 +42,11 @@ protected:
 public:
   virtual ~SEElectricalCircuit();
 
+  //-----------------------------------------------------------------------------
+
+  void Unload(CDM::ElectricalCircuitData& data) const override;
+  bool Load(const CDM::ElectricalCircuitData& in, SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit> const& ledger);
+
   SEElectricalCircuitNode& CreateNode(const std::string& name);
   SEElectricalCircuitNode& CreateNode(const char* name);
   SEElectricalCircuitPath& CreatePath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name);
@@ -45,4 +56,7 @@ public:
 protected:
   SECircuitManager& m_Mgr;
 };
+
+BG_EXT template class BIOGEARS_API SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
+
 }

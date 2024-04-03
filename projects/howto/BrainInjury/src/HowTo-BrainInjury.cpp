@@ -93,7 +93,7 @@ int HowToBrainInjury()
   // Create an SEBrainInjury object
   // Set the severity (a fraction between 0 and 1; for maximal injury, use 1.)
   SEBrainInjury tbi;
-  tbi.SetType(CDM::enumBrainInjuryType::Diffuse); // Can also be LeftFocal or RightFocal, and you will get pupillary effects in only one eye
+  tbi.SetType(SEBrainInjuryType::Diffuse); // Can also be LeftFocal or RightFocal, and you will get pupillary effects in only one eye
   tbi.GetSeverity().SetValue(0.2);
   bg->ProcessAction(tbi);
   bg->GetLogger()->Info("Giving the patient a brain injury.");

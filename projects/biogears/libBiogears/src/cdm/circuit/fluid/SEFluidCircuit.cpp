@@ -10,8 +10,11 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
+
+#include "io/cdm/Circuit.h"
+#include <biogears/cdm/circuit/SECircuitLedger.h>
+#include <biogears/cdm/circuit/SECircuitManager.h>
 
 namespace std {
 template class vector<biogears::SEFluidCircuitNode*>;
@@ -37,6 +40,16 @@ SEFluidCircuit::SEFluidCircuit(const std::string& name, SECircuitManager& mgr)
 SEFluidCircuit::~SEFluidCircuit()
 {
   Clear();
+}
+//-------------------------------------------------------------------------------
+void SEFluidCircuit::Unload(CDM::FluidCircuitData& data) const
+{
+  io::Circuit::Marshall(*this, data);
+}
+bool SEFluidCircuit::Load(const CDM::FluidCircuitData& in, SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit> const& ledger)
+{ // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
+  io::Circuit::UnMarshall(in, ledger, *this);
+  return true;
 }
 //-----------------------------------------------------------------------------
 SEFluidCircuitNode& SEFluidCircuit::CreateNode(const char* name)

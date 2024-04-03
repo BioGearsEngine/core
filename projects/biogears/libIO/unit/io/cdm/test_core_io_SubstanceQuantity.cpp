@@ -77,8 +77,8 @@ void TEST_FIXTURE_NAME::TearDown()
 
 // class  SEGasSubstanceQuantity
 //    TYPE GasSubstanceQuantity
-//   static void Marshall(const CDM::GasSubstanceQuantityData& in, SEGasSubstanceQuantity& out);
-//   static void UnMarshall(const SEGasSubstanceQuantity& in, CDM::GasSubstanceQuantityData& out);
+//   static void UnMarshall(const CDM::GasSubstanceQuantityData& in, SEGasSubstanceQuantity& out);
+//   static void Marshall(const SEGasSubstanceQuantity& in, CDM::GasSubstanceQuantityData& out);
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 namespace BGE = mil::tatrc::physiology::biogears;
@@ -100,7 +100,7 @@ TEST_F(TEST_FIXTURE_NAME, GasSubstanceQuantity)
   auto& pRightChestLeak = compMgr.CreateGasCompartment(BGE::PulmonaryCompartment::RightChestLeak);
   auto& pLeftChestLeak = compMgr.CreateGasCompartment(BGE::PulmonaryCompartment::LeftChestLeak);
 
-  SEType source { *sarin, pRightChestLeak }, sink { *sarin, pLeftChestLeak };
+  SEType source { *sarin, pRightChestLeak }, sink { *sarin, pRightChestLeak };
   CDMType data;
 
   source.GetPartialPressure().SetValue(1.0, biogears::PressureUnit::mmHg);
@@ -109,16 +109,16 @@ TEST_F(TEST_FIXTURE_NAME, GasSubstanceQuantity)
 
   EXPECT_NE(source, sink);
 
-  SubstanceQuantity::UnMarshall(source, data);
-  SubstanceQuantity::Marshall(data, sink);
+  SubstanceQuantity::Marshall(source, data);
+  SubstanceQuantity::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class  SELiquidSubstanceQuantity
 //    TYPE LiquidSubstanceQuantity
-//   static void Marshall(const CDM::LiquidSubstanceQuantityData& in, SELiquidSubstanceQuantity& out);
-//   static void UnMarshall(const SELiquidSubstanceQuantity& in, CDM::LiquidSubstanceQuantityData& out);
+//   static void UnMarshall(const CDM::LiquidSubstanceQuantityData& in, SELiquidSubstanceQuantity& out);
+//   static void Marshall(const SELiquidSubstanceQuantity& in, CDM::LiquidSubstanceQuantityData& out);
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 
 TEST_F(TEST_FIXTURE_NAME, LiquidSubstanceQuantity)
@@ -147,7 +147,7 @@ TEST_F(TEST_FIXTURE_NAME, LiquidSubstanceQuantity)
   source.GetMassDeposited().SetValue(1.0, biogears::MassUnit::g);
   source.GetMassExcreted().SetValue(1.0, biogears::MassUnit::g); 
   source.GetMolarity().SetValue(1.0, biogears::AmountPerVolumeUnit::ct_Per_uL);
-  source.GetSaturation().SetValue(0.22);
+  /*source.GetSaturation().SetValue(0.22);*/  //Only O2,CO2, and CO have Saturations
 
   //Don't get me started on tis
   EXPECT_THROW(source.GetPartialPressure().SetValue(1.0, biogears::PressureUnit::mmHg), biogears::CommonDataModelException);
@@ -155,8 +155,8 @@ TEST_F(TEST_FIXTURE_NAME, LiquidSubstanceQuantity)
 
   EXPECT_NE(source, sink);
 
-  SubstanceQuantity::UnMarshall(source, data);
-  SubstanceQuantity::Marshall(data, sink);
+  SubstanceQuantity::Marshall(source, data);
+  SubstanceQuantity::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

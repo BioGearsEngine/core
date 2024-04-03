@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 
 #include <iostream>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEScalar.h> //Utils
 
 namespace biogears {
@@ -54,11 +56,7 @@ void SEHistogram::Invalidate()
 
 bool SEHistogram::Load(const CDM::HistogramData& in)
 {
-  Clear();
-  for (unsigned int i = 0; i < in.Dependent().DoubleList().size(); i++)
-    m_Dependent.push_back(in.Dependent().DoubleList()[i]);
-  for (unsigned int i = 0; i < in.Independent().DoubleList().size(); i++)
-    m_Independent.push_back(in.Independent().DoubleList()[i]);
+  io::Property::UnMarshall(in, *this);
   return IsValid();
 }
 
@@ -73,14 +71,7 @@ CDM::HistogramData* SEHistogram::Unload() const
 
 void SEHistogram::Unload(CDM::HistogramData& data) const
 {
-  data.Dependent(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  data.Dependent().DoubleList(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  data.Independent(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  data.Independent().DoubleList(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  for (unsigned int i = 0; i < m_Dependent.size(); i++)
-    data.Dependent().DoubleList().push_back(m_Dependent[i]);
-  for (unsigned int i = 0; i < m_Independent.size(); i++)
-    data.Independent().DoubleList().push_back(m_Independent[i]);
+  io::Property::Marshall(*this, data);
 }
 
 unsigned int SEHistogram::NumberOfBins() const

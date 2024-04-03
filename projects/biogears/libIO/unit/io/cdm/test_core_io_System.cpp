@@ -77,8 +77,8 @@ void TEST_FIXTURE_NAME::TearDown()
 
 // class  SEGasSystem
 //    TYPE GasSystem
-//   static void Marshall(const CDM::GasSystemData& in, SEGasSystem& out);
-//   static void UnMarshall(const SEGasSystem& in, CDM::GasSystemData& out);
+//   static void UnMarshall(const CDM::GasSystemData& in, SEGasSystem& out);
+//   static void Marshall(const SEGasSystem& in, CDM::GasSystemData& out);
 #include <biogears/cdm/system/SESystem.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
@@ -92,8 +92,8 @@ TEST_F(TEST_FIXTURE_NAME, System)
 
   // EXPECT_NE(source, sink);
 
-  // System::UnMarshall(source, data);
-  // System::Marshall(data, sink);
+  // System::Marshall(source, data);
+  // System::UnMarshall(data, sink);
 
   // EXPECT_EQ(source, sink);
 

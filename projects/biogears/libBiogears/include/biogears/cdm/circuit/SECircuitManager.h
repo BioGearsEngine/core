@@ -11,52 +11,19 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/circuit/SECircuitLedger.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
-
 #include <biogears/schema/cdm/Properties.hxx>
 
 CDM_BIND_DECL(CircuitManagerData);
-
-#define CIRCUIT_LEDGER_TEMPLATE typename NodeType, typename PathType, typename CircuitType
-#define CIRCUIT_LEDGER_TYPES NodeType, PathType, CircuitType
 
 namespace biogears {
 namespace io {
   class Circuit;
 }
 class SECircuitManager;
-
-template <CIRCUIT_LEDGER_TEMPLATE>
-class SECircuitLedger {
-  friend class SECircuitManager;
-  friend io::Circuit;
-
-protected:
-  SECircuitLedger() {};
-
-public:
-  virtual ~SECircuitLedger() { Clear(); };
-  void Clear()
-  {
-    DELETE_MAP_SECOND(nodes);
-    DELETE_MAP_SECOND(paths);
-    DELETE_MAP_SECOND(circuits);
-  }
-  std::map<std::string, NodeType*> nodes;
-  std::map<std::string, PathType*> paths;
-  std::map<std::string, CircuitType*> circuits;
-};
-
-
-BG_EXT template class BIOGEARS_API SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
-BG_EXT template class BIOGEARS_API SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit>;
-BG_EXT template class BIOGEARS_API SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit>;
-
-#define ELECTRICAL_LEDGER_TYPES SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit
-#define FLUID_LEDGER_TYPES SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit
-#define THERMAL_LEDGER_TYPES SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit
 
 class BIOGEARS_API SECircuitManager : public Loggable {
   friend io::Circuit;
@@ -65,7 +32,7 @@ public:
   SECircuitManager(Logger* logger);
   virtual ~SECircuitManager();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   virtual bool Load(const CDM::CircuitManagerData& in);
   virtual CDM::CircuitManagerData* Unload() const;
@@ -237,9 +204,9 @@ protected:
   template <CIRCUIT_LEDGER_TEMPLATE>
   const CircuitType* GetCircuit(const std::string& name, const SECircuitLedger<CIRCUIT_LEDGER_TYPES>& ledger) const;
 
-  SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit> m_ElectricalLedger;
-  SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit> m_FluidLedger;
-  SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit> m_ThermalLedger;
+  SECircuitLedger<ELECTRICAL_LEDGER_TYPES> m_ElectricalLedger;
+  SECircuitLedger<FLUID_LEDGER_TYPES> m_FluidLedger;
+  SECircuitLedger<THERMAL_LEDGER_TYPES> m_ThermalLedger;
 };
 
 template <CIRCUIT_LEDGER_TEMPLATE>

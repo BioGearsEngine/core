@@ -132,4 +132,3 @@ inline void IncrementOverride(SEScalarQuantity<Unit>& s, double value, const Uni
 }
 //-------------------------------------------------------------------------------
 }
-#include <biogears/cdm/properties/SEScalarQuantity.inl>

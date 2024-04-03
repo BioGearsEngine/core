@@ -166,7 +166,7 @@ int HowToInfusionDrug()
     salineConcentration.GetConcentration().SetValue  (2.17, MassPerVolumeUnit::kg_Per_L);
 
     auto morphine_albumin_compound = std::make_unique<SESubstanceCompound>("morphine_albumin_compound", bg->GetLogger());
-    morphine_albumin_compound->SetClassification(CDM::enumSubstanceClass::Sedative);
+    morphine_albumin_compound->SetClassification(SESubstanceClass::Sedative);
     morphine_albumin_compound->GetComponents().push_back(albuminConcentration);
     morphine_albumin_compound->GetComponents().push_back(morphineConcentration);
     morphine_albumin_compound->GetComponents().push_back(salineConcentration);

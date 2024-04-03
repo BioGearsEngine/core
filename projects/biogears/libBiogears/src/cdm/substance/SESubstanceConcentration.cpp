@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
+#include "io/cdm/Substance.h"
+
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -49,8 +51,7 @@ void SESubstanceConcentration::Clear()
 //-------------------------------------------------------------------------------
 bool SESubstanceConcentration::Load(const CDM::SubstanceConcentrationData& in)
 {
-  Clear();
-  GetConcentration().Load(in.Concentration());
+  io::Substance::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -63,8 +64,7 @@ CDM::SubstanceConcentrationData* SESubstanceConcentration::Unload() const
 //-------------------------------------------------------------------------------
 void SESubstanceConcentration::Unload(CDM::SubstanceConcentrationData& data) const
 {
-  data.Name(m_Substance->GetName());
-  data.Concentration(*m_Concentration.Unload());
+  io::Substance::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceConcentration::HasConcentration() const

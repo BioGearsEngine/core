@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEAction.h>
 
+#include "io/cdm/Actions.h"
+
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
@@ -76,8 +78,8 @@ template class vector<biogears::SEAction*>;
 }
 
 namespace biogears {
-SEAction::SEAction()
-  : Loggable()
+SEAction::SEAction( Logger* logger )
+  : Loggable(logger)
 {
   m_Comment = "";
 }
@@ -535,9 +537,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
 //-----------------------------------------------------------------------------
 bool SEAction::Load(const CDM::ActionData& in)
 {
-  Clear();
-  if (in.Comment().present())
-    m_Comment = in.Comment().get();
+  io::Actions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------

@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEEquipmentDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
 #include <biogears/schema/cdm/Environment.hxx>
 
 namespace biogears {
@@ -33,8 +35,7 @@ void SEEquipmentDataRequest::Clear()
 //-----------------------------------------------------------------------------
 bool SEEquipmentDataRequest::Load(const CDM::EquipmentDataRequestData& in)
 {
-  SEDataRequest::Load(in);
-  SetType(in.Type());
+  io::DataRequests::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -47,9 +48,7 @@ CDM::EquipmentDataRequestData* SEEquipmentDataRequest::Unload() const
 //-----------------------------------------------------------------------------
 void SEEquipmentDataRequest::Unload(CDM::EquipmentDataRequestData& data) const
 {
-  SEDataRequest::Unload(data);
-  if (HasType())
-    data.Type(m_Type);
+  io::DataRequests::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEEquipmentDataRequest::HasType() const

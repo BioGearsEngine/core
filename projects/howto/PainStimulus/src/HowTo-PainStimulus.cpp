@@ -71,7 +71,7 @@ int HowToPainStimulus()
   SESubstanceBolus bolus(*morphine);
   bolus.GetConcentration().SetValue(1000, MassPerVolumeUnit::ug_Per_mL);
   bolus.GetDose().SetValue(10.5, VolumeUnit::mL);
-  bolus.SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  bolus.SetAdminRoute(SEBolusAdministration::Intravenous);
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects

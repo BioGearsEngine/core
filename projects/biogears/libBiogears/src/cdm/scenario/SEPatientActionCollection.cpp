@@ -11,10 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
 
+#include "io/cdm/Scenario.h"
+#include "io/cdm/PatientActions.h"
+
+#include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
-#include <biogears/cdm/engine/PhysiologyEngine.h>
+
+#include <io/cdm/Property.h>
 
 #include <map>
 #include <vector>
@@ -84,9 +89,8 @@ bool MapIteratorWrapper<KeyType, ValueType>::operator!=(MapIteratorWrapper const
   return _iterator != rhs._iterator;
 }
 
-
 template <typename KeyType, typename ValueType>
-auto MapIteratorWrapper<KeyType, ValueType>::operator()() const ->  PairWrapper<KeyType, ValueType> 
+auto MapIteratorWrapper<KeyType, ValueType>::operator()() const -> PairWrapper<KeyType, ValueType>
 {
   return PairWrapper<KeyType, ValueType>(_iterator.operator->());
 }
@@ -94,7 +98,7 @@ auto MapIteratorWrapper<KeyType, ValueType>::operator()() const ->  PairWrapper<
 template <typename KeyType, typename ValueType>
 auto MapIteratorWrapper<KeyType, ValueType>::operator*() const -> PairWrapper<KeyType, ValueType>
 {
-  //Prefix  Operator
+  // Prefix  Operator
 
   return PairWrapper<KeyType, ValueType>(_iterator.operator->());
 }
@@ -102,7 +106,7 @@ auto MapIteratorWrapper<KeyType, ValueType>::operator*() const -> PairWrapper<Ke
 template <typename KeyType, typename ValueType>
 auto MapIteratorWrapper<KeyType, ValueType>::operator++() -> MapIteratorWrapper&
 {
-  //Prefix  Operator                                         ~
+  // Prefix  Operator                                         ~
   ++_iterator;
   return *this;
 }
@@ -110,7 +114,7 @@ auto MapIteratorWrapper<KeyType, ValueType>::operator++() -> MapIteratorWrapper&
 template <typename KeyType, typename ValueType>
 auto MapIteratorWrapper<KeyType, ValueType>::operator++(int) -> MapIteratorWrapper
 {
-  //Postfix Operator
+  // Postfix Operator
   MapIteratorWrapper temp { this->_iterator };
   ++_iterator;
   return temp;
@@ -191,14 +195,14 @@ auto VectorIteratorWrapper<ValueType>::operator*() -> ValueType const&
 template <typename ValueType>
 auto VectorIteratorWrapper<ValueType>::operator++() -> VectorIteratorWrapper&
 {
-  //Prefix  Operator
+  // Prefix  Operator
   ++_iterator;
   return { _iterator };
 }
 template <typename ValueType>
 auto VectorIteratorWrapper<ValueType>::operator++(int) -> VectorIteratorWrapper
 {
-  //Postfix Operator
+  // Postfix Operator
   VectorIteratorWrapper<ValueType> temp { _iterator };
   ++_iterator;
   return temp;
@@ -227,7 +231,7 @@ auto VectorWrapper<ValueType>::end() const -> VectorIteratorWrapper<ValueType>
   return { _vector.end() };
 }
 
-//Template Specializations
+// Template Specializations
 template class PairWrapper<std::string, SEHemorrhage*>;
 template class PairWrapper<std::string, SETourniquet*>;
 template class PairWrapper<std::string, SEEscharotomy*>;
@@ -257,7 +261,7 @@ template class MapWrapper<const SESubstance*, SESubstanceInfusion*>;
 template class MapWrapper<const SESubstance*, SESubstanceOralDose*>;
 template class MapWrapper<const SESubstance*, SESubstanceNasalDose*>;
 template class MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
-} //namespace biogears
+} // namespace biogears
 
 namespace biogears {
 SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substances)
@@ -632,7 +636,6 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
       m_BurnWound = new SEBurnWound();
     }
 
-
     m_BurnWound->Load(*burn);
     if (m_BurnWound->GetTimeOfBurn() == 0.0) {
       m_BurnWound->SetTimeOfBurn(engine.GetSimulationTime(TimeUnit::s));
@@ -647,8 +650,8 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
   const CDM::CardiacArrestData* cardiacarrest = dynamic_cast<const CDM::CardiacArrestData*>(&action);
   if (cardiacarrest != nullptr) {
 
-    if (m_CardiacArrest == nullptr && cardiacarrest->State() == CDM::enumOnOff::Off) {
-      return true; //Ignore :CardiacArrest::Off request when no :CardiacArrest Event exist.
+    if (m_CardiacArrest == nullptr && cardiacarrest->State() == SEOnOff::Off) {
+      return true; // Ignore :CardiacArrest::Off request when no :CardiacArrest Event exist.
     }
 
     if (m_CardiacArrest == nullptr) {
@@ -697,7 +700,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
 
   const CDM::ChestOcclusiveDressingData* chestOccl = dynamic_cast<const CDM::ChestOcclusiveDressingData*>(&action);
   if (chestOccl != nullptr) {
-    if (chestOccl->Side() == CDM::enumSide::Left) {
+    if (chestOccl->Side() == SESide::Left) {
       if (m_LeftChestOcclusiveDressing == nullptr) {
         m_LeftChestOcclusiveDressing = new SEChestOcclusiveDressing();
       }
@@ -707,7 +710,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
         return true;
       }
       return IsValid(*m_LeftChestOcclusiveDressing);
-    } else if (chestOccl->Side() == CDM::enumSide::Right) {
+    } else if (chestOccl->Side() == SESide::Right) {
       if (m_RightChestOcclusiveDressing == nullptr) {
         m_RightChestOcclusiveDressing = new SEChestOcclusiveDressing();
       }
@@ -868,7 +871,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
 
   const CDM::NeedleDecompressionData* needleDecomp = dynamic_cast<const CDM::NeedleDecompressionData*>(&action);
   if (needleDecomp != nullptr) {
-    if (needleDecomp->Side() == CDM::enumSide::Left) {
+    if (needleDecomp->Side() == SESide::Left) {
       if (m_LeftNeedleDecompression == nullptr) {
         m_LeftNeedleDecompression = new SENeedleDecompression();
       }
@@ -878,7 +881,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
         return true;
       }
       return IsValid(*m_LeftNeedleDecompression);
-    } else if (needleDecomp->Side() == CDM::enumSide::Right) {
+    } else if (needleDecomp->Side() == SESide::Right) {
       if (m_RightNeedleDecompression == nullptr) {
         m_RightNeedleDecompression = new SENeedleDecompression();
       }
@@ -966,7 +969,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
 
   const CDM::TensionPneumothoraxData* pneumo = dynamic_cast<const CDM::TensionPneumothoraxData*>(&action);
   if (pneumo != nullptr) {
-    if (pneumo->Side() == CDM::enumSide::Left && pneumo->Type() == CDM::enumPneumothoraxType::Open) {
+    if (pneumo->Side() == SESide::Left && pneumo->Type() == SEPneumothoraxType::Open) {
       if (m_LeftOpenTensionPneumothorax == nullptr) {
         m_LeftOpenTensionPneumothorax = new SETensionPneumothorax();
       }
@@ -976,7 +979,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
         return true;
       }
       return IsValid(*m_LeftOpenTensionPneumothorax);
-    } else if (pneumo->Side() == CDM::enumSide::Left && pneumo->Type() == CDM::enumPneumothoraxType::Closed) {
+    } else if (pneumo->Side() == SESide::Left && pneumo->Type() == SEPneumothoraxType::Closed) {
       if (m_LeftClosedTensionPneumothorax == nullptr) {
         m_LeftClosedTensionPneumothorax = new SETensionPneumothorax();
       }
@@ -986,7 +989,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
         return true;
       }
       return IsValid(*m_LeftClosedTensionPneumothorax);
-    } else if (pneumo->Side() == CDM::enumSide::Right && pneumo->Type() == CDM::enumPneumothoraxType::Open) {
+    } else if (pneumo->Side() == SESide::Right && pneumo->Type() == SEPneumothoraxType::Open) {
       if (m_RightOpenTensionPneumothorax == nullptr) {
         m_RightOpenTensionPneumothorax = new SETensionPneumothorax();
       }
@@ -996,7 +999,7 @@ bool SEPatientActionCollection::ProcessAction(const CDM::PatientActionData& acti
         return true;
       }
       return IsValid(*m_RightOpenTensionPneumothorax);
-    } else if (pneumo->Side() == CDM::enumSide::Right && pneumo->Type() == CDM::enumPneumothoraxType::Closed) {
+    } else if (pneumo->Side() == SESide::Right && pneumo->Type() == SEPneumothoraxType::Closed) {
       if (m_RightClosedTensionPneumothorax == nullptr) {
         m_RightClosedTensionPneumothorax = new SETensionPneumothorax();
       }
@@ -1660,7 +1663,7 @@ bool SEPatientActionCollection::HasTensionPneumothorax() const
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasLeftOpenTensionPneumothorax() const
 {
-  return m_LeftOpenTensionPneumothorax == nullptr ? false : true; //m_LeftOpenTensionPneumothorax->IsValid();//TODO
+  return m_LeftOpenTensionPneumothorax == nullptr ? false : true; // m_LeftOpenTensionPneumothorax->IsValid();//TODO
 }
 //-------------------------------------------------------------------------------
 SETensionPneumothorax* SEPatientActionCollection::GetLeftOpenTensionPneumothorax() const
@@ -1675,7 +1678,7 @@ void SEPatientActionCollection::RemoveLeftOpenTensionPneumothorax()
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasLeftClosedTensionPneumothorax() const
 {
-  return m_LeftClosedTensionPneumothorax == nullptr ? false : true; //m_LeftClosedTensionPneumothorax->IsValid();//TODO
+  return m_LeftClosedTensionPneumothorax == nullptr ? false : true; // m_LeftClosedTensionPneumothorax->IsValid();//TODO
 }
 //-------------------------------------------------------------------------------
 SETensionPneumothorax* SEPatientActionCollection::GetLeftClosedTensionPneumothorax() const
@@ -1690,7 +1693,7 @@ void SEPatientActionCollection::RemoveLeftClosedTensionPneumothorax()
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasRightOpenTensionPneumothorax() const
 {
-  return m_RightOpenTensionPneumothorax == nullptr ? false : true; //m_RightOpenTensionPneumothorax->IsValid();//TODO
+  return m_RightOpenTensionPneumothorax == nullptr ? false : true; // m_RightOpenTensionPneumothorax->IsValid();//TODO
 }
 //-------------------------------------------------------------------------------
 SETensionPneumothorax* SEPatientActionCollection::GetRightOpenTensionPneumothorax() const
@@ -1705,7 +1708,7 @@ void SEPatientActionCollection::RemoveRightOpenTensionPneumothorax()
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasRightClosedTensionPneumothorax() const
 {
-  return m_RightClosedTensionPneumothorax == nullptr ? false : true; //m_RightClosedTensionPneumothorax->IsValid();//TODO
+  return m_RightClosedTensionPneumothorax == nullptr ? false : true; // m_RightClosedTensionPneumothorax->IsValid();//TODO
 }
 //-------------------------------------------------------------------------------
 SETensionPneumothorax* SEPatientActionCollection::GetRightClosedTensionPneumothorax() const

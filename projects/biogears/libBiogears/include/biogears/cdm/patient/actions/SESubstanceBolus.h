@@ -11,7 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
@@ -30,17 +32,17 @@ public:
   SESubstanceBolus(const SESubstance& substance);
   virtual ~SESubstanceBolus();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceBolusData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::SubstanceBolusData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::SubstanceBolusData* Unload() const;
 
 public:
-  virtual CDM::enumBolusAdministration::value GetAdminRoute() const;
-  virtual void SetAdminRoute(CDM::enumBolusAdministration::value name);
+  virtual SEBolusAdministration GetAdminRoute() const;
+  virtual void SetAdminRoute(SEBolusAdministration name);
   virtual bool HasAdminRoute() const;
   virtual void InvalidateAdminRoute();
 
@@ -56,7 +58,7 @@ public:
   virtual SESubstance& GetSubstance() const;
 
   virtual void ToString(std::ostream& str) const;
-  
+
   bool operator==(const SESubstanceBolus& rhs) const;
   bool operator!=(const SESubstanceBolus& rhs) const;
 
@@ -64,7 +66,7 @@ protected:
   virtual void Unload(CDM::SubstanceBolusData& data) const;
 
 protected:
-  CDM::enumBolusAdministration::value m_AdminRoute;
+  SEBolusAdministration m_AdminRoute;
   SEScalarTime* m_AdminTime;
   SEScalarMassPerVolume* m_Concentration;
   SEScalarVolume* m_Dose;
@@ -78,14 +80,14 @@ public:
   SESubstanceBolusState(const SESubstance& sub);
   ~SESubstanceBolusState();
 
-  virtual bool Load(const CDM::SubstanceBolusStateData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::SubstanceBolusStateData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::SubstanceBolusStateData* Unload() const;
 
   SEScalarTime& GetElapsedTime() { return m_ElapsedTime; }
   SEScalarVolume& GetAdministeredDose() { return m_AdministeredDose; }
 
-  bool operator==( const SESubstanceBolusState& rhs) const;
-  bool operator!=( const SESubstanceBolusState& rhs) const;
+  bool operator==(const SESubstanceBolusState& rhs) const;
+  bool operator!=(const SESubstanceBolusState& rhs) const;
 
 protected:
   virtual void Unload(CDM::SubstanceBolusStateData& data) const;

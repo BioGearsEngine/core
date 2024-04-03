@@ -1,6 +1,6 @@
 #include "EnvironmentActions.h"
 
-#include "Scenario.h"
+#include "Actions.h"
 
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/cdm/system/environment/SEActiveCooling.h>
@@ -12,29 +12,29 @@
 namespace biogears {
 namespace io {
   // class SEEnvironmentAction
-  void EnvironmentActions::Marshall(const CDM::EnvironmentActionData& in, SEEnvironmentAction& out)
+  void EnvironmentActions::UnMarshall(const CDM::EnvironmentActionData& in, SEEnvironmentAction& out)
   {
-    io::Scenario::Marshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
+    io::Actions::UnMarshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
   }
   //----------------------------------------------------------------------------------
-  void EnvironmentActions::UnMarshall(const SEEnvironmentAction& in, CDM::EnvironmentActionData& out)
+  void EnvironmentActions::Marshall(const SEEnvironmentAction& in, CDM::EnvironmentActionData& out)
   {
-    io::Scenario::UnMarshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
+    io::Actions::Marshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
   }
   //----------------------------------------------------------------------------------
   // class SEEnvironmentChange
-  void EnvironmentActions::Marshall(const CDM::EnvironmentChangeData& in, SEEnvironmentChange& out)
+  void EnvironmentActions::UnMarshall(const CDM::EnvironmentChangeData& in, SEEnvironmentChange& out)
   {
-    io::Scenario::Marshall(static_cast<const CDM::EnvironmentActionData&>(in), static_cast<SEEnvironmentAction&>(out));
+    UnMarshall(static_cast<const CDM::EnvironmentActionData&>(in), static_cast<SEEnvironmentAction&>(out));
     if (in.ConditionsFile().present())
       out.SetConditionsFile(in.ConditionsFile().get());
     else if (in.Conditions().present())
       out.GetConditions().Load(in.Conditions().get());
   }
   //----------------------------------------------------------------------------------
-  void EnvironmentActions::UnMarshall(const SEEnvironmentChange& in, CDM::EnvironmentChangeData& out)
+  void EnvironmentActions::Marshall(const SEEnvironmentChange& in, CDM::EnvironmentChangeData& out)
   {
-    io::Scenario::UnMarshall(static_cast<const SEEnvironmentAction&>(in), static_cast<CDM::EnvironmentActionData&>(out));
+    io::Actions::Marshall(static_cast<const SEEnvironmentAction&>(in), static_cast<CDM::EnvironmentActionData&>(out));
     if (in.HasConditions())
       out.Conditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(in.m_Conditions->Unload()));
     else if (in.HasConditionsFile())
@@ -42,9 +42,9 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
   // class SEThermalApplication
-  void EnvironmentActions::Marshall(const CDM::ThermalApplicationData& in, SEThermalApplication& out)
+  void EnvironmentActions::UnMarshall(const CDM::ThermalApplicationData& in, SEThermalApplication& out)
   {
-    io::Scenario::Marshall(static_cast<const CDM::EnvironmentActionData&>(in), static_cast<SEEnvironmentAction&>(out));
+    io::Actions::UnMarshall(static_cast<const CDM::EnvironmentActionData&>(in), static_cast<SEEnvironmentAction&>(out));
 
     if (in.ActiveHeating().present())
       out.GetActiveHeating().Load(in.ActiveHeating().get());
@@ -54,9 +54,9 @@ namespace io {
       out.GetAppliedTemperature().Load(in.AppliedTemperature().get());
   }
   //----------------------------------------------------------------------------------
-  void EnvironmentActions::UnMarshall(const SEThermalApplication& in, CDM::ThermalApplicationData& out)
+  void EnvironmentActions::Marshall(const SEThermalApplication& in, CDM::ThermalApplicationData& out)
   {
-    io::Scenario::UnMarshall(static_cast<const SEEnvironmentAction&>(in), static_cast<CDM::EnvironmentActionData&>(out));
+    Marshall(static_cast<const SEEnvironmentAction&>(in), static_cast<CDM::EnvironmentActionData&>(out));
     if (in.HasActiveHeating())
       out.ActiveHeating(std::unique_ptr<CDM::ActiveHeatingData>(in.m_ActiveHeating->Unload()));
     if (in.HasActiveCooling())
@@ -69,8 +69,8 @@ namespace io {
   void Copy(const SE& in, SE& out)
   {
     XSD data;
-    EnvironmentActions::UnMarshall(in, data);
-    EnvironmentActions::Marshall(data, out);
+    EnvironmentActions::Marshall(in, data);
+    EnvironmentActions::UnMarshall(data, out);
   }
   //-----------------------------------------------------------------------------
   void EnvironmentActions::Copy(const SEEnvironmentAction& in, SEEnvironmentAction& out)
@@ -91,13 +91,13 @@ namespace io {
   {
     if (auto environmentChangeAction = dynamic_cast<SEEnvironmentChange const*>(environmentAction); environmentChangeAction) {
       auto environmentChangeActionData = std::make_unique<CDM::EnvironmentChangeData>();
-      UnMarshall(*environmentChangeAction, *environmentChangeActionData);
+      Marshall(*environmentChangeAction, *environmentChangeActionData);
       return std::move(environmentChangeActionData);
     }
     
     if (auto thermalApplication = dynamic_cast<SEThermalApplication const*>(environmentAction); thermalApplication) {
       auto thermalApplicationData = std::make_unique<CDM::EnvironmentChangeData>();
-      UnMarshall(*thermalApplication, *thermalApplicationData);
+      Marshall(*thermalApplication, *thermalApplicationData);
       return std::move(thermalApplicationData);
     }
     throw biogears::CommonDataModelException("EnvironmentActions::factory does not support the derived SEEnvironmentAction. If you are not a developer contact upstream for support.");

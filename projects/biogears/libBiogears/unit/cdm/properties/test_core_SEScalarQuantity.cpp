@@ -22,6 +22,7 @@
 
 #include "biogears/cdm/properties/SEScalar.h"
 #include <biogears/cdm/properties/SEProperty.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include "biogears/cdm/properties/SEScalarMass.h"
@@ -95,6 +96,8 @@ using namespace biogears;
   const TestUnit TestUnit::kg = TestUnit{ "kg" };
   const TestUnit TestUnit::lb = TestUnit{ "lb" };
 
+  template class SEScalarQuantity<TestUnit>;
+
   class TestScalarQuantity : public SEScalarQuantity<TestUnit> {
   public:
     TestScalarQuantity() = default;
@@ -117,6 +120,7 @@ using namespace biogears;
     }
   };
 
+  
 
 // The fixture for testing class Foo.
 class TEST_FIXTURE_NAME : public ::testing::Test {

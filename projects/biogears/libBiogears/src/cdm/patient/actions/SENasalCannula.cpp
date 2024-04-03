@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SENasalCannula.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
@@ -47,8 +48,7 @@ bool SENasalCannula::IsActive() const
 //-------------------------------------------------------------------------------
 bool SENasalCannula::Load(const CDM::NasalCannulaData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  GetFlowRate().Load(in.FlowRate(), rd);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -61,9 +61,7 @@ CDM::NasalCannulaData* SENasalCannula::Unload() const
 //-------------------------------------------------------------------------------
 void SENasalCannula::Unload(CDM::NasalCannulaData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_FlowRate != nullptr)
-    data.FlowRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_FlowRate->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SENasalCannula::HasFlowRate() const

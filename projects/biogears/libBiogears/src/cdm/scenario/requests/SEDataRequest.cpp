@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
@@ -39,10 +41,7 @@ void SEDataRequest::Clear()
 bool SEDataRequest::Load(const CDM::DataRequestData& in)
 {
 
-  SEDecimalFormat::Load(in);
-  m_Name = in.Name();
-  if (in.Unit().present())
-    m_RequestedUnit = in.Unit().get();
+   io::DataRequests::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -55,12 +54,7 @@ CDM::DataRequestData* SEDataRequest::Unload() const
 //-------------------------------------------------------------------------------
 void SEDataRequest::Unload(CDM::DataRequestData& data) const
 {
-  SEDecimalFormat::Unload(data);
-  data.Name(m_Name);
-  if (HasUnit())
-    data.Unit(m_Unit->GetString());
-  else if (HasRequestedUnit())
-    data.Unit(m_RequestedUnit);
+  io::DataRequests::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 std::string SEDataRequest::GetName() const

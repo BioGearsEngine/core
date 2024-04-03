@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
@@ -74,12 +76,7 @@ const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
 //-------------------------------------------------------------------------------
 bool SEGastrointestinalSystem::Load(const CDM::GastrointestinalSystemData& in)
 {
-  SESystem::Load(in);
-  if (in.ChymeAbsorptionRate().present())
-    GetChymeAbsorptionRate().Load(in.ChymeAbsorptionRate().get());
-  if (in.StomachContents().present())
-    GetStomachContents().Load(in.StomachContents().get());
-
+  io::Physiology::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -92,15 +89,7 @@ CDM::GastrointestinalSystemData* SEGastrointestinalSystem::Unload() const
 //-------------------------------------------------------------------------------
 void SEGastrointestinalSystem::Unload(CDM::GastrointestinalSystemData& data) const
 {
-  SESystem::Unload(data);
-  if (m_ChymeAbsorptionRate != nullptr)
-    data.ChymeAbsorptionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_ChymeAbsorptionRate->Unload()));
-  if (m_StomachContents != nullptr)
-    data.StomachContents(std::unique_ptr<CDM::NutritionData>(m_StomachContents->Unload()));
-  for (auto itr : m_DrugTransitStates) {
-    if (itr.second != nullptr)
-      data.DrugTransitStates().push_back(std::unique_ptr<CDM::DrugTransitStateData>(itr.second->Unload()));
-  }
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEGastrointestinalSystem::HasChymeAbsorptionRate() const
@@ -259,11 +248,11 @@ void SEDrugTransitState::Unload(CDM::DrugTransitStateData& data) const
   data.Substance(m_Substance->GetName());
 }
 //-------------------------------------------------------------------------------
-bool SEDrugTransitState::Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route)
+bool SEDrugTransitState::Initialize(SEScalarMass& dose, SEOralAdministrationType route)
 {
   std::vector<double> zeroMassVec(m_NumTransitMasses); // All zeros, correct number of elements
   bool trSolSet = SetLumenSolidMasses(zeroMassVec, MassUnit::ug);
-  if (route == CDM::enumOralAdministration::Gastrointestinal) {
+  if (route == SEOralAdministrationType::Gastrointestinal) {
     m_LumenSolidMasses[0].Set(dose); // If pill swallowed, put all the mass as solid in to stomach at initialization
   }
   // If route is transmucosal, we leave everything at 0 because we assume that no drug has been dissolved in saliva and swallowed at first time step

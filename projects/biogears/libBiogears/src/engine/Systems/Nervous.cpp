@@ -79,7 +79,7 @@ void Nervous::Initialize()
   BioGearsSystem::Initialize();
   m_FeedbackActive = false;
   m_blockActive = false;
-  SetSleepState(CDM::enumSleepState::Awake);  //patient always starts awake
+  SetSleepState(SESleepState::Awake);  //patient always starts awake
   m_AfferentChemoreceptor_Hz = 3.55;
   m_AfferentPulmonaryStretchReceptor_Hz = 12.0;
   m_AorticBaroreceptorStrain = 0.04226;
@@ -507,7 +507,7 @@ void Nervous::CentralSignalProcess()
   //Model fatigue of sympathetic peripheral response during sepsis -- Future work should investigate relevance of fatigue in other scenarios
   //Currently applying only to the peripheral signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy,
   //(Sayk et al., 2008 and Brassard et al., 2016) which would inhibit ability to increase peripheral resistance
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Infection)) {
     double fatigueThreshold = 6.0;
     double fatigueTimeConstant_hr = 2.0;
     double dFatigueScale_hr = 0.0;
@@ -671,7 +671,7 @@ void Nervous::BaroreceptorFeedback()
     painEffect = 0.5 * painVAS * m_BaroreceptorOperatingPoint_mmHg;
   }
   for (SESubstance* drug : m_data.GetSubstances().GetActiveDrugs()) {
-    if ((drug->GetClassification() == CDM::enumSubstanceClass::Anesthetic) || (drug->GetClassification() == CDM::enumSubstanceClass::Sedative) || (drug->GetClassification() == CDM::enumSubstanceClass::Opioid)) {
+    if ((drug->GetClassification() == SESubstanceClass::Anesthetic) || (drug->GetClassification() == SESubstanceClass::Sedative) || (drug->GetClassification() == SESubstanceClass::Opioid)) {
       drugEffect = m_data.GetDrugs().GetMeanBloodPressureChange(PressureUnit::mmHg); // / m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
       break;
       //Only want to apply the blood pressure change ONCE (In case there are multiple sedative/opioids/etc)
@@ -732,7 +732,7 @@ void Nervous::BaroreceptorFeedback()
   //Update baroreceptor setpoint -- the study from which this time constant was obtained focused on hemorrhagic shock.  The time scale is much different
   //than septic shock and so it is not clear how (or if) this value would change for sepsis.  For now, we will track baroreceptor adaptation and sympathetic fatigue
   //separately.  Future work should try to consolidate these two phenomena into a single model
-  if (m_data.GetState() > EngineState::SecondaryStabilization && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+  if (m_data.GetState() > EngineState::SecondaryStabilization && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Infection)) {
     //Pruett2013Population assumes ~16 hr half-time for baroreceptor adaptation to new setpoint (They varied this parameter up to 1-2 days half-time)
     const double kAdapt_Per_hr = 0.042;
     const double dSetpointAdjust_mmHg_Per_hr = kAdapt_Per_hr * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
@@ -1128,20 +1128,20 @@ void Nervous::CheckNervousStatus()
   if (icp_mmHg > 25.0) // \cite steiner2006monitoring
   {
     /// \event Patient: Intracranial Hypertension. The intracranial pressure has risen above 25 mmHg.
-    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, true, m_data.GetSimulationTime());
-  } else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypertension) && icp_mmHg < 23.0) {
+    m_data.GetPatient().SetEvent(SEPatientEventType::IntracranialHypertension, true, m_data.GetSimulationTime());
+  } else if (m_data.GetPatient().IsEventActive(SEPatientEventType::IntracranialHypertension) && icp_mmHg < 23.0) {
     /// \event Patient: End Intracranial Hypertension. The intracranial pressure has fallen below 24 mmHg.
-    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, false, m_data.GetSimulationTime());
+    m_data.GetPatient().SetEvent(SEPatientEventType::IntracranialHypertension, false, m_data.GetSimulationTime());
   }
 
   //Intracranial Hypotension
   if (icp_mmHg < 7.0) // \cite steiner2006monitoring
   {
     /// \event Patient: Intracranial Hypotension. The intracranial pressure has fallen below 7 mmHg.
-    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypotension, true, m_data.GetSimulationTime());
-  } else if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::IntracranialHypotension) && icp_mmHg > 7.5) {
+    m_data.GetPatient().SetEvent(SEPatientEventType::IntracranialHypotension, true, m_data.GetSimulationTime());
+  } else if (m_data.GetPatient().IsEventActive(SEPatientEventType::IntracranialHypotension) && icp_mmHg > 7.5) {
     /// \event Patient: End Intracranial Hypotension. The intracranial pressure has risen above 7.5 mmHg.
-    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::IntracranialHypertension, false, m_data.GetSimulationTime());
+    m_data.GetPatient().SetEvent(SEPatientEventType::IntracranialHypertension, false, m_data.GetSimulationTime());
   }
 
   //---Check Sedatation / Agitation State and output a Richmond Agitation Sedation Scale (RASS) score
@@ -1159,11 +1159,11 @@ void Nervous::CheckNervousStatus()
   /*if (m_Muscleintracellular.GetSubstanceQuantity(*m_Calcium)->GetConcentration(MassPerVolumeUnit::g_Per_L) < 1.0)
     {
     /// \event Patient: Patient is fasciculating due to calcium deficiency
-    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
+    m_data.GetPatient().SetEvent(SEPatientEventType::Fasciculation, true, m_data.GetSimulationTime());
     }
     else if (m_Muscleintracellular.GetSubstanceQuantity(*m_Calcium)->GetConcentration(MassPerVolumeUnit::g_Per_L) > 3.0)
     {
-    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
+    m_data.GetPatient().SetEvent(SEPatientEventType::Fasciculation, false, m_data.GetSimulationTime());
     }*/
 
   //-----patient events due to Sarin--------------------------------------------------
@@ -1186,76 +1186,76 @@ void Nervous::CheckNervousStatus()
       //100% inhibition when, in actuality, a patient with 100% rbc-ache inhibition will likely survive (rbc-ache thought to act as a buffer
       //for neuromuscular ache)
       if (0.4 < RbcFractionInhibited && RbcFractionInhibited < 0.75) {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::Fasciculation, true, m_data.GetSimulationTime());
       }
       if (RbcFractionInhibited < 0.38) {
         //Oscillations around 70% rbc-ache inhibition are highly unlikely but give some leeway for reversal just in case
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::Fasciculation, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::MildWeakness, false, m_data.GetSimulationTime());
       }
       if (RbcFractionInhibited > 0.8 && !m_data.GetSubstances().IsActive(*m_Atropine))  {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::Fasciculation, false, m_data.GetSimulationTime());
       }
       if (0.4 < RbcFractionInhibited && RbcFractionInhibited < 0.65) {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, true, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateWeakness, false, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FlaccidParalysis, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::MildWeakness, true, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::ModerateWeakness, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::FlaccidParalysis, false, m_data.GetSimulationTime());
       }
       if (0.7 < RbcFractionInhibited && RbcFractionInhibited < 0.85) {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateWeakness, true, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildWeakness, false, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FlaccidParalysis, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::ModerateWeakness, true, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::MildWeakness, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::FlaccidParalysis, false, m_data.GetSimulationTime());
       }
       if (midazolam_mg_Per_L > 0.4) {   //handle seizures in a special way to account for diazapam reversal agent
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::Seizures, false, m_data.GetSimulationTime());
       }
       if (0.8 < RbcFractionInhibited && RbcFractionInhibited < 0.88 && midazolam_mg_Per_L < 0.4) {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, true, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::Seizures, true, m_data.GetSimulationTime());
       }
       if (RbcFractionInhibited > 0.9) {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FlaccidParalysis, true, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Seizures, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::FlaccidParalysis, true, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::Seizures, false, m_data.GetSimulationTime());
       }
       //Muscarinic/atropine patient events
       if (brainAtropine_mg_Per_L == 0) {
         if (0.2 < RbcFractionInhibited && RbcFractionInhibited < 0.45) {
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, true, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, true, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiaphoresis, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::Nausea, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::MildSecretions, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::MildDiaphoresis, true, m_data.GetSimulationTime());
         }
         if (0.5 < RbcFractionInhibited && RbcFractionInhibited < 0.75) {
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, true, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, false, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiaphoresis, false, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateSecretions, true, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateDiaphoresis, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::Nausea, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::Vomiting, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::MildSecretions, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::MildDiaphoresis, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::ModerateSecretions, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::ModerateDiaphoresis, true, m_data.GetSimulationTime());
         }
         if (RbcFractionInhibited > 0.8) {
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::FunctionalIncontinence, true, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateSecretions, false, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateDiaphoresis, false, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereSecretions, true, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
-          m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiaphoresis, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::FunctionalIncontinence, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::ModerateSecretions, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::ModerateDiaphoresis, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::SevereSecretions, true, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::Vomiting, false, m_data.GetSimulationTime());
+          m_data.GetPatient().SetEvent(SEPatientEventType::SevereDiaphoresis, true, m_data.GetSimulationTime());
         }
       }
     }
    //Muscarinic reversals
       //use the brain intracellular compartment for atropine reference
       if (0.2 < brainAtropine_mg_Per_L && brainAtropine_mg_Per_L < 0.3) {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildSecretions, false, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiaphoresis, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::Nausea, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::MildSecretions, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::MildDiaphoresis, false, m_data.GetSimulationTime());
       }
       if (0.4 < brainAtropine_mg_Per_L && brainAtropine_mg_Per_L < 0.5) {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateSecretions, false, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::ModerateDiaphoresis, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::Vomiting, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::ModerateSecretions, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::ModerateDiaphoresis, false, m_data.GetSimulationTime());
       }
       if (0.6 < brainAtropine_mg_Per_L) {
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereSecretions, false, m_data.GetSimulationTime());
-        m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiaphoresis, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::SevereSecretions, false, m_data.GetSimulationTime());
+        m_data.GetPatient().SetEvent(SEPatientEventType::SevereDiaphoresis, false, m_data.GetSimulationTime());
       }
 
   //----Fasciculations due to Succinylcholine administration.---------------------------------------------------
@@ -1269,9 +1269,9 @@ void Nervous::CheckNervousStatus()
   double neuromuscularBlockLevel = m_data.GetDrugs().GetNeuromuscularBlockLevel().GetValue();
   if (m_data.GetSubstances().IsActive(*m_Succinylcholine) && (neuromuscularBlockLevel > 0.0)) {
     if ((neuromuscularBlockLevel < 0.9) && (!m_blockActive))
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::Fasciculation, true, m_data.GetSimulationTime());
     else {
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Fasciculation, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::Fasciculation, false, m_data.GetSimulationTime());
       m_blockActive = true;
     }
   }
@@ -1308,17 +1308,17 @@ void Nervous::SetPupilEffects()
     if (b->GetSeverity().GetValue() > 0) {
       double icp_mmHg = m_data.GetCardiovascular().GetIntracranialPressure().GetValue(PressureUnit::mmHg);
 
-      if (b->GetType() == CDM::enumBrainInjuryType::Diffuse) {
+      if (b->GetType() == SEBrainInjuryType::Diffuse) {
         //https://www.wolframalpha.com/input/?i=y%3D(1+%2F+(1+%2B+exp(-2.0*(x+-+24))))+from+18%3Cx%3C28
         leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 20))));
         //https://www.wolframalpha.com/input/?i=y%3D-.001*pow(10,+.27*(x+-+15))+from+18%3Cx%3C28+and+-1%3Cy%3C0
         leftPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 13));
         rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
         rightPupilReactivityResponseLevel = leftPupilReactivityResponseLevel;
-      } else if (b->GetType() == CDM::enumBrainInjuryType::LeftFocal) {
+      } else if (b->GetType() == SEBrainInjuryType::LeftFocal) {
         leftPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 20))));
         leftPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 13));
-      } else if (b->GetType() == CDM::enumBrainInjuryType::RightFocal) {
+      } else if (b->GetType() == SEBrainInjuryType::RightFocal) {
         rightPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 20))));
         rightPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 13));
       }
@@ -1362,7 +1362,7 @@ bool Nervous::CalculatePsychomotorVigilanceTask(SEPsychomotorVigilanceTask& pvt)
 void Nervous::CalculateSleepEffects()
 {
   //Calculate wake/sleep ratio to determine parameter scaling
-  CDM::enumSleepState sleepState = GetSleepState();
+  SESleepState sleepState = GetSleepState();
   double sleepTime = GetSleepTime().GetValue(TimeUnit::min);   //update value from last computation
   double wakeTime = GetWakeTime().GetValue(TimeUnit::min);   //update value from last computation
   m_BiologicalDebt = GetBiologicalDebt().GetValue();   //update value from last computation
@@ -1394,7 +1394,7 @@ void Nervous::CalculateSleepEffects()
   double count = 1.0;
   
 
-  if (sleepState == CDM::enumSleepState::Asleep) {
+  if (sleepState == SESleepState::Sleeping) {
     rwt *= rwSleepScale;
     rbt *= rbSleepScale;
   }
@@ -1414,22 +1414,22 @@ void Nervous::CalculateSleepEffects()
   //lets try an improved scheme
   m_BiologicalDebt = m_BiologicalDebt + m_dt_s * 0.5*(k1 +  k2);
 
-  if (sleepState == CDM::enumSleepState::Awake) {
+  if (sleepState == SESleepState::Awake) {
     wakeTime += (m_dt_s / 60);
   }
-  else if (sleepState == CDM::enumSleepState::Asleep) {
+  else if (sleepState == SESleepState::Sleeping) {
     sleepTime += (m_dt_s / 60);
   }
 
   //Calculate alertness metric 
-  if(sleepRatio > 3.0 && sleepState == CDM::enumSleepState::Awake) {
+  if(sleepRatio > 3.0 && sleepState == SESleepState::Awake) {
     m_AttentionLapses = aSlope * m_TiredTime_hr + aIntercept;
     m_ReactionTime_s = rSlope * m_TiredTime_hr + rIntercept;
     m_TiredTime_hr += m_dt_s / 3600.0;
   }
 
   //reset if patient has had enough sleep, recovery requires 8 hours (in any combination)
-  if(sleepState > (420.0 * count) + m_data.GetPatient().GetSleepAmount(TimeUnit::min)) {
+  if (sleepTime > (420.0 * count) + m_data.GetPatient().GetSleepAmount(TimeUnit::min)) {
     m_AttentionLapses = aIntercept;
     m_ReactionTime_s = rIntercept;
     count += 1.0;
@@ -1457,11 +1457,11 @@ void biogears::Nervous::UpdateSleepState()
 {
   //update state from the action
   if (m_data.GetActions().GetPatientActions().HasSleepState() && m_data.GetActions().GetPatientActions().GetSleepState()->IsActive()) {
-    SetSleepState(CDM::enumSleepState::Asleep);
+    SetSleepState(SESleepState::Sleeping);
     return;
   }
   else {
-    SetSleepState(CDM::enumSleepState::Awake);
+    SetSleepState(SESleepState::Awake);
   }
   return;
 }

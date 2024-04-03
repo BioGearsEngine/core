@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 #include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
@@ -49,8 +50,8 @@ public:
   virtual void SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumberData n);
   virtual void InvalidateLeadNumber();
 
-  virtual CDM::enumHeartRhythm::value GetRhythm() const;
-  virtual void SetRhythm(CDM::enumHeartRhythm::value name);
+  virtual SEHeartRhythm GetRhythm() const;
+  virtual void SetRhythm(SEHeartRhythm name);
   virtual bool HasRhythm() const;
   virtual void InvalidateRhythm();
 
@@ -66,7 +67,7 @@ public:
 
 protected:
   CDM::ElectroCardioGramWaveformLeadNumberData m_LeadNumber;
-  CDM::enumHeartRhythm::value m_Rhythm;
+  SEHeartRhythm m_Rhythm;
   SEScalarTime* m_TimeStep;
   SEFunctionElectricPotentialVsTime* m_Data;
   std::vector<unsigned int> m_ActiveIndicies;

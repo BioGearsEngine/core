@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/schema/cdm/DataRequests.hxx>
 
 CDM_BIND_DECL(ScenarioAutoSerializationData)
@@ -45,18 +46,18 @@ public:
   virtual double GetPeriod(const TimeUnit& unit) const;
 
   virtual bool HasPeriodTimeStamps() const;
-  virtual CDM::enumOnOff::value GetPeriodTimeStamps() const;
-  virtual void SetPeriodTimeStamps(CDM::enumOnOff::value v);
+  virtual SEOnOff GetPeriodTimeStamps() const;
+  virtual void SetPeriodTimeStamps(SEOnOff v);
   virtual void InvalidatePeriodTimeStamps();
 
   virtual bool HasAfterActions() const;
-  virtual CDM::enumOnOff::value GetAfterActions() const;
-  virtual void SetAfterActions(CDM::enumOnOff::value v);
+  virtual SEOnOff GetAfterActions() const;
+  virtual void SetAfterActions(SEOnOff v);
   virtual void InvalidateAfterActions();
 
   virtual bool HasReloadState() const;
-  virtual CDM::enumOnOff::value GetReloadState() const;
-  virtual void SetReloadState(CDM::enumOnOff::value v);
+  virtual SEOnOff GetReloadState() const;
+  virtual void SetReloadState(SEOnOff v);
   virtual void InvalidateReloadState();
 
   virtual bool HasDirectory() const;
@@ -73,9 +74,9 @@ public:
 
 protected:
   SEScalarTime* m_Period;
-  CDM::enumOnOff::value m_PeriodTimeStamps;
-  CDM::enumOnOff::value m_AfterActions;
-  CDM::enumOnOff::value m_ReloadState;
+  SEOnOff m_PeriodTimeStamps;
+  SEOnOff m_AfterActions;
+  SEOnOff m_ReloadState;
   std::string m_Directory;
   std::string m_FileName;
 };

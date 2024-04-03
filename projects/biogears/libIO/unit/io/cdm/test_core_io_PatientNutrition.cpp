@@ -70,8 +70,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SENutrition;
 //!
 //! TYPE Nutrition
-//! static void Marshall(const CDM::Nutrition& in, SENutrition& out);
-//! static void UnMarshall(const SENutrition& in, CDM::Nutrition& out);
+//! static void UnMarshall(const CDM::Nutrition& in, SENutrition& out);
+//! static void Marshall(const SENutrition& in, CDM::Nutrition& out);
 #include <biogears/cdm/patient/SENutrition.h>
 TEST_F(TEST_FIXTURE_NAME, Nutrition)
 {
@@ -95,8 +95,8 @@ TEST_F(TEST_FIXTURE_NAME, Nutrition)
 
   EXPECT_NE(source, sink);
 
-  PatientNutrition::UnMarshall(source, data);
-  PatientNutrition::Marshall(data, sink);
+  PatientNutrition::Marshall(source, data);
+  PatientNutrition::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

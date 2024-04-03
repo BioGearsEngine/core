@@ -72,8 +72,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SEPatient;
 //!
 //! TYPE Patient
-//! static void Marshall(const CDM::Patient& in, SEPatient& out);
-//! static void UnMarshall(const SEPatient& in, CDM::Patient& out);
+//! static void UnMarshall(const CDM::Patient& in, SEPatient& out);
+//! static void Marshall(const SEPatient& in, CDM::Patient& out);
 TEST_F(TEST_FIXTURE_NAME, Patient)
 {
   USING_TYPES(Patient)
@@ -89,14 +89,14 @@ TEST_F(TEST_FIXTURE_NAME, Patient)
 
   source.SetName("unit_test");
   source.SetAnnotation("Seerailization Test User");
-  source.SetGender(CDM::enumSex::Female);
-  source.SetSex(CDM::enumSex::Female);
+  source.SetSex(biogears::SESex::Female);
+  source.SetSex(biogears::SESex::Female);
   source.GetAge().SetValue(55.0, biogears::TimeUnit::yr);
   source.GetWeight().SetValue(80.0, biogears::MassUnit::kg);
   source.GetHeight().SetValue(175.0, biogears::LengthUnit::cm);
   source.GetAlveoliSurfaceArea().SetValue(16.0, biogears::AreaUnit::cm2);
   source.GetBasalMetabolicRate().SetValue(15.0, biogears::PowerUnit::J_Per_s);
-  source.SetBloodType(CDM::enumBloodType::AB);
+  source.SetBloodType(biogears::SEBloodType::AB);
   source.SetBloodRh(true);
   source.GetBloodVolumeBaseline().SetValue(14.0, biogears::VolumeUnit::L);
   source.GetBodyDensity().SetValue(13.0, biogears::MassPerVolumeUnit::g_Per_L);
@@ -129,8 +129,8 @@ TEST_F(TEST_FIXTURE_NAME, Patient)
 
   EXPECT_NE(source, sink);
 
-  Patient::UnMarshall(source, data);
-  Patient::Marshall(data, sink);
+  Patient::Marshall(source, data);
+  Patient::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

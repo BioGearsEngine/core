@@ -28,10 +28,10 @@ CDM_BIND_DECL(DataRequestManagerData)
 
 namespace biogears {
 namespace io {
-  class Scenario;
+  class DataRequests;
 }
 class BIOGEARS_API SEDataRequestManager : public Loggable {
-  friend io::Scenario;
+  friend io::DataRequests;
 
 public:
   SEDataRequestManager(Logger* logger);

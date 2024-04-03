@@ -11,10 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+
 #include <Eigen/Core>
 #include <biogears/cdm/circuit/SECircuit.h>
-#include <biogears/cdm/utils/SmartEnum.h>
 #include <biogears/cdm/utils/TimingProfile.h>
+#include <iostream>
 
 #define CIRCUIT_CALCULATOR_TEMPLATE typename CircuitType, typename NodeType, typename PathType, typename CapacitanceUnit, typename FluxUnit, typename InductanceUnit, typename PotentialUnit, typename QuantityUnit, typename ResistanceUnit
 #define CIRCUIT_CALCULATOR_TYPES CircuitType, NodeType, PathType, CapacitanceUnit, FluxUnit, InductanceUnit, PotentialUnit, QuantityUnit, ResistanceUnit
@@ -23,19 +24,79 @@ namespace biogears {
 // These are the Eigen Solvers we can use for solving our circuits
 struct BIOGEARS_API EigenCircuitSolver {
   enum Type { Direct,
-    PartialPivLu,
-    FullPivLu,
-    JacobiSvd,
-    HouseholderQr,
-    Ldlt,
-    Llt,
-    SparseLU,
-    SparseQR,
-    BiCGSTAB,
-    ConjugateGradient };
-  SMART_ENUM(EigenCircuitSolver, Type, 11);
+              PartialPivLu,
+              FullPivLu,
+              JacobiSvd,
+              HouseholderQr,
+              Ldlt,
+              Llt,
+              SparseLU,
+              SparseQR,
+              BiCGSTAB,
+              ConjugateGradient };
+
+
+
+  inline void set(Type t) { m_value = t; }
+  inline Type get() const  { return m_value; };
+  inline Type value() const { return m_value; };
+
   static char const* Value(size_t idx);
+
+  private: 
+      Type m_value = Type::Direct;
 };
+
+inline char const * ToString( EigenCircuitSolver::Type const & pt)
+{
+  using Type = EigenCircuitSolver::Type;
+
+  switch (pt) {
+  case Type::Direct:
+    return "Direct";
+  case Type::PartialPivLu:
+    return "PartialPivLu";
+  case Type::FullPivLu:
+    return "FullPivLu";
+  case Type::JacobiSvd:
+    return "JacobiSvd";
+  case Type::HouseholderQr:
+    return "HouseholderQr";
+  case Type::Ldlt:
+    return "Ldlt";
+  case Type::Llt:
+    return "Llt";
+  case Type::SparseLU:
+    return "SparseLU";
+  case Type::SparseQR:
+    return "SparseQR";
+  case Type::BiCGSTAB:
+    return "BiCGSTAB";
+  case Type::ConjugateGradient:
+    return "ConjugateGradient";
+  default:
+    return "Invalid";
+  }
+}
+
+inline char const* ToString(EigenCircuitSolver const& es)
+{
+  return ToString(es.get());
+}
+
+
+inline std::ostream& operator<<(std::ostream& os, const EigenCircuitSolver::Type& bit)
+{
+  os << ToString(bit);
+  return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const EigenCircuitSolver& bit)
+{
+  os << ToString(bit);
+  return os;
+}
+
 
 template <CIRCUIT_CALCULATOR_TEMPLATE>
 class SECircuitCalculator : public Loggable {
@@ -66,10 +127,10 @@ protected:
   // These are all transient and cleared/set at the start of the process call
 
   std::stringstream m_ss;
-  //Ax=b
-  Eigen::MatrixXd m_AMatrix; //A
-  Eigen::VectorXd m_xVector; //x
-  Eigen::VectorXd m_bVector; //b
+  // Ax=b
+  Eigen::MatrixXd m_AMatrix; // A
+  Eigen::VectorXd m_xVector; // x
+  Eigen::VectorXd m_bVector; // b
 
   double m_dT_s;
   CircuitType* m_circuit;

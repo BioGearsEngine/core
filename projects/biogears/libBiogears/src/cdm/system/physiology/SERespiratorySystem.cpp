@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
@@ -179,58 +181,7 @@ const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
 
 bool SERespiratorySystem::Load(const CDM::RespiratorySystemData& in)
 {
-  SESystem::Load(in);
-
-  if (in.AlveolarArterialGradient().present())
-    GetAlveolarArterialGradient().Load(in.AlveolarArterialGradient().get());
-  if (in.CarricoIndex().present())
-    GetCarricoIndex().Load(in.CarricoIndex().get());
-  if (in.EndTidalCarbonDioxideFraction().present())
-    GetEndTidalCarbonDioxideFraction().Load(in.EndTidalCarbonDioxideFraction().get());
-  if (in.EndTidalCarbonDioxidePressure().present())
-    GetEndTidalCarbonDioxidePressure().Load(in.EndTidalCarbonDioxidePressure().get());
-  if (in.ExpiratoryFlow().present())
-    GetExpiratoryFlow().Load(in.ExpiratoryFlow().get());
-  if (in.InspiratoryExpiratoryRatio().present())
-    GetInspiratoryExpiratoryRatio().Load(in.InspiratoryExpiratoryRatio().get());
-  if (in.InspiratoryFlow().present())
-    GetInspiratoryFlow().Load(in.InspiratoryFlow().get());
-  if (in.MeanPleuralPressure().present())
-    GetMeanPleuralPressure().Load(in.MeanPleuralPressure().get());
-  if (in.PulmonaryCompliance().present())
-    GetPulmonaryCompliance().Load(in.PulmonaryCompliance().get());
-  if (in.PulmonaryResistance().present())
-    GetPulmonaryResistance().Load(in.PulmonaryResistance().get());
-  if (in.RespirationCyclePercentComplete().present())
-    GetRespirationCyclePercentComplete().Load(in.RespirationCyclePercentComplete().get());
-  if (in.RespirationDriverFrequency().present())
-    GetRespirationDriverFrequency().Load(in.RespirationDriverFrequency().get());
-  if (in.RespirationDriverPressure().present())
-    GetRespirationDriverPressure().Load(in.RespirationDriverPressure().get());
-  if (in.RespirationMusclePressure().present())
-    GetRespirationMusclePressure().Load(in.RespirationMusclePressure().get());
-  if (in.RespirationRate().present())
-    GetRespirationRate().Load(in.RespirationRate().get());
-  if (in.SpecificVentilation().present())
-    GetSpecificVentilation().Load(in.SpecificVentilation().get());
-  if (in.TargetPulmonaryVentilation().present())
-    GetTargetPulmonaryVentilation().Load(in.TargetPulmonaryVentilation().get());
-  if (in.TidalVolume().present())
-    GetTidalVolume().Load(in.TidalVolume().get());
-  if (in.TotalAlveolarVentilation().present())
-    GetTotalAlveolarVentilation().Load(in.TotalAlveolarVentilation().get());
-  if (in.TotalDeadSpaceVentilation().present())
-    GetTotalDeadSpaceVentilation().Load(in.TotalDeadSpaceVentilation().get());
-  if (in.LeftLungVolume().present())
-    GetLeftLungVolume().Load(in.LeftLungVolume().get());
-  if (in.RightLungVolume().present())
-    GetRightLungVolume().Load(in.RightLungVolume().get());
-  if (in.TotalLungVolume().present())
-    GetTotalLungVolume().Load(in.TotalLungVolume().get());
-  if (in.TotalPulmonaryVentilation().present())
-    GetTotalPulmonaryVentilation().Load(in.TotalPulmonaryVentilation().get());
-  if (in.TranspulmonaryPressure().present())
-    GetTranspulmonaryPressure().Load(in.TranspulmonaryPressure().get());
+  io::Physiology::UnMarshall(in, *this);
 
   return true;
 }
@@ -246,58 +197,7 @@ CDM::RespiratorySystemData* SERespiratorySystem::Unload() const
 
 void SERespiratorySystem::Unload(CDM::RespiratorySystemData& data) const
 {
-  SESystem::Unload(data);
-
-  if (m_AlveolarArterialGradient != nullptr)
-    data.AlveolarArterialGradient(std::unique_ptr<CDM::ScalarPressureData>(m_AlveolarArterialGradient->Unload()));
-  if (m_CarricoIndex != nullptr)
-    data.CarricoIndex(std::unique_ptr<CDM::ScalarPressureData>(m_CarricoIndex->Unload()));
-  if (m_EndTidalCarbonDioxideFraction != nullptr)
-    data.EndTidalCarbonDioxideFraction(std::unique_ptr<CDM::ScalarFractionData>(m_EndTidalCarbonDioxideFraction->Unload()));
-  if (m_EndTidalCarbonDioxidePressure != nullptr)
-    data.EndTidalCarbonDioxidePressure(std::unique_ptr<CDM::ScalarPressureData>(m_EndTidalCarbonDioxidePressure->Unload()));
-  if (m_ExpiratoryFlow != nullptr)
-    data.ExpiratoryFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_ExpiratoryFlow->Unload()));
-  if (m_InspiratoryExpiratoryRatio != nullptr)
-    data.InspiratoryExpiratoryRatio(std::unique_ptr<CDM::ScalarData>(m_InspiratoryExpiratoryRatio->Unload()));
-  if (m_InspiratoryFlow != nullptr)
-    data.InspiratoryFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_InspiratoryFlow->Unload()));
-  if (m_MeanPleuralPressure != nullptr)
-    data.MeanPleuralPressure(std::unique_ptr<CDM::ScalarPressureData>(m_MeanPleuralPressure->Unload()));
-  if (m_PulmonaryCompliance != nullptr)
-    data.PulmonaryCompliance(std::unique_ptr<CDM::ScalarFlowComplianceData>(m_PulmonaryCompliance->Unload()));
-  if (m_PulmonaryResistance != nullptr)
-    data.PulmonaryResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_PulmonaryResistance->Unload()));
-  if (m_RespirationCyclePercentComplete != nullptr)
-    data.RespirationCyclePercentComplete(std::unique_ptr<CDM::Scalar0To1Data>(m_RespirationCyclePercentComplete->Unload()));
-  if (m_RespirationDriverFrequency != nullptr)
-    data.RespirationDriverFrequency(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationDriverFrequency->Unload()));
-  if (m_RespirationDriverPressure != nullptr)
-    data.RespirationDriverPressure(std::unique_ptr<CDM::ScalarPressureData>(m_RespirationDriverPressure->Unload()));
-  if (m_RespirationMusclePressure != nullptr)
-    data.RespirationMusclePressure(std::unique_ptr<CDM::ScalarPressureData>(m_RespirationMusclePressure->Unload()));
-  if (m_RespirationRate != nullptr)
-    data.RespirationRate(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRate->Unload()));
-  if (m_SpecificVentilation != nullptr)
-    data.SpecificVentilation(std::unique_ptr<CDM::ScalarData>(m_SpecificVentilation->Unload()));
-  if (m_TargetPulmonaryVentilation != nullptr)
-    data.TargetPulmonaryVentilation(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TargetPulmonaryVentilation->Unload()));
-  if (m_TidalVolume != nullptr)
-    data.TidalVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolume->Unload()));
-  if (m_TotalAlveolarVentilation != nullptr)
-    data.TotalAlveolarVentilation(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TotalAlveolarVentilation->Unload()));
-  if (m_TotalDeadSpaceVentilation != nullptr)
-    data.TotalDeadSpaceVentilation(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TotalDeadSpaceVentilation->Unload()));
-  if (m_LeftLungVolume != nullptr)
-    data.LeftLungVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_LeftLungVolume->Unload()));
-  if (m_RightLungVolume != nullptr)
-    data.RightLungVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_RightLungVolume->Unload()));
-  if (m_TotalLungVolume != nullptr)
-    data.TotalLungVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalLungVolume->Unload()));
-  if (m_TotalPulmonaryVentilation != nullptr)
-    data.TotalPulmonaryVentilation(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TotalPulmonaryVentilation->Unload()));
-  if (m_TranspulmonaryPressure != nullptr)
-    data.TranspulmonaryPressure(std::unique_ptr<CDM::ScalarPressureData>(m_TranspulmonaryPressure->Unload()));
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 

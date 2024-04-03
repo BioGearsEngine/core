@@ -982,7 +982,7 @@ void CommonDataModelTest::PolarizedCapacitorTest(const std::string& sTestDirecto
   //Paths
   SEFluidCircuitPath& Path2 = fluidCircuit->CreatePath(Node2, Node1, "Path2");
   Path2.GetNextCompliance().SetValue(1, FlowComplianceUnit::m3_Per_Pa);
-  Path2.SetNextPolarizedState(CDM::enumOpenClosed::Closed);
+  Path2.SetNextPolarizedState(SEOpenClosed::Closed);
   Path2.GetSourceNode().GetNextVolume().SetValue(0, VolumeUnit::m3);
   SEFluidCircuitPath& Path3 = fluidCircuit->CreatePath(Node2, Node3, "Path3");
   Path3.GetNextResistance().SetValue(1, FlowResistanceUnit::Pa_s_Per_m3);

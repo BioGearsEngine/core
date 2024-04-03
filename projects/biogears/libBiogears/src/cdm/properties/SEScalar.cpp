@@ -17,6 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <limits>
 #include <sstream>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/utils/GeneralMath.h>
 
 namespace biogears {

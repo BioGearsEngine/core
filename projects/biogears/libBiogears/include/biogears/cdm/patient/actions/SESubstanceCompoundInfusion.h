@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
@@ -30,12 +31,12 @@ public:
   SESubstanceCompoundInfusion(const SESubstanceCompound& compound);
   virtual ~SESubstanceCompoundInfusion();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceCompoundInfusionData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::SubstanceCompoundInfusionData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::SubstanceCompoundInfusionData* Unload() const;
 
   virtual bool HasBagVolume() const;
@@ -48,8 +49,8 @@ public:
 
   virtual void ToString(std::ostream& str) const;
 
-  bool operator==( const SESubstanceCompoundInfusion& rhs) const;
-  bool operator!=( const SESubstanceCompoundInfusion& rhs) const;
+  bool operator==(const SESubstanceCompoundInfusion& rhs) const;
+  bool operator!=(const SESubstanceCompoundInfusion& rhs) const;
 
 protected:
   virtual void Unload(CDM::SubstanceCompoundInfusionData& data) const;

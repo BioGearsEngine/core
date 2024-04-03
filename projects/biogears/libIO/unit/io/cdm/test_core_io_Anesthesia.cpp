@@ -21,6 +21,7 @@
 #include <gtest/gtest.h>
 
 #include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/Logger.h>
 
@@ -73,8 +74,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SEAnesthesiaMachine;
 //!
 //! TYPE AnesthesiaMachine
-//! static void Marshall(const CDM::AnesthesiaMachine& in, SEAnesthesiaMachine& out);
-//! static void UnMarshall(const SEAnesthesiaMachine& in, CDM::AnesthesiaMachine& out);
+//! static void UnMarshall(const CDM::AnesthesiaMachine& in, SEAnesthesiaMachine& out);
+//! static void Marshall(const SEAnesthesiaMachine& in, CDM::AnesthesiaMachine& out);
 TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachine)
 {
   USING_TYPES(AnesthesiaMachine)
@@ -88,13 +89,13 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachine)
   auto oxygen = mgr.GetSubstance("Oxygen");
   auto nitrogen = mgr.GetSubstance("Nitrogen");
 
-  source.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
+  source.SetConnection(biogears::SEAnesthesiaMachineConnection::Mask);
   source.GetInletFlow().SetValue(33, biogears::VolumePerTimeUnit::mL_Per_day);
   source.GetInspiratoryExpiratoryRatio().SetValue(0.5);
   source.GetOxygenFraction().SetValue(.04);
-  source.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::BottleTwo);
+  source.SetOxygenSource(biogears::SEAnesthesiaMachineOxygenSource::BottleTwo);
   source.GetPositiveEndExpiredPressure().SetValue(55, biogears::PressureUnit::mmHg);
-  source.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
+  source.SetPrimaryGas(biogears::SEAnesthesiaMachinePrimaryGas::Nitrogen);
   source.GetRespiratoryRate().SetValue(66, biogears::FrequencyUnit::Per_hr);
   source.GetReliefValvePressure().SetValue(77, biogears::PressureUnit::mmHg);
   source.GetVentilatorPressure().SetValue(88, biogears::PressureUnit::mmHg);
@@ -102,11 +103,11 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachine)
   biogears::SEAnesthesiaMachineChamber lChamber(mgr), rChamber(mgr);
   biogears::SEAnesthesiaMachineOxygenBottle lBootle(&logger), rBottle(&logger);
 
-  source.GetRightChamber().SetState(CDM::enumOnOff::On);
+  source.GetRightChamber().SetState(biogears::SEOnOff::On);
   source.GetRightChamber().GetSubstanceFraction().SetValue(.05);
   source.GetRightChamber().SetSubstance(*oxygen);
 
-  source.GetLeftChamber().SetState(CDM::enumOnOff::On);
+  source.GetLeftChamber().SetState(biogears::SEOnOff::On);
   source.GetLeftChamber().GetSubstanceFraction().SetValue(.05);
   source.GetLeftChamber().SetSubstance(*nitrogen);
 
@@ -115,8 +116,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachine)
 
   EXPECT_NE(source, sink);
 
-  Anesthesia::UnMarshall(source, data);
-  Anesthesia::Marshall(data, sink);
+  Anesthesia::Marshall(source, data);
+  Anesthesia::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -124,8 +125,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachine)
 // class SEAnesthesiaMachineChamber;
 //!
 //! TYPE AnesthesiaMachineChamber
-//! static void Marshall(const CDM::AnesthesiaMachineChamber& in, SEAnesthesiaMachineChamber& out);
-//! static void UnMarshall(const SEAnesthesiaMachineChamber& in, CDM::AnesthesiaMachineChamber& out);
+//! static void UnMarshall(const CDM::AnesthesiaMachineChamber& in, SEAnesthesiaMachineChamber& out);
+//! static void Marshall(const SEAnesthesiaMachineChamber& in, CDM::AnesthesiaMachineChamber& out);
 TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineChamber)
 {
   USING_TYPES(AnesthesiaMachineChamber)
@@ -139,14 +140,14 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineChamber)
   auto oxygen = mgr.GetSubstance("Oxygen");
   auto nitrogen = mgr.GetSubstance("Nitrogen");
 
-  source.SetState(CDM::enumOnOff::On);
+  source.SetState(biogears::SEOnOff::On);
   source.GetSubstanceFraction().SetValue(.05);
   source.SetSubstance(*oxygen);
 
   EXPECT_NE(source, sink);
 
-  Anesthesia::UnMarshall(source, data);
-  Anesthesia::Marshall(data, sink);
+  Anesthesia::Marshall(source, data);
+  Anesthesia::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -154,8 +155,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineChamber)
 // class SEAnesthesiaMachineOxygenBottle;
 //!
 //! TYPE AnesthesiaMachineOxygenBottle
-//! static void Marshall(const CDM::AnesthesiaMachineOxygenBottle& in, SEAnesthesiaMachineOxygenBottle& out);
-//! static void UnMarshall(const SEAnesthesiaMachineOxygenBottle& in, CDM::AnesthesiaMachineOxygenBottle& out);
+//! static void UnMarshall(const CDM::AnesthesiaMachineOxygenBottle& in, SEAnesthesiaMachineOxygenBottle& out);
+//! static void Marshall(const SEAnesthesiaMachineOxygenBottle& in, CDM::AnesthesiaMachineOxygenBottle& out);
 TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineOxygenBottle)
 {
   USING_TYPES(AnesthesiaMachineOxygenBottle)
@@ -173,8 +174,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineOxygenBottle)
 
   EXPECT_NE(source, sink);
 
-  Anesthesia::UnMarshall(source, data);
-  Anesthesia::Marshall(data, sink);
+  Anesthesia::Marshall(source, data);
+  Anesthesia::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

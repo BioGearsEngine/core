@@ -72,8 +72,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SEInhalerActions;
 //!
 //! TYPE InhalerActions
-//! static void Marshall(const CDM::InhalerActions& in, SEInhalerActions& out);
-//! static void UnMarshall(const SEInhalerActions& in, CDM::InhalerActions& out);
+//! static void UnMarshall(const CDM::InhalerActions& in, SEInhalerActions& out);
+//! static void Marshall(const SEInhalerActions& in, CDM::InhalerActions& out);
 TEST_F(TEST_FIXTURE_NAME, InhalerConfiguration)
 {
   USING_TYPES(InhalerConfiguration)
@@ -88,7 +88,7 @@ TEST_F(TEST_FIXTURE_NAME, InhalerConfiguration)
 
   auto& conf = source.GetConfiguration();
 
-  conf.SetState(CDM::enumOnOff::Off);
+  conf.SetState(biogears::SEOnOff::Off);
   conf.GetMeteredDose().SetValue(55.f, biogears::MassUnit::kg);
   conf.GetNozzleLoss().SetValue(22.f);
   conf.GetSpacerVolume().SetValue(55, biogears::VolumeUnit::L);
@@ -96,8 +96,8 @@ TEST_F(TEST_FIXTURE_NAME, InhalerConfiguration)
 
   EXPECT_NE(source, sink);
 
-  InhalerActions::UnMarshall(source, data);
-  InhalerActions::Marshall(data, sink);
+  InhalerActions::Marshall(source, data);
+  InhalerActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

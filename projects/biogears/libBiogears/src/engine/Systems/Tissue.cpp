@@ -664,7 +664,7 @@ void Tissue::CalculateCompartmentalBurn()
       m_trunkDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_trunkDeltaResistance_mmHg_s_Per_mL;
       if (activeCirculatoryCircuit->GetNode(targetNodeCardio)->GetPressure().GetValue(PressureUnit::mmHg) <= 24.0) { //Approx. 0.75% of normal pulse pressure, considered weak
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal, true, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeAbdominal, true, m_data.GetSimulationTime());
         m_compartmentSyndromeCount += 1.0;
       }
 
@@ -680,7 +680,7 @@ void Tissue::CalculateCompartmentalBurn()
       m_leftArmDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_leftArmDeltaResistance_mmHg_s_Per_mL;
       if (activeCirculatoryCircuit->GetNode(targetNodeCardio)->GetPressure().GetValue(PressureUnit::mmHg) <= 24.0) { //Approx. 0.75% of normal pulse pressure
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm, true, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeLeftArm, true, m_data.GetSimulationTime());
         m_compartmentSyndromeCount += 1.0;
       }
     } else if (burnCompt == "RightArm" && m_rightArmEscharotomy == false) {
@@ -689,7 +689,7 @@ void Tissue::CalculateCompartmentalBurn()
       m_rightArmDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_rightArmDeltaResistance_mmHg_s_Per_mL;
       if (activeCirculatoryCircuit->GetNode(targetNodeCardio)->GetPressure().GetValue(PressureUnit::mmHg) <= 24.0) { //Approx. 0.75% of normal pulse pressure
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_RightArm, true, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeRightArm, true, m_data.GetSimulationTime());
         m_compartmentSyndromeCount += 1.0;
       }
     } else if (burnCompt == "LeftLeg" && m_leftLegEscharotomy == false) {
@@ -698,7 +698,7 @@ void Tissue::CalculateCompartmentalBurn()
       m_leftLegDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_leftLegDeltaResistance_mmHg_s_Per_mL;
       if (activeCirculatoryCircuit->GetNode(targetNodeCardio)->GetPressure().GetValue(PressureUnit::mmHg) <= 24.0) { //Approx. 0.75% of normal pulse pressure
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg, true, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeLeftLeg, true, m_data.GetSimulationTime());
         m_compartmentSyndromeCount += 1.0;
       }
     } else if (burnCompt == "RightLeg" && m_rightLegEscharotomy == false) {
@@ -707,7 +707,7 @@ void Tissue::CalculateCompartmentalBurn()
       m_rightLegDeltaResistance_mmHg_s_Per_mL += ((fluidCreepTuningFactor * burnSpread * deltaR_mmHg_s_Per_mL) / csTuningFactor);
       tunedDeltaR_mmHg_s_Per_mL = m_rightLegDeltaResistance_mmHg_s_Per_mL;
       if (activeCirculatoryCircuit->GetNode(targetNodeCardio)->GetPressure().GetValue(PressureUnit::mmHg) <= 24.0) { //Approx. 0.75% of normal pulse pressure
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg, true, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeRightLeg, true, m_data.GetSimulationTime());
         m_compartmentSyndromeCount += 1.0;
       }
     } else {
@@ -764,39 +764,39 @@ void Tissue::CalculateCompartmentalBurn()
         return;
       }
       // Check to make sure escharotomy compartment matches compartment syndrome location
-      if (locale == "Trunk" && m_Patient->IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal)) {
+      if (locale == "Trunk" && m_Patient->IsEventActive(SEPatientEventType::CompartmentSyndromeAbdominal)) {
         eschPath += "Muscle1";
         releasedResistance = m_trunkDeltaResistance_mmHg_s_Per_mL;
         m_trunkDeltaResistance_mmHg_s_Per_mL = 0.0;
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeAbdominal, false, m_data.GetSimulationTime());
         m_compartmentSyndromeCount -= 1.0;
         m_trunkEscharotomy = true;
-      } else if (locale == "LeftArm" && m_Patient->IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm)) {
+      } else if (locale == "LeftArm" && m_Patient->IsEventActive(SEPatientEventType::CompartmentSyndromeLeftArm)) {
         eschPath += "LeftArm1";
         releasedResistance = m_leftArmDeltaResistance_mmHg_s_Per_mL;
         m_leftArmDeltaResistance_mmHg_s_Per_mL = 0.0;
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeLeftArm, false, m_data.GetSimulationTime());
         m_compartmentSyndromeCount -= 1.0;
         m_leftArmEscharotomy = true;
-      } else if (locale == "LeftLeg" && m_Patient->IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg)) {
+      } else if (locale == "LeftLeg" && m_Patient->IsEventActive(SEPatientEventType::CompartmentSyndromeLeftLeg)) {
         eschPath += "LeftLeg1";
         releasedResistance = m_leftLegDeltaResistance_mmHg_s_Per_mL;
         m_leftLegDeltaResistance_mmHg_s_Per_mL = 0.0;
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeLeftLeg, false, m_data.GetSimulationTime());
         m_compartmentSyndromeCount -= 1.0;
         m_leftLegEscharotomy = true;
-      } else if (locale == "RightArm" && m_Patient->IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightArm)) {
+      } else if (locale == "RightArm" && m_Patient->IsEventActive(SEPatientEventType::CompartmentSyndromeRightArm)) {
         eschPath += "RightArm1";
         releasedResistance = m_rightArmDeltaResistance_mmHg_s_Per_mL;
         m_rightArmDeltaResistance_mmHg_s_Per_mL = 0.0;
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_RightArm, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeRightArm, false, m_data.GetSimulationTime());
         m_compartmentSyndromeCount -= 1.0;
         m_rightArmEscharotomy = true;
-      } else if (locale == "RightLeg" && m_Patient->IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg)) {
+      } else if (locale == "RightLeg" && m_Patient->IsEventActive(SEPatientEventType::CompartmentSyndromeRightLeg)) {
         eschPath += "RightLeg1";
         releasedResistance = m_rightLegDeltaResistance_mmHg_s_Per_mL;
         m_rightLegDeltaResistance_mmHg_s_Per_mL = 0.0;
-        m_Patient->SetEvent(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::CompartmentSyndromeRightLeg, false, m_data.GetSimulationTime());
         m_compartmentSyndromeCount -= 1.0;
         m_rightLegEscharotomy = true;
       } else {
@@ -1558,11 +1558,11 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   fatigue = m_FatigueRunningAverage.Sample(fatigue);
 
   /// \event Patient: Fatigue - Energy stores are sub-maximal, skip if beginning of cardiac cycle.
-  //if (!m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  //if (!m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
   //  if (fatigue > 0.0035) {
-  //    m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, true, m_data.GetSimulationTime());
+  //    m_Patient->SetEvent(SEPatientEventType::Fatigue, true, m_data.GetSimulationTime());
   //  } else if (fatigue < 0.000001) {
-  //    m_Patient->SetEvent(CDM::enumPatientEvent::Fatigue, false, m_data.GetSimulationTime());
+  //    m_Patient->SetEvent(SEPatientEventType::Fatigue, false, m_data.GetSimulationTime());
   //  }
   //}
 
@@ -1582,7 +1582,7 @@ void Tissue::CalculateMetabolicConsumptionAndProduction(double time_s)
   m_hepaticO2Consumed_mol = 0;
 
   //reset average at beginning of cardiac cycle:
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
     m_FatigueRunningAverage.Reset();
     m_FatigueRunningAverage.Reset();
   }
@@ -1662,8 +1662,8 @@ void Tissue::ProteinStorageAndRelease()
     }
 
     //If we rise above 10% of protein storage, turn off the Muscle Catabolism event
-    if (m_Patient->IsEventActive(CDM::enumPatientEvent::MuscleCatabolism) && GetStoredProtein(MassUnit::g) > .1 * m_maxProteinStorage_g) {
-      m_Patient->SetEvent(CDM::enumPatientEvent::MuscleCatabolism, false, m_data.GetSimulationTime());
+    if (m_Patient->IsEventActive(SEPatientEventType::MuscleCatabolism) && GetStoredProtein(MassUnit::g) > .1 * m_maxProteinStorage_g) {
+      m_Patient->SetEvent(SEPatientEventType::MuscleCatabolism, false, m_data.GetSimulationTime());
     }
   }
 
@@ -1672,17 +1672,17 @@ void Tissue::ProteinStorageAndRelease()
   else if (hormoneFactor < 0 && m_MuscleAA->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL) < aminoAcidsBaseline_mg_Per_dL) {
     //Muscle catabolism
     if (GetStoredProtein(MassUnit::g) < proteinBreakdownRate_g_Per_s * m_Dt_s) {
-      if (!m_Patient->IsEventActive(CDM::enumPatientEvent::MuscleCatabolism)) {
-        m_Patient->SetEvent(CDM::enumPatientEvent::MuscleCatabolism, true, m_data.GetSimulationTime());
+      if (!m_Patient->IsEventActive(SEPatientEventType::MuscleCatabolism)) {
+        m_Patient->SetEvent(SEPatientEventType::MuscleCatabolism, true, m_data.GetSimulationTime());
       }
       if (m_Patient->GetMuscleMass(MassUnit::g) < proteinBreakdownRate_g_Per_s * m_Dt_s) {
         m_ss << "The patient has consumed all of their body's amino acids. They've effectively starved.";
         Warning(m_ss);
         if (!m_PatientActions->HasOverride()) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       } else {
@@ -1821,10 +1821,10 @@ void Tissue::FatStorageAndRelease()
       m_ss << "The patient has consumed all of their body's fat. They've effectively starved.";
       Warning(m_ss);
       if (!m_PatientActions->HasOverride()) {
-        m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
       } else {
-        if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+          m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         }
       }
     } else {
@@ -1868,9 +1868,9 @@ void Tissue::CalculateVitals()
   GetDehydrationFraction().SetValue(dehydrationFraction);
   if (dehydrationFraction > 0.03) {
     /// \event Patient: Patient is dehydrated when 3% of body mass is lost due to fluid reduction
-    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Dehydration, true, m_data.GetSimulationTime()); /// \cite who2005dehydration
+    m_data.GetPatient().SetEvent(SEPatientEventType::Dehydration, true, m_data.GetSimulationTime()); /// \cite who2005dehydration
   } else if (dehydrationFraction < 0.01) {
-    m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Dehydration, false, m_data.GetSimulationTime());
+    m_data.GetPatient().SetEvent(SEPatientEventType::Dehydration, false, m_data.GetSimulationTime());
   }
 
   ///\TODO: check for patient thirst, when plasma osmolarity increases 3 percent \cite cheuvront2014dehydration
@@ -1903,16 +1903,16 @@ void Tissue::CheckGlycogenLevels()
 {
   //liver glycogen
   if (GetLiverGlycogen().GetValue(MassUnit::g) < 1) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::LiverGlycogenDepleted, true, m_data.GetSimulationTime());
-  } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::LiverGlycogenDepleted) && GetLiverGlycogen().GetValue(MassUnit::g) > 10) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::LiverGlycogenDepleted, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::LiverGlycogenDepleted, true, m_data.GetSimulationTime());
+  } else if (m_Patient->IsEventActive(SEPatientEventType::LiverGlycogenDepleted) && GetLiverGlycogen().GetValue(MassUnit::g) > 10) {
+    m_Patient->SetEvent(SEPatientEventType::LiverGlycogenDepleted, false, m_data.GetSimulationTime());
   }
 
   //muscle glycogen
   if (GetMuscleGlycogen().GetValue(MassUnit::g) < 1) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::MuscleGlycogenDepleted, true, m_data.GetSimulationTime());
-  } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::MuscleGlycogenDepleted) && GetMuscleGlycogen().GetValue(MassUnit::g) > 10) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::MuscleGlycogenDepleted, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::MuscleGlycogenDepleted, true, m_data.GetSimulationTime());
+  } else if (m_Patient->IsEventActive(SEPatientEventType::MuscleGlycogenDepleted) && GetMuscleGlycogen().GetValue(MassUnit::g) > 10) {
+    m_Patient->SetEvent(SEPatientEventType::MuscleGlycogenDepleted, false, m_data.GetSimulationTime());
   }
 }
 
@@ -2221,35 +2221,35 @@ void Tissue::OverrideControlLoop()
     currentStoredFatOverride = override->GetStoredFatOverride(MassUnit::g);
   }
 
-  if ((currentExtravascularFluidVolumeOverride < minExtravascularFluidVolumeOverride || currentExtravascularFluidVolumeOverride > maxExtravascularFluidVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentExtravascularFluidVolumeOverride < minExtravascularFluidVolumeOverride || currentExtravascularFluidVolumeOverride > maxExtravascularFluidVolumeOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Extravascular Fluid Volume Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentIntracellularFluidVolumeOverride < minIntracellularFluidVolumeOverride || currentIntracellularFluidVolumeOverride > maxIntracellularFluidVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentIntracellularFluidVolumeOverride < minIntracellularFluidVolumeOverride || currentIntracellularFluidVolumeOverride > maxIntracellularFluidVolumeOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Intracellular Fluid Volume Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentLiverGlycogenOverride < minLiverGlycogenOverride || currentLiverGlycogenOverride > maxLiverGlycogenOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentLiverGlycogenOverride < minLiverGlycogenOverride || currentLiverGlycogenOverride > maxLiverGlycogenOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Liver Glycogen Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentMuscleGlycogenOverride < minMuscleGlycogenOverride || currentMuscleGlycogenOverride > maxMuscleGlycogenOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentMuscleGlycogenOverride < minMuscleGlycogenOverride || currentMuscleGlycogenOverride > maxMuscleGlycogenOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Muscle Glycogen Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentStoredProteinOverride < minStoredProteinOverride || currentStoredProteinOverride > maxStoredProteinOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentStoredProteinOverride < minStoredProteinOverride || currentStoredProteinOverride > maxStoredProteinOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Stored Protein Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentStoredFatOverride < minStoredFatOverride || currentStoredFatOverride > maxStoredFatOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentStoredFatOverride < minStoredFatOverride || currentStoredFatOverride > maxStoredFatOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Stored Fat Override (Tissue) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   return;
 }

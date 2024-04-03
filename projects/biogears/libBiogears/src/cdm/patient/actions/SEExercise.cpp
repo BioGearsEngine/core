@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEExercise.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
@@ -100,71 +101,13 @@ bool SEExercise::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEExercise::Load(const CDM::ExerciseData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  if (in.GenericExercise().present()) {
-    LoadGeneric(in.GenericExercise().get(), rd);
-  } else if (in.CyclingExercise().present()) {
-    LoadCycling(in.CyclingExercise().get(), rd);
-  } else if (in.RunningExercise().present()) {
-    LoadRunning(in.RunningExercise().get(), rd);
-  } else if (in.StrengthExercise().present()) {
-    LoadStrength(in.StrengthExercise().get(), rd);
-  }
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
 SEExercise::ExerciseType SEExercise::GetExerciseType() const
 {
   return m_mode;
-}
-//-------------------------------------------------------------------------------
-bool SEExercise::LoadGeneric(const CDM::GenericExerciseData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  m_mode = GENERIC;
-  if (in.Intensity().present()) {
-    m_genericExercise.Intensity.Load(in.Intensity().get());
-  } else if (in.DesiredWorkRate().present()) {
-    m_genericExercise.DesiredWorkRate.Load(in.DesiredWorkRate().get());
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-bool SEExercise::LoadCycling(const CDM::CyclingExerciseData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  m_mode = CYCLING;
-  m_cyclingExercise.CadenceCycle.Load(in.Cadence(), rd);
-  m_cyclingExercise.PowerCycle.Load(in.Power(), rd);
-  if (in.AddedWeight().present()) {
-    m_cyclingExercise.AddedWeight.Load(in.AddedWeight().get(), rd);
-  } else {
-    m_cyclingExercise.AddedWeight.SetValue(0, MassUnit::kg);
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-bool SEExercise::LoadRunning(const CDM::RunningExerciseData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  m_mode = RUNNING;
-  m_runningExercise.SpeedRun.Load(in.Speed(), rd);
-  m_runningExercise.InclineRun.Load(in.Incline(), rd);
-  if (in.AddedWeight().present()) {
-    m_runningExercise.AddedWeight.Load(in.AddedWeight().get(), rd);
-  } else {
-    m_runningExercise.AddedWeight.SetValue(0, MassUnit::kg);
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-bool SEExercise::LoadStrength(const CDM::StrengthExerciseData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  m_mode = STRENGTH_TRAINING;
-  m_strengthExercise.WeightStrength.Load(in.Weight(), rd);
-  m_strengthExercise.RepsStrength.Load(in.Repetitions(), rd);
-  return true;
 }
 //-------------------------------------------------------------------------------
 CDM::ExerciseData* SEExercise::Unload() const
@@ -176,39 +119,7 @@ CDM::ExerciseData* SEExercise::Unload() const
 //-------------------------------------------------------------------------------
 void SEExercise::Unload(CDM::ExerciseData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (HasGenericExercise()) {
-    data.GenericExercise(std::make_unique<CDM::ExerciseData::GenericExercise_type>());
-    if (m_genericExercise.Intensity.IsValid()) {
-      data.GenericExercise()->Intensity(std::unique_ptr<CDM::Scalar0To1Data>(m_genericExercise.Intensity.Unload()));
-    } else if (m_genericExercise.DesiredWorkRate.IsValid()) {
-      data.GenericExercise()->DesiredWorkRate(std::unique_ptr<CDM::ScalarPowerData>(m_genericExercise.DesiredWorkRate.Unload()));
-    }
-  } else if (HasCyclingExercise()) {
-    data.CyclingExercise(std::make_unique<CDM::ExerciseData::CyclingExercise_type>(
-      std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Cadence_type>(),
-      std::unique_ptr<CDM::ExerciseData::CyclingExercise_type::Power_type>()));
-    data.CyclingExercise()->Cadence(std::unique_ptr<CDM::ScalarFrequencyData>(m_cyclingExercise.CadenceCycle.Unload()));
-    data.CyclingExercise()->Power(std::unique_ptr<CDM::ScalarPowerData>(m_cyclingExercise.PowerCycle.Unload()));
-    if (m_cyclingExercise.AddedWeight.IsValid()) {
-      data.CyclingExercise()->AddedWeight(std::unique_ptr<CDM::ScalarMassData>(m_cyclingExercise.AddedWeight.Unload()));
-    }
-  } else if (HasRunningExercise()) {
-    data.RunningExercise(std::make_unique<CDM::ExerciseData::RunningExercise_type>(
-      std::unique_ptr<CDM::ExerciseData::RunningExercise_type::Speed_type>(),
-      std::unique_ptr<CDM::ExerciseData::RunningExercise_type::Incline_type>()));
-    data.RunningExercise()->Speed(std::unique_ptr<CDM::ScalarLengthPerTimeData>(m_runningExercise.SpeedRun.Unload()));
-    data.RunningExercise()->Incline(std::unique_ptr<CDM::Scalar0To1Data>(m_runningExercise.InclineRun.Unload()));
-    if (m_runningExercise.AddedWeight.IsValid()) {
-      data.RunningExercise()->AddedWeight(std::unique_ptr<CDM::ScalarMassData>(m_runningExercise.AddedWeight.Unload()));
-    }
-  } else if (HasStrengthExercise()) {
-    data.StrengthExercise(std::make_unique<CDM::ExerciseData::StrengthExercise_type>(
-      std::unique_ptr<CDM::ExerciseData::StrengthExercise_type::Weight_type>(),
-      std::unique_ptr<CDM::ExerciseData::StrengthExercise_type::Repetitions_type>()));
-    data.StrengthExercise()->Weight(std::unique_ptr<CDM::ScalarMassData>(m_strengthExercise.WeightStrength.Unload()));
-    data.StrengthExercise()->Repetitions(std::unique_ptr<CDM::ScalarData>(m_strengthExercise.RepsStrength.Unload()));
-  }
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEExercise::HasGenericExercise() const { return m_mode == GENERIC; };

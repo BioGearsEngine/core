@@ -12,11 +12,14 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
@@ -47,28 +50,28 @@ public:
   static constexpr const char* TypeTag() { return "SEOverride"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::OverrideData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::OverrideData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::OverrideData* Unload() const override;
 
 protected:
   virtual void Unload(CDM::OverrideData& data) const;
 
 public:
-  CDM::enumOnOff::value GetOverrideState() const;
-  void SetOverrideState(CDM::enumOnOff::value state);
+  SEOnOff GetOverrideState() const;
+  void SetOverrideState(SEOnOff state);
   bool HasOverrideState() const;
   void InvalidateOverrideState();
-  CDM::enumOnOff::value GetOverrideConformance() const;
-  void SetOverrideConformance(CDM::enumOnOff::value valid);
+  SEOnOff GetOverrideConformance() const;
+  void SetOverrideConformance(SEOnOff valid);
   bool HasOverrideConformance() const;
   void InvalidateOverrideConformance();
 
-  //Blood Chemistry
+  // Blood Chemistry
   bool HasArterialPHOverride() const;
   SEScalar& GetArterialPHOverride();
   double GetArterialPHOverride() const;
@@ -111,7 +114,7 @@ public:
 
   bool HasBloodChemistryOverride() const;
 
-  //Cardiovascular
+  // Cardiovascular
   bool HasBloodVolumeOverride() const;
   SEScalarVolume& GetBloodVolumeOverride();
   double GetBloodVolumeOverride(const VolumeUnit& unit) const;
@@ -135,7 +138,7 @@ public:
   double GetSystolicArterialPressureOverride(const PressureUnit& unit) const;
   bool HasCardiovascularOverride() const;
 
-  //Endocrine
+  // Endocrine
   bool HasInsulinSynthesisRateOverride() const;
   SEScalarAmountPerTime& GetInsulinSynthesisRateOverride();
   double GetInsulinSynthesisRateOverride(const AmountPerTimeUnit& unit) const;
@@ -144,7 +147,7 @@ public:
   double GetGlucagonSynthesisRateOverride(const AmountPerTimeUnit& unit) const;
   bool HasEndocrineOverride() const;
 
-  //Energy
+  // Energy
   bool HasAchievedExerciseLevelOverride() const;
   SEScalarFraction& GetAchievedExerciseLevelOverride();
   double GetAchievedExerciseLevelOverride() const;
@@ -187,7 +190,7 @@ public:
 
   bool HasEnergyOverride() const;
 
-  //Renal
+  // Renal
   bool HasLeftAfferentArterioleResistanceOverride() const;
   SEScalarFlowResistance& GetLeftAfferentArterioleResistanceOverride();
   double GetLeftAfferentArterioleResistanceOverride(const FlowResistanceUnit& unit) const;
@@ -230,7 +233,7 @@ public:
 
   bool HasRenalOverride() const;
 
-  //Respiratory
+  // Respiratory
   bool HasExpiratoryFlowOverride() const;
   SEScalarVolumePerTime& GetExpiratoryFlowOverride();
   double GetExpiratoryFlowOverride(const VolumePerTimeUnit& unit) const;
@@ -264,7 +267,7 @@ public:
 
   bool HasRespiratoryOverride() const;
 
-  //Tissue
+  // Tissue
   bool HasExtravascularFluidVolumeOverride() const;
   SEScalarVolume& GetExtravascularFluidVolumeOverride();
   double GetExtravascularFluidVolumeOverride(const VolumeUnit& unit) const;
@@ -287,13 +290,13 @@ public:
   bool HasTissueOverride() const;
 
   virtual void ToString(std::ostream& str) const override;
-  
-  bool operator==( const SEOverride& rhs) const;
-  bool operator!=( const SEOverride& rhs) const;
+
+  bool operator==(const SEOverride& rhs) const;
+  bool operator!=(const SEOverride& rhs) const;
 
 protected:
-  CDM::enumOnOff m_OverrideState;
-  CDM::enumOnOff m_OverrideConformance;
+  SEOnOff m_OverrideState;
+  SEOnOff m_OverrideConformance;
   SEScalar* m_ArterialBloodPHOverride;
   SEScalar* m_VenousBloodPHOverride;
   SEScalarFraction* m_CarbonDioxideSaturationOverride;

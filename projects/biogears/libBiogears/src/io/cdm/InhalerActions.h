@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/InhalerActions.hxx>
 
-#define CDM_INHALER_ACTIONS_UNMARSHAL_HELPER(in, out, func)                          \
+#define CDM_INHALER_ACTIONS_MARSHALL_HELPER(in, out, func)                          \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::InhalerActions::UnMarshall(*in.m_##func, out.func());                        \
+    io::InhalerActions::Marshall(*in.m_##func, out.func());                        \
   }
 
-#define CDM_OPTIONAL_INHALER_ACTIONS_UNMARSHAL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_INHALER_ACTIONS_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                                 \
-    io::InhalerActions::UnMarshall(*in.m_##func, out.func());        \
+    io::InhalerActions::Marshall(*in.m_##func, out.func());        \
   }
 
 namespace biogears {
@@ -38,34 +38,34 @@ namespace io {
   public:
     //template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     //class SEInhalerAction
-    static void Marshall(const CDM::InhalerActionData& in, SEInhalerAction& out);
-    static void UnMarshall(const SEInhalerAction& in, CDM::InhalerActionData& out);
+    static void UnMarshall(const CDM::InhalerActionData& in, SEInhalerAction& out);
+    static void Marshall(const SEInhalerAction& in, CDM::InhalerActionData& out);
     //class SEInhalerConfiguration
-    static void Marshall(const CDM::InhalerConfigurationData& in, SEInhalerConfiguration& out);
-    static void UnMarshall(const SEInhalerConfiguration& in, CDM::InhalerConfigurationData& out);
+    static void UnMarshall(const CDM::InhalerConfigurationData& in, SEInhalerConfiguration& out);
+    static void Marshall(const SEInhalerConfiguration& in, CDM::InhalerConfigurationData& out);
     // Factories
     static std::unique_ptr<CDM::InhalerActionData> factory(const SEInhalerAction*);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void InhalerActions::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void InhalerActions::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Invalidate();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void InhalerActions::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void InhalerActions::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO

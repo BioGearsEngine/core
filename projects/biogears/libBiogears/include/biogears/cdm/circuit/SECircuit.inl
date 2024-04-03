@@ -12,7 +12,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/circuit/SECircuit.h>
+
 #include <biogears/schema/cdm/Circuit.hxx>
+
+#include "io/cdm/Circuit.h"
 
 #define OPEN_RESISTANCE 1e100
 
@@ -58,59 +61,13 @@ void SECircuit<CIRCUIT_TYPES>::Clear()
 }
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
-bool SECircuit<CIRCUIT_TYPES>::Load(const CircuitBindType& in, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths)
-{ // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
-  Clear();
-  m_Name = in.Name();
-  for (auto name : in.Node()) {
-    auto idx = nodes.find(name);
-    if (idx == nodes.end()) {
-      Error(m_Name + " could not find node " + name.c_str());
-      return false;
-    }
-    AddNode(*idx->second);
-  }
-  for (auto name : in.Path()) {
-    auto idx = paths.find(name);
-    if (idx == paths.end()) {
-      Error(m_Name + " could not find path " + name.c_str());
-      return false;
-    }
-    AddPath(*idx->second);
-  }
-  for (auto name : in.ReferenceNode()) {
-    auto idx = nodes.find(name);
-    if (idx == nodes.end()) {
-      Error(m_Name + " could not find reference node " + name.c_str());
-      return false;
-    }
-    AddReferenceNode(*idx->second);
-  }
-  StateChange();
-  return true;
-}
-//-----------------------------------------------------------------------------
-template <CIRCUIT_TEMPLATE>
 CircuitBindType* SECircuit<CIRCUIT_TYPES>::Unload() const
 {
   CircuitBindType* data = new CircuitBindType();
   Unload(*data);
   return data;
 }
-//-----------------------------------------------------------------------------
-template <CIRCUIT_TEMPLATE>
-void SECircuit<CIRCUIT_TYPES>::Unload(CircuitBindType& data) const
-{
-  data.Name(m_Name);
-  if (HasReferenceNode()) {
-    for (NodeType* n : m_ReferenceNodes)
-      data.ReferenceNode().push_back(n->GetName());
-  }
-  for (auto* n : m_Nodes)
-    data.Node().push_back(n->GetName());
-  for (auto* p : m_Paths)
-    data.Path().push_back(p->GetName());
-}
+
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::StateChange()
@@ -135,8 +92,8 @@ void SECircuit<CIRCUIT_TYPES>::StateChange()
       Fatal(m_ss);
     }
 
-    //There should never be a NextFlow value set on a path
-    //Flow sources are defined using NextFlowSource
+    // There should never be a NextFlow value set on a path
+    // Flow sources are defined using NextFlowSource
     /* if (p->HasNextFlux())
     {
     ///\error Fatal: Invalid Path in the Circuit.
@@ -168,7 +125,7 @@ void SECircuit<CIRCUIT_TYPES>::StateChange()
       m_ConnectedPathMap[nSrc] = conSrcPaths;
     }
 
-    //Make sure we didn't accidentally define something twice
+    // Make sure we didn't accidentally define something twice
     if (std::find(m_ConnectedPathMap[nSrc]->begin(), m_ConnectedPathMap[nSrc]->end(), p) != m_ConnectedPathMap[nSrc]->end() || std::find(m_ConnectedPathMap[nTgt]->begin(), m_ConnectedPathMap[nTgt]->end(), p) != m_ConnectedPathMap[nTgt]->end()) {
       m_ss << p->GetName() << " is defined multiple times.";
       Fatal(m_ss);
@@ -189,14 +146,14 @@ void SECircuit<CIRCUIT_TYPES>::StateChange()
   size_t jIdx = 0;
   m_CalculatorIndex.clear();
   for (NodeType* n : m_Nodes) {
-    //There should never be a next pressure value set on a node
-    //  //Initializing a compliance "charge" is done on the current pressure value
-    //  //Pressure sources are defined on a path
-    //  if (n->HasNextPotential() && n!=GetReferenceNode())
-    //  {
-    //    m_ss << "You cannot set a pressure value without using a path pressure source.  The NextPressure value will be ignored and overwritten for Node " << n->GetName();
-    //    Warning(m_ss);
-    //  }
+    // There should never be a next pressure value set on a node
+    //   //Initializing a compliance "charge" is done on the current pressure value
+    //   //Pressure sources are defined on a path
+    //   if (n->HasNextPotential() && n!=GetReferenceNode())
+    //   {
+    //     m_ss << "You cannot set a pressure value without using a path pressure source.  The NextPressure value will be ignored and overwritten for Node " << n->GetName();
+    //     Warning(m_ss);
+    //   }
     if (!IsReferenceNode(*n))
       m_CalculatorIndex[n] = jIdx++;
   }
@@ -271,7 +228,7 @@ bool SECircuit<CIRCUIT_TYPES>::HasNode(NodeType& node)
 template <CIRCUIT_TEMPLATE>
 bool SECircuit<CIRCUIT_TYPES>::HasNode(const char* name)
 {
-  return HasNode(std::string{ name });
+  return HasNode(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
@@ -299,7 +256,7 @@ NodeType* SECircuit<CIRCUIT_TYPES>::GetNode(const std::string& name)
 template <CIRCUIT_TEMPLATE>
 const NodeType* SECircuit<CIRCUIT_TYPES>::GetNode(const char* name) const
 {
-  return GetNode(std::string{ name });
+  return GetNode(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
@@ -334,7 +291,7 @@ void SECircuit<CIRCUIT_TYPES>::RemoveNode(const NodeType& node)
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::RemoveNode(const char* name)
 {
-  RemoveNode(std::string{ name });
+  RemoveNode(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
@@ -355,7 +312,7 @@ size_t SECircuit<CIRCUIT_TYPES>::GetCalculatorIndex(const NodeType& node) const
 {
   auto itr = m_CalculatorIndex.find(&node);
   if (itr == m_CalculatorIndex.end()) {
-    Error("Node " + std::string{ node.GetName() } +" is not in Calculator Index Map.");
+    Error("Node " + std::string { node.GetName() } + " is not in Calculator Index Map.");
     return -1;
   }
   return itr->second;
@@ -377,7 +334,7 @@ bool SECircuit<CIRCUIT_TYPES>::HasPath(PathType& path)
 template <CIRCUIT_TEMPLATE>
 bool SECircuit<CIRCUIT_TYPES>::HasPath(const char* name)
 {
-  return HasPath(std::string{ name });
+  return HasPath(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
@@ -389,7 +346,7 @@ bool SECircuit<CIRCUIT_TYPES>::HasPath(const std::string& name)
 template <CIRCUIT_TEMPLATE>
 PathType* SECircuit<CIRCUIT_TYPES>::GetPath(const char* name)
 {
-  return GetPath(std::string{ name });
+  return GetPath(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
@@ -405,7 +362,7 @@ PathType* SECircuit<CIRCUIT_TYPES>::GetPath(const std::string& name)
 template <CIRCUIT_TEMPLATE>
 const PathType* SECircuit<CIRCUIT_TYPES>::GetPath(const char* name) const
 {
-  return  GetPath(std::string{ name });
+  return GetPath(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>
@@ -440,7 +397,7 @@ void SECircuit<CIRCUIT_TYPES>::RemovePath(const PathType& path)
 template <CIRCUIT_TEMPLATE>
 void SECircuit<CIRCUIT_TYPES>::RemovePath(const char* name)
 {
-  RemovePath(std::string{ name });
+  RemovePath(std::string { name });
 }
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>

@@ -14,7 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
@@ -44,23 +46,23 @@ protected:
 
 public:
   virtual bool HasColorResult() const;
-  virtual CDM::enumUrineColor::value GetColorResult() const;
-  virtual void SetColorResult(CDM::enumUrineColor::value color);
+  virtual SEUrineColor GetColorResult() const;
+  virtual void SetColorResult(SEUrineColor color);
   virtual void InvalidateColorResult();
 
   virtual bool HasAppearanceResult() const;
-  virtual CDM::enumClarityIndicator::value GetAppearanceResult() const;
-  virtual void SetAppearanceResult(CDM::enumClarityIndicator::value c);
+  virtual SEClarityIndicator GetAppearanceResult() const;
+  virtual void SetAppearanceResult(SEClarityIndicator c);
   virtual void InvalidateAppearanceResult();
 
   virtual bool HasGlucoseResult() const;
-  virtual CDM::enumPresenceIndicator::value GetGlucoseResult() const;
-  virtual void SetGlucoseResult(CDM::enumPresenceIndicator::value p);
+  virtual SEPresenceIndicator GetGlucoseResult() const;
+  virtual void SetGlucoseResult(SEPresenceIndicator p);
   virtual void InvalidateGlucoseResult();
 
   virtual bool HasKetoneResult() const;
-  virtual CDM::enumPresenceIndicator::value GetKetoneResult() const;
-  virtual void SetKetoneResult(CDM::enumPresenceIndicator::value p);
+  virtual SEPresenceIndicator GetKetoneResult() const;
+  virtual void SetKetoneResult(SEPresenceIndicator p);
   virtual void InvalidateKetoneResult();
 
   virtual bool HasBilirubinResult() const;
@@ -70,29 +72,29 @@ public:
   virtual SEScalar& GetSpecificGravityResult();
 
   virtual bool HasBloodResult() const;
-  virtual CDM::enumPresenceIndicator::value GetBloodResult() const;
-  virtual void SetBloodResult(CDM::enumPresenceIndicator::value p);
+  virtual SEPresenceIndicator GetBloodResult() const;
+  virtual void SetBloodResult(SEPresenceIndicator p);
   virtual void InvalidateBloodResult();
 
   virtual bool HasPHResult() const;
   virtual SEScalar& GetPHResult();
 
   virtual bool HasProteinResult() const;
-  virtual CDM::enumPresenceIndicator::value GetProteinResult() const;
-  virtual void SetProteinResult(CDM::enumPresenceIndicator::value p);
+  virtual SEPresenceIndicator GetProteinResult() const;
+  virtual void SetProteinResult(SEPresenceIndicator p);
   virtual void InvalidateProteinResult();
 
   virtual bool HasUrobilinogenResult() const;
   virtual SEScalarMassPerVolume& GetUrobilinogenResult();
 
   virtual bool HasNitriteResult() const;
-  virtual CDM::enumPresenceIndicator::value GetNitriteResult() const;
-  virtual void SetNitriteResult(CDM::enumPresenceIndicator::value p);
+  virtual SEPresenceIndicator GetNitriteResult() const;
+  virtual void SetNitriteResult(SEPresenceIndicator p);
   virtual void InvalidateNitriteResult();
 
   virtual bool HasLeukocyteEsteraseResult() const;
-  virtual CDM::enumPresenceIndicator::value GetLeukocyteEsteraseResult() const;
-  virtual void SetLeukocyteEsteraseResult(CDM::enumPresenceIndicator::value p);
+  virtual SEPresenceIndicator GetLeukocyteEsteraseResult() const;
+  virtual void SetLeukocyteEsteraseResult(SEPresenceIndicator p);
   virtual void InvalidateLeukocyteEsteraseResult();
 
   virtual bool HasMicroscopicResult() const;
@@ -103,18 +105,18 @@ public:
   bool operator!=(SEUrinalysis const&) const;
 
 protected:
-  CDM::enumUrineColor::value m_Color;
-  CDM::enumClarityIndicator::value m_Appearance;
-  CDM::enumPresenceIndicator::value m_Glucose;
-  CDM::enumPresenceIndicator::value m_Ketone;
+  SEUrineColor m_Color;
+  SEClarityIndicator m_Appearance;
+  SEPresenceIndicator m_Glucose;
+  SEPresenceIndicator m_Ketone;
   SEScalar* m_Bilirubin;
   SEScalar* m_SpecificGravity;
-  CDM::enumPresenceIndicator::value m_Blood;
+  SEPresenceIndicator m_Blood;
   SEScalar* m_pH;
-  CDM::enumPresenceIndicator::value m_Protein;
+  SEPresenceIndicator m_Protein;
   SEScalarMassPerVolume* m_Urobilinogen;
-  CDM::enumPresenceIndicator::value m_Nitrite;
-  CDM::enumPresenceIndicator::value m_LeukocyteEsterase;
+  SEPresenceIndicator m_Nitrite;
+  SEPresenceIndicator m_LeukocyteEsterase;
 
   SEUrinalysisMicroscopic* m_Microscopic;
 };

@@ -14,6 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <numeric>
 #include <iostream>
 //Project Includes
+
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
 
@@ -50,9 +53,7 @@ bool SEHistogramFractionVsLength::IsVaild() const
 
 bool SEHistogramFractionVsLength::Load(const CDM::HistogramFractionVsLengthData& in)
 {
-  if (!SEHistogram::Load(in))
-    return false;
-  m_LengthUnit = &LengthUnit::GetCompoundUnit(in.IndependentUnit().get());
+  io::Property::UnMarshall(in, *this);
   return IsValid();
 }
 
@@ -67,8 +68,7 @@ CDM::HistogramFractionVsLengthData* SEHistogramFractionVsLength::Unload() const
 
 void SEHistogramFractionVsLength::Unload(CDM::HistogramFractionVsLengthData& data) const
 {
-  SEHistogram::Unload(data);
-  data.IndependentUnit(m_LengthUnit->GetString());
+  io::Property::Marshall(*this, data);  
 }
 
 double SEHistogramFractionVsLength::GetLengthValue(unsigned int index, const LengthUnit& unit) const

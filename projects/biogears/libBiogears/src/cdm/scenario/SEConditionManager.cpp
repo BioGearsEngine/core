@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEConditionManager.h>
 
+#include "io/cdm/Scenario.h"
+
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/patient/conditions/SEChronicAnemia.h>

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SELobarPneumonia.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SELobarPneumonia::SELobarPneumonia()
@@ -42,10 +43,7 @@ bool SELobarPneumonia::IsValid() const
 //-----------------------------------------------------------------------------
 bool SELobarPneumonia::Load(const CDM::LobarPneumoniaData& in)
 {
-  SEPatientCondition::Load(in);
-  GetSeverity().Load(in.Severity());
-  GetLeftLungAffected().Load(in.LeftLungAffected());
-  GetRightLungAffected().Load(in.RightLungAffected());
+  io::PatientConditions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -58,13 +56,7 @@ CDM::LobarPneumoniaData* SELobarPneumonia::Unload() const
 //-----------------------------------------------------------------------------
 void SELobarPneumonia::Unload(CDM::LobarPneumoniaData& data) const
 {
-  SEPatientCondition::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-  if (m_LeftLungAffected != nullptr)
-    data.LeftLungAffected(std::unique_ptr<CDM::Scalar0To1Data>(m_LeftLungAffected->Unload()));
-  if (m_RightLungAffected != nullptr)
-    data.RightLungAffected(std::unique_ptr<CDM::Scalar0To1Data>(m_RightLungAffected->Unload()));
+  io::PatientConditions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SELobarPneumonia::HasSeverity() const

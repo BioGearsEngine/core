@@ -87,8 +87,8 @@ namespace BGE = mil::tatrc::physiology::biogears;
 
 // class  SEGasTestReport
 //    TYPE GasTestReport
-//   static void Marshall(const CDM::GasTestReportData& in, SEGasTestReport& out);
-//   static void UnMarshall(const SEGasTestReport& in, CDM::GasTestReportData& out);
+//   static void UnMarshall(const CDM::GasTestReportData& in, SEGasTestReport& out);
+//   static void Marshall(const SEGasTestReport& in, CDM::GasTestReportData& out);
 #include <biogears/cdm/utils/testing/SETestErrorStatistics.h>
 TEST_F(TEST_FIXTURE_NAME, TestErrorStatistics)
 {
@@ -118,16 +118,16 @@ TEST_F(TEST_FIXTURE_NAME, TestErrorStatistics)
 
   EXPECT_NE(source, sink);
 
-  TestReport::UnMarshall(source, data);
-  TestReport::Marshall(data, sink);
+  TestReport::Marshall(source, data);
+  TestReport::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class  SETestCase
 //    TYPE TestCase
-//   static void Marshall(const CDM::TestCase& in, SETestCase& out);
-//   static void UnMarshall(const SETestCase& in, CDM::TestCase& out);
+//   static void UnMarshall(const CDM::TestCase& in, SETestCase& out);
+//   static void Marshall(const SETestCase& in, CDM::TestCase& out);
 #include <biogears/cdm/utils/testing/SETestCase.h>
 TEST_F(TEST_FIXTURE_NAME, TestCase)
 {
@@ -162,16 +162,16 @@ TEST_F(TEST_FIXTURE_NAME, TestCase)
   
   EXPECT_NE(source, sink);
 
-  TestReport::UnMarshall(source, data);
-  TestReport::Marshall(data, sink);
+  TestReport::Marshall(source, data);
+  TestReport::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class  SETestSuite
 //    TYPE TestSuite
-//   static void Marshall(const CDM::TestSuite& in, SETestSuite& out);
-//   static void UnMarshall(const SETestSuite& in, CDM::TestSuite& out);
+//   static void UnMarshall(const CDM::TestSuite& in, SETestSuite& out);
+//   static void Marshall(const SETestSuite& in, CDM::TestSuite& out);
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 TEST_F(TEST_FIXTURE_NAME, TestSuite)
 {
@@ -234,16 +234,16 @@ TEST_F(TEST_FIXTURE_NAME, TestSuite)
 
   EXPECT_NE(source, sink);
 
-  TestReport::UnMarshall(source, data);
-  TestReport::Marshall(data, sink);
+  TestReport::Marshall(source, data);
+  TestReport::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class  SEGasTestReport
 //    TYPE GasTestReport
-//   static void Marshall(const CDM::GasTestReportData& in, SEGasTestReport& out);
-//   static void UnMarshall(const SEGasTestReport& in, CDM::GasTestReportData& out);
+//   static void UnMarshall(const CDM::GasTestReportData& in, SEGasTestReport& out);
+//   static void Marshall(const SEGasTestReport& in, CDM::GasTestReportData& out);
 #include <biogears/cdm/utils/testing/SETestReport.h>
 TEST_F(TEST_FIXTURE_NAME, TestReport)
 {
@@ -304,8 +304,8 @@ TEST_F(TEST_FIXTURE_NAME, TestReport)
 
   EXPECT_NE(source, sink);
 
-  TestReport::UnMarshall(source, data);
-  TestReport::Marshall(data, sink);
+  TestReport::Marshall(source, data);
+  TestReport::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

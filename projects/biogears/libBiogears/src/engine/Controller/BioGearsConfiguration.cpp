@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGearsConfiguration.h>
 
+#include "io/cdm/Property.h"
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
@@ -84,7 +85,7 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_StefanBoltzmann(nullptr)
   , m_UniversalGasConstant(nullptr)
   // Drugs
-  , m_PDEnabled(CDM::enumOnOff::value(-1))
+  , m_PDEnabled(SEOnOff(-1))
   // Energy
   , m_BodySpecificHeat(nullptr)
   , m_CarbondDioxideProductionFromOxygenConsumptionConstant(nullptr)
@@ -111,10 +112,10 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_ProteinToUreaFraction(nullptr)
   , m_WaterDigestionRate(nullptr)
   // Nervous
-  , m_CerebralEnabled(CDM::enumOnOff::value(-1))
+  , m_CerebralEnabled(SEOnOff(-1))
   , m_PupilDiameterBaseline(nullptr)
   // Renal
-  , m_RenalEnabled(CDM::enumOnOff::value(-1))
+  , m_RenalEnabled(SEOnOff(-1))
   , m_PlasmaSodiumConcentrationSetPoint(nullptr)
   , m_PeritubularPotassiumConcentrationSetPoint(nullptr)
   , m_LeftGlomerularFluidPermeabilityBaseline(nullptr)
@@ -133,7 +134,7 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_PulmonaryVentilationRateMaximum(nullptr)
   , m_VentilatoryOcclusionPressure(nullptr)
   // Tissue
-  , m_TissueEnabled(CDM::enumOnOff::value(-1))
+  , m_TissueEnabled(SEOnOff(-1))
 {
 }
 
@@ -179,7 +180,7 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_UniversalGasConstant);
 
   // Drugs
-  m_PDEnabled = CDM::enumOnOff::value(-1);
+  m_PDEnabled = SEOnOff(-1);
 
   // Energy
   SAFE_DELETE(m_BodySpecificHeat);
@@ -210,11 +211,11 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_WaterDigestionRate);
 
   // Nervous
-  m_CerebralEnabled = CDM::enumOnOff::value(-1);
+  m_CerebralEnabled = SEOnOff(-1);
   SAFE_DELETE(m_PupilDiameterBaseline);
 
   // Renal
-  m_RenalEnabled = CDM::enumOnOff::value(-1);
+  m_RenalEnabled = SEOnOff(-1);
   SAFE_DELETE(m_PlasmaSodiumConcentrationSetPoint);
   SAFE_DELETE(m_PeritubularPotassiumConcentrationSetPoint);
   SAFE_DELETE(m_LeftGlomerularFluidPermeabilityBaseline);
@@ -235,13 +236,13 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_VentilatoryOcclusionPressure);
 
   //Tissue
-  m_TissueEnabled = CDM::enumOnOff::value(-1);
+  m_TissueEnabled = SEOnOff(-1);
 }
 
 void BioGearsConfiguration::Initialize()
 {
   Clear();
-  m_WritePatientBaselineFile = CDM::enumOnOff::Off;
+  m_WritePatientBaselineFile = SEOnOff::Off;
 
   // Reset to default values
   GetECGInterpolator().LoadWaveforms("StandardECG.xml");
@@ -282,7 +283,7 @@ void BioGearsConfiguration::Initialize()
   GetUniversalGasConstant().SetValue(8.3144621, HeatCapacitancePerAmountUnit::J_Per_K_mol); //http://physics.nist.gov/cuu/Constants/
 
   // Drugs
-  m_PDEnabled = CDM::enumOnOff::On;
+  m_PDEnabled = SEOnOff::On;
 
   // Energy
   GetBodySpecificHeat().SetValue(0.83, HeatCapacitancePerMassUnit::kcal_Per_K_kg);
@@ -314,11 +315,11 @@ void BioGearsConfiguration::Initialize()
   GetWaterDigestionRate().SetValue(0.417, VolumePerTimeUnit::mL_Per_s); // Peronnet2012Pharmacokinetic, Estimated from 300mL H20 being absorbed in 9.5-12m
 
   // Nervous
-  m_CerebralEnabled = CDM::enumOnOff::On;
+  m_CerebralEnabled = SEOnOff::On;
   GetPupilDiameterBaseline().SetValue(4, LengthUnit::mm);
 
   // Renal
-  m_RenalEnabled = CDM::enumOnOff::On;
+  m_RenalEnabled = SEOnOff::On;
   GetPlasmaSodiumConcentrationSetPoint().SetValue(3.23, MassPerVolumeUnit::mg_Per_mL);
   GetPeritubularPotassiumConcentrationSetPoint().SetValue(0.0185, MassPerVolumeUnit::g_Per_dL);
   GetLeftGlomerularFluidPermeabilityBaseline().SetValue(3.67647, VolumePerTimePressureAreaUnit::mL_Per_min_mmHg_m2);
@@ -340,7 +341,7 @@ void BioGearsConfiguration::Initialize()
   GetVentilatoryOcclusionPressure().SetValue(0.75, PressureUnit::cmH2O); //This increases the absolute max driver pressure
 
   // Tissue
-  m_TissueEnabled = CDM::enumOnOff::On;
+  m_TissueEnabled = SEOnOff::On;
 }
 
 void BioGearsConfiguration::Merge(const PhysiologyEngineConfiguration& from)
@@ -473,7 +474,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   if (in.DrugsConfiguration().present()) {
     const CDM::DrugsConfigurationData& config = in.DrugsConfiguration().get();
     if (config.PDModel().present())
-      UsePDModel(config.PDModel().get());
+      io::Property::UnMarshall(config.PDModel(), m_PDEnabled);
   }
 
   // Energy
@@ -555,7 +556,7 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
   if (in.NervousConfiguration().present()) {
     const CDM::NervousConfigurationData& config = in.NervousConfiguration().get();
     if (config.EnableCerebral().present())
-      EnableCerebral(config.EnableCerebral().get());
+      io::Property::UnMarshall(config.EnableCerebral(), m_CerebralEnabled);
     if (config.PupilDiameterBaseline().present())
       GetPupilDiameterBaseline().Load(config.PupilDiameterBaseline().get());
   }
@@ -565,7 +566,8 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
     const CDM::RenalConfigurationData& config = in.RenalConfiguration().get();
 
     if (config.EnableRenal().present())
-      EnableRenal(config.EnableRenal().get());
+      io::Property::UnMarshall(config.EnableRenal(), m_RenalEnabled);
+
 
     if (config.PlasmaSodiumConcentrationSetPoint().present())
       GetPlasmaSodiumConcentrationSetPoint().Load(config.PlasmaSodiumConcentrationSetPoint().get());
@@ -612,7 +614,8 @@ bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
     const CDM::TissueConfigurationData& config = in.TissueConfiguration().get();
 
     if (config.EnableTissue().present())
-      EnableTissue(config.EnableTissue().get());
+      io::Property::UnMarshall(config.EnableTissue(), m_TissueEnabled);
+     
   }
 
   return true;
@@ -696,7 +699,7 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   // Drugs
   CDM::DrugsConfigurationData* drugs(new CDM::DrugsConfigurationData());
   if (HasUsePDModel())
-    drugs->PDModel(m_PDEnabled);
+    io::Property::Marshall(m_PDEnabled, drugs->PDModel());
   data.DrugsConfiguration(std::unique_ptr<CDM::DrugsConfigurationData>(drugs));
 
   // Energy
@@ -756,7 +759,7 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   // Nervous
   CDM::NervousConfigurationData* n(new CDM::NervousConfigurationData());
   if (HasEnableCerebral())
-    n->EnableCerebral(m_CerebralEnabled);
+    io::Property::Marshall(m_CerebralEnabled, n->EnableCerebral());
   if (HasPupilDiameterBaseline())
     n->PupilDiameterBaseline(std::unique_ptr<CDM::ScalarLengthData>(m_PupilDiameterBaseline->Unload()));
   data.NervousConfiguration(std::unique_ptr<CDM::NervousConfigurationData>(n));
@@ -764,7 +767,7 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   // Renal
   CDM::RenalConfigurationData* renal(new CDM::RenalConfigurationData());
   if (HasEnableRenal())
-    renal->EnableRenal(m_RenalEnabled);
+    io::Property::Marshall(m_RenalEnabled, renal->EnableRenal());
   if (HasPlasmaSodiumConcentrationSetPoint())
     renal->PlasmaSodiumConcentrationSetPoint(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_PlasmaSodiumConcentrationSetPoint->Unload()));
   if (HasLeftGlomerularFilteringSurfaceAreaBaseline())
@@ -804,7 +807,7 @@ void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
   // Tissue
   CDM::TissueConfigurationData* tissue(new CDM::TissueConfigurationData());
   if (HasEnableTissue())
-    tissue->EnableTissue(m_TissueEnabled);
+    io::Property::Marshall(m_TissueEnabled, tissue->EnableTissue());
   data.TissueConfiguration(std::unique_ptr<CDM::TissueConfigurationData>(tissue));
 }
 
