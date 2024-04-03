@@ -10,6 +10,10 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
+
+#include "io/cdm/Environment.h"
+#include "io/cdm/EnvironmentConditions.h"
+
 namespace biogears {
 	SEEnvironmentCondition::SEEnvironmentCondition()
 		: SECondition()
@@ -33,7 +37,7 @@ namespace biogears {
   //-----------------------------------------------------------------------------
 	bool SEEnvironmentCondition::Load(const CDM::EnvironmentConditionData& in)
 	{
-		SECondition::Load(in);
+    io::EnvironmentConditions::UnMarshall(in, *this);
 		return true;
 	}
   //-----------------------------------------------------------------------------
@@ -46,6 +50,6 @@ namespace biogears {
   //-----------------------------------------------------------------------------
 	void SEEnvironmentCondition::Unload(CDM::EnvironmentConditionData& data) const
 	{
-		SECondition::Unload(data);
+    io::EnvironmentConditions::Marshall(*this, data);
 	}
 }

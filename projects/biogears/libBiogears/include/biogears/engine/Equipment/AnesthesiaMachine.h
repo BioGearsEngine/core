@@ -79,7 +79,7 @@ public:
 
   // Extending some functionality to these base class methods
   // We will update the BioGears Airway mode when these are called
-  void SetConnection(CDM::enumAnesthesiaMachineConnection::value c) override;
+  void SetConnection(SEAnesthesiaMachineConnection c) override;
   void InvalidateConnection() override;
 
 private:

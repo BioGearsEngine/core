@@ -9,9 +9,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/cdm/compartment/SECompartmentGraph.inl>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
 
+#include <biogears/cdm/compartment/SECompartmentGraph.inl>
+#include "io/cdm/Compartment.h"
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
 
@@ -36,23 +37,7 @@ SEThermalCompartmentLink::~SEThermalCompartmentLink()
 //-------------------------------------------------------------------------------
 bool SEThermalCompartmentLink::Load(const CDM::ThermalCompartmentLinkData& in, SECircuitManager* circuits)
 {
-  if (!SECompartmentLink::Load(in, circuits))
-    return false;
-  if (in.Path().present()) {
-    if (circuits == nullptr) {
-      Error("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but no circuit manager was provided, cannot load");
-      return false;
-    }
-    SEThermalCircuitPath* path = circuits->GetThermalPath(in.Path().get());
-    if (path == nullptr) {
-      Error("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but provided circuit manager did not have that path");
-      return false;
-    }
-    MapPath(*path);
-  } else {
-    if (in.HeatTransferRate().present())
-      const_cast<SEScalarPower&>(GetHeatTransferRate()).Load(in.HeatTransferRate().get());
-  }
+  io::Compartment::UnMarshall(in, *this, circuits);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -65,14 +50,7 @@ CDM::ThermalCompartmentLinkData* SEThermalCompartmentLink::Unload()
 //-------------------------------------------------------------------------------
 void SEThermalCompartmentLink::Unload(CDM::ThermalCompartmentLinkData& data)
 {
-  SECompartmentLink::Unload(data);
-  data.SourceCompartment(m_SourceCmpt.GetName());
-  data.TargetCompartment(m_TargetCmpt.GetName());
-  if (m_Path != nullptr)
-    data.Path(m_Path->GetName());
-  // Even if you have a path, I am unloading everything, this makes the xml actually usefull...
-  if (HasHeatTransferRate())
-    data.HeatTransferRate(std::unique_ptr<CDM::ScalarPowerData>(GetHeatTransferRate().Unload()));
+  io::Compartment::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEThermalCompartmentLink::Clear()

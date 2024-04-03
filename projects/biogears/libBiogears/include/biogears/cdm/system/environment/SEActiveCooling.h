@@ -10,9 +10,11 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
-#include <biogears/cdm/CommonDataModel.h>
-#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
+#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
+#include <biogears/cdm/enums/SEEnvironmentEnums.h>
 #include <biogears/schema/cdm/Environment.hxx>
 
 #include <random>

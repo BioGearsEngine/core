@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
 
+#include "io/cdm/Compartment.h"
 #include <biogears/cdm/compartment/SECompartmentGraph.inl>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/SECompartmentNodes.inl>
@@ -45,23 +46,7 @@ SEGasCompartmentGraph::~SEGasCompartmentGraph()
 //-----------------------------------------------------------------------------
 bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr)
 {
-  m_Name = in.Name();
-  for (auto name : in.Compartment()) {
-    SEGasCompartment* cmpt = cmptMgr.GetGasCompartment(name);
-    if (cmpt == nullptr) {
-      Error("Could not find compartment " + std::string { name } + " for graph " + m_Name);
-      return false;
-    }
-    AddCompartment(*cmpt);
-  }
-  for (auto name : in.Link()) {
-    SEGasCompartmentLink* link = cmptMgr.GetGasLink(name);
-    if (link == nullptr) {
-      Error("Could not find link " + std::string { name } + " for graph " + m_Name);
-      return false;
-    }
-    AddLink(*link);
-  }
+  io::Compartment::UnMarshall(in, *this, cmptMgr);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -74,11 +59,7 @@ CDM::GasCompartmentGraphData* SEGasCompartmentGraph::Unload()
 //-----------------------------------------------------------------------------
 void SEGasCompartmentGraph::Unload(CDM::GasCompartmentGraphData& data)
 {
-  data.Name(m_Name);
-  for (SEGasCompartment* cmpt : m_Compartments)
-    data.Compartment().push_back(cmpt->GetName());
-  for (SEGasCompartmentLink* link : m_CompartmentLinks)
-    data.Link().push_back(link->GetName());
+  io::Compartment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SEGasCompartmentGraph::BalanceByIntensive()

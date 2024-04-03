@@ -72,8 +72,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SEElectroCardioGram;
 //!
 //! TYPE ElectroCardioGram
-//! static void Marshall(const CDM::ElectroCardioGram& in, SEElectroCardioGram& out);
-//! static void UnMarshall(const SEElectroCardioGram& in, CDM::ElectroCardioGram& out);
+//! static void UnMarshall(const CDM::ElectroCardioGram& in, SEElectroCardioGram& out);
+//! static void Marshall(const SEElectroCardioGram& in, CDM::ElectroCardioGram& out);
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 TEST_F(TEST_FIXTURE_NAME, ElectroCardioGram)
 {
@@ -100,8 +100,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGram)
 
   EXPECT_NE(source, sink);
 
-  ElectroCardioGram::UnMarshall(source, data);
-  ElectroCardioGram::Marshall(data, sink);
+  ElectroCardioGram::Marshall(source, data);
+  ElectroCardioGram::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -110,8 +110,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGram)
 // class SEElectroCardioGramInterpolationWaveform;
 //!
 //! TYPE ElectroCardioGramInterpolationWaveform
-//! static void Marshall(const CDM::ElectroCardioGramInterpolationWaveform& in, SEElectroCardioGramInterpolationWaveform& out);
-//! static void UnMarshall(const SEElectroCardioGramInterpolationWaveform& in, CDM::ElectroCardioGramInterpolationWaveform& out);
+//! static void UnMarshall(const CDM::ElectroCardioGramInterpolationWaveform& in, SEElectroCardioGramInterpolationWaveform& out);
+//! static void Marshall(const SEElectroCardioGramInterpolationWaveform& in, CDM::ElectroCardioGramInterpolationWaveform& out);
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
 TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolationWaveform)
 {
@@ -124,7 +124,7 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolationWaveform)
   CDMType data;
 
   source.SetLeadNumber(2);
-  source.SetRhythm(CDM::enumHeartRhythm::NormalSinus);
+  source.SetRhythm(biogears::SEHeartRhythm::NormalSinus);
 
   source.GetTimeStep().SetValue(1.0, biogears::TimeUnit::yr);
   auto& epVt = source.GetData();
@@ -148,8 +148,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolationWaveform)
 
   EXPECT_NE(source, sink);
 
-  ElectroCardioGram::UnMarshall(source, data);
-  ElectroCardioGram::Marshall(data, sink);
+  ElectroCardioGram::Marshall(source, data);
+  ElectroCardioGram::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -158,8 +158,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolationWaveform)
 // class SEElectroCardioGramInterpolator;
 //!
 //! TYPE ElectroCardioGramInterpolator
-//! static void Marshall(const CDM::ElectroCardioGramInterpolator& in, SEElectroCardioGramInterpolator& out);
-//! static void UnMarshall(const SEElectroCardioGramInterpolator& in, CDM::ElectroCardioGramInterpolator& out);
+//! static void UnMarshall(const CDM::ElectroCardioGramInterpolator& in, SEElectroCardioGramInterpolator& out);
+//! static void Marshall(const SEElectroCardioGramInterpolator& in, CDM::ElectroCardioGramInterpolator& out);
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramWaveformLeadNumber.h>
 TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramWaveformLeadNumber)
 {
@@ -175,8 +175,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramWaveformLeadNumber)
 
   EXPECT_NE(source, sink);
 
-  ElectroCardioGram::UnMarshall(source, data);
-  ElectroCardioGram::Marshall(data, sink);
+  ElectroCardioGram::Marshall(source, data);
+  ElectroCardioGram::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -184,8 +184,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramWaveformLeadNumber)
 // class SEElectroCardioGramInterpolator;
 //!
 //! TYPE ElectroCardioGramInterpolator
-//! static void Marshall(const CDM::ElectroCardioGramInterpolator& in, SEElectroCardioGramInterpolator& out);
-//! static void UnMarshall(const SEElectroCardioGramInterpolator& in, CDM::ElectroCardioGramInterpolator& out);
+//! static void UnMarshall(const CDM::ElectroCardioGramInterpolator& in, SEElectroCardioGramInterpolator& out);
+//! static void Marshall(const SEElectroCardioGramInterpolator& in, CDM::ElectroCardioGramInterpolator& out);
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolator)
 {
@@ -199,11 +199,11 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolator)
 
   auto potential = biogears::SEScalarElectricPotential { 10, biogears::ElectricPotentialUnit::mV };
   source.SetLeadElectricPotential(1, potential);
-  auto& waveform = source.GetWaveform(10, CDM::enumHeartRhythm::Asystole);
+  auto& waveform = source.GetWaveform(10, biogears::SEHeartRhythm::Asystole);
 
   //LeadNumber an Rythem set by GetWaveForm of Coherence.
   //waveform.SetLeadNumber(10) 
-  //waveform.SetRhythm(CDM::enumHeartRhythm::NormalSinus);
+  //waveform.SetRhythm(biogears::SEHeartRhythm::NormalSinus);
 
   waveform.GetTimeStep().SetValue(1.0, biogears::TimeUnit::yr);
   auto& epVt = waveform.GetData();
@@ -227,8 +227,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolator)
 
   EXPECT_NE(source, sink);
 
-  ElectroCardioGram::UnMarshall(source, data);
-  ElectroCardioGram::Marshall(data, sink);
+  ElectroCardioGram::Marshall(source, data);
+  ElectroCardioGram::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

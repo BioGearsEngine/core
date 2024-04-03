@@ -12,12 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEChestOcclusiveDressing::SEChestOcclusiveDressing()
   : SEPatientAction()
 {
-  m_State = CDM::enumOnOff::Off;
-  m_Side = (CDM::enumSide::value)-1;
+  m_State = SEOnOff::Off;
+  m_Side = SESide::Invalid;
 }
 //-------------------------------------------------------------------------------
 SEChestOcclusiveDressing::~SEChestOcclusiveDressing()
@@ -28,8 +29,8 @@ SEChestOcclusiveDressing::~SEChestOcclusiveDressing()
 void SEChestOcclusiveDressing::Clear()
 {
   SEPatientAction::Clear();
-  m_State = CDM::enumOnOff::Off;
-  m_Side = (CDM::enumSide::value)-1;
+  m_State = SEOnOff::Off;
+  m_Side = SESide::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEChestOcclusiveDressing::IsValid() const
@@ -39,19 +40,17 @@ bool SEChestOcclusiveDressing::IsValid() const
 //-------------------------------------------------------------------------------
 bool SEChestOcclusiveDressing::IsActive() const
 {
-  return IsValid() && m_State == CDM::enumOnOff::On;
+  return IsValid() && m_State == SEOnOff::On;
 }
 //-------------------------------------------------------------------------------
 void SEChestOcclusiveDressing::SetActive(bool b)
 {
-  m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
+  m_State = b ? SEOnOff::On : SEOnOff::Off;
 }
 //-------------------------------------------------------------------------------
 bool SEChestOcclusiveDressing::Load(const CDM::ChestOcclusiveDressingData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  m_Side = in.Side();
-  m_State = in.State();
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -64,30 +63,27 @@ CDM::ChestOcclusiveDressingData* SEChestOcclusiveDressing::Unload() const
 //-------------------------------------------------------------------------------
 void SEChestOcclusiveDressing::Unload(CDM::ChestOcclusiveDressingData& data) const
 {
-  SEPatientAction::Unload(data);
-  data.State(m_State);
-  if (HasSide())
-    data.Side(m_Side);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
-CDM::enumSide::value SEChestOcclusiveDressing::GetSide() const
+SESide SEChestOcclusiveDressing::GetSide() const
 {
   return m_Side;
 }
 //-------------------------------------------------------------------------------
-void SEChestOcclusiveDressing::SetSide(CDM::enumSide::value Side)
+void SEChestOcclusiveDressing::SetSide(SESide Side)
 {
   m_Side = Side;
 }
 //-------------------------------------------------------------------------------
 bool SEChestOcclusiveDressing::HasSide() const
 {
-  return m_Side == ((CDM::enumSide::value)-1) ? false : true;
+  return m_Side == SESide::Invalid ? false : true;
 }
 //-------------------------------------------------------------------------------
 void SEChestOcclusiveDressing::InvalidateSide()
 {
-  m_Side = (CDM::enumSide::value)-1;
+  m_Side = SESide::Invalid;
 }
 //-------------------------------------------------------------------------------
 void SEChestOcclusiveDressing::ToString(std::ostream& str) const

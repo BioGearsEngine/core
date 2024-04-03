@@ -22,6 +22,7 @@
 
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
 #include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/Logger.h>
 
@@ -74,8 +75,8 @@ void TEST_FIXTURE_NAME::TearDown()
 
 // class SESubstanceManager;
 //    TYPE SubstanceManager
-//   static void Marshall(const CDM::SubstanceManagerData& in, SESubstanceManager& out);
-//   static void UnMarshall(const SESubstanceManager& in, CDM::SubstanceManagerData& out);
+//   static void UnMarshall(const CDM::SubstanceManagerData& in, SESubstanceManager& out);
+//   static void Marshall(const SESubstanceManager& in, CDM::SubstanceManagerData& out);
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 TEST_F(TEST_FIXTURE_NAME, SubstanceManager)
@@ -90,8 +91,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceManager)
 }
 // class SESubstanceAerosolization;
 //   TYPE SubstanceAerosolization
-//  static void Marshall(const CDM::SubstanceAerosolizationData& in, SESubstanceAerosolization& out);
-//  static void UnMarshall(const SESubstanceAerosolization& in, CDM::SubstanceAerosolizationData& out);
+//  static void UnMarshall(const CDM::SubstanceAerosolizationData& in, SESubstanceAerosolization& out);
+//  static void Marshall(const SESubstanceAerosolization& in, CDM::SubstanceAerosolizationData& out);
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
 
 TEST_F(TEST_FIXTURE_NAME, SubstanceAerosolization)
@@ -117,15 +118,15 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceAerosolization)
   source.GetParticulateSizeDistribution().SetLengthUnit(biogears::LengthUnit::m);
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SESubstancePharmacokinetics;
 //   TYPE SubstancePharmacokinetics
-//  static void Marshall(const CDM::SubstancePharmacokineticsData& in, SESubstancePharmacokinetics& out);
-//  static void UnMarshall(const v& in, CDM::SubstancePharmacokineticsData& out);
+//  static void UnMarshall(const CDM::SubstancePharmacokineticsData& in, SESubstancePharmacokinetics& out);
+//  static void Marshall(const v& in, CDM::SubstancePharmacokineticsData& out);
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
 TEST_F(TEST_FIXTURE_NAME, SubstancePharmacokinetics)
@@ -142,31 +143,31 @@ TEST_F(TEST_FIXTURE_NAME, SubstancePharmacokinetics)
   auto sarin = mgr.GetSubstance("Sarin");
 
   auto& chemicals = source.GetPhysicochemicals();
-  chemicals.SetBindingProtein(CDM::enumSubstanceBindingProtein::AAG);
+  chemicals.SetBindingProtein(biogears::SESubstanceBindingProtein::AAG);
   chemicals.GetPrimaryPKA().SetValue(9);
   chemicals.GetSecondaryPKA().SetValue(4);
   chemicals.GetBloodPlasmaRatio().SetValue(1.0);
   chemicals.GetFractionUnboundInPlasma().SetValue(1.0);
-  chemicals.SetIonicState(CDM::enumSubstanceIonicState::Acid);
+  chemicals.SetIonicState(biogears::SESubstanceIonicState::Acid);
   chemicals.GetLogP().SetValue(1.0);
   chemicals.GetHydrogenBondCount().SetValue(1.0);
   chemicals.GetPolarSurfaceArea().SetValue(1.0);
 
-  auto& kenetics = source.GetTissueKinetics("sarin") ;
+  auto& kenetics = source.GetTissueKinetics("sarin");
 
   kenetics.GetPartitionCoefficient().SetValue(2);
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SESubstancePhysicochemical;
 //   TYPE SubstancePhysicochemicals
-//  static void Marshall(const CDM::SubstancePhysicochemicalsData& in, SESubstancePhysicochemical& out);
-//  static void UnMarshall(const SESubstancePhysicochemical& in, CDM::SubstancePhysicochemicalsData& out);
+//  static void UnMarshall(const CDM::SubstancePhysicochemicalsData& in, SESubstancePhysicochemical& out);
+//  static void Marshall(const SESubstancePhysicochemical& in, CDM::SubstancePhysicochemicalsData& out);
 #include <biogears/cdm/substance/SESubstancePhysicochemical.h>
 
 TEST_F(TEST_FIXTURE_NAME, SubstancePhysicochemical)
@@ -181,27 +182,27 @@ TEST_F(TEST_FIXTURE_NAME, SubstancePhysicochemical)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetBindingProtein(CDM::enumSubstanceBindingProtein::AAG);
+  source.SetBindingProtein(biogears::SESubstanceBindingProtein::AAG);
   source.GetPrimaryPKA().SetValue(9);
   source.GetSecondaryPKA().SetValue(4);
   source.GetBloodPlasmaRatio().SetValue(1.0);
   source.GetFractionUnboundInPlasma().SetValue(1.0);
-  source.SetIonicState(CDM::enumSubstanceIonicState::Acid);
+  source.SetIonicState(biogears::SESubstanceIonicState::Acid);
   source.GetLogP().SetValue(1.0);
   source.GetHydrogenBondCount().SetValue(1.0);
   source.GetPolarSurfaceArea().SetValue(1.0);
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SESubstanceTissuePharmacokinetics;
 //   TYPE SubstanceTissuePharmacokinetics
-//  static void Marshall(const CDM::SubstanceTissuePharmacokineticsData& in, SESubstanceTissuePharmacokinetics& out);
-//  static void UnMarshall(const SESubstanceTissuePharmacokinetics& in, CDM::SubstanceTissuePharmacokineticsData& out);
+//  static void UnMarshall(const CDM::SubstanceTissuePharmacokineticsData& in, SESubstanceTissuePharmacokinetics& out);
+//  static void Marshall(const SESubstanceTissuePharmacokinetics& in, CDM::SubstanceTissuePharmacokineticsData& out);
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 TEST_F(TEST_FIXTURE_NAME, SubstanceTissuePharmacokinetics)
 {
@@ -219,15 +220,15 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceTissuePharmacokinetics)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SESubstancePharmacodynamics;
 //   TYPE SubstancePharmacodynamics
-//  static void Marshall(const CDM::SubstancePharmacodynamicsData& in, SESubstancePharmacodynamics& out);
-//  static void UnMarshall(const SESubstancePharmacodynamics& in, CDM::SubstancePharmacodynamicsData& out);
+//  static void UnMarshall(const CDM::SubstancePharmacodynamicsData& in, SESubstancePharmacodynamics& out);
+//  static void Marshall(const SESubstancePharmacodynamics& in, CDM::SubstancePharmacodynamicsData& out);
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 
 TEST_F(TEST_FIXTURE_NAME, SubstancePharmacodynamics)
@@ -267,16 +268,16 @@ TEST_F(TEST_FIXTURE_NAME, SubstancePharmacodynamics)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SESubstanceClearance;
 //   TYPE SubstanceClearance
-//  static void Marshall(const CDM::SubstanceClearanceData& in, SESubstanceClearance& out);
-//  static void UnMarshall(const SESubstanceClearance& in, CDM::SubstanceClearanceData& out);
+//  static void UnMarshall(const CDM::SubstanceClearanceData& in, SESubstanceClearance& out);
+//  static void Marshall(const SESubstanceClearance& in, CDM::SubstanceClearanceData& out);
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 
 TEST_F(TEST_FIXTURE_NAME, SubstanceClearance)
@@ -293,7 +294,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceClearance)
 
   source.SetSystemic(true);
   source.SetCellular(false);
-  source.SetChargeInBlood(CDM::enumCharge::Negative);
+  source.SetChargeInBlood(biogears::SECharge::Negative);
 
   source.GetCellBirthRate().SetValue(1.0, biogears::FrequencyUnit::Hz);
   source.GetCellDeathRate().SetValue(1.0, biogears::FrequencyUnit::Hz);
@@ -319,15 +320,15 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceClearance)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SESubstance;
 //   TYPE Substance
-//  static void Marshall(const CDM::SubstanceData& in, SESubstance& out);
-//  static void UnMarshall(const SESubstance& in, CDM::SubstanceData& out);
+//  static void UnMarshall(const CDM::SubstanceData& in, SESubstance& out);
+//  static void Marshall(const SESubstance& in, CDM::SubstanceData& out);
 #include <biogears/cdm/substance/SESubstance.h>
 TEST_F(TEST_FIXTURE_NAME, Substance)
 {
@@ -340,8 +341,8 @@ TEST_F(TEST_FIXTURE_NAME, Substance)
   CDMType data;
 
   source.SetName("SubstanceTest");
-  source.SetClassification(CDM::enumSubstanceClass::Anesthetic);
-  source.SetState(CDM::enumSubstanceState::Solid);
+  source.SetClassification(biogears::SESubstanceClass::Anesthetic);
+  source.SetState(biogears::SESubstanceState::Solid);
 
   source.GetMichaelisCoefficient().SetValue(1.0);
   source.GetRelativeDiffusionCoefficient().SetValue(1.0);
@@ -387,7 +388,7 @@ TEST_F(TEST_FIXTURE_NAME, Substance)
   source.GetAerosolization().GetParticulateSizeDistribution().SetLengthUnit(biogears::LengthUnit::m);
   source.GetClearance().SetSystemic(true);
   source.GetClearance().SetCellular(false);
-  source.GetClearance().SetChargeInBlood(CDM::enumCharge::Negative);
+  source.GetClearance().SetChargeInBlood(biogears::SECharge::Negative);
 
   source.GetClearance().GetCellBirthRate().SetValue(1.0, biogears::FrequencyUnit::Hz);
   source.GetClearance().GetCellDeathRate().SetValue(1.0, biogears::FrequencyUnit::Hz);
@@ -418,15 +419,15 @@ TEST_F(TEST_FIXTURE_NAME, Substance)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SESubstanceCompound;
 //   TYPE SubstanceCompound
-//  static void Marshall(const CDM::SubstanceCompoundData& in, SESubstanceCompound& out);
-//  static void UnMarshall(const SESubstanceCompound& in, CDM::SubstanceCompoundData& out);
+//  static void UnMarshall(const CDM::SubstanceCompoundData& in, SESubstanceCompound& out);
+//  static void Marshall(const SESubstanceCompound& in, CDM::SubstanceCompoundData& out);
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 
 TEST_F(TEST_FIXTURE_NAME, SubstanceCompound)
@@ -442,7 +443,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompound)
   auto sarin = mgr.GetSubstance("Sarin");
 
   source.SetName("SubstanceCompoundTest");
-  source.SetClassification(CDM::enumSubstanceClass::Anesthetic);
+  source.SetClassification(biogears::SESubstanceClass::Anesthetic);
   source.SetRhFactor(true);
 
   biogears::SESubstanceConcentration sub { *sarin };
@@ -452,15 +453,15 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompound)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, mgr, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, mgr, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SESubstanceFraction;
 //   TYPE SubstanceFraction
-//  static void Marshall(const CDM::SubstanceFractionData& in, SESubstanceFraction& out);
-//  static void UnMarshall(const SESubstanceFraction& in, CDM::SubstanceFractionData& out);
+//  static void UnMarshall(const CDM::SubstanceFractionData& in, SESubstanceFraction& out);
+//  static void Marshall(const SESubstanceFraction& in, CDM::SubstanceFractionData& out);
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 
 TEST_F(TEST_FIXTURE_NAME, SubstanceFraction)
@@ -476,19 +477,19 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceFraction)
   SEType source { *sarin }, sink { *sarin };
   CDMType data;
 
-source.GetFractionAmount().SetValue( 0.99);
+  source.GetFractionAmount().SetValue(0.99);
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SESubstanceConcentration;
 //   TYPE SubstanceConcentration
-//  static void Marshall(const CDM::SubstanceConcentrationData& in, SESubstanceConcentration& out);
-//  static void UnMarshall(const SESubstanceConcentration& in, CDM::SubstanceConcentrationData& out);
+//  static void UnMarshall(const CDM::SubstanceConcentrationData& in, SESubstanceConcentration& out);
+//  static void Marshall(const SESubstanceConcentration& in, CDM::SubstanceConcentrationData& out);
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
 TEST_F(TEST_FIXTURE_NAME, SubstanceConcentration)
@@ -508,16 +509,16 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceConcentration)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEPharmacodynamicModifier;
 //    TYPE PharmacodynamicModifier
-//   static void Marshall(const CDM::PharmacodynamicModifierData& in, SEPharmacodynamicModifier& out);
-//   static void UnMarshall(const SEPharmacodynamicModifier& in, CDM::PharmacodynamicModifierData& out);
+//   static void UnMarshall(const CDM::PharmacodynamicModifierData& in, SEPharmacodynamicModifier& out);
+//   static void Marshall(const SEPharmacodynamicModifier& in, CDM::PharmacodynamicModifierData& out);
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 
 TEST_F(TEST_FIXTURE_NAME, PharmacodynamicModifier)
@@ -537,8 +538,8 @@ TEST_F(TEST_FIXTURE_NAME, PharmacodynamicModifier)
 
   EXPECT_NE(source, sink);
 
-  Substance::UnMarshall(source, data);
-  Substance::Marshall(data, sink);
+  Substance::Marshall(source, data);
+  Substance::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

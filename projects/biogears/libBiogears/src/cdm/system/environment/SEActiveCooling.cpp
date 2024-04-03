@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/SEActiveCooling.h>
 
+#include "io/cdm/Environment.h"
+
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
@@ -61,11 +63,7 @@ const SEScalar* SEActiveCooling::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SEActiveCooling::Load(const CDM::ActiveCoolingData& in, std::default_random_engine *rd)
 {
-  GetPower().Load(in.Power(), rd);
-  if (in.SurfaceArea().present())
-    GetSurfaceArea().Load(in.SurfaceArea().get(), rd);
-  if (in.SurfaceAreaFraction().present())
-    GetSurfaceAreaFraction().Load(in.SurfaceAreaFraction().get(), rd);
+  io::Environment::UnMarshall(in, *this, rd);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -78,12 +76,7 @@ CDM::ActiveCoolingData* SEActiveCooling::Unload() const
 //-----------------------------------------------------------------------------
 void SEActiveCooling::Unload(CDM::ActiveCoolingData& data) const
 {
-  if (HasPower())
-    data.Power(std::unique_ptr<CDM::ScalarPowerData>(m_Power->Unload()));
-  if (HasSurfaceArea())
-    data.SurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_SurfaceArea->Unload()));
-  if (HasSurfaceAreaFraction())
-    data.SurfaceAreaFraction(std::unique_ptr<CDM::ScalarFractionData>(m_SurfaceAreaFraction->Unload()));
+  io::Environment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEActiveCooling::HasPower() const

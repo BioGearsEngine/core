@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
@@ -40,8 +43,7 @@ void SEAnesthesiaMachineOxygenBottle::Clear()
 
 bool SEAnesthesiaMachineOxygenBottle::Load(const CDM::AnesthesiaMachineOxygenBottleData& in)
 {
-  if (in.Volume().present())
-    GetVolume().Load(in.Volume().get());
+  io::Anesthesia::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -56,8 +58,7 @@ CDM::AnesthesiaMachineOxygenBottleData* SEAnesthesiaMachineOxygenBottle::Unload(
 
 void SEAnesthesiaMachineOxygenBottle::Unload(CDM::AnesthesiaMachineOxygenBottleData& data) const
 {
-  if (m_Volume != nullptr)
-    data.Volume(std::unique_ptr<CDM::ScalarVolumeData>(m_Volume->Unload()));
+  io::Anesthesia::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 

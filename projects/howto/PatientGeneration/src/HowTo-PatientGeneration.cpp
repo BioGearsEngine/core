@@ -180,7 +180,7 @@ void PatientRun::refresh_treatment()
       _refresh_state = RefreshState::NOREPINEPHRINE_TITRATE;
       _Saline_bag->GetBagVolume().SetValue(250, VolumeUnit::mL);
       _Saline_bag->GetRate().SetValue(250, VolumePerTimeUnit::mL_Per_hr);
-      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
+      if (ua.GetBloodResult() == SEPresenceIndicator::Positive
           || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
         //Because body fluids are so low apply an additional 1000nl bolus over the hour
         _Saline_bag->GetBagVolume().SetValue(1250, VolumeUnit::mL);
@@ -258,7 +258,7 @@ void PatientRun::egdt_treatment()
 
         auto is_septic = _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
                         || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90;
-        auto is_not_euvolaemic = ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
+        auto is_not_euvolaemic = ua.GetBloodResult() == SEPresenceIndicator::Positive
                                  || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20;
 
         if (is_septic && is_not_euvolaemic) {
@@ -372,7 +372,7 @@ void PatientRun::egdt_treatment()
 
       _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL); 
       _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
-      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
+      if (ua.GetBloodResult() == SEPresenceIndicator::Positive
           || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
         //Because body fluids are so low apply an additional 500ml bolus over the hour
         _Saline_bag->GetBagVolume().SetValue(1000, VolumeUnit::mL);
@@ -595,13 +595,13 @@ PatientRun& PatientRun::infection_severity(std::string severity)
 {
   std::transform(severity.begin(), severity.end(), severity.begin(), [](unsigned char c) { return std::tolower(c); });
   if (severity == "mild") {
-    _infection_severity = CDM::enumInfectionSeverity::value::Mild;
+    _infection_severity = SEInfectionSeverity::Mild;
     _infection_severity_str = "Mild";
   } else if (severity == "") {
-    _infection_severity = CDM::enumInfectionSeverity::value::Moderate;
+    _infection_severity = SEInfectionSeverity::Moderate;
     _infection_severity_str = "Moderate";
   } else if (severity == "severe") {
-    _infection_severity = CDM::enumInfectionSeverity::value::Severe;
+    _infection_severity = SEInfectionSeverity::Severe;
     _infection_severity_str = "Severe";
   }
   return *this;

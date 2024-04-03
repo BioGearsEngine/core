@@ -23,18 +23,18 @@ CDM_BIND_DECL(ActionData);
 namespace biogears {
 class SESubstanceManager;
 namespace io {
-  class Scenario;
+  class Actions;
 }
 } //namespace biogears
 
 namespace biogears{
 class BIOGEARS_API SEAction : public Loggable {
-  friend io::Scenario;
+  friend io::Actions;
 
 public:
   virtual const char* classname() const = 0;
 
-  SEAction();
+  SEAction( Logger* = nullptr);
   virtual ~SEAction();
 
   virtual void Clear(); // Deletes all members

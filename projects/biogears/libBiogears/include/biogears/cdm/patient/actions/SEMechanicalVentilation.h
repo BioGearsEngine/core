@@ -11,8 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include "biogears/cdm/properties/SEScalarPressure.h"
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
@@ -45,11 +46,11 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr, std::default_random_engine* rd = nullptr);
   virtual CDM::MechanicalVentilationData* Unload() const override;
 
-  virtual CDM::enumOnOff::value GetState() const;
-  virtual void SetState(CDM::enumOnOff::value name);
+  virtual SEOnOff GetState() const;
+  virtual void SetState(SEOnOff name);
   virtual bool HasState() const;
   virtual void InvalidateState();
 
@@ -72,8 +73,8 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
-  bool operator==( const SEMechanicalVentilation& rhs) const;
-  bool operator!=( const SEMechanicalVentilation& rhs) const;
+  bool operator==(const SEMechanicalVentilation& rhs) const;
+  bool operator!=(const SEMechanicalVentilation& rhs) const;
 
 protected:
   virtual void Unload(CDM::MechanicalVentilationData& data) const;
@@ -81,7 +82,7 @@ protected:
 protected:
   std::stringstream m_ss;
 
-  CDM::enumOnOff::value m_State;
+  SEOnOff m_State;
   SEScalarVolumePerTime* m_Flow;
   SEScalarPressure* m_Pressure;
 

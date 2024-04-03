@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 
+#include "io/cdm/Circuit.h"
+
 namespace biogears {
 SEThermalCircuitNode::SEThermalCircuitNode(const char* name, Logger* logger)
   : SEThermalCircuitNode(std::string{ name }, logger)
@@ -35,17 +37,7 @@ void SEThermalCircuitNode::Clear()
 //-------------------------------------------------------------------------------
 bool SEThermalCircuitNode::Load(const CDM::ThermalCircuitNodeData& in)
 {
-  SECircuitNode::Load(in);
-  if (in.Temperature().present())
-    GetTemperature().Load(in.Temperature().get());
-  if (in.NextTemperature().present())
-    GetNextTemperature().Load(in.NextTemperature().get());
-  if (in.Heat().present())
-    GetHeat().Load(in.Heat().get());
-  if (in.NextHeat().present())
-    GetNextHeat().Load(in.NextHeat().get());
-  if (in.HeatBaseline().present())
-    GetHeatBaseline().Load(in.HeatBaseline().get());
+  io::Circuit::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -58,17 +50,7 @@ CDM::ThermalCircuitNodeData* SEThermalCircuitNode::Unload() const
 //-------------------------------------------------------------------------------
 void SEThermalCircuitNode::Unload(CDM::ThermalCircuitNodeData& data) const
 {
-  SECircuitNode::Unload(data);
-  if (HasTemperature())
-    data.Temperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_Potential->Unload()));
-  if (HasNextTemperature())
-    data.NextTemperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_NextPotential->Unload()));
-  if (HasHeat())
-    data.Heat(std::unique_ptr<CDM::ScalarEnergyData>(m_Quantity->Unload()));
-  if (HasNextHeat())
-    data.NextHeat(std::unique_ptr<CDM::ScalarEnergyData>(m_NextQuantity->Unload()));
-  if (HasHeatBaseline())
-    data.HeatBaseline(std::unique_ptr<CDM::ScalarEnergyData>(m_QuantityBaseline->Unload()));
+  io::Circuit::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEThermalCircuitNode::HasTemperature() const

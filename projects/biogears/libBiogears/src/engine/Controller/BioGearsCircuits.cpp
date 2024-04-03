@@ -165,15 +165,15 @@ SEFluidCircuit& BioGearsCircuits::GetRenalCircuit()
 SEFluidCircuit& BioGearsCircuits::GetActiveRespiratoryCircuit()
 {
   switch (m_data.GetAirwayMode()) {
-  case CDM::enumBioGearsAirwayMode::Free:
+  case SEBioGearsAirwayMode::Free:
     return *m_RespiratoryCircuit;
-  case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
+  case SEBioGearsAirwayMode::AnesthesiaMachine:
     return *m_CombinedRespiratoryAnesthesiaCircuit;
-  case CDM::enumBioGearsAirwayMode::Inhaler:
+  case SEBioGearsAirwayMode::Inhaler:
     return *m_CombinedRespiratoryInhalerCircuit;
-  case CDM::enumBioGearsAirwayMode::NasalCannula:
+  case SEBioGearsAirwayMode::NasalCannula:
     return *m_CombinedRespiratoryNasalCannulaCircuit;
-  case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
+  case SEBioGearsAirwayMode::MechanicalVentilator:
     return *m_CombinedRespiratoryMechanicalVentilatorCircuit;
   default:
     throw CommonDataModelException("Unknown airway mode");

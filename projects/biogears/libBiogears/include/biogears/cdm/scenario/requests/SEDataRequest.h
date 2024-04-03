@@ -22,11 +22,11 @@ class SESubstanceManager;
 class SEDecimalFormat;
 class SEDataRequestManager;
 namespace io {
-  class Scenario;
+  class DataRequests;
 }
 class BIOGEARS_API SEDataRequest : public SEDecimalFormat {
   friend class SEDataRequestManager;
-  friend io::Scenario;
+  friend io::DataRequests;
 
 
 public:

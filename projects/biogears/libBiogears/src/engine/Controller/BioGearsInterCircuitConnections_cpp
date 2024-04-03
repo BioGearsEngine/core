@@ -59,8 +59,8 @@ bool BioGearsInterCircuitConnections::LoadInterCircuitConnections(const std::str
 
   SECircuit* RespiratoryCircuit = m_Data->GetCircuits()->GetRespiratoryCircuit();
   SECircuit* AnesthesiaMachineCircuit = m_Data->GetCircuits()->GetAnesthesiaCircuit();
-  SECircuitNode* MouthNode = RespiratoryCircuit->GetNode(CDM::enumBioGearsNode::Mouth);
-  SECircuitNode* ConnectionNode = AnesthesiaMachineCircuit->GetNode(CDM::enumBioGearsNode::AnesthesiaConnection);
+  SECircuitNode* MouthNode = RespiratoryCircuit->GetNode(SEBioGearsNode::Mouth);
+  SECircuitNode* ConnectionNode = AnesthesiaMachineCircuit->GetNode(SEBioGearsNode::AnesthesiaConnection);
 
   m_RespiratoryAnesthesiaMachineInterCircuitConnection->CreateInterCircuitConnection("RespiratoryAnesthesiaMachineConnection", AnesthesiaMachineCircuit, ConnectionNode, RespiratoryCircuit, MouthNode);
   m_RespiratoryAnesthesiaMachineInterCircuitConnection->SetActive(false);

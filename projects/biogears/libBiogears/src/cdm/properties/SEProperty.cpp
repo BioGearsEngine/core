@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEProperty.h>
 
+#include "io/cdm/Property.h"
+
 namespace biogears {
 SEProperty::SEProperty()
 {

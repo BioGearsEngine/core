@@ -23,6 +23,9 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SELiquidCompartment;
 class SECompartmentManager;
+
+BG_EXT template class BIOGEARS_API SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment>;
+
 class BIOGEARS_API SELiquidCompartmentLink : public SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment> {
   friend class SECompartmentManager;
 

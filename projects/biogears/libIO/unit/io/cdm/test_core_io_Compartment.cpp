@@ -104,8 +104,8 @@ void TEST_FIXTURE_NAME::TearDown()
 
 //! Abstract class SEGasCompartment
 //! TYPE GasCompartment
-//! static void Marshall(const CDM::GasCompartment& in, SEGasCompartment& out);
-//! static void UnMarshall(const SEGasCompartment& in, CDM::GasCompartment& out);
+//! static void UnMarshall(const CDM::GasCompartment& in, SEGasCompartment& out);
+//! static void Marshall(const SEGasCompartment& in, CDM::GasCompartment& out);
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 TEST_F(TEST_FIXTURE_NAME, GasCompartment)
 {
@@ -122,16 +122,16 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartment)
 
   EXPECT_NE(source, sink);
 
-  Compartment::UnMarshall(source, data);
-  Compartment::Marshall(data, sink, substanceManager);
+  Compartment::Marshall(source, data);
+  Compartment::UnMarshall(data, sink, substanceManager);
 
   EXPECT_EQ(source, sink);
 };
 
 //! Abstract class SEGasCompartmentLink
 //! TYPE GasCompartmentLink
-//! static void Marshall(const CDM::GasCompartmentLink& in, SEGasCompartmentLink& out);
-//! static void UnMarshall(const SEGasCompartmentLink& in, CDM::GasCompartmentLink& out);
+//! static void UnMarshall(const CDM::GasCompartmentLink& in, SEGasCompartmentLink& out);
+//! static void Marshall(const SEGasCompartmentLink& in, CDM::GasCompartmentLink& out);
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 TEST_F(TEST_FIXTURE_NAME, GasCompartmentLink)
 {
@@ -148,16 +148,16 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartmentLink)
 
   //EXPECT_NE(source, sink);
 
-  //Compartment::UnMarshall(source, data);
-  //Compartment::Marshall(data, sink);
+  //Compartment::Marshall(source, data);
+  //Compartment::UnMarshall(data, sink);
 
   //EXPECT_EQ(source, sink);
 };
 
 //! Abstract class SEGasCompartmentGraph
 //! TYPE GasCompartmentGraph
-// static void Marshall(const CDM::GasCompartmentGraphData& in, SEGasCompartmentGraph& out, SECompartmentManager& cmptMgr);
-// static void UnMarshall(const SEGasCompartmentGraph& in, CDM::GasCompartmentGraphData& out);
+// static void UnMarshall(const CDM::GasCompartmentGraphData& in, SEGasCompartmentGraph& out, SECompartmentManager& cmptMgr);
+// static void Marshall(const SEGasCompartmentGraph& in, CDM::GasCompartmentGraphData& out);
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
 TEST_F(TEST_FIXTURE_NAME, GasCompartmentGraph) {
   // USING_TYPES(GasCompartmentGraph)
@@ -168,8 +168,8 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartmentGraph) {
 
   // EXPECT_NE(source, sink);
 
-  // Compartment::UnMarshall(source, data);
-  // Compartment::Marshall(data, sink, compartmentManager);
+  // Compartment::Marshall(source, data);
+  // Compartment::UnMarshall(data, sink, compartmentManager);
 
   // EXPECT_EQ(source, sink);
 };

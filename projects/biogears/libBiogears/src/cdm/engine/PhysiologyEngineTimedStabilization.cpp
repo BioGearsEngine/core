@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
 
+#include "io/cdm/EngineConfiguration.h"
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
@@ -91,12 +92,12 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
     // if it is we can break our loop. This will allow us to record our stabilization data
     engine.AdvanceModelTime();
 
-    m_currentTime->IncrementValue(dT_s, TimeUnit::s);
+    m_CurrentTime->IncrementValue(dT_s, TimeUnit::s);
     if (m_LogProgress) {
       statusTime_s += dT_s;
       if (statusTime_s > statusStep_s) {
         statusTime_s = 0;
-        ss << "Current Time is " << m_currentTime->GetValue(TimeUnit::s) << "s, it took "
+        ss << "Current Time is " << m_CurrentTime->GetValue(TimeUnit::s) << "s, it took "
            << profiler.GetElapsedTime_s("Status") << "s to simulate the past "
            << statusStep_s << "s" << std::flush;
         profiler.Reset("Status");
@@ -140,15 +141,7 @@ void PhysiologyEngineTimedStabilization::Clear()
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const CDM::PhysiologyEngineTimedStabilizationData& in)
 {
-  PhysiologyEngineStabilization::Load(in);
-  GetRestingStabilizationTime().Load(in.RestingStabilizationTime());
-  if (in.FeedbackStabilizationTime().present())
-    GetFeedbackStabilizationTime().Load(in.FeedbackStabilizationTime().get());
-  for (auto cc : in.ConditionStabilization()) {
-    PhysiologyEngineTimedStabilizationCriteria* sc = new PhysiologyEngineTimedStabilizationCriteria(nullptr);
-    sc->Load(cc);
-    m_ConditionCriteria.push_back(sc);
-  }
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -161,13 +154,7 @@ CDM::PhysiologyEngineTimedStabilizationData* PhysiologyEngineTimedStabilization:
 //-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilization::Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const
 {
-  PhysiologyEngineStabilization::Unload(data);
-  data.RestingStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_RestingStabilizationTime.Unload()));
-  if (HasFeedbackStabilizationTime())
-    data.FeedbackStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_FeedbackStabilizationTime->Unload()));
-  for (auto cc : m_ConditionCriteria) {
-    data.ConditionStabilization().push_back(std::unique_ptr<CDM::PhysiologyEngineTimedConditionStabilizationData>(cc->Unload()));
-  }
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const char* file)

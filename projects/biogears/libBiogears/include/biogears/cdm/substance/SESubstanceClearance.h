@@ -14,7 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include "biogears/cdm/properties/SEScalarFrequency.h"
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/schema/cdm/Substance.hxx>
 
 CDM_BIND_DECL(SubstanceClearanceData)
@@ -68,8 +69,8 @@ public:
   virtual SEScalarFrequency& GetCellDeathRate();
   virtual double GetCellDeathRate(const FrequencyUnit& unit) const;
 
-  virtual CDM::enumCharge::value GetChargeInBlood() const;
-  virtual void SetChargeInBlood(CDM::enumCharge::value type);
+  virtual SECharge GetChargeInBlood() const;
+  virtual void SetChargeInBlood(SECharge type);
   virtual bool HasChargeInBlood() const;
   virtual void InvalidateChargeInBlood();
 
@@ -142,7 +143,7 @@ protected:
   SEScalarFrequency* m_CellBirthRate;
   SEScalarFrequency* m_CellDeathRate;
 
-  CDM::enumCharge::value m_ChargeInBlood;
+  SECharge m_ChargeInBlood;
   SEScalarFraction* m_FractionExcretedInFeces;
   SEScalarFraction* m_FractionExcretedInUrine;
   SEScalarFraction* m_FractionMetabolizedInGut;

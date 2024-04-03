@@ -14,9 +14,11 @@ specific language governing permissions and limitations under the License.
 
 #include <memory>
 
-#include <biogears/cdm/CommonDataModel.h>
-#include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/exports.h>
+#include <biogears/cdm/CommonDataModel.h>
+
+#include <biogears/cdm/enums/SESubstanceEnums.h>
+#include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/schema/cdm/Substance.hxx>
 
 namespace biogears {
@@ -48,8 +50,8 @@ public:
   virtual bool HasName() const;
   virtual void InvalidateName();
 
-  virtual CDM::enumSubstanceClass::value GetClassification() const;
-  virtual void SetClassification(CDM::enumSubstanceClass::value subClass);
+  virtual SESubstanceClass GetClassification() const;
+  virtual void SetClassification(SESubstanceClass subClass);
   virtual bool HasClassification() const;
   virtual void InvalidateClassification();
   virtual bool GetRhFactor() const;
@@ -72,7 +74,7 @@ protected:
 
 protected:
   std::string m_Name;
-  CDM::enumSubstanceClass::value m_Classification;
+  SESubstanceClass m_Classification;
   bool m_RhFactor;
 
   std::vector<SESubstanceConcentration> m_Components;

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
@@ -40,8 +41,8 @@ protected:
 
 public:
   virtual bool HasObservationType() const;
-  virtual CDM::enumMicroscopicObservationType::value GetObservationType() const;
-  virtual void SetObservationType(CDM::enumMicroscopicObservationType::value p);
+  virtual SEMicroscopicObservationType GetObservationType() const;
+  virtual void SetObservationType(SEMicroscopicObservationType p);
   virtual void InvalidateObservationType();
 
   virtual bool HasRedBloodCellsResult() const;
@@ -51,45 +52,45 @@ public:
   virtual SEScalarAmount& GetWhiteBloodCellsResult();
 
   virtual bool HasEpithelialCellsResult() const;
-  virtual CDM::enumMicroscopicObservationAmount::value GetEpithelialCellsResult() const;
-  virtual void SetEpithelialCellsResult(CDM::enumMicroscopicObservationAmount::value p);
+  virtual SEMicroscopicObservationAmount GetEpithelialCellsResult() const;
+  virtual void SetEpithelialCellsResult(SEMicroscopicObservationAmount p);
   virtual void InvalidateEpithelialCellsResult();
 
   virtual bool HasCastsResult() const;
   virtual SEScalarAmount& GetCastsResult();
 
   virtual bool HasCrystalsResult() const;
-  virtual CDM::enumMicroscopicObservationAmount::value GetCrystalsResult() const;
-  virtual void SetCrystalsResult(CDM::enumMicroscopicObservationAmount::value p);
+  virtual SEMicroscopicObservationAmount GetCrystalsResult() const;
+  virtual void SetCrystalsResult(SEMicroscopicObservationAmount p);
   virtual void InvalidateCrystalsResult();
 
   virtual bool HasBacteriaResult() const;
-  virtual CDM::enumMicroscopicObservationAmount::value GetBacteriaResult() const;
-  virtual void SetBacteriaResult(CDM::enumMicroscopicObservationAmount::value p);
+  virtual SEMicroscopicObservationAmount GetBacteriaResult() const;
+  virtual void SetBacteriaResult(SEMicroscopicObservationAmount p);
   virtual void InvalidateBacteriaResult();
 
   virtual bool HasTrichomonadsResult() const;
-  virtual CDM::enumMicroscopicObservationAmount::value GetTrichomonadsResult() const;
-  virtual void SetTrichomonadsResult(CDM::enumMicroscopicObservationAmount::value p);
+  virtual SEMicroscopicObservationAmount GetTrichomonadsResult() const;
+  virtual void SetTrichomonadsResult(SEMicroscopicObservationAmount p);
   virtual void InvalidateTrichomonadsResult();
 
   virtual bool HasYeastResult() const;
-  virtual CDM::enumMicroscopicObservationAmount::value GetYeastResult() const;
-  virtual void SetYeastResult(CDM::enumMicroscopicObservationAmount::value p);
+  virtual SEMicroscopicObservationAmount GetYeastResult() const;
+  virtual void SetYeastResult(SEMicroscopicObservationAmount p);
   virtual void InvalidateYeastResult();
 
   bool operator==(SEUrinalysisMicroscopic const&) const;
   bool operator!=(SEUrinalysisMicroscopic const&) const;
 
 protected:
-  CDM::enumMicroscopicObservationType::value m_ObservationType;
+  SEMicroscopicObservationType m_ObservationType;
   SEScalarAmount* m_RedBloodCells;
   SEScalarAmount* m_WhiteBloodCells;
-  CDM::enumMicroscopicObservationAmount::value m_EpithelialCells;
+  SEMicroscopicObservationAmount m_EpithelialCells;
   SEScalarAmount* m_Casts;
-  CDM::enumMicroscopicObservationAmount::value m_Crystals;
-  CDM::enumMicroscopicObservationAmount::value m_Bacteria;
-  CDM::enumMicroscopicObservationAmount::value m_Trichomonads;
-  CDM::enumMicroscopicObservationAmount::value m_Yeast;
+  SEMicroscopicObservationAmount m_Crystals;
+  SEMicroscopicObservationAmount m_Bacteria;
+  SEMicroscopicObservationAmount m_Trichomonads;
+  SEMicroscopicObservationAmount m_Yeast;
 };
 }

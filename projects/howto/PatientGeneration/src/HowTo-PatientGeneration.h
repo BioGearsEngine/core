@@ -12,9 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#include "biogears/cdm/engine/PhysiologyEngine.h"
-#include "biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h"
-#include "biogears/cdm/patient/actions/SESubstanceInfusion.h"
+#include <biogears/cdm/engine/PhysiologyEngine.h>
+#include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
+#include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/filesystem/path.h>
 
 
@@ -96,8 +97,8 @@ private:
   //Configuration Details
   std::string _patient_name;
   char const* _infection_severity_str;
-  CDM::enumInfectionSeverity::value _infection_severity = CDM::enumInfectionSeverity::value::Eliminated;
   char const* _treatment_plan_str;
+  biogears::SEInfectionSeverity _infection_severity = biogears::SEInfectionSeverity::Eliminated;
   TreatmentPlan _treatment_plan = TreatmentPlan::STANDARD;
 
   biogears::filesystem::path _patient_state;

@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
 
+#include "io/cdm/Inhaler.h"
+#include "io/cdm/InhalerActions.h"
+
 namespace biogears {
 SEInhalerAction::SEInhalerAction()
   : SEAction()
@@ -34,7 +37,7 @@ bool SEInhalerAction::IsValid() const
 
 bool SEInhalerAction::Load(const CDM::InhalerActionData& in)
 {
-  SEAction::Load(in);
+  io::InhalerActions::UnMarshall(in, *this);
   return true;
 }
 
@@ -47,6 +50,6 @@ CDM::InhalerActionData* SEInhalerAction::Unload() const
 
 void SEInhalerAction::Unload(CDM::InhalerActionData& data) const
 {
-  SEAction::Unload(data);
+  io::InhalerActions::Marshall(*this, data);
 }
 }

@@ -5,12 +5,12 @@
 namespace biogears {
 namespace io {
   //class SESystem
-  void System::Marshall(const CDM::SystemData& in, SESystem& out)
+  void System::UnMarshall(const CDM::SystemData& in, SESystem& out)
   {
     out.Clear();
   }
   //-----------------------------------------------------------------------------
-  void System::UnMarshall(const SESystem& in, CDM::SystemData& out)
+  void System::Marshall(const SESystem& in, CDM::SystemData& out)
   {
   }
   //-----------------------------------------------------------------------------

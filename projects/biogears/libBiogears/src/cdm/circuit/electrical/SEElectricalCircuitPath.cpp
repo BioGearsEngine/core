@@ -12,7 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
 
+#include "io/cdm/Circuit.h"
+
 namespace biogears {
+
+    template class  SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>;
+
 SEElectricalCircuitPath::SEElectricalCircuitPath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const char* name)
   : SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>(src, tgt, name)
   , m_ElectricalSourceNode(src)
@@ -36,44 +41,7 @@ void SEElectricalCircuitPath::Clear()
 
 bool SEElectricalCircuitPath::Load(const CDM::ElectricalCircuitPathData& in)
 {
-  SECircuitPath::Load(in);
-  if (in.Resistance().present())
-    GetResistance().Load(in.Resistance().get());
-  if (in.NextResistance().present())
-    GetNextResistance().Load(in.NextResistance().get());
-  if (in.ResistanceBaseline().present())
-    GetResistanceBaseline().Load(in.ResistanceBaseline().get());
-  if (in.Capacitance().present())
-    GetCapacitance().Load(in.Capacitance().get());
-  if (in.NextCapacitance().present())
-    GetNextCapacitance().Load(in.NextCapacitance().get());
-  if (in.CapacitanceBaseline().present())
-    GetCapacitanceBaseline().Load(in.CapacitanceBaseline().get());
-  if (in.Inductance().present())
-    GetInductance().Load(in.Inductance().get());
-  if (in.NextInductance().present())
-    GetNextInductance().Load(in.NextInductance().get());
-  if (in.InductanceBaseline().present())
-    GetInductanceBaseline().Load(in.InductanceBaseline().get());
-  if (in.Current().present())
-    GetCurrent().Load(in.Current().get());
-  if (in.NextCurrent().present())
-    GetNextCurrent().Load(in.NextCurrent().get());
-  if (in.CurrentSource().present())
-    GetCurrentSource().Load(in.CurrentSource().get());
-  if (in.NextCurrentSource().present())
-    GetNextCurrentSource().Load(in.NextCurrentSource().get());
-  if (in.CurrentSourceBaseline().present())
-    GetCurrentSourceBaseline().Load(in.CurrentSourceBaseline().get());
-  if (in.VoltageSource().present())
-    GetVoltageSource().Load(in.VoltageSource().get());
-  if (in.NextVoltageSource().present())
-    GetNextVoltageSource().Load(in.NextVoltageSource().get());
-  if (in.VoltageSourceBaseline().present())
-    GetVoltageSourceBaseline().Load(in.VoltageSourceBaseline().get());
-  if (in.ValveBreakdownVoltage().present())
-    GetValveBreakdownVoltage().Load(in.ValveBreakdownVoltage().get());
-
+  io::Circuit::UnMarshall(in, *this);
   return HasValidElements();
 }
 CDM::ElectricalCircuitPathData* SEElectricalCircuitPath::Unload() const
@@ -84,43 +52,7 @@ CDM::ElectricalCircuitPathData* SEElectricalCircuitPath::Unload() const
 }
 void SEElectricalCircuitPath::Unload(CDM::ElectricalCircuitPathData& data) const
 {
-  SECircuitPath::Unload(data);
-  if (HasResistance())
-    data.Resistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_Resistance->Unload()));
-  if (HasNextResistance())
-    data.NextResistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_NextResistance->Unload()));
-  if (HasResistanceBaseline())
-    data.ResistanceBaseline(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_ResistanceBaseline->Unload()));
-  if (HasCapacitance())
-    data.Capacitance(std::unique_ptr<CDM::ScalarElectricCapacitanceData>(m_Capacitance->Unload()));
-  if (HasNextCapacitance())
-    data.NextCapacitance(std::unique_ptr<CDM::ScalarElectricCapacitanceData>(m_NextCapacitance->Unload()));
-  if (HasCapacitanceBaseline())
-    data.CapacitanceBaseline(std::unique_ptr<CDM::ScalarElectricCapacitanceData>(m_CapacitanceBaseline->Unload()));
-  if (HasInductance())
-    data.Inductance(std::unique_ptr<CDM::ScalarElectricInductanceData>(m_Inductance->Unload()));
-  if (HasNextInductance())
-    data.NextInductance(std::unique_ptr<CDM::ScalarElectricInductanceData>(m_NextInductance->Unload()));
-  if (HasInductanceBaseline())
-    data.InductanceBaseline(std::unique_ptr<CDM::ScalarElectricInductanceData>(m_InductanceBaseline->Unload()));
-  if (HasCurrent())
-    data.Current(std::unique_ptr<CDM::ScalarElectricCurrentData>(m_Flux->Unload()));
-  if (HasNextCurrent())
-    data.NextCurrent(std::unique_ptr<CDM::ScalarElectricCurrentData>(m_NextFlux->Unload()));
-  if (HasCurrentSource())
-    data.CurrentSource(std::unique_ptr<CDM::ScalarElectricCurrentData>(m_FluxSource->Unload()));
-  if (HasNextCurrentSource())
-    data.NextCurrentSource(std::unique_ptr<CDM::ScalarElectricCurrentData>(m_NextFluxSource->Unload()));
-  if (HasCurrentSourceBaseline())
-    data.CurrentSourceBaseline(std::unique_ptr<CDM::ScalarElectricCurrentData>(m_FluxSourceBaseline->Unload()));
-  if (HasVoltageSource())
-    data.VoltageSource(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_PotentialSource->Unload()));
-  if (HasNextVoltageSource())
-    data.NextVoltageSource(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_NextPotentialSource->Unload()));
-  if (HasVoltageSourceBaseline())
-    data.VoltageSourceBaseline(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_PotentialSourceBaseline->Unload()));
-  if (HasValveBreakdownVoltage())
-    data.ValveBreakdownVoltage(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_ValveBreakdownPotential->Unload()));
+  io::Circuit::Marshall(*this, data);
 }
 
 ////////////////////////////////

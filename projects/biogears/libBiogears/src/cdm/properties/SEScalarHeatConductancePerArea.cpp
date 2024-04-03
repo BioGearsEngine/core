@@ -11,13 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_K("W/m^2 K");
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_C("W/m^2 degC");
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::BTU_Per_hr_ft2_C("BTU/hr ft^2 degC");
 
-template class SEScalarQuantity<HeatConductancePerAreaUnit>;
+template BIOGEARS_API class SEScalarQuantity<HeatConductancePerAreaUnit>;
+//template void BIOGEARS_API SEScalarQuantity<HeatConductancePerAreaUnit>::SetValue(double d, const HeatConductancePerAreaUnit& unit);
 
 HeatConductancePerAreaUnit::HeatConductancePerAreaUnit(const char* u)
   : HeatConductancePerAreaUnit(std::string { u })

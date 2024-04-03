@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -45,8 +46,7 @@ bool SEAcuteRespiratoryDistress::IsActive() const
 
 bool SEAcuteRespiratoryDistress::Load(const CDM::AcuteRespiratoryDistressData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 
@@ -59,9 +59,7 @@ CDM::AcuteRespiratoryDistressData* SEAcuteRespiratoryDistress::Unload() const
 
 void SEAcuteRespiratoryDistress::Unload(CDM::AcuteRespiratoryDistressData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 
 bool SEAcuteRespiratoryDistress::HasSeverity() const

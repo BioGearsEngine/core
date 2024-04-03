@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 
+#include "io/cdm/Actions.h"
+
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/Actions.hxx>
 
@@ -39,8 +41,7 @@ bool SEAdvanceTime::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEAdvanceTime::Load(const CDM::AdvanceTimeData& in, std::default_random_engine *rd)
 {
-  SEAction::Load(in);
-  GetTime().Load(in.Time(), rd);
+  io::Actions::UnMarshall(in, *this, rd);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -53,9 +54,7 @@ CDM::AdvanceTimeData* SEAdvanceTime::Unload() const
 //-----------------------------------------------------------------------------
 void SEAdvanceTime::Unload(CDM::AdvanceTimeData& data) const
 {
-  SEAction::Unload(data);
-  if (HasTime())
-    data.Time(std::unique_ptr<CDM::ScalarTimeData>(m_Time->Unload()));
+  io::Actions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SEAdvanceTime::ToString(std::ostream& str) const

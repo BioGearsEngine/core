@@ -788,7 +788,7 @@ void Renal::CalculateActiveTransport()
 
   unsigned int i = 0;
   for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
-    if (sub->GetClassification()==mil::tatrc::physiology::datamodel::enumSubstanceClass::WholeBlood) {
+    if (sub->GetClassification() == SESubstanceClass::WholeBlood) {
       CalculateGolmerularReabsorption(*sub);
     }
     if (!sub->HasClearance())
@@ -978,15 +978,15 @@ void Renal::CalculateFilterability(SESubstance& sub)
     filterability = 0.0;
   } else {
     switch (sub.GetClearance().GetChargeInBlood()) {
-    case CDM::enumCharge::Positive:
+    case SECharge::Positive:
       filterability = 0.0386 * std::pow(molecularRadius_nm, 4.0) - 0.431 * std::pow(molecularRadius_nm, 3.0)
         + 1.61 * std::pow(molecularRadius_nm, 2.0) - 2.6162 * molecularRadius_nm + 2.607;
       break;
-    case CDM::enumCharge::Neutral:
+    case SECharge::Neutral:
       filterability = -0.0908 * std::pow(molecularRadius_nm, 4.0) + 1.2135 * std::pow(molecularRadius_nm, 3.0)
         - 5.76 * std::pow(molecularRadius_nm, 2.0) + 11.013 * molecularRadius_nm - 6.2792;
       break;
-    case CDM::enumCharge::Negative:
+    case SECharge::Negative:
       //Subtracting 0.01 to account for not enough significant digits given by the best fit - tuned looking at data table from report and confirmed for Albumin
       filterability = 0.0616 * std::pow(molecularRadius_nm, 4.0) - 0.8781 * std::pow(molecularRadius_nm, 3.0)
         + 4.6699 * std::pow(molecularRadius_nm, 2.0) - 10.995 * molecularRadius_nm + 9.6959 - 0.01;
@@ -1489,17 +1489,17 @@ void Renal::CalculateVitalSigns()
 
   //Only check these once each cardiac cycle (using running average for entire cycle)
   //Otherwise, they could turn on and off like crazy as the flows fluctuate throughout the cycle
-  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle) && m_Urinating == false) {
+  if (m_data.GetPatient().IsEventActive(SEPatientEventType::StartOfCardiacCycle) && m_Urinating == false) {
     if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
       //Handle Events
       /// \cite lahav1992intermittent
       /// 2.5 mL/min
       if (m_urineProductionRate_mL_Per_min_runningAvg.Value() > 2.5) {
         /// \event Patient: Diuresis. Occurs when the urine production rate double to around 2.5 ml/min. \cite lahav1992intermittent
-        m_patient->SetEvent(CDM::enumPatientEvent::Diuresis, true, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::Diuresis, true, m_data.GetSimulationTime());
       } else if (m_urineProductionRate_mL_Per_min_runningAvg.Value() < 1.0) {
         /// \event Patient: Ends when the urine production rate falls below 1.0 mL/min (near normal urine production). \cite lahav1992intermittent
-        m_patient->SetEvent(CDM::enumPatientEvent::Diuresis, false, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::Diuresis, false, m_data.GetSimulationTime());
       }
 
       /// \cite valtin1995renal
@@ -1507,20 +1507,20 @@ void Renal::CalculateVitalSigns()
       /// urine osmolarity must be hyperosmotic relative to plasma and urine production rate must be less than 0.5 mL/min
       if (m_urineProductionRate_mL_Per_min_runningAvg.Value() < 0.5 && m_urineOsmolarity_mOsm_Per_L_runningAvg.Value() > 280) {
         /// \event Patient: Antidiuresis occurs when urine production rate is less than 0.5 mL/min and the urine osmolarity is hyperosmotic to the plasma \cite valtin1995renal
-        m_patient->SetEvent(CDM::enumPatientEvent::Antidiuresis, true, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::Antidiuresis, true, m_data.GetSimulationTime());
       } else if ((m_urineProductionRate_mL_Per_min_runningAvg.Value() > 0.55 || m_urineOsmolarity_mOsm_Per_L_runningAvg.Value() < 275)) {
         /// \event Patient: Antidiuresis. Ends when urine production rate rises back above 0.55 mL/min or the urine osmolarity falls below that of the plasma \cite valtin1995renal
-        m_patient->SetEvent(CDM::enumPatientEvent::Antidiuresis, false, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::Antidiuresis, false, m_data.GetSimulationTime());
       }
 
       /// \cite Zager1988HypoperfusionRate
       /// Computing percent decrease as (1-1.6/11.2)*100 = 85 percent decrease or 15% total flow (using 20ml/s as "normal" value, below 3ml/s):
       if (renalBloodFlow_mL_Per_s < 3.0) {
         /// \event Patient: hypoperfusion occurs when renal blood flow decreases below 3 ml/s
-        m_patient->SetEvent(CDM::enumPatientEvent::RenalHypoperfusion, true, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::RenalHypoperfusion, true, m_data.GetSimulationTime());
       } else if (renalBloodFlow_mL_Per_s > 4.0) {
         /// \event Patient: hypoperfusion ends when blood flow recovers above 4 ml/s
-        m_patient->SetEvent(CDM::enumPatientEvent::RenalHypoperfusion, false, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::RenalHypoperfusion, false, m_data.GetSimulationTime());
       }
 
       /// \cite moss2014hormonal
@@ -1529,19 +1529,19 @@ void Renal::CalculateVitalSigns()
 
       if (m_sodiumExcretionRate_mg_Per_min_runningAvg.Value() > 14.4) {
         /// \event Patient: Natriuresis. Occurs when the sodium excretion rate rises above 14.4 mg/min \cite moss2013hormonal
-        m_patient->SetEvent(CDM::enumPatientEvent::Natriuresis, true, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::Natriuresis, true, m_data.GetSimulationTime());
       } else if (m_sodiumExcretionRate_mg_Per_min_runningAvg.Value() < 14.0) {
         /// \event Patient: Ends when the sodium excretion rate falls below 14.0 mg/min \cite moss2013hormonal
-        m_patient->SetEvent(CDM::enumPatientEvent::Natriuresis, false, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::Natriuresis, false, m_data.GetSimulationTime());
       }
 
-      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Infection)) {
         double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
         if (systolicBP <= 100.0 && GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) <= 0.5) {
-          m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, true, m_data.GetSimulationTime());
+          m_patient->SetEvent(SEPatientEventType::SevereSepsis, true, m_data.GetSimulationTime());
         }
-        if (m_patient->IsEventActive(CDM::enumPatientEvent::SevereSepsis) && m_urineProductionRate_mL_Per_min_runningAvg.Value() >= 0.55 && systolicBP > 90.0) {
-          m_patient->SetEvent(CDM::enumPatientEvent::SevereSepsis, false, m_data.GetSimulationTime());
+        if (m_patient->IsEventActive(SEPatientEventType::SevereSepsis) && m_urineProductionRate_mL_Per_min_runningAvg.Value() >= 0.55 && systolicBP > 90.0) {
+          m_patient->SetEvent(SEPatientEventType::SevereSepsis, false, m_data.GetSimulationTime());
         }
       }
     }
@@ -1571,7 +1571,7 @@ void Renal::Urinate()
   //Check and see if the bladder is overfull or if there is an action called
   if (m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) > bladderMaxVolume_mL) {
     /// \event Patient: FunctionalIncontinence: The patient's bladder has reached a maximum
-    m_patient->SetEvent(CDM::enumPatientEvent::FunctionalIncontinence, true, m_data.GetSimulationTime());
+    m_patient->SetEvent(SEPatientEventType::FunctionalIncontinence, true, m_data.GetSimulationTime());
     m_Urinating = true;
   }
 
@@ -1588,8 +1588,8 @@ void Renal::Urinate()
     //  //The urethra resistances will use the baselines value of an open switch to stop the flow
 
     //  //Turn off the event
-    //  if (m_patient->IsEventActive(CDM::enumPatientEvent::FunctionalIncontinence)) {
-    //    m_patient->SetEvent(CDM::enumPatientEvent::FunctionalIncontinence, false, m_data.GetSimulationTime());
+    //  if (m_patient->IsEventActive(SEPatientEventType::FunctionalIncontinence)) {
+    //    m_patient->SetEvent(SEPatientEventType::FunctionalIncontinence, false, m_data.GetSimulationTime());
     //  }
     //} else {
     //  //Prevent anything from leaving except for what's in the bladder
@@ -1676,42 +1676,42 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
 
   double urineOsm_Per_kg = GetUrineOsmolality(OsmolalityUnit::mOsm_Per_kg);
   if (m_data.GetBloodChemistry().GetHemoglobinLostToUrine(MassUnit::g) >= 5.0) {
-    u.SetColorResult(CDM::enumUrineColor::Pink);
+    u.SetColorResult(SEUrineColor::Pink);
   } else if (urineOsm_Per_kg <= 400) { // Need cite for this
-    u.SetColorResult(CDM::enumUrineColor::PaleYellow);
+    u.SetColorResult(SEUrineColor::PaleYellow);
   } else if (urineOsm_Per_kg > 400 && urineOsm_Per_kg <= 750) {
-    u.SetColorResult(CDM::enumUrineColor::Yellow);
+    u.SetColorResult(SEUrineColor::Yellow);
   } else {
-    u.SetColorResult(CDM::enumUrineColor::DarkYellow);
+    u.SetColorResult(SEUrineColor::DarkYellow);
   }
 
   //u.SetApperanceResult();
   double bladder_glucose_mg_Per_dL = m_bladderGlucose->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL);
 
   if (bladder_glucose_mg_Per_dL >= 100.0) /// \cite roxe1990urinalysis
-    u.SetGlucoseResult(CDM::enumPresenceIndicator::Positive);
+    u.SetGlucoseResult(SEPresenceIndicator::Positive);
   else
-    u.SetGlucoseResult(CDM::enumPresenceIndicator::Negative);
+    u.SetGlucoseResult(SEPresenceIndicator::Negative);
 
   if (bladder_glucose_mg_Per_dL >= 5.0) /// \cite roxe1990urinalysis
-    u.SetKetoneResult(CDM::enumPresenceIndicator::Positive);
+    u.SetKetoneResult(SEPresenceIndicator::Positive);
   else
-    u.SetKetoneResult(CDM::enumPresenceIndicator::Negative);
+    u.SetKetoneResult(SEPresenceIndicator::Negative);
 
   //u.SetBilirubinResult();
 
   u.GetSpecificGravityResult().Set(GetUrineSpecificGravity());
   if (bladder_glucose_mg_Per_dL > 0.15 || m_data.GetBloodChemistry().GetHemoglobinLostToUrine(MassUnit::g) >= 5.0) /// \cite roxe1990urinalysis
-    u.SetBloodResult(CDM::enumPresenceIndicator::Positive);
+    u.SetBloodResult(SEPresenceIndicator::Positive);
   else
-    u.SetBloodResult(CDM::enumPresenceIndicator::Negative);
+    u.SetBloodResult(SEPresenceIndicator::Negative);
 
   //u.GetPHResult().Set();
 
   if (bladder_glucose_mg_Per_dL > 30.0) /// \cite roxe1990urinalysis
-    u.SetProteinResult(CDM::enumPresenceIndicator::Positive);
+    u.SetProteinResult(SEPresenceIndicator::Positive);
   else
-    u.SetProteinResult(CDM::enumPresenceIndicator::Negative);
+    u.SetProteinResult(SEPresenceIndicator::Negative);
 
   //u.SetUrobilinogen();
   //u.SetNitrite();
@@ -1772,7 +1772,7 @@ void Renal::CalculateOsmoreceptorFeedback()
 
       m_leftReabsorptionPermeabilityModificationFactor = std::pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / std::pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
 
-      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+      if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_leftReabsorptionPermeabilityModificationFactor;
 
         //Modify reabsorption resistance
@@ -1783,7 +1783,7 @@ void Renal::CalculateOsmoreceptorFeedback()
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetRightTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
       m_rightReabsorptionPermeabilityModificationFactor = std::pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / std::pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
-      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+      if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_rightReabsorptionPermeabilityModificationFactor;
 
         //Modify reabsorption resistance
@@ -1791,7 +1791,7 @@ void Renal::CalculateOsmoreceptorFeedback()
       }
     }
   }
-  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
     m_sodiumConcentration_mg_Per_mL_runningAvg.Reset();
   }
 }
@@ -1849,7 +1849,7 @@ void Renal::CalculateTubuloglomerularFeedback()
       sodiumFlow_mg_Per_s = m_leftSodiumFlow_mg_Per_s_runningAvg.Sample(sodiumFlow_mg_Per_s);
 
       // Save off the last set point from initial stabilization for use after stabilization
-      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         //Don't change the resistance - just figure out what it is
         m_leftSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
       }
@@ -1878,14 +1878,14 @@ void Renal::CalculateTubuloglomerularFeedback()
       sodiumFlow_mg_Per_s = m_rightSodiumFlow_mg_Per_s_runningAvg.Sample(sodiumFlow_mg_Per_s);
 
       // Save off the last set point from initial stabilization for use after stabilization
-      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         //Don't change the resistance - just figure out what it is
         m_rightSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
       }
       sodiumFlowSetPoint_mg_Per_s = m_rightSodiumFlowSetPoint_mg_Per_s;
     }
 
-    if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+    if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
       //Us the "current" resistance, to continually drive towards the response we want - the next value is overwritten by the baseline during postprocess
       double currentAfferentResistance_mmHg_s_Per_mL = afferentResistancePath->GetResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
       double nextAfferentResistance_mmHg_s_Per_mL = afferentResistancePath->GetNextResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1927,7 +1927,7 @@ void Renal::CalculateTubuloglomerularFeedback()
     }
   }
   //reset sodium flow at start of cardiac cycle
-  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
     m_leftSodiumFlow_mg_Per_s_runningAvg.Reset();
     m_rightSodiumFlow_mg_Per_s_runningAvg.Reset();
   }
@@ -1969,7 +1969,7 @@ void Renal::CalculateFluidPermeability()
       leftArterialPressure_mmHg = m_leftRenalArterialPressure_mmHg_runningAvg.Sample(leftArterialPressure_mmHg);
 
       //compute desired permeability as a function of arterial pressure, else set as baseline
-      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+      if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         if (round(leftArterialPressure_mmHg) >= 80.0) {
           permeability_mL_Per_s_mmHg_m2 = a * std::pow(leftArterialPressure_mmHg, 2) + b * leftArterialPressure_mmHg + c;
         } else {
@@ -1995,7 +1995,7 @@ void Renal::CalculateFluidPermeability()
       rightArterialPressure_mmHg = m_rightRenalArterialPressure_mmHg_runningAvg.Sample(rightArterialPressure_mmHg);
 
       //compute desired permeability as a function of arterial pressure, else set as baseline
-      if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+      if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         if (round(rightArterialPressure_mmHg) >= 80.0) {
           permeability_mL_Per_s_mmHg_m2 = a * std::pow(rightArterialPressure_mmHg, 2) + b * rightArterialPressure_mmHg + c;
         } else {
@@ -2013,7 +2013,7 @@ void Renal::CalculateFluidPermeability()
     }
   }
   //reset average at start of cardiac cycle
-  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
     m_leftRenalArterialPressure_mmHg_runningAvg.Reset();
     m_rightRenalArterialPressure_mmHg_runningAvg.Reset();
   }
@@ -2162,70 +2162,70 @@ void Renal::OverrideControlLoop()
     currentUrineUreaNitrogenOverride = override->GetUrineUreaNitrogenConcentrationOverride(MassPerVolumeUnit::g_Per_L);
   }
 
-  if ((currentLeftAAROverride < minLeftAAROverride || currentLeftAAROverride > maxLeftAAROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentLeftAAROverride < minLeftAAROverride || currentLeftAAROverride > maxLeftAAROverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Left Afferent Arteriole Resistance Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentLeftGFROverride < minLeftGFROverride || currentLeftGFROverride > maxLeftGFROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentLeftGFROverride < minLeftGFROverride || currentLeftGFROverride > maxLeftGFROverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Left Glomerular Filtration Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentLeftReabsorRateOverride < minLeftReabsorRateOverride || currentLeftReabsorRateOverride > maxLeftReabsorRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentLeftReabsorRateOverride < minLeftReabsorRateOverride || currentLeftReabsorRateOverride > maxLeftReabsorRateOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Left Reabsorption Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentRenalBloodFlowOverride < minRenalBloodFlowOverride || currentRenalBloodFlowOverride > maxRenalBloodFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentRenalBloodFlowOverride < minRenalBloodFlowOverride || currentRenalBloodFlowOverride > maxRenalBloodFlowOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Renal Blood Flow (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentRenalPlasmaFlowOverride < minRenalPlasmaFlowOverride || currentRenalPlasmaFlowOverride > maxRenalPlasmaFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentRenalPlasmaFlowOverride < minRenalPlasmaFlowOverride || currentRenalPlasmaFlowOverride > maxRenalPlasmaFlowOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Renal Plasma Flow Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentRightAAROverride < minRightAAROverride || currentRightAAROverride > maxRightAAROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentRightAAROverride < minRightAAROverride || currentRightAAROverride > maxRightAAROverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Right Afferent Arteriole Resistance Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentRightGFROverride < minRightGFROverride || currentRightGFROverride > maxRightGFROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentRightGFROverride < minRightGFROverride || currentRightGFROverride > maxRightGFROverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Right Glomerular Filtration Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentRightReabsorRateOverride < minRightReabsorRateOverride || currentRightReabsorRateOverride > maxRightReabsorRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentRightReabsorRateOverride < minRightReabsorRateOverride || currentRightReabsorRateOverride > maxRightReabsorRateOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Right Reabsorption Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentUrinationRateOverride < minUrinationRateOverride || currentUrinationRateOverride > maxUrinationRateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentUrinationRateOverride < minUrinationRateOverride || currentUrinationRateOverride > maxUrinationRateOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Urination Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentUrineProductionOverride < minUrineProductionOverride || currentUrineProductionOverride > maxUrineProductionOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentUrineProductionOverride < minUrineProductionOverride || currentUrineProductionOverride > maxUrineProductionOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Urine Production Rate Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentUrineOsmolalityOverride < minUrineOsmolalityOverride || currentUrineOsmolalityOverride > maxUrineOsmolalityOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentUrineOsmolalityOverride < minUrineOsmolalityOverride || currentUrineOsmolalityOverride > maxUrineOsmolalityOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Urine Osmolality Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentUrineVolumeOverride < minUrineVolumeOverride || currentUrineVolumeOverride > maxUrineVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentUrineVolumeOverride < minUrineVolumeOverride || currentUrineVolumeOverride > maxUrineVolumeOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Urine Volume Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentUrineUreaNitrogenOverride < minUrineUreaNitrogenOverride || currentUrineUreaNitrogenOverride > maxUrineUreaNitrogenOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentUrineUreaNitrogenOverride < minUrineUreaNitrogenOverride || currentUrineUreaNitrogenOverride > maxUrineUreaNitrogenOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Urine Urea Nitrogen Concentration Override (Renal) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   return;
 }

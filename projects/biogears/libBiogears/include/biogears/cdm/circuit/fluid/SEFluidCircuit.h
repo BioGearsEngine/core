@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <vector>
 
 #include <biogears/cdm/circuit/SECircuit.h>
+#include <biogears/cdm/circuit/SECircuitLedger.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
 
@@ -26,11 +27,15 @@ BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, vect
 BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, size_t>;
 }
 
+#define FLUID_CIRCUIT_TYPES CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData;
+#define FLUID_LEDGER_TYPES SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit
+
 namespace biogears {
 class SECircuitManager;
 namespace io {
   class Circuit;
 }
+
 BG_EXT template class BIOGEARS_API SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
 
 class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData> {
@@ -44,6 +49,9 @@ protected:
 public:
   virtual ~SEFluidCircuit();
 
+  void Unload(CDM::FluidCircuitData& data) const override;
+  bool Load(const CDM::FluidCircuitData& in, SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit> const& ledger);
+
   SEFluidCircuitNode& CreateNode(const std::string& name);
   SEFluidCircuitNode& CreateNode(const char* name);
   SEFluidCircuitPath& CreatePath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const std::string& name);
@@ -54,4 +62,7 @@ public:
 protected:
   SECircuitManager& m_Mgr;
 };
+
+BG_EXT template class BIOGEARS_API SECircuitLedger<FLUID_LEDGER_TYPES>;
+
 }

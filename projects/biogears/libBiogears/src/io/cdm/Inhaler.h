@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Inhaler.hxx>
 
-#define CDM_INHALER_UNMARSHAL_HELPER(in, out, func)                                  \
+#define CDM_INHALER_MARSHALL_HELPER(in, out, func)                                  \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Inhaler::UnMarshall(*in.m_##func, out.func());                               \
+    io::Inhaler::Marshall(*in.m_##func, out.func());                               \
   }
 
-#define CDM_OPTIONAL_INHALER_UNMARSHAL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_INHALER_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                         \
-    io::Inhaler::UnMarshall(*in.m_##func, out.func());       \
+    io::Inhaler::Marshall(*in.m_##func, out.func());       \
   }
 namespace biogears {
 class SEInhaler;
@@ -37,29 +37,29 @@ namespace io {
   public:
     //template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     //class SEInhaler
-    static void Marshall(const CDM::InhalerData& in, SEInhaler& out);
-    static void UnMarshall(const SEInhaler& in, CDM::InhalerData& out);
+    static void UnMarshall(const CDM::InhalerData& in, SEInhaler& out);
+    static void Marshall(const SEInhaler& in, CDM::InhalerData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Inhaler::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void Inhaler::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Clear();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Inhaler::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void Inhaler::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO

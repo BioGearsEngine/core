@@ -350,10 +350,10 @@ void Environment::ProcessActions()
   //Set the temperature source to zero
   m_ActiveTemperaturePath->GetNextTemperatureSource().SetValue(0.0, TemperatureUnit::K);
   //Open the switch
-  m_ActiveSwitchPath->SetNextSwitch(CDM::enumOpenClosed::Open);
+  m_ActiveSwitchPath->SetNextSwitch(SEOpenClosed::Open);
 
   //Check for actions that modify environment resistances
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
     //In the event of a burn, modify the skin to clothing, clothing to enclosure (radiation), and clothing to environment (convection)
     //paths based on the burn surface area fraction.  Reducing skin to clothing resistance assumes that burn patient will have large
     //surface area uncovered. We calculate change in evaporative resistance in CalcEvaporation since that involves adjustment of funtion level parameters
@@ -386,7 +386,7 @@ void Environment::ProcessActions()
     const double burnRampGain = 1.0e-5;
     for (SEThermalCircuitPath* skinToClothing : m_SkinToClothingPaths) {
       double burnSurfaceAreaFraction = 0.0;
-      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
         SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
         std::vector<std::string> burnComptVector = burnAction->GetCompartments();
         // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
@@ -528,7 +528,7 @@ void Environment::ProcessActions()
     m_ActiveTemperaturePath->GetNextTemperatureSource().SetValue(dAppliedTemperature_K, TemperatureUnit::K);
 
     //Close the switch
-    m_ActiveSwitchPath->SetNextSwitch(CDM::enumOpenClosed::Closed);
+    m_ActiveSwitchPath->SetNextSwitch(SEOpenClosed::Closed);
   }
 }
 
@@ -583,7 +583,7 @@ void Environment::CalculateSupplementalValues()
   m_dHeatOfVaporizationOfWater_J_Per_kg = dHeatOfVaporizationOfWater_JPerMol / 0.0180153; //1 mol of water = 0.0180153 kg
 
   //Water convective heat transfer properties
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     double dWaterTemperature_C = GetConditions().GetAmbientTemperature(TemperatureUnit::C);
     double dT = Convert(dWaterTemperature_C, TemperatureUnit::C, TemperatureUnit::K) / 298.15;
 
@@ -604,7 +604,7 @@ void Environment::CalculateSupplementalValues()
 //--------------------------------------------------------------------------------------------------
 void Environment::CalculateRadiation()
 {
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     //Submerged - therefore, no radiation
 
     //Invalidate the coefficient
@@ -663,7 +663,7 @@ void Environment::CalculateConvection()
 {
   double dConvectiveHeatTransferCoefficient_WPerM2_K = 0.0;
 
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     //Submerged - therefore, convection is most important
     double dClothingTemperature_K = m_ClothingNode->GetTemperature().GetValue(TemperatureUnit::K);
     double dWaterTemperature_K = GetConditions().GetAmbientTemperature(TemperatureUnit::K);
@@ -721,7 +721,7 @@ void Environment::CalculateConvection()
 //--------------------------------------------------------------------------------------------------
 void Environment::CalculateEvaporation()
 {
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     //Submerged - therefore, no evaporation
     //Invalidate the coefficient
     GetEvaporativeHeatTranferCoefficient().Invalidate();
@@ -757,12 +757,12 @@ void Environment::CalculateEvaporation()
       double skinWettednessDiffusion = 0.06;
 
       auto& inflamationSources = m_data.GetBloodChemistry().GetInflammatoryResponse().GetInflammationSources();
-      auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), CDM::enumInflammationSource::Burn);
+      auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), SEInflammationSource::Burn);
       if (burn_inflamation != inflamationSources.end()) {
         if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
           bool isBurnWoundLocal = false;
           double localBurnIntensity = 0.0;
-          if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+          if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
             SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
             std::vector<std::string> burnComptVector = burnAction->GetCompartments();
             // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head

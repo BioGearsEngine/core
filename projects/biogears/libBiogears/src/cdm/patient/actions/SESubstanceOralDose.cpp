@@ -10,6 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
+
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -18,7 +20,7 @@ SESubstanceOralDose::SESubstanceOralDose(const SESubstance& substance)
   : SESubstanceAdministration()
   , m_Substance(substance)
 {
-  m_AdminRoute = (CDM::enumOralAdministration::value)-1;
+  m_AdminRoute = (SEOralAdministrationType)-1;
   m_Dose = nullptr;
 }
 //-------------------------------------------------------------------------------
@@ -30,7 +32,7 @@ SESubstanceOralDose::~SESubstanceOralDose()
 void SESubstanceOralDose::Clear()
 {
   SESubstanceAdministration::Clear();
-  m_AdminRoute = (CDM::enumOralAdministration::value)-1;
+  m_AdminRoute = (SEOralAdministrationType)-1;
   SAFE_DELETE(m_Dose);
 }
 //-------------------------------------------------------------------------------
@@ -48,9 +50,7 @@ bool SESubstanceOralDose::IsActive() const
 //-------------------------------------------------------------------------------
 bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine *rd)
 {
-  SESubstanceAdministration::Load(in);
-  GetDose().Load(in.Dose(), rd);
-  m_AdminRoute = in.AdminRoute();
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -63,27 +63,22 @@ CDM::SubstanceOralDoseData* SESubstanceOralDose::Unload() const
 //-------------------------------------------------------------------------------
 void SESubstanceOralDose::Unload(CDM::SubstanceOralDoseData& data) const
 {
-  SESubstanceAdministration::Unload(data);
-  if (m_Dose != nullptr)
-    data.Dose(std::unique_ptr<CDM::ScalarMassData>(m_Dose->Unload()));
-  if (HasAdminRoute())
-    data.AdminRoute(m_AdminRoute);
-  data.Substance(m_Substance.GetName());
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
-CDM::enumOralAdministration::value SESubstanceOralDose::GetAdminRoute() const
+SEOralAdministrationType SESubstanceOralDose::GetAdminRoute() const
 {
   return m_AdminRoute;
 }
 //-------------------------------------------------------------------------------
-void SESubstanceOralDose::SetAdminRoute(CDM::enumOralAdministration::value route)
+void SESubstanceOralDose::SetAdminRoute(SEOralAdministrationType route)
 {
   m_AdminRoute = route;
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceOralDose::HasAdminRoute() const
 {
-  return m_AdminRoute == ((CDM::enumOralAdministration::value)-1) ? false : true;
+  return m_AdminRoute == SEOralAdministrationType::Invalid ? false : true;
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceOralDose::HasDose() const

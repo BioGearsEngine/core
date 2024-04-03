@@ -27,7 +27,7 @@ public:
 
   virtual bool IsValid() const;
 
-  virtual bool Load(const CDM::AnesthesiaMachineActionData& in);
+  virtual bool Load(const CDM::AnesthesiaMachineActionData& in, std::default_random_engine* rd);
   virtual CDM::AnesthesiaMachineActionData* Unload() const;
 
 protected:

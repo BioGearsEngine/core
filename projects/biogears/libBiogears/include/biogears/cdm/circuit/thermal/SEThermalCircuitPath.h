@@ -26,6 +26,8 @@ namespace io {
   class Circuit;
 }
 
+BG_EXT template class BIOGEARS_API SECircuitPath<THERMAL_CIRCUIT_PATH>;
+
 class BIOGEARS_API SEThermalCircuitPath : public SECircuitPath<THERMAL_CIRCUIT_PATH> {
   friend class SECircuitManager;
   friend io::Circuit;

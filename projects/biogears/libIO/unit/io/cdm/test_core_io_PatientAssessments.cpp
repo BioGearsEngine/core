@@ -70,8 +70,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SEArterialBloodGasAnalysis;
 //!
 //! TYPE ArterialBloodGasAnalysis
-//! static void Marshall(const CDM::ArterialBloodGasAnalysis& in, SEArterialBloodGasAnalysis& out);
-//! static void UnMarshall(const SEArterialBloodGasAnalysis& in, CDM::ArterialBloodGasAnalysis& out);
+//! static void UnMarshall(const CDM::ArterialBloodGasAnalysis& in, SEArterialBloodGasAnalysis& out);
+//! static void Marshall(const SEArterialBloodGasAnalysis& in, CDM::ArterialBloodGasAnalysis& out);
 #include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 TEST_F(TEST_FIXTURE_NAME, ArterialBloodGasAnalysis)
 {
@@ -94,16 +94,16 @@ TEST_F(TEST_FIXTURE_NAME, ArterialBloodGasAnalysis)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEPulmonaryFunctionTest;
 //!
 //! TYPE PulmonaryFunctionTest
-//! static void Marshall(const CDM::PulmonaryFunctionTest& in, SEPulmonaryFunctionTest& out);
-//! static void UnMarshall(const SEPulmonaryFunctionTest& in, CDM::PulmonaryFunctionTest& out);
+//! static void UnMarshall(const CDM::PulmonaryFunctionTest& in, SEPulmonaryFunctionTest& out);
+//! static void Marshall(const SEPulmonaryFunctionTest& in, CDM::PulmonaryFunctionTest& out);
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 TEST_F(TEST_FIXTURE_NAME, PulmonaryFunctionTest)
@@ -136,16 +136,16 @@ TEST_F(TEST_FIXTURE_NAME, PulmonaryFunctionTest)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SECompleteBloodCount;
 //!
 //! TYPE CompleteBloodCoun
-//! static void Marshall(const CDM::CompleteBloodCount& in, SECompleteBloodCount& out);
-//! static void UnMarshall(const SECompleteBloodCount& in, CDM::CompleteBloodCount& out);
+//! static void UnMarshall(const CDM::CompleteBloodCount& in, SECompleteBloodCount& out);
+//! static void Marshall(const SECompleteBloodCount& in, CDM::CompleteBloodCount& out);
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 TEST_F(TEST_FIXTURE_NAME, CompleteBloodCount)
 {
@@ -172,16 +172,16 @@ TEST_F(TEST_FIXTURE_NAME, CompleteBloodCount)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEComprehensiveMetabolicPanel;
 //!
 //! TYPE ComprehensiveMetabolicPanel
-//! static void Marshall(const CDM::ComprehensiveMetabolicPanel& in, SEComprehensiveMetabolicPanel& out);
-//! static void UnMarshall(const SEComprehensiveMetabolicPanel& in, CDM::ComprehensiveMetabolicPanel& out);
+//! static void UnMarshall(const CDM::ComprehensiveMetabolicPanel& in, SEComprehensiveMetabolicPanel& out);
+//! static void Marshall(const SEComprehensiveMetabolicPanel& in, CDM::ComprehensiveMetabolicPanel& out);
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
 TEST_F(TEST_FIXTURE_NAME, ComprehensiveMetabolicPanel)
 {
@@ -211,16 +211,16 @@ TEST_F(TEST_FIXTURE_NAME, ComprehensiveMetabolicPanel)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEUrinalysis;
 //!
 //! TYPE Urinalysis
-//! static void Marshall(const CDM::Urinalysis& in, SEUrinalysis& out);
-//! static void UnMarshall(const SEUrinalysis& in, CDM::Urinalysis& out);
+//! static void UnMarshall(const CDM::Urinalysis& in, SEUrinalysis& out);
+//! static void Marshall(const SEUrinalysis& in, CDM::Urinalysis& out);
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
 TEST_F(TEST_FIXTURE_NAME, Urinalysis)
@@ -235,45 +235,45 @@ TEST_F(TEST_FIXTURE_NAME, Urinalysis)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetColorResult(CDM::enumUrineColor::Pink);
-  source.SetAppearanceResult(CDM::enumClarityIndicator::Cloudy);
-  source.SetGlucoseResult(CDM::enumPresenceIndicator::Positive);
-  source.SetKetoneResult(CDM::enumPresenceIndicator::Negative);
+  source.SetColorResult(biogears::SEUrineColor::Pink);
+  source.SetAppearanceResult(biogears::SEClarityIndicator::Cloudy);
+  source.SetGlucoseResult(biogears::SEPresenceIndicator::Positive);
+  source.SetKetoneResult(biogears::SEPresenceIndicator::Negative);
   source.GetBilirubinResult().SetValue(5);
   source.GetSpecificGravityResult().SetValue(9);
-  source.SetBloodResult(CDM::enumPresenceIndicator::Positive);
+  source.SetBloodResult(biogears::SEPresenceIndicator::Positive);
   source.GetPHResult().SetValue(2);
-  source.SetProteinResult(CDM::enumPresenceIndicator::Negative);
+  source.SetProteinResult(biogears::SEPresenceIndicator::Negative);
   source.GetUrobilinogenResult().SetValue(88, biogears::MassPerVolumeUnit::g_Per_mL);
-  source.SetNitriteResult(CDM::enumPresenceIndicator::Positive);
-  source.SetLeukocyteEsteraseResult(CDM::enumPresenceIndicator::Negative);
+  source.SetNitriteResult(biogears::SEPresenceIndicator::Positive);
+  source.SetLeukocyteEsteraseResult(biogears::SEPresenceIndicator::Negative);
 
   auto microscopic = new biogears::SEUrinalysisMicroscopic();
 
-  source.GetMicroscopicResult().SetObservationType(CDM::enumMicroscopicObservationType::LowPowerField);
+  source.GetMicroscopicResult().SetObservationType(biogears::SEMicroscopicObservationType::LowPowerField);
   source.GetMicroscopicResult().GetRedBloodCellsResult().SetValue(1, biogears::AmountUnit::mol);
   source.GetMicroscopicResult().GetWhiteBloodCellsResult().SetValue(2, biogears::AmountUnit::pmol);
 
-  source.GetMicroscopicResult().SetEpithelialCellsResult(CDM::enumMicroscopicObservationAmount::Many);
+  source.GetMicroscopicResult().SetEpithelialCellsResult(biogears::SEMicroscopicObservationAmount::Many);
   source.GetMicroscopicResult().GetCastsResult().SetValue(2, biogears::AmountUnit::pmol);
 
-  source.GetMicroscopicResult().SetCrystalsResult(CDM::enumMicroscopicObservationAmount::Few);
-  source.GetMicroscopicResult().SetBacteriaResult(CDM::enumMicroscopicObservationAmount::Moderate);
-  source.GetMicroscopicResult().SetTrichomonadsResult(CDM::enumMicroscopicObservationAmount::Many);
-  source.GetMicroscopicResult().SetYeastResult(CDM::enumMicroscopicObservationAmount::Few);
+  source.GetMicroscopicResult().SetCrystalsResult(biogears::SEMicroscopicObservationAmount::Few);
+  source.GetMicroscopicResult().SetBacteriaResult(biogears::SEMicroscopicObservationAmount::Moderate);
+  source.GetMicroscopicResult().SetTrichomonadsResult(biogears::SEMicroscopicObservationAmount::Many);
+  source.GetMicroscopicResult().SetYeastResult(biogears::SEMicroscopicObservationAmount::Few);
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEUrinalysisMicroscopic;
 //!
 //! TYPE UrinalysisMicroscopic
-//! static void Marshall(const CDM::UrinalysisMicroscopic& in, SEUrinalysisMicroscopic& out);
-//! static void UnMarshall(const SEUrinalysisMicroscopic& in, CDM::UrinalysisMicroscopic& out);
+//! static void UnMarshall(const CDM::UrinalysisMicroscopic& in, SEUrinalysisMicroscopic& out);
+//! static void Marshall(const SEUrinalysisMicroscopic& in, CDM::UrinalysisMicroscopic& out);
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
 TEST_F(TEST_FIXTURE_NAME, UrinalysisMicroscopic)
 {
@@ -287,22 +287,22 @@ TEST_F(TEST_FIXTURE_NAME, UrinalysisMicroscopic)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetObservationType(CDM::enumMicroscopicObservationType::LowPowerField);
+  source.SetObservationType(biogears::SEMicroscopicObservationType::LowPowerField);
   source.GetRedBloodCellsResult().SetValue(1, biogears::AmountUnit::mol);
   source.GetWhiteBloodCellsResult().SetValue(2, biogears::AmountUnit::pmol);
 
-  source.SetEpithelialCellsResult(CDM::enumMicroscopicObservationAmount::Many);
+  source.SetEpithelialCellsResult(biogears::SEMicroscopicObservationAmount::Many);
   source.GetCastsResult().SetValue(2, biogears::AmountUnit::pmol);
 
-  source.SetCrystalsResult(CDM::enumMicroscopicObservationAmount::Few);
-  source.SetBacteriaResult(CDM::enumMicroscopicObservationAmount::Moderate);
-  source.SetTrichomonadsResult(CDM::enumMicroscopicObservationAmount::Many);
-  source.SetYeastResult(CDM::enumMicroscopicObservationAmount::Few);
+  source.SetCrystalsResult(biogears::SEMicroscopicObservationAmount::Few);
+  source.SetBacteriaResult(biogears::SEMicroscopicObservationAmount::Moderate);
+  source.SetTrichomonadsResult(biogears::SEMicroscopicObservationAmount::Many);
+  source.SetYeastResult(biogears::SEMicroscopicObservationAmount::Few);
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -310,8 +310,8 @@ TEST_F(TEST_FIXTURE_NAME, UrinalysisMicroscopic)
 // class SEProthrombinTime
 //!
 //! TYPE ProthrombinTime
-//! static void Marshall(const CDM::ProthrombinTime& in, SEProthrombinTime& out);
-//! static void UnMarshall(const SEProthrombinTime& in, CDM::ProthrombinTime& out);
+//! static void UnMarshall(const CDM::ProthrombinTime& in, SEProthrombinTime& out);
+//! static void Marshall(const SEProthrombinTime& in, CDM::ProthrombinTime& out);
 #include <biogears/cdm/patient/assessments/SEProthrombinTime.h>
 TEST_F(TEST_FIXTURE_NAME, ProthrombinTime)
 {
@@ -330,16 +330,16 @@ TEST_F(TEST_FIXTURE_NAME, ProthrombinTime)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEPsychomotorVigilanceTask
 //!
 //! TYPE PsychomotorVigilanceTask
-//! static void Marshall(const CDM::PsychomotorVigilanceTask& in, SEPsychomotorVigilanceTask& out);
-//! static void UnMarshall(const SEPsychomotorVigilanceTask& in, CDM::PsychomotorVigilanceTask& out);
+//! static void UnMarshall(const CDM::PsychomotorVigilanceTask& in, SEPsychomotorVigilanceTask& out);
+//! static void Marshall(const SEPsychomotorVigilanceTask& in, CDM::PsychomotorVigilanceTask& out);
 #include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
 TEST_F(TEST_FIXTURE_NAME, PsychomotorVigilanceTask)
 {
@@ -358,8 +358,8 @@ TEST_F(TEST_FIXTURE_NAME, PsychomotorVigilanceTask)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -367,8 +367,8 @@ TEST_F(TEST_FIXTURE_NAME, PsychomotorVigilanceTask)
 // class SESequentialOrganFailureAssessment
 //!
 //! TYPE SequentialOrganFailureAssessment
-//! static void Marshall(const CDM::SequentialOrganFailureAssessment& in, SESequentialOrganFailureAssessment& out);
-//! static void UnMarshall(const SESequentialOrganFailureAssessment& in, CDM::SequentialOrganFailureAssessment& out);
+//! static void UnMarshall(const CDM::SequentialOrganFailureAssessment& in, SESequentialOrganFailureAssessment& out);
+//! static void Marshall(const SESequentialOrganFailureAssessment& in, CDM::SequentialOrganFailureAssessment& out);
 #include <biogears/cdm/patient/assessments/SESequentialOrganFailureAssessment.h>
 TEST_F(TEST_FIXTURE_NAME, SequentialOrganFailureAssessment)
 {
@@ -391,8 +391,8 @@ TEST_F(TEST_FIXTURE_NAME, SequentialOrganFailureAssessment)
 
   EXPECT_NE(source, sink);
 
-  PatientAssessments::UnMarshall(source, data);
-  PatientAssessments::Marshall(data, sink);
+  PatientAssessments::Marshall(source, data);
+  PatientAssessments::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

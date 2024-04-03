@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
+#include "io/cdm/Property.h"
+
 namespace biogears {
 SEScalar0To1::SEScalar0To1()
   : SEScalar()
@@ -24,22 +26,7 @@ SEScalar0To1::~SEScalar0To1()
 //-------------------------------------------------------------------------------
 void SEScalar0To1::Load(const CDM::ScalarData& in, std::default_random_engine *rd)
 {
-  Clear();
-  SEProperty::Load(in);
-
-  if (in.deviation().present() && rd) {
-    auto nd = std::normal_distribution(in.value(), in.deviation().get());
-    SetValue( std::clamp(nd(*rd), 0.0, 1.0));
-  } else {
-    SetValue(in.value());
-  }
-  if (in.unit().present()) {
-    std::string u = in.unit().get();
-    if (!("unitless" == u || "" == u || u.empty())) {
-      throw CommonDataModelException("CDM::Scalar API is intended to be unitless, You are trying to load a ScalarData with a unit defined");
-    }
-  }
-  m_readOnly = in.readOnly();
+  io::Property::UnMarshall(in, *this);
 }
 
 //-------------------------------------------------------------------------------

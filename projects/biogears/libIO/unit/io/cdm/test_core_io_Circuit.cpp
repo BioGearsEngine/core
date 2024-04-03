@@ -101,8 +101,8 @@ class SECircuitManager;
 
 //! Abstract class SEGasCircuit
 //! TYPE GasCircuit
-//! static void Marshall(const CDM::GasCircuit& in, SEGasCircuit& out);
-//! static void UnMarshall(const SEGasCircuit& in, CDM::GasCircuit& out);
+//! static void UnMarshall(const CDM::GasCircuit& in, SEGasCircuit& out);
+//! static void Marshall(const SEGasCircuit& in, CDM::GasCircuit& out);
 #include <biogears/cdm/Circuit/SECircuit.h>
 TEST_F(TEST_FIXTURE_NAME, GasCircuit)
 {

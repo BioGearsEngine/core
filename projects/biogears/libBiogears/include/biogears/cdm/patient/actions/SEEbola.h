@@ -11,19 +11,20 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/exports.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 
 namespace biogears {
-  class SEScalarMassPerVolume;
-  namespace io {
-    class PatientActions;
-  }
+class SEScalarMassPerVolume;
+namespace io {
+  class PatientActions;
+}
 
 class BIOGEARS_API SEEbola : public SEPatientAction {
   friend io::PatientActions;
@@ -35,17 +36,17 @@ public:
   static constexpr const char* TypeTag() { return "SEEbola"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::EbolaData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::EbolaData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::EbolaData* Unload() const override;
 
   virtual bool HasSeverity() const;
-  virtual CDM::enumInfectionSeverity::value GetSeverity() const;
-  virtual void SetSeverity(CDM::enumInfectionSeverity::value t);
+  virtual SEInfectionSeverity GetSeverity() const;
+  virtual void SetSeverity(SEInfectionSeverity t);
   virtual void InvalidateSeverity();
 
   virtual void ToString(std::ostream& str) const override;
@@ -57,6 +58,6 @@ protected:
   virtual void Unload(CDM::EbolaData& data) const;
 
 protected:
-  CDM::enumInfectionSeverity::value m_Severity;
+  SEInfectionSeverity m_Severity;
 };
 }

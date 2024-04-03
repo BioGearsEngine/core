@@ -21,7 +21,7 @@ class BIOGEARS_API SEEnvironmentAction : public SEAction {
   friend io::EnvironmentActions;
 
 public:
-  SEEnvironmentAction();
+  SEEnvironmentAction( Logger* = nullptr);
   virtual ~SEEnvironmentAction();
 
   virtual void Clear();

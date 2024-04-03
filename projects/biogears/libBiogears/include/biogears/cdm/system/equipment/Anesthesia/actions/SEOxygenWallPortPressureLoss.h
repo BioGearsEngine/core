@@ -43,6 +43,6 @@ public:
   virtual void ToString(std::ostream& str) const override;
 
 protected:
-  CDM::enumOnOff::value m_State;
+  SEOnOff m_State;
 };
 }

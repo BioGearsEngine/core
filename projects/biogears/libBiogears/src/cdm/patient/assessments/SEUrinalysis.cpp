@@ -14,22 +14,25 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/utils/GeneralMath.h>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SEUrinalysis::SEUrinalysis()
 {
-  m_Color = CDM::enumUrineColor::value(-1);
-  m_Appearance = CDM::enumClarityIndicator::value(-1);
-  m_Glucose = CDM::enumPresenceIndicator::value(-1);
-  m_Ketone = CDM::enumPresenceIndicator::value(-1);
+  m_Color = SEUrineColor::Invalid;
+  m_Appearance = SEClarityIndicator::Invalid;
+  m_Glucose = SEPresenceIndicator::Invalid;
+  m_Ketone = SEPresenceIndicator::Invalid;
   m_Bilirubin = nullptr;
   m_SpecificGravity = nullptr;
-  m_Blood = CDM::enumPresenceIndicator::value(-1);
+  m_Blood = SEPresenceIndicator::Invalid;
   m_pH = nullptr;
-  m_Protein = CDM::enumPresenceIndicator::value(-1);
+  m_Protein = SEPresenceIndicator::Invalid;
   m_Urobilinogen = nullptr;
-  m_Nitrite = CDM::enumPresenceIndicator::value(-1);
-  m_LeukocyteEsterase = CDM::enumPresenceIndicator::value(-1);
+  m_Nitrite = SEPresenceIndicator::Invalid;
+  m_LeukocyteEsterase = SEPresenceIndicator::Invalid;
 
   m_Microscopic = nullptr;
 }
@@ -42,18 +45,18 @@ SEUrinalysis::~SEUrinalysis()
 void SEUrinalysis::Clear()
 {
   SEPatientAssessment::Clear();
-  m_Color = CDM::enumUrineColor::value(-1);
-  m_Appearance = CDM::enumClarityIndicator::value(-1);
-  m_Glucose = CDM::enumPresenceIndicator::value(-1);
-  m_Ketone = CDM::enumPresenceIndicator::value(-1);
+  m_Color = SEUrineColor::Invalid;
+  m_Appearance = SEClarityIndicator::Invalid;
+  m_Glucose = SEPresenceIndicator::Invalid;
+  m_Ketone = SEPresenceIndicator::Invalid;
   SAFE_DELETE(m_Bilirubin);
   SAFE_DELETE(m_SpecificGravity);
-  m_Blood = CDM::enumPresenceIndicator::value(-1);
+  m_Blood = SEPresenceIndicator::Invalid;
   SAFE_DELETE(m_pH);
-  m_Protein = CDM::enumPresenceIndicator::value(-1);
+  m_Protein = SEPresenceIndicator::Invalid;
   SAFE_DELETE(m_Urobilinogen);
-  m_Nitrite = CDM::enumPresenceIndicator::value(-1);
-  m_LeukocyteEsterase = CDM::enumPresenceIndicator::value(-1);
+  m_Nitrite = SEPresenceIndicator::Invalid;
+  m_LeukocyteEsterase = SEPresenceIndicator::Invalid;
 
   SAFE_DELETE(m_Microscopic);
 }
@@ -61,25 +64,25 @@ void SEUrinalysis::Clear()
 void SEUrinalysis::Reset()
 {
   SEPatientAssessment::Reset();
-  m_Color = CDM::enumUrineColor::value(-1);
-  m_Appearance = CDM::enumClarityIndicator::value(-1);
-  m_Glucose = CDM::enumPresenceIndicator::value(-1);
-  m_Ketone = CDM::enumPresenceIndicator::value(-1);
+  m_Color = SEUrineColor::Invalid;
+  m_Appearance = SEClarityIndicator::Invalid;
+  m_Glucose = SEPresenceIndicator::Invalid;
+  m_Ketone = SEPresenceIndicator::Invalid;
   INVALIDATE_PROPERTY(m_Bilirubin);
   INVALIDATE_PROPERTY(m_SpecificGravity);
-  m_Blood = CDM::enumPresenceIndicator::value(-1);
+  m_Blood = SEPresenceIndicator::Invalid;
   INVALIDATE_PROPERTY(m_pH);
-  m_Protein = CDM::enumPresenceIndicator::value(-1);
+  m_Protein = SEPresenceIndicator::Invalid;
   INVALIDATE_PROPERTY(m_Urobilinogen);
-  m_Nitrite = CDM::enumPresenceIndicator::value(-1);
-  m_LeukocyteEsterase = CDM::enumPresenceIndicator::value(-1);
+  m_Nitrite = SEPresenceIndicator::Invalid;
+  m_LeukocyteEsterase = SEPresenceIndicator::Invalid;
 
   SAFE_DELETE(m_Microscopic);
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::Load(const CDM::UrinalysisData& in)
 {
-  SEPatientAssessment::Load(in);
+  io::PatientAssessments::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -92,102 +95,75 @@ CDM::UrinalysisData* SEUrinalysis::Unload()
 //-------------------------------------------------------------------------------
 void SEUrinalysis::Unload(CDM::UrinalysisData& data)
 {
-  SEPatientAssessment::Unload(data);
-  if (HasColorResult())
-    data.Color(m_Color);
-  if (HasAppearanceResult())
-    data.Appearance(m_Appearance);
-  if (HasGlucoseResult())
-    data.Glucose(m_Glucose);
-  if (HasKetoneResult())
-    data.Ketone(m_Ketone);
-  if (HasBilirubinResult())
-    data.Bilirubin(std::unique_ptr<CDM::ScalarData>(m_Bilirubin->Unload()));
-  if (HasSpecificGravityResult())
-    data.SpecificGravity(std::unique_ptr<CDM::ScalarData>(m_SpecificGravity->Unload()));
-  if (HasBloodResult())
-    data.Blood(m_Blood);
-  if (HasPHResult())
-    data.pH(std::unique_ptr<CDM::ScalarData>(m_pH->Unload()));
-  if (HasProteinResult())
-    data.Protein(m_Protein);
-  if (HasUrobilinogenResult())
-    data.Urobilinogen(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Urobilinogen->Unload()));
-  if (HasNitriteResult())
-    data.Nitrite(m_Nitrite);
-  if (HasLeukocyteEsteraseResult())
-    data.LeukocyteEsterase(m_LeukocyteEsterase);
-
-  if (HasMicroscopicResult())
-    data.Microscopic(std::unique_ptr<CDM::UrinalysisMicroscopicData>(m_Microscopic->Unload()));
+  io::PatientAssessments::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasColorResult() const
 {
-  return m_Color != CDM::enumUrineColor::value(-1);
+  return m_Color != SEUrineColor::Invalid;
 }
-CDM::enumUrineColor::value SEUrinalysis::GetColorResult() const
+SEUrineColor SEUrinalysis::GetColorResult() const
 {
   return m_Color;
 }
-void SEUrinalysis::SetColorResult(CDM::enumUrineColor::value color)
+void SEUrinalysis::SetColorResult(SEUrineColor color)
 {
   m_Color = color;
 }
 void SEUrinalysis::InvalidateColorResult()
 {
-  m_Color = CDM::enumUrineColor::value(-1);
+  m_Color = SEUrineColor::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasAppearanceResult() const
 {
-  return m_Appearance != CDM::enumClarityIndicator::value(-1);
+  return m_Appearance != SEClarityIndicator::Invalid;
 }
-CDM::enumClarityIndicator::value SEUrinalysis::GetAppearanceResult() const
+SEClarityIndicator SEUrinalysis::GetAppearanceResult() const
 {
   return m_Appearance;
 }
-void SEUrinalysis::SetAppearanceResult(CDM::enumClarityIndicator::value c)
+void SEUrinalysis::SetAppearanceResult(SEClarityIndicator c)
 {
   m_Appearance = c;
 }
 void SEUrinalysis::InvalidateAppearanceResult()
 {
-  m_Appearance = CDM::enumClarityIndicator::value(-1);
+  m_Appearance = SEClarityIndicator::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasGlucoseResult() const
 {
-  return m_Glucose != CDM::enumPresenceIndicator::value(-1);
+  return m_Glucose != SEPresenceIndicator::Invalid;
 }
-CDM::enumPresenceIndicator::value SEUrinalysis::GetGlucoseResult() const
+SEPresenceIndicator SEUrinalysis::GetGlucoseResult() const
 {
   return m_Glucose;
 }
-void SEUrinalysis::SetGlucoseResult(CDM::enumPresenceIndicator::value p)
+void SEUrinalysis::SetGlucoseResult(SEPresenceIndicator p)
 {
   m_Glucose = p;
 }
 void SEUrinalysis::InvalidateGlucoseResult()
 {
-  m_Glucose = CDM::enumPresenceIndicator::value(-1);
+  m_Glucose = SEPresenceIndicator::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasKetoneResult() const
 {
-  return m_Ketone != CDM::enumPresenceIndicator::value(-1);
+  return m_Ketone != SEPresenceIndicator::Invalid;
 }
-CDM::enumPresenceIndicator::value SEUrinalysis::GetKetoneResult() const
+SEPresenceIndicator SEUrinalysis::GetKetoneResult() const
 {
   return m_Ketone;
 }
-void SEUrinalysis::SetKetoneResult(CDM::enumPresenceIndicator::value p)
+void SEUrinalysis::SetKetoneResult(SEPresenceIndicator p)
 {
   m_Ketone = p;
 }
 void SEUrinalysis::InvalidateKetoneResult()
 {
-  m_Ketone = CDM::enumPresenceIndicator::value(-1);
+  m_Ketone = SEPresenceIndicator::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasBilirubinResult() const
@@ -214,19 +190,19 @@ SEScalar& SEUrinalysis::GetSpecificGravityResult()
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasBloodResult() const
 {
-  return m_Blood != CDM::enumPresenceIndicator::value(-1);
+  return m_Blood != SEPresenceIndicator::Invalid;
 }
-CDM::enumPresenceIndicator::value SEUrinalysis::GetBloodResult() const
+SEPresenceIndicator SEUrinalysis::GetBloodResult() const
 {
   return m_Blood;
 }
-void SEUrinalysis::SetBloodResult(CDM::enumPresenceIndicator::value p)
+void SEUrinalysis::SetBloodResult(SEPresenceIndicator p)
 {
   m_Blood = p;
 }
 void SEUrinalysis::InvalidateBloodResult()
 {
-  m_Blood = CDM::enumPresenceIndicator::value(-1);
+  m_Blood = SEPresenceIndicator::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasPHResult() const
@@ -242,19 +218,19 @@ SEScalar& SEUrinalysis::GetPHResult()
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasProteinResult() const
 {
-  return m_Protein != CDM::enumPresenceIndicator::value(-1);
+  return m_Protein != SEPresenceIndicator::Invalid;
 }
-CDM::enumPresenceIndicator::value SEUrinalysis::GetProteinResult() const
+SEPresenceIndicator SEUrinalysis::GetProteinResult() const
 {
   return m_Protein;
 }
-void SEUrinalysis::SetProteinResult(CDM::enumPresenceIndicator::value p)
+void SEUrinalysis::SetProteinResult(SEPresenceIndicator p)
 {
   m_Protein = p;
 }
 void SEUrinalysis::InvalidateProteinResult()
 {
-  m_Protein = CDM::enumPresenceIndicator::value(-1);
+  m_Protein = SEPresenceIndicator::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasUrobilinogenResult() const
@@ -270,36 +246,36 @@ SEScalarMassPerVolume& SEUrinalysis::GetUrobilinogenResult()
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasNitriteResult() const
 {
-  return m_Nitrite != CDM::enumPresenceIndicator::value(-1);
+  return m_Nitrite != SEPresenceIndicator::Invalid;
 }
-CDM::enumPresenceIndicator::value SEUrinalysis::GetNitriteResult() const
+SEPresenceIndicator SEUrinalysis::GetNitriteResult() const
 {
   return m_Nitrite;
 }
-void SEUrinalysis::SetNitriteResult(CDM::enumPresenceIndicator::value p)
+void SEUrinalysis::SetNitriteResult(SEPresenceIndicator p)
 {
   m_Nitrite = p;
 }
 void SEUrinalysis::InvalidateNitriteResult()
 {
-  m_Nitrite = CDM::enumPresenceIndicator::value(-1);
+  m_Nitrite = SEPresenceIndicator::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasLeukocyteEsteraseResult() const
 {
-  return m_LeukocyteEsterase != CDM::enumPresenceIndicator::value(-1);
+  return m_LeukocyteEsterase != SEPresenceIndicator::Invalid;
 }
-CDM::enumPresenceIndicator::value SEUrinalysis::GetLeukocyteEsteraseResult() const
+SEPresenceIndicator SEUrinalysis::GetLeukocyteEsteraseResult() const
 {
   return m_LeukocyteEsterase;
 }
-void SEUrinalysis::SetLeukocyteEsteraseResult(CDM::enumPresenceIndicator::value p)
+void SEUrinalysis::SetLeukocyteEsteraseResult(SEPresenceIndicator p)
 {
   m_LeukocyteEsterase = p;
 }
 void SEUrinalysis::InvalidateLeukocyteEsteraseResult()
 {
-  m_LeukocyteEsterase = CDM::enumPresenceIndicator::value(-1);
+  m_LeukocyteEsterase = SEPresenceIndicator::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasMicroscopicResult() const

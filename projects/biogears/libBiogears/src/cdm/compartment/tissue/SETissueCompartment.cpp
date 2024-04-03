@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+#include "io/cdm/Compartment.h"
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
@@ -64,29 +65,7 @@ void SETissueCompartment::Clear()
 //-----------------------------------------------------------------------------
 bool SETissueCompartment::Load(const CDM::TissueCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
 {
-  if (!SECompartment::Load(in))
-    return false;
-  if (in.AcidicPhospohlipidConcentration().present())
-    GetAcidicPhospohlipidConcentration().Load(in.AcidicPhospohlipidConcentration().get());
-  if (in.MatrixVolume().present())
-    GetMatrixVolume().Load(in.MatrixVolume().get());
-  if (in.MembranePotential().present())
-    GetMembranePotential().Load(in.MembranePotential().get());
-  if (in.NeutralLipidsVolumeFraction().present())
-    GetNeutralLipidsVolumeFraction().Load(in.NeutralLipidsVolumeFraction().get());
-  if (in.NeutralPhospholipidsVolumeFraction().present())
-    GetNeutralPhospholipidsVolumeFraction().Load(in.NeutralPhospholipidsVolumeFraction().get());
-  if (in.ReflectionCoefficient().present())
-    GetReflectionCoefficient().Load(in.ReflectionCoefficient().get());
-  if (in.TissueToPlasmaAlbuminRatio().present())
-    GetTissueToPlasmaAlbuminRatio().Load(in.TissueToPlasmaAlbuminRatio().get());
-  if (in.TissueToPlasmaAlphaAcidGlycoproteinRatio().present())
-    GetTissueToPlasmaAlphaAcidGlycoproteinRatio().Load(in.TissueToPlasmaAlphaAcidGlycoproteinRatio().get());
-  if (in.TissueToPlasmaLipoproteinRatio().present())
-    GetTissueToPlasmaLipoproteinRatio().Load(in.TissueToPlasmaLipoproteinRatio().get());
-  if (in.TotalMass().present())
-    GetTotalMass().Load(in.TotalMass().get());
-
+  io::Compartment::UnMarshall(in, *this, subMgr, circuits);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -99,29 +78,7 @@ CDM::TissueCompartmentData* SETissueCompartment::Unload()
 //-----------------------------------------------------------------------------
 void SETissueCompartment::Unload(CDM::TissueCompartmentData& data)
 {
-  SECompartment::Unload(data);
-  if (HasAcidicPhospohlipidConcentration())
-    data.AcidicPhospohlipidConcentration(std::unique_ptr<CDM::ScalarMassPerMassData>(m_AcidicPhospohlipidConcentration->Unload()));
-  if (HasMatrixVolume())
-    data.MatrixVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_MatrixVolume->Unload()));
-  if (HasMembranePotential())
-    data.MembranePotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_MembranePotential->Unload()));
-  if (HasNeutralLipidsVolumeFraction())
-    data.NeutralLipidsVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(m_NeutralLipidsVolumeFraction->Unload()));
-  if (HasNeutralPhospholipidsVolumeFraction())
-    data.NeutralPhospholipidsVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(m_NeutralPhospholipidsVolumeFraction->Unload()));
-  if (HasReflectionCoefficient())
-    data.ReflectionCoefficient(std::unique_ptr<CDM::Scalar0To1Data>(m_ReflectionCoefficient->Unload()));
-  if (HasTissueToPlasmaAlbuminRatio())
-    data.TissueToPlasmaAlbuminRatio(std::unique_ptr<CDM::ScalarData>(m_TissueToPlasmaAlbuminRatio->Unload()));
-  if (HasTissueToPlasmaAlbuminRatio())
-    data.TissueToPlasmaAlbuminRatio(std::unique_ptr<CDM::ScalarData>(m_TissueToPlasmaAlbuminRatio->Unload()));
-  if (HasTissueToPlasmaAlphaAcidGlycoproteinRatio())
-    data.TissueToPlasmaAlphaAcidGlycoproteinRatio(std::unique_ptr<CDM::ScalarData>(m_TissueToPlasmaAlphaAcidGlycoproteinRatio->Unload()));
-  if (HasTissueToPlasmaLipoproteinRatio())
-    data.TissueToPlasmaLipoproteinRatio(std::unique_ptr<CDM::ScalarData>(m_TissueToPlasmaLipoproteinRatio->Unload()));
-  if (HasTotalMass())
-    data.TotalMass(std::unique_ptr<CDM::ScalarMassData>(m_TotalMass->Unload()));
+  io::Compartment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SETissueCompartment::GetScalar(const char* name)

@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
@@ -40,12 +41,12 @@ public:
   static constexpr const char* TypeTag() { return "SEHemorrhage"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::HemorrhageData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::HemorrhageData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::HemorrhageData* Unload() const override;
 
   virtual const char* GetCompartment_cStr() const;
@@ -57,7 +58,7 @@ public:
 
   virtual bool HasMCIS() const;
   virtual std::vector<unsigned int>& GetMCIS() { return m_MCIS; }
-  virtual std::vector<unsigned int> const & GetMCIS() const { return m_MCIS; };
+  virtual std::vector<unsigned int> const& GetMCIS() const { return m_MCIS; };
   virtual void SetMCIS();
 
   virtual bool HasInitialRate() const;
@@ -70,8 +71,8 @@ public:
 
   virtual void ToString(std::ostream& str) const override;
 
-  bool operator==( const SEHemorrhage& rhs) const;
-  bool operator!=( const SEHemorrhage& rhs) const;
+  bool operator==(const SEHemorrhage& rhs) const;
+  bool operator!=(const SEHemorrhage& rhs) const;
 
 protected:
   virtual void Unload(CDM::HemorrhageData& data) const;

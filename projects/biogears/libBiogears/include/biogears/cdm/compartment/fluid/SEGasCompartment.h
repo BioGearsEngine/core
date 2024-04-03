@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <map>
 
 namespace biogears {
+class SESubstanceManager;
 namespace io {
   class Compartment;
 }
@@ -69,5 +70,5 @@ protected:
 
 namespace std {
 BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartment*>;
+//BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartment*>;
 }

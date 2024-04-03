@@ -21,6 +21,7 @@
 #include <gtest/gtest.h>
 
 #include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/Logger.h>
 
@@ -71,8 +72,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SEInhaler;
 //!
 //! TYPE Inhaler
-//! static void Marshall(const CDM::Inhaler& in, SEInhaler& out);
-//! static void UnMarshall(const SEInhaler& in, CDM::Inhaler& out);
+//! static void UnMarshall(const CDM::Inhaler& in, SEInhaler& out);
+//! static void Marshall(const SEInhaler& in, CDM::Inhaler& out);
 TEST_F(TEST_FIXTURE_NAME, Inhaler)
 {
   USING_TYPES(Inhaler)
@@ -84,8 +85,8 @@ TEST_F(TEST_FIXTURE_NAME, Inhaler)
   CDMType data;
 
   auto sarin = mgr.GetSubstance("Sarin");
- 
-  source.SetState(CDM::enumOnOff::Off);
+
+  source.SetState(biogears::SEOnOff::Off);
   source.GetMeteredDose().SetValue(55.f, biogears::MassUnit::kg);
   source.GetNozzleLoss().SetValue(22.f);
   source.GetSpacerVolume().SetValue(55, biogears::VolumeUnit::L);
@@ -93,8 +94,8 @@ TEST_F(TEST_FIXTURE_NAME, Inhaler)
 
   EXPECT_NE(source, sink);
 
-  Inhaler::UnMarshall(source, data);
-  Inhaler::Marshall(data, sink);
+  Inhaler::Marshall(source, data);
+  Inhaler::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

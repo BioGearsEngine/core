@@ -46,8 +46,8 @@ specific language governing permissions and limitations under the License.
 //!    Some biogears events happen very often and this class will be called everytime any event triggers
 //!    Not just the ones you code for
 //! 
-//!    virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
-//!    virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
+//!    virtual void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time = nullptr) = 0;
+//!    virtual void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr) = 0;
 //! 
 //!    The alternative method is to provide callback functions for a single event. This is a more narrow approach where if you choose the same handler
 //!    Could be assigned to multiple events or seperate handlers for each event you wish to react to. As of biogears 7.0 this is the preferred and more 
@@ -68,7 +68,7 @@ public:
     : SEEventHandler()
   {
   }
-  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr)
+  virtual void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time = nullptr)
   {
 
     static int event_count = 0;
@@ -87,181 +87,181 @@ public:
     std::string end = "|\n";
 
     switch (type) {
-    case CDM::enumPatientEvent::AcuteLungInjury:
+    case SEPatientEventType::AcuteLungInjury:
       event = "AcuteLungInjury";
       break;
-    case CDM::enumPatientEvent::AcuteRespiratoryDistress:
+    case SEPatientEventType::AcuteRespiratoryDistress:
       event = "AcuteRespiratoryDistress";
       break;
-    case CDM::enumPatientEvent::Antidiuresis:
+    case SEPatientEventType::Antidiuresis:
       event = "Antidiuresis";
       break;
-    case CDM::enumPatientEvent::Asystole:
+    case SEPatientEventType::Asystole:
       event = "Asystoley";
       break;
-    case CDM::enumPatientEvent::Bradycardia:
+    case SEPatientEventType::Bradycardia:
       event = "Bradycardia";
       break;
-    case CDM::enumPatientEvent::Bradypnea:
+    case SEPatientEventType::Bradypnea:
       event = "Bradypnea";
       break;
-    case CDM::enumPatientEvent::BrainOxygenDeficit:
+    case SEPatientEventType::BrainOxygenDeficit:
       event = "BrainOxygenDeficit";
       break;
-    case CDM::enumPatientEvent::CardiacArrest:
+    case SEPatientEventType::CardiacArrest:
       event = "CardiacArrest";
       break;
-    case CDM::enumPatientEvent::CardiogenicShock:
+    case SEPatientEventType::CardiogenicShock:
       event = "CardiogenicShock";
       break;
-    case CDM::enumPatientEvent::CriticalBrainOxygenDeficit:
+    case SEPatientEventType::CriticalBrainOxygenDeficit:
       event = "CriticalBrainOxygenDeficit";
       break;
-    case CDM::enumPatientEvent::Dehydration:
+    case SEPatientEventType::Dehydration:
       event = "Dehydration";
       break;
-    case CDM::enumPatientEvent::Diuresis:
+    case SEPatientEventType::Diuresis:
       event = "AcuteLungInjury";
       break;
-    case CDM::enumPatientEvent::Fasciculation:
+    case SEPatientEventType::Fasciculation:
       event = "Fasciculation";
       break;
-    case CDM::enumPatientEvent::Fatigue:
+    case SEPatientEventType::Fatigue:
       event = "Fatigue";
       break;
-    case CDM::enumPatientEvent::FunctionalIncontinence:
+    case SEPatientEventType::FunctionalIncontinence:
       event = "FunctionalIncontinence";
       break;
-    case CDM::enumPatientEvent::HemolyticTransfusionReaction:
+    case SEPatientEventType::HemolyticTransfusionReaction:
       event = "HemolyticTransfusionReaction";
       break;
-    case CDM::enumPatientEvent::Hypercapnia:
+    case SEPatientEventType::Hypercapnia:
       event = "Hypercapnia";
       break;
-    case CDM::enumPatientEvent::Hyperglycemia:
+    case SEPatientEventType::Hyperglycemia:
       event = "Hyperglycemia";
       break;
-    case CDM::enumPatientEvent::MildHyperkalemia:
+    case SEPatientEventType::MildHyperkalemia:
       event = "MildHyperkalemia";
       break;
-    case CDM::enumPatientEvent::SevereHyperkalemia:
+    case SEPatientEventType::SevereHyperkalemia:
       event = "SevereHyperkalemia";
       break;
-    case CDM::enumPatientEvent::MildHypernatremia:
+    case SEPatientEventType::MildHypernatremia:
       event = "MildHypernatremia";
       break;
-    case CDM::enumPatientEvent::SevereHypernatremia:
+    case SEPatientEventType::SevereHypernatremia:
       event = "SevereHypernatremia";
       break;
-    case CDM::enumPatientEvent::Hyperthermia:
+    case SEPatientEventType::Hyperthermia:
       event = "Hyperthermia";
       break;
-    case CDM::enumPatientEvent::Hypoglycemia:
+    case SEPatientEventType::Hypoglycemia:
       event = "Hypoglycemia";
       break;
-    case CDM::enumPatientEvent::HypoglycemicShock:
+    case SEPatientEventType::HypoglycemicShock:
       event = "HypoglycemicShock";
       break;
-    case CDM::enumPatientEvent::HypoglycemicComa:
+    case SEPatientEventType::HypoglycemicComa:
       event = "HypoglycemicComa";
       break;
-    case CDM::enumPatientEvent::MildHypothermia:
+    case SEPatientEventType::MildHypothermia:
       event = "MildHypothermia";
       break;
-    case CDM::enumPatientEvent::MildHypokalemia:
+    case SEPatientEventType::MildHypokalemia:
       event = "MildHypokalemia";
       break;
-    case CDM::enumPatientEvent::SevereHypokalemia:
+    case SEPatientEventType::SevereHypokalemia:
       event = "SevereHypokalemia";
       break;
-    case CDM::enumPatientEvent::MildHyponatremia:
+    case SEPatientEventType::MildHyponatremia:
       event = "MildHyponatremia";
       break;
-    case CDM::enumPatientEvent::SevereHyponatremia:
+    case SEPatientEventType::SevereHyponatremia:
       event = "SevereHyponatremia";
       break;
-    case CDM::enumPatientEvent::Hypoxia:
+    case SEPatientEventType::Hypoxia:
       event = "Hypoxia";
       break;
-    case CDM::enumPatientEvent::HypovolemicShock:
+    case SEPatientEventType::HypovolemicShock:
       event = "HypovolemicShock";
       break;
-    case CDM::enumPatientEvent::IntracranialHypertension:
+    case SEPatientEventType::IntracranialHypertension:
       event = "IntracranialHypertension";
       break;
-    case CDM::enumPatientEvent::IntracranialHypotension:
+    case SEPatientEventType::IntracranialHypotension:
       event = "IntracranialHypotension";
       break;
-    case CDM::enumPatientEvent::IrreversibleState:
+    case SEPatientEventType::IrreversibleState:
       event = "IrreversibleState";
       break;
-    case CDM::enumPatientEvent::Ketoacidosis:
+    case SEPatientEventType::Ketoacidosis:
       event = "Ketoacidosis";
       break;
-    case CDM::enumPatientEvent::LacticAcidosis:
+    case SEPatientEventType::LacticAcidosis:
       event = "LacticAcidosis";
       break;
-    case CDM::enumPatientEvent::LiverGlycogenDepleted:
+    case SEPatientEventType::LiverGlycogenDepleted:
       event = "LiverGlycogenDepleted";
       break;
-    case CDM::enumPatientEvent::MaximumPulmonaryVentilationRate:
+    case SEPatientEventType::MaximumPulmonaryVentilationRate:
       event = "MaximumPulmonaryVentilationRate";
       break;
-    case CDM::enumPatientEvent::MetabolicAcidosis:
+    case SEPatientEventType::MetabolicAcidosis:
       event = "MetabolicAcidosis";
       break;
-    case CDM::enumPatientEvent::MetabolicAlkalosis:
+    case SEPatientEventType::MetabolicAlkalosis:
       event = "MetabolicAlkalosis";
       break;
-    case CDM::enumPatientEvent::MuscleCatabolism:
+    case SEPatientEventType::MuscleCatabolism:
       event = "MuscleCatabolism";
       break;
-    case CDM::enumPatientEvent::MuscleGlycogenDepleted:
+    case SEPatientEventType::MuscleGlycogenDepleted:
       event = "MuscleGlycogenDepleted";
       break;
-    case CDM::enumPatientEvent::MyocardiumOxygenDeficit:
+    case SEPatientEventType::MyocardiumOxygenDeficit:
       event = "MyocardiumOxygenDeficit";
       break;
-    case CDM::enumPatientEvent::Natriuresis:
+    case SEPatientEventType::Natriuresis:
       event = "Natriuresis";
       break;
-    case CDM::enumPatientEvent::NutritionDepleted:
+    case SEPatientEventType::NutritionDepleted:
       event = "NutritionDepleted";
       break;
-    case CDM::enumPatientEvent::PulselessRhythm:
+    case SEPatientEventType::PulselessRhythm:
       event = "PulselessRhythm";
       break;
-    case CDM::enumPatientEvent::RenalHypoperfusion:
+    case SEPatientEventType::RenalHypoperfusion:
       event = "RenalHypoperfusion";
       break;
-    case CDM::enumPatientEvent::RespiratoryAcidosis:
+    case SEPatientEventType::RespiratoryAcidosis:
       event = "RespiratoryAcidosis";
       break;
-    case CDM::enumPatientEvent::RespiratoryAlkalosis:
+    case SEPatientEventType::RespiratoryAlkalosis:
       event = "RespiratoryAlkalosis";
       break;
-    case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
+    case SEPatientEventType::SevereAcuteRespiratoryDistress:
       event = "SevereAcuteRespiratoryDistress";
       break;
-    case CDM::enumPatientEvent::StartOfCardiacCycle:
+    case SEPatientEventType::StartOfCardiacCycle:
       event = "AcuteLungInjury";
       break;
-    case CDM::enumPatientEvent::StartOfExhale:
+    case SEPatientEventType::StartOfExhale:
       event = "StartOfExhale";
       break;
-    case CDM::enumPatientEvent::StartOfInhale:
+    case SEPatientEventType::StartOfInhale:
       event = "StartOfInhale";
       break;
-    case CDM::enumPatientEvent::SevereSepsis:
+    case SEPatientEventType::SevereSepsis:
       event = "SevereSepsis";
       break;
-    case CDM::enumPatientEvent::Tachycardia:
+    case SEPatientEventType::Tachycardia:
       event = "Tachycardia";
       break;
-    case CDM::enumPatientEvent::Tachypnea:
+    case SEPatientEventType::Tachypnea:
       event = "Tachypnea";
       break;
-    case CDM::enumPatientEvent::TotalPatientEvents:
+    case SEPatientEventType::_TotalPatientEvents:
       event = "TotalPatientEvents";
       break;
     }
@@ -286,7 +286,7 @@ public:
     std::cout << "  0--0--0      0  0      0       0     0        0        0    \n";
     std::cout << std::endl;
   }
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr)
+  virtual void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr)
   {
   }
 };
@@ -537,12 +537,12 @@ int HowToPatientEvents()
   }
 
   auto biogears = dynamic_cast<BioGears*>(bg.get());
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::Hypoxia, hypoxia_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::RespiratoryAcidosis, respiratory_acidosis_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::Tachycardia, tachycardia_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::Hypercapnia, hypercapnia_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::AcuteRespiratoryDistress, acute_respiratory_distress_callback);
-  biogears->GetPatient().SetEventCallback( CDM::enumPatientEvent::IrreversibleState, irreversible_state_callback);
+  biogears->GetPatient().SetEventCallback( SEPatientEventType::Hypoxia, hypoxia_callback);
+  biogears->GetPatient().SetEventCallback( SEPatientEventType::RespiratoryAcidosis, respiratory_acidosis_callback);
+  biogears->GetPatient().SetEventCallback( SEPatientEventType::Tachycardia, tachycardia_callback);
+  biogears->GetPatient().SetEventCallback( SEPatientEventType::Hypercapnia, hypercapnia_callback);
+  biogears->GetPatient().SetEventCallback( SEPatientEventType::AcuteRespiratoryDistress, acute_respiratory_distress_callback);
+  biogears->GetPatient().SetEventCallback( SEPatientEventType::IrreversibleState, irreversible_state_callback);
 
   CustomEventHandler eventHandler;
   bg->SetEventHandler(&eventHandler);
@@ -551,13 +551,13 @@ int HowToPatientEvents()
   auto& machine_config = machine.GetConfiguration();
   bg->AdvanceModelTime(50.0, TimeUnit::s);
 
-  machine_config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
+  machine_config.SetConnection(SEAnesthesiaMachineConnection::Mask);
   machine_config.GetInletFlow().SetValue(5.0, biogears::VolumePerTimeUnit::L_Per_min);
   machine_config.GetInspiratoryExpiratoryRatio().SetValue(.5);
   machine_config.GetOxygenFraction().SetValue(0.23);
-  machine_config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
+  machine_config.SetOxygenSource(SEAnesthesiaMachineOxygenSource::Wall);
   machine_config.GetPositiveEndExpiredPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);
-  machine_config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
+  machine_config.SetPrimaryGas(SEAnesthesiaMachinePrimaryGas::Nitrogen);
   machine_config.GetRespiratoryRate().SetValue(16, biogears::FrequencyUnit::Per_min);
   machine_config.GetVentilatorPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);
   machine_config.GetOxygenBottleOne().GetVolume().SetValue(660, biogears::VolumeUnit::L);
@@ -567,14 +567,14 @@ int HowToPatientEvents()
 
   bg->AdvanceModelTime(50.0, TimeUnit::s);
 
-  machine_config.GetLeftChamber().SetState(CDM::enumOnOff::On);
+  machine_config.GetLeftChamber().SetState(SEOnOff::On);
   machine_config.GetLeftChamber().GetSubstanceFraction().SetValue(0.05);
   machine_config.GetLeftChamber().SetSubstance(*bg->GetSubstanceManager().GetSubstance("Desflurane"));
   bg->ProcessAction(machine);
 
   bg->AdvanceModelTime(0.5, TimeUnit::hr);
 
-  machine_config.GetLeftChamber().SetState(CDM::enumOnOff::Off);
+  machine_config.GetLeftChamber().SetState(SEOnOff::Off);
   bg->ProcessAction(machine);
 
   bg->AdvanceModelTime(2, TimeUnit::hr);

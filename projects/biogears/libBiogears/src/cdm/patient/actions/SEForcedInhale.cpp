@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
@@ -46,9 +47,7 @@ bool SEForcedInhale::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEForcedInhale::Load(const CDM::ForcedInhaleData& in, std::default_random_engine *rd)
 {
-  SEConsciousRespirationCommand::Load(in);
-  GetInspiratoryCapacityFraction().Load(in.InspiratoryCapacityFraction(), rd);
-  GetPeriod().Load(in.Period(), rd);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -61,11 +60,7 @@ CDM::ForcedInhaleData* SEForcedInhale::Unload() const
 //-------------------------------------------------------------------------------
 void SEForcedInhale::Unload(CDM::ForcedInhaleData& data) const
 {
-  SEConsciousRespirationCommand::Unload(data);
-  if (m_InspiratoryCapacityFraction != nullptr)
-    data.InspiratoryCapacityFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_InspiratoryCapacityFraction->Unload()));
-  if (m_Period != nullptr)
-    data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEForcedInhale::HasInspiratoryCapacityFraction() const

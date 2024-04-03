@@ -41,14 +41,14 @@ void DiffusionCalculator::Initialize(SESubstanceManager& subMgr)
       //Drugs are handled by ActiveDrugs vector in SubManager
       continue;
     }
-    if (sub->GetState() == CDM::enumSubstanceState::Gas) {
+    if (sub->GetState() == SESubstanceState::Gas) {
       m_InstantDiffusionSubstances.emplace_back(sub);
       continue;
     }
     if (sub->HasMaximumDiffusionFlux()) {
       m_FacilitatedDiffusionSubstances.emplace_back(sub);
     } else {
-      if (sub->GetMolarMass(MassPerAmountUnit::g_Per_mol) < 1000.0 && sub->GetName() != "Bicarbonate" && sub->GetClassification() != CDM::enumSubstanceClass::WholeBlood) {
+      if (sub->GetMolarMass(MassPerAmountUnit::g_Per_mol) < 1000.0 && sub->GetName() != "Bicarbonate" && sub->GetClassification() != SESubstanceClass::WholeBlood) {
         //We elect not to transport HCO3 with simple diffusion because it is a charged substance.   We also need to filter out blood antigens
         m_SimpleDiffusionSubstances.emplace_back(sub);
       }
@@ -206,7 +206,7 @@ void DiffusionCalculator::CalculateLinearDiffusionMethods()
     rowNumber = 0;
     for (auto simpleSub : m_SimpleDiffusionSubstances) {
       massToMoveVE_ug = DeltaMassSimpleVE_ug(rowNumber, colNumber);
-      massToMoveEI_ug = simpleSub->GetClassification() == CDM::enumSubstanceClass::Ion ? 0.0 : DeltaMassSimpleEI_ug(rowNumber, colNumber);
+      massToMoveEI_ug = simpleSub->GetClassification() == SESubstanceClass::Ion ? 0.0 : DeltaMassSimpleEI_ug(rowNumber, colNumber);
       vascularSubQ = diffSet.vascular->GetSubstanceQuantity(*simpleSub);
       extracellularSubQ = diffSet.extracellular->GetSubstanceQuantity(*simpleSub);
       intracellularSubQ = diffSet.intracellular->GetSubstanceQuantity(*simpleSub);
@@ -248,7 +248,7 @@ void DiffusionCalculator::CalculateLinearDiffusionMethods()
       //Extracellular->Intracellular transport of ions happens in Tissue::CoupledIonTransport
       //We do need to diffuse extracellular ion mass that transfers with vascular, but we do not want to balance yet
       //Ion balance on both extra and intra happens in CoupledIonTransport
-      if (simpleSub->GetClassification() == CDM::enumSubstanceClass::Ion) {
+      if (simpleSub->GetClassification() == SESubstanceClass::Ion) {
         vascularSubQ->Balance(BalanceLiquidBy::Mass);
         rowNumber++;
         continue;

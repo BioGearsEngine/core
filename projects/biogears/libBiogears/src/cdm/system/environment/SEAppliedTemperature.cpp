@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 
+#include "io/cdm/Environment.h"
+
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
@@ -24,7 +27,7 @@ SEAppliedTemperature::SEAppliedTemperature(Logger* logger)
   m_Temperature = nullptr;
   m_SurfaceArea = nullptr;
   m_SurfaceAreaFraction = nullptr;
-  m_State = CDM::enumOnOff::On;
+  m_State = SEOnOff::On;
 }
 //-----------------------------------------------------------------------------
 SEAppliedTemperature::~SEAppliedTemperature()
@@ -37,7 +40,7 @@ void SEAppliedTemperature::Clear()
   SAFE_DELETE(m_Temperature);
   SAFE_DELETE(m_SurfaceArea);
   SAFE_DELETE(m_SurfaceAreaFraction);
-  m_State = CDM::enumOnOff::On;
+  m_State = SEOnOff::On;
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEAppliedTemperature::GetScalar(const char* name)
@@ -56,17 +59,9 @@ const SEScalar* SEAppliedTemperature::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEAppliedTemperature::Load(const CDM::AppliedTemperatureData& in, std::default_random_engine *rd)
+bool SEAppliedTemperature::Load(const CDM::AppliedTemperatureData& in, std::default_random_engine* rd)
 {
-  Clear();
-  if (in.State().present())
-    m_State = in.State().get();
-  if (in.Temperature().present())
-    GetTemperature().Load(in.Temperature().get(), rd);
-  if (in.SurfaceArea().present())
-    GetSurfaceArea().Load(in.SurfaceArea().get(), rd);
-  if (in.SurfaceAreaFraction().present())
-    GetSurfaceAreaFraction().Load(in.SurfaceAreaFraction().get(), rd);
+  io::Environment::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -79,13 +74,7 @@ CDM::AppliedTemperatureData* SEAppliedTemperature::Unload() const
 //-----------------------------------------------------------------------------
 void SEAppliedTemperature::Unload(CDM::AppliedTemperatureData& data) const
 {
-  if (HasTemperature())
-    data.Temperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_Temperature->Unload()));
-  if (HasSurfaceArea())
-    data.SurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_SurfaceArea->Unload()));
-  if (HasSurfaceAreaFraction())
-    data.SurfaceAreaFraction(std::unique_ptr<CDM::ScalarFractionData>(m_SurfaceAreaFraction->Unload()));
-  data.State(m_State);
+  io::Environment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEAppliedTemperature::HasTemperature() const
@@ -145,12 +134,12 @@ double SEAppliedTemperature::GetSurfaceAreaFraction() const
   return m_SurfaceAreaFraction->GetValue();
 }
 //-----------------------------------------------------------------------------
-CDM::enumOnOff::value SEAppliedTemperature::GetState() const
+SEOnOff SEAppliedTemperature::GetState() const
 {
   return m_State;
 }
 //-----------------------------------------------------------------------------
-void SEAppliedTemperature::SetState(CDM::enumOnOff::value onOff)
+void SEAppliedTemperature::SetState(SEOnOff onOff)
 {
   m_State = onOff;
 }
@@ -177,7 +166,6 @@ bool SEAppliedTemperature::operator==(SEAppliedTemperature const& rhs) const
     && ((m_Temperature && rhs.m_Temperature) ? m_Temperature->operator==(*rhs.m_Temperature) : m_Temperature == rhs.m_Temperature)
     && ((m_SurfaceArea && rhs.m_SurfaceArea) ? m_SurfaceArea->operator==(*rhs.m_SurfaceArea) : m_SurfaceArea == rhs.m_SurfaceArea)
     && ((m_SurfaceAreaFraction && rhs.m_SurfaceAreaFraction) ? m_SurfaceAreaFraction->operator==(*rhs.m_SurfaceAreaFraction) : m_SurfaceAreaFraction == rhs.m_SurfaceAreaFraction);
-  
 }
 bool SEAppliedTemperature::operator!=(SEAppliedTemperature const& rhs) const
 {

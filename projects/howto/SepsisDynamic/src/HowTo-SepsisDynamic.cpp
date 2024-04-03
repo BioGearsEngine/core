@@ -196,7 +196,7 @@ void DynamicSepsis::UpdateMIC(double mic)
 {
   m_septicInfection = new SEInfection(); //This will not override current infection because inflammation model is already active
   m_septicInfection->SetLocation("Gut"); //Assume stomach infection--will not change outcome
-  m_septicInfection->SetSeverity(CDM::enumInfectionSeverity::Severe); //Again, this will not change model outcome, as inflammation is already active
+  m_septicInfection->SetSeverity(SEInfectionSeverity::Severe); //Again, this will not change model outcome, as inflammation is already active
   m_septicInfection->GetMinimumInhibitoryConcentration().SetValue(mic, MassPerVolumeUnit::mg_Per_L);
   m_mutex.lock();
   m_bg->ProcessAction(*m_septicInfection);

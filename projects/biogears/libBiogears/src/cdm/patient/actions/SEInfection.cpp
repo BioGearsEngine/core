@@ -9,6 +9,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEInfection.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
@@ -18,7 +19,7 @@ namespace biogears
     : SEPatientAction()
   {
     m_Location = ""; //User input, location of infection
-    m_Severity = (CDM::enumInfectionSeverity::value)-1;
+    m_Severity = SEInfectionSeverity::Invalid;
     m_MinimumInhibitoryConcentration = nullptr;
   }
   //-------------------------------------------------------------------------------
@@ -31,7 +32,7 @@ namespace biogears
   {
     SEPatientAction::Clear();
     m_Location = "";
-    m_Severity = (CDM::enumInfectionSeverity::value)-1;
+    m_Severity = SEInfectionSeverity::Invalid;
     SAFE_DELETE(m_MinimumInhibitoryConcentration);
   }
   //-------------------------------------------------------------------------------
@@ -42,15 +43,12 @@ namespace biogears
   //-------------------------------------------------------------------------------
   bool SEInfection::IsActive() const
   {
-    return m_Severity == CDM::enumInfectionSeverity::Eliminated ? false : true;
+    return m_Severity == SEInfectionSeverity::Eliminated ? false : true;
   }
   //-------------------------------------------------------------------------------
   bool SEInfection::Load(const CDM::InfectionData& in, std::default_random_engine * rd)
   {
-    SEPatientAction::Load(in);
-    m_Location = in.Location();
-    m_Severity = in.Severity();
-    GetMinimumInhibitoryConcentration().Load(in.MinimumInhibitoryConcentration(), rd);
+    io::PatientActions::UnMarshall(in, *this, rd);
     return true;
   }
   //-------------------------------------------------------------------------------
@@ -63,13 +61,7 @@ namespace biogears
   //-------------------------------------------------------------------------------
   void SEInfection::Unload(CDM::InfectionData& data) const
   {
-    SEPatientAction::Unload(data);
-    if (HasLocation())
-      data.Location(m_Location);
-    if (HasSeverity())
-      data.Severity(m_Severity);
-    if (m_MinimumInhibitoryConcentration != nullptr)
-      data.MinimumInhibitoryConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_MinimumInhibitoryConcentration->Unload()));
+    io::PatientActions::Marshall(*this, data);
   }
   //-------------------------------------------------------------------------------
   const char* SEInfection::GetLocation_cStr() const
@@ -102,24 +94,24 @@ namespace biogears
     m_Location = name;
   }
   //-------------------------------------------------------------------------------
-  CDM::enumInfectionSeverity::value SEInfection::GetSeverity() const
+  SEInfectionSeverity SEInfection::GetSeverity() const
   {
     return m_Severity;
   }
   //-------------------------------------------------------------------------------
-  void SEInfection::SetSeverity(CDM::enumInfectionSeverity::value t)
+  void SEInfection::SetSeverity(SEInfectionSeverity t)
   {
     m_Severity = t;
   }
   //-------------------------------------------------------------------------------
   bool SEInfection::HasSeverity() const
   {
-    return m_Severity == ((CDM::enumInfectionSeverity::value)-1) ? false : true;
+    return m_Severity == (SEInfectionSeverity::Invalid) ? false : true;
   }
   //-------------------------------------------------------------------------------
   void SEInfection::InvalidateSeverity()
   {
-    m_Severity = (CDM::enumInfectionSeverity::value)-1;
+    m_Severity = SEInfectionSeverity::Invalid;
   }
   //-----------------------------------------------------------------------------
   bool SEInfection::HasMinimumInhibitoryConcentration() const

@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/schema/cdm/Substance.hxx>
-
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
@@ -72,13 +72,13 @@ public:
   virtual bool HasName() const;
   virtual void InvalidateName();
 
-  virtual CDM::enumSubstanceState::value GetState() const;
-  virtual void SetState(CDM::enumSubstanceState::value state);
+  virtual SESubstanceState GetState() const;
+  virtual void SetState(SESubstanceState state);
   virtual bool HasState() const;
   virtual void InvalidateState();
 
-  virtual CDM::enumSubstanceClass::value GetClassification() const;
-  virtual void SetClassification(CDM::enumSubstanceClass::value subClass);
+  virtual SESubstanceClass GetClassification() const;
+  virtual void SetClassification(SESubstanceClass subClass);
   virtual bool HasClassification() const;
   virtual void InvalidateClassification();
 
@@ -193,8 +193,8 @@ protected:
 
 protected:
   std::string m_Name;
-  CDM::enumSubstanceClass::value m_Classification;
-  CDM::enumSubstanceState::value m_State;
+  SESubstanceClass m_Classification;
+  SESubstanceState m_State;
   SEScalarMassPerVolume* m_Density;
   SEScalarMassPerAmount* m_MolarMass;
 

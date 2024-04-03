@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
 
+#include "io/cdm/Substance.h"
+
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
@@ -65,10 +67,7 @@ const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::Load(const CDM::SubstanceAerosolizationData& in)
 {
-  Clear();
-  GetBronchioleModifier().Load(in.BronchioleModifier());
-  GetInflammationCoefficient().Load(in.InflammationCoefficient());
-  GetParticulateSizeDistribution().Load(in.ParticulateSizeDistribution());
+  io::Substance::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -83,12 +82,7 @@ CDM::SubstanceAerosolizationData* SESubstanceAerosolization::Unload() const
 //-----------------------------------------------------------------------------
 void SESubstanceAerosolization::Unload(CDM::SubstanceAerosolizationData& data) const
 {
-  if (HasBronchioleModifier())
-    data.BronchioleModifier(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_BronchioleModifier->Unload()));
-  if (HasInflammationCoefficient())
-    data.InflammationCoefficient(std::unique_ptr<CDM::Scalar0To1Data>(m_InflammationCoefficient->Unload()));
-  if (HasParticulateSizeDistribution())
-    data.ParticulateSizeDistribution(std::unique_ptr<CDM::HistogramFractionVsLengthData>(m_ParticulateSizeDistribution->Unload()));
+  io::Substance::Marshall(*this, data);
 };
 //-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::HasBronchioleModifier() const

@@ -10,12 +10,13 @@ specific language governing permissions and limitations under the License.
 
 #include "biogears/cdm/patient/actions/SESleep.h"
 
+#include "io/cdm/PatientActions.h"
 namespace biogears
 {
   SESleep::SESleep()
     : SEPatientAction()
   {
-     m_SleepState = CDM::enumOnOff::Off;
+     m_SleepState = SEOnOff::Off;
   }
   //-------------------------------------------------------------------------------
   SESleep::~SESleep()
@@ -26,7 +27,7 @@ namespace biogears
   void SESleep::Clear()
   {
     SEPatientAction::Clear();
-    m_SleepState = CDM::enumOnOff::Off;;
+    m_SleepState = SEOnOff::Off;;
   }
   //-------------------------------------------------------------------------------
   bool SESleep::IsValid() const
@@ -36,13 +37,12 @@ namespace biogears
   //-------------------------------------------------------------------------------
   bool SESleep::IsActive() const
   {
-    return m_SleepState == CDM::enumOnOff::Off ? false : true;
+    return m_SleepState == SEOnOff::Off ? false : true;
   }
   //-------------------------------------------------------------------------------
   bool SESleep::Load(const CDM::SleepData& in, std::default_random_engine *rd)
   {
-    SEPatientAction::Load(in);
-    m_SleepState = in.Sleep();
+    io::PatientActions::UnMarshall(in, *this, rd);
     return true;
   }
   //-------------------------------------------------------------------------------
@@ -55,22 +55,20 @@ namespace biogears
   //-------------------------------------------------------------------------------
   void SESleep::Unload(CDM::SleepData& data) const
   {
-    SEPatientAction::Unload(data);
-    if (HasSleepState())
-      data.Sleep(m_SleepState);
+    io::PatientActions::Marshall(*this, data);
   }
   //-------------------------------------------------------------------------------
-  CDM::enumOnOff SESleep::GetSleepState() const
+  SEOnOff SESleep::GetSleepState() const
   {
         return m_SleepState;
   }
   //-------------------------------------------------------------------------------
   bool SESleep::HasSleepState() const
   {
-      return m_SleepState == ((CDM::enumOnOff::value) - 1) ? false : true;
+      return m_SleepState == ((SEOnOff) - 1) ? false : true;
   }
   //-------------------------------------------------------------------------------
-  void SESleep::SetSleepState(CDM::enumOnOff::value t) 
+  void SESleep::SetSleepState(SEOnOff t) 
   {
       m_SleepState = t;
   }

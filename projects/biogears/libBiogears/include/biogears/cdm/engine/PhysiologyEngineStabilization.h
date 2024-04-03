@@ -25,7 +25,12 @@ class PhysiologyEngineTrack;
 class PhysiologyEngineConfiguration;
 class SECondition;
 
+namespace io {
+  class EngineConfiguration;
+}
 class  PhysiologyEngineStabilization : public Loggable {
+  friend io::EngineConfiguration;
+
 public:
   BIOGEARS_API PhysiologyEngineStabilization(Logger* logger);
   BIOGEARS_API virtual ~PhysiologyEngineStabilization();
@@ -62,7 +67,7 @@ public:
 protected:
   bool m_Canceled;
   bool m_LogProgress;
-  SEScalarTime* m_currentTime;
+  SEScalarTime* m_CurrentTime;
   std::stringstream m_ss;
 
   SEScalarTime* m_StabilizationDuration;
