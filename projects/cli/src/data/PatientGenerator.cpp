@@ -148,24 +148,24 @@ bool PatientGenerator::process(const std::string& name, const std::string& value
     } catch (std::exception e) {
       rValue = false;
     }
-  } else if ("RightLungFraction" == name) {
-    PatientData::RightLungRatio_type rlr_data;
-    try {
-      rlr_data.value(std::stod(value));
-      patient.RightLungRatio(rlr_data);
-    } catch (std::exception e) {
-      rValue = false;
-    }
-  } else if ("SkinSurfaceArea" == name) {
-    size_t pos;
-    PatientData::SkinSurfaceArea_type ssa_data;
-    try {
-      ssa_data.value(std::stod(value, &pos));
-      ssa_data.unit(biogears::trim(value.substr(pos)));
-      patient.SkinSurfaceArea(ssa_data);
-    } catch (std::exception e) {
-      rValue = false;
-    }
+  //} else if ("RightLungFraction" == name) {
+  //  PatientData::RightLungRatio_type rlr_data;
+  //  try {
+  //    rlr_data.value(std::stod(value));
+  //    patient.RightLungRatio(rlr_data);
+  //  } catch (std::exception e) {
+  //    rValue = false;
+  //  }
+  //} else if ("SkinSurfaceArea" == name) {
+  //  size_t pos;
+  //  PatientData::SkinSurfaceArea_type ssa_data;
+  //  try {
+  //    ssa_data.value(std::stod(value, &pos));
+  //    ssa_data.unit(biogears::trim(value.substr(pos)));
+  //    patient.SkinSurfaceArea(ssa_data);
+  //  } catch (std::exception e) {
+  //    rValue = false;
+  //  }
   } else if ("BasalMetabolicRate" == name) {
     size_t pos;
     PatientData::BasalMetabolicRate_type bmr_data;

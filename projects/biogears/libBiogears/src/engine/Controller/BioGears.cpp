@@ -607,7 +607,7 @@ bool BioGears::SetupPatient()
   double respirationRate_bpm;
   double respirationRateStandard_bpm = 14.0;
   double respirationRateMax_bpm = 20.0;
-  double respirationRateMin_bpm = 12.0;
+  double respirationRateMin_bpm = 10.0;
   if (!m_Patient->HasRespirationRateBaseline()) {
     respirationRate_bpm = respirationRateStandard_bpm;
     m_Patient->GetRespirationRateBaseline().SetValue(respirationRate_bpm, FrequencyUnit::Per_min);

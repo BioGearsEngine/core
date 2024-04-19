@@ -53,7 +53,7 @@ std::vector<std::string> generate_girl_names();
 PopulationGenerator::PopulationGenerator(std::vector<std::string> params)
 {
   if (params.size() == 1) {
-    _runs.emplace_back("PopulationTemplate.xml", 10);
+    _runs.emplace_back("PopulationTemplate.xml", 20);
   } else {
     for (auto i = 0; i < params.size(); ++i) {
       if (i + 2 <= params.size()) {
@@ -264,18 +264,18 @@ void PopulationGenerator::Generate()
           }
         }
 
-        if (!population->BodyFatFractionDistribution().empty()) {
-          standard_distribution = std::normal_distribution<>(population->BodyFatFractionDistribution()[0].mean(),
-                                                             population->BodyFatFractionDistribution()[0].diviation());
-          for (auto& distribution : population->BodyFatFractionDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
+        //if (!population->BodyFatFractionDistribution().empty()) {
+        //  standard_distribution = std::normal_distribution<>(population->BodyFatFractionDistribution()[0].mean(),
+        //                                                     population->BodyFatFractionDistribution()[0].diviation());
+        //  for (auto& distribution : population->BodyFatFractionDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
 
-          patient.BodyFatFraction(standard_distribution(gen));
-          patient.BodyFatFraction()->unit("");
-        }
+        //  patient.BodyFatFraction(standard_distribution(gen));
+        //  patient.BodyFatFraction()->unit("");
+        //}
         if (!population->MaxWorkRateDistribution().empty()) {
           unit_str = population->MaxWorkRateDistribution()[0].unit();
           standard_distribution = std::normal_distribution<>(population->MaxWorkRateDistribution()[0].mean(),
@@ -320,59 +320,59 @@ void PopulationGenerator::Generate()
           }
           patient.BloodTypeRh(binomial_distribution(gen));
         }
-        if (!population->AlveoliSurfaceAreaDistribution().empty()) {
-          unit_str = population->AlveoliSurfaceAreaDistribution()[0].unit();
-          standard_distribution = std::normal_distribution<>(population->AlveoliSurfaceAreaDistribution()[0].mean(),
-                                                             population->AlveoliSurfaceAreaDistribution()[0].diviation());
-          for (auto& distribution : population->AlveoliSurfaceAreaDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              unit_str = distribution.unit();
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
-          if (unit_str.empty()) {
-            unit_str = "m^2";
-          }
-          patient.AlveoliSurfaceArea(standard_distribution(gen));
-          patient.AlveoliSurfaceArea()->unit(unit_str);
-        }
-        if (!population->HyperhidrosisDistribution().empty()) {
-          standard_distribution = std::normal_distribution<>(population->HyperhidrosisDistribution()[0].mean(),
-                                                             population->HyperhidrosisDistribution()[0].diviation());
-          for (auto& distribution : population->HyperhidrosisDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
-          patient.Hyperhidrosis(standard_distribution(gen));
-          patient.Hyperhidrosis()->unit(unit_str);
-        }
-        if (!population->RightLungRatioDistribution().empty()) {
-          standard_distribution = std::normal_distribution<>(population->RightLungRatioDistribution()[0].mean(),
-                                                             population->RightLungRatioDistribution()[0].diviation());
-          for (auto& distribution : population->RightLungRatioDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
-          patient.RightLungRatio(standard_distribution(gen));
-        }
-        if (!population->SkinSurfaceAreaDistribution().empty()) {
-          unit_str = population->SkinSurfaceAreaDistribution()[0].unit();
-          standard_distribution = std::normal_distribution<>(population->SkinSurfaceAreaDistribution()[0].mean(),
-                                                             population->SkinSurfaceAreaDistribution()[0].diviation());
-          for (auto& distribution : population->SkinSurfaceAreaDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              unit_str = distribution.unit();
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
-          if (unit_str.empty()) {
-            unit_str = "m^2";
-          }
-          patient.SkinSurfaceArea(standard_distribution(gen));
-          patient.SkinSurfaceArea()->unit(unit_str);
-        }
+        //if (!population->AlveoliSurfaceAreaDistribution().empty()) {
+        //  unit_str = population->AlveoliSurfaceAreaDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->AlveoliSurfaceAreaDistribution()[0].mean(),
+        //                                                     population->AlveoliSurfaceAreaDistribution()[0].diviation());
+        //  for (auto& distribution : population->AlveoliSurfaceAreaDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "m^2";
+        //  }
+        //  patient.AlveoliSurfaceArea(standard_distribution(gen));
+        //  patient.AlveoliSurfaceArea()->unit(unit_str);
+        //}
+        //if (!population->HyperhidrosisDistribution().empty()) {
+        //  standard_distribution = std::normal_distribution<>(population->HyperhidrosisDistribution()[0].mean(),
+        //                                                     population->HyperhidrosisDistribution()[0].diviation());
+        //  for (auto& distribution : population->HyperhidrosisDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  patient.Hyperhidrosis(standard_distribution(gen));
+        //  patient.Hyperhidrosis()->unit(unit_str);
+        //}
+        //if (!population->RightLungRatioDistribution().empty()) {
+        //  standard_distribution = std::normal_distribution<>(population->RightLungRatioDistribution()[0].mean(),
+        //                                                     population->RightLungRatioDistribution()[0].diviation());
+        //  for (auto& distribution : population->RightLungRatioDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  patient.RightLungRatio(standard_distribution(gen));
+        //}
+        //if (!population->SkinSurfaceAreaDistribution().empty()) {
+        //  unit_str = population->SkinSurfaceAreaDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->SkinSurfaceAreaDistribution()[0].mean(),
+        //                                                     population->SkinSurfaceAreaDistribution()[0].diviation());
+        //  for (auto& distribution : population->SkinSurfaceAreaDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "m^2";
+        //  }
+        //  patient.SkinSurfaceArea(standard_distribution(gen));
+        //  patient.SkinSurfaceArea()->unit(unit_str);
+        //}
         if (!population->SleepAmountDistribution().empty()) {
           unit_str = population->SleepAmountDistribution()[0].unit();
           standard_distribution = std::normal_distribution<>(population->SleepAmountDistribution()[0].mean(),
@@ -389,17 +389,17 @@ void PopulationGenerator::Generate()
           patient.SleepAmount(standard_distribution(gen));
           patient.SleepAmount()->unit(unit_str);
         }
-        if (!population->PainSusceptibilityDistribution().empty()) {
-          standard_distribution = std::normal_distribution<>(population->PainSusceptibilityDistribution()[0].mean(),
-                                                             population->PainSusceptibilityDistribution()[0].diviation());
-          for (auto& distribution : population->PainSusceptibilityDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              unit_str = distribution.unit();
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
-          patient.PainSusceptibility(standard_distribution(gen));
-        }
+        //if (!population->PainSusceptibilityDistribution().empty()) {
+        //  standard_distribution = std::normal_distribution<>(population->PainSusceptibilityDistribution()[0].mean(),
+        //                                                     population->PainSusceptibilityDistribution()[0].diviation());
+        //  for (auto& distribution : population->PainSusceptibilityDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  patient.PainSusceptibility(standard_distribution(gen));
+        //}
         if (!population->BasalMetabolicRateDistribution().empty()) {
           unit_str = population->BasalMetabolicRateDistribution()[0].unit();
           standard_distribution = std::normal_distribution<>(population->BasalMetabolicRateDistribution()[0].mean(),
@@ -416,22 +416,22 @@ void PopulationGenerator::Generate()
           patient.BasalMetabolicRate(standard_distribution(gen));
           patient.BasalMetabolicRate()->unit(unit_str);
         }
-        if (!population->BloodVolumeBaselineDistribution().empty()) {
-          unit_str = population->BloodVolumeBaselineDistribution()[0].unit();
-          standard_distribution = std::normal_distribution<>(population->BloodVolumeBaselineDistribution()[0].mean(),
-                                                             population->BloodVolumeBaselineDistribution()[0].diviation());
-          for (auto& distribution : population->BloodVolumeBaselineDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              unit_str = distribution.unit();
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
-          if (unit_str.empty()) {
-            unit_str = "mL";
-          }
-          patient.BloodVolumeBaseline(standard_distribution(gen));
-          patient.BloodVolumeBaseline()->unit(unit_str);
-        }
+        //if (!population->BloodVolumeBaselineDistribution().empty()) {
+        //  unit_str = population->BloodVolumeBaselineDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->BloodVolumeBaselineDistribution()[0].mean(),
+        //                                                     population->BloodVolumeBaselineDistribution()[0].diviation());
+        //  for (auto& distribution : population->BloodVolumeBaselineDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "mL";
+        //  }
+        //  patient.BloodVolumeBaseline(standard_distribution(gen));
+        //  patient.BloodVolumeBaseline()->unit(unit_str);
+        //}
         if (!population->DiastolicArterialPressureBaselineDistribution().empty()) {
           unit_str = population->DiastolicArterialPressureBaselineDistribution()[0].unit();
           standard_distribution = std::normal_distribution<>(population->DiastolicArterialPressureBaselineDistribution()[0].mean(),
@@ -529,54 +529,54 @@ void PopulationGenerator::Generate()
           patient.HeartRateMinimum(standard_distribution(gen));
           patient.HeartRateMinimum()->unit(unit_str);
         }
-        if (!population->FunctionalResidualCapacityDistribution().empty()) {
-          unit_str = population->FunctionalResidualCapacityDistribution()[0].unit();
-          standard_distribution = std::normal_distribution<>(population->FunctionalResidualCapacityDistribution()[0].mean(),
-                                                             population->FunctionalResidualCapacityDistribution()[0].diviation());
-          for (auto& distribution : population->FunctionalResidualCapacityDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              unit_str = distribution.unit();
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
-          if (unit_str.empty()) {
-            unit_str = "L";
-          }
-          patient.FunctionalResidualCapacity(standard_distribution(gen));
-          patient.FunctionalResidualCapacity()->unit(unit_str);
-        }
-        if (!population->ResidualVolumeDistribution().empty()) {
-          unit_str = population->ResidualVolumeDistribution()[0].unit();
-          standard_distribution = std::normal_distribution<>(population->ResidualVolumeDistribution()[0].mean(),
-                                                             population->ResidualVolumeDistribution()[0].diviation());
-          for (auto& distribution : population->ResidualVolumeDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              unit_str = distribution.unit();
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
-          if (unit_str.empty()) {
-            unit_str = "L";
-          }
-          patient.ResidualVolume(standard_distribution(gen));
-          patient.ResidualVolume()->unit(unit_str);
-        }
-        if (!population->TotalLungCapacityDistribution().empty()) {
-          unit_str = population->TotalLungCapacityDistribution()[0].unit();
-          standard_distribution = std::normal_distribution<>(population->TotalLungCapacityDistribution()[0].mean(),
-                                                             population->TotalLungCapacityDistribution()[0].diviation());
-          for (auto& distribution : population->TotalLungCapacityDistribution()) {
-            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
-              unit_str = distribution.unit();
-              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
-            }
-          }
-          if (unit_str.empty()) {
-            unit_str = "L";
-          }
-          patient.TotalLungCapacity(standard_distribution(gen));
-          patient.TotalLungCapacity()->unit(unit_str);
-        }
+        //if (!population->FunctionalResidualCapacityDistribution().empty()) {
+        //  unit_str = population->FunctionalResidualCapacityDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->FunctionalResidualCapacityDistribution()[0].mean(),
+        //                                                     population->FunctionalResidualCapacityDistribution()[0].diviation());
+        //  for (auto& distribution : population->FunctionalResidualCapacityDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "L";
+        //  }
+        //  patient.FunctionalResidualCapacity(standard_distribution(gen));
+        //  patient.FunctionalResidualCapacity()->unit(unit_str);
+        //}
+        //if (!population->ResidualVolumeDistribution().empty()) {
+        //  unit_str = population->ResidualVolumeDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->ResidualVolumeDistribution()[0].mean(),
+        //                                                     population->ResidualVolumeDistribution()[0].diviation());
+        //  for (auto& distribution : population->ResidualVolumeDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "L";
+        //  }
+        //  patient.ResidualVolume(standard_distribution(gen));
+        //  patient.ResidualVolume()->unit(unit_str);
+        //}
+        //if (!population->TotalLungCapacityDistribution().empty()) {
+        //  unit_str = population->TotalLungCapacityDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->TotalLungCapacityDistribution()[0].mean(),
+        //                                                     population->TotalLungCapacityDistribution()[0].diviation());
+        //  for (auto& distribution : population->TotalLungCapacityDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "L";
+        //  }
+        //  patient.TotalLungCapacity(standard_distribution(gen));
+        //  patient.TotalLungCapacity()->unit(unit_str);
+        //}
 
         xml_schema::namespace_infomap info;
         info[""].name = "uri:/mil/tatrc/physiology/datamodel";
