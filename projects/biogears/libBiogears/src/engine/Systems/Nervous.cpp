@@ -1331,7 +1331,7 @@ void Nervous::SetPupilEffects()
   GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
-  GetGlasgowComaScalar().SetValue(gcs);
+  GetGlasgowComaScalar().SetValue(gcs); ///\ToDo:  In the future this value should be calculated to be more representative of the gcs (0-15), but is just being mapped to TBI Severity (0-1) based on current needs
 }
 
 //--------------------------------------------------------------------------------------------------
