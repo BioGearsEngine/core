@@ -26,6 +26,7 @@ constexpr char idHeartRateScale[] = "HeartRateScale";
 constexpr char idHeartElastanceScale[] = "HeartElastanceScale";
 constexpr char idMentalStatus[] = "MentalStatus";
 constexpr char idPainVisualAnalogueScale[] = "PainVisualAnalogueScale";
+constexpr char idGlasgowComaScalar[] = "GlasgowComaScalar";
 constexpr char idLeftEyePupillaryResponse[] = "LeftEyePupillaryResponse";
 constexpr char idRightEyePupillaryResponse[] = "RightEyePupillaryResponse";
 constexpr char idReactionTime[] = "ReactionTime";
@@ -45,6 +46,7 @@ SENervousSystem::SENervousSystem(Logger* logger)
   m_ComplianceScale = nullptr;
   m_HeartRateScale = nullptr;
   m_HeartElastanceScale = nullptr;
+  m_GlasgowComaScalar = nullptr;
   m_LeftEyePupillaryResponse = nullptr;
   m_RightEyePupillaryResponse = nullptr;
   m_MentalStatus = nullptr;
@@ -81,6 +83,7 @@ void SENervousSystem::Clear()
   SAFE_DELETE(m_ResistanceScaleMyocardium);
   SAFE_DELETE(m_ResistanceScaleSplanchnic);
   SAFE_DELETE(m_ComplianceScale);
+  SAFE_DELETE(m_GlasgowComaScalar);
   SAFE_DELETE(m_LeftEyePupillaryResponse);
   SAFE_DELETE(m_RightEyePupillaryResponse);
   SAFE_DELETE(m_PainVisualAnalogueScale);
@@ -119,6 +122,8 @@ const SEScalar* SENervousSystem::GetScalar(const std::string& name)
     return &GetResistanceScaleSplanchnic();
   if (name == idComplianceScale)
     return &GetComplianceScale();
+  if (name == idGlasgowComaScalar)
+    return &GetGlasgowComaScalar();
   if (name == idPainVisualAnalogueScale)
     return &GetPainVisualAnalogueScale();
   if (name == idSleepTime)
@@ -168,6 +173,8 @@ bool SENervousSystem::Load(const CDM::NervousSystemData& in)
     GetComplianceScale().Load(in.ComplianceScale().get());
   if (in.PainVisualAnalogueScale().present())
     GetPainVisualAnalogueScale().Load(in.PainVisualAnalogueScale().get());
+  if (in.GlasgowComaScalar().present())
+    GetGlasgowComaScalar().Load(in.GlasgowComaScalar().get());
   if (in.LeftEyePupillaryResponse().present())
     GetLeftEyePupillaryResponse().Load(in.LeftEyePupillaryResponse().get());
   if (in.RichmondAgitationSedationScale().present())
@@ -219,6 +226,8 @@ void SENervousSystem::Unload(CDM::NervousSystemData& data) const
     data.ComplianceScale(std::unique_ptr<CDM::ScalarData>(m_ComplianceScale->Unload()));
   if (m_PainVisualAnalogueScale != nullptr)
     data.PainVisualAnalogueScale(std::unique_ptr<CDM::ScalarData>(m_PainVisualAnalogueScale->Unload()));
+  if (m_GlasgowComaScalar != nullptr)
+    data.GlasgowComaScalar(std::unique_ptr<CDM::ScalarData>(m_GlasgowComaScalar->Unload()));
   if (m_LeftEyePupillaryResponse != nullptr)
     data.LeftEyePupillaryResponse(std::unique_ptr<CDM::PupillaryResponseData>(m_LeftEyePupillaryResponse->Unload()));
   if (m_RichmondAgitationSedationScale != nullptr)
@@ -467,6 +476,25 @@ double SENervousSystem::GetRichmondAgitationSedationScale() const
   return m_RichmondAgitationSedationScale->GetValue();
 }
 //-------------------------------------------------------------------------------
+bool SENervousSystem::HasGlasgowComaScalar() const
+{
+  return m_GlasgowComaScalar == nullptr ? false : m_GlasgowComaScalar->IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalar& SENervousSystem::GetGlasgowComaScalar()
+{
+  if (m_GlasgowComaScalar == nullptr)
+    m_GlasgowComaScalar = new SEScalar();
+  return *m_GlasgowComaScalar;
+}
+//-------------------------------------------------------------------------------
+double SENervousSystem::GetGlasgowComaScalar() const
+{
+  if (m_GlasgowComaScalar == nullptr)
+    return SEScalar::dNaN();
+  return m_GlasgowComaScalar->GetValue();
+}
+//-------------------------------------------------------------------------------
 bool SENervousSystem::HasLeftEyePupillaryResponse() const
 {
   return (m_LeftEyePupillaryResponse != nullptr);
@@ -619,6 +647,7 @@ bool SENervousSystem::operator==(SENervousSystem const& rhs) const
     return true;
 
   bool equivilant = m_SleepState == rhs.m_SleepState;
+  equivilant &= ((m_GlasgowComaScalar && rhs.m_GlasgowComaScalar) ? m_GlasgowComaScalar->operator==(*rhs.m_GlasgowComaScalar) : m_GlasgowComaScalar == rhs.m_GlasgowComaScalar);
   equivilant &= ((m_LeftEyePupillaryResponse && rhs.m_LeftEyePupillaryResponse) ? m_LeftEyePupillaryResponse->operator==(*rhs.m_LeftEyePupillaryResponse) : m_LeftEyePupillaryResponse == rhs.m_LeftEyePupillaryResponse);
   equivilant &= ((m_RightEyePupillaryResponse && rhs.m_RightEyePupillaryResponse) ? m_RightEyePupillaryResponse->operator==(*rhs.m_RightEyePupillaryResponse) : m_RightEyePupillaryResponse == rhs.m_RightEyePupillaryResponse);
   equivilant &= ((m_AttentionLapses && rhs.m_AttentionLapses) ? m_AttentionLapses->operator==(*rhs.m_AttentionLapses) : m_AttentionLapses == rhs.m_AttentionLapses);
