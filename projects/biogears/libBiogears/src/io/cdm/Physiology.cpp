@@ -425,6 +425,7 @@ namespace io {
     io::Property::Marshall(in.MentalStatus(), out.GetMentalStatus());
 
     io::Property::Marshall(in.PainVisualAnalogueScale(), out.GetPainVisualAnalogueScale());
+    io::Property::Marshall(in.GlasgowComaScalar(), out.GetGlasgowComaScalar());
     io::Property::Marshall(in.ResistanceScaleExtrasplanchnic(), out.GetResistanceScaleExtrasplanchnic());
     io::Property::Marshall(in.ResistanceScaleMuscle(), out.GetResistanceScaleMuscle());
     io::Property::Marshall(in.ResistanceScaleMyocardium(), out.GetResistanceScaleMyocardium());
@@ -451,6 +452,7 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, HeartElastanceScale)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MentalStatus)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PainVisualAnalogueScale)
+    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, GlasgowComaScalar)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ResistanceScaleExtrasplanchnic)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ResistanceScaleMuscle)
     CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ResistanceScaleMyocardium)

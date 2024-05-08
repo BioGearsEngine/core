@@ -476,11 +476,6 @@ double SENervousSystem::GetRichmondAgitationSedationScale() const
   return m_RichmondAgitationSedationScale->GetValue();
 }
 //-------------------------------------------------------------------------------
-bool SENervousSystem::HasGlasgowComaScalar() const
-{
-  return m_GlasgowComaScalar == nullptr ? false : m_GlasgowComaScalar->IsValid();
-}
-//-------------------------------------------------------------------------------
 SEScalar& SENervousSystem::GetGlasgowComaScalar()
 {
   if (m_GlasgowComaScalar == nullptr)

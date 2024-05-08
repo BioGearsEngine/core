@@ -103,7 +103,6 @@ public:
   const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
   void RemoveRightEyePupillaryResponse();
 
-  bool HasGlasgowComaScalar() const;
   SEScalar& GetGlasgowComaScalar();
   double GetGlasgowComaScalar() const;
 
