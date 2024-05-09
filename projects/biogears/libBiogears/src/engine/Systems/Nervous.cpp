@@ -137,6 +137,7 @@ void Nervous::Initialize()
   GetComplianceScale().SetValue(1.0);
   GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(0);
   GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(0);
+  GetGlasgowComaScalar().SetValue(0);
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(0);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(0);
   GetPainVisualAnalogueScale().SetValue(0.0);
@@ -1286,6 +1287,7 @@ void Nervous::CheckNervousStatus()
 /// Modifiers are on a scale between -1 (for reduction in size/reactivity) and 1 (for increase)
 /// TBI effects are applied to the eye on the same side of the injury if localized or both if diffuse
 /// Drug and TBI pupil effects are simply summed together
+/// TBI effects now also sets Glasgow Coma scalar
 //--------------------------------------------------------------------------------------------------
 void Nervous::SetPupilEffects()
 {
@@ -1294,6 +1296,7 @@ void Nervous::SetPupilEffects()
   double leftPupilReactivityResponseLevel = GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue();
   double rightPupilSizeResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
   double rightPupilReactivityResponseLevel = GetRightEyePupillaryResponse().GetReactivityModifier().GetValue();
+  double gcs = GetGlasgowComaScalar().GetValue();
 
   // Calculate the TBI response
   if (m_data.GetActions().GetPatientActions().HasBrainInjury()) {
@@ -1316,6 +1319,7 @@ void Nervous::SetPupilEffects()
         rightPupilSizeResponseLevel += (1 / (1 + exp(-2.0 * (icp_mmHg - 20))));
         rightPupilReactivityResponseLevel += -.001 * std::pow(10, .27 * (icp_mmHg - 13));
       }
+      gcs = b->GetSeverity().GetValue();
     }
   }
 
@@ -1327,6 +1331,7 @@ void Nervous::SetPupilEffects()
   GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
   GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
   GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
+  GetGlasgowComaScalar().SetValue(gcs); ///\ToDo:  In the future this value should be calculated to be more representative of the gcs (0-15), but is just being mapped to TBI Severity (0-1) based on current needs
 }
 
 //--------------------------------------------------------------------------------------------------

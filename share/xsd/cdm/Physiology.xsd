@@ -450,7 +450,9 @@ specific language governing permissions and limitations under the License.
     <xs:complexContent>
       <xs:extension base="SystemData">
         <xs:sequence>
-          <xs:element name="HeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="GlasgowComaScalar" type="ScalarData" minOccurs="0"  maxOccurs="1"/>
+          <!--<< @brief Currently only implemented for TBI. outputs on a scale of 0-1 the expected scale for motor and verbal responses-->
+		  <xs:element name="HeartRateScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief Heart rate multiplier used to scale the heart rate due to baroreceptor feedback-->
           <xs:element name="HeartElastanceScale" type="ScalarData" minOccurs="0" maxOccurs="1"/>
           <!--<< @brief Heart elastance multiplier used to scale the heart rate due to baroreceptor feedback-->

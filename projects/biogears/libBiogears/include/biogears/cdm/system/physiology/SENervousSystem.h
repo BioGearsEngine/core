@@ -103,6 +103,9 @@ public:
   const SEPupillaryResponse* GetRightEyePupillaryResponse() const;
   void RemoveRightEyePupillaryResponse();
 
+  SEScalar& GetGlasgowComaScalar();
+  double GetGlasgowComaScalar() const;
+
   bool IsAsleep() const;
   SEScalarTime& GetSleepTime();
   double GetSleepTime(const TimeUnit& unit) const;
@@ -133,6 +136,7 @@ protected:
   SEScalar* m_HeartRateScale;
   SEScalar* m_HeartElastanceScale;
   SEScalar* m_MentalStatus;
+  SEScalar* m_GlasgowComaScalar;
   SEPupillaryResponse* m_LeftEyePupillaryResponse;
   SEPupillaryResponse* m_RightEyePupillaryResponse;
   SEScalar* m_PainVisualAnalogueScale;
