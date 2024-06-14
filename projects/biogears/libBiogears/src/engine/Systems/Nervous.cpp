@@ -1296,7 +1296,10 @@ void Nervous::SetPupilEffects()
   double leftPupilReactivityResponseLevel = GetLeftEyePupillaryResponse().GetReactivityModifier().GetValue();
   double rightPupilSizeResponseLevel = GetRightEyePupillaryResponse().GetSizeModifier().GetValue();
   double rightPupilReactivityResponseLevel = GetRightEyePupillaryResponse().GetReactivityModifier().GetValue();
-  double gcs = GetGlasgowComaScalar().GetValue();
+
+  // NOTE: Current Glasgow Coma implementation just passes TBI severity to the outputs and is not an actual representation of the Glasgow Coma Scale
+  double gcs = 0.0;
+
 
   // Calculate the TBI response
   if (m_data.GetActions().GetPatientActions().HasBrainInjury()) {
