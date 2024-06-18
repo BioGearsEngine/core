@@ -27,7 +27,8 @@ BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, vect
 BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, size_t>;
 }
 
-#define FLUID_CIRCUIT_TYPES CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData;
+#define FLUID_CIRCUIT_TYPES CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData
+
 #define FLUID_LEDGER_TYPES SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit
 
 namespace biogears {

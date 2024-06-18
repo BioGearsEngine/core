@@ -26,8 +26,8 @@ public:
 
   virtual bool Load(const CDM::PatientConditionData& in);
 
-  virtual bool operator==(SECondition const&) const = 0;
-  virtual bool operator!=(SECondition const&) const = 0;
+  virtual bool operator==(SECondition const&) const override = 0;
+  virtual bool operator!=(SECondition const&) const override = 0;
 
 protected:
   virtual void Unload(CDM::PatientConditionData& data) const;

@@ -125,7 +125,7 @@ bool SESerializeState::operator==(SESerializeState const& rhs) const
     return true;
 
   return m_Filename == rhs.m_Filename
-    && m_Type == m_Type;
+    && m_Type == rhs.m_Type;
 }
 bool SESerializeState::operator!=(SESerializeState const& rhs) const
 {

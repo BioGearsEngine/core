@@ -264,6 +264,9 @@ public:
     case SEPatientEventType::_TotalPatientEvents:
       event = "TotalPatientEvents";
       break;
+    default:
+      event = "Unknown";
+      break;
     }
     std::string state = (active) ? "(On)" : "(Off)";
     if (event.size() < marquee_1.size()) {

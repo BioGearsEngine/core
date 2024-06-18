@@ -108,7 +108,7 @@ bool operator==(CDM::enumSerializationType const& lhs, SESerializationType const
   case SESerializationType ::Load:
     return (CDM::enumSerializationType ::Load == lhs);
   case SESerializationType ::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSerializationType::value)-1 == lhs);
   default:
     return false;
   }

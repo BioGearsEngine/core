@@ -29,12 +29,12 @@ public:
   SEDiabetesType1();
   virtual ~SEDiabetesType1();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::DiabetesType1Data& in);
-  virtual CDM::DiabetesType1Data* Unload() const;
+  virtual CDM::DiabetesType1Data* Unload() const override ;
 
   bool operator==(SEDiabetesType1 const&) const;
   bool operator!=(SEDiabetesType1 const&) const;
@@ -45,13 +45,13 @@ protected:
   virtual void Unload(CDM::DiabetesType1Data& data) const;
 
 public:
-  virtual std::string GetName() const { return "DiabetesType1"; }
-  virtual const char* GetName_cStr() const { return "DiabetesType1"; }
+  virtual std::string GetName() const  override { return "DiabetesType1"; }
+  virtual const char* GetName_cStr() const  override { return "DiabetesType1"; }
 
   virtual bool HasInsulinProductionSeverity() const;
   virtual SEScalar0To1& GetInsulinProductionSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SEScalar0To1* m_InsulinProductionSeverity;

@@ -128,8 +128,11 @@ static void WriteScenarioFile(std::string const directory, std::string const nam
       auto result = Serializer::ReadBuffer((XMLByte*)contents.data(), contents.size(), &logger);
 
       CDM::Scenario(oFileStream, *((CDM::ScenarioData*)result.get()), info);
-      std::cout << std::format("Saved {}/", PREFIX_DIR) + directory.c_str() + "/" + name
-                << "\n";
+      #ifdef WIN32
+        std::cout << std::format("Saved {}/{}/{}\n", PREFIX_DIR,directory.c_str(),name);
+      #else
+        std::cout << biogears::asprintf("Saved %s/%s/%s\n", PREFIX_DIR, directory.c_str(),name.c_str());
+      #endif
     }
     oFileStream.close();
 
@@ -157,10 +160,15 @@ void ScenarioGenerator::Generate()
   std::random_device rd {};
   std::mt19937 gen { rd() };
   std::string unit_str = "";
-
+#ifdef WIN32
   auto const time = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
   std::string template_directory = std::format("Templates_{:%Y%m%dT%H%M}", time);
-
+#else
+  auto end = std::chrono::system_clock::now();
+  std::time_t now = std::chrono::system_clock::to_time_t(end);
+  std::stringstream ss; ss << std::put_time(std::localtime(&now), "Templates_%Y%m%dT%H%M/");
+  std::string template_directory= ss.str();
+#endif
   // STEP 1 : Iterate over command arguments of CDM::ScenarioGeneratorData
   for (auto& run : _runs) {
     auto const& config_file = run;
@@ -207,7 +215,11 @@ void ScenarioGenerator::Generate()
         }
 
         if (!std::filesystem::exists(path_to_timeline)) {
+          #ifdef WIN32
           std::cerr << std::format("Unable to find {}", scenarioTemplate.templateFile().c_str());
+          #else
+          std::cerr << biogears::asprintf("Unable to find %s", scenarioTemplate.templateFile().c_str());
+          #endif
           continue;
         }
 
@@ -215,7 +227,11 @@ void ScenarioGenerator::Generate()
         master_timeline_content_size = ioManager.read_resource_file(path_to_timeline.string().c_str(), reinterpret_cast<char*>(&_buffer[0]), _buffer.size());
 
         if (master_timeline_content_size == 0) {
+          #ifdef WIN32
           std::cerr << std::format("Unable to read {}", path_to_timeline.string());
+          #else
+          std::cerr << biogears::asprintf("Unable to read %s", path_to_timeline.string().c_str());
+          #endif
           continue;
         }
 
@@ -230,34 +246,76 @@ void ScenarioGenerator::Generate()
           std::string modified_scenario_contents = master_timeline_contents;
 
           for (auto& [key, distribution] : processed_template.normals) {
-            std::string regex = std::format("@{}@", key);
+            std::string regex; 
+            #ifdef WIN32
+              regex = std::format("@{}@", key);
+            #else
+              regex = biogears::asprintf("@%s@", key.c_str());
+            #endif
             const std::regex re(regex);
-            auto clmaped_value = std::max(processed_template.limits_of_normals[key].first,
+            auto clamped_value = std::max(processed_template.limits_of_normals[key].first,
                                           std::min(processed_template.limits_of_normals[key].second, distribution(gen)));
-            modified_scenario_contents = std::regex_replace(modified_scenario_contents, re, std::format("{}", clmaped_value));
+            std::string clamped_value_str;
+            #ifdef WIN32
+              clamped_value_str = std::format("@{}@", clamped_value);
+            #else
+              clamped_value_str = biogears::asprintf("@%f@", clamped_value);
+            #endif
+            modified_scenario_contents = std::regex_replace(modified_scenario_contents, re, clamped_value_str);
           }
 
           for (auto& [key, distribution] : processed_template.discrete_uniforms) {
-            std::string regex = std::format("@{}@", key);
+            std::string regex; 
+            #ifdef WIN32
+              regex = std::format("@{}@", key);
+            #else
+              regex = biogears::asprintf("@%s@", key.c_str());
+            #endif
             const std::regex re(regex);
-            modified_scenario_contents = std::regex_replace(modified_scenario_contents, re, std::format("{}", distribution(gen)));
+            std::string generated_value_str;
+            #ifdef WIN32
+              generated_value_str = std::format("@{}@", distribution(gen));
+            #else
+              generated_value_str = biogears::asprintf("@%f@", distribution(gen));
+            #endif
+            modified_scenario_contents = std::regex_replace(modified_scenario_contents, re, generated_value_str);
           }
 
           for (auto& [key, distribution] : processed_template.continuous_uniforms) {
-            std::string regex = std::format("@{}@", key);
+            std::string regex; 
+            #ifdef WIN32
+              regex = std::format("@{}@", key);
+            #else
+              regex = biogears::asprintf("@%s@", key.c_str());
+            #endif
             const std::regex re(regex);
-            modified_scenario_contents = std::regex_replace(modified_scenario_contents, re, std::format("{}", distribution(gen)));
+            std::string generated_value_str;
+            #ifdef WIN32
+              generated_value_str = std::format("@{}@", distribution(gen));
+            #else
+              generated_value_str = biogears::asprintf("@%f@", distribution(gen));
+            #endif
+            modified_scenario_contents = std::regex_replace(modified_scenario_contents, re, generated_value_str);
           }
 
           for (auto& [key, distribution] : processed_template.weighted_discretes) {
-            const std::regex re(std::format("@{}@", key));
+            std::regex regex; 
+            #ifdef WIN32
+              regex = std::format("@{}@", key);
+            #else
+              regex = biogears::asprintf("@%s@", key.c_str());
+            #endif
 
             auto intermediate_value = distribution(gen);
             auto intended_values = processed_template.weighted_descrete_values[key].Value();
             std::string value = intended_values[intermediate_value];
-            modified_scenario_contents = std::regex_replace(modified_scenario_contents, re, std::format("{}", value));
+            modified_scenario_contents = std::regex_replace(modified_scenario_contents, regex, value);
           }
+#ifdef WIN32
           std::string output_name = std::format("{}_{:02}.xml", processed_template.name, template_count + 1);
+#else
+          std::string output_name = biogears::asprintf("%s_%02d.xml", processed_template.name.c_str(), template_count + 1);
+#endif
           WriteScenarioFile(template_directory, output_name, modified_scenario_contents);
         }
       }

@@ -1973,7 +1973,7 @@ bool operator==(CDM::enumBrainInjuryType const& lhs, SEBrainInjuryType const& rh
   case SEBrainInjuryType::RightFocal:
     return (CDM::enumBrainInjuryType::RightFocal == lhs);
   case SEBrainInjuryType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumBrainInjuryType::value)-1 == lhs);
   default:
     return false;
   }
@@ -1988,7 +1988,7 @@ bool operator==(CDM::enumBolusAdministration const& lhs, SEBolusAdministration c
   case SEBolusAdministration::Intravenous:
     return (CDM::enumBolusAdministration::Intravenous == lhs);
   case SEBolusAdministration::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumBolusAdministration::value)-1 == lhs);
   default:
     return false;
   }
@@ -2003,7 +2003,7 @@ bool operator==(CDM::enumBurnDegree const& lhs, SEBurnDegree const& rhs)
   case SEBurnDegree::Third:
     return (CDM::enumBurnDegree::Third == lhs);
   case SEBurnDegree::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumBurnDegree::value)-1 == lhs);
   default:
     return false;
   }
@@ -2020,7 +2020,7 @@ bool operator==(CDM::enumInfectionSeverity const& lhs, SEInfectionSeverity const
   case SEInfectionSeverity::Severe:
     return (CDM::enumInfectionSeverity::Severe == lhs);
   case SEInfectionSeverity::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumInfectionSeverity::value)-1 == lhs);
   default:
     return false;
   }
@@ -2039,7 +2039,7 @@ bool operator==(CDM::enumIntubationType const& lhs, SEIntubationType const& rhs)
   case SEIntubationType::Tracheal:
     return (CDM::enumIntubationType::Tracheal == lhs);
   case SEIntubationType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumIntubationType::value)-1 == lhs);
   default:
     return false;
   }
@@ -2065,7 +2065,7 @@ bool operator==(CDM::enumPatientAssessment const& lhs, SEPatientAssessmentType c
   case SEPatientAssessmentType::Urinalysis:
     return (CDM::enumPatientAssessment::Urinalysis == lhs);
   case SEPatientAssessmentType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumPatientAssessment::value)-1 == lhs);
   default:
     return false;
   }
@@ -2078,7 +2078,7 @@ bool operator==(CDM::enumPneumothoraxType const& lhs, SEPneumothoraxType const& 
   case SEPneumothoraxType::Closed:
     return (CDM::enumPneumothoraxType::Closed == lhs);
   case SEPneumothoraxType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumPneumothoraxType::value)-1 == lhs);
   default:
     return false;
   }
@@ -2091,7 +2091,7 @@ bool operator==(CDM::enumOralAdministration const& lhs, SEOralAdministrationType
   case SEOralAdministrationType::Transmucosal:
     return (CDM::enumOralAdministration::Transmucosal == lhs);
   case SEOralAdministrationType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumOralAdministration::value)-1 == lhs);
   default:
     return false;
   }
@@ -2106,7 +2106,7 @@ bool operator==(CDM::enumTourniquetApplicationLevel const& lhs, SETourniquetAppl
   case SETourniquetApplicationType::Applied:
     return (CDM::enumTourniquetApplicationLevel::Applied == lhs);
   case SETourniquetApplicationType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumTourniquetApplicationLevel::value)-1 == lhs);
   default:
     return false;
   }

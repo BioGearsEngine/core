@@ -879,7 +879,7 @@ bool operator==(CDM::enumSide const& lhs, SESide const& rhs)
   case SESide::Right:
     return (CDM::enumSide::Right == lhs);
   case SESide::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSide::value)-1 == lhs);
   default:
     return false;
   }
@@ -892,7 +892,7 @@ bool operator==(CDM::enumOpenClosed const& lhs, SEOpenClosed const& rhs)
   case SEOpenClosed::Closed:
     return (CDM::enumOpenClosed::Closed == lhs);
   case SEOpenClosed::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumOpenClosed::value)-1 == lhs);
   default:
     return false;
   }
@@ -905,7 +905,7 @@ bool operator==(CDM::enumOnOff const& lhs, SEOnOff const& rhs)
   case SEOnOff::Off:
     return (CDM::enumOnOff::Off == lhs);
   case SEOnOff::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumOnOff::value)-1 == lhs);
   default:
     return false;
   }
@@ -916,7 +916,7 @@ bool operator==(CDM::enumErrorType const& lhs, SEErrorType const& rhs)
   case SEErrorType::Standard:
     return (CDM::enumErrorType::Standard == lhs);
   case SEErrorType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumErrorType::value)-1 == lhs);
   default:
     return false;
   }

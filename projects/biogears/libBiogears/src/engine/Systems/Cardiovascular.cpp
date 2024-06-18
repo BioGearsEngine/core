@@ -451,6 +451,8 @@ void Cardiovascular::SetUp()
         case SEResistancePathType::Splanchnic:
           m_splanchnicResistancePaths.push_back(path);
           break;
+        default:
+          break;
         }
         m_systemicResistancePaths.push_back(path);
         venousNodes.push_back(&path->GetTargetNode());
@@ -478,6 +480,8 @@ void Cardiovascular::SetUp()
               break;
             case SEResistancePathType::Cerebral:
               m_cerebralResistancePaths.push_back(path);
+              break;
+            default:
               break;
             }
           }

@@ -549,7 +549,7 @@ bool operator==(CDM::enumPresenceIndicator const& lhs, SEPresenceIndicator const
   case SEPresenceIndicator::Positive:
     return (CDM::enumPresenceIndicator::Positive == lhs);
   case SEPresenceIndicator::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumPresenceIndicator::value)-1 == lhs);
   default:
     return false;
   }
@@ -566,7 +566,7 @@ bool operator==(CDM::enumClarityIndicator const& lhs, SEClarityIndicator const& 
   case SEClarityIndicator::Turbid:
     return (CDM::enumClarityIndicator::Turbid == lhs);
   case SEClarityIndicator::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumClarityIndicator::value)-1 == lhs);
   default:
     return false;
   }
@@ -583,7 +583,7 @@ bool operator==(CDM::enumUrineColor const& lhs, SEUrineColor const& rhs)
   case SEUrineColor::Yellow:
     return (CDM::enumUrineColor::Yellow == lhs);
   case SEUrineColor::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumUrineColor::value)-1 == lhs);
   default:
     return false;
   }
@@ -596,7 +596,7 @@ bool operator==(CDM::enumMicroscopicObservationType const& lhs, SEMicroscopicObs
   case SEMicroscopicObservationType::LowPowerField:
     return (CDM::enumMicroscopicObservationType::LowPowerField == lhs);
   case SEMicroscopicObservationType ::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumMicroscopicObservationType::value)-1 == lhs);
   default:
     return false;
   }
@@ -611,7 +611,7 @@ bool operator==(CDM::enumMicroscopicObservationAmount const& lhs, SEMicroscopicO
   case SEMicroscopicObservationAmount::Many:
     return (CDM::enumMicroscopicObservationAmount::Many == lhs);
   case SEMicroscopicObservationAmount::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumMicroscopicObservationAmount::value)-1 == lhs);
   default:
     return false;
   }

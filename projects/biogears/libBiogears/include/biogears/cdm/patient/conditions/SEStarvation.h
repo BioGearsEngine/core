@@ -25,12 +25,12 @@ public:
   SEStarvation();
   virtual ~SEStarvation();
 
-  virtual void Clear();
+  virtual void Clear() override ;
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override ;
 
   virtual bool Load(const CDM::StarvationData& in);
-  virtual CDM::StarvationData* Unload() const;
+  virtual CDM::StarvationData* Unload() const override ;
 
   bool operator==(SEStarvation const&) const;
   bool operator!=(SEStarvation const&) const;
@@ -42,13 +42,13 @@ protected:
   virtual void Unload(CDM::StarvationData& data) const;
 
 public:
-  virtual std::string GetName() const { return "Starvation"; }
-  virtual const char* GetName_cStr() const { return "Starvation"; }
+  virtual std::string GetName() const  override { return "Starvation"; }
+  virtual const char* GetName_cStr() const  override { return "Starvation"; }
 
   virtual bool HasTimeSinceMeal() const;
   virtual SEScalarTime& GetTimeSinceMeal();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SEScalarTime* m_TimeSinceMeal;

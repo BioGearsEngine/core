@@ -775,7 +775,7 @@ bool operator==(CDM::enumSubstanceState const& lhs, SESubstanceState const& rhs)
   case SESubstanceState::Molecular:
     return (CDM::enumSubstanceState::Molecular == lhs);
   case SESubstanceState::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSubstanceState::value)-1 == lhs);
   default:
     return false;
   }
@@ -795,7 +795,7 @@ bool operator==(CDM::enumSubstanceIonicState const& lhs, SESubstanceIonicState c
   case SESubstanceIonicState::Zwitterion:
     return (CDM::enumSubstanceIonicState::Zwitterion == lhs);
   case SESubstanceIonicState::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSubstanceIonicState::value)-1 == lhs);
   default:
     return false;
   }
@@ -811,7 +811,7 @@ bool operator==(CDM::enumSubstanceBindingProtein const& lhs, SESubstanceBindingP
   case SESubstanceBindingProtein::AAG:
     return (CDM::enumSubstanceBindingProtein::AAG == lhs);
   case SESubstanceBindingProtein::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSubstanceBindingProtein::value)-1 == lhs);
   default:
     return false;
   }
@@ -827,7 +827,7 @@ bool operator==(CDM::enumCharge const& lhs, SECharge const& rhs)
   case SECharge::Negative:
     return (CDM::enumCharge::Negative == lhs);
   case SECharge::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumCharge::value)-1 == lhs);
   default:
     return false;
   }
@@ -851,7 +851,7 @@ bool operator==(CDM::enumSubstanceClass const& lhs, SESubstanceClass const& rhs)
   case SESubstanceClass::Sedative:
     return (CDM::enumSubstanceClass::Sedative == lhs);
   case SESubstanceClass::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSubstanceClass::value)-1 == lhs);
   default:
     return false;
   }

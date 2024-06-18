@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEScalar0To1;
 namespace io {
-  AnesthesiaActions;
+  class AnesthesiaActions;
 }
 class BIOGEARS_API SEOxygenTankPressureLoss : public SEAnesthesiaMachineAction {
   friend io::AnesthesiaActions;

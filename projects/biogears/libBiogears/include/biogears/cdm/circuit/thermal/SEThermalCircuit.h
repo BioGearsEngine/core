@@ -27,7 +27,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SEThermalCircuitNode*, ve
 BG_EXT template class BIOGEARS_API map<const biogears::SEThermalCircuitNode*, size_t>;
 }
 
-#define THERMAL_CIRCUIT_TYPES CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData;
+#define THERMAL_CIRCUIT_TYPES CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData
 #define THERMAL_LEDGER_TYPES SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit
 
 namespace biogears {

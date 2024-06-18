@@ -737,7 +737,7 @@ bool operator==(CDM::enumSex const& lhs, SESex const& rhs)
   case SESex::Female:
     return (CDM::enumSex::Female == lhs);
   case SESex::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSex::value)-1 == lhs);
   default:
     return false;
   }
@@ -754,7 +754,7 @@ bool operator==(CDM::enumBloodType const& lhs, SEBloodType const& rhs)
   case SEBloodType::O:
     return (CDM::enumBloodType::O == lhs);
   case SEBloodType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumBloodType::value)-1 == lhs);
   default:
     return false;
   }
@@ -927,7 +927,7 @@ bool operator==(CDM::enumPatientEvent const& lhs, SEPatientEventType const& rhs)
   case SEPatientEventType::Vomiting:
     return (CDM::enumPatientEvent::Vomiting == lhs);
   case SEPatientEventType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumPatientEvent::value)-1 == lhs);
   default:
     return false;
   }

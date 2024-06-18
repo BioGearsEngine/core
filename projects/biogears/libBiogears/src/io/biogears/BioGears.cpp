@@ -257,7 +257,7 @@ bool operator==(CDM::enumBioGearsAirwayMode const& lhs, SEBioGearsAirwayMode con
   case SEBioGearsAirwayMode::MechanicalVentilator:
     return (CDM::enumBioGearsAirwayMode::MechanicalVentilator == lhs);
   case SEBioGearsAirwayMode::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumBioGearsAirwayMode::value)-1 == lhs);
   default:
     return false;
   }

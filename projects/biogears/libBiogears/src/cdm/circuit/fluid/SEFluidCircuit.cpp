@@ -15,6 +15,9 @@ specific language governing permissions and limitations under the License.
 #include "io/cdm/Circuit.h"
 #include <biogears/cdm/circuit/SECircuitLedger.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/schema/cdm/Circuit.hxx>
+#include <biogears/cdm/circuit/SECircuit.inl>
+#include <biogears/cdm/utils/Logger.h>
 
 namespace std {
 template class vector<biogears::SEFluidCircuitNode*>;
@@ -23,7 +26,6 @@ template class map<const biogears::SEFluidCircuitNode*, vector<biogears::SEFluid
 template class map<const biogears::SEFluidCircuitNode*, size_t>;
 }
 namespace biogears {
-template class SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
 
 SEFluidCircuit::SEFluidCircuit(const char* name, SECircuitManager& mgr)
   : SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>(name, mgr.GetLogger())

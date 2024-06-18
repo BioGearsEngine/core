@@ -830,7 +830,7 @@ bool operator==(CDM::enumInflammationSource const& lhs, SEInflammationSource con
   case SEInflammationSource::Ebola:
     return (CDM::enumInflammationSource::Ebola == lhs);
   case SEInflammationSource::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumInflammationSource::value)-1 == lhs);
   default:
     return false;
   }
@@ -843,7 +843,7 @@ bool operator==(CDM::enumHeartRhythm const& lhs, SEHeartRhythm const& rhs)
   case SEHeartRhythm::NormalSinus:
     return (CDM::enumHeartRhythm::NormalSinus == lhs);
   case SEHeartRhythm::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumHeartRhythm::value)-1 == lhs);
   default:
     return false;
   }
@@ -856,7 +856,7 @@ bool operator==(CDM::enumSleepState const& lhs, SESleepState const& rhs)
   case SESleepState::Sleeping:
     return (CDM::enumSleepState::Asleep == lhs);
   case SESleepState::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSleepState::value)-1 == lhs);
   default:
     return false;
   }

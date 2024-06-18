@@ -40,7 +40,7 @@ if(SWIG_csharp_FOUND AND Biogears_SWIG_CSHARP_BINDINGS)
    set_target_properties(biogears_csharp PROPERTIES
       POSITION_INDEPENDENT_CODE ON
       FOLDER Libraries
-      CXX_STANDARD 14
+      CXX_STANDARD 20
    )  
    get_property(support_files TARGET biogears_csharp PROPERTY SWIG_SUPPORT_FILES)
 

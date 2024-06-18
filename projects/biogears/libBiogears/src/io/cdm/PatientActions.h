@@ -424,7 +424,7 @@ inline bool operator!=(SEBurnDegree const& lhs, CDM::enumBurnDegree const& rhs)
 }
 inline bool operator!=(SEInfectionSeverity const& lhs, CDM::enumInfectionSeverity const& rhs)
 {
-
+ return !(rhs == lhs);
 } // Namespace Biogears
 inline bool operator!=(SEIntubationType const& lhs, CDM::enumIntubationType const& rhs)
 {

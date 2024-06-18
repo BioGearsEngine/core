@@ -24,20 +24,20 @@ public:
   SEEnvironmentCondition();
   virtual ~SEEnvironmentCondition();
 
-  virtual void Clear();
+  virtual void Clear() override ;
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::EnvironmentConditionData& in);
-  virtual CDM::EnvironmentConditionData* Unload() const;
+  virtual CDM::EnvironmentConditionData* Unload() const override ;
 
-  bool operator==(SECondition const&) const = 0;
-  bool operator!=(SECondition const&) const = 0;
+  bool operator==(SECondition const&) const  override = 0;
+  bool operator!=(SECondition const&) const  override = 0;
 
 protected:
   virtual void Unload(CDM::EnvironmentConditionData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const = 0;
+  virtual void ToString(std::ostream& str) const  override = 0;
 };
 }

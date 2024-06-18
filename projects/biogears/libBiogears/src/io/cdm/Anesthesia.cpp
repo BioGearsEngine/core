@@ -346,7 +346,7 @@ bool operator==(CDM::enumAnesthesiaMachineEvent const& lhs, SEAnesthesiaMachineE
   case SEAnesthesiaMachineEvent::ReliefValveActive:
     return (CDM::enumAnesthesiaMachineEvent::ReliefValveActive == lhs);
   case SEAnesthesiaMachineEvent::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumAnesthesiaMachineEvent::value)-1 == lhs);
   default:
     return false;
   }
@@ -361,7 +361,7 @@ bool operator==(CDM::enumAnesthesiaMachineOxygenSource const& lhs, SEAnesthesiaM
   case SEAnesthesiaMachineOxygenSource::Wall:
     return (CDM::enumAnesthesiaMachineOxygenSource::Wall == lhs);
   case SEAnesthesiaMachineOxygenSource::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumAnesthesiaMachineOxygenSource::value)-1 == lhs);
   default:
     return false;
   }
@@ -374,7 +374,7 @@ bool operator==(CDM::enumAnesthesiaMachinePrimaryGas const& lhs, SEAnesthesiaMac
   case SEAnesthesiaMachinePrimaryGas::Nitrogen:
     return (CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen == lhs);
   case SEAnesthesiaMachinePrimaryGas::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumAnesthesiaMachinePrimaryGas::value)-1 == lhs);
   default:
     return false;
   }
@@ -389,7 +389,7 @@ bool operator==(CDM::enumAnesthesiaMachineConnection const& lhs, SEAnesthesiaMac
   case SEAnesthesiaMachineConnection::Tube:
     return (CDM::enumAnesthesiaMachineConnection::Tube == lhs);
   case SEAnesthesiaMachineConnection::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumAnesthesiaMachineConnection::value)-1 == lhs);
   default:
     return false;
   }
