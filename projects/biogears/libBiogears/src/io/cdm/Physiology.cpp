@@ -720,22 +720,26 @@ namespace io {
   // SEInflammationSource
   void Physiology::UnMarshall(const CDM::enumInflammationSource& in, SEInflammationSource& out)
   {
-    switch (in) {
-    case CDM::enumInflammationSource::Burn:
-      out = SEInflammationSource::Burn;
-      break;
-    case CDM::enumInflammationSource::Hemorrhage:
-      out = SEInflammationSource::Hemorrhage;
-      break;
-    case CDM::enumInflammationSource::Infection:
-      out = SEInflammationSource::Infection;
-      break;
-    case CDM::enumInflammationSource::Ebola:
-      out = SEInflammationSource::Ebola;
-      break;
-    default:
-      out = SEInflammationSource::Invalid;
-      break;
+    try {
+      switch (in) {
+        case CDM::enumInflammationSource::Burn:
+          out = SEInflammationSource::Burn;
+          break;
+        case CDM::enumInflammationSource::Hemorrhage:
+          out = SEInflammationSource::Hemorrhage;
+          break;
+        case CDM::enumInflammationSource::Infection:
+          out = SEInflammationSource::Infection;
+          break;
+        case CDM::enumInflammationSource::Ebola:
+          out = SEInflammationSource::Ebola;
+          break;
+        default:
+          out = SEInflammationSource::Invalid;
+          break;
+      }
+    } catch ( xsd::cxx::tree::unexpected_enumerator<char> ) {
+        out = SEInflammationSource::Invalid;
     }
   }
   void Physiology::Marshall(const SEInflammationSource& in, CDM::enumInflammationSource& out)
@@ -754,23 +758,27 @@ namespace io {
       out = CDM::enumInflammationSource::Ebola;
       break;
     default:
-      out = (CDM::enumInflammationSource::value)-1;
+//      out = (CDM::enumInflammationSource::value)-1;
       break;
     }
   }
   // SEHeartRhythm
   void Physiology::UnMarshall(const CDM::enumHeartRhythm& in, SEHeartRhythm& out)
   {
-    switch (in) {
-    case CDM::enumHeartRhythm::Asystole:
-      out = SEHeartRhythm::Asystole;
-      break;
-    case CDM::enumHeartRhythm::NormalSinus:
-      out = SEHeartRhythm::NormalSinus;
-      break;
-    default:
-      out = SEHeartRhythm::Invalid;
-      break;
+    try{
+      switch (in) {
+        case CDM::enumHeartRhythm::Asystole:
+          out = SEHeartRhythm::Asystole;
+          break;
+        case CDM::enumHeartRhythm::NormalSinus:
+          out = SEHeartRhythm::NormalSinus;
+          break;
+        default:
+          out = SEHeartRhythm::Invalid;
+          break;
+      }
+    } catch ( xsd::cxx::tree::unexpected_enumerator<char> ) {
+        out = SEHeartRhythm::Invalid;
     }
   }
   void Physiology::Marshall(const SEHeartRhythm& in, CDM::enumHeartRhythm& out)
@@ -783,23 +791,27 @@ namespace io {
       out = CDM::enumHeartRhythm::NormalSinus;
       break;
     default:
-      out = (CDM::enumHeartRhythm::value)-1;
+//      out = (CDM::enumHeartRhythm::value)-1;
       break;
     }
   }
   // SESleepState
   void Physiology::UnMarshall(const CDM::enumSleepState& in, SESleepState& out)
   {
-    switch (in) {
-    case CDM::enumSleepState::Asleep:
-      out = SESleepState::Sleeping;
-      break;
-    case CDM::enumSleepState::Awake:
-      out = SESleepState::Awake;
-      break;
-    default:
-      out = SESleepState::Invalid;
-      break;
+    try {
+      switch (in) {
+        case CDM::enumSleepState::Asleep:
+          out = SESleepState::Sleeping;
+          break;
+        case CDM::enumSleepState::Awake:
+          out = SESleepState::Awake;
+          break;
+        default:
+          out = SESleepState::Invalid;
+          break;
+      }
+    } catch ( xsd::cxx::tree::unexpected_enumerator<char> ) {
+        out = SESleepState::Invalid;
     }
   }
   void Physiology::Marshall(const SESleepState& in, CDM::enumSleepState& out)
@@ -812,7 +824,7 @@ namespace io {
       out = CDM::enumSleepState::Awake;
       break;
     default:
-      out = (CDM::enumSleepState::value)-1;
+//      out = (CDM::enumSleepState::value)-1;
       break;
     }
   }

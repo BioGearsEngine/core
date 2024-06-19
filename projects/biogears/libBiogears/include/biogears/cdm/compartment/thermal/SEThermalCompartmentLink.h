@@ -31,6 +31,7 @@ class BIOGEARS_API SEThermalCompartmentLink : public SECompartmentLink {
   friend io::Compartment;
 
 protected:
+protected:
   SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const char* name);
   SEThermalCompartmentLink(SEThermalCompartment& src, SEThermalCompartment& tgt, const std::string& name);
 

@@ -232,8 +232,8 @@ bool SEScalarQuantity<Unit>::Equals(const SEScalarQuantity<Unit>& rhs) const
     }
 
     if (m_unit == rhs.m_unit) {
-      if (std::isinf(m_value) && std::isinf(rhs.m_value) // This implies -> -inf == +inf
-          || (std::isnan(m_value) && std::isnan(rhs.m_value))) // This Violates C++ Spec
+      if (  (std::isinf(m_value) && std::isinf(rhs.m_value)) // This implies -> -inf == +inf
+          || ((std::isnan(m_value) && std::isnan(rhs.m_value)))) // This Violates C++ Spec
       {
         return true;
       }

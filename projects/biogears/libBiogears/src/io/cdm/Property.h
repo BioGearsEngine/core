@@ -229,6 +229,10 @@ namespace io {
     out.value(in.m_value);
     out.unit(in.m_unit->GetString());
     out.readOnly(in.m_readOnly);
+
+//    out.value(std::make_unique<std::remove_reference<decltype(out.value())>::type>(in.m_value));
+//    out.unit(std::make_unique<std::remove_reference<decltype(out.unit())>::type>(in.m_unit->GetString()));
+//    out.readOnly(std::make_unique<std::remove_reference<decltype(out.readOnly())>::type>(in.m_readOnly));
   }
   //----------------------------------------------------------------------------------
 

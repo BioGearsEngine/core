@@ -5,7 +5,7 @@ message(STATUS "  Configuring libbiogears")
 
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in contents)
 string(CONFIGURE "${contents}" contents @ONLY)
-FILE(GENERATE OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/../generated/$<CONFIG>/biogears/config.h 
+FILE(GENERATE OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/../generated/${GENERATED_PREFIX}/biogears/config.h 
               CONTENT   "${contents}"
      NEWLINE_STYLE LF)
 

@@ -516,8 +516,14 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
     state->DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(m_EngineTrack.GetDataRequestManager().Unload()));
   }
 
+  ((CDM::BioGearsStateData*)state.get())->AirwayMode((std::make_unique<CDM::enumBioGearsAirwayMode>()));
   io::BioGears::Marshall(m_AirwayMode, ((CDM::BioGearsStateData*)state.get())->AirwayMode());
+
+  ((CDM::BioGearsStateData*)state.get())->Intubation((std::make_unique<CDM::enumOnOff>()));
   io::Property::Marshall(m_Intubation, ((CDM::BioGearsStateData*)state.get())->Intubation());
+
+
+
   // Patient
   state->Patient(std::unique_ptr<CDM::PatientData>(m_Patient->Unload()));
   // Conditions

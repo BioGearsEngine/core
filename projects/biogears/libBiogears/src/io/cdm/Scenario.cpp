@@ -240,7 +240,7 @@ namespace io {
     }
 
     if (auto serilizeAction = dynamic_cast<biogears::SESerializeState const*>(action); serilizeAction) {
-      auto serilizeActionData = std::make_unique<CDM::AdvanceTimeData>();
+      auto serilizeActionData = std::make_unique<CDM::SerializeStateData>();
       Actions::Marshall(*serilizeAction, *serilizeActionData);
       return std::move(serilizeActionData);
     }

@@ -367,6 +367,7 @@ namespace io {
   // SEPresenceIndicator
   void PatientAssessments::UnMarshall(const CDM::enumPresenceIndicator& in, SEPresenceIndicator& out)
   {
+    try {
     switch (in) {
     case CDM::enumPresenceIndicator::Negative:
       out = SEPresenceIndicator::Negative;
@@ -377,6 +378,9 @@ namespace io {
     default:
       out = SEPresenceIndicator::Invalid;
       break;
+    }
+    } catch ( xsd::cxx::tree::unexpected_enumerator<char> ) {
+        out = SEPresenceIndicator::Invalid;
     }
   }
   void PatientAssessments::Marshall(const SEPresenceIndicator& in, CDM::enumPresenceIndicator& out)
@@ -389,13 +393,14 @@ namespace io {
       out = CDM::enumPresenceIndicator::Positive;
       break;
     default:
-      out = (CDM::enumPresenceIndicator::value)-1;
+//      out = (CDM::enumPresenceIndicator::value)-1;
       break;
     }
   }
   // SEClarityIndicator
   void PatientAssessments::UnMarshall(const CDM::enumClarityIndicator& in, SEClarityIndicator& out)
   {
+    try {
     switch (in) {
     case CDM::enumClarityIndicator::Clear:
       out = SEClarityIndicator::Clear;
@@ -412,6 +417,9 @@ namespace io {
     default:
       out = SEClarityIndicator::Invalid;
       break;
+    }
+    } catch ( xsd::cxx::tree::unexpected_enumerator<char> ) {
+        out = SEClarityIndicator::Invalid;
     }
   }
   void PatientAssessments::Marshall(const SEClarityIndicator& in, CDM::enumClarityIndicator& out)
@@ -430,13 +438,14 @@ namespace io {
       out = CDM::enumClarityIndicator::Turbid;
       break;
     default:
-      out = (CDM::enumClarityIndicator::value)-1;
+//      out = (CDM::enumClarityIndicator::value)-1;
       break;
     }
   }
   // SEUrineColor
   void PatientAssessments::UnMarshall(const CDM::enumUrineColor& in, SEUrineColor& out)
   {
+    try {
     switch (in) {
     case CDM::enumUrineColor::Yellow:
       out = SEUrineColor::Yellow;
@@ -453,6 +462,9 @@ namespace io {
     default:
       out = SEUrineColor::Invalid;
       break;
+    }
+    } catch ( xsd::cxx::tree::unexpected_enumerator<char> ) {
+        out = SEUrineColor::Invalid;
     }
   }
   void PatientAssessments::Marshall(const SEUrineColor& in, CDM::enumUrineColor& out)
@@ -471,23 +483,27 @@ namespace io {
       out = CDM::enumUrineColor::Pink;
       break;
     default:
-      out = (CDM::enumUrineColor::value)-1;
+//      out = (CDM::enumUrineColor::value)-1;
       break;
     }
   }
   // SEMicroscopicObservationType
   void PatientAssessments::UnMarshall(const CDM::enumMicroscopicObservationType& in, SEMicroscopicObservationType& out)
   {
-    switch (in) {
-    case CDM::enumMicroscopicObservationType::HighPowerField:
-      out = SEMicroscopicObservationType::HighPowerField;
-      break;
-    case CDM::enumMicroscopicObservationType::LowPowerField:
-      out = SEMicroscopicObservationType::LowPowerField;
-      break;
-    default:
-      out = SEMicroscopicObservationType::Invalid;
-      break;
+    try {
+      switch (in) {
+        case CDM::enumMicroscopicObservationType::HighPowerField:
+          out = SEMicroscopicObservationType::HighPowerField;
+          break;
+        case CDM::enumMicroscopicObservationType::LowPowerField:
+          out = SEMicroscopicObservationType::LowPowerField;
+          break;
+        default:
+          out = SEMicroscopicObservationType::Invalid;
+          break;
+      }
+    } catch ( xsd::cxx::tree::unexpected_enumerator<char> ) {
+        out = SEMicroscopicObservationType::Invalid;
     }
   }
   void PatientAssessments::Marshall(const SEMicroscopicObservationType& in, CDM::enumMicroscopicObservationType& out)
@@ -500,26 +516,30 @@ namespace io {
       out = CDM::enumMicroscopicObservationType::LowPowerField;
       break;
     default:
-      out = (CDM::enumMicroscopicObservationType::value)-1;
+//      out = (CDM::enumMicroscopicObservationType::value)-1;
       break;
     }
   }
   // SEMicroscopicObservationAmount
   void PatientAssessments::UnMarshall(const CDM::enumMicroscopicObservationAmount& in, SEMicroscopicObservationAmount& out)
   {
-    switch (in) {
-    case CDM::enumMicroscopicObservationAmount::Few:
-      out = SEMicroscopicObservationAmount::Few;
-      break;
-    case CDM::enumMicroscopicObservationAmount::Many:
-      out = SEMicroscopicObservationAmount::Many;
-      break;
-    case CDM::enumMicroscopicObservationAmount::Moderate:
-      out = SEMicroscopicObservationAmount::Moderate;
-      break;
-    default:
-      out = SEMicroscopicObservationAmount::Invalid;
-      break;
+    try {
+      switch (in) {
+        case CDM::enumMicroscopicObservationAmount::Few:
+          out = SEMicroscopicObservationAmount::Few;
+          break;
+        case CDM::enumMicroscopicObservationAmount::Many:
+          out = SEMicroscopicObservationAmount::Many;
+          break;
+        case CDM::enumMicroscopicObservationAmount::Moderate:
+          out = SEMicroscopicObservationAmount::Moderate;
+          break;
+        default:
+          out = SEMicroscopicObservationAmount::Invalid;
+          break;
+      }
+    } catch ( xsd::cxx::tree::unexpected_enumerator<char> ) {
+        out = SEMicroscopicObservationAmount::Invalid;
     }
   }
   void PatientAssessments::Marshall(const SEMicroscopicObservationAmount& in, CDM::enumMicroscopicObservationAmount& out)
@@ -535,7 +555,7 @@ namespace io {
       out = CDM::enumMicroscopicObservationAmount::Many;
       break;
     default:
-      out = (CDM::enumMicroscopicObservationAmount::value)-1;
+//      out = (CDM::enumMicroscopicObservationAmount::value)-1;
       break;
     }
   }

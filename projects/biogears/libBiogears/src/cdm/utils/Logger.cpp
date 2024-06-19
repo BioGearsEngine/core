@@ -384,8 +384,8 @@ void Logger::ResetLogFile(const char* filepath)
 //!  Log Deconstructor
 //!
 Logger::~Logger()
-{
-  m_impl->formatMessages = false;
+{ 
+  m_impl = nullptr;
 }
 
 void Logger::SetLogTime(const SEScalarTime* time) { m_impl->time = time; }

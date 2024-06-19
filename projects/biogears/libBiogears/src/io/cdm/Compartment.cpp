@@ -401,7 +401,8 @@ namespace io {
     if (in.m_Path != nullptr)
       out.Path(in.m_Path->GetName());
     // Even if you have a path, I am unloading everything, this makes the xml actually usefull...
-    if (in.HasHeatTransferRate()) {
+    if (in.m_HeatTransferRate && in.m_HeatTransferRate->IsValid()) {
+      out.HeatTransferRate(std::make_unique<CDM::ScalarPowerData>());
       io::Property::Marshall(*in.m_HeatTransferRate, out.HeatTransferRate());
     }
   }

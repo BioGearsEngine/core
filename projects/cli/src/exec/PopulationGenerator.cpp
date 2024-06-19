@@ -92,7 +92,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.normals) {
     if (result.first.size() <= key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -100,7 +100,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.weighted_discretes) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -108,7 +108,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.continuous_uniforms) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -116,7 +116,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.discrete_uniforms) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -124,7 +124,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.bernoullis) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -132,7 +132,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.sequences) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -140,7 +140,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.cycles) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -337,7 +337,7 @@ numeric_type sample_population(std::set<std::string> key, DistributionCollection
       //                     when the user gives a bad min and max
       std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
       std::chrono::steady_clock::time_point now = begin;
-      while (roll_value < min_value || roll_value > max_value && std::chrono::duration_cast<std::chrono::seconds>(now - begin).count() < 1) {
+      while (roll_value < min_value || (roll_value > max_value && std::chrono::duration_cast<std::chrono::seconds>(now - begin).count() < 1)) {
         roll_value = distribution(rd);
         now = std::chrono::steady_clock::now();
       }

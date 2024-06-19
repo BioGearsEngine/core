@@ -95,7 +95,7 @@ bool PhysiologyEngineStabilization::operator==(PhysiologyEngineStabilization con
 {
   bool equivilant = m_Canceled == rhs.m_Canceled;
   ;
-  equivilant &= rhs.m_LogProgress == rhs.m_LogProgress;
+  equivilant &= m_LogProgress == rhs.m_LogProgress;
   equivilant &= ((m_CurrentTime && rhs.m_CurrentTime) ? m_CurrentTime->operator==(*rhs.m_CurrentTime)
                                                      : m_CurrentTime == rhs.m_CurrentTime);
   equivilant &= ((m_StabilizationDuration && rhs.m_StabilizationDuration) 
