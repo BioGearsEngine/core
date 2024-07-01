@@ -341,7 +341,7 @@ const std::vector<SEAction*>& SEScenario::GetActions() const
   return m_Actions;
 }
 //-----------------------------------------------------------------------------
-#pragma optimize("", off)
+
 bool SEScenario::operator==(SEScenario const& rhs) const
 {
   if (this == &rhs)
@@ -373,7 +373,7 @@ bool SEScenario::operator==(SEScenario const& rhs) const
   }
   return equivilant;
 }
-#pragma optimize("", on)
+
 bool SEScenario::operator!=(SEScenario const& rhs) const
 {
   return !(*this == rhs);

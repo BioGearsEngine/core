@@ -505,7 +505,7 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   return true; // return CheckDataRequirements/IsValid() or something
 }
 
-#pragma optimize("", off)
+
 //-------------------------------------------------------------------------------
 std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
 {
@@ -602,7 +602,7 @@ void BioGearsEngine::SaveStateToFile(const std::string& file)
     stream.close();
   }
 }
-#pragma optimize("", on)
+
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const char* patientFile)
 {

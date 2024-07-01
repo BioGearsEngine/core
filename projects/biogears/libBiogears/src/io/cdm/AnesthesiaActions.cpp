@@ -274,14 +274,14 @@ namespace io {
     out.SetActive(in.State() == SEOnOff::On ? true : false);
   }
   //----------------------------------------------------------------------------------
-#pragma optimize("", off)
+
   void AnesthesiaActions::Marshall(const SEOxygenTankPressureLoss& in, CDM::OxygenTankPressureLossData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
     out.State(std::make_unique<std::remove_reference<decltype(out.State())>::type>()); 
     io::Property::Marshall(in.m_State, out.State());
   }
-#pragma optimize("",on)
+
   //----------------------------------------------------------------------------------
   std::unique_ptr<CDM::AnesthesiaMachineActionData> AnesthesiaActions::factory(const SEAnesthesiaMachineAction* anesthesiaMachineAction)
   {

@@ -178,7 +178,7 @@ void SEScenarioInitialParameters::SetTrackStabilization(bool flag)
   m_DoTrackStabilization = flag;
 }
 //-----------------------------------------------------------------------------
-#pragma optimize("", off)
+
 bool SEScenarioInitialParameters::operator==(SEScenarioInitialParameters const& rhs) const
 {
   if (this == &rhs)
@@ -199,7 +199,7 @@ bool SEScenarioInitialParameters::operator==(SEScenarioInitialParameters const& 
 
   return equivilant;
 }
-#pragma optimize("", on)
+
 bool SEScenarioInitialParameters::operator!=(SEScenarioInitialParameters const& rhs) const
 {
     return !(*this == rhs);

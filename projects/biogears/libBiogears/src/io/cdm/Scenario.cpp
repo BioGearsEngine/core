@@ -47,7 +47,7 @@ namespace io {
 
   //-----------------------------------------------------------------------------
   // class SEScenario
-#pragma optimize("", off)
+
   void Scenario::UnMarshall(const CDM::ScenarioData& in, SEScenario& out)
   {
     out.Clear();
@@ -101,7 +101,7 @@ namespace io {
       throw CommonDataModelException("Unable UnMarshall SEScenario from ScenarioData");
     }
   }
-#pragma optimize("", on)
+
   void Scenario::Marshall(const SEScenario& in, CDM::ScenarioData& out)
   {
     out.Name(in.m_Name);

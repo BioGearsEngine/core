@@ -227,7 +227,7 @@ void SEGasSubstanceQuantity::AddChild(SEGasSubstanceQuantity& subQ)
 }
 //-----------------------------------------------------------------------------
 
-#pragma optimize("", off)
+
 bool SEGasSubstanceQuantity::operator==(SEGasSubstanceQuantity const& rhs) const
 {
   if (this == &rhs)
@@ -248,7 +248,7 @@ bool SEGasSubstanceQuantity::operator==(SEGasSubstanceQuantity const& rhs) const
 
   return equivilant;
 }
-#pragma optimize("", on)
+
 bool SEGasSubstanceQuantity::operator!=(SEGasSubstanceQuantity const& rhs) const
 {
   return !(*this == rhs);
