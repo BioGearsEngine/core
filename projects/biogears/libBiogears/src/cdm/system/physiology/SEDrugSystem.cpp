@@ -94,7 +94,7 @@ bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
 {
   SESystem::Load(in);
 
-  io::Physiology::UnMarshall( in, *this);
+  io::Physiology::UnMarshall(in, *this);
 
   return true;
 }
@@ -151,7 +151,7 @@ void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
 {
   SESystem::Unload(data);
 
-    io::Physiology::Marshall(*this, data);
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 
@@ -454,21 +454,25 @@ bool SEDrugSystem::operator==(SEDrugSystem const& rhs) const
   if (this == &rhs)
     return true;
 
-  return ((m_AntibioticActivity && rhs.m_AntibioticActivity) ? m_AntibioticActivity->operator==(*rhs.m_AntibioticActivity) : m_AntibioticActivity == rhs.m_AntibioticActivity)
-    && ((m_BronchodilationLevel && rhs.m_BronchodilationLevel) ? m_BronchodilationLevel->operator==(*rhs.m_BronchodilationLevel) : m_BronchodilationLevel == rhs.m_BronchodilationLevel)
-    && ((m_FeverChange && rhs.m_FeverChange) ? m_FeverChange->operator==(*rhs.m_FeverChange) : m_FeverChange == rhs.m_FeverChange)
-    && ((m_HeartRateChange && rhs.m_HeartRateChange) ? m_HeartRateChange->operator==(*rhs.m_HeartRateChange) : m_HeartRateChange == rhs.m_HeartRateChange)
-    && ((m_HemorrhageChange && rhs.m_HemorrhageChange) ? m_HemorrhageChange->operator==(*rhs.m_HemorrhageChange) : m_HemorrhageChange == rhs.m_HemorrhageChange)
-    && ((m_MeanBloodPressureChange && rhs.m_MeanBloodPressureChange) ? m_MeanBloodPressureChange->operator==(*rhs.m_MeanBloodPressureChange) : m_MeanBloodPressureChange == rhs.m_MeanBloodPressureChange)
-    && ((m_NeuromuscularBlockLevel && rhs.m_NeuromuscularBlockLevel) ? m_NeuromuscularBlockLevel->operator==(*rhs.m_NeuromuscularBlockLevel) : m_NeuromuscularBlockLevel == rhs.m_NeuromuscularBlockLevel)
-    && ((m_PainToleranceChange && rhs.m_PainToleranceChange) ? m_PainToleranceChange->operator==(*rhs.m_PainToleranceChange) : m_PainToleranceChange == rhs.m_PainToleranceChange)
-    && ((m_PulsePressureChange && rhs.m_PulsePressureChange) ? m_PulsePressureChange->operator==(*rhs.m_PulsePressureChange) : m_PulsePressureChange == rhs.m_PulsePressureChange)
-    && ((m_RespirationRateChange && rhs.m_RespirationRateChange) ? m_RespirationRateChange->operator==(*rhs.m_RespirationRateChange) : m_RespirationRateChange == rhs.m_RespirationRateChange)
-    && ((m_SedationLevel && rhs.m_SedationLevel) ? m_SedationLevel->operator==(*rhs.m_SedationLevel) : m_SedationLevel == rhs.m_SedationLevel)
-    && ((m_TidalVolumeChange && rhs.m_TidalVolumeChange) ? m_TidalVolumeChange->operator==(*rhs.m_TidalVolumeChange) : m_TidalVolumeChange == rhs.m_TidalVolumeChange)
-    && ((m_TubularPermeabilityChange && rhs.m_TubularPermeabilityChange) ? m_TubularPermeabilityChange->operator==(*rhs.m_TubularPermeabilityChange) : m_TubularPermeabilityChange == rhs.m_TubularPermeabilityChange)
-    && ((m_CentralNervousResponse && rhs.m_CentralNervousResponse) ? m_CentralNervousResponse->operator==(*rhs.m_CentralNervousResponse) : m_CentralNervousResponse == rhs.m_CentralNervousResponse)
-    ;
+  bool result = true;
+  ;
+  result &= ((m_AntibioticActivity && rhs.m_AntibioticActivity) ? m_AntibioticActivity->operator==(*rhs.m_AntibioticActivity) : m_AntibioticActivity == rhs.m_AntibioticActivity);
+  ;
+  result &= ((m_BronchodilationLevel && rhs.m_BronchodilationLevel) ? m_BronchodilationLevel->operator==(*rhs.m_BronchodilationLevel) : m_BronchodilationLevel == rhs.m_BronchodilationLevel);
+  result &= ((m_FeverChange && rhs.m_FeverChange) ? m_FeverChange->operator==(*rhs.m_FeverChange) : m_FeverChange == rhs.m_FeverChange);
+  result &= ((m_HeartRateChange && rhs.m_HeartRateChange) ? m_HeartRateChange->operator==(*rhs.m_HeartRateChange) : m_HeartRateChange == rhs.m_HeartRateChange);
+  result &= ((m_HemorrhageChange && rhs.m_HemorrhageChange) ? m_HemorrhageChange->operator==(*rhs.m_HemorrhageChange) : m_HemorrhageChange == rhs.m_HemorrhageChange);
+  result &= ((m_MeanBloodPressureChange && rhs.m_MeanBloodPressureChange) ? m_MeanBloodPressureChange->operator==(*rhs.m_MeanBloodPressureChange) : m_MeanBloodPressureChange == rhs.m_MeanBloodPressureChange);
+  result &= ((m_NeuromuscularBlockLevel && rhs.m_NeuromuscularBlockLevel) ? m_NeuromuscularBlockLevel->operator==(*rhs.m_NeuromuscularBlockLevel) : m_NeuromuscularBlockLevel == rhs.m_NeuromuscularBlockLevel);
+  result &= ((m_PainToleranceChange && rhs.m_PainToleranceChange) ? m_PainToleranceChange->operator==(*rhs.m_PainToleranceChange) : m_PainToleranceChange == rhs.m_PainToleranceChange);
+  result &= ((m_PulsePressureChange && rhs.m_PulsePressureChange) ? m_PulsePressureChange->operator==(*rhs.m_PulsePressureChange) : m_PulsePressureChange == rhs.m_PulsePressureChange);
+  result &= ((m_RespirationRateChange && rhs.m_RespirationRateChange) ? m_RespirationRateChange->operator==(*rhs.m_RespirationRateChange) : m_RespirationRateChange == rhs.m_RespirationRateChange);
+  result &= ((m_SedationLevel && rhs.m_SedationLevel) ? m_SedationLevel->operator==(*rhs.m_SedationLevel) : m_SedationLevel == rhs.m_SedationLevel);
+  result &= ((m_TidalVolumeChange && rhs.m_TidalVolumeChange) ? m_TidalVolumeChange->operator==(*rhs.m_TidalVolumeChange) : m_TidalVolumeChange == rhs.m_TidalVolumeChange);
+  result &= ((m_TubularPermeabilityChange && rhs.m_TubularPermeabilityChange) ? m_TubularPermeabilityChange->operator==(*rhs.m_TubularPermeabilityChange) : m_TubularPermeabilityChange == rhs.m_TubularPermeabilityChange);
+  result &= ((m_CentralNervousResponse && rhs.m_CentralNervousResponse) ? m_CentralNervousResponse->operator==(*rhs.m_CentralNervousResponse) : m_CentralNervousResponse == rhs.m_CentralNervousResponse);
+
+  return result;
 }
 bool SEDrugSystem::operator!=(SEDrugSystem const& rhs) const
 {

@@ -46,6 +46,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Equipment/ECG.h>
 #include <biogears/io/io-manager.h>
 #include <io/cdm/Property.h>
+#include <io/cdm/Patient.h>
 
 #if defined(BIOGEARS_IO_PRESENT) && defined(BIOGEARS_IO_EMBED_STATES)
 #include <biogears/io/directories/states.h>
@@ -503,6 +504,8 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
 
   return true; // return CheckDataRequirements/IsValid() or something
 }
+
+#pragma optimize("", off)
 //-------------------------------------------------------------------------------
 std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
 {
@@ -525,10 +528,12 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
 
 
   // Patient
-  state->Patient(std::unique_ptr<CDM::PatientData>(m_Patient->Unload()));
+  state->Patient(std::make_unique<CDM::PatientData>());
+  io::Patient::Marshall(*m_Patient, ((CDM::BioGearsStateData*)state.get())->Patient());
   // Conditions
   std::vector<CDM::ConditionData*> conditions;
   m_Conditions->Unload(conditions);
+
   for (CDM::ConditionData* cData : conditions) {
     state->Condition().push_back(std::unique_ptr<CDM::ConditionData>(cData));
   }
@@ -575,6 +580,7 @@ void BioGearsEngine::SaveStateToFile(const char* file)
 {
   SaveStateToFile(std::string { file });
 }
+
 //-------------------------------------------------------------------------------
 void BioGearsEngine::SaveStateToFile(const std::string& file)
 {
@@ -591,11 +597,12 @@ void BioGearsEngine::SaveStateToFile(const std::string& file)
     try {
       BioGearsState(stream, dynamic_cast<CDM::BioGearsStateData&>(*state), map);
     } catch (std::exception& ex) {
-      m_Logger->Error(ex.what());
+      m_Logger->Fatal(ex.what());
     }
     stream.close();
   }
 }
+#pragma optimize("", on)
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const char* patientFile)
 {

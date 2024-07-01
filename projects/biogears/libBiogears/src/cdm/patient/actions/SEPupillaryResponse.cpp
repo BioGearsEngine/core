@@ -139,9 +139,13 @@ double SEPupillaryResponse::GetSizeModifier() const
 //-----------------------------------------------------------------------------
 bool SEPupillaryResponse::operator==(const SEPupillaryResponse& rhs) const
 {
-  return ((m_ReactivityModifier && rhs.m_ReactivityModifier) ? m_ReactivityModifier->operator==(*rhs.m_ReactivityModifier) : m_ReactivityModifier == rhs.m_ReactivityModifier)
-    && ((m_ShapeModifier && rhs.m_ShapeModifier) ? m_ShapeModifier->operator==(*rhs.m_ShapeModifier) : m_ShapeModifier == rhs.m_ShapeModifier)
-    && ((m_SizeModifier && rhs.m_SizeModifier) ? m_SizeModifier->operator==(*rhs.m_SizeModifier) : m_SizeModifier == rhs.m_SizeModifier);
+  bool equivilant = true;
+  
+  equivilant &= ((m_ReactivityModifier && rhs.m_ReactivityModifier) ? m_ReactivityModifier->operator==(*rhs.m_ReactivityModifier) : m_ReactivityModifier == rhs.m_ReactivityModifier);
+  equivilant &= ((m_ShapeModifier && rhs.m_ShapeModifier) ? m_ShapeModifier->operator==(*rhs.m_ShapeModifier) : m_ShapeModifier == rhs.m_ShapeModifier);
+  equivilant &= ((m_SizeModifier && rhs.m_SizeModifier) ? m_SizeModifier->operator==(*rhs.m_SizeModifier) : m_SizeModifier == rhs.m_SizeModifier);
+
+  return equivilant;
 }
 //-----------------------------------------------------------------------------
 bool SEPupillaryResponse::operator!=(const SEPupillaryResponse& rhs) const
