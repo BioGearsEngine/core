@@ -194,16 +194,6 @@ namespace io {
     static void UnMarshall(const CDM::enumErrorType& in, SEErrorType& out);
     static void Marshall(const SEErrorType& in, CDM::enumErrorType& out);
 
-    template <typename SE, typename XSD>
-    static typename std::enable_if<std::is_enum<SE>::type>::type
-    UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out, std::default_random_engine* rd)
-    {
-      if (!option_in.present()) {
-        out = SE::Invalid;
-      } else {
-        UnMarshall(option_in.get(), out);
-      }
-    }
   };
 
   //-------------------------------------------------------------------------------
@@ -239,7 +229,7 @@ namespace io {
   template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>*>
   void Property::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
-    if (!option_in.present()) {
+    if (!option_in.present() || option_in->empty()) {
       out = SE::Invalid;
     } else {
       UnMarshall(option_in.get(), out);

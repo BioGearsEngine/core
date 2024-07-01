@@ -1649,7 +1649,7 @@ namespace io {
       out = CDM::enumBrainInjuryType::RightFocal;
       break;
     default:
-//      out = (CDM::enumBrainInjuryType::value)-1;
+out = "";
       break;
     }
   }
@@ -1688,7 +1688,7 @@ namespace io {
       out = CDM::enumBolusAdministration::Intravenous;
       break;
     default:
-//      out = (CDM::enumBolusAdministration::value)-1;
+out = "";
       break;
     }
   }
@@ -1727,7 +1727,7 @@ namespace io {
       out = CDM::enumBurnDegree::Third;
       break;
     default:
-//      out = (CDM::enumBurnDegree::value)-1;
+out = "";
       break;
     }
   }
@@ -1772,7 +1772,7 @@ namespace io {
       out = CDM::enumInfectionSeverity::Severe;
       break;
     default:
-//      out = (CDM::enumInfectionSeverity::value)-1;
+out = "";
       break;
     }
   }
@@ -1817,7 +1817,7 @@ namespace io {
       out = CDM::enumIntubationType::Tracheal;
       break;
     default:
-//      out = (CDM::enumIntubationType::value)-1;
+out = "";
       break;
     }
   }
@@ -1886,7 +1886,7 @@ namespace io {
       out = CDM::enumPatientAssessment::Urinalysis;
       break;
     default:
-//      out = (CDM::enumPatientAssessment::value)-1;
+out = "";
       break;
     }
   }
@@ -1919,7 +1919,7 @@ namespace io {
       out = CDM::enumPneumothoraxType::Closed;
       break;
     default:
-//      out = (CDM::enumPneumothoraxType::value)-1;
+out = "";
       break;
     }
   }
@@ -1952,7 +1952,7 @@ namespace io {
       out = CDM::enumOralAdministration::Gastrointestinal;
       break;
     default:
-//      out = (CDM::enumOralAdministration::value)-1;
+out = "";
       break;
     }
   }
@@ -1991,7 +1991,7 @@ namespace io {
       out = CDM::enumTourniquetApplicationLevel::None;
       break;
     default:
-//      out = (CDM::enumTourniquetApplicationLevel::value)-1;
+out = "";
       break;
     }
   }

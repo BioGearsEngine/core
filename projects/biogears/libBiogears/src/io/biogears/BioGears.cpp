@@ -240,7 +240,7 @@ void BioGears::Marshall(const SEBioGearsAirwayMode& in, CDM::enumBioGearsAirwayM
       out = CDM::enumBioGearsAirwayMode::MechanicalVentilator;
       break;
     default:
-      //      out = (CDM::enumBioGearsAirwayMode::value)-1;
+      out = "";
       break;
   }
 }

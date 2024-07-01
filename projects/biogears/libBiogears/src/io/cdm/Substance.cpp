@@ -583,7 +583,7 @@ namespace io {
       out = CDM::enumSubstanceState::Molecular;
       break;
     default:
-//      out = (CDM::enumSubstanceState::value)-1;
+out = "";
       break;
     }
   }
@@ -634,7 +634,7 @@ namespace io {
       out = CDM::enumSubstanceIonicState::Zwitterion;
       break;
     default:
-//      out = (CDM::enumSubstanceIonicState::value)-1;
+out = "";
       break;
     }
   }
@@ -673,7 +673,7 @@ namespace io {
       out = CDM::enumSubstanceBindingProtein::AAG;
       break;
     default:
-//      out = (CDM::enumSubstanceBindingProtein::value)-1;
+out = "";
       break;
     }
   }
@@ -712,7 +712,7 @@ namespace io {
       out = CDM::enumCharge::Negative;
       break;
     default:
-//      out = (CDM::enumCharge::value)-1;
+      out = "";
       break;
     }
   }
@@ -775,7 +775,7 @@ namespace io {
       out = CDM::enumSubstanceClass::Sedative;
       break;
     default:
-//      out = (CDM::enumSubstanceClass::value)-1;
+out = "";
       break;
     }
   }

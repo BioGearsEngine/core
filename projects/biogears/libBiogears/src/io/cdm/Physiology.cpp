@@ -775,7 +775,7 @@ namespace io {
       out = CDM::enumInflammationSource::Ebola;
       break;
     default:
-      //      out = (CDM::enumInflammationSource::value)-1;
+      out = "";
       break;
     }
   }
@@ -808,7 +808,7 @@ namespace io {
       out = CDM::enumHeartRhythm::NormalSinus;
       break;
     default:
-      //      out = (CDM::enumHeartRhythm::value)-1;
+      out = "";
       break;
     }
   }
@@ -841,7 +841,7 @@ namespace io {
       out = CDM::enumSleepState::Awake;
       break;
     default:
-      //      out = (CDM::enumSleepState::value)-1;
+      out = "";
       break;
     }
   }

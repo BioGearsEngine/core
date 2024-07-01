@@ -175,7 +175,7 @@ namespace io {
       out = CDM::enumSex::Female;
       break;
     default:
-//      out = (CDM::enumSex::value)-1;
+out = "";
       break;
     }
   }
@@ -221,7 +221,7 @@ namespace io {
       out = CDM::enumBloodType::O;
       break;
     default:
-//      out = (CDM::enumBloodType::value)-1;
+out = "";
       break;
     }
   }
@@ -735,7 +735,7 @@ namespace io {
       out = CDM::enumPatientEvent::Vomiting;
       break;
     default:
-//      out = (CDM::enumPatientEvent::value)-1;
+out = "";
       break;
     }
   }

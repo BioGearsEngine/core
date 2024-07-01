@@ -75,7 +75,7 @@ void Actions::Marshall(const SESerializationType& in, CDM::enumSerializationType
       out = CDM::enumSerializationType::Save;
       break;
     default:
-      //      out = (CDM::enumSerializationType::value)-1;
+      out = "";
       break;
   }
 }

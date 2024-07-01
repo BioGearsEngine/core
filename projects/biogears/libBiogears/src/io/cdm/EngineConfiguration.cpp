@@ -25,11 +25,11 @@ namespace io {
       out.Clear(); // Reset only if we are not merging
 
     if (in.TimeStep().present())
-
       io::Property::UnMarshall(in.TimeStep(), out.GetTimeStep());
-    if (in.WritePatientBaselineFile().present()) {
-      io::Property::UnMarshall(in.WritePatientBaselineFile(), out.m_WritePatientBaselineFile);
-    }
+
+
+    io::Property::UnMarshall(in.WritePatientBaselineFile(), out.m_WritePatientBaselineFile);
+    
     if (in.ElectroCardioGramInterpolatorFile().present()) {
       if (!out.GetECGInterpolator().LoadWaveforms(in.ElectroCardioGramInterpolatorFile().get())) {
         throw CommonDataModelException("Unable to load ElectroCardioGram Waveforms file");

@@ -237,7 +237,7 @@ namespace io {
       out = CDM::enumSurroundingType::Water;
       break;
     default:
-//      out = (CDM::enumSurroundingType::value)-1;
+out = "";
       break;
     }
   }

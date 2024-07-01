@@ -393,7 +393,7 @@ namespace io {
       out = CDM::enumPresenceIndicator::Positive;
       break;
     default:
-//      out = (CDM::enumPresenceIndicator::value)-1;
+out = "";
       break;
     }
   }
@@ -438,7 +438,7 @@ namespace io {
       out = CDM::enumClarityIndicator::Turbid;
       break;
     default:
-//      out = (CDM::enumClarityIndicator::value)-1;
+out = "";
       break;
     }
   }
@@ -483,7 +483,7 @@ namespace io {
       out = CDM::enumUrineColor::Pink;
       break;
     default:
-//      out = (CDM::enumUrineColor::value)-1;
+out = "";
       break;
     }
   }
@@ -516,7 +516,7 @@ namespace io {
       out = CDM::enumMicroscopicObservationType::LowPowerField;
       break;
     default:
-//      out = (CDM::enumMicroscopicObservationType::value)-1;
+out = "";
       break;
     }
   }
@@ -555,7 +555,7 @@ namespace io {
       out = CDM::enumMicroscopicObservationAmount::Many;
       break;
     default:
-//      out = (CDM::enumMicroscopicObservationAmount::value)-1;
+out = "";
       break;
     }
   }

@@ -235,7 +235,7 @@ void Anesthesia::Marshall(const SEAnesthesiaMachineEvent& in, CDM::enumAnesthesi
       break;
       
     default:
-      //      out = (CDM::enumAnesthesiaMachineEvent::value)-1;
+      out = "";
       break;
   }
 }
@@ -274,7 +274,7 @@ void Anesthesia::Marshall(const SEAnesthesiaMachineOxygenSource& in, CDM::enumAn
       out = CDM::enumAnesthesiaMachineOxygenSource::Wall;
       break;
     default:
-      //      out = (CDM::enumAnesthesiaMachineOxygenSource::value)-1;
+      out = "";
       break;
   }
 }
@@ -307,7 +307,7 @@ void Anesthesia::Marshall(const SEAnesthesiaMachinePrimaryGas& in, CDM::enumAnes
       out = CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen;
       break;
     default:
-      //      out = (CDM::enumAnesthesiaMachinePrimaryGas::value)-1;
+      out = "";
       break;
   }
 }
@@ -346,7 +346,7 @@ void Anesthesia::Marshall(const SEAnesthesiaMachineConnection& in, CDM::enumAnes
       out = CDM::enumAnesthesiaMachineConnection::Tube;
       break;
     default:
-      //      out = (CDM::enumAnesthesiaMachineConnection::value)-1;
+      out = "";
       break;
   }
 }
