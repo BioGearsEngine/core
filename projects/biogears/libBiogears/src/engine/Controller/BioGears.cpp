@@ -396,7 +396,7 @@ bool BioGears::SetupPatient()
   //BODY FAT FRACTION ---------------------------------------------------------------
   //From American Council on Exercise
   /// \cite muth2009what
-  double fatFraction;
+  double fatFraction = 0.0;
   double fatFractionStandardMale = 0.21;
   double fatFractionStandardFemale = 0.28;
   double fatFractionMaxMale = 0.25; //Obese
