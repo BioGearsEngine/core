@@ -180,7 +180,7 @@
 
     <AgeDistribution>
       <NormalDistribution strategy="resample" mean="23.5"  deviation="3.75"  
-                          min="16" max="31" unit="yr">YoungAdult</NormalDistribution>
+                          min="18" max="31" unit="yr">YoungAdult</NormalDistribution>
       <NormalDistribution strategy="resample" mean="40.0" deviation="3.75" 
                            min="32" max="47" unit="yr">Adult</NormalDistribution>
       <NormalDistribution strategy="resample" mean="57"  deviation="3.75"  

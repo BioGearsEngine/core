@@ -25,14 +25,30 @@ namespace io {
     io::Property::UnMarshall(in.Age(), out.GetAge());
     io::Property::UnMarshall(in.Weight(), out.GetWeight());
     io::Property::UnMarshall(in.Height(), out.GetHeight());
+
+    if (in.BodyMassIndex().present()) {
+    if (!in.Weight().present() && in.Height().present()) {
+        out.CalculateWeightByBMI(in.BodyMassIndex().get());
+    } else if (in.Weight().present() && !in.Height().present()) {
+        out.CalculateHeightByBMI(in.BodyMassIndex().get());
+    } else {
+        std::stringstream ss;
+        ss << "BodyMassIndex as an input must be provided with height OR weight (and not neither/both). BMI input value is not being used and default inputs will be used." << std::endl;
+        out.Warning(ss);
+    }
+}
+
+
     io::Property::UnMarshall(in.AlveoliSurfaceArea(), out.GetAlveoliSurfaceArea());
     io::Property::UnMarshall(in.BasalMetabolicRate(), out.GetBasalMetabolicRate());
+
     if (in.BloodTypeRh().present()) {
       out.m_BloodRh = in.BloodTypeRh().get();
     }
     if (in.BloodTypeABO().present()) {
       io::Patient::UnMarshall(in.BloodTypeABO(), out.m_BloodType);
     }
+
     io::Property::UnMarshall(in.BloodVolumeBaseline(), out.GetBloodVolumeBaseline());
     io::Property::UnMarshall(in.BodyDensity(), out.GetBodyDensity());
     io::Property::UnMarshall(in.BodyFatFraction(), out.GetBodyFatFraction());
