@@ -101,8 +101,8 @@ namespace io {
   class BIOGEARS_PRIVATE_API PatientActions {
   public:
     // class Factories;
-    static std::vector<std::unique_ptr<SEAction>> action_factory(const CDM::ActionListData& in, SESubstanceManager& substances);
-    static std::unique_ptr<SEAction> factory(CDM::ActionData const* actionData, SESubstanceManager& substances);
+    static std::vector<std::unique_ptr<SEAction>> action_factory(const CDM::ActionListData& in, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<SEAction> factory(CDM::ActionData const* actionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
     static std::unique_ptr<CDM::PatientActionData> factory(const SEPatientAction* data);
 
     // template <typename SE, typename XSD>  option
