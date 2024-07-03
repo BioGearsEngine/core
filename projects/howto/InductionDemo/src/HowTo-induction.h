@@ -36,6 +36,7 @@ public:
   void SetBloodInfusionRate(double& volume, double& rate);
   void SetPlasmaInfusionRate(double& volume, double& rate);
   void SetPlateletInfusionRate(double& volume, double& rate);
+  void Ventilation();
   void Status();
   void FluidLoading();
 
@@ -49,6 +50,7 @@ public:
 
   protected:
   void AdvanceTime();
+
 
 
   std::thread m_inductionThread;

@@ -276,7 +276,7 @@ bool BioGears::SetupPatient()
   //AGE ---------------------------------------------------------------
   double age_yr;
   double ageMin_yr = 18.0;
-  double ageMax_yr = 65.0;
+  double ageMax_yr = 105.0;
   double ageStandard_yr = 44.0;
   if (!m_Patient->HasAge()) {
     m_Patient->GetAge().SetValue(ageStandard_yr, TimeUnit::yr);
