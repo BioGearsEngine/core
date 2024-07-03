@@ -75,7 +75,9 @@ namespace io {
       }
 
       for (auto& action : actionList->Action()) {
-        auto new_action = PatientActions::factory(&action, scenario.m_SubMgr);
+
+        auto new_action = PatientActions::factory(&action, scenario.m_SubMgr, default_random_engine.get());
+
         if (new_action != nullptr) {
           scenario.m_Actions.push_back(new_action.release());
         }
@@ -107,17 +109,16 @@ namespace io {
         biogears::filesystem::path requestFile = in.DataRequests()->DataRequestFile().get();
         auto weak_io = out.GetLogger()->GetIoManager();
         auto iom = weak_io.lock();
+
         if (requestFile.exists()) {
           auto sData = Serializer::ReadFile(requestFile.ToString(), out.GetLogger());
           if (auto requestManagerData = dynamic_cast<CDM::DataRequestManagerData*>(sData.get())) {
             // We are ignoring recursive DataRequestManagerData where an DataRequestManagerData has an DataRequestFile reference
             DataRequests::UnMarshall(*requestManagerData, out.m_SubMgr, out.m_DataRequestMgr);
           }
-
         } else {
           throw CommonDataModelException("Can not find " + requestFile.ToString());
         }
-
       } else {
         DataRequests::UnMarshall(dataRequests, out.m_SubMgr, out.m_DataRequestMgr);
       }
@@ -132,24 +133,17 @@ namespace io {
         auto sData = Serializer::ReadFile(actionFile.ToString(), out.GetLogger());
         if (auto actionList = dynamic_cast<CDM::ActionListData*>(sData.get())) {
           // We are ignoring recursive ActionListData where an ActionListData has an ActionFile reference
-          for (auto& action : actionList->Action()) {
-            auto new_action = PatientActions::factory(&action, out.m_SubMgr);
-            if (new_action != nullptr) {
-              out.m_Actions.push_back(new_action.release());
-            }
-          }
+          loadActions(out, actionList);
+        } else {
+          throw CommonDataModelException("Unable to load " + actionFile.ToString() + "File is not ofrmated properly.");
         }
       } else {
         throw CommonDataModelException("Can not find " + actionFile.ToString());
       }
     } else {
-      for (auto& action : in.Actions().Action()) {
-        auto new_action = PatientActions::factory(&action, out.m_SubMgr);
-        if (new_action != nullptr) {
-          out.m_Actions.push_back(new_action.release());
-        }
-      }
+      loadActions(out, &in.Actions());
     }
+
     if (!out.IsValid()) {
       throw CommonDataModelException("Unable UnMarshall SEScenario from ScenarioData");
     }
@@ -157,6 +151,7 @@ namespace io {
 
   void Scenario::Marshall(const SEScenario& in, CDM::ScenarioData& out)
   {
+
     out.Name(in.m_Name);
     out.Description(in.m_Description);
     if (in.HasEngineStateFile()) {
@@ -165,10 +160,12 @@ namespace io {
       out.InitialParameters(std::make_unique<CDM::ScenarioInitialParametersData>());
       Marshall(*in.m_InitialParameters, out.InitialParameters());
     }
+
     if (in.HasAutoSerialization()) {
       out.AutoSerialization(std::make_unique<CDM::ScenarioAutoSerializationData>());
       Marshall(*in.m_AutoSerialization, out.AutoSerialization());
     }
+
     out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_DataRequestMgr.Unload()));
 
     out.Actions(std::make_unique<CDM::ActionListData>());
