@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/schema/cdm/DataRequests.hxx>
 
 #define CDM_SCENARIO_UNMARSHAL_HELPER(in, out, func)                                 \
   if (in.m_##func) {                                                                 \

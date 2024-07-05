@@ -1,6 +1,7 @@
 #include "PatientActions.h"
 
 #include <memory>
+#include <random>
 
 #include "AnesthesiaActions.h"
 #include "EnvironmentActions.h"
@@ -99,6 +100,13 @@
   if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
     auto typeName = std::make_unique<SE##typeName>();                                              \
     schema::Marshall(*typeName##Data, *typeName);                                                  \
+    return std::move(typeName);                                                                    \
+  }
+
+#define STOCASTIC_POLYMORPHIC_UNMARSHALL(paramName, typeName, schema, engine)                      \
+  if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
+    auto typeName = std::make_unique<SE##typeName>();                                              \
+    schema::UnMarshall(*typeName##Data, *typeName, engine);                                        \
     return std::move(typeName);                                                                    \
   }
 
@@ -231,7 +239,7 @@ namespace io {
       POLYMORPHIC_MARSHALL(patientActionData, Urinate, PatientActions)
       throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Patient Action Received.");
     } else if (auto anesthesiaMachineActionData = dynamic_cast<CDM::AnesthesiaMachineActionData const*>(actionData); anesthesiaMachineActionData) {
-  
+
       if (auto AnesthesiaMachineConfigurationData = dynamic_cast<CDM::AnesthesiaMachineConfigurationData const*>(anesthesiaMachineActionData); AnesthesiaMachineConfigurationData) {
         auto AnesthesiaMachineConfiguration = std::make_unique<SEAnesthesiaMachineConfiguration>(substances);
         AnesthesiaActions::Marshall(*AnesthesiaMachineConfigurationData, *AnesthesiaMachineConfiguration);
@@ -464,7 +472,7 @@ namespace io {
   // class SEBurnWound
   void PatientActions::Marshall(const CDM::BurnWoundData& in, SEBurnWound& out)
   {
-    //TODO: UPDATE TO SUPPORT NEW MEMBERS
+    // TODO: UPDATE TO SUPPORT NEW MEMBERS
     out.Clear();
 
     Scenario::Marshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));

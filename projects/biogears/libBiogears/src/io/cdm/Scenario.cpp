@@ -1,12 +1,11 @@
 #include "Scenario.h"
 
-#include "EngineConfiguration.h"
-#include "Patient.h"
-#include "PatientConditions.h"
-#include "PatientActions.h"
-#include "InhalerActions.h"
 #include "AnesthesiaActions.h"
+#include "EngineConfiguration.h"
 #include "EnvironmentActions.h"
+#include "InhalerActions.h"
+#include "Patient.h"
+#include "PatientActions.h"
 #include "PatientConditions.h"
 #include "Property.h"
 
@@ -278,6 +277,38 @@ namespace io {
   // class SEScenario
   void Scenario::Marshall(const CDM::ScenarioData& in, SEScenario& out)
   {
+
+    auto loadActions = [](SEScenario& scenario, CDM::ActionListData const* actionList) {
+      std::unique_ptr<std::seed_seq> seed;
+      std::random_device random_device;
+      std::unique_ptr<std::default_random_engine> default_random_engine;
+
+      if (actionList->RandomSeed().present() && actionList->RandomSeed().get().seed().size() != 0) {
+        auto seeds = actionList->RandomSeed().get().seed();
+        seed = std::make_unique<std::seed_seq>(seeds.begin(), seeds.end());
+        default_random_engine = std::make_unique<std::default_random_engine>(*seed);
+
+        std::stringstream ss;
+        ss << "Using seed={";
+        for (auto& seed : actionList->RandomSeed().get().seed()) {
+          ss << seed << ", ";
+        }
+        ss.seekp(-2, ss.cur);
+        ss << "}" << std::endl;
+        scenario.m_Logger->Warning(ss.str());
+      } else {
+        seed.reset(new std::seed_seq { random_device(), random_device(), random_device(), random_device(), random_device() });
+        default_random_engine = std::make_unique<std::default_random_engine>(*seed);
+      }
+
+      for (auto& action : actionList->Action()) {
+        auto new_action = PatientActions::factory(&action, scenario.m_SubMgr);
+        if (new_action != nullptr) {
+          scenario.m_Actions.push_back(new_action.release());
+        }
+      }
+    };
+
     out.Clear();
     if (in.Name().present()) {
       out.m_Name = in.Name().get();
@@ -292,12 +323,31 @@ namespace io {
     } else {
       throw CommonDataModelException("No State or Initial Parameters provided");
     }
-    if (in.AutoSerialization().present()) {
-      Marshall(in.AutoSerialization(), out.GetAutoSerialization());
-    }
+
     if (in.DataRequests().present()) {
-      Scenario::Marshall(in.DataRequests().get(), out.m_SubMgr, out.m_DataRequestMgr);
+
+      auto dataRequests = in.DataRequests().get();
+      if (dataRequests.DataRequestFile().present()) {
+        biogears::filesystem::path requestFile = in.DataRequests()->DataRequestFile().get();
+        auto weak_io = out.GetLogger()->GetIoManager();
+        auto iom = weak_io.lock();
+        if (requestFile.exists()) {
+          auto sData = Serializer::ReadFile(requestFile.ToString(), out.GetLogger());
+          if (auto requestManagerData = dynamic_cast<CDM::DataRequestManagerData*>(sData.get())) {
+            // We are ignoring recursive DataRequestManagerData where an DataRequestManagerData has an DataRequestFile reference
+              Marshall(*requestManagerData, out.m_SubMgr, out.m_DataRequestMgr);
+          }
+
+        } else {
+          throw CommonDataModelException("Can not find " + requestFile.ToString());
+        }
+
+      } else {
+        Marshall(dataRequests, out.m_SubMgr, out.m_DataRequestMgr);
+      }
     }
+
+
     if (in.Actions().ActionFile().present()) {
       biogears::filesystem::path actionFile = in.Actions().ActionFile().get();
       auto weak_io = out.GetLogger()->GetIoManager();
@@ -587,31 +637,31 @@ namespace io {
   //-----------------------------------------------------------------------------
   std::unique_ptr<CDM::ActionData> Scenario::factory(biogears::SEAction const* action)
   {
-    
-    if (auto patientAction = dynamic_cast<biogears::SEPatientAction const*>(action);patientAction) {
+
+    if (auto patientAction = dynamic_cast<biogears::SEPatientAction const*>(action); patientAction) {
       return PatientActions::factory(patientAction);
     }
-    
-    if (auto advanceTimeAction = dynamic_cast<biogears::SEAdvanceTime const*>(action);advanceTimeAction) {
+
+    if (auto advanceTimeAction = dynamic_cast<biogears::SEAdvanceTime const*>(action); advanceTimeAction) {
       auto advanceTimeData = std::make_unique<CDM::AdvanceTimeData>();
       Scenario::UnMarshall(*advanceTimeAction, *advanceTimeData);
       return std::move(advanceTimeData);
     }
-    
-    if (auto serilizeAction = dynamic_cast<biogears::SESerializeState const*>(action);serilizeAction) {
+
+    if (auto serilizeAction = dynamic_cast<biogears::SESerializeState const*>(action); serilizeAction) {
       auto serilizeActionData = std::make_unique<CDM::AdvanceTimeData>();
       Scenario::UnMarshall(*serilizeAction, *serilizeActionData);
       return std::move(serilizeActionData);
     }
-    
+
     if (auto environmentAction = dynamic_cast<biogears::SEEnvironmentAction const*>(action); environmentAction) {
       return EnvironmentActions::factory(environmentAction);
     }
-    
+
     if (auto anesthesiaMachineAction = dynamic_cast<biogears::SEAnesthesiaMachineAction const*>(action); anesthesiaMachineAction) {
       return AnesthesiaActions::factory(anesthesiaMachineAction);
     }
-    
+
     if (auto inhalerAction = dynamic_cast<biogears::SEInhalerAction const*>(action); inhalerAction) {
       return InhalerActions::factory(inhalerAction);
     }
