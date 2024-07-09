@@ -43,7 +43,7 @@ int HowToHemorrhage()
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToHemorrhage.log");
   bg->GetLogger()->Info("HowToHemorrhage");
-  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
+  if (!bg->InitializeEngine("./patients/StandardMale.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return 1;
   }
@@ -72,7 +72,6 @@ int HowToHemorrhage()
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
 
-  return 0;
 
   //We are going to create a hemorrhage in two different ways.  One way will be to specify the location and a severity on a scale of 0-1.
   //The other way will be to parse an injury code and derive the location and severity
