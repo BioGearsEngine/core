@@ -10,8 +10,11 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
+
+#include "io/cdm/Circuit.h"
+#include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/circuit/SECircuitLedger.h>
 
 namespace std {
 template class vector<biogears::SEThermalCircuitNode*>;
@@ -38,6 +41,16 @@ SEThermalCircuit::SEThermalCircuit(const std::string& name, SECircuitManager& mg
 SEThermalCircuit::~SEThermalCircuit()
 {
   Clear();
+}
+//-------------------------------------------------------------------------------
+void SEThermalCircuit::Unload(CDM::ThermalCircuitData& data) const
+{
+  io::Circuit::UnMarshall(*this, data);
+}
+bool SEThermalCircuit::Load(const CDM::ThermalCircuitData& in, SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit> const& ledger)
+{ // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
+  //io::Circuit::Marshall(in, ledger, *this);
+  return true;
 }
 //-------------------------------------------------------------------------------
 SEThermalCircuitNode& SEThermalCircuit::CreateNode(const char* name)
