@@ -18,7 +18,7 @@
 
 #include <biogears/cdm/properties/SEProperties.h>
 
-#include <biogears/cdm/patient/actions/PatientActionsEnums.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>

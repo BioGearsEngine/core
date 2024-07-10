@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/cdm/properties/PropertyEnum.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
