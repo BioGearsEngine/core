@@ -13,24 +13,26 @@ specific language governing permissions and limitations under the License.
 
 #include <ostream>
 
+#include <biogears/exports.h>
+
 namespace biogears {
-enum class SESide {
+enum class BIOGEARS_API SESide {
   Invalid = -1,
   Left = 0,
   Right
 };
 
-enum class SEOpenClosed {
+enum class BIOGEARS_API SEOpenClosed {
   Invalid = -1,
   Closed = 0,
   Open
 };
-enum class SEOnOff {
+enum class BIOGEARS_API SEOnOff {
   Invalid = -1,
   Off = 0,
   On
 };
-enum class SEErrorType {
+enum class BIOGEARS_API SEErrorType {
   Invalid = -1,
   Standard = 0
 };
