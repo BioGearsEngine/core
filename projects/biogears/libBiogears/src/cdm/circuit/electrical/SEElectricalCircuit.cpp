@@ -10,14 +10,17 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 
+#include "io/cdm/Circuit.h"
+#include <biogears/cdm/circuit/SECircuit.inl>
+#include <biogears/cdm/circuit/SECircuitManager.h>
+
 namespace std {
- template class vector<biogears::SEElectricalCircuitNode*>;
- template class vector<biogears::SEElectricalCircuitPath*>;
- template class map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
- template class map<const biogears::SEElectricalCircuitNode*, size_t>;
+template class vector<biogears::SEElectricalCircuitNode*>;
+template class vector<biogears::SEElectricalCircuitPath*>;
+template class map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
+template class map<const biogears::SEElectricalCircuitNode*, size_t>;
 }
 namespace biogears {
 
@@ -37,6 +40,16 @@ SEElectricalCircuit::SEElectricalCircuit(const char* name, SECircuitManager& mgr
 //-------------------------------------------------------------------------------
 SEElectricalCircuit::~SEElectricalCircuit()
 {
+}
+//-------------------------------------------------------------------------------
+void SEElectricalCircuit::Unload(CDM::ElectricalCircuitData& data) const
+{
+  //io::Circuit::Marshall(*this, data);
+}
+bool SEElectricalCircuit::Load(const CDM::ElectricalCircuitData& in, SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit> const& ledger)
+{ // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
+  //io::Circuit::UnMarshall(in, ledger, *this);
+  return true;
 }
 //-------------------------------------------------------------------------------
 SEElectricalCircuitNode& SEElectricalCircuit::CreateNode(const char* name)
