@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/TestReport.hxx>
 
-#define CDM_TEST_REPORT_UNMARSHAL_HELPER(in, out, func)                              \
+#define CDM_TEST_REPORT_MARSHALL_HELPER(in, out, func)                              \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::TestReport::UnMarshall(*in.m_##func, out.func());                            \
+    io::TestReport::Marshall(*in.m_##func, out.func());                            \
   }
 
-#define CDM_OPTIONAL_TEST_REPORT_UNMARSHAL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_TEST_REPORT_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                             \
-    io::TestReport::UnMarshall(*in.m_##func, out.func());        \
+    io::TestReport::Marshall(*in.m_##func, out.func());        \
   }
 
 namespace biogears {
@@ -40,38 +40,38 @@ namespace io {
   public:
     //template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     //class SETestErrorStatistics
-    static void Marshall(const CDM::TestErrorStatisticsData& in, SETestErrorStatistics& out);
-    static void UnMarshall(const SETestErrorStatistics& in, CDM::TestErrorStatisticsData& out);
+    static void UnMarshall(const CDM::TestErrorStatisticsData& in, SETestErrorStatistics& out);
+    static void Marshall(const SETestErrorStatistics& in, CDM::TestErrorStatisticsData& out);
     //class SETestReport
-    static void Marshall(const CDM::TestReportData& in, SETestReport& out);
-    static void UnMarshall(const SETestReport& in, CDM::TestReportData& out);
+    static void UnMarshall(const CDM::TestReportData& in, SETestReport& out);
+    static void Marshall(const SETestReport& in, CDM::TestReportData& out);
     //class SETestSuite
-    static void Marshall(const CDM::TestSuiteData& in, SETestSuite& out);
-    static void UnMarshall(const SETestSuite& in, CDM::TestSuiteData& out);
+    static void UnMarshall(const CDM::TestSuiteData& in, SETestSuite& out);
+    static void Marshall(const SETestSuite& in, CDM::TestSuiteData& out);
     //class SETestCase
-    static void Marshall(const CDM::TestCaseData& in, SETestCase& out);
-    static void UnMarshall(const SETestCase& in, CDM::TestCaseData& out);
+    static void UnMarshall(const CDM::TestCaseData& in, SETestCase& out);
+    static void Marshall(const SETestCase& in, CDM::TestCaseData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void TestReport::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void TestReport::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Invalidate();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void TestReport::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void TestReport::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO

@@ -9,18 +9,18 @@
 namespace biogears {
 namespace io {
   // class SEAnesthesiaMachine
-  void BiogearsEnvironment::Marshall(const CDM::BioGearsEnvironmentData& in, biogears::Environment& out)
+  void BiogearsEnvironment::UnMarshall(const CDM::BioGearsEnvironmentData& in, biogears::Environment& out)
   {
-    io::Environment::Marshall(in, out);
+    io::Environment::UnMarshall(in, out);
 
     out.BioGearsSystem::LoadState();
 
     out.m_PatientEquivalentDiameter_m = in.PatientEquivalentDiameter_m();
     out.StateChange();
   }
-  void BiogearsEnvironment::UnMarshall(const biogears::Environment& in, CDM::BioGearsEnvironmentData& out)
+  void BiogearsEnvironment::Marshall(const biogears::Environment& in, CDM::BioGearsEnvironmentData& out)
   {
-    io::Environment::UnMarshall(in, out);
+    io::Environment::Marshall(in, out);
     out.PatientEquivalentDiameter_m(in.m_PatientEquivalentDiameter_m);
   }
 }

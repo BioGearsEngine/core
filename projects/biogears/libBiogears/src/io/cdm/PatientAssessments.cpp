@@ -22,196 +22,196 @@
 namespace biogears {
 namespace io {
   // class SEPatientAssessment
-  void PatientAssessments::Marshall(const CDM::PatientAssessmentData& in, SEPatientAssessment& out)
-  {
-    // Empty Marshall
-  }
-  //----------------------------------------------------------------------------------
-  void PatientAssessments::UnMarshall(const SEPatientAssessment& in, CDM::PatientAssessmentData& out)
+  void PatientAssessments::UnMarshall(const CDM::PatientAssessmentData& in, SEPatientAssessment& out)
   {
     // Empty UnMarshall
   }
   //----------------------------------------------------------------------------------
-  // class SEArterialBloodGasAnalysis
-  void PatientAssessments::Marshall(const CDM::ArterialBloodGasAnalysisData& in, SEArterialBloodGasAnalysis& out)
+  void PatientAssessments::Marshall(const SEPatientAssessment& in, CDM::PatientAssessmentData& out)
   {
-    Marshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
-    io::Property::Marshall(in.pH(), out.GetpH());
-    io::Property::Marshall(in.PartialPressureOxygen(), out.GetPartialPressureOxygen());
-    io::Property::Marshall(in.PartialPressureCarbonDioxide(), out.GetPartialPressureCarbonDioxide());
-    io::Property::Marshall(in.BaseExcess(), out.GetBaseExcess());
-    io::Property::Marshall(in.StandardBicarbonate(), out.GetStandardBicarbonate());
-    io::Property::Marshall(in.OxygenSaturation(), out.GetOxygenSaturation());
+    // Empty Marshall
   }
   //----------------------------------------------------------------------------------
-  void PatientAssessments::UnMarshall(const SEArterialBloodGasAnalysis& in, CDM::ArterialBloodGasAnalysisData& out)
+  // class SEArterialBloodGasAnalysis
+  void PatientAssessments::UnMarshall(const CDM::ArterialBloodGasAnalysisData& in, SEArterialBloodGasAnalysis& out)
   {
-    UnMarshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
+    UnMarshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
+    io::Property::UnMarshall(in.pH(), out.GetpH());
+    io::Property::UnMarshall(in.PartialPressureOxygen(), out.GetPartialPressureOxygen());
+    io::Property::UnMarshall(in.PartialPressureCarbonDioxide(), out.GetPartialPressureCarbonDioxide());
+    io::Property::UnMarshall(in.BaseExcess(), out.GetBaseExcess());
+    io::Property::UnMarshall(in.StandardBicarbonate(), out.GetStandardBicarbonate());
+    io::Property::UnMarshall(in.OxygenSaturation(), out.GetOxygenSaturation());
+  }
+  //----------------------------------------------------------------------------------
+  void PatientAssessments::Marshall(const SEArterialBloodGasAnalysis& in, CDM::ArterialBloodGasAnalysisData& out)
+  {
+    Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, pH)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, PartialPressureOxygen)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, PartialPressureCarbonDioxide)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, BaseExcess)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, StandardBicarbonate)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, OxygenSaturation)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, pH)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, PartialPressureOxygen)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, PartialPressureCarbonDioxide)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, BaseExcess)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, StandardBicarbonate)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, OxygenSaturation)
   }
   //----------------------------------------------------------------------------------
   // class SEPulmonaryFunctionTest
-  void PatientAssessments::Marshall(const CDM::PulmonaryFunctionTestData& in, SEPulmonaryFunctionTest& out)
+  void PatientAssessments::UnMarshall(const CDM::PulmonaryFunctionTestData& in, SEPulmonaryFunctionTest& out)
   {
-    Marshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
-    io::Property::Marshall(in.ExpiratoryReserveVolume(), out.GetExpiratoryReserveVolume());
-    io::Property::Marshall(in.ForcedVitalCapacity(), out.GetForcedVitalCapacity());
-    io::Property::Marshall(in.ForcedExpiratoryVolume(), out.GetForcedExpiratoryVolume());
-    io::Property::Marshall(in.ForcedExpiratoryFlow(), out.GetForcedExpiratoryFlow());
-    io::Property::Marshall(in.FunctionalResidualCapacity(), out.GetFunctionalResidualCapacity());
-    io::Property::Marshall(in.InspiratoryReserveVolume(), out.GetInspiratoryReserveVolume());
-    io::Property::Marshall(in.MaximumVoluntaryVentilation(), out.GetMaximumVoluntaryVentilation());
-    io::Property::Marshall(in.PeakExpiratoryFlow(), out.GetPeakExpiratoryFlow());
-    io::Property::Marshall(in.ResidualVolume(), out.GetResidualVolume());
-    io::Property::Marshall(in.SlowVitalCapacity(), out.GetSlowVitalCapacity());
-    io::Property::Marshall(in.TotalLungCapacity(), out.GetTotalLungCapacity());
-    io::Property::Marshall(in.VitalCapacity(), out.GetVitalCapacity());
-    io::Property::Marshall(in.LungVolumePlot(), out.GetLungVolumePlot());
+    UnMarshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
+    io::Property::UnMarshall(in.ExpiratoryReserveVolume(), out.GetExpiratoryReserveVolume());
+    io::Property::UnMarshall(in.ForcedVitalCapacity(), out.GetForcedVitalCapacity());
+    io::Property::UnMarshall(in.ForcedExpiratoryVolume(), out.GetForcedExpiratoryVolume());
+    io::Property::UnMarshall(in.ForcedExpiratoryFlow(), out.GetForcedExpiratoryFlow());
+    io::Property::UnMarshall(in.FunctionalResidualCapacity(), out.GetFunctionalResidualCapacity());
+    io::Property::UnMarshall(in.InspiratoryReserveVolume(), out.GetInspiratoryReserveVolume());
+    io::Property::UnMarshall(in.MaximumVoluntaryVentilation(), out.GetMaximumVoluntaryVentilation());
+    io::Property::UnMarshall(in.PeakExpiratoryFlow(), out.GetPeakExpiratoryFlow());
+    io::Property::UnMarshall(in.ResidualVolume(), out.GetResidualVolume());
+    io::Property::UnMarshall(in.SlowVitalCapacity(), out.GetSlowVitalCapacity());
+    io::Property::UnMarshall(in.TotalLungCapacity(), out.GetTotalLungCapacity());
+    io::Property::UnMarshall(in.VitalCapacity(), out.GetVitalCapacity());
+    io::Property::UnMarshall(in.LungVolumePlot(), out.GetLungVolumePlot());
   }
   //----------------------------------------------------------------------------------
-  void PatientAssessments::UnMarshall(const SEPulmonaryFunctionTest& in, CDM::PulmonaryFunctionTestData& out)
+  void PatientAssessments::Marshall(const SEPulmonaryFunctionTest& in, CDM::PulmonaryFunctionTestData& out)
   {
-    UnMarshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
+    Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
     if (in.m_ExpiratoryReserveVolume != nullptr)
-      io::Property::UnMarshall(*in.m_ExpiratoryReserveVolume, out.ExpiratoryReserveVolume());
+      io::Property::Marshall(*in.m_ExpiratoryReserveVolume, out.ExpiratoryReserveVolume());
     if (in.m_ForcedVitalCapacity != nullptr)
-      io::Property::UnMarshall(*in.m_ForcedVitalCapacity, out.ForcedVitalCapacity());
+      io::Property::Marshall(*in.m_ForcedVitalCapacity, out.ForcedVitalCapacity());
     if (in.m_ForcedExpiratoryVolume != nullptr)
-      io::Property::UnMarshall(*in.m_ForcedExpiratoryVolume, out.ForcedExpiratoryVolume());
+      io::Property::Marshall(*in.m_ForcedExpiratoryVolume, out.ForcedExpiratoryVolume());
     if (in.m_ForcedExpiratoryFlow != nullptr)
-      io::Property::UnMarshall(*in.m_ForcedExpiratoryFlow, out.ForcedExpiratoryFlow());
+      io::Property::Marshall(*in.m_ForcedExpiratoryFlow, out.ForcedExpiratoryFlow());
     if (in.m_FunctionalResidualCapacity != nullptr)
-      io::Property::UnMarshall(*in.m_FunctionalResidualCapacity, out.FunctionalResidualCapacity());
+      io::Property::Marshall(*in.m_FunctionalResidualCapacity, out.FunctionalResidualCapacity());
     if (in.m_InspiratoryCapacity != nullptr)
-      io::Property::UnMarshall(*in.m_InspiratoryCapacity, out.InspiratoryCapacity());
+      io::Property::Marshall(*in.m_InspiratoryCapacity, out.InspiratoryCapacity());
     if (in.m_InspiratoryReserveVolume != nullptr)
-      io::Property::UnMarshall(*in.m_InspiratoryReserveVolume, out.InspiratoryReserveVolume());
+      io::Property::Marshall(*in.m_InspiratoryReserveVolume, out.InspiratoryReserveVolume());
     if (in.m_MaximumVoluntaryVentilation != nullptr)
-      io::Property::UnMarshall(*in.m_MaximumVoluntaryVentilation, out.MaximumVoluntaryVentilation());
+      io::Property::Marshall(*in.m_MaximumVoluntaryVentilation, out.MaximumVoluntaryVentilation());
     if (in.m_PeakExpiratoryFlow != nullptr)
-      io::Property::UnMarshall(*in.m_PeakExpiratoryFlow, out.PeakExpiratoryFlow());
+      io::Property::Marshall(*in.m_PeakExpiratoryFlow, out.PeakExpiratoryFlow());
     if (in.m_ResidualVolume != nullptr)
-      io::Property::UnMarshall(*in.m_ResidualVolume, out.ResidualVolume());
+      io::Property::Marshall(*in.m_ResidualVolume, out.ResidualVolume());
     if (in.m_SlowVitalCapacity != nullptr)
-      io::Property::UnMarshall(*in.m_SlowVitalCapacity, out.SlowVitalCapacity());
+      io::Property::Marshall(*in.m_SlowVitalCapacity, out.SlowVitalCapacity());
     if (in.m_TotalLungCapacity != nullptr)
-      io::Property::UnMarshall(*in.m_TotalLungCapacity, out.TotalLungCapacity());
+      io::Property::Marshall(*in.m_TotalLungCapacity, out.TotalLungCapacity());
     if (in.m_VitalCapacity != nullptr)
-      io::Property::UnMarshall(*in.m_VitalCapacity, out.VitalCapacity());
+      io::Property::Marshall(*in.m_VitalCapacity, out.VitalCapacity());
     if (in.m_LungVolumePlot != nullptr)
-      io::Property::UnMarshall(*in.m_LungVolumePlot, out.LungVolumePlot());
+      io::Property::Marshall(*in.m_LungVolumePlot, out.LungVolumePlot());
   }
   //----------------------------------------------------------------------------------
   // class SECompleteBloodCount
-  void PatientAssessments::Marshall(const CDM::CompleteBloodCountData& in, SECompleteBloodCount& out)
+  void PatientAssessments::UnMarshall(const CDM::CompleteBloodCountData& in, SECompleteBloodCount& out)
   {
-    Marshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
-    io::Property::Marshall(in.Hematocrit(), out.GetHematocrit());
-    io::Property::Marshall(in.Hemoglobin(), out.GetHemoglobin());
-    io::Property::Marshall(in.LymphocyteCellCount(), out.GetLymphocyteCellCount());
-    io::Property::Marshall(in.PlateletCount(), out.GetPlateletCount());
-    io::Property::Marshall(in.MeanCorpuscularHemoglobin(), out.GetMeanCorpuscularHemoglobin());
-    io::Property::Marshall(in.MeanCorpuscularHemoglobinConcentration(), out.GetMeanCorpuscularHemoglobinConcentration());
-    io::Property::Marshall(in.MeanCorpuscularVolume(), out.GetMeanCorpuscularVolume());
-    io::Property::Marshall(in.NeutrophilCellCount(), out.GetNeutrophilCount());
-    io::Property::Marshall(in.RedBloodCellCount(), out.GetRedBloodCellCount());
-    io::Property::Marshall(in.WhiteBloodCellCount(), out.GetWhiteBloodCellCount());
+    UnMarshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
+    io::Property::UnMarshall(in.Hematocrit(), out.GetHematocrit());
+    io::Property::UnMarshall(in.Hemoglobin(), out.GetHemoglobin());
+    io::Property::UnMarshall(in.LymphocyteCellCount(), out.GetLymphocyteCellCount());
+    io::Property::UnMarshall(in.PlateletCount(), out.GetPlateletCount());
+    io::Property::UnMarshall(in.MeanCorpuscularHemoglobin(), out.GetMeanCorpuscularHemoglobin());
+    io::Property::UnMarshall(in.MeanCorpuscularHemoglobinConcentration(), out.GetMeanCorpuscularHemoglobinConcentration());
+    io::Property::UnMarshall(in.MeanCorpuscularVolume(), out.GetMeanCorpuscularVolume());
+    io::Property::UnMarshall(in.NeutrophilCellCount(), out.GetNeutrophilCount());
+    io::Property::UnMarshall(in.RedBloodCellCount(), out.GetRedBloodCellCount());
+    io::Property::UnMarshall(in.WhiteBloodCellCount(), out.GetWhiteBloodCellCount());
   }
   //----------------------------------------------------------------------------------
-  void PatientAssessments::UnMarshall(const SECompleteBloodCount& in, CDM::CompleteBloodCountData& out)
+  void PatientAssessments::Marshall(const SECompleteBloodCount& in, CDM::CompleteBloodCountData& out)
   {
-    UnMarshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
+    Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Hematocrit)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Hemoglobin)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, LymphocyteCellCount)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PlateletCount)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MeanCorpuscularHemoglobin)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MeanCorpuscularHemoglobinConcentration)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MeanCorpuscularVolume)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, NeutrophilCellCount)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, RedBloodCellCount)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, WhiteBloodCellCount)
-
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Hematocrit)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Hemoglobin)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LymphocyteCellCount)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PlateletCount)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanCorpuscularHemoglobin)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanCorpuscularHemoglobinConcentration)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanCorpuscularVolume)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, NeutrophilCellCount)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RedBloodCellCount)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WhiteBloodCellCount)
   }
   //----------------------------------------------------------------------------------
   // class SEComprehensiveMetabolicPanel
-  void PatientAssessments::Marshall(const CDM::ComprehensiveMetabolicPanelData& in, SEComprehensiveMetabolicPanel& out)
+  void PatientAssessments::UnMarshall(const CDM::ComprehensiveMetabolicPanelData& in, SEComprehensiveMetabolicPanel& out)
   {
-    Marshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
-    io::Property::Marshall(in.Albumin(), out.GetAlbumin());
-    io::Property::Marshall(in.ALP(), out.GetALP());
-    io::Property::Marshall(in.ALT(), out.GetALT());
-    io::Property::Marshall(in.AST(), out.GetAST());
-    io::Property::Marshall(in.BUN(), out.GetBUN());
-    io::Property::Marshall(in.Calcium(), out.GetCalcium());
-    io::Property::Marshall(in.CO2(), out.GetCO2());
-    io::Property::Marshall(in.Creatinine(), out.GetCreatinine());
-    io::Property::Marshall(in.Glucose(), out.GetGlucose());
-    io::Property::Marshall(in.Potassium(), out.GetPotassium());
-    io::Property::Marshall(in.Sodium(), out.GetSodium());
-    io::Property::Marshall(in.TotalBilirubin(), out.GetTotalBilirubin());
-    io::Property::Marshall(in.TotalProtein(), out.GetTotalProtein());
+    UnMarshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
+    io::Property::UnMarshall(in.Albumin(), out.GetAlbumin());
+    io::Property::UnMarshall(in.ALP(), out.GetALP());
+    io::Property::UnMarshall(in.ALT(), out.GetALT());
+    io::Property::UnMarshall(in.AST(), out.GetAST());
+    io::Property::UnMarshall(in.BUN(), out.GetBUN());
+    io::Property::UnMarshall(in.Calcium(), out.GetCalcium());
+    io::Property::UnMarshall(in.CO2(), out.GetCO2());
+    io::Property::UnMarshall(in.Creatinine(), out.GetCreatinine());
+    io::Property::UnMarshall(in.Glucose(), out.GetGlucose());
+    io::Property::UnMarshall(in.Potassium(), out.GetPotassium());
+    io::Property::UnMarshall(in.Sodium(), out.GetSodium());
+    io::Property::UnMarshall(in.TotalBilirubin(), out.GetTotalBilirubin());
+    io::Property::UnMarshall(in.TotalProtein(), out.GetTotalProtein());
   }
   //----------------------------------------------------------------------------------
-  void PatientAssessments::UnMarshall(const SEComprehensiveMetabolicPanel& in, CDM::ComprehensiveMetabolicPanelData& out)
+  void PatientAssessments::Marshall(const SEComprehensiveMetabolicPanel& in, CDM::ComprehensiveMetabolicPanelData& out)
   {
-    UnMarshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
+    Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
     if (in.HasAlbumin()) {
-      io::Property::UnMarshall(*in.m_Albumin, out.Albumin());
+      io::Property::Marshall(*in.m_Albumin, out.Albumin());
     }
     if (in.HasALP()) {
-      io::Property::UnMarshall(*in.m_ALP, out.ALP());
+      io::Property::Marshall(*in.m_ALP, out.ALP());
     }
     if (in.HasALT()) {
-      io::Property::UnMarshall(*in.m_ALT, out.ALT());
+      io::Property::Marshall(*in.m_ALT, out.ALT());
     }
     if (in.HasAST()) {
-      io::Property::UnMarshall(*in.m_AST, out.AST());
+      io::Property::Marshall(*in.m_AST, out.AST());
     }
     if (in.HasBUN()) {
-      io::Property::UnMarshall(*in.m_BUN, out.BUN());
+      io::Property::Marshall(*in.m_BUN, out.BUN());
     }
     if (in.HasCalcium()) {
-      io::Property::UnMarshall(*in.m_Calcium, out.Calcium());
+      io::Property::Marshall(*in.m_Calcium, out.Calcium());
     }
     if (in.HasChloride()) {
-      io::Property::UnMarshall(*in.m_Chloride, out.Chloride());
+      io::Property::Marshall(*in.m_Chloride, out.Chloride());
     }
     if (in.HasCO2()) {
-      io::Property::UnMarshall(*in.m_CO2, out.CO2());
+      io::Property::Marshall(*in.m_CO2, out.CO2());
     }
     if (in.HasCreatinine()) {
-      io::Property::UnMarshall(*in.m_Creatinine, out.Creatinine());
+      io::Property::Marshall(*in.m_Creatinine, out.Creatinine());
     }
     if (in.HasGlucose()) {
-      io::Property::UnMarshall(*in.m_Glucose, out.Glucose());
+      io::Property::Marshall(*in.m_Glucose, out.Glucose());
     }
     if (in.HasPotassium()) {
-      io::Property::UnMarshall(*in.m_Potassium, out.Potassium());
+      io::Property::Marshall(*in.m_Potassium, out.Potassium());
     }
     if (in.HasSodium()) {
-      io::Property::UnMarshall(*in.m_Sodium, out.Sodium());
+      io::Property::Marshall(*in.m_Sodium, out.Sodium());
     }
     if (in.HasTotalBilirubin()) {
-      io::Property::UnMarshall(*in.m_TotalBilirubin, out.TotalBilirubin());
+      io::Property::Marshall(*in.m_TotalBilirubin, out.TotalBilirubin());
     }
     if (in.HasTotalProtein()) {
-      io::Property::UnMarshall(*in.m_TotalProtein, out.TotalProtein());
+      io::Property::Marshall(*in.m_TotalProtein, out.TotalProtein());
     }
   }
   //----------------------------------------------------------------------------------
   // class SEUrinalysis
-  void PatientAssessments::Marshall(const CDM::UrinalysisData& in, SEUrinalysis& out)
+  void PatientAssessments::UnMarshall(const CDM::UrinalysisData& in, SEUrinalysis& out)
   {
-    Marshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
+    UnMarshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
+
     if (in.Color().present())
       out.m_Color = in.Color().get();
     if (in.Appearance().present())
@@ -220,69 +220,89 @@ namespace io {
       out.m_Glucose = in.Glucose().get();
     if (in.Ketone().present())
       out.m_Ketone = in.Ketone().get();
-    io::Property::Marshall(in.Bilirubin(), out.GetBilirubinResult());
-    io::Property::Marshall(in.SpecificGravity(), out.GetSpecificGravityResult());
+    // UnMarshall(in.Color(), out.m_Color);
+    // UnMarshall(in.Appearance(), out.m_Appearance);
+    // UnMarshall(in.Glucose(), out.m_Glucose);
+    // UnMarshall(in.Ketone(), out.m_Ketone);
+
+    io::Property::UnMarshall(in.Bilirubin(), out.GetBilirubinResult());
+    io::Property::UnMarshall(in.SpecificGravity(), out.GetSpecificGravityResult());
     if (in.Blood().present())
       out.m_Blood = in.Blood().get();
-    io::Property::Marshall(in.pH(), out.GetPHResult());
+    // UnMarshall(in.Blood(), out.m_Blood);
+    io::Property::UnMarshall(in.pH(), out.GetPHResult());
     if (in.Protein().present())
       out.m_Protein = in.Protein().get();
-    io::Property::Marshall(in.Urobilinogen(), out.GetUrobilinogenResult());
+    // UnMarshall(in.Protein(), out.m_Protein);
+    io::Property::UnMarshall(in.Urobilinogen(), out.GetUrobilinogenResult());
     if (in.Nitrite().present())
       out.m_Nitrite = in.Nitrite().get();
+    // UnMarshall(in.Nitrite(), out.m_Nitrite);
     if (in.LeukocyteEsterase().present())
       out.m_LeukocyteEsterase = in.LeukocyteEsterase().get();
-    Marshall(in.Microscopic(), out.GetMicroscopicResult());
+    // UnMarshall(in.LeukocyteEsterase(), out.m_LeukocyteEsterase);
+    UnMarshall(in.Microscopic(), out.GetMicroscopicResult());
   }
   //----------------------------------------------------------------------------------
-  void PatientAssessments::UnMarshall(const SEUrinalysis& in, CDM::UrinalysisData& out)
+  void PatientAssessments::Marshall(const SEUrinalysis& in, CDM::UrinalysisData& out)
   {
-    UnMarshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
+    Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
+
     if (in.HasColorResult())
       out.Color(in.m_Color);
+    // Marshall(in.GetColorResult(), out.Color());
     if (in.HasAppearanceResult())
       out.Appearance(in.m_Appearance);
+    // Marshall(in.GetAppearanceResult(), out.Appearance());
     if (in.HasGlucoseResult())
       out.Glucose(in.m_Glucose);
+    // Marshall(in.GetGlucoseResult(), out.Glucose());
     if (in.HasKetoneResult())
       out.Ketone(in.m_Ketone);
+    // Marshall(in.GetKetoneResult(), out.Ketone());
     if (in.HasBilirubinResult()) {
-      io::Property::UnMarshall(*in.m_Bilirubin, out.Bilirubin());
+      io::Property::Marshall(*in.m_Bilirubin, out.Bilirubin());
     }
     if (in.HasSpecificGravityResult()) {
-      io::Property::UnMarshall(*in.m_SpecificGravity, out.SpecificGravity());
+      io::Property::Marshall(*in.m_SpecificGravity, out.SpecificGravity());
     }
     if (in.HasBloodResult())
       out.Blood(in.m_Blood);
+      //Marshall(in.GetBloodResult(), out.Blood());
     if (in.HasPHResult()) {
-      io::Property::UnMarshall(*in.m_pH, out.pH());
+      io::Property::Marshall(*in.m_pH, out.pH());
     }
     if (in.HasProteinResult())
       out.Protein(in.m_Protein);
+      //Marshall(in.GetProteinResult(), out.Protein());
     if (in.HasUrobilinogenResult()) {
-      io::Property::UnMarshall(*in.m_Urobilinogen, out.Urobilinogen());
+      io::Property::Marshall(*in.m_Urobilinogen, out.Urobilinogen());
     }
     if (in.HasNitriteResult())
       out.Nitrite(in.m_Nitrite);
+      //Marshall(in.GetNitriteResult(), out.Nitrite());
     if (in.HasLeukocyteEsteraseResult())
       out.LeukocyteEsterase(in.m_LeukocyteEsterase);
+      //Marshall(in.GetLeukocyteEsteraseResult(), out.LeukocyteEsterase());
 
     if (in.HasMicroscopicResult())
-      UnMarshall(*in.m_Microscopic, out.Microscopic());
+      Marshall(*in.m_Microscopic, out.Microscopic());
   }
   //----------------------------------------------------------------------------------
   // class SEUrinalysisMicroscopic
-  void PatientAssessments::Marshall(const CDM::UrinalysisMicroscopicData& in, SEUrinalysisMicroscopic& out)
+  void PatientAssessments::UnMarshall(const CDM::UrinalysisMicroscopicData& in, SEUrinalysisMicroscopic& out)
   {
-    Marshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
+    UnMarshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
 
     out.m_ObservationType = in.ObservationType();
-    io::Property::Marshall(in.RedBloodCells(), out.GetRedBloodCellsResult());
-    io::Property::Marshall(in.WhiteBloodCells(), out.GetWhiteBloodCellsResult());
+    // UnMarshall(in.ObservationType(), out.m_ObservationType);
+    io::Property::UnMarshall(in.RedBloodCells(), out.GetRedBloodCellsResult());
+    io::Property::UnMarshall(in.WhiteBloodCells(), out.GetWhiteBloodCellsResult());
 
     if (in.EpithelialCells().present())
       out.m_EpithelialCells = in.EpithelialCells().get();
-    io::Property::Marshall(in.Casts(), out.GetCastsResult());
+      //UnMarshall(in.EpithelialCells(), out.m_EpithelialCells);
+    io::Property::UnMarshall(in.Casts(), out.GetCastsResult());
 
     if (in.Crystals().present())
       out.m_Crystals = in.Crystals().get();
@@ -292,82 +312,348 @@ namespace io {
       out.m_Trichomonads = in.Trichomonads().get();
     if (in.Yeast().present())
       out.m_Yeast = in.Yeast().get();
+    // UnMarshall(in.Crystals(), out.m_Crystals);
+    // UnMarshall(in.Bacteria(), out.m_Bacteria);
+    // UnMarshall(in.Trichomonads(), out.m_Trichomonads);
+    // UnMarshall(in.Yeast(), out.m_Yeast);
   }
   //----------------------------------------------------------------------------------
-  void PatientAssessments::UnMarshall(const SEUrinalysisMicroscopic& in, CDM::UrinalysisMicroscopicData& out)
+  void PatientAssessments::Marshall(const SEUrinalysisMicroscopic& in, CDM::UrinalysisMicroscopicData& out)
   {
-    UnMarshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
+    Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
+
     if (in.HasObservationType())
       out.ObservationType(in.m_ObservationType);
+    // SE_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in,out,ObservationType)
+
     if (in.HasRedBloodCellsResult()) {
-      io::Property::UnMarshall(*in.m_RedBloodCells, out.RedBloodCells());
+      io::Property::Marshall(*in.m_RedBloodCells, out.RedBloodCells());
     }
     if (in.HasWhiteBloodCellsResult()) {
-      io::Property::UnMarshall(*in.m_WhiteBloodCells, out.WhiteBloodCells());
+      io::Property::Marshall(*in.m_WhiteBloodCells, out.WhiteBloodCells());
     }
+
     if (in.HasEpithelialCellsResult())
       out.EpithelialCells(in.m_EpithelialCells);
+      //Marshall(in.m_EpithelialCells, out.EpithelialCells());
     if (in.HasCastsResult()) {
-      io::Property::UnMarshall(*in.m_Casts, out.Casts());
+      io::Property::Marshall(*in.m_Casts, out.Casts());
     }
     if (in.HasCrystalsResult())
       out.Crystals(in.m_Crystals);
+    // Marshall(in.m_Crystals, out.Crystals());
     if (in.HasBacteriaResult())
       out.Bacteria(in.m_Bacteria);
+    // Marshall(in.m_Bacteria, out.Bacteria());
     if (in.HasTrichomonadsResult())
       out.Trichomonads(in.m_Trichomonads);
+    // Marshall(in.m_Trichomonads, out.Trichomonads());
     if (in.HasYeastResult())
       out.Yeast(in.m_Yeast);
+    // Marshall(in.m_Yeast, out.Yeast());
   }
   //----------------------------------------------------------------------------------
   // class SEProthrombinTime.h
-  void PatientAssessments::Marshall(const CDM::ProthrombinTimeData& in, SEProthrombinTime& out)
+  void PatientAssessments::UnMarshall(const CDM::ProthrombinTimeData& in, SEProthrombinTime& out)
   {
-    io::PatientAssessments::Marshall(in, (SEPatientAssessment&)out);
-    io::Property::Marshall(in.InternationalNormalizedRatio(), out.GetInternationalNormalizedRatio());
+    io::PatientAssessments::UnMarshall(in, (SEPatientAssessment&)out);
+    io::Property::UnMarshall(in.InternationalNormalizedRatio(), out.GetInternationalNormalizedRatio());
   }
 
-  void PatientAssessments::UnMarshall(const SEProthrombinTime& in, CDM::ProthrombinTimeData& out)
+  void PatientAssessments::Marshall(const SEProthrombinTime& in, CDM::ProthrombinTimeData& out)
   {
-    io::PatientAssessments::UnMarshall((SEPatientAssessment const&)in, out);
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, InternationalNormalizedRatio)
+    io::PatientAssessments::Marshall((SEPatientAssessment const&)in, out);
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InternationalNormalizedRatio)
   }
   //----------------------------------------------------------------------------------
   // class SEPsychomotorVigilanceTask.h
-  void PatientAssessments::Marshall(const CDM::PsychomotorVigilanceTaskData& in, SEPsychomotorVigilanceTask& out)
+  void PatientAssessments::UnMarshall(const CDM::PsychomotorVigilanceTaskData& in, SEPsychomotorVigilanceTask& out)
   {
-    io::PatientAssessments::Marshall(in, (SEPatientAssessment&)out);
-    io::Property::Marshall(in.AttentionLapses(), out.GetAttentionLapses());
-    io::Property::Marshall(in.ReactionTime(), out.GetReactionTime());
+    io::PatientAssessments::UnMarshall(in, (SEPatientAssessment&)out);
+    io::Property::UnMarshall(in.AttentionLapses(), out.GetAttentionLapses());
+    io::Property::UnMarshall(in.ReactionTime(), out.GetReactionTime());
   }
-  void PatientAssessments::UnMarshall(const SEPsychomotorVigilanceTask& in, CDM::PsychomotorVigilanceTaskData& out)
+  void PatientAssessments::Marshall(const SEPsychomotorVigilanceTask& in, CDM::PsychomotorVigilanceTaskData& out)
   {
-    io::PatientAssessments::UnMarshall((SEPatientAssessment const&)in, out);
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, AttentionLapses)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, ReactionTime)
+    io::PatientAssessments::Marshall((SEPatientAssessment const&)in, out);
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AttentionLapses)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ReactionTime)
   }
   //----------------------------------------------------------------------------------
   // class SESequentialOrganFailureAssessment.h
-  void PatientAssessments::Marshall(const CDM::SequentialOrganFailureAssessmentData& in, SESequentialOrganFailureAssessment& out)
+  void PatientAssessments::UnMarshall(const CDM::SequentialOrganFailureAssessmentData& in, SESequentialOrganFailureAssessment& out)
   {
-    io::PatientAssessments::Marshall(in, (SEPatientAssessment&)out);
-    io::Property::Marshall(in.RespirationSOFA(), out.GetRespirationSOFA());
-    io::Property::Marshall(in.CoagulationSOFA(), out.GetCoagulationSOFA());
-    io::Property::Marshall(in.LiverSOFA(), out.GetLiverSOFA());
-    io::Property::Marshall(in.CardiovascularSOFA(), out.GetCardiovascularSOFA());
-    io::Property::Marshall(in.CentralNervousSOFA(), out.GetCentralNervousSOFA());
-    io::Property::Marshall(in.RenalSOFA(), out.GetRenalSOFA());
+    io::PatientAssessments::UnMarshall(in, (SEPatientAssessment&)out);
+    io::Property::UnMarshall(in.RespirationSOFA(), out.GetRespirationSOFA());
+    io::Property::UnMarshall(in.CoagulationSOFA(), out.GetCoagulationSOFA());
+    io::Property::UnMarshall(in.LiverSOFA(), out.GetLiverSOFA());
+    io::Property::UnMarshall(in.CardiovascularSOFA(), out.GetCardiovascularSOFA());
+    io::Property::UnMarshall(in.CentralNervousSOFA(), out.GetCentralNervousSOFA());
+    io::Property::UnMarshall(in.RenalSOFA(), out.GetRenalSOFA());
   }
-  void PatientAssessments::UnMarshall(const SESequentialOrganFailureAssessment& in, CDM::SequentialOrganFailureAssessmentData& out)
+  void PatientAssessments::Marshall(const SESequentialOrganFailureAssessment& in, CDM::SequentialOrganFailureAssessmentData& out)
   {
-    io::PatientAssessments::UnMarshall((SEPatientAssessment const&)in, out);
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, RespirationSOFA)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, CoagulationSOFA)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, LiverSOFA)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, CardiovascularSOFA)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, CentralNervousSOFA)
-    CDM_PROPERTY_UNMARSHAL_HELPER(in, out, RenalSOFA)
+    io::PatientAssessments::Marshall((SEPatientAssessment const&)in, out);
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, RespirationSOFA)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, CoagulationSOFA)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, LiverSOFA)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, CardiovascularSOFA)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, CentralNervousSOFA)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, RenalSOFA)
   }
 
+  //-----------------------------------------------------------------------------------
+  // SEPresenceIndicator
+  void PatientAssessments::UnMarshall(const CDM::enumPresenceIndicator& in, SEPresenceIndicator& out)
+  {
+    switch (in) {
+    case CDM::enumPresenceIndicator::Negative:
+      out = SEPresenceIndicator::Negative;
+      break;
+    case CDM::enumPresenceIndicator::Positive:
+      out = SEPresenceIndicator::Positive;
+      break;
+    default:
+      out = SEPresenceIndicator::Invalid;
+      break;
+    }
+  }
+  void PatientAssessments::Marshall(const SEPresenceIndicator& in, CDM::enumPresenceIndicator& out)
+  {
+    switch (in) {
+    case SEPresenceIndicator::Negative:
+      out = CDM::enumPresenceIndicator::Negative;
+      break;
+    case SEPresenceIndicator::Positive:
+      out = CDM::enumPresenceIndicator::Positive;
+      break;
+    default:
+      out = (CDM::enumPresenceIndicator::value)-1;
+      break;
+    }
+  }
+  // SEClarityIndicator
+  void PatientAssessments::UnMarshall(const CDM::enumClarityIndicator& in, SEClarityIndicator& out)
+  {
+    switch (in) {
+    case CDM::enumClarityIndicator::Clear:
+      out = SEClarityIndicator::Clear;
+      break;
+    case CDM::enumClarityIndicator::Cloudy:
+      out = SEClarityIndicator::Cloudy;
+      break;
+    case CDM::enumClarityIndicator::SlightlyCloudy:
+      out = SEClarityIndicator::SlightlyCloudy;
+      break;
+    case CDM::enumClarityIndicator::Turbid:
+      out = SEClarityIndicator::Turbid;
+      break;
+    default:
+      out = SEClarityIndicator::Invalid;
+      break;
+    }
+  }
+  void PatientAssessments::Marshall(const SEClarityIndicator& in, CDM::enumClarityIndicator& out)
+  {
+    switch (in) {
+    case SEClarityIndicator::Clear:
+      out = CDM::enumClarityIndicator::Clear;
+      break;
+    case SEClarityIndicator::SlightlyCloudy:
+      out = CDM::enumClarityIndicator::SlightlyCloudy;
+      break;
+    case SEClarityIndicator::Cloudy:
+      out = CDM::enumClarityIndicator::Cloudy;
+      break;
+    case SEClarityIndicator::Turbid:
+      out = CDM::enumClarityIndicator::Turbid;
+      break;
+    default:
+      out = (CDM::enumClarityIndicator::value)-1;
+      break;
+    }
+  }
+  // SEUrineColor
+  void PatientAssessments::UnMarshall(const CDM::enumUrineColor& in, SEUrineColor& out)
+  {
+    switch (in) {
+    case CDM::enumUrineColor::Yellow:
+      out = SEUrineColor::Yellow;
+      break;
+    case CDM::enumUrineColor::DarkYellow:
+      out = SEUrineColor::DarkYellow;
+      break;
+    case CDM::enumUrineColor::PaleYellow:
+      out = SEUrineColor::PaleYellow;
+      break;
+    case CDM::enumUrineColor::Pink:
+      out = SEUrineColor::Pink;
+      break;
+    default:
+      out = SEUrineColor::Invalid;
+      break;
+    }
+  }
+  void PatientAssessments::Marshall(const SEUrineColor& in, CDM::enumUrineColor& out)
+  {
+    switch (in) {
+    case SEUrineColor::PaleYellow:
+      out = CDM::enumUrineColor::PaleYellow;
+      break;
+    case SEUrineColor::Yellow:
+      out = CDM::enumUrineColor::Yellow;
+      break;
+    case SEUrineColor::DarkYellow:
+      out = CDM::enumUrineColor::DarkYellow;
+      break;
+    case SEUrineColor::Pink:
+      out = CDM::enumUrineColor::Pink;
+      break;
+    default:
+      out = (CDM::enumUrineColor::value)-1;
+      break;
+    }
+  }
+  // SEMicroscopicObservationType
+  void PatientAssessments::UnMarshall(const CDM::enumMicroscopicObservationType& in, SEMicroscopicObservationType& out)
+  {
+    switch (in) {
+    case CDM::enumMicroscopicObservationType::HighPowerField:
+      out = SEMicroscopicObservationType::HighPowerField;
+      break;
+    case CDM::enumMicroscopicObservationType::LowPowerField:
+      out = SEMicroscopicObservationType::LowPowerField;
+      break;
+    default:
+      out = SEMicroscopicObservationType::Invalid;
+      break;
+    }
+  }
+  void PatientAssessments::Marshall(const SEMicroscopicObservationType& in, CDM::enumMicroscopicObservationType& out)
+  {
+    switch (in) {
+    case SEMicroscopicObservationType::HighPowerField:
+      out = CDM::enumMicroscopicObservationType::HighPowerField;
+      break;
+    case SEMicroscopicObservationType::LowPowerField:
+      out = CDM::enumMicroscopicObservationType::LowPowerField;
+      break;
+    default:
+      out = (CDM::enumMicroscopicObservationType::value)-1;
+      break;
+    }
+  }
+  // SEMicroscopicObservationAmount
+  void PatientAssessments::UnMarshall(const CDM::enumMicroscopicObservationAmount& in, SEMicroscopicObservationAmount& out)
+  {
+    switch (in) {
+    case CDM::enumMicroscopicObservationAmount::Few:
+      out = SEMicroscopicObservationAmount::Few;
+      break;
+    case CDM::enumMicroscopicObservationAmount::Many:
+      out = SEMicroscopicObservationAmount::Many;
+      break;
+    case CDM::enumMicroscopicObservationAmount::Moderate:
+      out = SEMicroscopicObservationAmount::Moderate;
+      break;
+    default:
+      out = SEMicroscopicObservationAmount::Invalid;
+      break;
+    }
+  }
+  void PatientAssessments::Marshall(const SEMicroscopicObservationAmount& in, CDM::enumMicroscopicObservationAmount& out)
+  {
+    switch (in) {
+    case SEMicroscopicObservationAmount::Few:
+      out = CDM::enumMicroscopicObservationAmount::Few;
+      break;
+    case SEMicroscopicObservationAmount::Moderate:
+      out = CDM::enumMicroscopicObservationAmount::Moderate;
+      break;
+    case SEMicroscopicObservationAmount::Many:
+      out = CDM::enumMicroscopicObservationAmount::Many;
+      break;
+    default:
+      out = (CDM::enumMicroscopicObservationAmount::value)-1;
+      break;
+    }
+  }
+} // NAMESPACE IO
+
+bool operator==(CDM::enumPresenceIndicator const& lhs, SEPresenceIndicator const& rhs)
+{
+  switch (rhs) {
+  case SEPresenceIndicator::Negative:
+    return (CDM::enumPresenceIndicator::Negative == lhs);
+  case SEPresenceIndicator::Positive:
+    return (CDM::enumPresenceIndicator::Positive == lhs);
+  case SEPresenceIndicator::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
+  }
 }
+bool operator==(CDM::enumClarityIndicator const& lhs, SEClarityIndicator const& rhs)
+{
+  switch (rhs) {
+  case SEClarityIndicator::Clear:
+    return (CDM::enumClarityIndicator::Clear == lhs);
+  case SEClarityIndicator::SlightlyCloudy:
+    return (CDM::enumClarityIndicator::SlightlyCloudy == lhs);
+  case SEClarityIndicator::Cloudy:
+    return (CDM::enumClarityIndicator::Cloudy == lhs);
+  case SEClarityIndicator::Turbid:
+    return (CDM::enumClarityIndicator::Turbid == lhs);
+  case SEClarityIndicator::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
+  }
 }
+bool operator==(CDM::enumUrineColor const& lhs, SEUrineColor const& rhs)
+{
+  switch (rhs) {
+  case SEUrineColor::DarkYellow:
+    return (CDM::enumUrineColor::DarkYellow == lhs);
+  case SEUrineColor::PaleYellow:
+    return (CDM::enumUrineColor::PaleYellow == lhs);
+  case SEUrineColor::Pink:
+    return (CDM::enumUrineColor::Pink == lhs);
+  case SEUrineColor::Yellow:
+    return (CDM::enumUrineColor::Yellow == lhs);
+  case SEUrineColor::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
+  }
+}
+bool operator==(CDM::enumMicroscopicObservationType const& lhs, SEMicroscopicObservationType const& rhs)
+{
+  switch (rhs) {
+  case SEMicroscopicObservationType::HighPowerField:
+    return (CDM::enumMicroscopicObservationType::HighPowerField == lhs);
+  case SEMicroscopicObservationType::LowPowerField:
+    return (CDM::enumMicroscopicObservationType::LowPowerField == lhs);
+  case SEMicroscopicObservationType ::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
+  }
+}
+bool operator==(CDM::enumMicroscopicObservationAmount const& lhs, SEMicroscopicObservationAmount const& rhs)
+{
+  switch (rhs) {
+  case SEMicroscopicObservationAmount::Few:
+    return (CDM::enumMicroscopicObservationAmount::Few == lhs);
+  case SEMicroscopicObservationAmount::Moderate:
+    return (CDM::enumMicroscopicObservationAmount::Moderate == lhs);
+  case SEMicroscopicObservationAmount::Many:
+    return (CDM::enumMicroscopicObservationAmount::Many == lhs);
+  case SEMicroscopicObservationAmount::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
+  }
+}
+
+} // Namespace BioGears

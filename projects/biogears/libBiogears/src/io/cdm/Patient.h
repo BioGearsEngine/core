@@ -13,21 +13,31 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <memory>
 
-#include "biogears/cdm/CommonDataModel.h"
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/exports.h>
 
 #include <biogears/schema/cdm/Patient.hxx>
 
-#define CDM_PATIENT_UNMARSHAL_HELPER(in, out, func)                                  \
+#define CDM_PATIENT_MARSHALL_HELPER(in, out, func)                                   \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Patient::UnMarshall(*in.m_##func, out.func());                               \
+    io::Patient::Marshall(*in.m_##func, out.func());                                 \
   }
 
-#define CDM_OPTIONAL_PATIENT_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                         \
-    io::Patient::UnMarshall(*in.m_##func, out.func());       \
+#define CDM_OPTIONAL_PATIENT_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func) {                                        \
+    io::Patient::Marshall(*in.m_##func, out.func());        \
   }
+
+#define SE_PATIENT_ENUM_MARSHALL_HELPER(in, out, func)                               \
+  if (in.Has##func()) {                                                              \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::Patient::Marshall(in.m_##func, out.func());                                  \
+  }
+
+#define SE_OPTIONAL_PATIENT_ENUM_MARSHALL_HELPER(in, out, func) \
+  io::Patient::Marshall(in.m_##func, out.func());
 
 namespace biogears {
 class SEPatient;
@@ -35,32 +45,114 @@ class SEPatient;
 namespace io {
   class BIOGEARS_PRIVATE_API Patient {
   public:
-    //template <typename SE, typename XSD>  option
+    // template <typename SE, typename XSD>  option
+    template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    template <typename SE, typename XSD, std::enable_if_t<!std::is_enum<SE>::value>* = nullptr>
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+
+    // class SEPatient
+    static void UnMarshall(const CDM::PatientData& in, SEPatient& out);
+    static void Marshall(const SEPatient& in, CDM::PatientData& out);
+
+    // SESex
+    static void UnMarshall(const CDM::enumSex& in, SESex& out);
+    static void Marshall(const SESex& in, CDM::enumSex& out);
+    // SEBloodType
+    static void UnMarshall(const CDM::enumBloodType& in, SEBloodType& out);
+    static void Marshall(const SEBloodType& in, CDM::enumBloodType& out);
+    //  SEPatientEventType
+    static void UnMarshall(const CDM::enumPatientEvent& in, SEPatientEventType& out);
+    static void Marshall(const SEPatientEventType& in, CDM::enumPatientEvent& out);
+
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
-    //class SEPatient
-    static void Marshall(const CDM::PatientData& in, SEPatient& out);
-    static void UnMarshall(const SEPatient& in, CDM::PatientData& out);
+    static typename std::enable_if<std::is_enum<SE>::type>::type
+    UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+    {
+      if (!option_in.present()) {
+        out = SE::Invalid;
+      } else {
+        UnMarshall(option_in.get(), out);
+      }
+    }
   };
   //----------------------------------------------------------------------------------
-  template <typename SE, typename XSD>
-  void Patient::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>*>
+  void Patient::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
-      out.Clear();
+      out = SE::Invalid;
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
-  //----------------------------------------------------------------------------------
+
+  template <typename SE, typename XSD, std::enable_if_t<!std::is_enum<SE>::value>*>
+  void Patient::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  {
+    if (!option_in.present()) {
+      out.Invalidate();
+    } else {
+      UnMarshall(option_in.get(), out);
+    }
+  }
+
   template <typename SE, typename XSD>
-  void Patient::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void Patient::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
-    option_out.set(*item);
+    Marshall(in, *item);
+    option_out.set(std::move(item));
   }
 } // Namespace IO
-} //Namespace Biogears
+
+// Operators
+// Operators
+bool operator==(CDM::enumSex const& lhs, SESex const& rhs);
+bool operator==(CDM::enumBloodType const& lhs, SEBloodType const& rhs);
+bool operator==(CDM::enumPatientEvent const& lhs, SEPatientEventType const& rhs);
+
+inline bool operator==(SESex const& lhs, CDM::enumSex const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEBloodType const& lhs, CDM::enumBloodType const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEPatientEventType const& lhs, CDM::enumPatientEvent const& rhs)
+{
+  return rhs == lhs;
+}
+
+inline bool operator!=(CDM::enumSex const& lhs, SESex const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumBloodType const& lhs, SEBloodType const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumPatientEvent const& lhs, SEPatientEventType const& rhs)
+{
+  return !(lhs == rhs);
+}
+
+inline bool operator!=(SESex const& lhs, CDM::enumSex const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEBloodType const& lhs, CDM::enumBloodType const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEPatientEventType const& lhs, CDM::enumPatientEvent const& rhs)
+{
+  return !(rhs == lhs);
+}
+
+
+} // Namespace Biogears

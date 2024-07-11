@@ -763,7 +763,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
   m_ss.str("");
   const SESerializeState* serialize = dynamic_cast<const SESerializeState*>(&action);
   if (serialize != nullptr) {
-    if (serialize->GetType() == CDM::enumSerializationType::Save) {
+    if (serialize->GetType() == SESerializationType::Save) {
       if (serialize->HasFilename()) {
         if (filesystem::is_directory(serialize->GetFilename()) || (filesystem::is_directory("states/" + serialize->GetFilename()))) {
           SaveStateToFile(asprintf("%s%s@%.0fs.xml", serialize->GetFilename().c_str(), m_Patient->GetName().c_str(), GetSimulationTime(TimeUnit::s)));

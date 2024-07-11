@@ -5,6 +5,7 @@
 
 #include <biogears/cdm/circuit/SECircuit.h>
 
+#include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/SECircuitNode.inl>
 #include <biogears/cdm/circuit/SECircuitPath.h>
@@ -17,384 +18,471 @@
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
-
+#include <biogears/cdm/enums/SECircuitEnums.h>
 namespace biogears {
 namespace io {
-  //class SEElectricalCircuit
-  void Circuit::Marshall(const CDM::ElectricalCircuitData& in, SEElectricalCircuit& out)
+  // class SEElectricalCircuit
+  void Circuit::UnMarshall(const CDM::ElectricalCircuitData& in, SECircuitLedger<ELECTRICAL_LEDGER_TYPES> const& ledger, SEElectricalCircuit& out)
   {
-    //Nothing to Do
+    // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
+    out.Clear();
+    out.m_Name = in.Name();
+    for (auto name : in.Node()) {
+      auto idx = ledger.nodes.find(name);
+      if (idx == ledger.nodes.end()) {
+        out.Error(out.m_Name + " could not find node " + name.c_str());
+      }
+      out.AddNode(*idx->second);
+    }
+    for (auto name : in.Path()) {
+      auto idx = ledger.paths.find(name);
+      if (idx == ledger.paths.end()) {
+        out.Error(out.m_Name + " could not find path " + name.c_str());
+      }
+      out.AddPath(*idx->second);
+    }
+    for (auto name : in.ReferenceNode()) {
+      auto idx = ledger.nodes.find(name);
+      if (idx == ledger.nodes.end()) {
+        out.Error(out.m_Name + " could not find reference node " + name.c_str());
+      }
+      out.AddReferenceNode(*idx->second);
+    }
+    out.StateChange();
+  }
+  void Circuit::Marshall(const SEElectricalCircuit& in, CDM::ElectricalCircuitData& out)
+  {
+    out.Name(in.m_Name);
+    if (in.HasReferenceNode()) {
+      for (auto n : in.m_ReferenceNodes)
+        out.ReferenceNode().push_back(n->GetName());
+    }
+    for (auto n : in.m_Nodes)
+      out.Node().push_back(n->GetName());
+    for (auto p : in.m_Paths)
+      out.Path().push_back(p->GetName());
   }
   //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SEElectricalCircuit& in, CDM::ElectricalCircuitData& out)
+  // class SEElectricalCircuitNode
+  void Circuit::UnMarshall(const CDM::ElectricalCircuitNodeData& in, SECircuitLedger<ELECTRICAL_LEDGER_TYPES> const& ledger, SEElectricalCircuitNode& out)
   {
-    //Nothing to Do
+    UnMarshall(static_cast<const CDM::CircuitNodeData>(in), static_cast<SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>&>(out));
+    io::Property::UnMarshall(in.Voltage(), out.GetVoltage());
+    io::Property::UnMarshall(in.NextVoltage(), out.GetNextVoltage());
+    io::Property::UnMarshall(in.Charge(), out.GetCharge());
+    io::Property::UnMarshall(in.NextCharge(), out.GetNextCharge());
+    io::Property::UnMarshall(in.ChargeBaseline(), out.GetChargeBaseline());
   }
-  //----------------------------------------------------------------------------------
-  //class SEElectricalCircuitNode
-  void Circuit::Marshall(const CDM::ElectricalCircuitNodeData& in, SEElectricalCircuitNode& out)
+  void Circuit::Marshall(const SEElectricalCircuitNode& in, CDM::ElectricalCircuitNodeData& out)
   {
-    Marshall(static_cast<const CDM::CircuitNodeData>(in), static_cast<SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>&>(out));
-    io::Property::Marshall(in.Voltage(), out.GetVoltage());
-    io::Property::Marshall(in.NextVoltage(), out.GetNextVoltage());
-    io::Property::Marshall(in.Charge(), out.GetCharge());
-    io::Property::Marshall(in.NextCharge(), out.GetNextCharge());
-    io::Property::Marshall(in.ChargeBaseline(), out.GetChargeBaseline());
-  }
-  //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SEElectricalCircuitNode& in, CDM::ElectricalCircuitNodeData& out)
-  {
-    UnMarshall(static_cast<const SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>&>(in), static_cast<CDM::CircuitNodeData&>(out));
+    Marshall(static_cast<const SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>&>(in), static_cast<CDM::CircuitNodeData&>(out));
 
     if (in.HasVoltage())
-      io::Property::UnMarshall(*in.m_Potential, out.Voltage());
+      io::Property::Marshall(*in.m_Potential, out.Voltage());
     if (in.HasNextVoltage())
-      io::Property::UnMarshall(*in.m_NextPotential, out.NextVoltage());
+      io::Property::Marshall(*in.m_NextPotential, out.NextVoltage());
     if (in.HasCharge())
-      io::Property::UnMarshall(*in.m_Quantity, out.Charge());
+      io::Property::Marshall(*in.m_Quantity, out.Charge());
     if (in.HasNextCharge())
-      io::Property::UnMarshall(*in.m_NextQuantity, out.NextCharge());
+      io::Property::Marshall(*in.m_NextQuantity, out.NextCharge());
     if (in.HasChargeBaseline())
-      io::Property::UnMarshall(*in.m_QuantityBaseline, out.ChargeBaseline());
+      io::Property::Marshall(*in.m_QuantityBaseline, out.ChargeBaseline());
   }
   //----------------------------------------------------------------------------------
-  //class SEElectricalCircuitPath
-  void Circuit::Marshall(const CDM::ElectricalCircuitPathData& in, SEElectricalCircuitPath& out)
+  // class SEElectricalCircuitPath
+  void Circuit::UnMarshall(const CDM::ElectricalCircuitPathData& in, SECircuitLedger<ELECTRICAL_LEDGER_TYPES> const& ledger, SEElectricalCircuitPath& out)
   {
-    Marshall(static_cast<const CDM::CircuitPathData>(in),
-             static_cast<SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>&>(out));
+    UnMarshall(static_cast<const CDM::CircuitPathData>(in),
+               static_cast<SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>&>(out));
 
-    io::Property::Marshall(in.Resistance(), out.GetResistance());
-    io::Property::Marshall(in.NextResistance(), out.GetNextResistance());
-    io::Property::Marshall(in.ResistanceBaseline(), out.GetResistanceBaseline());
-    io::Property::Marshall(in.Capacitance(), out.GetCapacitance());
-    io::Property::Marshall(in.NextCapacitance(), out.GetNextCapacitance());
-    io::Property::Marshall(in.CapacitanceBaseline(), out.GetCapacitanceBaseline());
-    io::Property::Marshall(in.Inductance(), out.GetInductance());
-    io::Property::Marshall(in.NextInductance(), out.GetNextInductance());
-    io::Property::Marshall(in.InductanceBaseline(), out.GetInductanceBaseline());
-    io::Property::Marshall(in.Current(), out.GetCurrent());
-    io::Property::Marshall(in.NextCurrent(), out.GetNextCurrent());
-    io::Property::Marshall(in.CurrentSource(), out.GetCurrentSource());
-    io::Property::Marshall(in.NextCurrentSource(), out.GetNextCurrentSource());
-    io::Property::Marshall(in.CurrentSourceBaseline(), out.GetCurrentSourceBaseline());
-    io::Property::Marshall(in.VoltageSource(), out.GetVoltageSource());
-    io::Property::Marshall(in.NextVoltageSource(), out.GetNextVoltageSource());
-    io::Property::Marshall(in.VoltageSourceBaseline(), out.GetVoltageSourceBaseline());
-    io::Property::Marshall(in.ValveBreakdownVoltage(), out.GetValveBreakdownVoltage());
+    io::Property::UnMarshall(in.Resistance(), out.GetResistance());
+    io::Property::UnMarshall(in.NextResistance(), out.GetNextResistance());
+    io::Property::UnMarshall(in.ResistanceBaseline(), out.GetResistanceBaseline());
+    io::Property::UnMarshall(in.Capacitance(), out.GetCapacitance());
+    io::Property::UnMarshall(in.NextCapacitance(), out.GetNextCapacitance());
+    io::Property::UnMarshall(in.CapacitanceBaseline(), out.GetCapacitanceBaseline());
+    io::Property::UnMarshall(in.Inductance(), out.GetInductance());
+    io::Property::UnMarshall(in.NextInductance(), out.GetNextInductance());
+    io::Property::UnMarshall(in.InductanceBaseline(), out.GetInductanceBaseline());
+    io::Property::UnMarshall(in.Current(), out.GetCurrent());
+    io::Property::UnMarshall(in.NextCurrent(), out.GetNextCurrent());
+    io::Property::UnMarshall(in.CurrentSource(), out.GetCurrentSource());
+    io::Property::UnMarshall(in.NextCurrentSource(), out.GetNextCurrentSource());
+    io::Property::UnMarshall(in.CurrentSourceBaseline(), out.GetCurrentSourceBaseline());
+    io::Property::UnMarshall(in.VoltageSource(), out.GetVoltageSource());
+    io::Property::UnMarshall(in.NextVoltageSource(), out.GetNextVoltageSource());
+    io::Property::UnMarshall(in.VoltageSourceBaseline(), out.GetVoltageSourceBaseline());
+    io::Property::UnMarshall(in.ValveBreakdownVoltage(), out.GetValveBreakdownVoltage());
   }
-  //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SEElectricalCircuitPath& in, CDM::ElectricalCircuitPathData& out)
+  void Circuit::Marshall(const SEElectricalCircuitPath& in, CDM::ElectricalCircuitPathData& out)
   {
 
-    UnMarshall(static_cast<const SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>&>(in),
-               static_cast<CDM::CircuitPathData&>(out));
+    Marshall(static_cast<const SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>&>(in),
+             static_cast<CDM::CircuitPathData&>(out));
     if (in.HasResistance()) {
-      io::Property::UnMarshall(*in.m_Resistance, out.Resistance());
+      io::Property::Marshall(*in.m_Resistance, out.Resistance());
     }
     if (in.HasNextResistance()) {
-      io::Property::UnMarshall(*in.m_NextResistance, out.NextResistance());
+      io::Property::Marshall(*in.m_NextResistance, out.NextResistance());
     }
     if (in.HasResistanceBaseline()) {
-      io::Property::UnMarshall(*in.m_ResistanceBaseline, out.ResistanceBaseline());
+      io::Property::Marshall(*in.m_ResistanceBaseline, out.ResistanceBaseline());
     }
     if (in.HasCapacitance()) {
-      io::Property::UnMarshall(*in.m_Capacitance, out.Capacitance());
+      io::Property::Marshall(*in.m_Capacitance, out.Capacitance());
     }
     if (in.HasNextCapacitance()) {
-      io::Property::UnMarshall(*in.m_NextCapacitance, out.NextCapacitance());
+      io::Property::Marshall(*in.m_NextCapacitance, out.NextCapacitance());
     }
     if (in.HasCapacitanceBaseline()) {
-      io::Property::UnMarshall(*in.m_CapacitanceBaseline, out.CapacitanceBaseline());
+      io::Property::Marshall(*in.m_CapacitanceBaseline, out.CapacitanceBaseline());
     }
     if (in.HasInductance()) {
-      io::Property::UnMarshall(*in.m_Inductance, out.Inductance());
+      io::Property::Marshall(*in.m_Inductance, out.Inductance());
     }
     if (in.HasNextInductance()) {
-      io::Property::UnMarshall(*in.m_NextInductance, out.NextInductance());
+      io::Property::Marshall(*in.m_NextInductance, out.NextInductance());
     }
     if (in.HasInductanceBaseline()) {
-      io::Property::UnMarshall(*in.m_InductanceBaseline, out.InductanceBaseline());
+      io::Property::Marshall(*in.m_InductanceBaseline, out.InductanceBaseline());
     }
     if (in.HasCurrent()) {
-      io::Property::UnMarshall(*in.m_Flux, out.Current());
+      io::Property::Marshall(*in.m_Flux, out.Current());
     }
     if (in.HasNextCurrent()) {
-      io::Property::UnMarshall(*in.m_NextFlux, out.NextCurrent());
+      io::Property::Marshall(*in.m_NextFlux, out.NextCurrent());
     }
     if (in.HasCurrentSource()) {
-      io::Property::UnMarshall(*in.m_FluxSource, out.CurrentSource());
+      io::Property::Marshall(*in.m_FluxSource, out.CurrentSource());
     }
     if (in.HasNextCurrentSource()) {
-      io::Property::UnMarshall(*in.m_NextFluxSource, out.NextCurrentSource());
+      io::Property::Marshall(*in.m_NextFluxSource, out.NextCurrentSource());
     }
     if (in.HasCurrentSourceBaseline()) {
-      io::Property::UnMarshall(*in.m_FluxSourceBaseline, out.CurrentSourceBaseline());
+      io::Property::Marshall(*in.m_FluxSourceBaseline, out.CurrentSourceBaseline());
     }
     if (in.HasVoltageSource()) {
-      io::Property::UnMarshall(*in.m_PotentialSource, out.VoltageSource());
+      io::Property::Marshall(*in.m_PotentialSource, out.VoltageSource());
     }
     if (in.HasNextVoltageSource()) {
-      io::Property::UnMarshall(*in.m_NextPotentialSource, out.NextVoltageSource());
+      io::Property::Marshall(*in.m_NextPotentialSource, out.NextVoltageSource());
     }
     if (in.HasVoltageSourceBaseline()) {
-      io::Property::UnMarshall(*in.m_PotentialSourceBaseline, out.VoltageSourceBaseline());
+      io::Property::Marshall(*in.m_PotentialSourceBaseline, out.VoltageSourceBaseline());
     }
     if (in.HasValveBreakdownVoltage()) {
-      io::Property::UnMarshall(*in.m_ValveBreakdownPotential, out.ValveBreakdownVoltage());
+      io::Property::Marshall(*in.m_ValveBreakdownPotential, out.ValveBreakdownVoltage());
     }
   }
   //----------------------------------------------------------------------------------
-  //class SEFluidCircuit
-  void Circuit::Marshall(const CDM::FluidCircuitData& in, SEFluidCircuit& out)
+  // class SEFluidCircuit
+  void Circuit::UnMarshall(const CDM::FluidCircuitData& in, SECircuitLedger<FLUID_LEDGER_TYPES> const& ledger, SEFluidCircuit& out)
   {
-    //Nothing to Do
+    // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
+    out.Clear();
+    out.m_Name = in.Name();
+    for (auto name : in.Node()) {
+      auto idx = ledger.nodes.find(name);
+      if (idx == ledger.nodes.end()) {
+        out.Error(out.m_Name + " could not find node " + name.c_str());
+      }
+      out.AddNode(*idx->second);
+    }
+    for (auto name : in.Path()) {
+      auto idx = ledger.paths.find(name);
+      if (idx == ledger.paths.end()) {
+        out.Error(out.m_Name + " could not find path " + name.c_str());
+      }
+      out.AddPath(*idx->second);
+    }
+    for (auto name : in.ReferenceNode()) {
+      auto idx = ledger.nodes.find(name);
+      if (idx == ledger.nodes.end()) {
+        out.Error(out.m_Name + " could not find reference node " + name.c_str());
+      }
+      out.AddReferenceNode(*idx->second);
+    }
+    out.StateChange();
+  }
+  void Circuit::Marshall(const SEFluidCircuit& in, CDM::FluidCircuitData& out)
+  {
+    out.Name(in.m_Name);
+    if (in.HasReferenceNode()) {
+      for (auto n : in.m_ReferenceNodes)
+        out.ReferenceNode().push_back(n->GetName());
+    }
+    for (auto n : in.m_Nodes)
+      out.Node().push_back(n->GetName());
+    for (auto p : in.m_Paths)
+      out.Path().push_back(p->GetName());
   }
   //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SEFluidCircuit& in, CDM::FluidCircuitData& out)
+  // class SEFluidCircuitNode
+  void Circuit::UnMarshall(const CDM::FluidCircuitNodeData& in, SECircuitLedger<FLUID_LEDGER_TYPES> const& ledger, SEFluidCircuitNode& out)
   {
-    //Nothing To Do
-  }
-  //----------------------------------------------------------------------------------
-  //class SEFluidCircuitNode
-  void Circuit::Marshall(const CDM::FluidCircuitNodeData& in, SEFluidCircuitNode& out)
-  {
-    Marshall(static_cast<const CDM::CircuitNodeData&>(in), static_cast<SECircuitNode<FLUID_CIRCUIT_NODE>&>(out));
-    io::Property::Marshall(in.Pressure(), out.GetPressure());
-    io::Property::Marshall(in.NextPressure(), out.GetNextPressure());
-    io::Property::Marshall(in.Volume(), out.GetVolume());
+    UnMarshall(static_cast<const CDM::CircuitNodeData&>(in), static_cast<SECircuitNode<FLUID_CIRCUIT_NODE>&>(out));
+    io::Property::UnMarshall(in.Pressure(), out.GetPressure());
+    io::Property::UnMarshall(in.NextPressure(), out.GetNextPressure());
+    io::Property::UnMarshall(in.Volume(), out.GetVolume());
     ;
-    io::Property::Marshall(in.NextVolume(), out.GetNextVolume());
-    io::Property::Marshall(in.VolumeBaseline(), out.GetVolumeBaseline());
+    io::Property::UnMarshall(in.NextVolume(), out.GetNextVolume());
+    io::Property::UnMarshall(in.VolumeBaseline(), out.GetVolumeBaseline());
   }
-  //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SEFluidCircuitNode& in, CDM::FluidCircuitNodeData& out)
+  void Circuit::Marshall(const SEFluidCircuitNode& in, CDM::FluidCircuitNodeData& out)
   {
-    UnMarshall(static_cast<const SECircuitNode<FLUID_CIRCUIT_NODE>&>(in), static_cast<CDM::CircuitNodeData&>(out));
+    Marshall(static_cast<const SECircuitNode<FLUID_CIRCUIT_NODE>&>(in), static_cast<CDM::CircuitNodeData&>(out));
     if (in.HasPressure())
-      io::Property::UnMarshall(*in.m_Potential, out.Pressure());
+      io::Property::Marshall(*in.m_Potential, out.Pressure());
     if (in.HasNextPressure())
-      io::Property::UnMarshall(*in.m_NextPotential, out.NextPressure());
+      io::Property::Marshall(*in.m_NextPotential, out.NextPressure());
     if (in.HasVolume())
-      io::Property::UnMarshall(*in.m_Quantity, out.Volume());
+      io::Property::Marshall(*in.m_Quantity, out.Volume());
     if (in.HasNextVolume())
-      io::Property::UnMarshall(*in.m_NextQuantity, out.NextVolume());
+      io::Property::Marshall(*in.m_NextQuantity, out.NextVolume());
     if (in.HasVolumeBaseline())
-      io::Property::UnMarshall(*in.m_QuantityBaseline, out.VolumeBaseline());
+      io::Property::Marshall(*in.m_QuantityBaseline, out.VolumeBaseline());
   }
   //----------------------------------------------------------------------------------
-  //class SEFluidCircuitPath
-  void Circuit::Marshall(const CDM::FluidCircuitPathData& in, SEFluidCircuitPath& out)
+  // class SEFluidCircuitPath
+  void Circuit::UnMarshall(const CDM::FluidCircuitPathData& in, SECircuitLedger<FLUID_LEDGER_TYPES> const& ledger, SEFluidCircuitPath& out)
   {
 
-    Marshall(static_cast<const CDM::CircuitPathData&>(in), static_cast<SECircuitPath<FLUID_CIRCUIT_PATH>&>(out));
-    io::Property::Marshall(in.Resistance(), out.GetResistance());
-    io::Property::Marshall(in.NextResistance(), out.GetNextResistance());
-    io::Property::Marshall(in.ResistanceBaseline(), out.GetResistanceBaseline());
-    io::Property::Marshall(in.Compliance(), out.GetCompliance());
-    io::Property::Marshall(in.NextCompliance(), out.GetNextCompliance());
-    io::Property::Marshall(in.ComplianceBaseline(), out.GetComplianceBaseline());
-    io::Property::Marshall(in.Inertance(), out.GetInertance());
-    io::Property::Marshall(in.NextInertance(), out.GetNextInertance());
-    io::Property::Marshall(in.InertanceBaseline(), out.GetInertanceBaseline());
-    io::Property::Marshall(in.Flow(), out.GetFlow());
-    io::Property::Marshall(in.NextFlow(), out.GetNextFlow());
-    io::Property::Marshall(in.FlowSource(), out.GetFlowSource());
-    io::Property::Marshall(in.NextFlowSource(), out.GetNextFlowSource());
-    io::Property::Marshall(in.FlowSourceBaseline(), out.GetFlowSourceBaseline());
-    io::Property::Marshall(in.PressureSource(), out.GetPressureSource());
-    io::Property::Marshall(in.NextPressureSource(), out.GetNextPressureSource());
-    io::Property::Marshall(in.PressureSourceBaseline(), out.GetPressureSourceBaseline());
-    io::Property::Marshall(in.ValveBreakdownPressure(), out.GetValveBreakdownPressure());
+    UnMarshall(static_cast<const CDM::CircuitPathData&>(in), static_cast<SECircuitPath<FLUID_CIRCUIT_PATH>&>(out));
+    io::Property::UnMarshall(in.Resistance(), out.GetResistance());
+    io::Property::UnMarshall(in.NextResistance(), out.GetNextResistance());
+    io::Property::UnMarshall(in.ResistanceBaseline(), out.GetResistanceBaseline());
+    io::Property::UnMarshall(in.Compliance(), out.GetCompliance());
+    io::Property::UnMarshall(in.NextCompliance(), out.GetNextCompliance());
+    io::Property::UnMarshall(in.ComplianceBaseline(), out.GetComplianceBaseline());
+    io::Property::UnMarshall(in.Inertance(), out.GetInertance());
+    io::Property::UnMarshall(in.NextInertance(), out.GetNextInertance());
+    io::Property::UnMarshall(in.InertanceBaseline(), out.GetInertanceBaseline());
+    io::Property::UnMarshall(in.Flow(), out.GetFlow());
+    io::Property::UnMarshall(in.NextFlow(), out.GetNextFlow());
+    io::Property::UnMarshall(in.FlowSource(), out.GetFlowSource());
+    io::Property::UnMarshall(in.NextFlowSource(), out.GetNextFlowSource());
+    io::Property::UnMarshall(in.FlowSourceBaseline(), out.GetFlowSourceBaseline());
+    io::Property::UnMarshall(in.PressureSource(), out.GetPressureSource());
+    io::Property::UnMarshall(in.NextPressureSource(), out.GetNextPressureSource());
+    io::Property::UnMarshall(in.PressureSourceBaseline(), out.GetPressureSourceBaseline());
+    io::Property::UnMarshall(in.ValveBreakdownPressure(), out.GetValveBreakdownPressure());
   }
-  //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SEFluidCircuitPath& in, CDM::FluidCircuitPathData& out)
+  void Circuit::Marshall(const SEFluidCircuitPath& in, CDM::FluidCircuitPathData& out)
   {
-    UnMarshall(static_cast<const SECircuitPath<FLUID_CIRCUIT_PATH>&>(in), static_cast<CDM::CircuitPathData&>(out));
+    Marshall(static_cast<const SECircuitPath<FLUID_CIRCUIT_PATH>&>(in), static_cast<CDM::CircuitPathData&>(out));
     if (in.HasResistance()) {
-      io::Property::UnMarshall(*in.m_Resistance, out.Resistance());
+      io::Property::Marshall(*in.m_Resistance, out.Resistance());
     }
     if (in.HasNextResistance()) {
-      io::Property::UnMarshall(*in.m_NextResistance, out.NextResistance());
+      io::Property::Marshall(*in.m_NextResistance, out.NextResistance());
     }
     if (in.HasResistanceBaseline()) {
-      io::Property::UnMarshall(*in.m_ResistanceBaseline, out.ResistanceBaseline());
+      io::Property::Marshall(*in.m_ResistanceBaseline, out.ResistanceBaseline());
     }
     if (in.HasCompliance()) {
-      io::Property::UnMarshall(*in.m_Capacitance, out.Compliance());
+      io::Property::Marshall(*in.m_Capacitance, out.Compliance());
     }
     if (in.HasNextCompliance()) {
-      io::Property::UnMarshall(*in.m_NextCapacitance, out.NextCompliance());
+      io::Property::Marshall(*in.m_NextCapacitance, out.NextCompliance());
     }
     if (in.HasComplianceBaseline()) {
-      io::Property::UnMarshall(*in.m_CapacitanceBaseline, out.ComplianceBaseline());
+      io::Property::Marshall(*in.m_CapacitanceBaseline, out.ComplianceBaseline());
     }
     if (in.HasInertance()) {
-      io::Property::UnMarshall(*in.m_Inductance, out.Inertance());
+      io::Property::Marshall(*in.m_Inductance, out.Inertance());
     }
     if (in.HasNextInertance()) {
-      io::Property::UnMarshall(*in.m_NextInductance, out.NextInertance());
+      io::Property::Marshall(*in.m_NextInductance, out.NextInertance());
     }
     if (in.HasInertanceBaseline()) {
-      io::Property::UnMarshall(*in.m_InductanceBaseline, out.InertanceBaseline());
+      io::Property::Marshall(*in.m_InductanceBaseline, out.InertanceBaseline());
     }
     if (in.HasFlow()) {
-      io::Property::UnMarshall(*in.m_Flux, out.Flow());
+      io::Property::Marshall(*in.m_Flux, out.Flow());
     }
     if (in.HasNextFlow()) {
-      io::Property::UnMarshall(*in.m_NextFlux, out.NextFlow());
+      io::Property::Marshall(*in.m_NextFlux, out.NextFlow());
     }
     if (in.HasFlowSource()) {
-      io::Property::UnMarshall(*in.m_FluxSource, out.FlowSource());
+      io::Property::Marshall(*in.m_FluxSource, out.FlowSource());
     }
     if (in.HasNextFlowSource()) {
-      io::Property::UnMarshall(*in.m_NextFluxSource, out.NextFlowSource());
+      io::Property::Marshall(*in.m_NextFluxSource, out.NextFlowSource());
     }
     if (in.HasFlowSourceBaseline()) {
-      io::Property::UnMarshall(*in.m_FluxSourceBaseline, out.FlowSourceBaseline());
+      io::Property::Marshall(*in.m_FluxSourceBaseline, out.FlowSourceBaseline());
     }
     if (in.HasPressureSource()) {
-      io::Property::UnMarshall(*in.m_PotentialSource, out.PressureSource());
+      io::Property::Marshall(*in.m_PotentialSource, out.PressureSource());
     }
     if (in.HasNextPressureSource()) {
-      io::Property::UnMarshall(*in.m_NextPotentialSource, out.NextPressureSource());
+      io::Property::Marshall(*in.m_NextPotentialSource, out.NextPressureSource());
     }
     if (in.HasPressureSourceBaseline()) {
-      io::Property::UnMarshall(*in.m_PotentialSourceBaseline, out.PressureSourceBaseline());
+      io::Property::Marshall(*in.m_PotentialSourceBaseline, out.PressureSourceBaseline());
     }
     if (in.HasValveBreakdownPressure()) {
-      io::Property::UnMarshall(*in.m_ValveBreakdownPotential, out.ValveBreakdownPressure());
+      io::Property::Marshall(*in.m_ValveBreakdownPotential, out.ValveBreakdownPressure());
     }
   }
   //----------------------------------------------------------------------------------
-  //class SEThermalCircuit
-  void Circuit::Marshall(const CDM::ThermalCircuitData& in, SEThermalCircuit& out)
+  // class SEThermalCircuit
+  void Circuit::UnMarshall(const CDM::ThermalCircuitData& in, SECircuitLedger<THERMAL_LEDGER_TYPES> const& ledger, SEThermalCircuit& out)
   {
-    //Nothing to do
+    // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
+    out.Clear();
+    out.m_Name = in.Name();
+    for (auto name : in.Node()) {
+      auto idx = ledger.nodes.find(name);
+      if (idx == ledger.nodes.end()) {
+        out.Error(out.m_Name + " could not find node " + name.c_str());
+      }
+      out.AddNode(*idx->second);
+    }
+    for (auto name : in.Path()) {
+      auto idx = ledger.paths.find(name);
+      if (idx == ledger.paths.end()) {
+        out.Error(out.m_Name + " could not find path " + name.c_str());
+      }
+      out.AddPath(*idx->second);
+    }
+    for (auto name : in.ReferenceNode()) {
+      auto idx = ledger.nodes.find(name);
+      if (idx == ledger.nodes.end()) {
+        out.Error(out.m_Name + " could not find reference node " + name.c_str());
+      }
+      out.AddReferenceNode(*idx->second);
+    }
+    out.StateChange();
+  }
+  void Circuit::Marshall(const SEThermalCircuit& in, CDM::ThermalCircuitData& out)
+  {
+    out.Name(in.m_Name);
+    if (in.HasReferenceNode()) {
+      for (auto n : in.m_ReferenceNodes)
+        out.ReferenceNode().push_back(n->GetName());
+    }
+    for (auto n : in.m_Nodes)
+      out.Node().push_back(n->GetName());
+    for (auto p : in.m_Paths)
+      out.Path().push_back(p->GetName());
   }
   //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SEThermalCircuit& in, CDM::ThermalCircuitData& out)
-  {
-    //Nothing to do
-  }
-  //----------------------------------------------------------------------------------
-  //class SEThermalCircuitNode
-  void Circuit::Marshall(const CDM::ThermalCircuitNodeData& in, SEThermalCircuitNode& out)
+  // class SEThermalCircuitNode
+  void Circuit::UnMarshall(const CDM::ThermalCircuitNodeData& in, SECircuitLedger<THERMAL_LEDGER_TYPES> const& ledger, SEThermalCircuitNode& out)
   {
 
-    Marshall(static_cast<const CDM::CircuitNodeData>(in), static_cast<SECircuitNode<THERMAL_CIRCUIT_NODE>&>(out));
-    io::Property::Marshall(in.Temperature(), out.GetTemperature());
-    io::Property::Marshall(in.NextTemperature(), out.GetNextTemperature());
-    io::Property::Marshall(in.Heat(), out.GetHeat());
-    io::Property::Marshall(in.NextHeat(), out.GetNextHeat());
-    io::Property::Marshall(in.HeatBaseline(), out.GetHeatBaseline());
+    UnMarshall(static_cast<const CDM::CircuitNodeData>(in), static_cast<SECircuitNode<THERMAL_CIRCUIT_NODE>&>(out));
+    io::Property::UnMarshall(in.Temperature(), out.GetTemperature());
+    io::Property::UnMarshall(in.NextTemperature(), out.GetNextTemperature());
+    io::Property::UnMarshall(in.Heat(), out.GetHeat());
+    io::Property::UnMarshall(in.NextHeat(), out.GetNextHeat());
+    io::Property::UnMarshall(in.HeatBaseline(), out.GetHeatBaseline());
   }
-  //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SEThermalCircuitNode& in, CDM::ThermalCircuitNodeData& out)
+  void Circuit::Marshall(const SEThermalCircuitNode& in, CDM::ThermalCircuitNodeData& out)
   {
 
-    UnMarshall(static_cast<const SECircuitNode<THERMAL_CIRCUIT_NODE>&>(in), static_cast<CDM::CircuitNodeData&>(out));
+    Marshall(static_cast<const SECircuitNode<THERMAL_CIRCUIT_NODE>&>(in), static_cast<CDM::CircuitNodeData&>(out));
     if (in.HasTemperature())
-      io::Property::UnMarshall(*in.m_Potential, out.Temperature());
+      io::Property::Marshall(*in.m_Potential, out.Temperature());
     if (in.HasNextTemperature())
-      io::Property::UnMarshall(*in.m_NextPotential, out.NextTemperature());
+      io::Property::Marshall(*in.m_NextPotential, out.NextTemperature());
     if (in.HasHeat())
-      io::Property::UnMarshall(*in.m_Quantity, out.Heat());
+      io::Property::Marshall(*in.m_Quantity, out.Heat());
     if (in.HasNextHeat())
-      io::Property::UnMarshall(*in.m_NextQuantity, out.NextHeat());
+      io::Property::Marshall(*in.m_NextQuantity, out.NextHeat());
     if (in.HasHeatBaseline())
-      io::Property::UnMarshall(*in.m_QuantityBaseline, out.HeatBaseline());
+      io::Property::Marshall(*in.m_QuantityBaseline, out.HeatBaseline());
   }
   //----------------------------------------------------------------------------------
-  //class SEThermalCircuitPath
-  void Circuit::Marshall(const CDM::ThermalCircuitPathData& in, SEThermalCircuitPath& out)
+  // class SEThermalCircuitPath
+  void Circuit::UnMarshall(const CDM::ThermalCircuitPathData& in, SECircuitLedger<THERMAL_LEDGER_TYPES> const& ledger, SEThermalCircuitPath& out)
   {
-    Marshall(static_cast<const CDM::CircuitPathData&>(in), static_cast<SECircuitPath<THERMAL_CIRCUIT_PATH>&>(out));
-    io::Property::Marshall(in.Resistance(), out.GetResistance());
-    io::Property::Marshall(in.NextResistance(), out.GetNextResistance());
-    io::Property::Marshall(in.ResistanceBaseline(), out.GetResistanceBaseline());
-    io::Property::Marshall(in.Capacitance(), out.GetCapacitance());
-    io::Property::Marshall(in.NextCapacitance(), out.GetNextCapacitance());
-    io::Property::Marshall(in.CapacitanceBaseline(), out.GetCapacitanceBaseline());
-    io::Property::Marshall(in.Inductance(), out.GetInductance());
-    io::Property::Marshall(in.NextInductance(), out.GetNextInductance());
-    io::Property::Marshall(in.InductanceBaseline(), out.GetInductanceBaseline());
-    io::Property::Marshall(in.HeatTransferRate(), out.GetHeatTransferRate());
-    io::Property::Marshall(in.NextHeatTransferRate(), out.GetNextHeatTransferRate());
-    io::Property::Marshall(in.HeatSource(), out.GetHeatSource());
-    io::Property::Marshall(in.NextHeatSource(), out.GetNextHeatSource());
-    io::Property::Marshall(in.HeatSourceBaseline(), out.GetHeatSourceBaseline());
-    io::Property::Marshall(in.TemperatureSource(), out.GetTemperatureSource());
-    io::Property::Marshall(in.NextTemperatureSource(), out.GetNextTemperatureSource());
-    io::Property::Marshall(in.TemperatureSourceBaseline(), out.GetTemperatureSourceBaseline());
-    io::Property::Marshall(in.ValveBreakdownTemperature(), out.GetValveBreakdownTemperature());
+    UnMarshall(static_cast<const CDM::CircuitPathData&>(in), static_cast<SECircuitPath<THERMAL_CIRCUIT_PATH>&>(out));
+    io::Property::UnMarshall(in.Resistance(), out.GetResistance());
+    io::Property::UnMarshall(in.NextResistance(), out.GetNextResistance());
+    io::Property::UnMarshall(in.ResistanceBaseline(), out.GetResistanceBaseline());
+    io::Property::UnMarshall(in.Capacitance(), out.GetCapacitance());
+    io::Property::UnMarshall(in.NextCapacitance(), out.GetNextCapacitance());
+    io::Property::UnMarshall(in.CapacitanceBaseline(), out.GetCapacitanceBaseline());
+    io::Property::UnMarshall(in.Inductance(), out.GetInductance());
+    io::Property::UnMarshall(in.NextInductance(), out.GetNextInductance());
+    io::Property::UnMarshall(in.InductanceBaseline(), out.GetInductanceBaseline());
+    io::Property::UnMarshall(in.HeatTransferRate(), out.GetHeatTransferRate());
+    io::Property::UnMarshall(in.NextHeatTransferRate(), out.GetNextHeatTransferRate());
+    io::Property::UnMarshall(in.HeatSource(), out.GetHeatSource());
+    io::Property::UnMarshall(in.NextHeatSource(), out.GetNextHeatSource());
+    io::Property::UnMarshall(in.HeatSourceBaseline(), out.GetHeatSourceBaseline());
+    io::Property::UnMarshall(in.TemperatureSource(), out.GetTemperatureSource());
+    io::Property::UnMarshall(in.NextTemperatureSource(), out.GetNextTemperatureSource());
+    io::Property::UnMarshall(in.TemperatureSourceBaseline(), out.GetTemperatureSourceBaseline());
+    io::Property::UnMarshall(in.ValveBreakdownTemperature(), out.GetValveBreakdownTemperature());
   }
-  //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SEThermalCircuitPath& in, CDM::ThermalCircuitPathData& out)
+  void Circuit::Marshall(const SEThermalCircuitPath& in, CDM::ThermalCircuitPathData& out)
   {
-    UnMarshall(static_cast<const SECircuitPath<THERMAL_CIRCUIT_PATH>&>(in), static_cast<CDM::CircuitPathData&>(out));
+    Marshall(static_cast<const SECircuitPath<THERMAL_CIRCUIT_PATH>&>(in), static_cast<CDM::CircuitPathData&>(out));
     if (in.HasResistance()) {
-      io::Property::UnMarshall(*in.m_Resistance, out.Resistance());
+      io::Property::Marshall(*in.m_Resistance, out.Resistance());
     }
     if (in.HasNextResistance()) {
-      io::Property::UnMarshall(*in.m_NextResistance, out.NextResistance());
+      io::Property::Marshall(*in.m_NextResistance, out.NextResistance());
     }
     if (in.HasResistanceBaseline()) {
-      io::Property::UnMarshall(*in.m_ResistanceBaseline, out.ResistanceBaseline());
+      io::Property::Marshall(*in.m_ResistanceBaseline, out.ResistanceBaseline());
     }
     if (in.HasCapacitance()) {
-      io::Property::UnMarshall(*in.m_Capacitance, out.Capacitance());
+      io::Property::Marshall(*in.m_Capacitance, out.Capacitance());
     }
     if (in.HasNextCapacitance()) {
-      io::Property::UnMarshall(*in.m_NextCapacitance, out.NextCapacitance());
+      io::Property::Marshall(*in.m_NextCapacitance, out.NextCapacitance());
     }
     if (in.HasCapacitanceBaseline()) {
-      io::Property::UnMarshall(*in.m_CapacitanceBaseline, out.CapacitanceBaseline());
+      io::Property::Marshall(*in.m_CapacitanceBaseline, out.CapacitanceBaseline());
     }
     if (in.HasInductance()) {
-      io::Property::UnMarshall(*in.m_Inductance, out.Inductance());
+      io::Property::Marshall(*in.m_Inductance, out.Inductance());
     }
     if (in.HasNextInductance()) {
-      io::Property::UnMarshall(*in.m_NextInductance, out.NextInductance());
+      io::Property::Marshall(*in.m_NextInductance, out.NextInductance());
     }
     if (in.HasInductanceBaseline()) {
-      io::Property::UnMarshall(*in.m_InductanceBaseline, out.InductanceBaseline());
+      io::Property::Marshall(*in.m_InductanceBaseline, out.InductanceBaseline());
     }
     if (in.HasHeatTransferRate()) {
-      io::Property::UnMarshall(*in.m_Flux, out.HeatTransferRate());
+      io::Property::Marshall(*in.m_Flux, out.HeatTransferRate());
     }
     if (in.HasNextHeatTransferRate()) {
-      io::Property::UnMarshall(*in.m_NextFlux, out.NextHeatTransferRate());
+      io::Property::Marshall(*in.m_NextFlux, out.NextHeatTransferRate());
     }
     if (in.HasHeatSource()) {
-      io::Property::UnMarshall(*in.m_FluxSource, out.HeatSource());
+      io::Property::Marshall(*in.m_FluxSource, out.HeatSource());
     }
     if (in.HasNextHeatSource()) {
-      io::Property::UnMarshall(*in.m_NextFluxSource, out.NextHeatSource());
+      io::Property::Marshall(*in.m_NextFluxSource, out.NextHeatSource());
     }
     if (in.HasHeatSourceBaseline()) {
-      io::Property::UnMarshall(*in.m_FluxSourceBaseline, out.HeatSourceBaseline());
+      io::Property::Marshall(*in.m_FluxSourceBaseline, out.HeatSourceBaseline());
     }
     if (in.HasTemperatureSource()) {
-      io::Property::UnMarshall(*in.m_PotentialSource, out.TemperatureSource());
+      io::Property::Marshall(*in.m_PotentialSource, out.TemperatureSource());
     }
     if (in.HasNextTemperatureSource()) {
-      io::Property::UnMarshall(*in.m_NextPotentialSource, out.NextTemperatureSource());
+      io::Property::Marshall(*in.m_NextPotentialSource, out.NextTemperatureSource());
     }
     if (in.HasTemperatureSourceBaseline()) {
-      io::Property::UnMarshall(*in.m_PotentialSourceBaseline, out.TemperatureSourceBaseline());
+      io::Property::Marshall(*in.m_PotentialSourceBaseline, out.TemperatureSourceBaseline());
     }
     if (in.HasValveBreakdownTemperature()) {
-      io::Property::UnMarshall(*in.m_ValveBreakdownPotential, out.ValveBreakdownTemperature());
+      io::Property::Marshall(*in.m_ValveBreakdownPotential, out.ValveBreakdownTemperature());
     }
   }
   //----------------------------------------------------------------------------------
-  //class SECircuitManager
-  void Circuit::Marshall(const CDM::CircuitManagerData& in, SECircuitManager& out)
+  // class SECircuitManager
+  void Circuit::UnMarshall(const CDM::CircuitManagerData& in, SECircuitManager& out)
   {
     out.Clear();
     for (const CDM::ElectricalCircuitNodeData& n : in.ElectricalNode()) {
-      io::Circuit::Marshall(n, out.CreateNode<ELECTRICAL_LEDGER_TYPES>(n.Name(), out.m_ElectricalLedger));
+      io::Circuit::UnMarshall(n, out.m_ElectricalLedger, out.CreateNode<ELECTRICAL_LEDGER_TYPES>(n.Name(), out.m_ElectricalLedger));
     }
     for (const CDM::ElectricalCircuitPathData& p : in.ElectricalPath()) {
       SEElectricalCircuitNode* src = out.GetNode(p.SourceNode(), out.m_ElectricalLedger);
@@ -405,13 +493,13 @@ namespace io {
       if (tgt == nullptr) {
         throw CommonDataModelException(std::string { "Could not find target node " } + std::string { p.TargetNode() } + " from path " + p.Name().c_str());
       }
-      io::Circuit::Marshall(p, out.CreatePath<ELECTRICAL_LEDGER_TYPES>(*src, *tgt, p.Name(), out.m_ElectricalLedger));
+      io::Circuit::UnMarshall(p, out.m_ElectricalLedger, out.CreatePath<ELECTRICAL_LEDGER_TYPES>(*src, *tgt, p.Name(), out.m_ElectricalLedger));
     }
     for (const CDM::ElectricalCircuitData& c : in.ElectricalCircuit()) {
-      io::Circuit::Marshall(c,out.CreateCircuit<ELECTRICAL_LEDGER_TYPES>(c.Name(), out.m_ElectricalLedger), out.m_ElectricalLedger.nodes, out.m_ElectricalLedger.paths);
+      io::Circuit::UnMarshall(c, out.m_ElectricalLedger, out.CreateCircuit<ELECTRICAL_LEDGER_TYPES>(c.Name(), out.m_ElectricalLedger));
     }
     for (const CDM::FluidCircuitNodeData& n : in.FluidNode()) {
-      io::Circuit::Marshall(n, out.CreateNode<FLUID_LEDGER_TYPES>(n.Name(), out.m_FluidLedger));
+      io::Circuit::UnMarshall(n, out.m_FluidLedger, out.CreateNode<FLUID_LEDGER_TYPES>(n.Name(), out.m_FluidLedger));
     }
     for (const CDM::FluidCircuitPathData& p : in.FluidPath()) {
       SEFluidCircuitNode* src = out.GetNode(p.SourceNode(), out.m_FluidLedger);
@@ -422,13 +510,14 @@ namespace io {
       if (tgt == nullptr) {
         throw CommonDataModelException(std::string { "Could not find target node " } + std::string { p.TargetNode() } + " from path " + p.Name().c_str());
       }
-      io::Circuit::Marshall(p, out.CreatePath<FLUID_LEDGER_TYPES>(*src, *tgt, p.Name(), out.m_FluidLedger));
+      io::Circuit::UnMarshall(p, out.m_FluidLedger, out.CreatePath<FLUID_LEDGER_TYPES>(*src, *tgt, p.Name(), out.m_FluidLedger));
     }
-    for (const CDM::FluidCircuitData& c : in.FluidCircuit())
-      io::Circuit::Marshall(c, out.CreateCircuit<FLUID_LEDGER_TYPES>(c.Name(), out.m_FluidLedger));
-
-    for (const CDM::ThermalCircuitNodeData& n : in.ThermalNode())
-      io::Circuit::Marshall(n, out.CreateNode<THERMAL_LEDGER_TYPES>(n.Name(), out.m_ThermalLedger));
+    for (const CDM::FluidCircuitData& c : in.FluidCircuit()) {
+      io::Circuit::UnMarshall(c, out.m_FluidLedger, out.CreateCircuit<FLUID_LEDGER_TYPES>(c.Name(), out.m_FluidLedger));
+    }
+    for (const CDM::ThermalCircuitNodeData& n : in.ThermalNode()) {
+      io::Circuit::UnMarshall(n, out.m_ThermalLedger, out.CreateNode<THERMAL_LEDGER_TYPES>(n.Name(), out.m_ThermalLedger));
+    }
     for (const CDM::ThermalCircuitPathData& p : in.ThermalPath()) {
       SEThermalCircuitNode* src = out.GetNode(p.SourceNode(), out.m_ThermalLedger);
       if (src == nullptr) {
@@ -438,59 +527,59 @@ namespace io {
       if (tgt == nullptr) {
         throw CommonDataModelException(std::string { "Could not find target node " } + std::string { p.TargetNode() } + " from path " + p.Name().c_str());
       }
-      io::Circuit::Marshall(p, out.CreatePath<THERMAL_LEDGER_TYPES>(*src, *tgt, p.Name(), out.m_ThermalLedger));
+      io::Circuit::UnMarshall(p, out.m_ThermalLedger, out.CreatePath<THERMAL_LEDGER_TYPES>(*src, *tgt, p.Name(), out.m_ThermalLedger));
     }
-    for (const CDM::ThermalCircuitData& c : in.ThermalCircuit())
-      io::Circuit::Marshall(c, out.CreateCircuit<THERMAL_LEDGER_TYPES>(c.Name(), out.m_ThermalLedger));
+    for (const CDM::ThermalCircuitData& c : in.ThermalCircuit()) {
+      io::Circuit::UnMarshall(c, out.m_ThermalLedger, out.CreateCircuit<THERMAL_LEDGER_TYPES>(c.Name(), out.m_ThermalLedger));
+    }
   }
-  //----------------------------------------------------------------------------------
-  void Circuit::UnMarshall(const SECircuitManager& in, CDM::CircuitManagerData& out)
+  void Circuit::Marshall(const SECircuitManager& in, CDM::CircuitManagerData& out)
   {
     for (auto itr : in.m_ElectricalLedger.nodes) {
       auto ecnData = CDM::ElectricalCircuitNodeData();
-      UnMarshall(*itr.second, ecnData);
+      Marshall(*itr.second, ecnData);
       out.ElectricalNode().push_back(ecnData);
     }
     for (auto itr : in.m_ElectricalLedger.paths) {
       auto ecpData = CDM::ElectricalCircuitPathData();
-      UnMarshall(*itr.second, ecpData);
+      Marshall(*itr.second, ecpData);
       out.ElectricalPath().push_back(ecpData);
     }
     for (auto itr : in.m_ElectricalLedger.circuits) {
       auto ecData = CDM::ElectricalCircuitData();
-      UnMarshall(*itr.second, ecData);
+      Marshall(*itr.second, ecData);
       out.ElectricalCircuit().push_back(ecData);
     }
 
     for (auto itr : in.m_FluidLedger.nodes) {
       auto fcnData = CDM::FluidCircuitNodeData();
-      UnMarshall(*itr.second, fcnData);
+      Marshall(*itr.second, fcnData);
       out.FluidNode().push_back(fcnData);
     }
     for (auto itr : in.m_FluidLedger.paths) {
       auto fcpData = CDM::FluidCircuitPathData();
-      UnMarshall(*itr.second, fcpData);
+      Marshall(*itr.second, fcpData);
       out.FluidPath().push_back(fcpData);
     }
     for (auto itr : in.m_FluidLedger.circuits) {
       auto fcData = CDM::FluidCircuitData();
-      UnMarshall(*itr.second, fcData);
+      Marshall(*itr.second, fcData);
       out.FluidCircuit().push_back(fcData);
     }
 
     for (auto itr : in.m_ThermalLedger.nodes) {
       auto tcnData = CDM::ThermalCircuitNodeData();
-      UnMarshall(*itr.second, tcnData);
+      Marshall(*itr.second, tcnData);
       out.ThermalNode().push_back(tcnData);
     }
     for (auto itr : in.m_ThermalLedger.paths) {
       auto tcpData = CDM::ThermalCircuitPathData();
-      UnMarshall(*itr.second, tcpData);
+      Marshall(*itr.second, tcpData);
       out.ThermalPath().push_back(tcpData);
     }
     for (auto itr : in.m_ThermalLedger.circuits) {
       auto tcData = CDM::ThermalCircuitData();
-      UnMarshall(*itr.second, tcData);
+      Marshall(*itr.second, tcData);
       out.ThermalCircuit().push_back(tcData);
     }
   }

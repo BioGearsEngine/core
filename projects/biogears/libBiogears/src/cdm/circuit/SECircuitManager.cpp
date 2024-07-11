@@ -42,7 +42,7 @@ void SECircuitManager::Clear()
 //-------------------------------------------------------------------------------
 bool SECircuitManager::Load(const CDM::CircuitManagerData& in)
 {
-  io::Circuit::Marshall(in, *this);
+  io::Circuit::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ CDM::CircuitManagerData* SECircuitManager::Unload() const
 //-------------------------------------------------------------------------------
 void SECircuitManager::Unload(CDM::CircuitManagerData& data) const
 {
-  io::Circuit::UnMarshall(*this, data);
+  io::Circuit::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SECircuitManager::SetReadOnly(bool b)

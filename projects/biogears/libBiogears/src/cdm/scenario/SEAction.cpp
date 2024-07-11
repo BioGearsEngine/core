@@ -76,8 +76,8 @@ template class vector<biogears::SEAction*>;
 }
 
 namespace biogears {
-SEAction::SEAction()
-  : Loggable()
+SEAction::SEAction(Logger* logger)
+  : Loggable(logger)
 {
   m_Comment = "";
 }
