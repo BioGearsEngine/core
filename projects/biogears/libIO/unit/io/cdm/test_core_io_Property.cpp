@@ -67,8 +67,8 @@ void TEST_FIXTURE_NAME::TearDown()
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 //!
 //!DecimalFormat;
-//! static void Marshall(const CDM::DecimalFormatData& in, SEDecimalFormat& out);
-//! static void UnMarshall(const SEDecimalFormat& in, CDM::DecimalFormatData& out);
+//! static void UnMarshall(const CDM::DecimalFormatData& in, SEDecimalFormat& out);
+//! static void Marshall(const SEDecimalFormat& in, CDM::DecimalFormatData& out);
 TEST_F(TEST_FIXTURE_NAME, DecimalFormat)
 {
 
@@ -82,8 +82,8 @@ TEST_F(TEST_FIXTURE_NAME, DecimalFormat)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -91,8 +91,8 @@ TEST_F(TEST_FIXTURE_NAME, DecimalFormat)
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 //! TYPE FunctionElectricPotentialVsTime
-//! static void Marshall(const CDM::FunctionElectricPotentialVsTimeData& in, SEFunctionElectricPotentialVsTime& out);
-//! static void UnMarshall(const SEFunctionElectricPotentialVsTime& in, CDM::FunctionElectricPotentialVsTimeData& out);
+//! static void UnMarshall(const CDM::FunctionElectricPotentialVsTimeData& in, SEFunctionElectricPotentialVsTime& out);
+//! static void Marshall(const SEFunctionElectricPotentialVsTime& in, CDM::FunctionElectricPotentialVsTimeData& out);
 TEST_F(TEST_FIXTURE_NAME, FunctionElectricPotentialVsTime)
 {
   USING_TYPES(FunctionElectricPotentialVsTime)
@@ -116,8 +116,8 @@ TEST_F(TEST_FIXTURE_NAME, FunctionElectricPotentialVsTime)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -125,8 +125,8 @@ TEST_F(TEST_FIXTURE_NAME, FunctionElectricPotentialVsTime)
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 //!
 //! TYPE Function;
-//! static void Marshall(const CDM::FunctionData& in, SEFunction& out);
-//! static void UnMarshall(const SEFunction& in, CDM::FunctionData& out);
+//! static void UnMarshall(const CDM::FunctionData& in, SEFunction& out);
+//! static void Marshall(const SEFunction& in, CDM::FunctionData& out);
 TEST_F(TEST_FIXTURE_NAME, Function)
 {
   USING_TYPES(Function)
@@ -146,8 +146,8 @@ TEST_F(TEST_FIXTURE_NAME, Function)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -155,8 +155,8 @@ TEST_F(TEST_FIXTURE_NAME, Function)
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 //!
 //! TYPE FunctionVolumeVsTime;
-//! static void Marshall(const CDM::FunctionVolumeVsTimeData& in, SEFunctionVolumeVsTime& out);
-//! static void UnMarshall(const SEFunctionVolumeVsTime& in, CDM::FunctionVolumeVsTimeData& out);
+//! static void UnMarshall(const CDM::FunctionVolumeVsTimeData& in, SEFunctionVolumeVsTime& out);
+//! static void Marshall(const SEFunctionVolumeVsTime& in, CDM::FunctionVolumeVsTimeData& out);
 TEST_F(TEST_FIXTURE_NAME, FunctionVolumeVsTime)
 {
   USING_TYPES(FunctionVolumeVsTime)
@@ -179,16 +179,16 @@ TEST_F(TEST_FIXTURE_NAME, FunctionVolumeVsTime)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
 //!
 //! TYPE HistogramFractionVsLength;
-//! static void Marshall(const CDM::HistogramFractionVsLengthData& in, SEHistogramFractionVsLength& out);
-//! static void UnMarshall(const SEHistogramFractionVsLength& in, CDM::HistogramFractionVsLengthData& out);
+//! static void UnMarshall(const CDM::HistogramFractionVsLengthData& in, SEHistogramFractionVsLength& out);
+//! static void Marshall(const SEHistogramFractionVsLength& in, CDM::HistogramFractionVsLengthData& out);
 TEST_F(TEST_FIXTURE_NAME, HistogramFractionVsLength)
 {
   USING_TYPES(HistogramFractionVsLength)
@@ -210,16 +210,16 @@ TEST_F(TEST_FIXTURE_NAME, HistogramFractionVsLength)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 #include <biogears/cdm/properties/SEHistogram.h>
 //!
 //! TYPE Histogram
-//! static void Marshall(const CDM::HistogramData& in, SEHistogram& out);
-//! static void UnMarshall(const SEHistogram& in, CDM::HistogramData& out);
+//! static void UnMarshall(const CDM::HistogramData& in, SEHistogram& out);
+//! static void Marshall(const SEHistogram& in, CDM::HistogramData& out);
 TEST_F(TEST_FIXTURE_NAME, Histogram)
 {
   USING_TYPES(Histogram)
@@ -239,16 +239,16 @@ TEST_F(TEST_FIXTURE_NAME, Histogram)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 #include <biogears/cdm/properties/SEScalar0To1.h>
 //!
 //! TYPE Scalar0To1
-//! static void Marshall(const CDM::Scalar0To1Data& in, SEScalar0To1& out);
-//! static void UnMarshall(const SEScalar0To1& in, CDM::Scalar0To1Data& out);
+//! static void UnMarshall(const CDM::Scalar0To1Data& in, SEScalar0To1& out);
+//! static void Marshall(const SEScalar0To1& in, CDM::Scalar0To1Data& out);
 TEST_F(TEST_FIXTURE_NAME, 0To1)
 {
   USING_TYPES(Scalar0To1)
@@ -260,16 +260,16 @@ TEST_F(TEST_FIXTURE_NAME, 0To1)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 #include <biogears/cdm/properties/SEScalarAmount.h>
 //!
 //! TYPE ScalarAmount
-//! static void Marshall(const CDM::ScalarAmountData& in, SEScalarAmount& out);
-//! static void UnMarshall(const SEScalarAmount& in, CDM::ScalarAmountData& out);
+//! static void UnMarshall(const CDM::ScalarAmountData& in, SEScalarAmount& out);
+//! static void Marshall(const SEScalarAmount& in, CDM::ScalarAmountData& out);
 TEST_F(TEST_FIXTURE_NAME, Amount)
 {
   USING_TYPES(ScalarAmount)
@@ -281,8 +281,8 @@ TEST_F(TEST_FIXTURE_NAME, Amount)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -290,8 +290,8 @@ TEST_F(TEST_FIXTURE_NAME, Amount)
 #include <biogears/cdm/properties/SEScalarAmountPerMass.h>
 //!
 //! TYPE ScalarAmountPerMass
-//! static void Marshall(const CDM::ScalarAmountPerMassData& in, SEScalarAmountPerMass& out);
-//! static void UnMarshall(const SEScalarAmountPerMass& in, CDM::ScalarAmountPerMassData& out);
+//! static void UnMarshall(const CDM::ScalarAmountPerMassData& in, SEScalarAmountPerMass& out);
+//! static void Marshall(const SEScalarAmountPerMass& in, CDM::ScalarAmountPerMassData& out);
 TEST_F(TEST_FIXTURE_NAME, AmountPerMass)
 {
   USING_TYPES(ScalarAmountPerMass)
@@ -303,8 +303,8 @@ TEST_F(TEST_FIXTURE_NAME, AmountPerMass)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -312,8 +312,8 @@ TEST_F(TEST_FIXTURE_NAME, AmountPerMass)
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 //!
 //! TYPE ScalarAmountPerTime
-//! static void Marshall(const CDM::ScalarAmountPerTimeData& in, SEScalarAmountPerTime& out);
-//! static void UnMarshall(const SEScalarAmountPerTime& in, CDM::ScalarAmountPerTimeData& out);
+//! static void UnMarshall(const CDM::ScalarAmountPerTimeData& in, SEScalarAmountPerTime& out);
+//! static void Marshall(const SEScalarAmountPerTime& in, CDM::ScalarAmountPerTimeData& out);
 TEST_F(TEST_FIXTURE_NAME, AmountPerTime)
 {
   USING_TYPES(ScalarAmountPerTime)
@@ -325,16 +325,16 @@ TEST_F(TEST_FIXTURE_NAME, AmountPerTime)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 //!
 //! TYPE ScalarAmountPerVolume
-//! static void Marshall(const CDM::ScalarAmountPerVolumeData& in, SEScalarAmountPerVolume& out);
-//! static void UnMarshall(const SEScalarAmountPerVolume& in, CDM::ScalarAmountPerVolumeData& out);
+//! static void UnMarshall(const CDM::ScalarAmountPerVolumeData& in, SEScalarAmountPerVolume& out);
+//! static void Marshall(const SEScalarAmountPerVolume& in, CDM::ScalarAmountPerVolumeData& out);
 TEST_F(TEST_FIXTURE_NAME, AmountPerVolume)
 {
   USING_TYPES(ScalarAmountPerVolume)
@@ -346,16 +346,16 @@ TEST_F(TEST_FIXTURE_NAME, AmountPerVolume)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 #include <biogears/cdm/properties/SEScalarArea.h>
 //!
 //! TYPE ScalarArea
-//! static void Marshall(const CDM::ScalarAreaData& in, SEScalarArea& out);
-//! static void UnMarshall(const SEScalarArea& in, CDM::ScalarAreaData& out);
+//! static void UnMarshall(const CDM::ScalarAreaData& in, SEScalarArea& out);
+//! static void Marshall(const SEScalarArea& in, CDM::ScalarAreaData& out);
 TEST_F(TEST_FIXTURE_NAME, Area)
 {
   USING_TYPES(ScalarArea)
@@ -367,16 +367,16 @@ TEST_F(TEST_FIXTURE_NAME, Area)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 #include <biogears/cdm/properties/SEScalarAreaPerTimePressure.h>
 //!
 //! TYPE ScalarAreaPerTimePressure
-//! static void Marshall(const CDM::ScalarAreaPerTimePressureData& in, SEScalarAreaPerTimePressure& out);
-//! static void UnMarshall(const SEScalarAreaPerTimePressure& in, CDM::ScalarAreaPerTimePressureData& out);
+//! static void UnMarshall(const CDM::ScalarAreaPerTimePressureData& in, SEScalarAreaPerTimePressure& out);
+//! static void Marshall(const SEScalarAreaPerTimePressure& in, CDM::ScalarAreaPerTimePressureData& out);
 TEST_F(TEST_FIXTURE_NAME, AreaPerTimePressure)
 {
   USING_TYPES(ScalarAreaPerTimePressure)
@@ -388,8 +388,8 @@ TEST_F(TEST_FIXTURE_NAME, AreaPerTimePressure)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -397,8 +397,8 @@ TEST_F(TEST_FIXTURE_NAME, AreaPerTimePressure)
 
 //!
 //! TYPE ScalarElectricCapacitance
-//! static void Marshall(const CDM::ScalarElectricCapacitanceData& in, SEScalarElectricCapacitance& out);
-//! static void UnMarshall(const SEScalarElectricCapacitance& in, CDM::ScalarElectricCapacitanceData& out);
+//! static void UnMarshall(const CDM::ScalarElectricCapacitanceData& in, SEScalarElectricCapacitance& out);
+//! static void Marshall(const SEScalarElectricCapacitance& in, CDM::ScalarElectricCapacitanceData& out);
 TEST_F(TEST_FIXTURE_NAME, ElectricCapacitance)
 { 
   USING_TYPES(ScalarElectricCapacitance)
@@ -410,8 +410,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricCapacitance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -419,8 +419,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricCapacitance)
 
 //!
 //! TYPE ScalarElectricCharge
-//! static void Marshall(const CDM::ScalarElectricChargeData& in, SEScalarElectricCharge& out);
-//! static void UnMarshall(const SEScalarElectricCharge& in, CDM::ScalarElectricChargeData& out);
+//! static void UnMarshall(const CDM::ScalarElectricChargeData& in, SEScalarElectricCharge& out);
+//! static void Marshall(const SEScalarElectricCharge& in, CDM::ScalarElectricChargeData& out);
 TEST_F(TEST_FIXTURE_NAME, ElectricCharge)
 {   
   USING_TYPES(ScalarElectricCharge)
@@ -432,8 +432,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricCharge)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -441,8 +441,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricCharge)
 
 //!
 //! TYPE ScalarElectricCurrent
-//! static void Marshall(const CDM::ScalarElectricCurrentData& in, SEScalarElectricCurrent& out);
-//! static void UnMarshall(const SEScalarElectricCurrent& in, CDM::ScalarElectricCurrentData& out);
+//! static void UnMarshall(const CDM::ScalarElectricCurrentData& in, SEScalarElectricCurrent& out);
+//! static void Marshall(const SEScalarElectricCurrent& in, CDM::ScalarElectricCurrentData& out);
 TEST_F(TEST_FIXTURE_NAME, ElectricCurrent)
 {      
   USING_TYPES(ScalarElectricCurrent)
@@ -454,8 +454,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricCurrent)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -463,8 +463,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricCurrent)
 
 //!
 //! TYPE ScalarElectricInductance
-//! static void Marshall(const CDM::ScalarElectricInductanceData& in, SEScalarElectricInductance& out);
-//! static void UnMarshall(const SEScalarElectricInductance& in, CDM::ScalarElectricInductanceData& out);
+//! static void UnMarshall(const CDM::ScalarElectricInductanceData& in, SEScalarElectricInductance& out);
+//! static void Marshall(const SEScalarElectricInductance& in, CDM::ScalarElectricInductanceData& out);
 TEST_F(TEST_FIXTURE_NAME, ElectricInductance)
 {       
   USING_TYPES(ScalarElectricInductance)
@@ -476,8 +476,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricInductance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -485,8 +485,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricInductance)
 
 //!
 //! TYPE ScalarElectricPotential
-//! static void Marshall(const CDM::ScalarElectricPotentialData& in, SEScalarElectricPotential& out);
-//! static void UnMarshall(const SEScalarElectricPotential& in, CDM::ScalarElectricPotentialData& out);
+//! static void UnMarshall(const CDM::ScalarElectricPotentialData& in, SEScalarElectricPotential& out);
+//! static void Marshall(const SEScalarElectricPotential& in, CDM::ScalarElectricPotentialData& out);
 TEST_F(TEST_FIXTURE_NAME, ElectricPotential)
 {     
   USING_TYPES(ScalarElectricPotential)
@@ -498,8 +498,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricPotential)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -507,8 +507,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricPotential)
 
 //!
 //! TYPE ScalarElectricResistance
-//! static void Marshall(const CDM::ScalarElectricResistanceData& in, SEScalarElectricResistance& out);
-//! static void UnMarshall(const SEScalarElectricResistance& in, CDM::ScalarElectricResistanceData& out);
+//! static void UnMarshall(const CDM::ScalarElectricResistanceData& in, SEScalarElectricResistance& out);
+//! static void Marshall(const SEScalarElectricResistance& in, CDM::ScalarElectricResistanceData& out);
 TEST_F(TEST_FIXTURE_NAME, ElectricResistance)
 {    
   USING_TYPES(ScalarElectricResistance)
@@ -520,8 +520,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricResistance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -529,8 +529,8 @@ TEST_F(TEST_FIXTURE_NAME, ElectricResistance)
 
 //!
 //! TYPE ScalarEnergy
-//! static void Marshall(const CDM::ScalarEnergyData& in, SEScalarEnergy& out);
-//! static void UnMarshall(const SEScalarEnergy& in, CDM::ScalarEnergyData& out);
+//! static void UnMarshall(const CDM::ScalarEnergyData& in, SEScalarEnergy& out);
+//! static void Marshall(const SEScalarEnergy& in, CDM::ScalarEnergyData& out);
 TEST_F(TEST_FIXTURE_NAME, Energy)
 {     
   USING_TYPES(ScalarEnergy)
@@ -542,8 +542,8 @@ TEST_F(TEST_FIXTURE_NAME, Energy)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -551,8 +551,8 @@ TEST_F(TEST_FIXTURE_NAME, Energy)
 
 //!
 //! TYPE ScalarEnergyPerAmount
-//! static void Marshall(const CDM::ScalarEnergyPerAmountData& in, SEScalarEnergyPerAmount& out);
-//! static void UnMarshall(const SEScalarEnergyPerAmount& in, CDM::ScalarEnergyPerAmountData& out);
+//! static void UnMarshall(const CDM::ScalarEnergyPerAmountData& in, SEScalarEnergyPerAmount& out);
+//! static void Marshall(const SEScalarEnergyPerAmount& in, CDM::ScalarEnergyPerAmountData& out);
 TEST_F(TEST_FIXTURE_NAME, EnergyPerAmount)
 {     
   USING_TYPES(ScalarEnergyPerAmount)
@@ -564,8 +564,8 @@ TEST_F(TEST_FIXTURE_NAME, EnergyPerAmount)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -573,8 +573,8 @@ TEST_F(TEST_FIXTURE_NAME, EnergyPerAmount)
 
 //!
 //! TYPE ScalarEnergyPerMass
-//! static void Marshall(const CDM::ScalarEnergyPerMassData& in, SEScalarEnergyPerMass& out);
-//! static void UnMarshall(const SEScalarEnergyPerMass& in, CDM::ScalarEnergyPerMassData& out);
+//! static void UnMarshall(const CDM::ScalarEnergyPerMassData& in, SEScalarEnergyPerMass& out);
+//! static void Marshall(const SEScalarEnergyPerMass& in, CDM::ScalarEnergyPerMassData& out);
 TEST_F(TEST_FIXTURE_NAME, EnergyPerMass)
 {   
   USING_TYPES(ScalarEnergyPerMass)
@@ -586,8 +586,8 @@ TEST_F(TEST_FIXTURE_NAME, EnergyPerMass)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -595,8 +595,8 @@ TEST_F(TEST_FIXTURE_NAME, EnergyPerMass)
 
 //!
 //! TYPE ScalarFlowCompliance
-//! static void Marshall(const CDM::ScalarFlowComplianceData& in, SEScalarFlowCompliance& out);
-//! static void UnMarshall(const SEScalarFlowCompliance& in, CDM::ScalarFlowComplianceData& out);
+//! static void UnMarshall(const CDM::ScalarFlowComplianceData& in, SEScalarFlowCompliance& out);
+//! static void Marshall(const SEScalarFlowCompliance& in, CDM::ScalarFlowComplianceData& out);
 TEST_F(TEST_FIXTURE_NAME, FlowCompliance)
 {   
   USING_TYPES(ScalarFlowCompliance)
@@ -608,8 +608,8 @@ TEST_F(TEST_FIXTURE_NAME, FlowCompliance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -617,8 +617,8 @@ TEST_F(TEST_FIXTURE_NAME, FlowCompliance)
 
 //!
 //! TYPE ScalarFlowElastance
-//! static void Marshall(const CDM::ScalarFlowElastanceData& in, SEScalarFlowElastance& out);
-//! static void UnMarshall(const SEScalarFlowElastance& in, CDM::ScalarFlowElastanceData& out);
+//! static void UnMarshall(const CDM::ScalarFlowElastanceData& in, SEScalarFlowElastance& out);
+//! static void Marshall(const SEScalarFlowElastance& in, CDM::ScalarFlowElastanceData& out);
 TEST_F(TEST_FIXTURE_NAME, FlowElastance)
 {   
   USING_TYPES(ScalarFlowElastance)
@@ -630,8 +630,8 @@ TEST_F(TEST_FIXTURE_NAME, FlowElastance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -639,8 +639,8 @@ TEST_F(TEST_FIXTURE_NAME, FlowElastance)
 
 //!
 //! TYPE ScalarFlowInertance
-//! static void Marshall(const CDM::ScalarFlowInertanceData& in, SEScalarFlowInertance& out);
-//! static void UnMarshall(const SEScalarFlowInertance& in, CDM::ScalarFlowInertanceData& out);
+//! static void UnMarshall(const CDM::ScalarFlowInertanceData& in, SEScalarFlowInertance& out);
+//! static void Marshall(const SEScalarFlowInertance& in, CDM::ScalarFlowInertanceData& out);
 TEST_F(TEST_FIXTURE_NAME, FlowInertance)
 {    
   USING_TYPES(ScalarFlowInertance)
@@ -652,8 +652,8 @@ TEST_F(TEST_FIXTURE_NAME, FlowInertance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -661,8 +661,8 @@ TEST_F(TEST_FIXTURE_NAME, FlowInertance)
 
 //!
 //! TYPE ScalarFlowResistance
-//! static void Marshall(const CDM::ScalarFlowResistanceData& in, SEScalarFlowResistance& out);
-//! static void UnMarshall(const SEScalarFlowResistance& in, CDM::ScalarFlowResistanceData& out);
+//! static void UnMarshall(const CDM::ScalarFlowResistanceData& in, SEScalarFlowResistance& out);
+//! static void Marshall(const SEScalarFlowResistance& in, CDM::ScalarFlowResistanceData& out);
 TEST_F(TEST_FIXTURE_NAME, FlowResistance)
 {    
   USING_TYPES(ScalarFlowResistance)
@@ -674,8 +674,8 @@ TEST_F(TEST_FIXTURE_NAME, FlowResistance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -683,8 +683,8 @@ TEST_F(TEST_FIXTURE_NAME, FlowResistance)
 
 //!
 //! TYPE ScalarForce
-//! static void Marshall(const CDM::ScalarForceData& in, SEScalarForce& out);
-//! static void UnMarshall(const SEScalarForce& in, CDM::ScalarForceData& out);
+//! static void UnMarshall(const CDM::ScalarForceData& in, SEScalarForce& out);
+//! static void Marshall(const SEScalarForce& in, CDM::ScalarForceData& out);
 TEST_F(TEST_FIXTURE_NAME, Force)
 {    
   USING_TYPES(ScalarForce)
@@ -696,8 +696,8 @@ TEST_F(TEST_FIXTURE_NAME, Force)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -705,8 +705,8 @@ TEST_F(TEST_FIXTURE_NAME, Force)
 
 //!
 //! TYPE ScalarFraction
-//! static void Marshall(const CDM::ScalarFractionData& in, SEScalarFraction& out);
-//! static void UnMarshall(const SEScalarFraction& in, CDM::ScalarFractionData& out);
+//! static void UnMarshall(const CDM::ScalarFractionData& in, SEScalarFraction& out);
+//! static void Marshall(const SEScalarFraction& in, CDM::ScalarFractionData& out);
 TEST_F(TEST_FIXTURE_NAME, Fraction)
 {   
   USING_TYPES(ScalarFraction)
@@ -718,8 +718,8 @@ TEST_F(TEST_FIXTURE_NAME, Fraction)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -727,8 +727,8 @@ TEST_F(TEST_FIXTURE_NAME, Fraction)
 
 //!
 //! TYPE ScalarFrequency
-//! static void Marshall(const CDM::ScalarFrequencyData& in, SEScalarFrequency& out);
-//! static void UnMarshall(const SEScalarFrequency& in, CDM::ScalarFrequencyData& out);
+//! static void UnMarshall(const CDM::ScalarFrequencyData& in, SEScalarFrequency& out);
+//! static void Marshall(const SEScalarFrequency& in, CDM::ScalarFrequencyData& out);
 TEST_F(TEST_FIXTURE_NAME, Frequency)
 {  
   USING_TYPES(ScalarFrequency)
@@ -740,8 +740,8 @@ TEST_F(TEST_FIXTURE_NAME, Frequency)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -749,8 +749,8 @@ TEST_F(TEST_FIXTURE_NAME, Frequency)
 
 //!
 //! TYPE Scalar
-//! static void Marshall(const CDM::ScalarData& in, SEScalar& out);
-//! static void UnMarshall(const SEScalar& in, CDM::ScalarData& out);
+//! static void UnMarshall(const CDM::ScalarData& in, SEScalar& out);
+//! static void Marshall(const SEScalar& in, CDM::ScalarData& out);
 TEST_F(TEST_FIXTURE_NAME, Scalar)
 {   
   USING_TYPES(Scalar)
@@ -762,8 +762,8 @@ TEST_F(TEST_FIXTURE_NAME, Scalar)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -771,8 +771,8 @@ TEST_F(TEST_FIXTURE_NAME, Scalar)
 
 //!
 //! TYPE ScalarHeatCapacitance
-//! static void Marshall(const CDM::ScalarHeatCapacitanceData& in, SEScalarHeatCapacitance& out);
-//! static void UnMarshall(const SEScalarHeatCapacitance& in, CDM::ScalarHeatCapacitanceData& out);
+//! static void UnMarshall(const CDM::ScalarHeatCapacitanceData& in, SEScalarHeatCapacitance& out);
+//! static void Marshall(const SEScalarHeatCapacitance& in, CDM::ScalarHeatCapacitanceData& out);
 TEST_F(TEST_FIXTURE_NAME, HeatCapacitance)
 {   
   USING_TYPES(ScalarHeatCapacitance)
@@ -784,8 +784,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatCapacitance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -793,8 +793,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatCapacitance)
 
 //!
 //! TYPE ScalarHeatCapacitancePerAmount
-//! static void Marshall(const CDM::ScalarHeatCapacitancePerAmountData& in, SEScalarHeatCapacitancePerAmount& out);
-//! static void UnMarshall(const SEScalarHeatCapacitancePerAmount& in, CDM::ScalarHeatCapacitancePerAmountData& out);
+//! static void UnMarshall(const CDM::ScalarHeatCapacitancePerAmountData& in, SEScalarHeatCapacitancePerAmount& out);
+//! static void Marshall(const SEScalarHeatCapacitancePerAmount& in, CDM::ScalarHeatCapacitancePerAmountData& out);
 TEST_F(TEST_FIXTURE_NAME, HeatCapacitancePerAmount)
 {  
   USING_TYPES(ScalarHeatCapacitancePerAmount)
@@ -806,8 +806,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatCapacitancePerAmount)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -815,8 +815,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatCapacitancePerAmount)
 
 //!
 //! TYPE ScalarHeatCapacitancePerMass
-//! static void Marshall(const CDM::ScalarHeatCapacitancePerMassData& in, SEScalarHeatCapacitancePerMass& out);
-//! static void UnMarshall(const SEScalarHeatCapacitancePerMass& in, CDM::ScalarHeatCapacitancePerMassData& out);
+//! static void UnMarshall(const CDM::ScalarHeatCapacitancePerMassData& in, SEScalarHeatCapacitancePerMass& out);
+//! static void Marshall(const SEScalarHeatCapacitancePerMass& in, CDM::ScalarHeatCapacitancePerMassData& out);
 TEST_F(TEST_FIXTURE_NAME, HeatCapacitancePerMass)
 {  
   USING_TYPES(ScalarHeatCapacitancePerMass)
@@ -828,8 +828,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatCapacitancePerMass)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -837,8 +837,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatCapacitancePerMass)
 
 //!
 //! TYPE ScalarHeatConductance
-//! static void Marshall(const CDM::ScalarHeatConductanceData& in, SEScalarHeatConductance& out);
-//! static void UnMarshall(const SEScalarHeatConductance& in, CDM::ScalarHeatConductanceData& out);
+//! static void UnMarshall(const CDM::ScalarHeatConductanceData& in, SEScalarHeatConductance& out);
+//! static void Marshall(const SEScalarHeatConductance& in, CDM::ScalarHeatConductanceData& out);
 TEST_F(TEST_FIXTURE_NAME, HeatConductance)
 {   
   USING_TYPES(ScalarHeatConductance)
@@ -850,8 +850,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatConductance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -859,8 +859,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatConductance)
 
 //!
 //! TYPE ScalarHeatConductancePerArea
-//! static void Marshall(const CDM::ScalarHeatConductancePerAreaData& in, SEScalarHeatConductancePerArea& out);
-//! static void UnMarshall(const SEScalarHeatConductancePerArea& in, CDM::ScalarHeatConductancePerAreaData& out);
+//! static void UnMarshall(const CDM::ScalarHeatConductancePerAreaData& in, SEScalarHeatConductancePerArea& out);
+//! static void Marshall(const SEScalarHeatConductancePerArea& in, CDM::ScalarHeatConductancePerAreaData& out);
 TEST_F(TEST_FIXTURE_NAME, HeatConductancePerArea)
 {  
   USING_TYPES(ScalarHeatConductancePerArea)
@@ -872,8 +872,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatConductancePerArea)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -881,8 +881,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatConductancePerArea)
 
 //!
 //! TYPE ScalarHeatInductance
-//! static void Marshall(const CDM::ScalarHeatInductanceData& in, SEScalarHeatInductance& out);
-//! static void UnMarshall(const SEScalarHeatInductance& in, CDM::ScalarHeatInductanceData& out);
+//! static void UnMarshall(const CDM::ScalarHeatInductanceData& in, SEScalarHeatInductance& out);
+//! static void Marshall(const SEScalarHeatInductance& in, CDM::ScalarHeatInductanceData& out);
 TEST_F(TEST_FIXTURE_NAME, HeatInductance)
 {   
   USING_TYPES(ScalarHeatInductance)
@@ -894,8 +894,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatInductance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -903,8 +903,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatInductance)
 
 //!
 //! TYPE ScalarHeatResistanceArea
-//! static void Marshall(const CDM::ScalarHeatResistanceAreaData& in, SEScalarHeatResistanceArea& out);
-//! static void UnMarshall(const SEScalarHeatResistanceArea& in, CDM::ScalarHeatResistanceAreaData& out);
+//! static void UnMarshall(const CDM::ScalarHeatResistanceAreaData& in, SEScalarHeatResistanceArea& out);
+//! static void Marshall(const SEScalarHeatResistanceArea& in, CDM::ScalarHeatResistanceAreaData& out);
 TEST_F(TEST_FIXTURE_NAME, HeatResistanceArea)
 { 
   USING_TYPES(ScalarHeatResistanceArea)
@@ -916,8 +916,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatResistanceArea)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -925,8 +925,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatResistanceArea)
 
 //!
 //! TYPE ScalarHeatResistance
-//! static void Marshall(const CDM::ScalarHeatResistanceData& in, SEScalarHeatResistance& out);
-//! static void UnMarshall(const SEScalarHeatResistance& in, CDM::ScalarHeatResistanceData& out);
+//! static void UnMarshall(const CDM::ScalarHeatResistanceData& in, SEScalarHeatResistance& out);
+//! static void Marshall(const SEScalarHeatResistance& in, CDM::ScalarHeatResistanceData& out);
 TEST_F(TEST_FIXTURE_NAME, HeatResistance)
 {     
   USING_TYPES(ScalarHeatResistance)
@@ -938,8 +938,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatResistance)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -947,8 +947,8 @@ TEST_F(TEST_FIXTURE_NAME, HeatResistance)
 
 //!
 //! TYPE ScalarInversePressure
-//! static void Marshall(const CDM::ScalarInversePressureData& in, SEScalarInversePressure& out);
-//! static void UnMarshall(const SEScalarInversePressure& in, CDM::ScalarInversePressureData& out);
+//! static void UnMarshall(const CDM::ScalarInversePressureData& in, SEScalarInversePressure& out);
+//! static void Marshall(const SEScalarInversePressure& in, CDM::ScalarInversePressureData& out);
 TEST_F(TEST_FIXTURE_NAME, InversePressure)
 {   
   USING_TYPES(ScalarInversePressure)
@@ -960,8 +960,8 @@ TEST_F(TEST_FIXTURE_NAME, InversePressure)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -969,8 +969,8 @@ TEST_F(TEST_FIXTURE_NAME, InversePressure)
 
 //!
 //! TYPE ScalarInverseVolume
-//! static void Marshall(const CDM::ScalarInverseVolumeData& in, SEScalarInverseVolume& out);
-//! static void UnMarshall(const SEScalarInverseVolume& in, CDM::ScalarInverseVolumeData& out);
+//! static void UnMarshall(const CDM::ScalarInverseVolumeData& in, SEScalarInverseVolume& out);
+//! static void Marshall(const SEScalarInverseVolume& in, CDM::ScalarInverseVolumeData& out);
 TEST_F(TEST_FIXTURE_NAME, InverseVolume)
 { 
   USING_TYPES(ScalarInverseVolume)
@@ -982,8 +982,8 @@ TEST_F(TEST_FIXTURE_NAME, InverseVolume)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -991,8 +991,8 @@ TEST_F(TEST_FIXTURE_NAME, InverseVolume)
 
 //!
 //! TYPE ScalarLength
-//! static void Marshall(const CDM::ScalarLengthData& in, SEScalarLength& out);
-//! static void UnMarshall(const SEScalarLength& in, CDM::ScalarLengthData& out);
+//! static void UnMarshall(const CDM::ScalarLengthData& in, SEScalarLength& out);
+//! static void Marshall(const SEScalarLength& in, CDM::ScalarLengthData& out);
 TEST_F(TEST_FIXTURE_NAME, Length)
 {    
   USING_TYPES(ScalarLength)
@@ -1004,8 +1004,8 @@ TEST_F(TEST_FIXTURE_NAME, Length)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1013,8 +1013,8 @@ TEST_F(TEST_FIXTURE_NAME, Length)
 
 //!
 //! TYPE ScalarLengthPerTime
-//! static void Marshall(const CDM::ScalarLengthPerTimeData& in, SEScalarLengthPerTime& out);
-//! static void UnMarshall(const SEScalarLengthPerTime& in, CDM::ScalarLengthPerTimeData& out);
+//! static void UnMarshall(const CDM::ScalarLengthPerTimeData& in, SEScalarLengthPerTime& out);
+//! static void Marshall(const SEScalarLengthPerTime& in, CDM::ScalarLengthPerTimeData& out);
 TEST_F(TEST_FIXTURE_NAME, LengthPerTime)
 {  
   USING_TYPES(ScalarLengthPerTime)
@@ -1026,8 +1026,8 @@ TEST_F(TEST_FIXTURE_NAME, LengthPerTime)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1035,8 +1035,8 @@ TEST_F(TEST_FIXTURE_NAME, LengthPerTime)
 
 //!
 //! TYPE ScalarLengthPerTimePressure
-//! static void Marshall(const CDM::ScalarLengthPerTimePressureData& in, SEScalarLengthPerTimePressure& out);
-//! static void UnMarshall(const SEScalarLengthPerTimePressure& in, CDM::ScalarLengthPerTimePressureData& out);
+//! static void UnMarshall(const CDM::ScalarLengthPerTimePressureData& in, SEScalarLengthPerTimePressure& out);
+//! static void Marshall(const SEScalarLengthPerTimePressure& in, CDM::ScalarLengthPerTimePressureData& out);
 TEST_F(TEST_FIXTURE_NAME, LengthPerTimePressure)
 {  
   USING_TYPES(ScalarLengthPerTimePressure)
@@ -1048,8 +1048,8 @@ TEST_F(TEST_FIXTURE_NAME, LengthPerTimePressure)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1057,8 +1057,8 @@ TEST_F(TEST_FIXTURE_NAME, LengthPerTimePressure)
 
 //!
 //! TYPE ScalarMass
-//! static void Marshall(const CDM::ScalarMassData& in, SEScalarMass& out);
-//! static void UnMarshall(const SEScalarMass& in, CDM::ScalarMassData& out);
+//! static void UnMarshall(const CDM::ScalarMassData& in, SEScalarMass& out);
+//! static void Marshall(const SEScalarMass& in, CDM::ScalarMassData& out);
 TEST_F(TEST_FIXTURE_NAME, Mass)
 {  
   USING_TYPES(ScalarMass)
@@ -1070,8 +1070,8 @@ TEST_F(TEST_FIXTURE_NAME, Mass)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1079,8 +1079,8 @@ TEST_F(TEST_FIXTURE_NAME, Mass)
 
 //!
 //! TYPE ScalarMassPerAmount
-//! static void Marshall(const CDM::ScalarMassPerAmountData& in, SEScalarMassPerAmount& out);
-//! static void UnMarshall(const SEScalarMassPerAmount& in, CDM::ScalarMassPerAmountData& out);
+//! static void UnMarshall(const CDM::ScalarMassPerAmountData& in, SEScalarMassPerAmount& out);
+//! static void Marshall(const SEScalarMassPerAmount& in, CDM::ScalarMassPerAmountData& out);
 TEST_F(TEST_FIXTURE_NAME, MassPerAmount)
 {  
   USING_TYPES(ScalarMassPerAmount)
@@ -1092,8 +1092,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerAmount)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1101,8 +1101,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerAmount)
 
 //!
 //! TYPE ScalarMassPerAreaTime
-//! static void Marshall(const CDM::ScalarMassPerAreaTimeData& in, SEScalarMassPerAreaTime& out);
-//! static void UnMarshall(const SEScalarMassPerAreaTime& in, CDM::ScalarMassPerAreaTimeData& out);
+//! static void UnMarshall(const CDM::ScalarMassPerAreaTimeData& in, SEScalarMassPerAreaTime& out);
+//! static void Marshall(const SEScalarMassPerAreaTime& in, CDM::ScalarMassPerAreaTimeData& out);
 TEST_F(TEST_FIXTURE_NAME, MassPerAreaTime)
 {   
   USING_TYPES(ScalarMassPerAreaTime)
@@ -1114,8 +1114,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerAreaTime)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1123,8 +1123,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerAreaTime)
 
 //!
 //! TYPE ScalarMassPerMass
-//! static void Marshall(const CDM::ScalarMassPerMassData& in, SEScalarMassPerMass& out);
-//! static void UnMarshall(const SEScalarMassPerMass& in, CDM::ScalarMassPerMassData& out);
+//! static void UnMarshall(const CDM::ScalarMassPerMassData& in, SEScalarMassPerMass& out);
+//! static void Marshall(const SEScalarMassPerMass& in, CDM::ScalarMassPerMassData& out);
 TEST_F(TEST_FIXTURE_NAME, MassPerMass)
 {  
   USING_TYPES(ScalarMassPerMass)
@@ -1136,8 +1136,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerMass)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1145,8 +1145,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerMass)
 
 //!
 //! TYPE ScalarMassPerTime
-//! static void Marshall(const CDM::ScalarMassPerTimeData& in, SEScalarMassPerTime& out);
-//! static void UnMarshall(const SEScalarMassPerTime& in, CDM::ScalarMassPerTimeData& out);
+//! static void UnMarshall(const CDM::ScalarMassPerTimeData& in, SEScalarMassPerTime& out);
+//! static void Marshall(const SEScalarMassPerTime& in, CDM::ScalarMassPerTimeData& out);
 TEST_F(TEST_FIXTURE_NAME, MassPerTime)
 {   
   USING_TYPES(ScalarMassPerTime)
@@ -1158,8 +1158,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerTime)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1167,8 +1167,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerTime)
 
 //!
 //! TYPE ScalarMassPerVolume
-//! static void Marshall(const CDM::ScalarMassPerVolumeData& in, SEScalarMassPerVolume& out);
-//! static void UnMarshall(const SEScalarMassPerVolume& in, CDM::ScalarMassPerVolumeData& out);
+//! static void UnMarshall(const CDM::ScalarMassPerVolumeData& in, SEScalarMassPerVolume& out);
+//! static void Marshall(const SEScalarMassPerVolume& in, CDM::ScalarMassPerVolumeData& out);
 TEST_F(TEST_FIXTURE_NAME, MassPerVolume)
 {  
   USING_TYPES(ScalarMassPerVolume)
@@ -1180,8 +1180,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerVolume)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1189,8 +1189,8 @@ TEST_F(TEST_FIXTURE_NAME, MassPerVolume)
 
 //!
 //! TYPE ScalarNeg1To1
-//! static void Marshall(const CDM::ScalarNeg1To1Data& in, SEScalarNeg1To1& out);
-//! static void UnMarshall(const SEScalarNeg1To1& in, CDM::ScalarNeg1To1Data& out);
+//! static void UnMarshall(const CDM::ScalarNeg1To1Data& in, SEScalarNeg1To1& out);
+//! static void Marshall(const SEScalarNeg1To1& in, CDM::ScalarNeg1To1Data& out);
 TEST_F(TEST_FIXTURE_NAME, Neg1To1)
 {  
   USING_TYPES(ScalarNeg1To1)
@@ -1202,8 +1202,8 @@ TEST_F(TEST_FIXTURE_NAME, Neg1To1)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1211,8 +1211,8 @@ TEST_F(TEST_FIXTURE_NAME, Neg1To1)
 
 //!
 //! TYPE ScalarOsmolality
-//! static void Marshall(const CDM::ScalarOsmolalityData& in, SEScalarOsmolality& out);
-//! static void UnMarshall(const SEScalarOsmolality& in, CDM::ScalarOsmolalityData& out);
+//! static void UnMarshall(const CDM::ScalarOsmolalityData& in, SEScalarOsmolality& out);
+//! static void Marshall(const SEScalarOsmolality& in, CDM::ScalarOsmolalityData& out);
 TEST_F(TEST_FIXTURE_NAME, Osmolality)
 { 
   USING_TYPES(ScalarOsmolality)
@@ -1224,8 +1224,8 @@ TEST_F(TEST_FIXTURE_NAME, Osmolality)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1233,8 +1233,8 @@ TEST_F(TEST_FIXTURE_NAME, Osmolality)
 
 //!
 //! TYPE ScalarOsmolarity
-//! static void Marshall(const CDM::ScalarOsmolarityData& in, SEScalarOsmolarity& out);
-//! static void UnMarshall(const SEScalarOsmolarity& in, CDM::ScalarOsmolarityData& out);
+//! static void UnMarshall(const CDM::ScalarOsmolarityData& in, SEScalarOsmolarity& out);
+//! static void Marshall(const SEScalarOsmolarity& in, CDM::ScalarOsmolarityData& out);
 TEST_F(TEST_FIXTURE_NAME, Osmolarity)
 { 
   USING_TYPES(ScalarOsmolarity)
@@ -1246,8 +1246,8 @@ TEST_F(TEST_FIXTURE_NAME, Osmolarity)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1255,8 +1255,8 @@ TEST_F(TEST_FIXTURE_NAME, Osmolarity)
 
 //!
 //! TYPE ScalarPower
-//! static void Marshall(const CDM::ScalarPowerData& in, SEScalarPower& out);
-//! static void UnMarshall(const SEScalarPower& in, CDM::ScalarPowerData& out);
+//! static void UnMarshall(const CDM::ScalarPowerData& in, SEScalarPower& out);
+//! static void Marshall(const SEScalarPower& in, CDM::ScalarPowerData& out);
 TEST_F(TEST_FIXTURE_NAME, Power)
 {  
   USING_TYPES(ScalarPower)
@@ -1268,8 +1268,8 @@ TEST_F(TEST_FIXTURE_NAME, Power)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1277,8 +1277,8 @@ TEST_F(TEST_FIXTURE_NAME, Power)
 
 //!
 //! TYPE ScalarPowerPerAreaTemperatureToTheFourth
-//! static void Marshall(const CDM::ScalarPowerPerAreaTemperatureToTheFourthData& in, SEScalarPowerPerAreaTemperatureToTheFourth& out);
-//! static void UnMarshall(const SEScalarPowerPerAreaTemperatureToTheFourth& in, CDM::ScalarPowerPerAreaTemperatureToTheFourthData& out);
+//! static void UnMarshall(const CDM::ScalarPowerPerAreaTemperatureToTheFourthData& in, SEScalarPowerPerAreaTemperatureToTheFourth& out);
+//! static void Marshall(const SEScalarPowerPerAreaTemperatureToTheFourth& in, CDM::ScalarPowerPerAreaTemperatureToTheFourthData& out);
 TEST_F(TEST_FIXTURE_NAME, PowerPerAreaTemperatureToTheFourth)
 {   
   USING_TYPES(ScalarPowerPerAreaTemperatureToTheFourth)
@@ -1290,8 +1290,8 @@ TEST_F(TEST_FIXTURE_NAME, PowerPerAreaTemperatureToTheFourth)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1299,8 +1299,8 @@ TEST_F(TEST_FIXTURE_NAME, PowerPerAreaTemperatureToTheFourth)
 
 //!
 //! TYPE ScalarPressure
-//! static void Marshall(const CDM::ScalarPressureData& in, SEScalarPressure& out);
-//! static void UnMarshall(const SEScalarPressure& in, CDM::ScalarPressureData& out);
+//! static void UnMarshall(const CDM::ScalarPressureData& in, SEScalarPressure& out);
+//! static void Marshall(const SEScalarPressure& in, CDM::ScalarPressureData& out);
 TEST_F(TEST_FIXTURE_NAME, Pressure)
 {  
   USING_TYPES(ScalarPressure)
@@ -1312,8 +1312,8 @@ TEST_F(TEST_FIXTURE_NAME, Pressure)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1321,8 +1321,8 @@ TEST_F(TEST_FIXTURE_NAME, Pressure)
 
 //!
 //! TYPE ScalarPressurePerVolume
-//! static void Marshall(const CDM::ScalarPressurePerVolumeData& in, SEScalarPressurePerVolume& out);
-//! static void UnMarshall(const SEScalarPressurePerVolume& in, CDM::ScalarPressurePerVolumeData& out);
+//! static void UnMarshall(const CDM::ScalarPressurePerVolumeData& in, SEScalarPressurePerVolume& out);
+//! static void Marshall(const SEScalarPressurePerVolume& in, CDM::ScalarPressurePerVolumeData& out);
 TEST_F(TEST_FIXTURE_NAME, PressurePerVolume)
 {  
   USING_TYPES(ScalarPressurePerVolume)
@@ -1334,8 +1334,8 @@ TEST_F(TEST_FIXTURE_NAME, PressurePerVolume)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1343,8 +1343,8 @@ TEST_F(TEST_FIXTURE_NAME, PressurePerVolume)
 
 //!
 //! TYPE ScaMlarPressureTimePerArea
-//! static void Marshall(const CDM::ScalarPressureTimePerAreaData& in, SEScalarPressureTimePerArea& out);
-//! static void UnMarshall(const SEScalarPressureTimePerArea& in, CDM::ScalarPressureTimePerAreaData& out);
+//! static void UnMarshall(const CDM::ScalarPressureTimePerAreaData& in, SEScalarPressureTimePerArea& out);
+//! static void Marshall(const SEScalarPressureTimePerArea& in, CDM::ScalarPressureTimePerAreaData& out);
 TEST_F(TEST_FIXTURE_NAME, PressureTimePerArea)
 {   
   USING_TYPES(ScalarPressureTimePerArea)
@@ -1356,8 +1356,8 @@ TEST_F(TEST_FIXTURE_NAME, PressureTimePerArea)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1365,8 +1365,8 @@ TEST_F(TEST_FIXTURE_NAME, PressureTimePerArea)
 
 //!
 //! TYPE ScalarPressureTimePerVolumeArea
-//! static void Marshall(const CDM::ScalarPressureTimePerVolumeAreaData& in, SEScalarPressureTimePerVolumeArea& out);
-//! static void UnMarshall(const SEScalarPressureTimePerVolumeArea& in, CDM::ScalarPressureTimePerVolumeAreaData& out);
+//! static void UnMarshall(const CDM::ScalarPressureTimePerVolumeAreaData& in, SEScalarPressureTimePerVolumeArea& out);
+//! static void Marshall(const SEScalarPressureTimePerVolumeArea& in, CDM::ScalarPressureTimePerVolumeAreaData& out);
 TEST_F(TEST_FIXTURE_NAME, PressureTimePerVolumeArea)
 {     
   USING_TYPES(ScalarPressureTimePerVolumeArea)
@@ -1378,8 +1378,8 @@ TEST_F(TEST_FIXTURE_NAME, PressureTimePerVolumeArea)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1387,8 +1387,8 @@ TEST_F(TEST_FIXTURE_NAME, PressureTimePerVolumeArea)
 
 //!
 //! TYPE ScalarTemperature
-//! static void Marshall(const CDM::ScalarTemperatureData& in, SEScalarTemperature& out);
-//! static void UnMarshall(const SEScalarTemperature& in, CDM::ScalarTemperatureData& out);
+//! static void UnMarshall(const CDM::ScalarTemperatureData& in, SEScalarTemperature& out);
+//! static void Marshall(const SEScalarTemperature& in, CDM::ScalarTemperatureData& out);
 TEST_F(TEST_FIXTURE_NAME, Temperature)
 {  
   USING_TYPES(ScalarTemperature)
@@ -1400,8 +1400,8 @@ TEST_F(TEST_FIXTURE_NAME, Temperature)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1409,8 +1409,8 @@ TEST_F(TEST_FIXTURE_NAME, Temperature)
 
 //!
 //! TYPE ScalarTime
-//! static void Marshall(const CDM::ScalarTimeData& in, SEScalarTime& out);
-//! static void UnMarshall(const SEScalarTime& in, CDM::ScalarTimeData& out);
+//! static void UnMarshall(const CDM::ScalarTimeData& in, SEScalarTime& out);
+//! static void Marshall(const SEScalarTime& in, CDM::ScalarTimeData& out);
 TEST_F(TEST_FIXTURE_NAME, Time)
 {    
   USING_TYPES(ScalarTime)
@@ -1422,8 +1422,8 @@ TEST_F(TEST_FIXTURE_NAME, Time)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1431,8 +1431,8 @@ TEST_F(TEST_FIXTURE_NAME, Time)
 
 //!
 //! TYPE ScalarVolume
-//! static void Marshall(const CDM::ScalarVolumeData& in, SEScalarVolume& out);
-//! static void UnMarshall(const SEScalarVolume& in, CDM::ScalarVolumeData& out);
+//! static void UnMarshall(const CDM::ScalarVolumeData& in, SEScalarVolume& out);
+//! static void Marshall(const SEScalarVolume& in, CDM::ScalarVolumeData& out);
 TEST_F(TEST_FIXTURE_NAME, Volume)
 {  
   USING_TYPES(ScalarVolume)
@@ -1444,8 +1444,8 @@ TEST_F(TEST_FIXTURE_NAME, Volume)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1453,8 +1453,8 @@ TEST_F(TEST_FIXTURE_NAME, Volume)
 
 //!
 //! TYPE ScalarVolumePerPressure
-//! static void Marshall(const CDM::ScalarVolumePerPressureData& in, SEScalarVolumePerPressure& out);
-//! static void UnMarshall(const SEScalarVolumePerPressure& in, CDM::ScalarVolumePerPressureData& out);
+//! static void UnMarshall(const CDM::ScalarVolumePerPressureData& in, SEScalarVolumePerPressure& out);
+//! static void Marshall(const SEScalarVolumePerPressure& in, CDM::ScalarVolumePerPressureData& out);
 TEST_F(TEST_FIXTURE_NAME, VolumePerPressure)
 {   
   USING_TYPES(ScalarVolumePerPressure)
@@ -1466,8 +1466,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerPressure)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1475,8 +1475,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerPressure)
 
 //!
 //! TYPE ScalarVolumePerTimeArea
-//! static void Marshall(const CDM::ScalarVolumePerTimeAreaData& in, SEScalarVolumePerTimeArea& out);
-//! static void UnMarshall(const SEScalarVolumePerTimeArea& in, CDM::ScalarVolumePerTimeAreaData& out);
+//! static void UnMarshall(const CDM::ScalarVolumePerTimeAreaData& in, SEScalarVolumePerTimeArea& out);
+//! static void Marshall(const SEScalarVolumePerTimeArea& in, CDM::ScalarVolumePerTimeAreaData& out);
 TEST_F(TEST_FIXTURE_NAME, VolumePerTimeArea)
 {   
   USING_TYPES(ScalarVolumePerTimeArea)
@@ -1488,8 +1488,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimeArea)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1497,8 +1497,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimeArea)
 
 //!
 //! TYPE ScalarVolumePerTime
-//! static void Marshall(const CDM::ScalarVolumePerTimeData& in, SEScalarVolumePerTime& out);
-//! static void UnMarshall(const SEScalarVolumePerTime& in, CDM::ScalarVolumePerTimeData& out);
+//! static void UnMarshall(const CDM::ScalarVolumePerTimeData& in, SEScalarVolumePerTime& out);
+//! static void Marshall(const SEScalarVolumePerTime& in, CDM::ScalarVolumePerTimeData& out);
 TEST_F(TEST_FIXTURE_NAME, VolumePerTime)
 {    
   USING_TYPES(ScalarVolumePerTime)
@@ -1510,8 +1510,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTime)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1519,8 +1519,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTime)
 
 //!
 //! TYPE ScalarVolumePerTimeMass
-//! static void Marshall(const CDM::ScalarVolumePerTimeMassData& in, SEScalarVolumePerTimeMass& out);
-//! static void UnMarshall(const SEScalarVolumePerTimeMass& in, CDM::ScalarVolumePerTimeMassData& out);
+//! static void UnMarshall(const CDM::ScalarVolumePerTimeMassData& in, SEScalarVolumePerTimeMass& out);
+//! static void Marshall(const SEScalarVolumePerTimeMass& in, CDM::ScalarVolumePerTimeMassData& out);
 TEST_F(TEST_FIXTURE_NAME, VolumePerTimeMass)
 {    
   USING_TYPES(ScalarVolumePerTimeMass)
@@ -1532,8 +1532,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimeMass)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1541,8 +1541,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimeMass)
 
 //!
 //! TYPE ScalarVolumePerTimePressureArea
-//! static void Marshall(const CDM::ScalarVolumePerTimePressureAreaData& in, SEScalarVolumePerTimePressureArea& out);
-//! static void UnMarshall(const SEScalarVolumePerTimePressureArea& in, CDM::ScalarVolumePerTimePressureAreaData& out);
+//! static void UnMarshall(const CDM::ScalarVolumePerTimePressureAreaData& in, SEScalarVolumePerTimePressureArea& out);
+//! static void Marshall(const SEScalarVolumePerTimePressureArea& in, CDM::ScalarVolumePerTimePressureAreaData& out);
 TEST_F(TEST_FIXTURE_NAME, VolumePerTimePressureArea)
 {    
   USING_TYPES(ScalarVolumePerTimePressureArea)
@@ -1554,8 +1554,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimePressureArea)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1563,8 +1563,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimePressureArea)
 
 //!
 //! TYPE ScalarVolumePerTimePressure
-//! static void Marshall(const CDM::ScalarVolumePerTimePressureData& in, SEScalarVolumePerTimePressure& out);
-//! static void UnMarshall(const SEScalarVolumePerTimePressure& in, CDM::ScalarVolumePerTimePressureData& out);
+//! static void UnMarshall(const CDM::ScalarVolumePerTimePressureData& in, SEScalarVolumePerTimePressure& out);
+//! static void Marshall(const SEScalarVolumePerTimePressure& in, CDM::ScalarVolumePerTimePressureData& out);
 TEST_F(TEST_FIXTURE_NAME, VolumePerTimePressure)
 {     
   USING_TYPES(ScalarVolumePerTimePressure)
@@ -1576,8 +1576,8 @@ TEST_F(TEST_FIXTURE_NAME, VolumePerTimePressure)
 
   EXPECT_NE(source, sink);
 
-  Property::UnMarshall(source, data);
-  Property::Marshall(data, sink);
+  Property::Marshall(source, data);
+  Property::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

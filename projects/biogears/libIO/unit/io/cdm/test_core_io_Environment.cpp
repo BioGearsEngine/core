@@ -21,6 +21,7 @@
 #include <gtest/gtest.h>
 
 #include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/utils/Logger.h>
 
@@ -106,8 +107,8 @@ public:
 // class SEEnvironmentalConditions;
 //!
 //! TYPE ThermalApplication
-//! static void Marshall(const CDM::EnvironmentalConditions& in, SEEnvironmentalConditions& out);
-//! static void UnMarshall(const SEEnvironmentalConditions& in, CDM::EnvironmentalConditions& out);
+//! static void UnMarshall(const CDM::EnvironmentalConditions& in, SEEnvironmentalConditions& out);
+//! static void Marshall(const SEEnvironmentalConditions& in, CDM::EnvironmentalConditions& out);
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 TEST_F(TEST_FIXTURE_NAME, EnvironmentalConditions)
 {
@@ -146,8 +147,8 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentalConditions)
   source.AddAmbientAerosol(*sarin, biogears::SEScalarMassPerVolume { 33, biogears::MassPerVolumeUnit::g_Per_L });
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -155,8 +156,8 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentalConditions)
 // class SEActiveHeating;
 //!
 //! TYPE ActiveHeating
-//! static void Marshall(const CDM::ActiveHeating& in, SEActiveHeating& out);
-//! static void UnMarshall(const SEActiveHeating& in, CDM::ActiveHeating& out);
+//! static void UnMarshall(const CDM::ActiveHeating& in, SEActiveHeating& out);
+//! static void Marshall(const SEActiveHeating& in, CDM::ActiveHeating& out);
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
 TEST_F(TEST_FIXTURE_NAME, ActiveHeating)
 {
@@ -174,8 +175,8 @@ TEST_F(TEST_FIXTURE_NAME, ActiveHeating)
 
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -183,8 +184,8 @@ TEST_F(TEST_FIXTURE_NAME, ActiveHeating)
 // class SEActiveCooling;
 //!
 //! TYPE ActiveCooling
-//! static void Marshall(const CDM::ActiveCooling& in, SEActiveCooling& out);
-//! static void UnMarshall(const SEActiveCooling& in, CDM::ActiveCooling& out);
+//! static void UnMarshall(const CDM::ActiveCooling& in, SEActiveCooling& out);
+//! static void Marshall(const SEActiveCooling& in, CDM::ActiveCooling& out);
 #include <biogears/cdm/system/environment/SEActiveCooling.h>
 TEST_F(TEST_FIXTURE_NAME, ActiveCooling)
 {
@@ -202,8 +203,8 @@ TEST_F(TEST_FIXTURE_NAME, ActiveCooling)
 
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -211,8 +212,8 @@ TEST_F(TEST_FIXTURE_NAME, ActiveCooling)
 // class SEAppliedTemperature;
 //!
 //! TYPE AppliedTemperature
-//! static void Marshall(const CDM::AppliedTemperature& in, SEAppliedTemperature& out);
-//! static void UnMarshall(const SEAppliedTemperature& in, CDM::AppliedTemperature& out);
+//! static void UnMarshall(const CDM::AppliedTemperature& in, SEAppliedTemperature& out);
+//! static void Marshall(const SEAppliedTemperature& in, CDM::AppliedTemperature& out);
 #include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 TEST_F(TEST_FIXTURE_NAME, AppliedTemperature)
 {
@@ -231,8 +232,8 @@ TEST_F(TEST_FIXTURE_NAME, AppliedTemperature)
 
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -240,8 +241,8 @@ TEST_F(TEST_FIXTURE_NAME, AppliedTemperature)
 // class SEEnvironment;
 //!
 //! TYPE Environment
-//! static void Marshall(const CDM::Environment& in, SEEnvironment& out);
-//! static void UnMarshall(const SEEnvironment& in, CDM::Environment& out);
+//! static void UnMarshall(const CDM::Environment& in, SEEnvironment& out);
+//! static void Marshall(const SEEnvironment& in, CDM::Environment& out);
 #include <biogears/cdm/system/environment/SEEnvironment.h>
 TEST_F(TEST_FIXTURE_NAME, Environment)
 {
@@ -297,8 +298,8 @@ TEST_F(TEST_FIXTURE_NAME, Environment)
 
   EXPECT_NE(source, sink);
 
-  Environment::UnMarshall(source, data);
-  Environment::Marshall(data, sink);
+  Environment::Marshall(source, data);
+  Environment::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

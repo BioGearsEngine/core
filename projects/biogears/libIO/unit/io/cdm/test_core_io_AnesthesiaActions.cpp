@@ -21,6 +21,7 @@
 #include <gtest/gtest.h>
 
 #include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
@@ -115,8 +116,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SEAnesthesiaMachineConfiguration;
 //!
 //! TYPE AnesthesiaMachineConfiguration
-//! static void Marshall(const CDM::AnesthesiaMachineConfigurationData& in, SEAnesthesiaMachineConfiguration& out);
-//! static void UnMarshall(const SEAnesthesiaMachineConfiguration& in, CDM::AnesthesiaMachineConfigurationData& out);
+//! static void UnMarshall(const CDM::AnesthesiaMachineConfigurationData& in, SEAnesthesiaMachineConfiguration& out);
+//! static void Marshall(const SEAnesthesiaMachineConfiguration& in, CDM::AnesthesiaMachineConfigurationData& out);
 TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineConfiguration)
 {
   USING_TYPES(AnesthesiaMachineConfiguration)
@@ -151,8 +152,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineConfiguration)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -161,8 +162,8 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineConfiguration)
 // class SEExpiratoryValveLeak;
 //!
 //! TYPE ExpiratoryValveLeak
-//! static void Marshall(const CDM::ExpiratoryValveLeakData& in, SEExpiratoryValveLeak& out);
-//! static void UnMarshall(const SEExpiratoryValveLeak& in, CDM::ExpiratoryValveLeakData& out);
+//! static void UnMarshall(const CDM::ExpiratoryValveLeakData& in, SEExpiratoryValveLeak& out);
+//! static void Marshall(const SEExpiratoryValveLeak& in, CDM::ExpiratoryValveLeakData& out);
 TEST_F(TEST_FIXTURE_NAME, ExpiratoryValveLeak)
 {
   USING_TYPES(ExpiratoryValveLeak)
@@ -175,8 +176,8 @@ TEST_F(TEST_FIXTURE_NAME, ExpiratoryValveLeak)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -185,8 +186,8 @@ TEST_F(TEST_FIXTURE_NAME, ExpiratoryValveLeak)
 // class SEExpiratoryValveObstruction;
 //!
 //! TYPE ExpiratoryValveObstruction
-//! static void Marshall(const CDM::ExpiratoryValveObstructionData& in, SEExpiratoryValveObstruction& out);
-//! static void UnMarshall(const SEExpiratoryValveObstruction& in, CDM::ExpiratoryValveObstructionData& out);
+//! static void UnMarshall(const CDM::ExpiratoryValveObstructionData& in, SEExpiratoryValveObstruction& out);
+//! static void Marshall(const SEExpiratoryValveObstruction& in, CDM::ExpiratoryValveObstructionData& out);
 TEST_F(TEST_FIXTURE_NAME, ExpiratoryValveObstruction)
 {
   USING_TYPES(ExpiratoryValveObstruction)
@@ -199,8 +200,8 @@ TEST_F(TEST_FIXTURE_NAME, ExpiratoryValveObstruction)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -208,8 +209,8 @@ TEST_F(TEST_FIXTURE_NAME, ExpiratoryValveObstruction)
 // class SEInspiratoryValveLeak;
 //!
 //! TYPE InspiratoryValveLeak
-//! static void Marshall(const CDM::InspiratoryValveLeakData& in, SEInspiratoryValveLeak& out);
-//! static void UnMarshall(const SEInspiratoryValveLeak& in, CDM::InspiratoryValveLeakData& out);
+//! static void UnMarshall(const CDM::InspiratoryValveLeakData& in, SEInspiratoryValveLeak& out);
+//! static void Marshall(const SEInspiratoryValveLeak& in, CDM::InspiratoryValveLeakData& out);
 TEST_F(TEST_FIXTURE_NAME, InspiratoryValveLeak)
 {
   USING_TYPES(InspiratoryValveLeak)
@@ -222,8 +223,8 @@ TEST_F(TEST_FIXTURE_NAME, InspiratoryValveLeak)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -231,8 +232,8 @@ TEST_F(TEST_FIXTURE_NAME, InspiratoryValveLeak)
 // class SEInspiratoryValveObstruction;
 //!
 //! TYPE InspiratoryValveObstruction
-//! static void Marshall(const CDM::InspiratoryValveObstructionData& in, SEInspiratoryValveObstruction& out);
-//! static void UnMarshall(const SEInspiratoryValveObstruction& in, CDM::InspiratoryValveObstructionData& out);
+//! static void UnMarshall(const CDM::InspiratoryValveObstructionData& in, SEInspiratoryValveObstruction& out);
+//! static void Marshall(const SEInspiratoryValveObstruction& in, CDM::InspiratoryValveObstructionData& out);
 TEST_F(TEST_FIXTURE_NAME, InspiratoryValveObstruction)
 {
   USING_TYPES(InspiratoryValveObstruction)
@@ -245,8 +246,8 @@ TEST_F(TEST_FIXTURE_NAME, InspiratoryValveObstruction)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -254,8 +255,8 @@ TEST_F(TEST_FIXTURE_NAME, InspiratoryValveObstruction)
 // class SEMaskLeak;
 //!
 //! TYPE MaskLeak
-//! static void Marshall(const CDM::MaskLeakData& in, SEMaskLeak& out);
-//! static void UnMarshall(const SEMaskLeak& in, CDM::MaskLeakData& out);
+//! static void UnMarshall(const CDM::MaskLeakData& in, SEMaskLeak& out);
+//! static void Marshall(const SEMaskLeak& in, CDM::MaskLeakData& out);
 TEST_F(TEST_FIXTURE_NAME, MaskLeak)
 {
   USING_TYPES(MaskLeak)
@@ -268,8 +269,8 @@ TEST_F(TEST_FIXTURE_NAME, MaskLeak)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -277,8 +278,8 @@ TEST_F(TEST_FIXTURE_NAME, MaskLeak)
 // class SESodaLimeFailure;
 //!
 //! TYPE SodaLimeFailure
-//! static void Marshall(const CDM::SodaLimeFailureData& in, SESodaLimeFailure& out);
-//! static void UnMarshall(const SESodaLimeFailure& in, CDM::SodaLimeFailureData& out);
+//! static void UnMarshall(const CDM::SodaLimeFailureData& in, SESodaLimeFailure& out);
+//! static void Marshall(const SESodaLimeFailure& in, CDM::SodaLimeFailureData& out);
 TEST_F(TEST_FIXTURE_NAME, SodaLimeFailure)
 {
   USING_TYPES(SodaLimeFailure)
@@ -291,8 +292,8 @@ TEST_F(TEST_FIXTURE_NAME, SodaLimeFailure)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -300,8 +301,8 @@ TEST_F(TEST_FIXTURE_NAME, SodaLimeFailure)
 // class SETubeCuffLeak;
 //!
 //! TYPE TubeCuffLeak
-//! static void Marshall(const CDM::TubeCuffLeakData& in, SETubeCuffLeak& out);
-//! static void UnMarshall(const SETubeCuffLeak& in, CDM::TubeCuffLeakData& out);
+//! static void UnMarshall(const CDM::TubeCuffLeakData& in, SETubeCuffLeak& out);
+//! static void Marshall(const SETubeCuffLeak& in, CDM::TubeCuffLeakData& out);
 TEST_F(TEST_FIXTURE_NAME, TubeCuffLeak)
 {
   USING_TYPES(TubeCuffLeak)
@@ -314,8 +315,8 @@ TEST_F(TEST_FIXTURE_NAME, TubeCuffLeak)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -323,8 +324,8 @@ TEST_F(TEST_FIXTURE_NAME, TubeCuffLeak)
 // class SEVaporizerFailure;
 //!
 //! TYPE VaporizerFailure
-//! static void Marshall(const CDM::VaporizerFailureData& in, SEVaporizerFailure& out);
-//! static void UnMarshall(const SEVaporizerFailure& in, CDM::VaporizerFailureData& out);
+//! static void UnMarshall(const CDM::VaporizerFailureData& in, SEVaporizerFailure& out);
+//! static void Marshall(const SEVaporizerFailure& in, CDM::VaporizerFailureData& out);
 TEST_F(TEST_FIXTURE_NAME, VaporizerFailure)
 {
   USING_TYPES(VaporizerFailure)
@@ -337,8 +338,8 @@ TEST_F(TEST_FIXTURE_NAME, VaporizerFailure)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -346,8 +347,8 @@ TEST_F(TEST_FIXTURE_NAME, VaporizerFailure)
 // class SEVentilatorPressureLoss;
 //!
 //! TYPE VentilatorPressureLoss
-//! static void Marshall(const CDM::VentilatorPressureLossData& in, SEVentilatorPressureLoss& out);
-//! static void UnMarshall(const SEVentilatorPressureLoss& in, CDM::VentilatorPressureLossData& out);
+//! static void UnMarshall(const CDM::VentilatorPressureLossData& in, SEVentilatorPressureLoss& out);
+//! static void Marshall(const SEVentilatorPressureLoss& in, CDM::VentilatorPressureLossData& out);
 TEST_F(TEST_FIXTURE_NAME, VentilatorPressureLoss)
 {
   USING_TYPES(VentilatorPressureLoss)
@@ -360,8 +361,8 @@ TEST_F(TEST_FIXTURE_NAME, VentilatorPressureLoss)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -369,8 +370,8 @@ TEST_F(TEST_FIXTURE_NAME, VentilatorPressureLoss)
 // class SEYPieceDisconnect;
 //!
 //! TYPE YPieceDisconnect
-//! static void Marshall(const CDM::YPieceDisconnectData& in, SEYPieceDisconnect& out);
-//! static void UnMarshall(const SEYPieceDisconnect& in, CDM::YPieceDisconnectData& out);
+//! static void UnMarshall(const CDM::YPieceDisconnectData& in, SEYPieceDisconnect& out);
+//! static void Marshall(const SEYPieceDisconnect& in, CDM::YPieceDisconnectData& out);
 TEST_F(TEST_FIXTURE_NAME, YPieceDisconnect)
 {
   USING_TYPES(YPieceDisconnect)
@@ -383,8 +384,8 @@ TEST_F(TEST_FIXTURE_NAME, YPieceDisconnect)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -392,8 +393,8 @@ TEST_F(TEST_FIXTURE_NAME, YPieceDisconnect)
 // class SEOxygenWallPortPressureLoss;
 //!
 //! TYPE OxygenWallPortPressureLoss
-//! static void Marshall(const CDM::OxygenWallPortPressureLossData& in, SEOxygenWallPortPressureLoss& out);
-//! static void UnMarshall(const SEOxygenWallPortPressureLoss& in, CDM::OxygenWallPortPressureLossData& out);
+//! static void UnMarshall(const CDM::OxygenWallPortPressureLossData& in, SEOxygenWallPortPressureLoss& out);
+//! static void Marshall(const SEOxygenWallPortPressureLoss& in, CDM::OxygenWallPortPressureLossData& out);
 TEST_F(TEST_FIXTURE_NAME, OxygenWallPortPressureLoss)
 {
   USING_TYPES(OxygenWallPortPressureLoss)
@@ -406,8 +407,8 @@ TEST_F(TEST_FIXTURE_NAME, OxygenWallPortPressureLoss)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -415,8 +416,8 @@ TEST_F(TEST_FIXTURE_NAME, OxygenWallPortPressureLoss)
 // class SEOxygenTankPressureLoss;
 //!
 //! TYPE OxygenTankPressureLoss
-//! static void Marshall(const CDM::OxygenTankPressureLossData& in, SEOxygenTankPressureLoss& out);
-//! static void UnMarshall(const SEOxygenTankPressureLoss& in, CDM::OxygenTankPressureLossData& out);
+//! static void UnMarshall(const CDM::OxygenTankPressureLossData& in, SEOxygenTankPressureLoss& out);
+//! static void Marshall(const SEOxygenTankPressureLoss& in, CDM::OxygenTankPressureLossData& out);
 TEST_F(TEST_FIXTURE_NAME, OxygenTankPressureLoss)
 {
   USING_TYPES(OxygenTankPressureLoss)
@@ -429,8 +430,8 @@ TEST_F(TEST_FIXTURE_NAME, OxygenTankPressureLoss)
 
   EXPECT_NE(source, sink);
 
-  AnesthesiaActions::UnMarshall(source, data);
-  AnesthesiaActions::Marshall(data, sink);
+  AnesthesiaActions::Marshall(source, data);
+  AnesthesiaActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
