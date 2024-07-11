@@ -20,6 +20,7 @@
 
 #include <gtest/gtest.h>
 
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/utils/Logger.h>
 
 #include <io/cdm/PatientActions.h>
@@ -67,13 +68,12 @@ void TEST_FIXTURE_NAME::TearDown()
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 
-
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
-//class SEPatientAssessmentRequest;
+// class SEPatientAssessmentRequest;
 //!
 //! TYPE PatientAssessmentRequest
-//! static void Marshall(const CDM::PatientAssessmentRequestData& in, SEPatientAssessmentRequest& out);
-//! static void UnMarshall(const SEPatientAssessmentRequest& in, CDM::PatientAssessmentRequestData& out);
+//! static void UnMarshall(const CDM::PatientAssessmentRequestData& in, SEPatientAssessmentRequest& out);
+//! static void Marshall(const SEPatientAssessmentRequest& in, CDM::PatientAssessmentRequestData& out);
 TEST_F(TEST_FIXTURE_NAME, PatientAssessmentRequest)
 {
   USING_TYPES(PatientAssessmentRequest)
@@ -86,19 +86,19 @@ TEST_F(TEST_FIXTURE_NAME, PatientAssessmentRequest)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
-//class SEAcuteStress;
+// class SEAcuteStress;
 //!
 //! TYPE AcuteStress
-//! static void Marshall(const CDM::AcuteStressData& in, SEAcuteStress& out);
-//! static void UnMarshall(const SEAcuteStress& in, CDM::AcuteStressData& out);
+//! static void UnMarshall(const CDM::AcuteStressData& in, SEAcuteStress& out);
+//! static void Marshall(const SEAcuteStress& in, CDM::AcuteStressData& out);
 TEST_F(TEST_FIXTURE_NAME, AcuteStress)
 {
   USING_TYPES(AcuteStress)
@@ -111,18 +111,18 @@ TEST_F(TEST_FIXTURE_NAME, AcuteStress)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
-//class SEAirwayObstruction;
+// class SEAirwayObstruction;
 //!
 //! TYPE AirwayObstruction
-//! static void Marshall(const CDM::AirwayObstructionData& in, SEAirwayObstruction& out);
-//! static void UnMarshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out);
+//! static void UnMarshall(const CDM::AirwayObstructionData& in, SEAirwayObstruction& out);
+//! static void Marshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out);
 TEST_F(TEST_FIXTURE_NAME, AirwayObstruction)
 {
   USING_TYPES(AirwayObstruction)
@@ -135,18 +135,18 @@ TEST_F(TEST_FIXTURE_NAME, AirwayObstruction)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEApnea.h>
-//class SEApnea;
+// class SEApnea;
 //!
 //! TYPE Apnea
-//! static void Marshall(const CDM::ApneaData& in, SEApnea& out);
-//! static void UnMarshall(const SEApnea& in, CDM::ApneaData& out);
+//! static void UnMarshall(const CDM::ApneaData& in, SEApnea& out);
+//! static void Marshall(const SEApnea& in, CDM::ApneaData& out);
 TEST_F(TEST_FIXTURE_NAME, Apnea)
 {
   USING_TYPES(Apnea)
@@ -159,18 +159,18 @@ TEST_F(TEST_FIXTURE_NAME, Apnea)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
-//class SEAsthmaAttack;
+// class SEAsthmaAttack;
 //!
 //! TYPE AsthmaAttack
-//! static void Marshall(const CDM::AsthmaAttackData& in, SEAsthmaAttack& out);
-//! static void UnMarshall(const SEAsthmaAttack& in, CDM::AsthmaAttackData& out);
+//! static void UnMarshall(const CDM::AsthmaAttackData& in, SEAsthmaAttack& out);
+//! static void Marshall(const SEAsthmaAttack& in, CDM::AsthmaAttackData& out);
 TEST_F(TEST_FIXTURE_NAME, AsthmaAttack)
 {
   USING_TYPES(AsthmaAttack)
@@ -183,18 +183,18 @@ TEST_F(TEST_FIXTURE_NAME, AsthmaAttack)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEBrainInjury.h>
-//class SEBrainInjury;
+// class SEBrainInjury;
 //!
 //! TYPE BrainInjury
-//! static void Marshall(const CDM::BrainInjuryData& in, SEBrainInjury& out);
-//! static void UnMarshall(const SEBrainInjury& in, CDM::BrainInjuryData& out);
+//! static void UnMarshall(const CDM::BrainInjuryData& in, SEBrainInjury& out);
+//! static void Marshall(const SEBrainInjury& in, CDM::BrainInjuryData& out);
 TEST_F(TEST_FIXTURE_NAME, BrainInjury)
 {
   USING_TYPES(BrainInjury)
@@ -208,18 +208,18 @@ TEST_F(TEST_FIXTURE_NAME, BrainInjury)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEBronchoconstriction.h>
-//class SEBronchoconstriction;
+// class SEBronchoconstriction;
 //!
 //! TYPE Bronchoconstriction
-//! static void Marshall(const CDM::BronchoconstrictionData& in, SEBronchoconstriction& out);
-//! static void UnMarshall(const SEBronchoconstriction& in, CDM::BronchoconstrictionData& out);
+//! static void UnMarshall(const CDM::BronchoconstrictionData& in, SEBronchoconstriction& out);
+//! static void Marshall(const SEBronchoconstriction& in, CDM::BronchoconstrictionData& out);
 TEST_F(TEST_FIXTURE_NAME, Bronchoconstriction)
 {
   USING_TYPES(Bronchoconstriction)
@@ -232,18 +232,18 @@ TEST_F(TEST_FIXTURE_NAME, Bronchoconstriction)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEBurnWound.h>
-//class SEBurnWound;
+// class SEBurnWound;
 //!
 //! TYPE BurnWound
-//! static void Marshall(const CDM::BurnWoundData& in, SEBurnWound& out);
-//! static void UnMarshall(const SEBurnWound& in, CDM::BurnWoundData& out);
+//! static void UnMarshall(const CDM::BurnWoundData& in, SEBurnWound& out);
+//! static void Marshall(const SEBurnWound& in, CDM::BurnWoundData& out);
 TEST_F(TEST_FIXTURE_NAME, BurnWound)
 {
   USING_TYPES(BurnWound)
@@ -256,18 +256,18 @@ TEST_F(TEST_FIXTURE_NAME, BurnWound)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
-//class SECardiacArrest;
+// class SECardiacArrest;
 //!
 //! TYPE CardiacArrest
-//! static void Marshall(const CDM::CardiacArrestData& in, SECardiacArrest& out);
-//! static void UnMarshall(const SECardiacArrest& in, CDM::CardiacArrestData& out);
+//! static void UnMarshall(const CDM::CardiacArrestData& in, SECardiacArrest& out);
+//! static void Marshall(const SECardiacArrest& in, CDM::CardiacArrestData& out);
 TEST_F(TEST_FIXTURE_NAME, CardiacArrest)
 {
   USING_TYPES(CardiacArrest)
@@ -279,18 +279,18 @@ TEST_F(TEST_FIXTURE_NAME, CardiacArrest)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
-//class SEChestCompression;
+// class SEChestCompression;
 //!
 //! TYPE ChestCompression
-//! static void Marshall(const CDM::ChestCompressionData& in, SEChestCompression& out);
-//! static void UnMarshall(const SEChestCompression& in, CDM::ChestCompressionData& out);
+//! static void UnMarshall(const CDM::ChestCompressionData& in, SEChestCompression& out);
+//! static void Marshall(const SEChestCompression& in, CDM::ChestCompressionData& out);
 TEST_F(TEST_FIXTURE_NAME, ChestCompression)
 {
   USING_TYPES(ChestCompression)
@@ -302,19 +302,19 @@ TEST_F(TEST_FIXTURE_NAME, ChestCompression)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
 #include <biogears/cdm/properties/SEScalarForce.h>
-//class SEChestCompressionForce;
+// class SEChestCompressionForce;
 //!
 //! TYPE ChestCompressionForce
-//! static void Marshall(const CDM::ChestCompressionForceData& in, SEChestCompressionForce& out);
-//! static void UnMarshall(const SEChestCompressionForce& in, CDM::ChestCompressionForceData& out);
+//! static void UnMarshall(const CDM::ChestCompressionForceData& in, SEChestCompressionForce& out);
+//! static void Marshall(const SEChestCompressionForce& in, CDM::ChestCompressionForceData& out);
 TEST_F(TEST_FIXTURE_NAME, ChestCompressionForce)
 {
   USING_TYPES(ChestCompressionForce)
@@ -327,19 +327,19 @@ TEST_F(TEST_FIXTURE_NAME, ChestCompressionForce)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEChestCompressionForceScale.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-//class SEChestCompressionForceScale;
+// class SEChestCompressionForceScale;
 //!
 //! TYPE ChestCompressionForceScale
-//! static void Marshall(const CDM::ChestCompressionForceScaleData& in, SEChestCompressionForceScale& out);
-//! static void UnMarshall(const SEChestCompressionForceScale& in, CDM::ChestCompressionForceScaleData& out);
+//! static void UnMarshall(const CDM::ChestCompressionForceScaleData& in, SEChestCompressionForceScale& out);
+//! static void Marshall(const SEChestCompressionForceScale& in, CDM::ChestCompressionForceScaleData& out);
 TEST_F(TEST_FIXTURE_NAME, ChestCompressionForceScale)
 {
   USING_TYPES(ChestCompressionForceScale)
@@ -353,18 +353,18 @@ TEST_F(TEST_FIXTURE_NAME, ChestCompressionForceScale)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEChestOcclusiveDressing.h>
-//class SEChestOcclusiveDressing;
+// class SEChestOcclusiveDressing;
 //!
 //! TYPE ChestOcclusiveDressing
-//! static void Marshall(const CDM::ChestOcclusiveDressingData& in, SEChestOcclusiveDressing& out);
-//! static void UnMarshall(const SEChestOcclusiveDressing& in, CDM::ChestOcclusiveDressingData& out);
+//! static void UnMarshall(const CDM::ChestOcclusiveDressingData& in, SEChestOcclusiveDressing& out);
+//! static void Marshall(const SEChestOcclusiveDressing& in, CDM::ChestOcclusiveDressingData& out);
 TEST_F(TEST_FIXTURE_NAME, ChestOcclusiveDressing)
 {
   USING_TYPES(ChestOcclusiveDressing)
@@ -378,17 +378,16 @@ TEST_F(TEST_FIXTURE_NAME, ChestOcclusiveDressing)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
-
 #include <biogears/cdm/patient/actions/SEEbola.h>
 // class SEEbola;
-//static void Marshall(const CDM::EbolaData& in, SEEbola& out);
-//static void UnMarshall(const SEEbola& in, CDM::EbolaData& out);
+// static void UnMarshall(const CDM::EbolaData& in, SEEbola& out);
+// static void Marshall(const SEEbola& in, CDM::EbolaData& out);
 
 TEST_F(TEST_FIXTURE_NAME, Ebola)
 {
@@ -399,21 +398,21 @@ TEST_F(TEST_FIXTURE_NAME, Ebola)
 
   source.SetComment("Test Comment");
   source.SetSeverity(CDM::enumInfectionSeverity::Moderate);
-  
+
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
-//class SEForcedInhale;
+// class SEForcedInhale;
 //!
 //! TYPE ForcedInhale
-//! static void Marshall(const CDM::ForcedInhaleData& in, SEForcedInhale& out);
-//! static void UnMarshall(const SEForcedInhale& in, CDM::ForcedInhaleData& out);
+//! static void UnMarshall(const CDM::ForcedInhaleData& in, SEForcedInhale& out);
+//! static void Marshall(const SEForcedInhale& in, CDM::ForcedInhaleData& out);
 TEST_F(TEST_FIXTURE_NAME, ForcedInhale)
 {
   USING_TYPES(ForcedInhale)
@@ -427,18 +426,18 @@ TEST_F(TEST_FIXTURE_NAME, ForcedInhale)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
-//class SEForcedExhale;
+// class SEForcedExhale;
 //!
 //! TYPE ForcedExhale
-//! static void Marshall(const CDM::ForcedExhaleData& in, SEForcedExhale& out);
-//! static void UnMarshall(const SEForcedExhale& in, CDM::ForcedExhaleData& out);
+//! static void UnMarshall(const CDM::ForcedExhaleData& in, SEForcedExhale& out);
+//! static void Marshall(const SEForcedExhale& in, CDM::ForcedExhaleData& out);
 TEST_F(TEST_FIXTURE_NAME, ForcedExhale)
 {
   USING_TYPES(ForcedExhale)
@@ -452,18 +451,18 @@ TEST_F(TEST_FIXTURE_NAME, ForcedExhale)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
-//class SEBreathHold;
+// class SEBreathHold;
 //!
 //! TYPE BreathHold
-//! static void Marshall(const CDM::BreathHoldData& in, SEBreathHold& out);
-//! static void UnMarshall(const SEBreathHold& in, CDM::BreathHoldData& out);
+//! static void UnMarshall(const CDM::BreathHoldData& in, SEBreathHold& out);
+//! static void Marshall(const SEBreathHold& in, CDM::BreathHoldData& out);
 TEST_F(TEST_FIXTURE_NAME, BreathHold)
 {
   USING_TYPES(BreathHold)
@@ -476,18 +475,18 @@ TEST_F(TEST_FIXTURE_NAME, BreathHold)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
-//class SEUseInhaler;
+// class SEUseInhaler;
 //!
 //! TYPE UseInhaler
-//! static void Marshall(const CDM::UseInhalerData& in, SEUseInhaler& out);
-//! static void UnMarshall(const SEUseInhaler& in, CDM::UseInhalerData& out);
+//! static void UnMarshall(const CDM::UseInhalerData& in, SEUseInhaler& out);
+//! static void Marshall(const SEUseInhaler& in, CDM::UseInhalerData& out);
 TEST_F(TEST_FIXTURE_NAME, UseInhaler)
 {
   USING_TYPES(UseInhaler)
@@ -499,18 +498,18 @@ TEST_F(TEST_FIXTURE_NAME, UseInhaler)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
-//class SEConsciousRespiration;
+// class SEConsciousRespiration;
 //!
 //! TYPE ConsciousRespiration
-//! static void Marshall(const CDM::ConsciousRespirationData& in, SEConsciousRespiration& out);
-//! static void UnMarshall(const SEConsciousRespiration& in, CDM::ConsciousRespirationData& out);
+//! static void UnMarshall(const CDM::ConsciousRespirationData& in, SEConsciousRespiration& out);
+//! static void Marshall(const SEConsciousRespiration& in, CDM::ConsciousRespirationData& out);
 TEST_F(TEST_FIXTURE_NAME, ConsciousRespiration)
 {
   USING_TYPES(ConsciousRespiration)
@@ -522,8 +521,8 @@ TEST_F(TEST_FIXTURE_NAME, ConsciousRespiration)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -532,11 +531,11 @@ TEST_F(TEST_FIXTURE_NAME, ConsciousRespiration)
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-//class SEConsumeNutrients;
+// class SEConsumeNutrients;
 //!
 //! TYPE ConsumeNutrients
-//! static void Marshall(const CDM::ConsumeNutrientsData& in, SEConsumeNutrients& out);
-//! static void UnMarshall(const SEConsumeNutrients& in, CDM::ConsumeNutrientsData& out);
+//! static void UnMarshall(const CDM::ConsumeNutrientsData& in, SEConsumeNutrients& out);
+//! static void Marshall(const SEConsumeNutrients& in, CDM::ConsumeNutrientsData& out);
 TEST_F(TEST_FIXTURE_NAME, ConsumeNutrients)
 {
   USING_TYPES(ConsumeNutrients)
@@ -557,18 +556,18 @@ TEST_F(TEST_FIXTURE_NAME, ConsumeNutrients)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEExercise.h>
-//class SEExercise;
+// class SEExercise;
 //!
 //! TYPE Exercise
-//! static void Marshall(const CDM::ExerciseData& in, SEExercise& out);
-//! static void UnMarshall(const SEExercise& in, CDM::ExerciseData& out);
+//! static void UnMarshall(const CDM::ExerciseData& in, SEExercise& out);
+//! static void Marshall(const SEExercise& in, CDM::ExerciseData& out);
 TEST_F(TEST_FIXTURE_NAME, Exercise)
 {
   USING_TYPES(Exercise)
@@ -586,8 +585,8 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 
@@ -603,8 +602,8 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 
@@ -620,8 +619,8 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 
@@ -638,8 +637,8 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 
@@ -654,19 +653,19 @@ TEST_F(TEST_FIXTURE_NAME, Exercise)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-//class SEHemorrhage;
+// class SEHemorrhage;
 //!
 //! TYPE Hemorrhage
-//! static void Marshall(const CDM::HemorrhageData& in, SEHemorrhage& out);
-//! static void UnMarshall(const SEHemorrhage& in, CDM::HemorrhageData& out);
+//! static void UnMarshall(const CDM::HemorrhageData& in, SEHemorrhage& out);
+//! static void Marshall(const SEHemorrhage& in, CDM::HemorrhageData& out);
 TEST_F(TEST_FIXTURE_NAME, Hemorrhage)
 {
   USING_TYPES(Hemorrhage)
@@ -681,19 +680,19 @@ TEST_F(TEST_FIXTURE_NAME, Hemorrhage)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-//class SEInfection;
+// class SEInfection;
 //!
 //! TYPE Infection
-//! static void Marshall(const CDM::InfectionData& in, SEInfection& out);
-//! static void UnMarshall(const SEInfection& in, CDM::InfectionData& out);
+//! static void UnMarshall(const CDM::InfectionData& in, SEInfection& out);
+//! static void Marshall(const SEInfection& in, CDM::InfectionData& out);
 TEST_F(TEST_FIXTURE_NAME, Infection)
 {
   USING_TYPES(Infection)
@@ -708,18 +707,18 @@ TEST_F(TEST_FIXTURE_NAME, Infection)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEIntubation.h>
-//class SEIntubation;
+// class SEIntubation;
 //!
 //! TYPE Intubation
-//! static void Marshall(const CDM::IntubationData& in, SEIntubation& out);
-//! static void UnMarshall(const SEIntubation& in, CDM::IntubationData& out);
+//! static void UnMarshall(const CDM::IntubationData& in, SEIntubation& out);
+//! static void Marshall(const SEIntubation& in, CDM::IntubationData& out);
 TEST_F(TEST_FIXTURE_NAME, Intubation)
 {
   USING_TYPES(Intubation)
@@ -732,19 +731,19 @@ TEST_F(TEST_FIXTURE_NAME, Intubation)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-//class SEMechanicalVentilation;
+// class SEMechanicalVentilation;
 //!
 //! TYPE MechanicalVentilation
-//!     static void Marshall(const CDM::MechanicalVentilationData& in, const SESubstanceManager& substances, SEMechanicalVentilation& out);
-//!     static void UnMarshall(const SEMechanicalVentilation& in, CDM::MechanicalVentilationData& out);
+//!     static void UnMarshall(const CDM::MechanicalVentilationData& in, const SESubstanceManager& substances, SEMechanicalVentilation& out);
+//!     static void Marshall(const SEMechanicalVentilation& in, CDM::MechanicalVentilationData& out);
 TEST_F(TEST_FIXTURE_NAME, MechanicalVentilation)
 {
   USING_TYPES(MechanicalVentilation)
@@ -762,17 +761,17 @@ TEST_F(TEST_FIXTURE_NAME, MechanicalVentilation)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, mgr, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, mgr, sink);
 
   EXPECT_EQ(source, sink);
 }
 #include <biogears/cdm/patient/actions/SENasalCannula.h>
 // class SENasalCannula;
 //!
-//! TYPE NasalCannula 
-//! static void Marshall(const CDM::NasalCannulaData& in, SENasalCannula& out);
-//! static void UnMarshall(const SENasalCannula& in, CDM::NasalCannulaData& out);
+//! TYPE NasalCannula
+//! static void UnMarshall(const CDM::NasalCannulaData& in, SENasalCannula& out);
+//! static void Marshall(const SENasalCannula& in, CDM::NasalCannulaData& out);
 TEST_F(TEST_FIXTURE_NAME, NasalCannula)
 {
   USING_TYPES(NasalCannula)
@@ -785,23 +784,22 @@ TEST_F(TEST_FIXTURE_NAME, NasalCannula)
 
   source.SetComment("Test Comment");
   source.GetFlowRate().SetValue(1.23, biogears::VolumePerTimeUnit::L_Per_s);
-  
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
-//class SENeedleDecompression;
+// class SENeedleDecompression;
 //!
 //! TYPE NeedleDecompression
-//! static void Marshall(const CDM::NeedleDecompressionData& in, SENeedleDecompression& out);
-//! static void UnMarshall(const SENeedleDecompression& in, CDM::NeedleDecompressionData& out);
-//! 
+//! static void UnMarshall(const CDM::NeedleDecompressionData& in, SENeedleDecompression& out);
+//! static void Marshall(const SENeedleDecompression& in, CDM::NeedleDecompressionData& out);
+//!
 TEST_F(TEST_FIXTURE_NAME, NeedleDecompression)
 {
   USING_TYPES(NeedleDecompression)
@@ -815,18 +813,18 @@ TEST_F(TEST_FIXTURE_NAME, NeedleDecompression)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
-//class SEPainStimulus;
+// class SEPainStimulus;
 //!
 //! TYPE PainStimulus
-//! static void Marshall(const CDM::PainStimulusData& in, SEPainStimulus& out);
-//! static void UnMarshall(const SEPainStimulus& in, CDM::PainStimulusData& out);
+//! static void UnMarshall(const CDM::PainStimulusData& in, SEPainStimulus& out);
+//! static void Marshall(const SEPainStimulus& in, CDM::PainStimulusData& out);
 TEST_F(TEST_FIXTURE_NAME, PainStimulus)
 {
   USING_TYPES(PainStimulus)
@@ -840,18 +838,18 @@ TEST_F(TEST_FIXTURE_NAME, PainStimulus)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
-//class SEPericardialEffusion;
+// class SEPericardialEffusion;
 //!
 //! TYPE PericardialEffusion
-//! static void Marshall(const CDM::PericardialEffusionData& in, SEPericardialEffusion& out);
-//! static void UnMarshall(const SEPericardialEffusion& in, CDM::PericardialEffusionData& out);
+//! static void UnMarshall(const CDM::PericardialEffusionData& in, SEPericardialEffusion& out);
+//! static void Marshall(const SEPericardialEffusion& in, CDM::PericardialEffusionData& out);
 TEST_F(TEST_FIXTURE_NAME, PericardialEffusion)
 {
   USING_TYPES(PericardialEffusion)
@@ -864,18 +862,18 @@ TEST_F(TEST_FIXTURE_NAME, PericardialEffusion)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
-//class SEPulmonaryShunt;
+// class SEPulmonaryShunt;
 //!
 //! TYPE PulmonaryShunt
-//! static void Marshall(const CDM::PulmonaryShuntData& in, SEPulmonaryShunt& out);
-//! static void UnMarshall(const SEPulmonaryShunt& in, CDM::PulmonaryShuntData& out);
+//! static void UnMarshall(const CDM::PulmonaryShuntData& in, SEPulmonaryShunt& out);
+//! static void Marshall(const SEPulmonaryShunt& in, CDM::PulmonaryShuntData& out);
 TEST_F(TEST_FIXTURE_NAME, PulmonaryShunt)
 {
   USING_TYPES(PulmonaryShunt)
@@ -888,19 +886,19 @@ TEST_F(TEST_FIXTURE_NAME, PulmonaryShunt)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-//class SESubstanceBolus;
+// class SESubstanceBolus;
 //!
 //! TYPE SubstanceBolus
-//! static void Marshall(const CDM::SubstanceBolusData& in, SESubstanceBolus& out);
-//! static void UnMarshall(const SESubstanceBolus& in, CDM::SubstanceBolusData& out);
+//! static void UnMarshall(const CDM::SubstanceBolusData& in, SESubstanceBolus& out);
+//! static void Marshall(const SESubstanceBolus& in, CDM::SubstanceBolusData& out);
 TEST_F(TEST_FIXTURE_NAME, SubstanceBolus)
 {
   USING_TYPES(SubstanceBolus)
@@ -921,18 +919,18 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolus)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/substance/SESubstanceManager.h>
-//class SESubstanceBolusState;
+// class SESubstanceBolusState;
 //!
 //! TYPE SubstanceBolusState
-//! static void Marshall(const CDM::SubstanceBolusStateData& in, SESubstanceBolusState& out);
-//! static void UnMarshall(const SESubstanceBolusState& in, CDM::SubstanceBolusStateData& out);
+//! static void UnMarshall(const CDM::SubstanceBolusStateData& in, SESubstanceBolusState& out);
+//! static void Marshall(const SESubstanceBolusState& in, CDM::SubstanceBolusStateData& out);
 TEST_F(TEST_FIXTURE_NAME, SubstanceBolusState)
 {
   USING_TYPES(SubstanceBolusState)
@@ -950,19 +948,19 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolusState)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-//class SESubstanceCompoundInfusion;
+// class SESubstanceCompoundInfusion;
 //!
 //! TYPE SubstanceCompoundInfusion
-//! static void Marshall(const CDM::SubstanceCompoundInfusionData& in, SESubstanceCompoundInfusion& out);
-//! static void UnMarshall(const SESubstanceCompoundInfusion& in, CDM::SubstanceCompoundInfusionData& out);
+//! static void UnMarshall(const CDM::SubstanceCompoundInfusionData& in, SESubstanceCompoundInfusion& out);
+//! static void Marshall(const SESubstanceCompoundInfusion& in, CDM::SubstanceCompoundInfusionData& out);
 TEST_F(TEST_FIXTURE_NAME, SubstanceCompoundInfusion)
 {
   USING_TYPES(SubstanceCompoundInfusion)
@@ -981,19 +979,19 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompoundInfusion)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
-//class SESubstanceInfusion;
+// class SESubstanceInfusion;
 //!
 //! TYPE SubstanceInfusion
-//! static void Marshall(const CDM::SubstanceInfusionData& in, SESubstanceInfusion& out);
-//! static void UnMarshall(const SESubstanceInfusion& in, CDM::SubstanceInfusionData& out);
+//! static void UnMarshall(const CDM::SubstanceInfusionData& in, SESubstanceInfusion& out);
+//! static void Marshall(const SESubstanceInfusion& in, CDM::SubstanceInfusionData& out);
 TEST_F(TEST_FIXTURE_NAME, SubstanceInfusion)
 {
   USING_TYPES(SubstanceInfusion)
@@ -1011,8 +1009,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceInfusion)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1021,14 +1019,14 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceInfusion)
 // class SESleep;
 //!
 //! TYPE Sleep
-//! static void Marshall(const CDM::SleepData& in, SESleep& out);
-//! static void UnMarshall(const SESleep& in, CDM::SleepData& out);
+//! static void UnMarshall(const CDM::SleepData& in, SESleep& out);
+//! static void Marshall(const SESleep& in, CDM::SleepData& out);
 TEST_F(TEST_FIXTURE_NAME, Sleep)
 {
   USING_TYPES(Sleep)
 
   biogears::Logger logger;
-  SEType source { }, sink { };
+  SEType source {}, sink {};
   CDMType data;
 
   source.SetComment("Test Comment");
@@ -1036,8 +1034,8 @@ TEST_F(TEST_FIXTURE_NAME, Sleep)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1046,8 +1044,8 @@ TEST_F(TEST_FIXTURE_NAME, Sleep)
 // class SESubstanceNasalDose;
 //!
 //! TYPE SubstanceNasalDose
-//! static void Marshall(const CDM::SubstanceNasalDoseData& in, SESubstanceNasalDose& out);
-//! static void UnMarshall(const SESubstanceNasalDose& in, CDM::SubstanceNasalDoseData& out);
+//! static void UnMarshall(const CDM::SubstanceNasalDoseData& in, SESubstanceNasalDose& out);
+//! static void Marshall(const SESubstanceNasalDose& in, CDM::SubstanceNasalDoseData& out);
 TEST_F(TEST_FIXTURE_NAME, SubstanceNasalDose)
 {
   USING_TYPES(SubstanceNasalDose)
@@ -1060,12 +1058,12 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceNasalDose)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.GetDose().SetValue( 2.0, biogears::MassUnit::kg);
+  source.GetDose().SetValue(2.0, biogears::MassUnit::kg);
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1073,8 +1071,8 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceNasalDose)
 // class NasalState;
 //!
 //! TYPE SENasalState
-//! static void Marshall(const CDM::NasalStateData& in, SENasalState& out);
-//! static void UnMarshall(const SENasalState& in, CDM::NasalStateData& out);
+//! static void UnMarshall(const CDM::NasalStateData& in, SENasalState& out);
+//! static void Marshall(const SENasalState& in, CDM::NasalStateData& out);
 TEST_F(TEST_FIXTURE_NAME, NasalState)
 {
   USING_TYPES(NasalState)
@@ -1086,16 +1084,15 @@ TEST_F(TEST_FIXTURE_NAME, NasalState)
   SEType source { *naloxone }, sink { *naloxone };
   CDMType data;
 
-  source.GetTotalNasalDose().SetValue( 1.1, biogears::MassUnit::kg);
-  //source.GetVenaCavaConcentration().SetValue(2.2, biogears::MassPerVolumeUnit::g_Per_L);
+  source.GetTotalNasalDose().SetValue(1.1, biogears::MassUnit::kg);
+  // source.GetVenaCavaConcentration().SetValue(2.2, biogears::MassPerVolumeUnit::g_Per_L);
   source.GetUnreleasedNasalMasses().emplace_back(3.2, biogears::MassUnit::g);
   source.GetReleasedNasalMasses().emplace_back(4.3, biogears::MassUnit::g);
-  
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1104,8 +1101,8 @@ TEST_F(TEST_FIXTURE_NAME, NasalState)
 // class SESubstanceOralDose;
 //!
 //! TYPE SubstanceOralDose
-//! static void Marshall(const CDM::SubstanceOralDoseData& in, SESubstanceOralDose& out);
-//! static void UnMarshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out);
+//! static void UnMarshall(const CDM::SubstanceOralDoseData& in, SESubstanceOralDose& out);
+//! static void Marshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out);
 TEST_F(TEST_FIXTURE_NAME, SubstanceOralDose)
 {
   USING_TYPES(SubstanceOralDose)
@@ -1123,16 +1120,16 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceOralDose)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SETransmucosalState;
 //!
 //! TYPE TransmucosalState
-//! static void Marshall(const CDM::TransmucosalStateData& in, SETransmucosalState& out);
-//! static void UnMarshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out);
+//! static void UnMarshall(const CDM::TransmucosalStateData& in, SETransmucosalState& out);
+//! static void Marshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out);
 TEST_F(TEST_FIXTURE_NAME, TransmucosalState)
 {
   USING_TYPES(TransmucosalState)
@@ -1151,8 +1148,8 @@ TEST_F(TEST_FIXTURE_NAME, TransmucosalState)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
@@ -1161,15 +1158,15 @@ TEST_F(TEST_FIXTURE_NAME, TransmucosalState)
 // class SETourniquet;
 //!
 //! TYPE Tourniquet
-//! static void Marshall(const CDM::TourniquetData& in, SETourniquet& out);
-//! static void UnMarshall(const SETourniquet& in, CDM::TourniquetData& out);
-//! 
+//! static void UnMarshall(const CDM::TourniquetData& in, SETourniquet& out);
+//! static void Marshall(const SETourniquet& in, CDM::TourniquetData& out);
+//!
 TEST_F(TEST_FIXTURE_NAME, Tourniquet)
 {
   USING_TYPES(Tourniquet)
 
   biogears::Logger logger;
-  SEType source {  }, sink {  };
+  SEType source {}, sink {};
   CDMType data;
 
   source.SetComment("Test Comment");
@@ -1178,19 +1175,19 @@ TEST_F(TEST_FIXTURE_NAME, Tourniquet)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
-//class SETensionPneumothorax;
+// class SETensionPneumothorax;
 //!
 //! TYPE TensionPneumothorax
 //!
-//! static void Marshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out);
-//! static void UnMarshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out);
+//! static void UnMarshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out);
+//! static void Marshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out);
 TEST_F(TEST_FIXTURE_NAME, TensionPneumothorax)
 {
   USING_TYPES(TensionPneumothorax)
@@ -1205,18 +1202,18 @@ TEST_F(TEST_FIXTURE_NAME, TensionPneumothorax)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEUrinate.h>
-//class SEUrinate;
+// class SEUrinate;
 //!
 //! TYPE Urinate
-//! static void Marshall(const CDM::UrinateData& in, SEUrinate& out);
-//! static void UnMarshall(const SEUrinate& in, CDM::UrinateData& out);
+//! static void UnMarshall(const CDM::UrinateData& in, SEUrinate& out);
+//! static void Marshall(const SEUrinate& in, CDM::UrinateData& out);
 TEST_F(TEST_FIXTURE_NAME, Urinate)
 {
   USING_TYPES(Urinate)
@@ -1228,18 +1225,18 @@ TEST_F(TEST_FIXTURE_NAME, Urinate)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 #include <biogears/cdm/patient/actions/SEOverride.h>
-//class SEOverride;
+// class SEOverride;
 //!
 //! TYPE Override
-//! static void Marshall(const CDM::OverrideData& in, SEOverride& out);
-//! static void UnMarshall(const SEOverride& in, CDM::OverrideData& out);
+//! static void UnMarshall(const CDM::OverrideData& in, SEOverride& out);
+//! static void Marshall(const SEOverride& in, CDM::OverrideData& out);
 TEST_F(TEST_FIXTURE_NAME, Override)
 {
   USING_TYPES(Override)
@@ -1251,11 +1248,8 @@ TEST_F(TEST_FIXTURE_NAME, Override)
 
   EXPECT_NE(source, sink);
 
-  PatientActions::UnMarshall(source, data);
-  PatientActions::Marshall(data, sink);
+  PatientActions::Marshall(source, data);
+  PatientActions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
-
-
-

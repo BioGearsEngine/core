@@ -71,8 +71,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SEInitialEnvironment;
 //!
 //! TYPE InitialEnvironment
-//! static void Marshall(const CDM::InitialEnvironment& in, SEInitialEnvironment& out);
-//! static void UnMarshall(const SEInitialEnvironment& in, CDM::InitialEnvironment& out);
+//! static void UnMarshall(const CDM::InitialEnvironment& in, SEInitialEnvironment& out);
+//! static void Marshall(const SEInitialEnvironment& in, CDM::InitialEnvironment& out);
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/environment/Conditions/SEInitialEnvironment.h>
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
@@ -118,8 +118,8 @@ TEST_F(TEST_FIXTURE_NAME, InitialEnvironment)
 
   EXPECT_NE(source, sink);
 
-  EnvironmentConditions::UnMarshall(source, data);
-  EnvironmentConditions::Marshall(data, sink);
+  EnvironmentConditions::Marshall(source, data);
+  EnvironmentConditions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }

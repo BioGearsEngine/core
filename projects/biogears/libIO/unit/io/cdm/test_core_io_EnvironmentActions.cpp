@@ -70,8 +70,8 @@ void TEST_FIXTURE_NAME::TearDown()
 // class SEEnvironmentChange;
 //!
 //! TYPE EnvironmentChange
-//! static void Marshall(const CDM::EnvironmentChange& in, SEEnvironmentChange& out);
-//! static void UnMarshall(const SEEnvironmentChange& in, CDM::EnvironmentChange& out);
+//! static void UnMarshall(const CDM::EnvironmentChange& in, SEEnvironmentChange& out);
+//! static void Marshall(const SEEnvironmentChange& in, CDM::EnvironmentChange& out);
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 TEST_F(TEST_FIXTURE_NAME, EnvironmentChange)
@@ -85,14 +85,14 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentChange)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetConditionsFile("ConditionFile.xml");
+  source.SetConditionsFile("SubmergedFreezing.xml");
   auto& conditions = source.GetConditions();
   
 
   //EXPECT_NE(source, sink);
 
-  EnvironmentActions::UnMarshall(source, data);
-  EnvironmentActions::Marshall(data, sink);
+  EnvironmentActions::Marshall(source, data);
+  EnvironmentActions::UnMarshall(data, sink);
 
   //EXPECT_EQ(source, sink);
 }
@@ -100,8 +100,8 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentChange)
 // class SEThermalApplication;
 //!
 //! TYPE ThermalApplication
-//! static void Marshall(const CDM::ThermalApplication& in, SEThermalApplication& out);
-//! static void UnMarshall(const SEThermalApplication& in, CDM::ThermalApplication& out);
+//! static void UnMarshall(const CDM::ThermalApplication& in, SEThermalApplication& out);
+//! static void Marshall(const SEThermalApplication& in, CDM::ThermalApplication& out);
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
 TEST_F(TEST_FIXTURE_NAME, ThermalApplication)
 {
@@ -111,12 +111,12 @@ TEST_F(TEST_FIXTURE_NAME, ThermalApplication)
   CDMType data;
 
   //source.SetComment("Test Comment");
-  //source.SetType(CDM::enumEnvironmentAssessment::CompleteBloodCount);
+  //source.SetType(biogears::SEEnvironmentAssessment::CompleteBloodCount);
 
   //EXPECT_NE(source, sink);
 
-  EnvironmentActions::UnMarshall(source, data);
-  EnvironmentActions::Marshall(data, sink);
+  EnvironmentActions::Marshall(source, data);
+  EnvironmentActions::UnMarshall(data, sink);
 
   //EXPECT_EQ(source, sink);
 }

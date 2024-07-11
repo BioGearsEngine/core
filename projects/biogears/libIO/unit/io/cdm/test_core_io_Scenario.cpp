@@ -21,11 +21,13 @@
 #include <gtest/gtest.h>
 
 #include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/Logger.h>
 
 #include <io/cdm/Property.h>
 #include <io/cdm/Scenario.h>
+#include <io/cdm/DataRequests.h>
 
 #ifdef DISABLE_BIOGEARS_Scenario_TEST
 #define TEST_FIXTURE_NAME DISABLED_ScenarioFixture
@@ -73,26 +75,26 @@ void TEST_FIXTURE_NAME::TearDown()
 
 // class SECondition;
 //  TYPE Condition
-// static void Marshall(const CDM::ConditionData& in, SECondition& out);
-// static void UnMarshall(const SECondition& in, CDM::ConditionData& out);
+// static void UnMarshall(const CDM::ConditionData& in, SECondition& out);
+// static void Marshall(const SECondition& in, CDM::ConditionData& out);
 #include <biogears/cdm/scenario/SECondition.h>
 
 // class SEAction;
 //  TYPE Action
-// static void Marshall(const CDM::ActionData& in, SEAction& out);
-// static void UnMarshall(const SEAction& in, CDM::ActionData& out);
+// static void UnMarshall(const CDM::ActionData& in, SEAction& out);
+// static void Marshall(const SEAction& in, CDM::ActionData& out);
 #include <biogears/cdm/scenario/SEAction.h>
 
 // class SEDataRequest;
 //  TYPE DataRequest
-// static void Marshall(const CDM::DataRequestData& in, SEDataRequest& out);
-// static void UnMarshall(const SEDataRequest& in, CDM::DataRequestData& out);
+// static void UnMarshall(const CDM::DataRequestData& in, SEDataRequest& out);
+// static void Marshall(const SEDataRequest& in, CDM::DataRequestData& out);
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
 
 // class SEPatientDataRequest;
 //  TYPE PatientDataRequest
-// static void Marshall(const CDM::PatientDataRequestData& in, SEPatientDataRequest& out);
-// static void UnMarshall(const SEPatientDataRequest& in, CDM::PatientDataRequestData& out);
+// static void UnMarshall(const CDM::PatientDataRequestData& in, SEPatientDataRequest& out);
+// static void Marshall(const SEPatientDataRequest& in, CDM::PatientDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SEPatientDataRequest.h>
 TEST_F(TEST_FIXTURE_NAME, PatientDataRequest)
 {
@@ -111,15 +113,15 @@ TEST_F(TEST_FIXTURE_NAME, PatientDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEPhysiologyDataRequest;
 //  TYPE PhysiologyDataRequest
-// static void Marshall(const CDM::PhysiologyDataRequestData& in, SEPhysiologyDataRequest& out);
-// static void UnMarshall(const SEPhysiologyDataRequest& in, CDM::PhysiologyDataRequestData& out);
+// static void UnMarshall(const CDM::PhysiologyDataRequestData& in, SEPhysiologyDataRequest& out);
+// static void Marshall(const SEPhysiologyDataRequest& in, CDM::PhysiologyDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SEPhysiologyDataRequest.h>
 TEST_F(TEST_FIXTURE_NAME, PhysiologyDataRequest)
 {
@@ -138,15 +140,15 @@ TEST_F(TEST_FIXTURE_NAME, PhysiologyDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEEnvironmentDataRequest;
 //  TYPE EnvironmentDataRequest
-// static void Marshall(const CDM::EnvironmentDataRequestData& in, SEEnvironmentDataRequest& out);
-// static void UnMarshall(const SEEnvironmentDataRequest& in, CDM::EnvironmentDataRequestData& out);
+// static void UnMarshall(const CDM::EnvironmentDataRequestData& in, SEEnvironmentDataRequest& out);
+// static void Marshall(const SEEnvironmentDataRequest& in, CDM::EnvironmentDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SEEnvironmentDataRequest.h>
 TEST_F(TEST_FIXTURE_NAME, EnvironmentDataRequest)
 {
@@ -166,15 +168,15 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEEquipmentDataRequest;
 //  TYPE EquipmentDataRequest
-// static void Marshall(const CDM::EquipmentDataRequestData& in, SEEquipmentDataRequest& out);
-// static void UnMarshall(const SEEquipmentDataRequest& in, CDM::EquipmentDataRequestData& out);
+// static void UnMarshall(const CDM::EquipmentDataRequestData& in, SEEquipmentDataRequest& out);
+// static void Marshall(const SEEquipmentDataRequest& in, CDM::EquipmentDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SEEquipmentDataRequest.h>
 TEST_F(TEST_FIXTURE_NAME, EquipmentDataRequest)
 {
@@ -192,27 +194,27 @@ TEST_F(TEST_FIXTURE_NAME, EquipmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SECompartmentDataRequest;
 //  TYPE CompartmentDataRequest
-// static void Marshall(const CDM::CompartmentDataRequestData& in, SECompartmentDataRequest& out);
-// static void UnMarshall(const SECompartmentDataRequest& in, CDM::CompartmentDataRequestData& out);
+// static void UnMarshall(const CDM::CompartmentDataRequestData& in, SECompartmentDataRequest& out);
+// static void Marshall(const SECompartmentDataRequest& in, CDM::CompartmentDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SECompartmentDataRequest.h>
 
 // class SECompartmentSubstanceDataRequest;
 //  TYPE CompartmentSubstanceDataRequest
-// static void Marshall(const CDM::CompartmentSubstanceDataRequestData& in, SECompartmentSubstanceDataRequest& out);
-// static void UnMarshall(const SECompartmentSubstanceDataRequest& in, CDM::CompartmentSubstanceDataRequestData& out);
+// static void UnMarshall(const CDM::CompartmentSubstanceDataRequestData& in, SECompartmentSubstanceDataRequest& out);
+// static void Marshall(const SECompartmentSubstanceDataRequest& in, CDM::CompartmentSubstanceDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.h>
 
 // class SEGasCompartmentDataRequest;
 //  TYPE GasCompartmentDataRequest
-// static void Marshall(const CDM::GasCompartmentDataRequestData& in, SEGasCompartmentDataRequest& out);
-// static void UnMarshall(const SEGasCompartmentDataRequest& in, CDM::GasCompartmentDataRequestData& out);
+// static void UnMarshall(const CDM::GasCompartmentDataRequestData& in, SEGasCompartmentDataRequest& out);
+// static void Marshall(const SEGasCompartmentDataRequest& in, CDM::GasCompartmentDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SEGasCompartmentDataRequest.h>
 TEST_F(TEST_FIXTURE_NAME, GasCompartmentDataRequest)
 {
@@ -230,15 +232,15 @@ TEST_F(TEST_FIXTURE_NAME, GasCompartmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SELiquidCompartmentDataRequest;
 //  TYPE LiquidCompartmentDataRequest
-// static void Marshall(const CDM::LiquidCompartmentDataRequestData& in, SELiquidCompartmentDataRequest& out);
-// static void UnMarshall(const SELiquidCompartmentDataRequest& in, CDM::LiquidCompartmentDataRequestData& out);
+// static void UnMarshall(const CDM::LiquidCompartmentDataRequestData& in, SELiquidCompartmentDataRequest& out);
+// static void Marshall(const SELiquidCompartmentDataRequest& in, CDM::LiquidCompartmentDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SELiquidCompartmentDataRequest.h>
 TEST_F(TEST_FIXTURE_NAME, LiquidCompartmentDataRequest)
 {
@@ -256,15 +258,15 @@ TEST_F(TEST_FIXTURE_NAME, LiquidCompartmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEThermalCompartmentDataRequest;
 //  TYPE ThermalCompartmentDataRequest
-// static void Marshall(const CDM::ThermalCompartmentDataRequestData& in, SEThermalCompartmentDataRequest& out);
-// static void UnMarshall(const SEThermalCompartmentDataRequest& in, CDM::ThermalCompartmentDataRequestData& out);
+// static void UnMarshall(const CDM::ThermalCompartmentDataRequestData& in, SEThermalCompartmentDataRequest& out);
+// static void Marshall(const SEThermalCompartmentDataRequest& in, CDM::ThermalCompartmentDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
 TEST_F(TEST_FIXTURE_NAME, ThermalCompartmentDataRequest)
 {
@@ -282,15 +284,15 @@ TEST_F(TEST_FIXTURE_NAME, ThermalCompartmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SETissueCompartmentDataRequest;
 //  TYPE TissueCompartmentDataRequest
-// static void Marshall(const CDM::TissueCompartmentDataRequestData& in, SETissueCompartmentDataRequest& out);
-// static void UnMarshall(const SETissueCompartmentDataRequest& in, CDM::TissueCompartmentDataRequestData& out);
+// static void UnMarshall(const CDM::TissueCompartmentDataRequestData& in, SETissueCompartmentDataRequest& out);
+// static void Marshall(const SETissueCompartmentDataRequest& in, CDM::TissueCompartmentDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
 TEST_F(TEST_FIXTURE_NAME, TissueCompartmentDataRequest)
 {
@@ -308,15 +310,15 @@ TEST_F(TEST_FIXTURE_NAME, TissueCompartmentDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SESubstanceDataRequest;
 //  TYPE SubstanceDataRequest
-// static void Marshall(const CDM::SubstanceDataRequestData& in, SESubstanceDataRequest& out);
-// static void UnMarshall(const SESubstanceDataRequest& in, CDM::SubstanceDataRequestData& out);
+// static void UnMarshall(const CDM::SubstanceDataRequestData& in, SESubstanceDataRequest& out);
+// static void Marshall(const SESubstanceDataRequest& in, CDM::SubstanceDataRequestData& out);
 #include <biogears/cdm/scenario/requests/SESubstanceDataRequest.h>
 TEST_F(TEST_FIXTURE_NAME, SubstanceDataRequest)
 {
@@ -335,15 +337,15 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceDataRequest)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, mgr, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, mgr, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEDataRequestManager;
 //  TYPE DataRequestManager
-// static void Marshall(const CDM::DataRequestManagerData& in, SEDataRequestManager& out);
-// static void UnMarshall(const SEDataRequestManager& in, CDM::DataRequestManagerData& out);
+// static void UnMarshall(const CDM::DataRequestManagerData& in, SEDataRequestManager& out);
+// static void Marshall(const SEDataRequestManager& in, CDM::DataRequestManagerData& out);
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 TEST_F(TEST_FIXTURE_NAME, DataRequestManager)
 {
@@ -367,15 +369,15 @@ TEST_F(TEST_FIXTURE_NAME, DataRequestManager)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, mgr, sink);
+  DataRequests::Marshall(source, data);
+  DataRequests::UnMarshall(data, mgr, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEScenario;
 //  TYPE Scenario
-// static void Marshall(const CDM::ScenarioData& in, SEScenario& out);
-// static void UnMarshall(const SEScenario& in, CDM::ScenarioData& out);
+// static void UnMarshall(const CDM::ScenarioData& in, SEScenario& out);
+// static void Marshall(const SEScenario& in, CDM::ScenarioData& out);
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
@@ -383,8 +385,8 @@ TEST_F(TEST_FIXTURE_NAME, DataRequestManager)
 #include <biogears/cdm/scenario/SEScenario.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
-#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 TEST_F(TEST_FIXTURE_NAME, Scenario)
 {
   USING_TYPES(Scenario)
@@ -439,7 +441,6 @@ TEST_F(TEST_FIXTURE_NAME, Scenario)
 
   source.GetInitialParameters().GetPatient().SetName("unit_test");
   source.GetInitialParameters().GetPatient().SetAnnotation("Seerailization Test User");
-  source.GetInitialParameters().GetPatient().SetGender(CDM::enumSex::Female);
   source.GetInitialParameters().GetPatient().SetSex(CDM::enumSex::Female);
   source.GetInitialParameters().GetPatient().GetAge().SetValue(55.0, biogears::TimeUnit::yr);
   source.GetInitialParameters().GetPatient().GetWeight().SetValue(80.0, biogears::MassUnit::kg);
@@ -492,15 +493,15 @@ TEST_F(TEST_FIXTURE_NAME, Scenario)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 // class SEScenarioInitialParameters;
 //  TYPE ScenarioInitialParameters
-// static void Marshall(const CDM::ScenarioInitialParametersData& in, SEScenarioInitialParameters& out);
-// static void UnMarshall(const SEScenarioInitialParameters& in, CDM::ScenarioInitialParametersData& out);
+// static void UnMarshall(const CDM::ScenarioInitialParametersData& in, SEScenarioInitialParameters& out);
+// static void Marshall(const SEScenarioInitialParameters& in, CDM::ScenarioInitialParametersData& out);
 #include <biogears/cdm/patient/conditions/SEChronicAnemia.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 
@@ -554,7 +555,6 @@ TEST_F(TEST_FIXTURE_NAME, ScenarioInitialParameters)
 
   source.GetPatient().SetName("unit_test");
   source.GetPatient().SetAnnotation("Seerailization Test User");
-  source.GetPatient().SetGender(CDM::enumSex::Female);
   source.GetPatient().SetSex(CDM::enumSex::Female);
   source.GetPatient().GetAge().SetValue(55.0, biogears::TimeUnit::yr);
   source.GetPatient().GetWeight().SetValue(80.0, biogears::MassUnit::kg);
@@ -597,22 +597,22 @@ TEST_F(TEST_FIXTURE_NAME, ScenarioInitialParameters)
   biogears::SEChronicAnemia condition;
   condition.SetComment("SEChronicAnemia");
   condition.GetReductionFactor().SetValue(0.4);
-   
+
   source.AddCondition(condition);
   source.SetTrackStabilization(false);
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEScenarioAutoSerialization;
 //  TYPE ScenarioAutoSerialization
-// static void Marshall(const CDM::ScenarioAutoSerializationData& in, SEScenarioAutoSerialization& out);
-// static void UnMarshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out);
+// static void UnMarshall(const CDM::ScenarioAutoSerializationData& in, SEScenarioAutoSerialization& out);
+// static void Marshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out);
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 TEST_F(TEST_FIXTURE_NAME, ScenarioAutoSerialization)
 {
@@ -637,16 +637,16 @@ TEST_F(TEST_FIXTURE_NAME, ScenarioAutoSerialization)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Scenario::Marshall(source, data);
+  Scenario::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SEAdvanceTime
 //  TYPE AdvanceTime
-// static void Marshall(const CDM::AdvanceTimeData& in, SEAdvanceTime& out);
-// static void UnMarshall(const SEAdvanceTime& in, CDM::AdvanceTimeData& out);
+// static void UnMarshall(const CDM::AdvanceTimeData& in, SEAdvanceTime& out);
+// static void Marshall(const SEAdvanceTime& in, CDM::AdvanceTimeData& out);
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 TEST_F(TEST_FIXTURE_NAME, AdvanceTime)
 {
@@ -664,16 +664,16 @@ TEST_F(TEST_FIXTURE_NAME, AdvanceTime)
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Actions::Marshall(source, data);
+  Actions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
 
 // class SESerializeState
 //  TYPE SerializeState
-// static void Marshall(const CDM::SerializeStateData& in, SESerializeState& out);
-// static void UnMarshall(const SESerializeState& in, CDM::SerializeStateData& out);
+// static void UnMarshall(const CDM::SerializeStateData& in, SESerializeState& out);
+// static void Marshall(const SESerializeState& in, CDM::SerializeStateData& out);
 #include <biogears/cdm/scenario/SESerializeState.h>
 TEST_F(TEST_FIXTURE_NAME, SerializeState)
 {
@@ -689,12 +689,12 @@ TEST_F(TEST_FIXTURE_NAME, SerializeState)
 
   source.SetComment("SerializeState Test");
   source.SetFilename("State.txt");
-  source.SetType(CDM::enumSerializationType::Save);
+  source.SetType(biogears::SESerializationType::Save);
 
   EXPECT_NE(source, sink);
 
-  Scenario::UnMarshall(source, data);
-  Scenario::Marshall(data, sink);
+  Actions::Marshall(source, data);
+  Actions::UnMarshall(data, sink);
 
   EXPECT_EQ(source, sink);
 }
