@@ -350,7 +350,7 @@ void Environment::ProcessActions()
   //Set the temperature source to zero
   m_ActiveTemperaturePath->GetNextTemperatureSource().SetValue(0.0, TemperatureUnit::K);
   //Open the switch
-  m_ActiveSwitchPath->SetNextSwitch(CDM::enumOpenClosed::Open);
+  m_ActiveSwitchPath->SetNextSwitch(SEOpenClosed::Open);
 
   //Check for actions that modify environment resistances
   if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
@@ -528,7 +528,7 @@ void Environment::ProcessActions()
     m_ActiveTemperaturePath->GetNextTemperatureSource().SetValue(dAppliedTemperature_K, TemperatureUnit::K);
 
     //Close the switch
-    m_ActiveSwitchPath->SetNextSwitch(CDM::enumOpenClosed::Closed);
+    m_ActiveSwitchPath->SetNextSwitch(SEOpenClosed::Closed);
   }
 }
 

@@ -189,20 +189,13 @@ namespace io {
   template <CIRCUIT_PATH_TEMPLATE>
   void Circuit::UnMarshall(const CDM::CircuitPathData& in, SECircuitPath<CIRCUIT_PATH_TYPES>& out)
   {
-    out.Clear();
-    out.SetSwitch(in.Switch().get());
-    out.SetNextSwitch(in.NextSwitch().get());
-    out.SetValve(in.Valve().get());
-    out.SetNextValve(in.NextValve().get());
-    out.SetPolarizedState(in.PolarizedState().get());
-    out.SetNextPolarizedState(in.NextPolarizedState().get());
-
-    // io::Property::UnMarshall(in.Switch(), out.m_Switch);
-    // io::Property::UnMarshall(in.NextSwitch(), out.m_NextSwitch);
-    // io::Property::UnMarshall(in.Valve(), out.m_Valve);
-    // io::Property::UnMarshall(in.NextValve(), out.m_NextValve);
-    // io::Property::UnMarshall(in.PolarizedState(), out.m_PolarizedState);
-    // io::Property::UnMarshall(in.NextPolarizedState(), out.m_NextPolarizedState);
+    out.Clear(); // TO Clear or not to Clear
+    io::Property::UnMarshall(in.Switch(), out.m_Switch);
+    io::Property::UnMarshall(in.NextSwitch(), out.m_NextSwitch);
+    io::Property::UnMarshall(in.Valve(), out.m_Valve);
+    io::Property::UnMarshall(in.NextValve(), out.m_NextValve);
+    io::Property::UnMarshall(in.PolarizedState(), out.m_PolarizedState);
+    io::Property::UnMarshall(in.NextPolarizedState(), out.m_NextPolarizedState);
   }
   //----------------------------------------------------------------------------------
   template <CIRCUIT_PATH_TEMPLATE>
@@ -211,36 +204,24 @@ namespace io {
     out.Name(in.m_Name);
     out.SourceNode(in.m_SourceNode.GetName());
     out.TargetNode(in.m_TargetNode.GetName());
-    if (in.HasSwitch())
-      out.Switch(in.m_Switch);
-    if (in.HasNextSwitch())
-      out.NextSwitch(in.m_NextSwitch);
-    if (in.HasValve())
-      out.Valve(in.m_Valve);
-    if (in.HasNextValve())
-      out.NextValve(in.m_NextValve);
-    if (in.HasPolarizedState())
-      out.PolarizedState(in.m_PolarizedState);
-    if (in.HasNextPolarizedState())
-      out.NextPolarizedState(in.m_NextPolarizedState);
-    //if (in.HasSwitch()) {
-    //  io::Property::Marshall(in.m_Switch, out.Switch());
-    //}
-    //if (in.HasNextSwitch()) {
-    //  io::Property::Marshall(in.m_NextSwitch, out.NextSwitch());
-    //}
-    //if (in.HasValve()) {
-    //  io::Property::Marshall(in.m_Valve, out.Valve());
-    //}
-    //if (in.HasNextValve()) {
-    //  io::Property::Marshall(in.m_NextValve, out.NextValve());
-    //}
-    //if (in.HasPolarizedState()) {
-    //  io::Property::Marshall(in.m_PolarizedState, out.PolarizedState());
-    //}
-    //if (in.HasNextPolarizedState()) {
-    //  io::Property::Marshall(in.m_NextPolarizedState, out.NextPolarizedState());
-    //}
+    if (in.HasSwitch()) {
+      io::Property::Marshall(in.m_Switch, out.Switch());
+    }
+    if (in.HasNextSwitch()) {
+      io::Property::Marshall(in.m_NextSwitch, out.NextSwitch());
+    }
+    if (in.HasValve()) {
+      io::Property::Marshall(in.m_Valve, out.Valve());
+    }
+    if (in.HasNextValve()) {
+      io::Property::Marshall(in.m_NextValve, out.NextValve());
+    }
+    if (in.HasPolarizedState()) {
+      io::Property::Marshall(in.m_PolarizedState, out.PolarizedState());
+    }
+    if (in.HasNextPolarizedState()) {
+      io::Property::Marshall(in.m_NextPolarizedState, out.NextPolarizedState());
+    }
   }
   //----------------------------------------------------------------------------------
 } // Namespace IO

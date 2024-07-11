@@ -172,9 +172,9 @@ void DataTrack::Probe(const SEFluidCircuit& c)
   }
   for (SEFluidCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Probe(std::string { p->GetName() } + "_Switch", p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Switch", p->GetSwitch() == SEOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Probe(std::string { p->GetName() } + "_Valve", p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Valve", p->GetValve() == SEOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
@@ -217,9 +217,9 @@ void DataTrack::Probe(const SEThermalCircuit& c)
   }
   for (SEThermalCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Probe(std::string { p->GetName() } + "_Switch", p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Switch", p->GetSwitch() == SEOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Probe(std::string { p->GetName() } + "_Valve", p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Valve", p->GetValve() == SEOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
@@ -262,9 +262,9 @@ void DataTrack::Probe(const SEElectricalCircuit& c)
   }
   for (SEElectricalCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Probe(std::string { p->GetName() } + "_Switch", p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Switch", p->GetSwitch() == SEOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Probe(std::string { p->GetName() } + "_Valve", p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Probe(std::string { p->GetName() } + "_Valve", p->GetValve() == SEOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
@@ -399,9 +399,9 @@ void DataTrack::Track(double time_s, const SEElectricalCircuit& c)
   }
   for (SEElectricalCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Track(std::string { p->GetName() } + "_Switch", time_s, p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Switch", time_s, p->GetSwitch() == SEOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Track(std::string { p->GetName() } + "_Valve", time_s, p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Valve", time_s, p->GetValve() == SEOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
@@ -443,9 +443,9 @@ void DataTrack::Track(double time_s, const SEFluidCircuit& c)
   }
   for (SEFluidCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Track(std::string { p->GetName() } + "_Switch", time_s, p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Switch", time_s, p->GetSwitch() == SEOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Track(std::string { p->GetName() } + "_Valve", time_s, p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Valve", time_s, p->GetValve() == SEOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();
@@ -487,9 +487,9 @@ void DataTrack::Track(double time_s, const SEThermalCircuit& c)
   }
   for (SEThermalCircuitPath* p : c.GetPaths()) {
     if (p->HasSwitch())
-      Track(std::string { p->GetName() } + "_Switch", time_s, p->GetSwitch() == CDM::enumOpenClosed::Open ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Switch", time_s, p->GetSwitch() == SEOpenClosed::Open ? 1 : 0);
     if (p->HasValve())
-      Track(std::string { p->GetName() } + "_Valve", time_s, p->GetValve() == CDM::enumOpenClosed::Closed ? 1 : 0);
+      Track(std::string { p->GetName() } + "_Valve", time_s, p->GetValve() == SEOpenClosed::Closed ? 1 : 0);
 
     if (p->HasResistance()) {
       auto unit = p->GetResistance().GetUnit();

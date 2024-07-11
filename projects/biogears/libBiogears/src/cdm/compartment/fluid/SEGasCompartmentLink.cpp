@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 
+#include "io/cdm/Compartment.h"
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.inl>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 

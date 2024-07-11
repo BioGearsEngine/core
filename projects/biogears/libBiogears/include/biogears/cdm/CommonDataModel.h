@@ -60,4 +60,5 @@ struct BIOGEARS_API CommonDataModelException : public std::runtime_error {
 }
 // Basics
 #include <biogears/cdm/Macros.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/utils/Logger.h>

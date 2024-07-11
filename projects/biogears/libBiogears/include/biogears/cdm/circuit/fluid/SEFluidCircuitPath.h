@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/enums/SECircuitEnums.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/properties/SEScalarFlowCompliance.h>
@@ -25,6 +26,9 @@ class SECircuitManager;
 namespace io {
   class Circuit;
 }
+
+BG_EXT template class BIOGEARS_API SECircuitPath<FLUID_CIRCUIT_PATH>;
+
 class BIOGEARS_API SEFluidCircuitPath : public SECircuitPath<FLUID_CIRCUIT_PATH> {
   friend class SECircuitManager;
   friend io::Circuit;
@@ -36,7 +40,7 @@ protected:
 public:
   virtual ~SEFluidCircuitPath();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   bool Load(const CDM::FluidCircuitPathData& in);
   CDM::FluidCircuitPathData* Unload() const;
@@ -108,13 +112,13 @@ public:
   virtual double GetValveBreakdownPressure(const PressureUnit& unit) const;
 
   virtual bool HasCardiovascularRegion() const;
-  CDM::enumResistancePathType::value GetCardiovascularRegion() const;
-  void SetCardiovascularRegion(CDM::enumResistancePathType::value pType);
+  SEResistancePathType GetCardiovascularRegion() const;
+  void SetCardiovascularRegion(SEResistancePathType pType);
   void InvalidateCardiovascularRegion();
 
 protected:
   SEFluidCircuitNode& m_FluidSourceNode;
   SEFluidCircuitNode& m_FluidTargetNode;
-  CDM::enumResistancePathType::value m_CardiovascularRegion;
+  SEResistancePathType m_CardiovascularRegion;
 };
 }

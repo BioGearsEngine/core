@@ -11,14 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 #include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/enums/SECompartmentEnums.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
@@ -29,41 +30,42 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(CompartmentManagerData)
 
 namespace std {
-  BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartment*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartment*> ;
-  BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentLink*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentLink*> ;
-  BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentGraph*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentGraph*> ;
-  BG_EXT template class BIOGEARS_API vector<biogears::SESubstance*> ;
-  
-  BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartment*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartment*> ;
-  BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentLink*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentLink*> ;
-  BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentGraph*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentGraph*> ;
-  
-  BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartment*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartment*> ;
-  BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartmentLink*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartmentLink*> ;
-  
-  BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SETissueCompartment*> ;
+BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartment*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartment*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentLink*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentLink*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentGraph*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentGraph*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SESubstance*>;
+
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartment*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartment*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentLink*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentLink*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentGraph*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentGraph*>;
+
+BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartment*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartment*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartmentLink*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartmentLink*>;
+
+BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*>;
+BG_EXT template class BIOGEARS_API map<string, biogears::SETissueCompartment*>;
 }
 namespace biogears {
-  namespace io {
+namespace io {
   class Compartment;
 }
 
 class BIOGEARS_API SECompartmentManager : public Loggable {
   friend io::Compartment;
+
 public:
   SECompartmentManager(SESubstanceManager& subMgr);
   virtual ~SECompartmentManager();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   virtual bool Load(const CDM::CompartmentManagerData& in, SECircuitManager* circuits = nullptr);
   virtual CDM::CompartmentManagerData* Unload() const;
@@ -77,12 +79,12 @@ public:
   virtual void UpdateLinks(SEGasCompartmentGraph& graph);
   virtual void UpdateLinks(SELiquidCompartmentGraph& graph);
 
-  virtual bool HasCompartment(CDM::enumCompartmentType::value type, const char* name) const;
-  virtual bool HasCompartment(CDM::enumCompartmentType::value type, const std::string& name) const;
-  virtual SECompartment* GetCompartment(CDM::enumCompartmentType::value type, const char* name);
-  virtual SECompartment* GetCompartment(CDM::enumCompartmentType::value type, const std::string& name);
-  virtual const SECompartment* GetCompartment(CDM::enumCompartmentType::value type, const char* name) const;
-  virtual const SECompartment* GetCompartment(CDM::enumCompartmentType::value type, const std::string& name) const;
+  virtual bool HasCompartment(SECompartmentType type, const char* name) const;
+  virtual bool HasCompartment(SECompartmentType type, const std::string& name) const;
+  virtual SECompartment* GetCompartment(SECompartmentType type, const char* name);
+  virtual SECompartment* GetCompartment(SECompartmentType type, const std::string& name);
+  virtual const SECompartment* GetCompartment(SECompartmentType type, const char* name) const;
+  virtual const SECompartment* GetCompartment(SECompartmentType type, const std::string& name) const;
 
   virtual SEGasCompartment& CreateGasCompartment(const char* name);
   virtual SEGasCompartment& CreateGasCompartment(const std::string& name);
@@ -90,7 +92,7 @@ public:
   virtual void DeleteGasCompartment(const std::string& name);
   virtual bool HasGasCompartment(const char* name) const;
   virtual bool HasGasCompartment(const std::string& name) const;
-  virtual SEGasCompartment* GetGasCompartment(const char* name); 
+  virtual SEGasCompartment* GetGasCompartment(const char* name);
   virtual SEGasCompartment* GetGasCompartment(const std::string& name);
   virtual const SEGasCompartment* GetGasCompartment(const char* name) const;
   virtual const SEGasCompartment* GetGasCompartment(const std::string& name) const;
