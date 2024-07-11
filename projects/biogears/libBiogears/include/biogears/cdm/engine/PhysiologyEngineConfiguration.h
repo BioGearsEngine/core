@@ -71,9 +71,9 @@ public:
   virtual SEScalarTime& GetTimeStep();
   virtual double GetTimeStep(const TimeUnit& unit) const;
 
-  virtual bool HasWritePatientBaselineFile() const { return m_WritePatientBaselineFile != (CDM::enumOnOff::value)-1; }
-  virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == CDM::enumOnOff::On; }
-  virtual void SetWritePatientBaselineFile(CDM::enumOnOff::value v) { m_WritePatientBaselineFile = v; }
+  virtual bool HasWritePatientBaselineFile() const { return m_WritePatientBaselineFile != SEOnOff::Invalid; }
+  virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == SEOnOff::On; }
+  virtual void SetWritePatientBaselineFile(SEOnOff v) { m_WritePatientBaselineFile = v; }
 
 protected:
   void Unload(CDM::PhysiologyEngineConfigurationData& data) const;
@@ -89,6 +89,6 @@ protected:
   std::unique_ptr<SEPatient> m_Patient;
   std::unique_ptr<bool> m_overrideMode;
 
-  CDM::enumOnOff::value m_WritePatientBaselineFile;
+  SEOnOff m_WritePatientBaselineFile;
 };
 }

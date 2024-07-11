@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
 
+#include "io/cdm/EngineConfiguration.h"
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
@@ -91,12 +92,12 @@ bool PhysiologyEngineTimedStabilization::Stabilize(PhysiologyEngine& engine, con
     // if it is we can break our loop. This will allow us to record our stabilization data
     engine.AdvanceModelTime();
 
-    m_currentTime->IncrementValue(dT_s, TimeUnit::s);
+    m_CurrentTime->IncrementValue(dT_s, TimeUnit::s);
     if (m_LogProgress) {
       statusTime_s += dT_s;
       if (statusTime_s > statusStep_s) {
         statusTime_s = 0;
-        ss << "Current Time is " << m_currentTime->GetValue(TimeUnit::s) << "s, it took "
+        ss << "Current Time is " << m_CurrentTime->GetValue(TimeUnit::s) << "s, it took "
            << profiler.GetElapsedTime_s("Status") << "s to simulate the past "
            << statusStep_s << "s" << std::flush;
         profiler.Reset("Status");

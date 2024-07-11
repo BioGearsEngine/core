@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
+#include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -31,7 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 namespace std {
-  BG_EXT template class BIOGEARS_API vector<biogears::SESystem*>;
+BG_EXT template class BIOGEARS_API vector<biogears::SESystem*>;
 }
 namespace biogears {
 
@@ -84,7 +85,7 @@ public:
   // Tissue cmpts don't have children and they don't have computed data that changes on call (like flow)
 };
 
-} //namespac biogears
+} // namespac biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
@@ -107,9 +108,9 @@ public:
   void Clear(); // Remove all requests and close the results file
 
   DataTrack& GetDataTrack();
-  DataTrack const & GetDataTrack() const;
-  SEDataRequestManager& GetDataRequestManager();  
-  SEDataRequestManager const & GetDataRequestManager()const; 
+  DataTrack const& GetDataTrack() const;
+  SEDataRequestManager& GetDataRequestManager();
+  SEDataRequestManager const& GetDataRequestManager() const;
 
   void ResetFile(); // Close file, so next Track Data will re hook up everything and make a new file
 

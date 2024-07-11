@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 
+#include "io/cdm/EngineConfiguration.h"
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/EngineConfiguration.hxx>
@@ -21,8 +22,7 @@ PhysiologyEngineStabilization::PhysiologyEngineStabilization(Logger* logger)
   : Loggable(logger)
 {
   m_StabilizationDuration = nullptr;
-  m_currentTime = nullptr;
-  
+  m_CurrentTime = nullptr;
 }
 //-------------------------------------------------------------------------------
 PhysiologyEngineStabilization::~PhysiologyEngineStabilization()
@@ -35,24 +35,12 @@ void PhysiologyEngineStabilization::Clear()
   m_LogProgress = true;
   m_Canceled = false;
   SAFE_DELETE(m_StabilizationDuration);
-  SAFE_DELETE(m_currentTime);
+  SAFE_DELETE(m_CurrentTime);
 }
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineStabilization::Load(const CDM::PhysiologyEngineStabilizationData& in)
 {
-  Clear();
-  if (in.Canceled().present()) {
-    m_Canceled = in.Canceled().get();
-  }
-  if (in.LogProgress().present()) {
-    m_LogProgress = in.LogProgress().get();
-  }
-  if (in.CurrentTime().present()) {
-    GetCurrentTime().Load(in.CurrentTime().get());
-  }
-  if (in.StabilizationDuration().present()) {
-    GetStabilizationDuration().Load(in.StabilizationDuration().get());
-  }
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -65,16 +53,7 @@ CDM::PhysiologyEngineStabilizationData* PhysiologyEngineStabilization::Unload() 
 //-------------------------------------------------------------------------------
 void PhysiologyEngineStabilization::Unload(CDM::PhysiologyEngineStabilizationData& data) const
 {
-  data.Canceled(m_Canceled);
-  data.LogProgress(m_LogProgress);
-  if (HasCurrentTime()) {
-    data.CurrentTime(std::unique_ptr<CDM::ScalarTimeData>(m_currentTime->Unload()));
-  }
-  if (HasStabilizationDuration()) {
-    data.StabilizationDuration(std::unique_ptr<CDM::ScalarTimeData>(m_StabilizationDuration->Unload()));
-  }
-  data.CurrentTime();
-
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void PhysiologyEngineStabilization::LogProgress(bool b)
@@ -87,7 +66,7 @@ void PhysiologyEngineStabilization::CancelStabilization()
   m_Canceled = true;
 }
 //-------------------------------------------------------------------------------
-bool PhysiologyEngineStabilization::HasStabilizationDuration() const 
+bool PhysiologyEngineStabilization::HasStabilizationDuration() const
 {
   return m_StabilizationDuration == nullptr ? false : m_StabilizationDuration->IsValid();
 }
@@ -101,23 +80,30 @@ SEScalarTime& PhysiologyEngineStabilization::GetStabilizationDuration()
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineStabilization::HasCurrentTime() const
 {
-  return m_currentTime == nullptr ? false : m_currentTime->IsValid();
+  return m_CurrentTime == nullptr ? false : m_CurrentTime->IsValid();
 }
 //-------------------------------------------------------------------------------
 SEScalarTime& PhysiologyEngineStabilization::GetCurrentTime()
 {
-  if (m_currentTime == nullptr)
-    m_currentTime = new SEScalarTime();
-  return *m_currentTime;
+  if (m_CurrentTime == nullptr)
+    m_CurrentTime = new SEScalarTime();
+  return *m_CurrentTime;
 }
 //-------------------------------------------------------------------------------
+#pragma optimize("", off)
 bool PhysiologyEngineStabilization::operator==(PhysiologyEngineStabilization const& rhs) const
 {
-  return m_Canceled == rhs.m_Canceled
-    && rhs.m_LogProgress == rhs.m_LogProgress
-    && ((m_currentTime && rhs.m_currentTime) ? m_currentTime->operator==(*rhs.m_currentTime) : m_currentTime == rhs.m_currentTime)
-    && ((m_StabilizationDuration && rhs.m_StabilizationDuration) ? m_StabilizationDuration->operator==(*rhs.m_StabilizationDuration) : m_StabilizationDuration == rhs.m_StabilizationDuration);
+  bool equivilant = m_Canceled == rhs.m_Canceled;
+  ;
+  equivilant &= rhs.m_LogProgress == rhs.m_LogProgress;
+  equivilant &= ((m_CurrentTime && rhs.m_CurrentTime) ? m_CurrentTime->operator==(*rhs.m_CurrentTime)
+                                                     : m_CurrentTime == rhs.m_CurrentTime);
+  equivilant &= ((m_StabilizationDuration && rhs.m_StabilizationDuration) 
+      ? m_StabilizationDuration->operator==(*rhs.m_StabilizationDuration)
+      : m_StabilizationDuration == rhs.m_StabilizationDuration);
+  return equivilant;
 }
+#pragma optimize("", on)
 bool PhysiologyEngineStabilization::operator!=(PhysiologyEngineStabilization const& rhs) const
 {
   return !(*this == rhs);
