@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 
+#include "io/cdm/EngineConfiguration.h"
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
@@ -33,7 +36,7 @@ PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   m_TimedStabilizationCriteria = nullptr;
   m_DynamicStabilizationCriteria = nullptr;
   m_TimeStep = nullptr;
-  m_WritePatientBaselineFile = CDM::enumOnOff::value(-1);
+  m_WritePatientBaselineFile = SEOnOff(-1);
 }
 
 //-----------------------------------------------------------------------------
@@ -48,7 +51,7 @@ void PhysiologyEngineConfiguration::Clear()
   RemoveStabilizationCriteria();
   SAFE_DELETE(m_TimeStep);
 
-  m_WritePatientBaselineFile = CDM::enumOnOff::value(-1);
+  m_WritePatientBaselineFile = SEOnOff(-1);
 }
 //-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::Merge(const PhysiologyEngineConfiguration& from)
@@ -101,7 +104,7 @@ bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfiguratio
   if (in.TimeStep().present())
     GetTimeStep().Load(in.TimeStep().get());
   if (in.WritePatientBaselineFile().present())
-    SetWritePatientBaselineFile(in.WritePatientBaselineFile().get());
+    io::Property::UnMarshall(in.WritePatientBaselineFile(), m_WritePatientBaselineFile);
 
   if (in.ElectroCardioGramInterpolatorFile().present()) {
     if (!GetECGInterpolator().LoadWaveforms(in.ElectroCardioGramInterpolatorFile().get())) {
@@ -171,7 +174,7 @@ void PhysiologyEngineConfiguration::Unload(CDM::PhysiologyEngineConfigurationDat
   if (HasTimeStep())
     data.TimeStep(std::unique_ptr<CDM::ScalarTimeData>(m_TimeStep->Unload()));
   if (HasWritePatientBaselineFile())
-    data.WritePatientBaselineFile(m_WritePatientBaselineFile);
+    io::Property::Marshall(m_WritePatientBaselineFile, data.WritePatientBaselineFile());    
 }
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasECGInterpolator() const

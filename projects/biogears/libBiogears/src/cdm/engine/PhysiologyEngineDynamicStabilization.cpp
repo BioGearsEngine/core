@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 // Standad Includes
 #include <cmath>
 // Project Includes
+#include "io/cdm/EngineConfiguration.h"
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>

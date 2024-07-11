@@ -241,7 +241,7 @@ void BioGearsConfiguration::Clear()
 void BioGearsConfiguration::Initialize()
 {
   Clear();
-  m_WritePatientBaselineFile = CDM::enumOnOff::Off;
+  m_WritePatientBaselineFile = SEOnOff::Off;
 
   // Reset to default values
   GetECGInterpolator().LoadWaveforms("StandardECG.xml");

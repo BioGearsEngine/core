@@ -28,8 +28,7 @@ namespace io {
 
       io::Property::UnMarshall(in.TimeStep(), out.GetTimeStep());
     if (in.WritePatientBaselineFile().present()) {
-      out.SetWritePatientBaselineFile(in.WritePatientBaselineFile().get());
-      //io::Property::UnMarshall(in.WritePatientBaselineFile(), out.m_WritePatientBaselineFile);
+      io::Property::UnMarshall(in.WritePatientBaselineFile(), out.m_WritePatientBaselineFile);
     }
     if (in.ElectroCardioGramInterpolatorFile().present()) {
       if (!out.GetECGInterpolator().LoadWaveforms(in.ElectroCardioGramInterpolatorFile().get())) {
@@ -85,9 +84,8 @@ namespace io {
     if (in.HasStabilizationCriteria())
       out.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(in.m_StabilizationCriteria->Unload()));
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TimeStep)
-    if (in.HasWritePatientBaselineFile())
-      out.WritePatientBaselineFile(in.m_WritePatientBaselineFile);
-    //io::Property::Marshall(in.m_WritePatientBaselineFile, out.WritePatientBaselineFile());
+    if (in.HasWritePatientBaselineFile())     
+    io::Property::Marshall(in.m_WritePatientBaselineFile, out.WritePatientBaselineFile());
   }
   //----------------------------------------------------------------------------------
   // class PhysiologyEngineStabilization
@@ -95,23 +93,23 @@ namespace io {
   {
     out.Clear();
 
-    //if (in.Canceled().present())
-    //  out.m_Canceled = in.Canceled().get();
-    //if (in.CurrentTime().present())
-    //  io::Property::UnMarshall(in.CurrentTime(), out.GetCurrentTime());
-    //if (in.StabilizationDuration().present())
-    //  io::Property::UnMarshall(in.StabilizationDuration(), out.GetStabilizationDuration());
-    //if (in.LogProgress().present())
-    //  out.m_LogProgress = in.LogProgress().get();
+    if (in.Canceled().present())
+      out.m_Canceled = in.Canceled().get();
+    if (in.CurrentTime().present())
+      io::Property::UnMarshall(in.CurrentTime(), out.GetCurrentTime());
+    if (in.StabilizationDuration().present())
+      io::Property::UnMarshall(in.StabilizationDuration(), out.GetStabilizationDuration());
+    if (in.LogProgress().present())
+      out.m_LogProgress = in.LogProgress().get();
   }
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineStabilization& in, CDM::PhysiologyEngineStabilizationData& out)
   {
-    //out.Canceled(in.m_Canceled);
-    //out.LogProgress(in.m_LogProgress);
+    out.Canceled(in.m_Canceled);
+    out.LogProgress(in.m_LogProgress);
 
-    //CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CurrentTime)
-    //CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StabilizationDuration)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CurrentTime)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StabilizationDuration)
   }
   //----------------------------------------------------------------------------------
   // class PhysiologyEngineTimedStabilization
