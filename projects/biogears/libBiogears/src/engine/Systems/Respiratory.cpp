@@ -1356,7 +1356,7 @@ void Respiratory::Pneumothorax()
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToLeftChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       if (severity == 0) {
-        m_EnvironmentToLeftChestLeak->SetNextValve(CDM::enumOpenClosed::Open);
+        m_EnvironmentToLeftChestLeak->SetNextValve(SEOpenClosed::Open);
       }
       if (m_PatientActions->HasLeftNeedleDecompression()) {
         DoLeftNeedleDecompression(dNeedleFlowResistance_cmH2O_s_Per_L);
@@ -1373,7 +1373,7 @@ void Respiratory::Pneumothorax()
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToRightChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       if (severity == 0) {
-        m_EnvironmentToRightChestLeak->SetNextValve(CDM::enumOpenClosed::Open);
+        m_EnvironmentToRightChestLeak->SetNextValve(SEOpenClosed::Open);
       }
 
       if (m_PatientActions->HasRightNeedleDecompression()) {
@@ -1391,7 +1391,7 @@ void Respiratory::Pneumothorax()
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_LeftAlveoliLeakToLeftPleuralCavity->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       if (severity == 0) {
-        m_LeftAlveoliLeakToLeftPleuralCavity->SetNextValve(CDM::enumOpenClosed::Open);
+        m_LeftAlveoliLeakToLeftPleuralCavity->SetNextValve(SEOpenClosed::Open);
       }
 
       if (m_PatientActions->HasLeftNeedleDecompression()) {
@@ -1409,7 +1409,7 @@ void Respiratory::Pneumothorax()
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_RightAlveoliLeakToRightPleuralCavity->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       if (severity == 0) {
-        m_RightAlveoliLeakToRightPleuralCavity->SetNextValve(CDM::enumOpenClosed::Open);
+        m_RightAlveoliLeakToRightPleuralCavity->SetNextValve(SEOpenClosed::Open);
       }
 
       if (m_PatientActions->HasRightNeedleDecompression()) {

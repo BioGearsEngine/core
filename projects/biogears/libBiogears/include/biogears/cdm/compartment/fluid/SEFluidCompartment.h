@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -11,7 +12,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <map>
+#include <string>
 #include <vector>
+
 // Project Includes
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
@@ -118,7 +122,7 @@ protected:
   virtual double CalculateOutFlow_mL_Per_s() const;
 
   virtual std::vector<TransportSubstanceType*>& GetTransportSubstances() override { return m_TransportSubstances; }
-  virtual std::vector<TransportSubstanceType*>const & GetTransportSubstances() const override { return m_TransportSubstances; }
+  virtual std::vector<TransportSubstanceType*> const& GetTransportSubstances() const override { return m_TransportSubstances; }
 
   SEScalarVolumePerTime* m_InFlow;
   SEScalarVolumePerTime* m_OutFlow;

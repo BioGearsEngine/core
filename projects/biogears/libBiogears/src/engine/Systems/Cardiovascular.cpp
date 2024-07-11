@@ -434,20 +434,20 @@ void Cardiovascular::SetUp()
   for (SEFluidCircuitPath* path : m_CirculatoryCircuit->GetPaths()) {
     if (&path->GetSourceNode() == aorta && path->HasResistanceBaseline()) {
       if (&path->GetTargetNode() != ground && path->HasCardiovascularRegion()) {
-        CDM::enumResistancePathType region = path->GetCardiovascularRegion();
+        SEResistancePathType region = path->GetCardiovascularRegion();
         switch (region) {
-        case CDM::enumResistancePathType::Cerebral:
+        case SEResistancePathType::Cerebral:
           continue;
-        case CDM::enumResistancePathType::Extrasplanchnic:
+        case SEResistancePathType::Extrasplanchnic:
           m_extrasplanchnicResistancePaths.push_back(path);
           break;
-        case CDM::enumResistancePathType::Muscle:
+        case SEResistancePathType::Muscle:
           m_muscleResistancePaths.push_back(path);
           break;
-        case CDM::enumResistancePathType::Myocardium:
+        case SEResistancePathType::Myocardium:
           m_myocardiumResistancePaths.push_back(path);
           break;
-        case CDM::enumResistancePathType::Splanchnic:
+        case SEResistancePathType::Splanchnic:
           m_splanchnicResistancePaths.push_back(path);
           break;
         }
@@ -461,21 +461,21 @@ void Cardiovascular::SetUp()
       if (&path->GetSourceNode() == node) {
         if (path->HasResistanceBaseline() && &path->GetTargetNode() != ground) {
           if (path->HasCardiovascularRegion()) {
-            CDM::enumResistancePathType region = path->GetCardiovascularRegion();
+            SEResistancePathType region = path->GetCardiovascularRegion();
             switch (region) {
-            case CDM::enumResistancePathType::Extrasplanchnic:
+            case SEResistancePathType::Extrasplanchnic:
               m_extrasplanchnicResistancePaths.push_back(path);
               break;
-            case CDM::enumResistancePathType::Muscle:
+            case SEResistancePathType::Muscle:
               m_muscleResistancePaths.push_back(path);
               break;
-            case CDM::enumResistancePathType::Myocardium:
+            case SEResistancePathType::Myocardium:
               m_myocardiumResistancePaths.push_back(path);
               break;
-            case CDM::enumResistancePathType::Splanchnic:
+            case SEResistancePathType::Splanchnic:
               m_splanchnicResistancePaths.push_back(path);
               break;
-            case CDM::enumResistancePathType::Cerebral:
+            case SEResistancePathType::Cerebral:
                m_cerebralResistancePaths.push_back(path);
               break;
 

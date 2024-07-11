@@ -25,6 +25,9 @@ class SECircuitManager;
 namespace io {
   class Circuit;
 }
+
+BG_EXT template class BIOGEARS_API SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>;
+
 class BIOGEARS_API SEElectricalCircuitPath : public SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge> {
   friend class SECircuitManager;
   friend io::Circuit;

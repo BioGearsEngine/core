@@ -744,14 +744,14 @@ void AnesthesiaMachine::CheckReliefValve()
   m_pEnvironmentToReliefValve->GetNextPressureSource().SetValue(dValvePressure_cmH2O, PressureUnit::cmH2O);
 
   //Check to see if it reached the pressure threshold
-  if (!IsEventActive(CDM::enumAnesthesiaMachineEvent::ReliefValveActive) && m_pSelectorToReliefValve->GetNextValve() == CDM::enumOpenClosed::Closed) {
+  if (!IsEventActive(CDM::enumAnesthesiaMachineEvent::ReliefValveActive) && m_pSelectorToReliefValve->GetNextValve() == SEOpenClosed::Closed) {
     /// \event %AnesthesiaMachine: Relief Valve is active. The pressure setting has been exceeded.
     SetEvent(CDM::enumAnesthesiaMachineEvent::ReliefValveActive, true, m_data.GetSimulationTime());
-  } else if (IsEventActive(CDM::enumAnesthesiaMachineEvent::ReliefValveActive) && m_pSelectorToReliefValve->GetNextValve() == CDM::enumOpenClosed::Open) {
+  } else if (IsEventActive(CDM::enumAnesthesiaMachineEvent::ReliefValveActive) && m_pSelectorToReliefValve->GetNextValve() == SEOpenClosed::Open) {
     SetEvent(CDM::enumAnesthesiaMachineEvent::ReliefValveActive, false, m_data.GetSimulationTime());
   }
 
   //Always try to let it run without the relief valve operational (i.e. closed (i.e. allowing flow)), otherwise it will always stay shorted
-  m_pSelectorToReliefValve->SetNextValve(CDM::enumOpenClosed::Open);
+  m_pSelectorToReliefValve->SetNextValve(SEOpenClosed::Open);
 }
 }

@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/SECompartmentLink.h>
 
+#include "io/cdm/Compartment.h"
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
@@ -37,13 +38,13 @@ void SECompartmentLink::Clear()
 //-------------------------------------------------------------------------------
 bool SECompartmentLink::Load(const CDM::CompartmentLinkData& in, SECircuitManager* circuits)
 {
-  Clear();
+  io::Compartment::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
 void SECompartmentLink::Unload(CDM::CompartmentLinkData& data)
 {
-  data.Name(m_Name);
+  io::Compartment::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 std::string SECompartmentLink::GetName() const

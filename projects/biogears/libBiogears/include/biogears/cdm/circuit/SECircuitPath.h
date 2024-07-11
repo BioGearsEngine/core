@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 
 #include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
 #include <biogears/cdm/properties/SEScalarElectricCharge.h>
@@ -124,38 +125,38 @@ public:
   virtual unsigned short NumberOfElements() const { return m_NumElements; }
   virtual unsigned short NumberOfNextElements() const { return m_NumNextElements; }
 
-  virtual CDM::enumOpenClosed::value GetSwitch() const;
-  virtual void SetSwitch(CDM::enumOpenClosed::value state);
+  virtual SEOpenClosed GetSwitch() const;
+  virtual void SetSwitch(SEOpenClosed state);
   virtual void FlipSwitch();
   virtual bool HasSwitch() const;
   virtual void InvalidateSwitch();
 
-  virtual CDM::enumOpenClosed::value GetNextSwitch() const;
-  virtual void SetNextSwitch(CDM::enumOpenClosed::value state);
+  virtual SEOpenClosed GetNextSwitch() const;
+  virtual void SetNextSwitch(SEOpenClosed state);
   virtual void FlipNextSwitch();
   virtual bool HasNextSwitch() const;
   virtual void InvalidateNextSwitch();
 
-  virtual CDM::enumOpenClosed::value GetValve() const;
-  virtual void SetValve(CDM::enumOpenClosed::value state);
+  virtual SEOpenClosed GetValve() const;
+  virtual void SetValve(SEOpenClosed state);
   virtual void FlipValve();
   virtual bool HasValve() const;
   virtual void InvalidateValve();
 
-  virtual CDM::enumOpenClosed::value GetNextValve() const;
-  virtual void SetNextValve(CDM::enumOpenClosed::value state);
+  virtual SEOpenClosed GetNextValve() const;
+  virtual void SetNextValve(SEOpenClosed state);
   virtual void FlipNextValve();
   virtual bool HasNextValve() const;
   virtual void InvalidateNextValve();
 
-  virtual CDM::enumOpenClosed::value GetPolarizedState() const;
-  virtual void SetPolarizedState(CDM::enumOpenClosed::value state);
+  virtual SEOpenClosed GetPolarizedState() const;
+  virtual void SetPolarizedState(SEOpenClosed state);
   virtual void FlipPolarizedState();
   virtual bool HasPolarizedState() const;
   virtual void InvalidatePolarizedState();
 
-  virtual CDM::enumOpenClosed::value GetNextPolarizedState() const;
-  virtual void SetNextPolarizedState(CDM::enumOpenClosed::value state);
+  virtual SEOpenClosed GetNextPolarizedState() const;
+  virtual void SetNextPolarizedState(SEOpenClosed state);
   virtual void FlipNextPolarizedState();
   virtual bool HasNextPolarizedState() const;
   virtual void InvalidateNextPolarizedState();
@@ -169,12 +170,12 @@ protected:
   /////////////////////////
   // Valves and Switches //
   /////////////////////////
-  CDM::enumOpenClosed::value m_Switch;
-  CDM::enumOpenClosed::value m_NextSwitch;
-  CDM::enumOpenClosed::value m_Valve;
-  CDM::enumOpenClosed::value m_NextValve;
-  CDM::enumOpenClosed::value m_PolarizedState;
-  CDM::enumOpenClosed::value m_NextPolarizedState;
+  SEOpenClosed m_Switch;
+  SEOpenClosed m_NextSwitch;
+  SEOpenClosed m_Valve;
+  SEOpenClosed m_NextValve;
+  SEOpenClosed m_PolarizedState;
+  SEOpenClosed m_NextPolarizedState;
 
   ResistanceScalar* m_Resistance;
   ResistanceScalar* m_NextResistance;
@@ -205,4 +206,3 @@ BG_EXT template class BIOGEARS_API SECircuitPath<FLUID_CIRCUIT_PATH>;
 BG_EXT template class BIOGEARS_API SECircuitPath<THERMAL_CIRCUIT_PATH>;
 
 }
-#include <biogears/cdm/circuit/SECircuitPath.inl>
