@@ -12,23 +12,35 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <memory>
+#include <random>
 
-#include "biogears/cdm/CommonDataModel.h"
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
+
+#include <biogears/cdm/enums/SEPatientEnums.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 
 #include <biogears/schema/cdm/PatientActions.hxx>
 
-
-#define CDM_PATIENT_ACTIONS_UNMARSHAL_HELPER(in, out, func)                          \
+#define CDM_PATIENT_ACTIONS_MARSHALL_HELPER(in, out, func)                           \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::PatientActions::UnMarshall(*in.m_##func, out.func());                        \
+    io::PatientActions::Marshall(*in.m_##func, out.func());                          \
   }
 
-#define CDM_OPTIONAL_PATIENT_ACTIONS_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                                 \
-    io::PatientActions::UnMarshall(*in.m_##func, out.func());        \
+#define CDM_OPTIONAL_PATIENT_ACTIONS_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                \
+    io::PatientActions::Marshall(*in.m_##func, out.func());         \
   }
+
+#define SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, func)                       \
+  if (in.Has##func()) {                                                              \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::PatientActions::Marshall(in.m_##func, out.func());                                \
+  }
+
+#define SE_OPTIONAL_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, func) \
+  io::PatientActions::Marshall(in.m_##func, out.func());
 
 namespace biogears {
 class SESubstanceManager;
@@ -92,180 +104,347 @@ namespace io {
     static std::vector<std::unique_ptr<SEAction>> action_factory(const CDM::ActionListData& in, SESubstanceManager& substances);
     static std::unique_ptr<SEAction> factory(CDM::ActionData const* actionData, SESubstanceManager& substances);
     static std::unique_ptr<CDM::PatientActionData> factory(const SEPatientAction* data);
+
     // template <typename SE, typename XSD>  option
+    template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+
+    template <typename SE, typename XSD, std::enable_if_t<!std::is_enum<SE>::value>* = nullptr>
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
-    template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     // class SEPatientAction;
-    static void Marshall(const CDM::PatientActionData& in, SEPatientAction& out);
-    static void UnMarshall(const SEPatientAction& in, CDM::PatientActionData& out);
+    static void UnMarshall(const CDM::PatientActionData& in, SEPatientAction& out);
+    static void Marshall(const SEPatientAction& in, CDM::PatientActionData& out);
     // class SEPatientAssessmentRequest;
-    static void Marshall(const CDM::PatientAssessmentRequestData& in, SEPatientAssessmentRequest& out);
-    static void UnMarshall(const SEPatientAssessmentRequest& in, CDM::PatientAssessmentRequestData& out);
+    static void UnMarshall(const CDM::PatientAssessmentRequestData& in, SEPatientAssessmentRequest& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEPatientAssessmentRequest& in, CDM::PatientAssessmentRequestData& out);
     // class SEAcuteRespiratoryDistressStress;
-    static void Marshall(const CDM::AcuteRespiratoryDistressData& in, SEAcuteRespiratoryDistress& out);
-    static void UnMarshall(const SEAcuteRespiratoryDistress& in, CDM::AcuteRespiratoryDistressData& out);
+    static void UnMarshall(const CDM::AcuteRespiratoryDistressData& in, SEAcuteRespiratoryDistress& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEAcuteRespiratoryDistress& in, CDM::AcuteRespiratoryDistressData& out);
     // class SEAcuteStress;
-    static void Marshall(const CDM::AcuteStressData& in, SEAcuteStress& out);
-    static void UnMarshall(const SEAcuteStress& in, CDM::AcuteStressData& out);
+    static void UnMarshall(const CDM::AcuteStressData& in, SEAcuteStress& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEAcuteStress& in, CDM::AcuteStressData& out);
     // class SEExampleAction;
-    static void Marshall(const CDM::ExampleActionData& in, SEExampleAction& out);
-    static void UnMarshall(const SEExampleAction& in, CDM::ExampleActionData& out);
+    static void UnMarshall(const CDM::ExampleActionData& in, SEExampleAction& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEExampleAction& in, CDM::ExampleActionData& out);
     // class SEAirwayObstruction;
-    static void Marshall(const CDM::AirwayObstructionData& in, SEAirwayObstruction& out);
-    static void UnMarshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out);
+    static void UnMarshall(const CDM::AirwayObstructionData& in, SEAirwayObstruction& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out);
     // class SEApnea;
-    static void Marshall(const CDM::ApneaData& in, SEApnea& out);
-    static void UnMarshall(const SEApnea& in, CDM::ApneaData& out);
+    static void UnMarshall(const CDM::ApneaData& in, SEApnea& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEApnea& in, CDM::ApneaData& out);
     // class SEAsthmaAttack;
-    static void Marshall(const CDM::AsthmaAttackData& in, SEAsthmaAttack& out);
-    static void UnMarshall(const SEAsthmaAttack& in, CDM::AsthmaAttackData& out);
+    static void UnMarshall(const CDM::AsthmaAttackData& in, SEAsthmaAttack& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEAsthmaAttack& in, CDM::AsthmaAttackData& out);
     // class SEBrainInjury;
-    static void Marshall(const CDM::BrainInjuryData& in, SEBrainInjury& out);
-    static void UnMarshall(const SEBrainInjury& in, CDM::BrainInjuryData& out);
+    static void UnMarshall(const CDM::BrainInjuryData& in, SEBrainInjury& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEBrainInjury& in, CDM::BrainInjuryData& out);
     // class SEBronchoconstriction;
-    static void Marshall(const CDM::BronchoconstrictionData& in, SEBronchoconstriction& out);
-    static void UnMarshall(const SEBronchoconstriction& in, CDM::BronchoconstrictionData& out);
+    static void UnMarshall(const CDM::BronchoconstrictionData& in, SEBronchoconstriction& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEBronchoconstriction& in, CDM::BronchoconstrictionData& out);
     // class SEBurnWound;
-    static void Marshall(const CDM::BurnWoundData& in, SEBurnWound& out);
-    static void UnMarshall(const SEBurnWound& in, CDM::BurnWoundData& out);
+    static void UnMarshall(const CDM::BurnWoundData& in, SEBurnWound& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEBurnWound& in, CDM::BurnWoundData& out);
     // class SECardiacArrest;
-    static void Marshall(const CDM::CardiacArrestData& in, SECardiacArrest& out);
-    static void UnMarshall(const SECardiacArrest& in, CDM::CardiacArrestData& out);
+    static void UnMarshall(const CDM::CardiacArrestData& in, SECardiacArrest& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SECardiacArrest& in, CDM::CardiacArrestData& out);
     // class SEChestCompression;
-    static void Marshall(const CDM::ChestCompressionData& in, SEChestCompression& out);
-    static void UnMarshall(const SEChestCompression& in, CDM::ChestCompressionData& out);
+    static void UnMarshall(const CDM::ChestCompressionData& in, SEChestCompression& out);
+    static void Marshall(const SEChestCompression& in, CDM::ChestCompressionData& out);
     // class SEChestCompressionForce;
-    static void Marshall(const CDM::ChestCompressionForceData& in, SEChestCompressionForce& out);
-    static void UnMarshall(const SEChestCompressionForce& in, CDM::ChestCompressionForceData& out);
+    static void UnMarshall(const CDM::ChestCompressionForceData& in, SEChestCompressionForce& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEChestCompressionForce& in, CDM::ChestCompressionForceData& out);
     // class SEChestCompressionForceScale;
-    static void Marshall(const CDM::ChestCompressionForceScaleData& in, SEChestCompressionForceScale& out);
-    static void UnMarshall(const SEChestCompressionForceScale& in, CDM::ChestCompressionForceScaleData& out);
+    static void UnMarshall(const CDM::ChestCompressionForceScaleData& in, SEChestCompressionForceScale& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEChestCompressionForceScale& in, CDM::ChestCompressionForceScaleData& out);
     // class SEChestOcclusiveDressing;
-    static void Marshall(const CDM::ChestOcclusiveDressingData& in, SEChestOcclusiveDressing& out);
-    static void UnMarshall(const SEChestOcclusiveDressing& in, CDM::ChestOcclusiveDressingData& out);
+    static void UnMarshall(const CDM::ChestOcclusiveDressingData& in, SEChestOcclusiveDressing& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEChestOcclusiveDressing& in, CDM::ChestOcclusiveDressingData& out);
     // class SEConsciousRespirationCommand;
-    static void Marshall(const CDM::ConsciousRespirationCommandData& in, SEConsciousRespirationCommand& out);
-    static void UnMarshall(const SEConsciousRespirationCommand& in, CDM::ConsciousRespirationCommandData& out);
+    static void UnMarshall(const CDM::ConsciousRespirationCommandData& in, SEConsciousRespirationCommand& out);
+    static void Marshall(const SEConsciousRespirationCommand& in, CDM::ConsciousRespirationCommandData& out);
     // class SEEbola;
-    static void Marshall(const CDM::EbolaData& in, SEEbola& out);
-    static void UnMarshall(const SEEbola& in, CDM::EbolaData& out);
+    static void UnMarshall(const CDM::EbolaData& in, SEEbola& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEEbola& in, CDM::EbolaData& out);
     // class SEEscharotomy
-    static void Marshall(const CDM::EscharotomyData& in, SEEscharotomy& out);
-    static void UnMarshall(const SEEscharotomy& in, CDM::EscharotomyData& out);
+    static void UnMarshall(const CDM::EscharotomyData& in, SEEscharotomy& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEEscharotomy& in, CDM::EscharotomyData& out);
     // class SEExercise;
-    static void Marshall(const CDM::ExerciseData& in, SEExercise& out);
-    static void UnMarshall(const SEExercise& in, CDM::ExerciseData& out);
+    static void UnMarshall(const CDM::ExerciseData& in, SEExercise& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEExercise& in, CDM::ExerciseData& out);
     // class SEForcedInhale;
-    static void Marshall(const CDM::ForcedInhaleData& in, SEForcedInhale& out);
-    static void UnMarshall(const SEForcedInhale& in, CDM::ForcedInhaleData& out);
+    static void UnMarshall(const CDM::ForcedInhaleData& in, SEForcedInhale& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEForcedInhale& in, CDM::ForcedInhaleData& out);
     // class SEForcedExhale;
-    static void Marshall(const CDM::ForcedExhaleData& in, SEForcedExhale& out);
-    static void UnMarshall(const SEForcedExhale& in, CDM::ForcedExhaleData& out);
+    static void UnMarshall(const CDM::ForcedExhaleData& in, SEForcedExhale& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEForcedExhale& in, CDM::ForcedExhaleData& out);
     // class SEBreathHold;
-    static void Marshall(const CDM::BreathHoldData& in, SEBreathHold& out);
-    static void UnMarshall(const SEBreathHold& in, CDM::BreathHoldData& out);
+    static void UnMarshall(const CDM::BreathHoldData& in, SEBreathHold& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEBreathHold& in, CDM::BreathHoldData& out);
     // class SEUseInhaler;
-    static void Marshall(const CDM::UseInhalerData& in, SEUseInhaler& out);
-    static void UnMarshall(const SEUseInhaler& in, CDM::UseInhalerData& out);
+    static void UnMarshall(const CDM::UseInhalerData& in, SEUseInhaler& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEUseInhaler& in, CDM::UseInhalerData& out);
     // class SEConsciousRespiration;
-    static void Marshall(const CDM::ConsciousRespirationData& in, SEConsciousRespiration& out);
-    static void UnMarshall(const SEConsciousRespiration& in, CDM::ConsciousRespirationData& out);
+    static void UnMarshall(const CDM::ConsciousRespirationData& in, SEConsciousRespiration& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEConsciousRespiration& in, CDM::ConsciousRespirationData& out);
     // class SEConsumeNutrients;
-    static void Marshall(const CDM::ConsumeNutrientsData& in, SEConsumeNutrients& out);
-    static void UnMarshall(const SEConsumeNutrients& in, CDM::ConsumeNutrientsData& out);
+    static void UnMarshall(const CDM::ConsumeNutrientsData& in, SEConsumeNutrients& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEConsumeNutrients& in, CDM::ConsumeNutrientsData& out);
     // class SEHemorrhage;
-    static void Marshall(const CDM::HemorrhageData& in, SEHemorrhage& out);
-    static void UnMarshall(const SEHemorrhage& in, CDM::HemorrhageData& out);
+    static void UnMarshall(const CDM::HemorrhageData& in, SEHemorrhage& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEHemorrhage& in, CDM::HemorrhageData& out);
     // class SEInfection;
-    static void Marshall(const CDM::InfectionData& in, SEInfection& out);
-    static void UnMarshall(const SEInfection& in, CDM::InfectionData& out);
+    static void UnMarshall(const CDM::InfectionData& in, SEInfection& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEInfection& in, CDM::InfectionData& out);
     // class SEIntubation;
-    static void Marshall(const CDM::IntubationData& in, SEIntubation& out);
-    static void UnMarshall(const SEIntubation& in, CDM::IntubationData& out);
+    static void UnMarshall(const CDM::IntubationData& in, SEIntubation& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEIntubation& in, CDM::IntubationData& out);
     // class SEMechanicalVentilation;
-    static void Marshall(const CDM::MechanicalVentilationData& in, const SESubstanceManager& substances, SEMechanicalVentilation& out);
-    static void UnMarshall(const SEMechanicalVentilation& in, CDM::MechanicalVentilationData& out);
+    static void UnMarshall(const CDM::MechanicalVentilationData& in, const SESubstanceManager& substances, SEMechanicalVentilation& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEMechanicalVentilation& in, CDM::MechanicalVentilationData& out);
     // class SENasalCannula;
-    static void Marshall(const CDM::NasalCannulaData& in, SENasalCannula& out);
-    static void UnMarshall(const SENasalCannula& in, CDM::NasalCannulaData& out);
+    static void UnMarshall(const CDM::NasalCannulaData& in, SENasalCannula& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SENasalCannula& in, CDM::NasalCannulaData& out);
     // class SENasalState;
-    static void Marshall(const CDM::NasalStateData& in, SENasalState& out);
-    static void UnMarshall(const SENasalState& in, CDM::NasalStateData& out);
+    static void UnMarshall(const CDM::NasalStateData& in, SENasalState& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SENasalState& in, CDM::NasalStateData& out);
     // class SENeedleDecompression;
-    static void Marshall(const CDM::NeedleDecompressionData& in, SENeedleDecompression& out);
-    static void UnMarshall(const SENeedleDecompression& in, CDM::NeedleDecompressionData& out);
+    static void UnMarshall(const CDM::NeedleDecompressionData& in, SENeedleDecompression& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SENeedleDecompression& in, CDM::NeedleDecompressionData& out);
     // class SEPainStimulus;
-    static void Marshall(const CDM::PainStimulusData& in, SEPainStimulus& out);
-    static void UnMarshall(const SEPainStimulus& in, CDM::PainStimulusData& out);
+    static void UnMarshall(const CDM::PainStimulusData& in, SEPainStimulus& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEPainStimulus& in, CDM::PainStimulusData& out);
     // class SEPericardialEffusion;
-    static void Marshall(const CDM::PericardialEffusionData& in, SEPericardialEffusion& out);
-    static void UnMarshall(const SEPericardialEffusion& in, CDM::PericardialEffusionData& out);
+    static void UnMarshall(const CDM::PericardialEffusionData& in, SEPericardialEffusion& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEPericardialEffusion& in, CDM::PericardialEffusionData& out);
     // class SEPulmonaryShunt;
-    static void Marshall(const CDM::PulmonaryShuntData& in, SEPulmonaryShunt& out);
-    static void UnMarshall(const SEPulmonaryShunt& in, CDM::PulmonaryShuntData& out);
+    static void UnMarshall(const CDM::PulmonaryShuntData& in, SEPulmonaryShunt& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEPulmonaryShunt& in, CDM::PulmonaryShuntData& out);
     // class SERadiationAbsorbedDose;
-    static void Marshall(const CDM::RadiationAbsorbedDoseData& in, SERadiationAbsorbedDose& out);
-    static void UnMarshall(const SERadiationAbsorbedDose& in, CDM::RadiationAbsorbedDoseData& out);
+    static void UnMarshall(const CDM::RadiationAbsorbedDoseData& in, SERadiationAbsorbedDose& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SERadiationAbsorbedDose& in, CDM::RadiationAbsorbedDoseData& out);
     // class SESleep;
-    static void Marshall(const CDM::SleepData& in, SESleep& out);
-    static void UnMarshall(const SESleep& in, CDM::SleepData& out);
+    static void UnMarshall(const CDM::SleepData& in, SESleep& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SESleep& in, CDM::SleepData& out);
     // class SESubstanceNasalDose;
-    static void Marshall(const CDM::SubstanceNasalDoseData& in, SESubstanceNasalDose& out);
-    static void UnMarshall(const SESubstanceNasalDose& in, CDM::SubstanceNasalDoseData& out);
+    static void UnMarshall(const CDM::SubstanceNasalDoseData& in, SESubstanceNasalDose& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SESubstanceNasalDose& in, CDM::SubstanceNasalDoseData& out);
     // class SETensionPneumothorax;
-    static void Marshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out);
-    static void UnMarshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out);
+    static void UnMarshall(const CDM::TensionPneumothoraxData& in, SETensionPneumothorax& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out);
     // class SESubstanceAdministration;
-    static void Marshall(const CDM::SubstanceAdministrationData& in, SESubstanceAdministration& out);
-    static void UnMarshall(const SESubstanceAdministration& in, CDM::SubstanceAdministrationData& out);
+    static void UnMarshall(const CDM::SubstanceAdministrationData& in, SESubstanceAdministration& out);
+    static void Marshall(const SESubstanceAdministration& in, CDM::SubstanceAdministrationData& out);
     // class SESubstanceBolus;
-    static void Marshall(const CDM::SubstanceBolusData& in, SESubstanceBolus& out);
-    static void UnMarshall(const SESubstanceBolus& in, CDM::SubstanceBolusData& out);
+    static void UnMarshall(const CDM::SubstanceBolusData& in, SESubstanceBolus& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SESubstanceBolus& in, CDM::SubstanceBolusData& out);
     // class SESubstanceBolusState;
-    static void Marshall(const CDM::SubstanceBolusStateData& in, SESubstanceBolusState& out);
-    static void UnMarshall(const SESubstanceBolusState& in, CDM::SubstanceBolusStateData& out);
+    static void UnMarshall(const CDM::SubstanceBolusStateData& in, SESubstanceBolusState& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SESubstanceBolusState& in, CDM::SubstanceBolusStateData& out);
     // class SESubstanceCompoundInfusion;
-    static void Marshall(const CDM::SubstanceCompoundInfusionData& in, SESubstanceCompoundInfusion& out);
-    static void UnMarshall(const SESubstanceCompoundInfusion& in, CDM::SubstanceCompoundInfusionData& out);
+    static void UnMarshall(const CDM::SubstanceCompoundInfusionData& in, SESubstanceCompoundInfusion& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SESubstanceCompoundInfusion& in, CDM::SubstanceCompoundInfusionData& out);
     // class SESubstanceInfusion;
-    static void Marshall(const CDM::SubstanceInfusionData& in, SESubstanceInfusion& out);
-    static void UnMarshall(const SESubstanceInfusion& in, CDM::SubstanceInfusionData& out);
+    static void UnMarshall(const CDM::SubstanceInfusionData& in, SESubstanceInfusion& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SESubstanceInfusion& in, CDM::SubstanceInfusionData& out);
     // class SESubstanceOralDose;
-    static void Marshall(const CDM::SubstanceOralDoseData& in, SESubstanceOralDose& out);
-    static void UnMarshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out);
+    static void UnMarshall(const CDM::SubstanceOralDoseData& in, SESubstanceOralDose& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out);
     // class SETransmucosalState;
-    static void Marshall(const CDM::TransmucosalStateData& in, SETransmucosalState& out);
-    static void UnMarshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out);
+    static void UnMarshall(const CDM::TransmucosalStateData& in, SETransmucosalState& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out);
     // class SETourniquet;
-    static void Marshall(const CDM::TourniquetData& in, SETourniquet& out);
-    static void UnMarshall(const SETourniquet& in, CDM::TourniquetData& out);
+    static void UnMarshall(const CDM::TourniquetData& in, SETourniquet& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SETourniquet& in, CDM::TourniquetData& out);
     // class SEUrinate;
-    static void Marshall(const CDM::UrinateData& in, SEUrinate& out);
-    static void UnMarshall(const SEUrinate& in, CDM::UrinateData& out);
+    static void UnMarshall(const CDM::UrinateData& in, SEUrinate& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEUrinate& in, CDM::UrinateData& out);
     // class SEOverride;
-    static void Marshall(const CDM::OverrideData& in, SEOverride& out);
-    static void UnMarshall(const SEOverride& in, CDM::OverrideData& out);
+    static void UnMarshall(const CDM::OverrideData& in, SEOverride& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEOverride& in, CDM::OverrideData& out);
+
+    // SEBrainInjuryType
+    static void UnMarshall(const CDM::enumBrainInjuryType& in, SEBrainInjuryType& out);
+    static void Marshall(const SEBrainInjuryType& in, CDM::enumBrainInjuryType& out);
+    // SEBolusAdministration
+    static void UnMarshall(const CDM::enumBolusAdministration& in, SEBolusAdministration& out);
+    static void Marshall(const SEBolusAdministration& in, CDM::enumBolusAdministration& out);
+    // SEBurnDegree
+    static void UnMarshall(const CDM::enumBurnDegree& in, SEBurnDegree& out);
+    static void Marshall(const SEBurnDegree& in, CDM::enumBurnDegree& out);
+    //  SEInfectionSeverity
+    static void UnMarshall(const CDM::enumInfectionSeverity& in, SEInfectionSeverity& out);
+    static void Marshall(const SEInfectionSeverity& in, CDM::enumInfectionSeverity& out);
+    // SEIntubationType
+    static void UnMarshall(const CDM::enumIntubationType& in, SEIntubationType& out);
+    static void Marshall(const SEIntubationType& in, CDM::enumIntubationType& out);
+    // SEPatientAssessmentType
+    static void UnMarshall(const CDM::enumPatientAssessment& in, SEPatientAssessmentType& out);
+    static void Marshall(const SEPatientAssessmentType& in, CDM::enumPatientAssessment& out);
+    // SEPneumothoraxType
+    static void UnMarshall(const CDM::enumPneumothoraxType& in, SEPneumothoraxType& out);
+    static void Marshall(const SEPneumothoraxType& in, CDM::enumPneumothoraxType& out);
+    // SEOralAdministrationType
+    static void UnMarshall(const CDM::enumOralAdministration in, SEOralAdministrationType& out);
+    static void Marshall(const SEOralAdministrationType& in, CDM::enumOralAdministration& out);
+    //  SETourniquetApplicationType
+    static void UnMarshall(const CDM::enumTourniquetApplicationLevel& in, SETourniquetApplicationType& out);
+    static void Marshall(const SETourniquetApplicationType& in, CDM::enumTourniquetApplicationLevel& out);
   };
 
   //----------------------------------------------------------------------------------
-  template <typename SE, typename XSD>
-  void PatientActions::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>*>
+  void PatientActions::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
-      out.Clear()();
+      out = SE::Invalid;
     } else {
-      Marshall(option_in.get(), out);
+      io::PatientActions::UnMarshall(option_in.get(), out);
     }
   }
-  //----------------------------------------------------------------------------------
-  template <typename SE, typename XSD>
-  void PatientActions::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+
+  template <typename SE, typename XSD, std::enable_if_t<!std::is_enum<SE>::value>*>
+  void PatientActions::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
+    if (!option_in.present()) {
+      out.Clear();
+    } else {
+      io::PatientActions::UnMarshall(option_in.get(), out);
+    }
+  }
+
+  template <typename SE, typename XSD>
+  void PatientActions::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  {
+
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
-    option_out.set(*item);
+    io::PatientActions::Marshall(in, *item);
+    option_out.set(std::move(item));
   }
 } // Namespace IO
+
+// Operators
+bool operator==(CDM::enumBrainInjuryType const& lhs, SEBrainInjuryType const& rhs);
+bool operator==(CDM::enumBolusAdministration const& lhs, SEBolusAdministration const& rhs);
+bool operator==(CDM::enumBurnDegree const& lhs, SEBurnDegree const& rhs);
+bool operator==(CDM::enumInfectionSeverity const& lhs, SEInfectionSeverity const& rhs);
+bool operator==(CDM::enumIntubationType const& lhs, SEIntubationType const& rhs);
+bool operator==(CDM::enumPatientAssessment const& lhs, SEPatientAssessmentType const& rhs);
+bool operator==(CDM::enumPneumothoraxType const& lhs, SEPneumothoraxType const& rhs);
+bool operator==(CDM::enumOralAdministration const& lhs, SEOralAdministrationType const& rhs);
+bool operator==(CDM::enumTourniquetApplicationLevel const& lhs, SETourniquetApplicationType const& rhs);
+
+inline bool operator==(SEBrainInjuryType const& lhs, CDM::enumBrainInjuryType const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEBolusAdministration const& lhs, CDM::enumBolusAdministration const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEBurnDegree const& lhs, CDM::enumBurnDegree const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEInfectionSeverity const& lhs, CDM::enumInfectionSeverity const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEIntubationType const& lhs, CDM::enumIntubationType const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEPatientAssessmentType const& lhs, CDM::enumPatientAssessment const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEPneumothoraxType const& lhs, CDM::enumPneumothoraxType const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEOralAdministrationType const& lhs, CDM::enumOralAdministration const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SETourniquetApplicationType const& lhs, CDM::enumTourniquetApplicationLevel const& rhs)
+{
+  return rhs == lhs;
+}
+
+inline bool operator!=(CDM::enumBrainInjuryType const& lhs, SEBrainInjuryType const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumBolusAdministration const& lhs, SEBolusAdministration const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumBurnDegree const& lhs, SEBurnDegree const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumInfectionSeverity const& lhs, SEInfectionSeverity const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumIntubationType const& lhs, SEIntubationType const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumPatientAssessment const& lhs, SEPatientAssessmentType const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumPneumothoraxType const& lhs, SEPneumothoraxType const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumOralAdministration const& lhs, SEOralAdministrationType const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumTourniquetApplicationLevel const& lhs, SETourniquetApplicationType const& rhs)
+{
+  return !(lhs == rhs);
+}
+
+inline bool operator!=(SEBrainInjuryType const& lhs, CDM::enumBrainInjuryType const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEBolusAdministration const& lhs, CDM::enumBolusAdministration const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEBurnDegree const& lhs, CDM::enumBurnDegree const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEInfectionSeverity const& lhs, CDM::enumInfectionSeverity const& rhs)
+{
+
 } // Namespace Biogears
+inline bool operator!=(SEIntubationType const& lhs, CDM::enumIntubationType const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEPatientAssessmentType const& lhs, CDM::enumPatientAssessment const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEPneumothoraxType const& lhs, CDM::enumPneumothoraxType const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEOralAdministrationType const& lhs, CDM::enumOralAdministration const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SETourniquetApplicationType const& lhs, CDM::enumTourniquetApplicationLevel const& rhs)
+{
+  return !(rhs == lhs);
+}
+
+}

@@ -18,15 +18,15 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/EngineState.hxx>
 
-#define CDM_ENGINE_STATE_UNMARSHAL_HELPER(in, out, func)                             \
+#define CDM_ENGINE_STATE_MARSHALL_HELPER(in, out, func)                             \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::EngineState::UnMarshall(*in.m_##func, out.func());                           \
+    io::EngineState::Marshall(*in.m_##func, out.func());                           \
   }
 
-#define CDM_OPTIONAL_ENGINE_STATE_UNMARSHAL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_ENGINE_STATE_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                              \
-    io::EngineState::UnMarshall(*in.m_##func, out.func());        \
+    io::EngineState::Marshall(*in.m_##func, out.func());        \
   }
 
 namespace biogears {
@@ -37,29 +37,29 @@ namespace io {
   public:
     //template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     //class SEPhysiologyEngineState
-    static void Marshall(const CDM::PhysiologyEngineStateData& in, PhysiologyEngine& out);
-    static void UnMarshall(const PhysiologyEngine& in, CDM::PhysiologyEngineStateData& out);
+    static void UnMarshall(const CDM::PhysiologyEngineStateData& in, PhysiologyEngine& out);
+    static void Marshall(const PhysiologyEngine& in, CDM::PhysiologyEngineStateData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void EngineState::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void EngineState::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Invalidate();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void EngineState::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void EngineState::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO

@@ -18,12 +18,12 @@ class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
 namespace io {
-  class Scenario;
+  class DataRequests;
 }
 
 class BIOGEARS_API SECompartmentSubstanceDataRequest : public SECompartmentDataRequest {
   friend class SEDataRequestManager;
-  friend io::Scenario;
+  friend io::DataRequests;
 
 public:
   SECompartmentSubstanceDataRequest(const SEDecimalFormat* dfault = nullptr);

@@ -23,10 +23,10 @@ namespace biogears {
 
 class TimeUnit;
 namespace io {
-  class Scenario;
+  class Actions;
 }
 class BIOGEARS_API SEAdvanceTime : public SEAction {
-  friend io::Scenario;
+  friend io::Actions;
 
 public:
   SEAdvanceTime();

@@ -19,12 +19,12 @@ class SESubstance;
 class SESubstanceManager;
 class SEDataRequestManager;
 namespace io {
-  class Scenario;
+  class DataRequests;
 }
 
 class BIOGEARS_API SESubstanceDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
-  friend io::Scenario;
+  friend io::DataRequests;
 
 
 public:

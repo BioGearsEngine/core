@@ -5,11 +5,15 @@
 #include <biogears/engine/Equipment/ECG.h>
 #include <biogears/version.h>
 
+#include <io/biogears/BioGears.h>
+#include <io/cdm/Actions.h>
+#include <io/cdm/Property.h>
+
 namespace biogears {
 namespace io {
 
   // BioGears
-  void BioGears::Marshall(const CDM::BioGearsStateData& in, BioGearsEngine& out, const SEScalarTime* simTime)
+  void BioGears::UnMarshall(const CDM::BioGearsStateData& in, BioGearsEngine& out, const SEScalarTime* simTime)
   {
     auto requests = out.GetEngineTrack()->GetDataRequestManager().GetDataRequests();
     auto resultsFile = out.GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
@@ -29,7 +33,7 @@ namespace io {
 
     out.m_State = EngineState::NotReady;
 
-    // if (in.DataRequests().present()) {
+    // if (in.DataRequests).present()) {
     //   out.m_EngineTrack.GetDataRequestManager().Clear();
     //   out.m_EngineTrack.GetDataRequestManager().Load(in.DataRequests().get(), *out.m_Substances);
     //   out.m_EngineTrack.ForceConnection(); // I don't want to rest the file because I would loose all my data
@@ -47,8 +51,11 @@ namespace io {
         out.m_SimulationTime->SetValue(0, TimeUnit::s);
       }
     }
+
     out.m_AirwayMode = in.AirwayMode();
     out.m_Intubation = in.Intubation();
+    // io::BioGears::UnMarshall(in.AirwayMode(), out.m_AirwayMode);
+    // io::Property::UnMarshall(in.Intubation(), out.m_Intubation);
 
     /// Patient //
     if (!in.Patient().present()) {
@@ -128,21 +135,21 @@ namespace io {
     }
   }
 
-  void BioGears::UnMarshall(const BioGearsEngine& in, CDM::BioGearsStateData& out)
+  void BioGears::Marshall(const BioGearsEngine& in, CDM::BioGearsStateData& out)
   {
-
 
     out.contentVersion(biogears::branded_version_string());
 
     out.SimulationTime(std::unique_ptr<CDM::ScalarTimeData>(in.m_SimulationTime->Unload()));
-    
+
     if (in.m_EngineTrack.GetDataRequestManager().HasDataRequests()) {
       out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_EngineTrack.GetDataRequestManager().Unload()));
     }
-
     out.AirwayMode(in.m_AirwayMode);
     out.Intubation(in.m_Intubation);
-    // Patient
+    // io::BioGears::Marshall(in.m_AirwayMode, out.AirwayMode());
+    // io::Property::Marshall(in.m_Intubation, out.Intubation());
+    //  Patient
     out.Patient(std::unique_ptr<CDM::PatientData>(in.m_Patient->Unload()));
     // Conditions
     std::vector<CDM::ConditionData*> conditions;
@@ -185,6 +192,76 @@ namespace io {
     out.Configuration(std::unique_ptr<CDM::PhysiologyEngineConfigurationData>(in.m_Config->Unload()));
     // Circuitsk
     out.CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(in.m_Circuits->Unload()));
+  }
+
+  //----------------------------------------------------------------------------------------
+  //  SEErrorType
+  void BioGears::UnMarshall(const CDM::enumBioGearsAirwayMode& in, SEBioGearsAirwayMode& out)
+  {
+    switch (in) {
+    case CDM::enumBioGearsAirwayMode::Free:
+      out = SEBioGearsAirwayMode::Free;
+      break;
+    case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
+      out = SEBioGearsAirwayMode::AnesthesiaMachine;
+      break;
+    case CDM::enumBioGearsAirwayMode::Inhaler:
+      out = SEBioGearsAirwayMode::Inhaler;
+      break;
+    case CDM::enumBioGearsAirwayMode::NasalCannula:
+      out = SEBioGearsAirwayMode::NasalCannula;
+      break;
+    case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
+      out = SEBioGearsAirwayMode::MechanicalVentilator;
+      break;
+    default:
+      out = SEBioGearsAirwayMode::Invalid;
+      break;
+    }
+  }
+  void BioGears::Marshall(const SEBioGearsAirwayMode& in, CDM::enumBioGearsAirwayMode& out)
+  {
+    switch (in) {
+    case SEBioGearsAirwayMode::Free:
+      out = CDM::enumBioGearsAirwayMode::Free;
+      break;
+    case SEBioGearsAirwayMode::AnesthesiaMachine:
+      out = CDM::enumBioGearsAirwayMode::AnesthesiaMachine;
+      break;
+    case SEBioGearsAirwayMode::Inhaler:
+      out = CDM::enumBioGearsAirwayMode::Inhaler;
+      break;
+    case SEBioGearsAirwayMode::NasalCannula:
+      out = CDM::enumBioGearsAirwayMode::NasalCannula;
+      break;
+    case SEBioGearsAirwayMode::MechanicalVentilator:
+      out = CDM::enumBioGearsAirwayMode::MechanicalVentilator;
+      break;
+    default:
+      out = (CDM::enumBioGearsAirwayMode::value)-1;
+      break;
+    }
+  }
+}
+
+bool operator==(CDM::enumBioGearsAirwayMode const& lhs, SEBioGearsAirwayMode const& rhs)
+{
+
+  switch (rhs) {
+  case SEBioGearsAirwayMode::Free:
+    return (CDM::enumBioGearsAirwayMode::Free == lhs);
+  case SEBioGearsAirwayMode::AnesthesiaMachine:
+    return (CDM::enumBioGearsAirwayMode::AnesthesiaMachine == lhs);
+  case SEBioGearsAirwayMode::Inhaler:
+    return (CDM::enumBioGearsAirwayMode::Inhaler == lhs);
+  case SEBioGearsAirwayMode::NasalCannula:
+    return (CDM::enumBioGearsAirwayMode::NasalCannula == lhs);
+  case SEBioGearsAirwayMode::MechanicalVentilator:
+    return (CDM::enumBioGearsAirwayMode::MechanicalVentilator == lhs);
+  case SEBioGearsAirwayMode::Invalid:
+    return (-1 == lhs);
+  default:
+    return false;
   }
 }
 }

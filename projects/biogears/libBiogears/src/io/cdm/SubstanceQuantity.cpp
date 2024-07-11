@@ -12,64 +12,68 @@
 namespace biogears {
 namespace io {
   // class SESubstanceQuantity
-  void SubstanceQuantity::Marshall(const CDM::SubstanceQuantityData& in, SESubstanceQuantity& out)
+  void SubstanceQuantity::UnMarshall(const CDM::SubstanceQuantityData& in, SESubstanceQuantity& out)
   {
     out.Clear();
   }
   //-----------------------------------------------------------------------------
-  void SubstanceQuantity::UnMarshall(const SESubstanceQuantity& in, CDM::SubstanceQuantityData& out)
+  void SubstanceQuantity::Marshall(const SESubstanceQuantity& in, CDM::SubstanceQuantityData& out)
   {
     out.Substance(in.m_Substance.GetName());
   }
   // class SEGasSubstanceQuantity
-  void SubstanceQuantity::Marshall(const CDM::GasSubstanceQuantityData& in, SEGasSubstanceQuantity& out)
+  void SubstanceQuantity::UnMarshall(const CDM::GasSubstanceQuantityData& in, SEGasSubstanceQuantity& out)
   {
-    Marshall(static_cast<const CDM::SubstanceQuantityData&>(in), static_cast<SESubstanceQuantity&>(out));
+    UnMarshall(static_cast<const CDM::SubstanceQuantityData&>(in), static_cast<SESubstanceQuantity&>(out));
     if (!out.m_Compartment.HasChildren()) {
-      io::Property::Marshall(in.PartialPressure(), out.GetPartialPressure());
-      io::Property::Marshall(in.Volume(), out.GetVolume());
-      io::Property::Marshall(in.VolumeFraction(), out.GetVolumeFraction());
+      io::Property::UnMarshall(in.PartialPressure(), out.GetPartialPressure());
+      io::Property::UnMarshall(in.Volume(), out.GetVolume());
+      io::Property::UnMarshall(in.VolumeFraction(), out.GetVolumeFraction());
     }
   }
   //-----------------------------------------------------------------------------
-  void SubstanceQuantity::UnMarshall(SEGasSubstanceQuantity& in, CDM::GasSubstanceQuantityData& out)
+  void SubstanceQuantity::Marshall(SEGasSubstanceQuantity& in, CDM::GasSubstanceQuantityData& out)
   {
-    UnMarshall(static_cast<const SESubstanceQuantity&>(in), static_cast<CDM::SubstanceQuantityData&>(out));
+    Marshall(static_cast<const SESubstanceQuantity&>(in), static_cast<CDM::SubstanceQuantityData&>(out));
     // Even if you have children, I am unloading everything, this makes the xml actually usefull...
-
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PartialPressure)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Volume)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, VolumeFraction)
+    
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PartialPressure)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Volume)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VolumeFraction)
   }
   //-----------------------------------------------------------------------------
   // class SELiquidSubstanceQuantity
-  void SubstanceQuantity::Marshall(const CDM::LiquidSubstanceQuantityData& in, SELiquidSubstanceQuantity& out)
+  void SubstanceQuantity::UnMarshall(const CDM::LiquidSubstanceQuantityData& in, SELiquidSubstanceQuantity& out)
   {
-    Marshall(static_cast<const CDM::SubstanceQuantityData&>(in), static_cast<SESubstanceQuantity&>(out));
+    UnMarshall(static_cast<const CDM::SubstanceQuantityData&>(in), static_cast<SESubstanceQuantity&>(out));
     if (!out.m_Compartment.HasChildren()) {
-      io::Property::Marshall(in.Concentration(), out.GetConcentration());
-      io::Property::Marshall(in.Mass(), out.GetMass());
-      io::Property::Marshall(in.MassCleared(), out.GetMassCleared());
-      io::Property::Marshall(in.MassDeposited(), out.GetMassDeposited());
-      io::Property::Marshall(in.MassExcreted(), out.GetMassExcreted());
-      io::Property::Marshall(in.Molarity(), out.GetMolarity());
-      io::Property::Marshall(in.Saturation(), out.GetSaturation());
-      io::Property::Marshall(in.PartialPressure(), out.GetPartialPressure());
+      io::Property::UnMarshall(in.Concentration(), out.GetConcentration());
+      io::Property::UnMarshall(in.Mass(), out.GetMass());
+      io::Property::UnMarshall(in.MassCleared(), out.GetMassCleared());
+      io::Property::UnMarshall(in.MassDeposited(), out.GetMassDeposited());
+      io::Property::UnMarshall(in.MassExcreted(), out.GetMassExcreted());
+      io::Property::UnMarshall(in.Molarity(), out.GetMolarity());
+      if (out.m_isO2 || out.m_isCO2 || out.m_isCO) {
+        io::Property::UnMarshall(in.Saturation(), out.GetSaturation());
+      }
+      io::Property::UnMarshall(in.PartialPressure(), out.GetPartialPressure());
     }
   }
   //-----------------------------------------------------------------------------
-  void SubstanceQuantity::UnMarshall(SELiquidSubstanceQuantity& in, CDM::LiquidSubstanceQuantityData& out)
+  void SubstanceQuantity::Marshall(SELiquidSubstanceQuantity& in, CDM::LiquidSubstanceQuantityData& out)
   {
-    UnMarshall(static_cast<const SESubstanceQuantity&>(in), static_cast<CDM::SubstanceQuantityData&>(out));
+    Marshall(static_cast<const SESubstanceQuantity&>(in), static_cast<CDM::SubstanceQuantityData&>(out));
     // Even if you have children, I am unloading everything, this makes the xml actually usefull...
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Concentration)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Mass)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MassCleared)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MassDeposited)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, MassExcreted)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Molarity)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, Saturation)
-    CDM_OPTIONAL_PROPERTY_UNMARSHAL_HELPER(in, out, PartialPressure)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Concentration)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Mass)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MassCleared)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MassDeposited)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MassExcreted)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Molarity)
+    if (in.m_isO2 || in.m_isCO2 || in.m_isCO) {
+      CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Saturation)
+    }
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PartialPressure)
   }
 }
 }

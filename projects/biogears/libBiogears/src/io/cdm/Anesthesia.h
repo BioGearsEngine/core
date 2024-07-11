@@ -12,22 +12,31 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <memory>
+#include <random>
 
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/enums/SEAnesthesiaEnums.h>
 #include <biogears/exports.h>
 
 #include <biogears/schema/cdm/Anesthesia.hxx>
 
-#define CDM_ANESTHESIA_UNMARSHAL_HELPER(in, out, func)                               \
+#define CDM_ANESTHESIA_MARSHALL_HELPER(in, out, func)                                \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Anesthesia::UnMarshall(*in.m_##func, out.func());                            \
+    io::Anesthesia::Marshall(*in.m_##func, out.func());                              \
   }
 
-#define CDM_OPTIONAL_ANESTHESIA_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                            \
-    io::Anesthesia::UnMarshall(*in.m_##func, out.func());       \
+#define CDM_OPTIONAL_ANESTHESIA_MARSHALL_HELPER(in, out, func) \
+  io::Anesthesia::Marshall(*in.m_##func, out.func());
+
+#define SE_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, func)                            \
+  if (in.Has##func()) {                                                              \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::Anesthesia::Marshall(in.m_##func, out.func());                               \
   }
+
+#define SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, func) \
+  io::Anesthesia::Marshall(in.m_##func, out.func());
 
 namespace biogears {
 class SEAnesthesiaMachine;
@@ -37,38 +46,124 @@ class SEAnesthesiaMachineOxygenBottle;
 namespace io {
   class BIOGEARS_PRIVATE_API Anesthesia {
   public:
-    //template <typename SE, typename XSD>  option
+    // template <typename SE, typename XSD>  option
+    template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    template <typename SE, typename XSD, std::enable_if_t<!std::is_enum<SE>::value>* = nullptr>
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
-    template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
-    //class SEAnesthesiaMachine
-    static void Marshall(const CDM::AnesthesiaMachineData& in, SEAnesthesiaMachine& out);
-    static void UnMarshall(const SEAnesthesiaMachine& in, CDM::AnesthesiaMachineData & out);
-    //class SEAnesthesiaMachineChamber
-    static void Marshall(const CDM::AnesthesiaMachineChamberData& in, SEAnesthesiaMachineChamber& out);
-    static void UnMarshall(const SEAnesthesiaMachineChamber& in, CDM::AnesthesiaMachineChamberData& out);
-    //class SEAnesthesiaMachineOxygenBottle
-    static void Marshall(const CDM::AnesthesiaMachineOxygenBottleData& in, SEAnesthesiaMachineOxygenBottle& out);
-    static void UnMarshall(const SEAnesthesiaMachineOxygenBottle& in, CDM::AnesthesiaMachineOxygenBottleData& out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    // class SEAnesthesiaMachine
+    static void UnMarshall(const CDM::AnesthesiaMachineData& in, SEAnesthesiaMachine& out);
+    static void Marshall(const SEAnesthesiaMachine& in, CDM::AnesthesiaMachineData& out);
+    // class SEAnesthesiaMachineChamber
+    static void UnMarshall(const CDM::AnesthesiaMachineChamberData& in, SEAnesthesiaMachineChamber& out);
+    static void Marshall(const SEAnesthesiaMachineChamber& in, CDM::AnesthesiaMachineChamberData& out);
+    // class SEAnesthesiaMachineOxygenBottle
+    static void UnMarshall(const CDM::AnesthesiaMachineOxygenBottleData& in, SEAnesthesiaMachineOxygenBottle& out);
+    static void Marshall(const SEAnesthesiaMachineOxygenBottle& in, CDM::AnesthesiaMachineOxygenBottleData& out);
+
+    // SEAnesthesiaMachineEvent
+    static void UnMarshall(const CDM::enumAnesthesiaMachineEvent& in, SEAnesthesiaMachineEvent& out);
+    static void Marshall(const SEAnesthesiaMachineEvent& in, CDM::enumAnesthesiaMachineEvent& out);
+    // SEAnesthesiaMachineOxygenSource
+    static void UnMarshall(const CDM::enumAnesthesiaMachineOxygenSource& in, SEAnesthesiaMachineOxygenSource& out);
+    static void Marshall(const SEAnesthesiaMachineOxygenSource& in, CDM::enumAnesthesiaMachineOxygenSource& out);
+    // SEAnesthesiaMachinePrimaryGas
+    static void UnMarshall(const CDM::enumAnesthesiaMachinePrimaryGas& in, SEAnesthesiaMachinePrimaryGas& out);
+    static void Marshall(const SEAnesthesiaMachinePrimaryGas& in, CDM::enumAnesthesiaMachinePrimaryGas& out);
+    // SEAnesthesiaMachineConnection
+    static void UnMarshall(const CDM::enumAnesthesiaMachineConnection& in, SEAnesthesiaMachineConnection& out);
+    static void Marshall(const SEAnesthesiaMachineConnection& in, CDM::enumAnesthesiaMachineConnection& out);
+
   };
   //----------------------------------------------------------------------------------
-  template <typename SE, typename XSD>
-  void Anesthesia::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>*>
+  void Anesthesia::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  {
+    if (!option_in.present()) {
+      out = SE::Invalid;
+    } else {
+      UnMarshall(option_in.get(), out);
+    }
+  }
+
+  template <typename SE, typename XSD, std::enable_if_t<!std::is_enum<SE>::value>*>
+  void Anesthesia::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
       out.Clear();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
+
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void Anesthesia::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void Anesthesia::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+
+// Operators
+bool operator==(CDM::enumAnesthesiaMachineEvent const& lhs, SEAnesthesiaMachineEvent const& rhs);
+bool operator==(CDM::enumAnesthesiaMachineOxygenSource const& lhs, SEAnesthesiaMachineOxygenSource const& rhs);
+bool operator==(CDM::enumAnesthesiaMachinePrimaryGas const& lhs, SEAnesthesiaMachinePrimaryGas const& rhs);
+bool operator==(CDM::enumAnesthesiaMachineConnection const& lhs, SEAnesthesiaMachineConnection const& rhs);
+
+inline bool operator==(SEAnesthesiaMachineEvent const& lhs, CDM::enumAnesthesiaMachineEvent const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEAnesthesiaMachineOxygenSource const& lhs, CDM::enumAnesthesiaMachineOxygenSource const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEAnesthesiaMachinePrimaryGas const& lhs, CDM::enumAnesthesiaMachinePrimaryGas const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEAnesthesiaMachineConnection const& lhs, CDM::enumAnesthesiaMachineConnection const& rhs)
+{
+  return rhs == lhs;
+}
+
+inline bool operator!=(CDM::enumAnesthesiaMachineEvent const& lhs, SEAnesthesiaMachineEvent const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumAnesthesiaMachineOxygenSource const& lhs, SEAnesthesiaMachineOxygenSource const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumAnesthesiaMachinePrimaryGas const& lhs, SEAnesthesiaMachinePrimaryGas const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumAnesthesiaMachineConnection const& lhs, SEAnesthesiaMachineConnection const& rhs)
+{
+  return !(lhs == rhs);
+}
+
+inline bool operator!=(SEAnesthesiaMachineEvent const& lhs, CDM::enumAnesthesiaMachineEvent const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEAnesthesiaMachineOxygenSource const& lhs, CDM::enumAnesthesiaMachineOxygenSource const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEAnesthesiaMachinePrimaryGas const& lhs, CDM::enumAnesthesiaMachinePrimaryGas const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEAnesthesiaMachineConnection const& lhs, CDM::enumAnesthesiaMachineConnection const& rhs)
+{
+  return !(rhs == lhs);
+}
+
+
+} // Namespace Biogears

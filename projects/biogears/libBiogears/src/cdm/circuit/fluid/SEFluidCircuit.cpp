@@ -44,11 +44,11 @@ SEFluidCircuit::~SEFluidCircuit()
 //-------------------------------------------------------------------------------
 void SEFluidCircuit::Unload(CDM::FluidCircuitData& data) const
 {
-  io::Circuit::UnMarshall(*this, data);
+  io::Circuit::Marshall(*this, data);
 }
 bool SEFluidCircuit::Load(const CDM::FluidCircuitData& in, SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit> const& ledger)
 { // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
-  //io::Circuit::Marshall(in, ledger, *this);
+  io::Circuit::UnMarshall(in, ledger, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
