@@ -16,8 +16,7 @@ namespace io {
   {
     out.Clear();
     if (in.State().present())
-      out.SetState(in.State().get());
-      //io::Property::UnMarshall(in.State().get(), out.m_State);
+      io::Property::UnMarshall(in.State().get(), out.m_State);
 
       io::Property::UnMarshall(in.MeteredDose(), out.GetMeteredDose());
       io::Property::UnMarshall(in.NozzleLoss(), out.GetNozzleLoss());
@@ -31,10 +30,9 @@ namespace io {
   //----------------------------------------------------------------------------------
   void Inhaler::Marshall(const SEInhaler& in, CDM::InhalerData& out)
   {
-    CDM_ENUM_MARSHALL_HELPER(in, out, State)
-    //if (in.HasState()) {
-      //io::Property::Marshall(in.m_State, out.State());
-    //}
+    if (in.HasState()) {
+      io::Property::Marshall(in.m_State, out.State());
+    }
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeteredDose)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, NozzleLoss)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SpacerVolume)

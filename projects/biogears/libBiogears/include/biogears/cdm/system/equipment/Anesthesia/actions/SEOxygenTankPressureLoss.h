@@ -15,8 +15,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEScalar0To1;
-
+namespace io {
+  AnesthesiaActions;
+}
 class BIOGEARS_API SEOxygenTankPressureLoss : public SEAnesthesiaMachineAction {
+  friend io::AnesthesiaActions;
+
 public:
   SEOxygenTankPressureLoss();
   virtual ~SEOxygenTankPressureLoss() override;
@@ -30,7 +34,7 @@ public:
   virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
-  virtual bool Load(const CDM::OxygenTankPressureLossData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::OxygenTankPressureLossData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::OxygenTankPressureLossData* Unload() const override;
 
   bool operator==(SEOxygenTankPressureLoss const& rhs) const;
@@ -43,6 +47,6 @@ public:
   virtual void ToString(std::ostream& str) const override;
 
 protected:
-  CDM::enumOnOff::value m_State;
+  SEOnOff m_State;
 };
 }

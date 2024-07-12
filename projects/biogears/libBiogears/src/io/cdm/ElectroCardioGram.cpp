@@ -56,8 +56,7 @@ namespace io {
   void ElectroCardioGram::UnMarshall(const CDM::ElectroCardioGramInterpolationWaveformData& in, SEElectroCardioGramInterpolationWaveform& out)
   {
     out.Clear();
-    out.m_Rhythm = in.Rhythm();
-    //io::Physiology::UnMarshall(in.Rhythm(), out.m_Rhythm);
+    io::Physiology::UnMarshall(in.Rhythm(), out.m_Rhythm);
 
     
     out.m_LeadNumber = in.Lead();
@@ -72,8 +71,7 @@ namespace io {
   void ElectroCardioGram::Marshall(const SEElectroCardioGramInterpolationWaveform& in, CDM::ElectroCardioGramInterpolationWaveformData& out)
   {
     out.Rhythm("");
-    CDM_ENUM_MARSHALL_HELPER(in, out, Rhythm);
-    //SE_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, Rhythm);
+    SE_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, Rhythm);
 
     out.Lead(std::make_unique<CDM::ElectroCardioGramWaveformLeadNumberData>());
     if (in.HasLeadNumber())

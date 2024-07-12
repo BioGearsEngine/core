@@ -96,7 +96,7 @@ void Inhaler::SetUp()
   m_Mouthpiece = m_data.GetCompartments().GetGasCompartment(BGE::InhalerCompartment::Mouthpiece);
   m_AerosolMouthpiece = m_data.GetCompartments().GetLiquidCompartment(BGE::InhalerCompartment::Mouthpiece);
 
-  if (m_State == CDM::enumOnOff::On) {
+  if (m_State == SEOnOff::On) {
     if (m_Substance == nullptr) {
       Fatal("State is on, but without a substance");
     } else {
@@ -125,7 +125,7 @@ void Inhaler::SetUp()
 void Inhaler::PreProcess()
 {
   if (m_data.GetActions().GetInhalerActions().HasConfiguration()) {
-    CDM::enumOnOff::value state = GetState();
+    SEOnOff state = GetState();
     SEInhalerConfiguration* config = m_data.GetActions().GetInhalerActions().GetConfiguration();
     ProcessConfiguration(*config);
     m_data.GetActions().GetInhalerActions().RemoveConfiguration();
@@ -145,14 +145,14 @@ void Inhaler::PreProcess()
   }
 
   // ### HANDLE INHALER-BASED UPDATES
-  if (m_State == CDM::enumOnOff::On) {
+  if (m_State == SEOnOff::On) {
     //  Check to see if there is a substantial mass of substance on the inhaler node.
     //  If not, we'll disconnect the inhaler.
     double dCInhalerSubstanceMass_ug = m_InhalerDrug->GetMass(MassUnit::ug);
     if (SEScalar::IsZero(dCInhalerSubstanceMass_ug, 1e-7)) {
       Info("Inhaler removed!");
       m_InhalerDrug = nullptr;
-      m_State = CDM::enumOnOff::Off;
+      m_State = SEOnOff::Off;
       m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
     }
   }
@@ -179,7 +179,7 @@ void Inhaler::Administer()
 {
   // Check to see if the inhaler is already on. We should not run this method unless the
   //  inhaler is currently off and about to be activated.
-  if (m_State == CDM::enumOnOff::On) {
+  if (m_State == SEOnOff::On) {
     /// \error: Already processing a Substance Inhalation, ignoring this command.
     Error("Already processing a Substance Inhalation, ignoring this command");
     return;
@@ -187,7 +187,7 @@ void Inhaler::Administer()
 
   // Alert the user that the inhaler is actuated
   Info("Inhaler actuated!");
-  m_State = CDM::enumOnOff::On;
+  m_State = SEOnOff::On;
   m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Inhaler);
 
   // Initialize pressure in the inhaler node to ambient

@@ -11,9 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/exports.h>
+#include <biogears/cdm/enums/SEAnesthesiaEnums.h>
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
@@ -36,11 +38,11 @@ class SEScalarFraction;
 namespace io {
   class Anesthesia;
 }
-} //namespace biogears
+} // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<CDM::enumAnesthesiaMachineEvent::value, bool>;
-BG_EXT template class BIOGEARS_API map<CDM::enumAnesthesiaMachineEvent::value, double>;
+BG_EXT template class BIOGEARS_API map<biogears::SEAnesthesiaMachineEvent, bool>;
+BG_EXT template class BIOGEARS_API map<biogears::SEAnesthesiaMachineEvent, double>;
 }
 
 namespace biogears {
@@ -69,10 +71,10 @@ protected:
   void Unload(CDM::AnesthesiaMachineData& data) const;
 
   /** @name StateChange
-  *   @brief - This method is called when ever there is a state change
-  *            Specically a new file has been loaded, configuration action, or the system reset
-  *            Engine specific methodology can then update their logic.
-  */
+   *   @brief - This method is called when ever there is a state change
+   *            Specically a new file has been loaded, configuration action, or the system reset
+   *            Engine specific methodology can then update their logic.
+   */
   virtual void StateChange();
   void Merge(const SEAnesthesiaMachine& from);
   void ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config);
@@ -83,22 +85,22 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  const std::map<CDM::enumAnesthesiaMachineEvent::value, bool>& GetEventStates() const { return m_EventState; }
-  void SetEvent(CDM::enumAnesthesiaMachineEvent::value state, bool active, const SEScalarTime& time);
-  bool IsEventActive(CDM::enumAnesthesiaMachineEvent::value state) const;
-  double GetEventDuration(CDM::enumAnesthesiaMachineEvent::value type, const TimeUnit& unit) const;
+  const std::map<SEAnesthesiaMachineEvent, bool>& GetEventStates() const { return m_EventState; }
+  void SetEvent(SEAnesthesiaMachineEvent state, bool active, const SEScalarTime& time);
+  bool IsEventActive(SEAnesthesiaMachineEvent state) const;
+  double GetEventDuration(SEAnesthesiaMachineEvent type, const TimeUnit& unit) const;
   void UpdateEvents(const SEScalarTime& timeStep);
   /** @name ForwardEvents
-  *  @brief - Set a callback class to invoke when any event changes
-  *  @details - Note that the handler callback can and will be called in the middle of a time step
-  *             So system and compartment objects may not be completely up to date when called.
-  *             Use the PhysiologyEngineInterface::SetEventHandler to ensure that all engine
-  *             data is up to date at the time the callback is invoked
-  */
+   *  @brief - Set a callback class to invoke when any event changes
+   *  @details - Note that the handler callback can and will be called in the middle of a time step
+   *             So system and compartment objects may not be completely up to date when called.
+   *             Use the PhysiologyEngineInterface::SetEventHandler to ensure that all engine
+   *             data is up to date at the time the callback is invoked
+   */
   void ForwardEvents(SEEventHandler* handler);
 
-  virtual CDM::enumAnesthesiaMachineConnection::value GetConnection() const;
-  virtual void SetConnection(CDM::enumAnesthesiaMachineConnection::value c);
+  virtual SEAnesthesiaMachineConnection GetConnection() const;
+  virtual void SetConnection(SEAnesthesiaMachineConnection c);
   virtual bool HasConnection() const;
   virtual void InvalidateConnection();
 
@@ -114,8 +116,8 @@ public:
   SEScalarFraction& GetOxygenFraction();
   double GetOxygenFraction() const;
 
-  CDM::enumAnesthesiaMachineOxygenSource::value GetOxygenSource() const;
-  void SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::value name);
+  SEAnesthesiaMachineOxygenSource GetOxygenSource() const;
+  void SetOxygenSource(SEAnesthesiaMachineOxygenSource name);
   bool HasOxygenSource() const;
   void InvalidateOxygenSource();
 
@@ -123,8 +125,8 @@ public:
   SEScalarPressure& GetPositiveEndExpiredPressure();
   double GetPositiveEndExpiredPressure(const PressureUnit& unit) const;
 
-  CDM::enumAnesthesiaMachinePrimaryGas::value GetPrimaryGas() const;
-  void SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::value name);
+  SEAnesthesiaMachinePrimaryGas GetPrimaryGas() const;
+  void SetPrimaryGas(SEAnesthesiaMachinePrimaryGas name);
   bool HasPrimaryGas() const;
   void InvalidatePrimaryGas();
 
@@ -166,16 +168,16 @@ public:
 protected:
   std::stringstream m_ss;
   SEEventHandler* m_EventHandler;
-  std::map<CDM::enumAnesthesiaMachineEvent::value, bool> m_EventState;
-  std::map<CDM::enumAnesthesiaMachineEvent::value, double> m_EventDuration_s;
+  std::map<SEAnesthesiaMachineEvent, bool> m_EventState;
+  std::map<SEAnesthesiaMachineEvent, double> m_EventDuration_s;
 
-  CDM::enumAnesthesiaMachineConnection::value m_Connection;
+  SEAnesthesiaMachineConnection m_Connection;
   SEScalarVolumePerTime* m_InletFlow;
   SEScalar* m_InspiratoryExpiratoryRatio;
   SEScalarFraction* m_OxygenFraction;
-  CDM::enumAnesthesiaMachineOxygenSource::value m_OxygenSource;
+  SEAnesthesiaMachineOxygenSource m_OxygenSource;
   SEScalarPressure* m_PositiveEndExpiredPressure;
-  CDM::enumAnesthesiaMachinePrimaryGas::value m_PrimaryGas;
+  SEAnesthesiaMachinePrimaryGas m_PrimaryGas;
   SEScalarFrequency* m_RespiratoryRate;
   SEScalarPressure* m_ReliefValvePressure;
 

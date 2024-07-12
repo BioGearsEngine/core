@@ -185,12 +185,12 @@ bool action_o2_mask(std::unique_ptr<biogears::BioGearsEngine>& engine, double o2
 
   // Any of these values could auso be adjusted, but I don't think its required
   // for this example
-  config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
+  config.SetConnection(biogears::SEAnesthesiaMachineConnection::Mask);
   config.GetInletFlow().SetValue(2.0, biogears::VolumePerTimeUnit::L_Per_min);
   config.GetInspiratoryExpiratoryRatio().SetValue(.5);
-  config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
+  config.SetOxygenSource(biogears::SEAnesthesiaMachineOxygenSource::Wall);
   config.GetPositiveEndExpiredPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);
-  config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
+  config.SetPrimaryGas(biogears::SEAnesthesiaMachinePrimaryGas::Nitrogen);
   config.GetReliefValvePressure().SetValue(20.0, biogears::PressureUnit::cmH2O);
   config.GetRespiratoryRate().SetValue(12, biogears::FrequencyUnit::Per_min);
   config.GetVentilatorPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);

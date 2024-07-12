@@ -88,7 +88,7 @@ TEST_F(TEST_FIXTURE_NAME, InhalerConfiguration)
 
   auto& conf = source.GetConfiguration();
 
-  conf.SetState(CDM::enumOnOff::Off);
+  conf.SetState(biogears::SEOnOff::Off);
   conf.GetMeteredDose().SetValue(55.f, biogears::MassUnit::kg);
   conf.GetNozzleLoss().SetValue(22.f);
   conf.GetSpacerVolume().SetValue(55, biogears::VolumeUnit::L);
