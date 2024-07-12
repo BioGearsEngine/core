@@ -10,6 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEChronicHeartFailure::SEChronicHeartFailure()
@@ -34,7 +35,7 @@ bool SEChronicHeartFailure::IsValid() const
 //-------------------------------------------------------------------------------
 bool SEChronicHeartFailure::Load(const CDM::ChronicHeartFailureData& in)
 {
-  SEPatientCondition::Load(in);
+  io::PatientConditions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------

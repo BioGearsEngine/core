@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEDiabetesType1::SEDiabetesType1()
@@ -38,8 +39,7 @@ bool SEDiabetesType1::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEDiabetesType1::Load(const CDM::DiabetesType1Data& in)
 {
-  SEPatientCondition::Load(in);
-  GetInsulinProductionSeverity().Load(in.InsulinProductionSeverity());
+  io::PatientConditions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -52,9 +52,7 @@ CDM::DiabetesType1Data* SEDiabetesType1::Unload() const
 //-----------------------------------------------------------------------------
 void SEDiabetesType1::Unload(CDM::DiabetesType1Data& data) const
 {
-  SEPatientCondition::Unload(data);
-  if (m_InsulinProductionSeverity != nullptr)
-    data.InsulinProductionSeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_InsulinProductionSeverity->Unload()));
+  io::PatientConditions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEDiabetesType1::HasInsulinProductionSeverity() const
