@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SEPsychomotorVigilanceTask::SEPsychomotorVigilanceTask()
@@ -43,13 +44,7 @@ void SEPsychomotorVigilanceTask::Reset()
 //-------------------------------------------------------------------------------
 bool SEPsychomotorVigilanceTask::Load(const CDM::PsychomotorVigilanceTaskData& in)
 {
-  SEPatientAssessment::Load(in);
-  if (in.AttentionLapses().present()) {
-    GetAttentionLapses().Load(in.AttentionLapses().get());
-  }
-  if (in.ReactionTime().present()) {
-    GetReactionTime().Load(in.ReactionTime().get());
-  }
+  io::PatientAssessments::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -62,11 +57,7 @@ CDM::PsychomotorVigilanceTaskData* SEPsychomotorVigilanceTask::Unload()
 //-------------------------------------------------------------------------------
 void SEPsychomotorVigilanceTask::Unload(CDM::PsychomotorVigilanceTaskData& data)
 {
-  SEPatientAssessment::Unload(data);
-  if (HasAttentionLapses())
-    data.AttentionLapses(std::unique_ptr<CDM::ScalarData>(m_AttentionLapses->Unload()));
-  if (HasReactionTime())
-    data.ReactionTime(std::unique_ptr<CDM::ScalarTimeData>(m_ReactionTime->Unload()));
+  io::PatientAssessments::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEPsychomotorVigilanceTask::HasAttentionLapses()

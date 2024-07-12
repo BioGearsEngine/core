@@ -212,35 +212,23 @@ namespace io {
   {
     UnMarshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
 
-    if (in.Color().present())
-      out.m_Color = in.Color().get();
-    if (in.Appearance().present())
-      out.m_Appearance = in.Appearance().get();
-    if (in.Glucose().present())
-      out.m_Glucose = in.Glucose().get();
-    if (in.Ketone().present())
-      out.m_Ketone = in.Ketone().get();
-    // UnMarshall(in.Color(), out.m_Color);
-    // UnMarshall(in.Appearance(), out.m_Appearance);
-    // UnMarshall(in.Glucose(), out.m_Glucose);
-    // UnMarshall(in.Ketone(), out.m_Ketone);
+    UnMarshall(in.Color(), out.m_Color);
+    UnMarshall(in.Appearance(), out.m_Appearance);
+    UnMarshall(in.Glucose(), out.m_Glucose);
+    UnMarshall(in.Ketone(), out.m_Ketone);
 
     io::Property::UnMarshall(in.Bilirubin(), out.GetBilirubinResult());
     io::Property::UnMarshall(in.SpecificGravity(), out.GetSpecificGravityResult());
     if (in.Blood().present())
-      out.m_Blood = in.Blood().get();
-    // UnMarshall(in.Blood(), out.m_Blood);
+      UnMarshall(in.Blood(), out.m_Blood);
     io::Property::UnMarshall(in.pH(), out.GetPHResult());
     if (in.Protein().present())
-      out.m_Protein = in.Protein().get();
-    // UnMarshall(in.Protein(), out.m_Protein);
+      UnMarshall(in.Protein(), out.m_Protein);
     io::Property::UnMarshall(in.Urobilinogen(), out.GetUrobilinogenResult());
     if (in.Nitrite().present())
-      out.m_Nitrite = in.Nitrite().get();
-    // UnMarshall(in.Nitrite(), out.m_Nitrite);
+      UnMarshall(in.Nitrite(), out.m_Nitrite);
     if (in.LeukocyteEsterase().present())
-      out.m_LeukocyteEsterase = in.LeukocyteEsterase().get();
-    // UnMarshall(in.LeukocyteEsterase(), out.m_LeukocyteEsterase);
+      UnMarshall(in.LeukocyteEsterase(), out.m_LeukocyteEsterase);
     UnMarshall(in.Microscopic(), out.GetMicroscopicResult());
   }
   //----------------------------------------------------------------------------------
@@ -249,17 +237,13 @@ namespace io {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
     if (in.HasColorResult())
-      out.Color(in.m_Color);
-    // Marshall(in.GetColorResult(), out.Color());
+      Marshall(in.GetColorResult(), out.Color());
     if (in.HasAppearanceResult())
-      out.Appearance(in.m_Appearance);
-    // Marshall(in.GetAppearanceResult(), out.Appearance());
+      Marshall(in.GetAppearanceResult(), out.Appearance());
     if (in.HasGlucoseResult())
-      out.Glucose(in.m_Glucose);
-    // Marshall(in.GetGlucoseResult(), out.Glucose());
+      Marshall(in.GetGlucoseResult(), out.Glucose());
     if (in.HasKetoneResult())
-      out.Ketone(in.m_Ketone);
-    // Marshall(in.GetKetoneResult(), out.Ketone());
+      Marshall(in.GetKetoneResult(), out.Ketone());
     if (in.HasBilirubinResult()) {
       io::Property::Marshall(*in.m_Bilirubin, out.Bilirubin());
     }
@@ -267,23 +251,19 @@ namespace io {
       io::Property::Marshall(*in.m_SpecificGravity, out.SpecificGravity());
     }
     if (in.HasBloodResult())
-      out.Blood(in.m_Blood);
-      //Marshall(in.GetBloodResult(), out.Blood());
+      Marshall(in.GetBloodResult(), out.Blood());
     if (in.HasPHResult()) {
       io::Property::Marshall(*in.m_pH, out.pH());
     }
     if (in.HasProteinResult())
-      out.Protein(in.m_Protein);
-      //Marshall(in.GetProteinResult(), out.Protein());
+      Marshall(in.GetProteinResult(), out.Protein());
     if (in.HasUrobilinogenResult()) {
       io::Property::Marshall(*in.m_Urobilinogen, out.Urobilinogen());
     }
     if (in.HasNitriteResult())
-      out.Nitrite(in.m_Nitrite);
-      //Marshall(in.GetNitriteResult(), out.Nitrite());
+      Marshall(in.GetNitriteResult(), out.Nitrite());
     if (in.HasLeukocyteEsteraseResult())
-      out.LeukocyteEsterase(in.m_LeukocyteEsterase);
-      //Marshall(in.GetLeukocyteEsteraseResult(), out.LeukocyteEsterase());
+      Marshall(in.GetLeukocyteEsteraseResult(), out.LeukocyteEsterase());
 
     if (in.HasMicroscopicResult())
       Marshall(*in.m_Microscopic, out.Microscopic());
@@ -294,28 +274,19 @@ namespace io {
   {
     UnMarshall(static_cast<const CDM::PatientAssessmentData&>(in), static_cast<SEPatientAssessment&>(out));
 
-    out.m_ObservationType = in.ObservationType();
-    // UnMarshall(in.ObservationType(), out.m_ObservationType);
+    UnMarshall(in.ObservationType(), out.m_ObservationType);
     io::Property::UnMarshall(in.RedBloodCells(), out.GetRedBloodCellsResult());
     io::Property::UnMarshall(in.WhiteBloodCells(), out.GetWhiteBloodCellsResult());
 
     if (in.EpithelialCells().present())
-      out.m_EpithelialCells = in.EpithelialCells().get();
-      //UnMarshall(in.EpithelialCells(), out.m_EpithelialCells);
+      UnMarshall(in.EpithelialCells(), out.m_EpithelialCells);
     io::Property::UnMarshall(in.Casts(), out.GetCastsResult());
 
-    if (in.Crystals().present())
-      out.m_Crystals = in.Crystals().get();
-    if (in.Bacteria().present())
-      out.m_Bacteria = in.Bacteria().get();
-    if (in.Trichomonads().present())
-      out.m_Trichomonads = in.Trichomonads().get();
-    if (in.Yeast().present())
-      out.m_Yeast = in.Yeast().get();
-    // UnMarshall(in.Crystals(), out.m_Crystals);
-    // UnMarshall(in.Bacteria(), out.m_Bacteria);
-    // UnMarshall(in.Trichomonads(), out.m_Trichomonads);
-    // UnMarshall(in.Yeast(), out.m_Yeast);
+    ;
+    UnMarshall(in.Crystals(), out.m_Crystals);
+    UnMarshall(in.Bacteria(), out.m_Bacteria);
+    UnMarshall(in.Trichomonads(), out.m_Trichomonads);
+    UnMarshall(in.Yeast(), out.m_Yeast);
   }
   //----------------------------------------------------------------------------------
   void PatientAssessments::Marshall(const SEUrinalysisMicroscopic& in, CDM::UrinalysisMicroscopicData& out)
@@ -323,8 +294,7 @@ namespace io {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
     if (in.HasObservationType())
-      out.ObservationType(in.m_ObservationType);
-    // SE_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in,out,ObservationType)
+      SE_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, ObservationType)
 
     if (in.HasRedBloodCellsResult()) {
       io::Property::Marshall(*in.m_RedBloodCells, out.RedBloodCells());
@@ -334,23 +304,18 @@ namespace io {
     }
 
     if (in.HasEpithelialCellsResult())
-      out.EpithelialCells(in.m_EpithelialCells);
-      //Marshall(in.m_EpithelialCells, out.EpithelialCells());
+      Marshall(in.m_EpithelialCells, out.EpithelialCells());
     if (in.HasCastsResult()) {
       io::Property::Marshall(*in.m_Casts, out.Casts());
     }
     if (in.HasCrystalsResult())
-      out.Crystals(in.m_Crystals);
-    // Marshall(in.m_Crystals, out.Crystals());
+      Marshall(in.m_Crystals, out.Crystals());
     if (in.HasBacteriaResult())
-      out.Bacteria(in.m_Bacteria);
-    // Marshall(in.m_Bacteria, out.Bacteria());
+      Marshall(in.m_Bacteria, out.Bacteria());
     if (in.HasTrichomonadsResult())
-      out.Trichomonads(in.m_Trichomonads);
-    // Marshall(in.m_Trichomonads, out.Trichomonads());
+      Marshall(in.m_Trichomonads, out.Trichomonads());
     if (in.HasYeastResult())
-      out.Yeast(in.m_Yeast);
-    // Marshall(in.m_Yeast, out.Yeast());
+      Marshall(in.m_Yeast, out.Yeast());
   }
   //----------------------------------------------------------------------------------
   // class SEProthrombinTime.h
