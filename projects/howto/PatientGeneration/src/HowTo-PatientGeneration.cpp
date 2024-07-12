@@ -595,13 +595,13 @@ PatientRun& PatientRun::infection_severity(std::string severity)
 {
   std::transform(severity.begin(), severity.end(), severity.begin(), [](unsigned char c) { return std::tolower(c); });
   if (severity == "mild") {
-    _infection_severity = CDM::enumInfectionSeverity::value::Mild;
+    _infection_severity = SEInfectionSeverity::Mild;
     _infection_severity_str = "Mild";
   } else if (severity == "") {
-    _infection_severity = CDM::enumInfectionSeverity::value::Moderate;
+    _infection_severity = SEInfectionSeverity::Moderate;
     _infection_severity_str = "Moderate";
   } else if (severity == "severe") {
-    _infection_severity = CDM::enumInfectionSeverity::value::Severe;
+    _infection_severity = SEInfectionSeverity::Severe;
     _infection_severity_str = "Severe";
   }
   return *this;

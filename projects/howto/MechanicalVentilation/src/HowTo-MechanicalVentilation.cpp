@@ -53,31 +53,31 @@ public:
     , m_Logger(logger)
   {
   }
-  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr)
+  virtual void HandlePatientEvent(biogears::SEPatientEventType type, bool active, const SEScalarTime* time = nullptr)
   {
     switch (type) {
-    case CDM::enumPatientEvent::AcuteLungInjury: {
+    case biogears::SEPatientEventType::AcuteLungInjury: {
       if (active)
         m_Logger->Info("Do something for MildAcuteRespiratoryDistress");
       else
         m_Logger->Info("Stop doing something for MildAcuteRespiratoryDistress");
       break;
     }
-    case CDM::enumPatientEvent::AcuteRespiratoryDistress: {
+    case biogears::SEPatientEventType::AcuteRespiratoryDistress: {
       if (active)
         m_Logger->Info("Do something for ModerateAcuteRespiratoryDistress");
       else
         m_Logger->Info("Stop doing something for ModerateAcuteRespiratoryDistress");
       break;
     }
-    case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress: {
+    case biogears::SEPatientEventType::SevereAcuteRespiratoryDistress: {
       if (active)
         m_Logger->Info("Do something for SevereAcuteRespiratoryDistress");
       else
         m_Logger->Info("Stop doing something for SevereAcuteRespiratoryDistress");
       break;
     }
-    case CDM::enumPatientEvent::CardiogenicShock: {
+    case biogears::SEPatientEventType::CardiogenicShock: {
       if (active)
         m_Logger->Info("Do something for CardiogenicShock");
       else
@@ -258,12 +258,11 @@ int HowToMechanicalVentialtion()
   // Set the severity (a fraction between 0 and 1)
   SETensionPneumothorax pneumo;
   // You can have a Closed or Open Tension Pneumothorax
-  pneumo.SetType(CDM::enumPneumothoraxType::Open);
-  //pneumo.SetType(CDM::enumPneumothoraxType::Open);
+  pneumo.SetType(SEPneumothoraxType::Open);
   pneumo.GetSeverity().SetValue(0.3);
   // It can be on the Left or right side
-  pneumo.SetSide(CDM::enumSide::Right);
-  //pneumo.SetSide(CDM::enumSide::Left);
+  pneumo.SetSide(SESide::Right);
+  //pneumo.SetSide(SESide::Left);
   bg->ProcessAction(pneumo);
 
   bg->AdvanceModelTime(60.0, TimeUnit::s);
@@ -281,7 +280,7 @@ int HowToMechanicalVentialtion()
   //TBI
   //See HowTo-BrainInjury for an example of getting the Glasgow Scale
   SEBrainInjury tbi;
-  tbi.SetType(CDM::enumBrainInjuryType::Diffuse); // Can also be LeftFocal or RightFocal, and you will get pupillary effects in only one eye
+  tbi.SetType(SEBrainInjuryType::Diffuse); // Can also be LeftFocal or RightFocal, and you will get pupillary effects in only one eye
   tbi.GetSeverity().SetValue(0.2);
   bg->ProcessAction(tbi);
 
@@ -310,7 +309,7 @@ int HowToMechanicalVentialtion()
   SESubstanceBolus bolus(*succs);
   bolus.GetConcentration().SetValue(4820, MassPerVolumeUnit::ug_Per_mL);
   bolus.GetDose().SetValue(20, VolumeUnit::mL);
-  bolus.SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  bolus.SetAdminRoute(SEBolusAdministration::Intravenous);
   bg->ProcessAction(bolus);
 
   bg->AdvanceModelTime(60.0, TimeUnit::s);
@@ -318,7 +317,7 @@ int HowToMechanicalVentialtion()
   //Mechanical Ventilation
   // Create an SEMechanicalVentilation object
   SEMechanicalVentilation mechVent;
-  mechVent.SetState(CDM::enumOnOff::On); // Turn it on
+  mechVent.SetState(SEOnOff::On); // Turn it on
     // Grab the substance fractions so we can quickly modify them
   SESubstanceFraction& O2frac = mechVent.GetGasFraction(*bg->GetSubstanceManager().GetSubstance("Oxygen"));
   SESubstanceFraction& CO2frac = mechVent.GetGasFraction(*bg->GetSubstanceManager().GetSubstance("CarbonDioxide"));

@@ -42,14 +42,14 @@ public:
   MyListener(Logger* logger)
     : SEEventHandler()
     , log(logger) {};
-  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time) override
+  void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time) override
   {
     std::stringstream ss;
     ss << "Recieved Patient Event : " << type;
     log->Info(ss);
   }
 
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time) override
+  void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time) override
   {
     std::stringstream ss;
     ss <<  "Recieved Anesthesia Machine Event : " << type;

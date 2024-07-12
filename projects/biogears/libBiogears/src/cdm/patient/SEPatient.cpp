@@ -676,9 +676,7 @@ void SEPatient::SetEvent(SEPatientEventType type, bool active, const SEScalarTim
   m_EventState[type] = active;
   m_EventDuration_s[type] = 0;
   if (m_EventHandler != nullptr) {
-    CDM::enumPatientEvent cdmType;
-    io::Patient::Marshall(type, cdmType);
-    m_EventHandler->HandlePatientEvent(cdmType, active, &time);
+    m_EventHandler->HandlePatientEvent(type, active, &time);
   }
   if (m_EventCallbacks[type] != nullptr) {
     m_EventCallbacks[type](active);

@@ -82,7 +82,7 @@ TEST_F(TEST_FIXTURE_NAME, PatientAssessmentRequest)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetType(CDM::enumPatientAssessment::CompleteBloodCount);
+  source.SetType(biogears::SEPatientAssessmentType::CompleteBloodCount);
 
   EXPECT_NE(source, sink);
 
@@ -204,7 +204,7 @@ TEST_F(TEST_FIXTURE_NAME, BrainInjury)
 
   source.SetComment("Test Comment");
   source.GetSeverity().Set(.79);
-  source.SetType(CDM::enumBrainInjuryType::LeftFocal);
+  source.SetType(biogears::SEBrainInjuryType::LeftFocal);
 
   EXPECT_NE(source, sink);
 
@@ -373,7 +373,7 @@ TEST_F(TEST_FIXTURE_NAME, ChestOcclusiveDressing)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetSide(CDM::enumSide::Right);
+  source.SetSide(biogears::SESide::Right);
   source.SetActive(true);
 
   EXPECT_NE(source, sink);
@@ -397,7 +397,7 @@ TEST_F(TEST_FIXTURE_NAME, Ebola)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetSeverity(CDM::enumInfectionSeverity::Moderate);
+  source.SetSeverity(biogears::SEInfectionSeverity::Moderate);
 
   EXPECT_NE(source, sink);
 
@@ -702,7 +702,7 @@ TEST_F(TEST_FIXTURE_NAME, Infection)
 
   source.SetComment("Test Comment");
   source.SetLocation("Fake Compartment");
-  source.SetSeverity(CDM::enumInfectionSeverity::Moderate);
+  source.SetSeverity(biogears::SEInfectionSeverity::Moderate);
   source.GetMinimumInhibitoryConcentration().SetValue(.5, biogears::MassPerVolumeUnit::g_Per_mL);
 
   EXPECT_NE(source, sink);
@@ -727,7 +727,7 @@ TEST_F(TEST_FIXTURE_NAME, Intubation)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetType(CDM::enumIntubationType::LeftMainstem);
+  source.SetType(biogears::SEIntubationType::LeftMainstem);
 
   EXPECT_NE(source, sink);
 
@@ -755,7 +755,7 @@ TEST_F(TEST_FIXTURE_NAME, MechanicalVentilation)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetState(CDM::enumOnOff::Off);
+  source.SetState(biogears::SEOnOff::Off);
   source.GetFlow().SetValue(1.23, biogears::VolumePerTimeUnit::L_Per_s);
   source.GetPressure().SetValue(1.23, biogears::PressureUnit::cmH2O);
 
@@ -808,7 +808,7 @@ TEST_F(TEST_FIXTURE_NAME, NeedleDecompression)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetSide(CDM::enumSide::Left);
+  source.SetSide(biogears::SESide::Left);
   source.SetActive(true);
 
   EXPECT_NE(source, sink);
@@ -912,7 +912,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceBolus)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetAdminRoute(CDM::enumBolusAdministration::Intramuscular);
+  source.SetAdminRoute(biogears::SEBolusAdministration::Intramuscular);
   source.GetAdminTime().SetValue(2.9, biogears::TimeUnit::s);
   source.GetDose().SetValue(1.9, biogears::VolumeUnit::dL);
   source.GetConcentration().SetValue(2.0, biogears::MassPerVolumeUnit::mg_Per_m3);
@@ -1030,7 +1030,7 @@ TEST_F(TEST_FIXTURE_NAME, Sleep)
   CDMType data;
 
   source.SetComment("Test Comment");
-  source.SetSleepState(CDM::enumOnOff::On);
+  source.SetSleepState(biogears::SEOnOff::On);
 
   EXPECT_NE(source, sink);
 
@@ -1116,7 +1116,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceOralDose)
 
   source.SetComment("Test Comment");
   source.GetDose().SetValue(2.0, biogears::MassUnit::kg);
-  source.SetAdminRoute(CDM::enumOralAdministration::Transmucosal);
+  source.SetAdminRoute(biogears::SEOralAdministrationType::Transmucosal);
 
   EXPECT_NE(source, sink);
 
@@ -1171,7 +1171,7 @@ TEST_F(TEST_FIXTURE_NAME, Tourniquet)
 
   source.SetComment("Test Comment");
   source.SetCompartment("InferiorAnteriorLateralDistalLimb");
-  source.SetTourniquetLevel(CDM::enumTourniquetApplicationLevel::Misapplied);
+  source.SetTourniquetLevel(biogears::SETourniquetApplicationType::Misapplied);
 
   EXPECT_NE(source, sink);
 
@@ -1197,8 +1197,8 @@ TEST_F(TEST_FIXTURE_NAME, TensionPneumothorax)
 
   source.SetComment("Test Comment");
   source.GetSeverity().SetValue(0.5);
-  source.SetSide(CDM::enumSide::Left);
-  source.SetType(CDM::enumPneumothoraxType::Closed);
+  source.SetSide(biogears::SESide::Left);
+  source.SetType(biogears::SEPneumothoraxType::Closed);
 
   EXPECT_NE(source, sink);
 

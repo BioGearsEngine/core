@@ -437,17 +437,17 @@ TEST_F(TEST_FIXTURE_NAME, Scenario)
   source.GetInitialParameters().GetConfiguration().GetDynamicStabilizationCriteria().GetStabilizationDuration().SetValue(10, biogears::TimeUnit::s);
 
   source.GetInitialParameters().GetConfiguration().GetTimeStep().SetValue(0.02, biogears::TimeUnit::s);
-  source.GetInitialParameters().GetConfiguration().SetWritePatientBaselineFile(CDM::enumOnOff::Off);
+  source.GetInitialParameters().GetConfiguration().SetWritePatientBaselineFile(biogears::SEOnOff::Off);
 
   source.GetInitialParameters().GetPatient().SetName("unit_test");
   source.GetInitialParameters().GetPatient().SetAnnotation("Seerailization Test User");
-  source.GetInitialParameters().GetPatient().SetSex(CDM::enumSex::Female);
+  source.GetInitialParameters().GetPatient().SetSex(biogears::SESex::Female);
   source.GetInitialParameters().GetPatient().GetAge().SetValue(55.0, biogears::TimeUnit::yr);
   source.GetInitialParameters().GetPatient().GetWeight().SetValue(80.0, biogears::MassUnit::kg);
   source.GetInitialParameters().GetPatient().GetHeight().SetValue(175.0, biogears::LengthUnit::cm);
   source.GetInitialParameters().GetPatient().GetAlveoliSurfaceArea().SetValue(16.0, biogears::AreaUnit::cm2);
   source.GetInitialParameters().GetPatient().GetBasalMetabolicRate().SetValue(15.0, biogears::PowerUnit::J_Per_s);
-  source.GetInitialParameters().GetPatient().SetBloodType(CDM::enumBloodType::AB);
+  source.GetInitialParameters().GetPatient().SetBloodType(biogears::SEBloodType::AB);
   source.GetInitialParameters().GetPatient().SetBloodRh(true);
   source.GetInitialParameters().GetPatient().GetBloodVolumeBaseline().SetValue(14.0, biogears::VolumeUnit::L);
   source.GetInitialParameters().GetPatient().GetBodyDensity().SetValue(13.0, biogears::MassPerVolumeUnit::g_Per_L);
@@ -551,17 +551,17 @@ TEST_F(TEST_FIXTURE_NAME, ScenarioInitialParameters)
 
   source.GetConfiguration().GetTimeStep().SetValue(0.02, biogears::TimeUnit::s);
 
-  source.GetConfiguration().SetWritePatientBaselineFile(CDM::enumOnOff::Off);
+  source.GetConfiguration().SetWritePatientBaselineFile(biogears::SEOnOff::Off);
 
   source.GetPatient().SetName("unit_test");
   source.GetPatient().SetAnnotation("Seerailization Test User");
-  source.GetPatient().SetSex(CDM::enumSex::Female);
+  source.GetPatient().SetSex(biogears::SESex::Female);
   source.GetPatient().GetAge().SetValue(55.0, biogears::TimeUnit::yr);
   source.GetPatient().GetWeight().SetValue(80.0, biogears::MassUnit::kg);
   source.GetPatient().GetHeight().SetValue(175.0, biogears::LengthUnit::cm);
   source.GetPatient().GetAlveoliSurfaceArea().SetValue(16.0, biogears::AreaUnit::cm2);
   source.GetPatient().GetBasalMetabolicRate().SetValue(15.0, biogears::PowerUnit::J_Per_s);
-  source.GetPatient().SetBloodType(CDM::enumBloodType::AB);
+  source.GetPatient().SetBloodType(biogears::SEBloodType::AB);
   source.GetPatient().SetBloodRh(true);
   source.GetPatient().GetBloodVolumeBaseline().SetValue(14.0, biogears::VolumeUnit::L);
   source.GetPatient().GetBodyDensity().SetValue(13.0, biogears::MassPerVolumeUnit::g_Per_L);

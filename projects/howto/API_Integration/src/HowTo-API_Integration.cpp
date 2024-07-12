@@ -71,9 +71,9 @@ bool action_apply_hemorrhage(std::unique_ptr<biogears::BioGearsEngine>& engine,
 //!
 //!  SETourniquet has two members
 //!  std::string compartment -- Where the tourniquet will be applied [LeftLeg,RightLeg,LeftArm,RightArm]
-//!  CDM::enumTourniquetApplicationLevel -- Applied, Misapplied, None
+//!  SETourniquetApplicationType -- Applied, Misapplied, None
 bool action_apply_tourniquet(std::unique_ptr<biogears::BioGearsEngine>& engine,
-                             std::string compartment, CDM::enumTourniquetApplicationLevel application)
+                             std::string compartment, biogears::SETourniquetApplicationType application)
 {
   auto tourniquet = biogears::SETourniquet();
   tourniquet.SetCompartment(compartment);
@@ -132,7 +132,7 @@ bool action_env_change(std::unique_ptr<biogears::BioGearsEngine>& engine, biogea
 //! \param enumSide Left, Right
 //! \param enumPneumothoraxType  Open, Closed
 //! \param double [0.0, 1.0]
-bool action_tension_pneumothorax(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::enumSide side, CDM::enumPneumothoraxType type, double severity)
+bool action_tension_pneumothorax(std::unique_ptr<biogears::BioGearsEngine>& engine, biogears::SESide side, biogears::SEPneumothoraxType type, double severity)
 {
   auto pneumothorax = biogears::SETensionPneumothorax();
   pneumothorax.SetSide(side);
@@ -153,7 +153,7 @@ bool action_tension_pneumothorax(std::unique_ptr<biogears::BioGearsEngine>& engi
 //! \param enumSide Left, Right
 //! \param bool  Active/Not-Active  {On/Off}
 
-bool action_needle_decompression(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::enumSide side, bool active)
+bool action_needle_decompression(std::unique_ptr<biogears::BioGearsEngine>& engine, biogears::SESide side, bool active)
 {
   auto needleD = biogears::SENeedleDecompression();
   needleD.SetSide(side);
@@ -211,7 +211,7 @@ bool action_o2_mask(std::unique_ptr<biogears::BioGearsEngine>& engine, double o2
 //! \param severity  -- Eliminated, Mild, Moderate, Severe
 //! \param location -- Compartmant Key on where the Infection Starts
 //! \param mic_mg_Per_l -- Minimal Inhibitory Condition for the given infection
-bool action_infection(std::unique_ptr<biogears::BioGearsEngine>& engine, CDM::enumInfectionSeverity severity, std::string location, double mic_mg_Per_l)
+bool action_infection(std::unique_ptr<biogears::BioGearsEngine>& engine, biogears::SEInfectionSeverity severity, std::string location, double mic_mg_Per_l)
 {
   auto sepsis = biogears::SEInfection();
   sepsis.SetSeverity(severity);
@@ -296,7 +296,7 @@ bool action_active_cooling(std::unique_ptr<biogears::BioGearsEngine>& engine, do
 //!  \param surface_ara_fraction -- What % [0.0,1.0] of the patients surface area is covered by the applied temp
 //!
 //!  This function can not be undone.  SEThermalApplication supports a State member which can be set to off to terminate
-//!  an active applied_temperature, you would simply need to pass the CDM::enumOnOff as an additional paramater to this function.
+//!  an active applied_temperature, you would simply need to pass the SEOnOff as an additional paramater to this function.
 bool action_applied_temperature(std::unique_ptr<biogears::BioGearsEngine>& engine, double degrees_c, double surface_area_fraction)
 {
   auto thermalApplication = biogears::SEThermalApplication();
@@ -478,12 +478,12 @@ BioGearsPlugin::BioGearsPlugin(std::string name)
       _pimpl->engine->GetLogger()->Warning("Could not load patient falling back to manually creating a patient.");
       biogears::SEPatient patient { _pimpl->engine->GetLogger() };
       patient.SetName("StandardMale");
-      patient.SetGender(CDM::enumSex::Male);
+      patient.SetSex(SESex::Male);
       patient.GetAge().SetValue(44, biogears::TimeUnit::yr);
       patient.GetWeight().SetValue(170, biogears::MassUnit::lb);
       patient.GetHeight().SetValue(71, biogears::LengthUnit::inch);
       patient.GetBodyFatFraction().SetValue(0.21);
-      patient.SetBloodType(CDM::enumBloodType::AB);
+      patient.SetBloodType(SEBloodType::AB);
       patient.SetBloodRh(true);
       patient.GetHeartRateBaseline().SetValue(72, biogears::FrequencyUnit::Per_min);
       patient.GetRespirationRateBaseline().SetValue(16, biogears::FrequencyUnit::Per_min);
@@ -520,14 +520,14 @@ void BioGearsPlugin::run()
         _pimpl->simulation_started.store(true);
         while (_pimpl->simulation_running) {
           action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", SETourniquetApplicationType::Applied);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_apply_hemorrhage(_pimpl->engine, "LeftLeg", 5.);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Misapplied);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", SETourniquetApplicationType::Misapplied);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::Applied);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", SETourniquetApplicationType::Applied);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_apply_tourniquet(_pimpl->engine, "LeftLeg", CDM::enumTourniquetApplicationLevel::None);
+          action_apply_tourniquet(_pimpl->engine, "LeftLeg", SETourniquetApplicationType::NotApplied);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
           //But you could imagine creating a vector of common conditions and then pushing and poping them in to
@@ -553,13 +553,13 @@ void BioGearsPlugin::run()
           
           action_env_change(_pimpl->engine, conditions);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_tension_pneumothorax(_pimpl->engine, CDM::enumSide::Left, CDM::enumPneumothoraxType::Open, 0.5);
+          action_tension_pneumothorax(_pimpl->engine, SESide::Left, SEPneumothoraxType::Open, 0.5);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_needle_decompression(_pimpl->engine, CDM::enumSide::Left, true);
+          action_needle_decompression(_pimpl->engine, SESide::Left, true);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_o2_mask(_pimpl->engine, .5, 3., 0.);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_infection(_pimpl->engine, CDM::enumInfectionSeverity::Mild, "LeftLeg", 0.2);
+          action_infection(_pimpl->engine, SEInfectionSeverity::Mild, "LeftLeg", 0.2);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_bloodtransfuction(_pimpl->engine, 500, 100);
 

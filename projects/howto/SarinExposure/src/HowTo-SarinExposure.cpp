@@ -111,7 +111,7 @@ int HowToSarinExposure()
   // We maintain this loop so that we can periodically check events while advancing data tracker
   while (bg->GetSimulationTime(TimeUnit::min) < simulationTime) {
     //Break out of loop if patient enters irreversible state
-    if (bg->GetPatient().IsEventActive(CDM::enumPatientEvent::IrreversibleState))
+    if (bg->GetPatient().IsEventActive(SEPatientEventType::IrreversibleState))
       break;
 
     //Check if we have reached the end of the exposure time to Sarin.  If so, remove it from the environment and deactivate it
