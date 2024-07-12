@@ -1,4 +1,7 @@
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramWaveformLeadNumber.h>
+
+#include "io/cdm/ElectroCardioGram.h"
+
 #include <biogears/string/manipulation.h>
 
 namespace biogears {
@@ -21,7 +24,7 @@ SEElectroCardioGramWaveformLeadNumber::~SEElectroCardioGramWaveformLeadNumber()
 bool SEElectroCardioGramWaveformLeadNumber::Load(const CDM::ElectroCardioGramWaveformLeadNumberData& in)
 {
 
-  m_value = static_cast<int>(in);
+  io::ElectroCardioGram::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -34,7 +37,7 @@ CDM::ElectroCardioGramWaveformLeadNumberData* SEElectroCardioGramWaveformLeadNum
 //-------------------------------------------------------------------------------
 void SEElectroCardioGramWaveformLeadNumber::Unload(CDM::ElectroCardioGramWaveformLeadNumberData& data) const
 {
-  data = m_value;
+  io::ElectroCardioGram::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 int SEElectroCardioGramWaveformLeadNumber::GetValue() const

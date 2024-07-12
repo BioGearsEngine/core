@@ -93,13 +93,13 @@ int HowToAnesthesiaMachine()
 	SEIntubation intubate; 
 	intubate.SetType(SEIntubationType::Tracheal);
 	SEAnesthesiaMachine& config = AMConfig.GetConfiguration();
-	config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
+	config.SetConnection(SEAnesthesiaMachineConnection::Mask);
 	config.GetInletFlow().SetValue(2.0, VolumePerTimeUnit::L_Per_min);
 	config.GetInspiratoryExpiratoryRatio().SetValue(.5);
 	config.GetOxygenFraction().SetValue(.5);
-  config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
+  config.SetOxygenSource(SEAnesthesiaMachineOxygenSource::Wall);
 	config.GetPositiveEndExpiredPressure().SetValue(3.0, PressureUnit::cmH2O);
-  config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
+  config.SetPrimaryGas(SEAnesthesiaMachinePrimaryGas::Nitrogen);
 	config.GetReliefValvePressure().SetValue(20.0, PressureUnit::cmH2O);
 	config.GetRespiratoryRate().SetValue(12, FrequencyUnit::Per_min);
 	config.GetVentilatorPressure().SetValue(22.0, PressureUnit::cmH2O);

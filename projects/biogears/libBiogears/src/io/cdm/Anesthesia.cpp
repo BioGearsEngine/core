@@ -25,10 +25,7 @@ namespace io {
   {
     System::UnMarshall(static_cast<const CDM::SystemData&>(in), static_cast<SESystem&>(out));
 
-    if (in.Connection().present()) {
-      out.m_Connection = in.Connection().get();
-    }
-    // UnMarshall(in.Connection(), out.m_Connection);
+    UnMarshall(in.Connection(), out.m_Connection);
 
     if (in.InletFlow().present()) {
       io::Property::UnMarshall(in.InletFlow(), out.GetInletFlow());
@@ -40,19 +37,13 @@ namespace io {
       io::Property::UnMarshall(in.OxygenFraction(), out.GetOxygenFraction());
     }
 
-    if (in.OxygenSource().present()) {
-      out.SetOxygenSource(in.OxygenSource().get());
-    }
-    // UnMarshall(in.OxygenSource(), out.m_OxygenSource);
+    UnMarshall(in.OxygenSource(), out.m_OxygenSource);
 
     if (in.PositiveEndExpiredPressure().present()) {
       io::Property::UnMarshall(in.PositiveEndExpiredPressure(), out.GetPositiveEndExpiredPressure());
     }
 
-    if (in.PrimaryGas().present()) {
-      out.SetPrimaryGas(in.PrimaryGas().get());
-    }
-    // UnMarshall(in.PrimaryGas(), out.m_PrimaryGas);
+    UnMarshall(in.PrimaryGas(), out.m_PrimaryGas);
 
     if (in.RespiratoryRate().present()) {
       io::Property::UnMarshall(in.RespiratoryRate(), out.GetRespiratoryRate());
@@ -80,12 +71,10 @@ namespace io {
     SEAnesthesiaMachineEvent event;
     for (auto e : in.ActiveEvent()) {
       io::Property::UnMarshall(e.Duration(), time);
-      // UnMarshall(e.Event(), event);
+      UnMarshall(e.Event(), event);
 
-      out.m_EventState[e.Event()] = true;
-      out.m_EventDuration_s[e.Event()] = time.GetValue(TimeUnit::s);
-      // out.m_EventState[event] = true;
-      // out.m_EventDuration_s[event] = time.GetValue(TimeUnit::s);
+      out.m_EventState[event] = true;
+      out.m_EventDuration_s[event] = time.GetValue(TimeUnit::s);
     }
 
     out.StateChange();
@@ -96,10 +85,7 @@ namespace io {
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::AnesthesiaMachineData&>(out));
 
-    if (in.HasConnection()) {
-      out.Connection(in.m_Connection);
-    }
-    // SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, Connection)
+    SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, Connection)
 
     if (in.m_InletFlow != nullptr) {
       io::Property::Marshall(*in.m_InletFlow, out.InletFlow());
@@ -111,19 +97,13 @@ namespace io {
       io::Property::Marshall(*in.m_OxygenFraction, out.OxygenFraction());
     }
 
-    if (in.HasOxygenSource()) {
-      out.OxygenSource(in.m_OxygenSource);
-    }
-    // SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, OxygenSource)
+    SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, OxygenSource)
 
     if (in.m_PositiveEndExpiredPressure != nullptr) {
       io::Property::Marshall(*in.m_PositiveEndExpiredPressure, out.PositiveEndExpiredPressure());
     }
 
-    if (in.HasPrimaryGas()) {
-      out.PrimaryGas(in.m_PrimaryGas);
-    }
-    // SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, PrimaryGas)
+    SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, PrimaryGas)
 
     if (in.m_RespiratoryRate != nullptr) {
       io::Property::Marshall(*in.m_RespiratoryRate, out.RespiratoryRate());
@@ -158,8 +138,7 @@ namespace io {
 
       CDM::ActiveAnesthesiaMachineEventData* eData = new CDM::ActiveAnesthesiaMachineEventData();
       eData->Event(std::make_unique<std::remove_reference<decltype(eData->Event())>::type>());
-      // Anesthesia::Marshall(itr.first, eData->Event());
-      eData->Event() = itr.first;
+      Anesthesia::Marshall(itr.first, eData->Event());
 
       eData->Duration(std::make_unique<std::remove_reference<decltype(eData->Duration())>::type>());
       io::Property::Marshall(time, eData->Duration());
@@ -172,10 +151,9 @@ namespace io {
   void Anesthesia::UnMarshall(const CDM::AnesthesiaMachineChamberData& in, SEAnesthesiaMachineChamber& out)
   {
     if (in.State().present()) {
-      out.SetState(in.State().get());
-      // auto state = out.GetState();
-      // Property::UnMarshall(in.State(), state);
-      // out.SetState(state);
+      auto state = out.GetState();
+      Property::UnMarshall(in.State(), state);
+      out.SetState(state);
     }
     if (in.SubstanceFraction().present()) {
       io::Property::UnMarshall(in.SubstanceFraction(), out.GetSubstanceFraction());
@@ -192,10 +170,7 @@ namespace io {
   //----------------------------------------------------------------------------------
   void Anesthesia::Marshall(const SEAnesthesiaMachineChamber& in, CDM::AnesthesiaMachineChamberData& out)
   {
-    if (in.HasState()) {
-      out.State(in.m_State);
-    }
-    //io::Property::Marshall(in.GetState(), out.State());
+    io::Property::Marshall(in.GetState(), out.State());
 
     if (in.m_SubstanceFraction != nullptr) {
       io::Property::Marshall(*in.m_SubstanceFraction, out.SubstanceFraction());

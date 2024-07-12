@@ -124,7 +124,7 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolationWaveform)
   CDMType data;
 
   source.SetLeadNumber(2);
-  source.SetRhythm(CDM::enumHeartRhythm::NormalSinus);
+  source.SetRhythm(biogears::SEHeartRhythm::NormalSinus);
 
   source.GetTimeStep().SetValue(1.0, biogears::TimeUnit::yr);
   auto& epVt = source.GetData();
@@ -199,11 +199,11 @@ TEST_F(TEST_FIXTURE_NAME, ElectroCardioGramInterpolator)
 
   auto potential = biogears::SEScalarElectricPotential { 10, biogears::ElectricPotentialUnit::mV };
   source.SetLeadElectricPotential(1, potential);
-  auto& waveform = source.GetWaveform(10, CDM::enumHeartRhythm::Asystole);
+  auto& waveform = source.GetWaveform(10, biogears::SEHeartRhythm::Asystole);
 
   //LeadNumber an Rythem set by GetWaveForm of Coherence.
   //waveform.SetLeadNumber(10) 
-  //waveform.SetRhythm(CDM::enumHeartRhythm::NormalSinus);
+  //waveform.SetRhythm(biogears::SEHeartRhythm::NormalSinus);
 
   waveform.GetTimeStep().SetValue(1.0, biogears::TimeUnit::yr);
   auto& epVt = waveform.GetData();

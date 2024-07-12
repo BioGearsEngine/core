@@ -551,13 +551,13 @@ int HowToPatientEvents()
   auto& machine_config = machine.GetConfiguration();
   bg->AdvanceModelTime(50.0, TimeUnit::s);
 
-  machine_config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
+  machine_config.SetConnection(SEAnesthesiaMachineConnection::Mask);
   machine_config.GetInletFlow().SetValue(5.0, biogears::VolumePerTimeUnit::L_Per_min);
   machine_config.GetInspiratoryExpiratoryRatio().SetValue(.5);
   machine_config.GetOxygenFraction().SetValue(0.23);
-  machine_config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
+  machine_config.SetOxygenSource(SEAnesthesiaMachineOxygenSource::Wall);
   machine_config.GetPositiveEndExpiredPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);
-  machine_config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
+  machine_config.SetPrimaryGas(SEAnesthesiaMachinePrimaryGas::Nitrogen);
   machine_config.GetRespiratoryRate().SetValue(16, biogears::FrequencyUnit::Per_min);
   machine_config.GetVentilatorPressure().SetValue(0.0, biogears::PressureUnit::cmH2O);
   machine_config.GetOxygenBottleOne().GetVolume().SetValue(660, biogears::VolumeUnit::L);
@@ -567,14 +567,14 @@ int HowToPatientEvents()
 
   bg->AdvanceModelTime(50.0, TimeUnit::s);
 
-  machine_config.GetLeftChamber().SetState(CDM::enumOnOff::On);
+  machine_config.GetLeftChamber().SetState(SEOnOff::On);
   machine_config.GetLeftChamber().GetSubstanceFraction().SetValue(0.05);
   machine_config.GetLeftChamber().SetSubstance(*bg->GetSubstanceManager().GetSubstance("Desflurane"));
   bg->ProcessAction(machine);
 
   bg->AdvanceModelTime(0.5, TimeUnit::hr);
 
-  machine_config.GetLeftChamber().SetState(CDM::enumOnOff::Off);
+  machine_config.GetLeftChamber().SetState(SEOnOff::Off);
   bg->ProcessAction(machine);
 
   bg->AdvanceModelTime(2, TimeUnit::hr);

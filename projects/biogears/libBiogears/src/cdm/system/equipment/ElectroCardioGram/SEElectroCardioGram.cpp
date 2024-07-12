@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 
+#include "io/cdm/ElectroCardioGram.h"
+
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
@@ -59,30 +61,7 @@ void SEElectroCardioGram::Clear()
 
 bool SEElectroCardioGram::Load(const CDM::ElectroCardioGramData& in)
 {
-  if (in.Lead1ElectricPotential().present())
-    GetLead1ElectricPotential().Load(in.Lead1ElectricPotential().get());
-  if (in.Lead2ElectricPotential().present())
-    GetLead2ElectricPotential().Load(in.Lead2ElectricPotential().get());
-  if (in.Lead3ElectricPotential().present())
-    GetLead3ElectricPotential().Load(in.Lead3ElectricPotential().get());
-  if (in.Lead4ElectricPotential().present())
-    GetLead4ElectricPotential().Load(in.Lead4ElectricPotential().get());
-  if (in.Lead5ElectricPotential().present())
-    GetLead5ElectricPotential().Load(in.Lead5ElectricPotential().get());
-  if (in.Lead6ElectricPotential().present())
-    GetLead6ElectricPotential().Load(in.Lead6ElectricPotential().get());
-  if (in.Lead7ElectricPotential().present())
-    GetLead7ElectricPotential().Load(in.Lead7ElectricPotential().get());
-  if (in.Lead8ElectricPotential().present())
-    GetLead8ElectricPotential().Load(in.Lead8ElectricPotential().get());
-  if (in.Lead9ElectricPotential().present())
-    GetLead9ElectricPotential().Load(in.Lead9ElectricPotential().get());
-  if (in.Lead10ElectricPotential().present())
-    GetLead10ElectricPotential().Load(in.Lead10ElectricPotential().get());
-  if (in.Lead11ElectricPotential().present())
-    GetLead11ElectricPotential().Load(in.Lead11ElectricPotential().get());
-  if (in.Lead12ElectricPotential().present())
-    GetLead12ElectricPotential().Load(in.Lead12ElectricPotential().get());
+  io::ElectroCardioGram::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -97,30 +76,7 @@ CDM::ElectroCardioGramData* SEElectroCardioGram::Unload() const
 
 void SEElectroCardioGram::Unload(CDM::ElectroCardioGramData& data) const
 {
-  if (m_Lead1ElectricPotential != nullptr)
-    data.Lead1ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead1ElectricPotential->Unload()));
-  if (m_Lead2ElectricPotential != nullptr)
-    data.Lead2ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead2ElectricPotential->Unload()));
-  if (m_Lead3ElectricPotential != nullptr)
-    data.Lead3ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead3ElectricPotential->Unload()));
-  if (m_Lead4ElectricPotential != nullptr)
-    data.Lead4ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead4ElectricPotential->Unload()));
-  if (m_Lead5ElectricPotential != nullptr)
-    data.Lead5ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead5ElectricPotential->Unload()));
-  if (m_Lead6ElectricPotential != nullptr)
-    data.Lead6ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead6ElectricPotential->Unload()));
-  if (m_Lead7ElectricPotential != nullptr)
-    data.Lead7ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead7ElectricPotential->Unload()));
-  if (m_Lead8ElectricPotential != nullptr)
-    data.Lead8ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead8ElectricPotential->Unload()));
-  if (m_Lead9ElectricPotential != nullptr)
-    data.Lead9ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead9ElectricPotential->Unload()));
-  if (m_Lead10ElectricPotential != nullptr)
-    data.Lead10ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead10ElectricPotential->Unload()));
-  if (m_Lead11ElectricPotential != nullptr)
-    data.Lead11ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead11ElectricPotential->Unload()));
-  if (m_Lead12ElectricPotential != nullptr)
-    data.Lead12ElectricPotential(std::unique_ptr<CDM::ScalarElectricPotentialData>(m_Lead12ElectricPotential->Unload()));
+  io::ElectroCardioGram::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 const SEScalar* SEElectroCardioGram::GetScalar(const char* name)

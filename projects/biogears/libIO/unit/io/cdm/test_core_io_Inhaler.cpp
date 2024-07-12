@@ -86,7 +86,7 @@ TEST_F(TEST_FIXTURE_NAME, Inhaler)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetState(CDM::enumOnOff::Off);
+  source.SetState(biogears::SEOnOff::Off);
   source.GetMeteredDose().SetValue(55.f, biogears::MassUnit::kg);
   source.GetNozzleLoss().SetValue(22.f);
   source.GetSpacerVolume().SetValue(55, biogears::VolumeUnit::L);

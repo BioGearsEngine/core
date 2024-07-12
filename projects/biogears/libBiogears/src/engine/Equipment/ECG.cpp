@@ -75,8 +75,8 @@ void ECG::Initialize()
   CDM_COPY(m_data.GetConfiguration().GetECGInterpolator(), (&m_Waveforms));
   // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
   /* Code to write out the ECG data in a format easy to view in plotting tools 
-  std::vector<double> original_s = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
-  std::vector<double> original_mV = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
+  std::vector<double> original_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
+  std::vector<double> original_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
   DataTrack Original;  
   for (size_t i = 0; i < original_s.size(); i++)
     Original.Track("Original_ECG",original_s[i], original_mV[i]);
@@ -84,8 +84,8 @@ void ECG::Initialize()
 */
   m_Waveforms.Interpolate(m_data.GetTimeStep());
   /* Code to write out the Interpolated ECG data in a format easy to view in plotting tools
-  std::vector<double> interpolated_s = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
-  std::vector<double> interpolated_mV = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
+  std::vector<double> interpolated_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
+  std::vector<double> interpolated_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
   DataTrack Interpolated;
   for (size_t i = 0; i < interpolated_s.size(); i++)
     Interpolated.Track("Interpolated_ECG", interpolated_s[i], interpolated_mV[i]);
@@ -159,7 +159,7 @@ void ECG::Process()
     // Currently we  have one data set for all currently supported Heart Rhythms
     // Eventually we will support multiple rhythmic data
     if (m_data.GetCardiovascular().GetHeartRhythm() == CDM::enumHeartRhythm::NormalSinus)
-      m_Waveforms.StartNewCycle(CDM::enumHeartRhythm::NormalSinus);
+      m_Waveforms.StartNewCycle(SEHeartRhythm::NormalSinus);
     else {
       m_ss << m_data.GetCardiovascular().GetHeartRhythm() << " is not a supported Heart Rhythm for ECG";
       Error(m_ss);

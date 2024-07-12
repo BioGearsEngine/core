@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEInspiratoryValveLeak.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -44,8 +47,7 @@ bool SEInspiratoryValveLeak::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEInspiratoryValveLeak::Load(const CDM::InspiratoryValveLeakData& in, std::default_random_engine *rd)
 {
-  SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
+  io::AnesthesiaActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -58,9 +60,7 @@ CDM::InspiratoryValveLeakData* SEInspiratoryValveLeak::Unload() const
 //-------------------------------------------------------------------------------
 void SEInspiratoryValveLeak::Unload(CDM::InspiratoryValveLeakData& data) const
 {
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
+  io::AnesthesiaActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEInspiratoryValveLeak::HasSeverity() const
