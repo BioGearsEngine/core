@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 
+#include "io/cdm/Environment.h"
+#include "io/cdm/EnvironmentConditions.h"
+
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
@@ -51,11 +54,7 @@ bool SEInitialEnvironment::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEInitialEnvironment::Load(const CDM::InitialEnvironmentData& in)
 {
-  SEEnvironmentCondition::Load(in);
-  if (in.ConditionsFile().present())
-    SetConditionsFile(in.ConditionsFile().get());
-  if (in.Conditions().present())
-    GetConditions().Load(in.Conditions().get());
+  io::EnvironmentConditions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -68,11 +67,7 @@ CDM::InitialEnvironmentData* SEInitialEnvironment::Unload() const
 //-----------------------------------------------------------------------------
 void SEInitialEnvironment::Unload(CDM::InitialEnvironmentData& data) const
 {
-  SEEnvironmentCondition::Unload(data);
-  if (HasConditions())
-    data.Conditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(m_Conditions->Unload()));
-  else if (HasConditionsFile())
-    data.ConditionsFile(m_ConditionsFile);
+  io::EnvironmentConditions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEInitialEnvironment::HasConditions() const

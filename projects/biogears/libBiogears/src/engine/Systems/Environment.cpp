@@ -583,7 +583,7 @@ void Environment::CalculateSupplementalValues()
   m_dHeatOfVaporizationOfWater_J_Per_kg = dHeatOfVaporizationOfWater_JPerMol / 0.0180153; //1 mol of water = 0.0180153 kg
 
   //Water convective heat transfer properties
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     double dWaterTemperature_C = GetConditions().GetAmbientTemperature(TemperatureUnit::C);
     double dT = Convert(dWaterTemperature_C, TemperatureUnit::C, TemperatureUnit::K) / 298.15;
 
@@ -604,7 +604,7 @@ void Environment::CalculateSupplementalValues()
 //--------------------------------------------------------------------------------------------------
 void Environment::CalculateRadiation()
 {
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     //Submerged - therefore, no radiation
 
     //Invalidate the coefficient
@@ -663,7 +663,7 @@ void Environment::CalculateConvection()
 {
   double dConvectiveHeatTransferCoefficient_WPerM2_K = 0.0;
 
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     //Submerged - therefore, convection is most important
     double dClothingTemperature_K = m_ClothingNode->GetTemperature().GetValue(TemperatureUnit::K);
     double dWaterTemperature_K = GetConditions().GetAmbientTemperature(TemperatureUnit::K);
@@ -721,7 +721,7 @@ void Environment::CalculateConvection()
 //--------------------------------------------------------------------------------------------------
 void Environment::CalculateEvaporation()
 {
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     //Submerged - therefore, no evaporation
     //Invalidate the coefficient
     GetEvaporativeHeatTranferCoefficient().Invalidate();

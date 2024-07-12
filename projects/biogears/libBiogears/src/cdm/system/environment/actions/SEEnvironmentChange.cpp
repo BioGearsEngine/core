@@ -11,6 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 
+#include "io/cdm/Environment.h"
+#include "io/cdm/EnvironmentActions.h"
+
+#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
@@ -22,10 +26,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/io/io-manager.h>
 
 namespace biogears {
 SEEnvironmentChange::SEEnvironmentChange(SESubstanceManager& substances)
-  : SEEnvironmentAction()
+  : SEEnvironmentAction(substances.GetLogger())
   , m_Substances(substances)
 {
   m_Conditions = nullptr;
@@ -49,13 +54,9 @@ bool SEEnvironmentChange::IsValid() const
   return SEEnvironmentAction::IsValid() && (HasConditions() || HasConditionsFile());
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentChange::Load(const CDM::EnvironmentChangeData& in, std::default_random_engine *rd)
+bool SEEnvironmentChange::Load(const CDM::EnvironmentChangeData& in, std::default_random_engine* rd)
 {
-  SEEnvironmentAction::Load(in);
-  if (in.ConditionsFile().present())
-    SetConditionsFile(in.ConditionsFile().get());
-  else if (in.Conditions().present())
-    GetConditions().Load(in.Conditions().get());
+  io::EnvironmentActions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -68,23 +69,46 @@ CDM::EnvironmentChangeData* SEEnvironmentChange::Unload() const
 //-----------------------------------------------------------------------------
 void SEEnvironmentChange::Unload(CDM::EnvironmentChangeData& data) const
 {
-  SEEnvironmentAction::Unload(data);
-  if (HasConditions())
-    data.Conditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(m_Conditions->Unload()));
-  else if (HasConditionsFile())
-    data.ConditionsFile(m_ConditionsFile);
+  io::EnvironmentActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEEnvironmentChange::HasConditions() const
 {
-  return m_Conditions != nullptr;
+  return m_Conditions != nullptr && m_Conditions->IsValid();
 }
 //-----------------------------------------------------------------------------
 SEEnvironmentalConditions& SEEnvironmentChange::GetConditions()
 {
-  m_ConditionsFile = "";
-  if (m_Conditions == nullptr)
+
+  if (m_Conditions == nullptr) {
     m_Conditions = new SEEnvironmentalConditions(m_Substances);
+    if (!m_ConditionsFile.empty()) {
+      CDM::EnvironmentalConditionsData* ecData;
+      std::unique_ptr<CDM::ObjectData> data;
+
+      auto io = m_Substances.GetLogger()->GetIoManager().lock();
+      auto possible_path = io->find_resource_file(m_ConditionsFile.c_str());
+      if (possible_path.empty()) {
+#ifdef BIOGEARS_IO_PRESENT
+        size_t content_size;
+        auto content = io->get_embedded_resource_file(m_ConditionsFile.c_str(), content_size);
+        data = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Substances.GetLogger());
+#endif
+      } else {
+        data = Serializer::ReadFile(possible_path.c_str(), m_Substances.GetLogger());
+      }
+
+      ecData = dynamic_cast<CDM::EnvironmentalConditionsData*>(data.get());
+      if (ecData == nullptr) {
+        std::stringstream ss;
+        ss << "EnvironmentalConditions file could not be read : " << m_ConditionsFile << std::endl;
+        Error(ss);
+      } else {
+        m_ConditionsFile = "";
+        m_Conditions->Load(*ecData);
+      }
+    }
+  }
   return *m_Conditions;
 }
 //-----------------------------------------------------------------------------
@@ -100,7 +124,7 @@ const char* SEEnvironmentChange::GetConditionsFile() const
 //-----------------------------------------------------------------------------
 void SEEnvironmentChange::SetConditionsFile(const char* fileName)
 {
-  SetConditionsFile(std::string{ fileName });
+  SetConditionsFile(std::string { fileName });
 }
 //-----------------------------------------------------------------------------
 void SEEnvironmentChange::SetConditionsFile(const std::string& fileName)

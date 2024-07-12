@@ -124,7 +124,7 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentalConditions)
   auto sarin = subMgr.GetSubstance("Sarin");
   ASSERT_NE(nullptr, nitrogen);
   ASSERT_NE(nullptr, sarin);
-  source.SetSurroundingType(CDM::enumSurroundingType::Water);
+  source.SetSurroundingType(biogears::SESurroundingType::Water);
 
   source.SetName("EnvironmentalConditions");
 
@@ -228,7 +228,7 @@ TEST_F(TEST_FIXTURE_NAME, AppliedTemperature)
   source.GetTemperature().SetValue(1.0, biogears::TemperatureUnit::C);
   source.GetSurfaceArea().SetValue(1.0, biogears::AreaUnit::m2);
   source.GetSurfaceAreaFraction().SetValue(1.0);
-  source.SetState(CDM::enumOnOff::On);
+  source.SetState(biogears::SEOnOff::On);
 
   EXPECT_NE(source, sink);
 
@@ -264,7 +264,7 @@ TEST_F(TEST_FIXTURE_NAME, Environment)
   auto sarin = subMgr.GetSubstance("Sarin");
   ASSERT_NE(nullptr, nitrogen);
   ASSERT_NE(nullptr, sarin);
-  conditions.SetSurroundingType(CDM::enumSurroundingType::Water);
+  conditions.SetSurroundingType(biogears::SESurroundingType::Water);
 
   conditions.SetName("EnvironmentalConditions");
 
