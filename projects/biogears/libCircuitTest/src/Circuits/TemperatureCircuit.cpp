@@ -52,7 +52,7 @@ void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::st
   SEThermalCircuitNode* Core = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalCore);
   Core->GetTemperature().SetValue(36.85, TemperatureUnit::C);
   Core->GetNextTemperature().SetValue(36.85, TemperatureUnit::C);
-  SEThermalCircuitNode* Skin = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalSkin);
+  SEThermalCircuitNode* Skin = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin);
   Skin->GetTemperature().SetValue(33.0, TemperatureUnit::C);
   Skin->GetNextTemperature().SetValue(33.0, TemperatureUnit::C);
   SEThermalCircuitNode* Ground = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalGround);
@@ -122,7 +122,7 @@ void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::s
   SEThermalCircuitNode* Core = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalCore);
   Core->GetTemperature().SetValue(36.85, TemperatureUnit::C);
   Core->GetNextTemperature().SetValue(36.85, TemperatureUnit::C);
-  SEThermalCircuitNode* Skin = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalSkin);
+  SEThermalCircuitNode* Skin = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin);
   Skin->GetTemperature().SetValue(33.0, TemperatureUnit::C);
   Skin->GetNextTemperature().SetValue(33.0, TemperatureUnit::C);
   SEThermalCircuitNode* Ground = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalGround);
@@ -206,7 +206,7 @@ void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::s
   SEThermalCircuitNode* Core = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalCore);
   Core->GetTemperature().SetValue(36.85, TemperatureUnit::C);
   Core->GetNextTemperature().SetValue(36.85, TemperatureUnit::C);
-  SEThermalCircuitNode* Skin = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalSkin);
+  SEThermalCircuitNode* Skin = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin);
   Skin->GetTemperature().SetValue(33.0, TemperatureUnit::C);
   Skin->GetNextTemperature().SetValue(33.0, TemperatureUnit::C);
   SEThermalCircuitNode* Ground = m_TCircuit.GetNode(BGE::InternalTemperatureNode::InternalGround);
@@ -285,7 +285,7 @@ void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::st
 
   double testBMR = 1700;
 
-  SEThermalCircuitPath* SkinToClothing = m_ECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalSkinToClothing);
+  SEThermalCircuitPath* SkinToClothing = m_ECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalTorsoSkinToClothing);
   SEThermalCircuitPath* ClothingToEnclosure = m_ECircuit.GetPath(BGE::ExternalTemperaturePath::ClothingToEnclosure);
   SEThermalCircuitPath* GroundToEnvironment = m_ECircuit.GetPath(BGE::ExternalTemperaturePath::GroundToEnvironment);
   SEThermalCircuitPath* ClothingToEnvironment = m_ECircuit.GetPath(BGE::ExternalTemperaturePath::ClothingToEnvironment);
@@ -300,7 +300,7 @@ void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::st
 
   // Make a new source attached to Environment circuit to take the place of the Energy circuit
   SEThermalCircuitNode* Core = m_ECircuit.GetNode(BGE::ExternalTemperatureNode::ExternalCore);
-  SEThermalCircuitNode* Skin = m_ECircuit.GetNode(BGE::ExternalTemperatureNode::ExternalSkin);
+  SEThermalCircuitNode* Skin = m_ECircuit.GetNode(BGE::ExternalTemperatureNode::ExternalTorsoSkin);
   SEThermalCircuitNode* Ground = m_ECircuit.GetNode(BGE::ExternalTemperatureNode::ExternalGround);
 
   SEThermalCircuitNode& MetabolicNode = m_ECircuit.CreateNode("Metabolic");
@@ -392,10 +392,10 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperature
   SEThermalCircuit& m_TECircuit = bg.GetCircuits().GetTemperatureCircuit();
 
   SEThermalCircuitPath* MetabolicPath = m_TECircuit.GetPath(BGE::InternalTemperaturePath::GroundToInternalCore);
-  SEThermalCircuitPath* CoreToSkin = m_TECircuit.GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalSkin);
+  SEThermalCircuitPath* CoreToSkin = m_TECircuit.GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalTorsoSkin);
   SEThermalCircuitPath* EnvCoreToGround = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalCoreToGround);
-  SEThermalCircuitPath* EnvSkinToGround = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalSkinToGround);
-  SEThermalCircuitPath* EnvSkinToClothing = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalSkinToClothing);
+  SEThermalCircuitPath* EnvSkinToGround = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalTorsoSkinToGround);
+  SEThermalCircuitPath* EnvSkinToClothing = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalTorsoSkinToClothing);
   SEThermalCircuitPath* ClothingToEnclosure = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ClothingToEnclosure);
   SEThermalCircuitPath* GroundToEnvironment = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::GroundToEnvironment);
   SEThermalCircuitPath* GroundToEnclosure = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::GroundToEnclosure);
@@ -423,7 +423,7 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperature
   //Set some initial temperatures
   SEThermalCircuitNode* Core = m_TECircuit.GetNode(BGE::InternalTemperatureNode::InternalCore);
   Core->GetTemperature().SetValue(37.0, TemperatureUnit::C);
-  SEThermalCircuitNode* Skin = m_TECircuit.GetNode(BGE::InternalTemperatureNode::InternalSkin);
+  SEThermalCircuitNode* Skin = m_TECircuit.GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin);
   Skin->GetTemperature().SetValue(33.0, TemperatureUnit::C);
   SEThermalCircuitNode* Clothing = m_TECircuit.GetNode(BGE::ExternalTemperatureNode::Clothing);
   Clothing->GetTemperature().SetValue(30.0, TemperatureUnit::C);
@@ -519,10 +519,10 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(c
   SEThermalCircuit& m_TECircuit = bg.GetCircuits().GetTemperatureCircuit();
 
   SEThermalCircuitPath* MetabolicPath = m_TECircuit.GetPath(BGE::InternalTemperaturePath::GroundToInternalCore);
-  SEThermalCircuitPath* CoreToSkin = m_TECircuit.GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalSkin);
+  SEThermalCircuitPath* CoreToSkin = m_TECircuit.GetPath(BGE::InternalTemperaturePath::InternalCoreToInternalTorsoSkin);
   SEThermalCircuitPath* EnvCoreToGround = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalCoreToGround);
-  SEThermalCircuitPath* EnvSkinToGround = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalSkinToGround);
-  SEThermalCircuitPath* EnvSkinToClothing = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalSkinToClothing);
+  SEThermalCircuitPath* EnvSkinToGround = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalTorsoSkinToGround);
+  SEThermalCircuitPath* EnvSkinToClothing = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ExternalTorsoSkinToClothing);
   SEThermalCircuitPath* ClothingToEnclosure = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::ClothingToEnclosure);
   SEThermalCircuitPath* GroundToEnvironment = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::GroundToEnvironment);
   SEThermalCircuitPath* GroundToEnclosure = m_TECircuit.GetPath(BGE::ExternalTemperaturePath::GroundToEnclosure);
@@ -636,7 +636,7 @@ void BioGearsEngineTest::EnvironmentISO7730ComparisonTest(const std::string& sTe
   SEThermalCircuit& EnvironmentCircuit = bg.GetCircuits().GetExternalTemperatureCircuit();
   SEThermalCircuitNode* ClothingNode = EnvironmentCircuit.GetNode(BGE::ExternalTemperatureNode::Clothing);
   SEThermalCircuitNode* EnvironmentCoreNode = EnvironmentCircuit.GetNode(BGE::ExternalTemperatureNode::ExternalCore);
-  SEThermalCircuitNode* EnvironmentSkinNode = EnvironmentCircuit.GetNode(BGE::ExternalTemperatureNode::ExternalSkin);
+  SEThermalCircuitNode* EnvironmentSkinNode = EnvironmentCircuit.GetNode(BGE::ExternalTemperatureNode::ExternalTorsoSkin);
   SEThermalCircuitNode* AbsoluteReferenceNode = EnvironmentCircuit.GetNode(BGE::ExternalTemperatureNode::ExternalGround);
 
   // Create some new stuff in the circuit

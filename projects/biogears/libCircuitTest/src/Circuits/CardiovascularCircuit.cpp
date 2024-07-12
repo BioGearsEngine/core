@@ -71,7 +71,7 @@ void BioGearsEngineTest::TuneCardiovascularCircuitTest(const std::string& sTestD
 
   SEPatient patient(nullptr);
   patient.SetName("TuneTest");
-  patient.SetSex(CDM::enumSex::Male);
+  patient.SetSex(SESex::Male);
 
   double HRLower = 60;
   double HRUpper = 100;

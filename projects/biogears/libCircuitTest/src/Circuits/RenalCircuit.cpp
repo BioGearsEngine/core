@@ -306,7 +306,7 @@ void BioGearsEngineTest::RenalFeedbackTest(RenalFeedback feedback, const std::st
     // Stabilize the circuit
     for (unsigned int i = 0; i < 3e6; i++) {
       //Flag beginning of cardiac cycle - this will make it just use the current value instead of a running average
-      patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, true, eventTime);
+      patient->SetEvent(SEPatientEventType::StartOfCardiacCycle, true, eventTime);
 
       GFRSteady = false;
       RBFSteady = false;
