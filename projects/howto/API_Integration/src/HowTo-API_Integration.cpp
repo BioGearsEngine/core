@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <thread>
 // Include the various types you will be using in your code
 
+#include <biogears/BiogearsEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
@@ -538,7 +539,7 @@ void BioGearsPlugin::run()
           auto* O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen");
           auto* CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
 
-          conditions.SetSurroundingType(CDM::enumSurroundingType::Water);
+          conditions.SetSurroundingType(SESurroundingType::Water);
           conditions.GetAirVelocity().SetValue(0, LengthPerTimeUnit::m_Per_s);
           conditions.GetAmbientTemperature().SetValue(10.0, TemperatureUnit::C);
           conditions.GetAtmosphericPressure().SetValue(760., PressureUnit::mmHg);

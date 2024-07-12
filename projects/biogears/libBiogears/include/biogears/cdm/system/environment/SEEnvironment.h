@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/schema/cdm/Environment.hxx>
+#include <biogears/cdm/enums/SEEnvironmentEnums.h>
 
 namespace biogears {
 class SESubstance;

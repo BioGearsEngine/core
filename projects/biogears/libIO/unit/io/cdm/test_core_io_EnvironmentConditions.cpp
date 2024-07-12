@@ -94,7 +94,7 @@ TEST_F(TEST_FIXTURE_NAME, InitialEnvironment)
   auto sarin = subMgr.GetSubstance("Sarin");
   ASSERT_NE(nullptr, sarin);
   ASSERT_NE(nullptr, nitrogen);
-  conditions.SetSurroundingType(CDM::enumSurroundingType::Water);
+  conditions.SetSurroundingType(biogears::SESurroundingType::Water);
 
   conditions.SetName("EnvironmentalConditions");
 

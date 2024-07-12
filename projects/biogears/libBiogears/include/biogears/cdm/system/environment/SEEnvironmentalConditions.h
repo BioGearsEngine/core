@@ -13,7 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
+
 #include <biogears/schema/cdm/Environment.hxx>
+#include <biogears/cdm/enums/SEEnvironmentEnums.h>
+
 
 #include <random>
 
@@ -56,66 +59,67 @@ public:
   SEEnvironmentalConditions(SESubstanceManager& substances);
   virtual ~SEEnvironmentalConditions();
 
-  virtual void Clear();
+  void Clear();
+  bool IsValid();
 
   bool operator==(SEEnvironmentalConditions const& rhs) const;
   bool operator!=(SEEnvironmentalConditions const& rhs) const;
 
-  virtual bool Load(const CDM::EnvironmentalConditionsData& in);
-  virtual bool Load(const char* environmentFile);
-  virtual bool Load(const std::string& environmentFile);
-  virtual CDM::EnvironmentalConditionsData* Unload() const;
+  bool Load(const CDM::EnvironmentalConditionsData& in);
+  bool Load(const char* environmentFile);
+  bool Load(const std::string& environmentFile);
+  CDM::EnvironmentalConditionsData* Unload() const;
 
-  virtual const SEScalar* GetScalar(const char* name);
-  virtual const SEScalar* GetScalar(const std::string& name);
+  const SEScalar* GetScalar(const char* name);
+  const SEScalar* GetScalar(const std::string& name);
 
-  virtual std::string GetName() const;
-  virtual const char* GetName_cStr() const;
-  virtual void SetName(const char* name);
-  virtual void SetName(const std::string& name);
-  virtual bool HasName() const;
-  virtual void InvalidateName();
+  std::string GetName() const;
+  const char* GetName_cStr() const;
+  void SetName(const char* name);
+  void SetName(const std::string& name);
+  bool HasName() const;
+  void InvalidateName();
 
-  virtual CDM::enumSurroundingType::value GetSurroundingType() const;
-  virtual void SetSurroundingType(CDM::enumSurroundingType::value name);
-  virtual bool HasSurroundingType() const;
-  virtual void InvalidateSurroundingType();
+  SESurroundingType GetSurroundingType() const;
+  void SetSurroundingType(SESurroundingType name);
+  bool HasSurroundingType() const;
+  void InvalidateSurroundingType();
 
-  virtual bool HasAirDensity() const;
-  virtual SEScalarMassPerVolume& GetAirDensity();
-  virtual double GetAirDensity(const MassPerVolumeUnit& unit) const;
+  bool HasAirDensity() const;
+  SEScalarMassPerVolume& GetAirDensity();
+  double GetAirDensity(const MassPerVolumeUnit& unit) const;
 
-  virtual bool HasAirVelocity() const;
-  virtual SEScalarLengthPerTime& GetAirVelocity();
-  virtual double GetAirVelocity(const LengthPerTimeUnit& unit) const;
+  bool HasAirVelocity() const;
+  SEScalarLengthPerTime& GetAirVelocity();
+  double GetAirVelocity(const LengthPerTimeUnit& unit) const;
 
-  virtual bool HasAmbientTemperature() const;
-  virtual SEScalarTemperature& GetAmbientTemperature();
-  virtual double GetAmbientTemperature(const TemperatureUnit& unit) const;
+  bool HasAmbientTemperature() const;
+  SEScalarTemperature& GetAmbientTemperature();
+  double GetAmbientTemperature(const TemperatureUnit& unit) const;
 
-  virtual bool HasAtmosphericPressure() const;
-  virtual SEScalarPressure& GetAtmosphericPressure();
-  virtual double GetAtmosphericPressure(const PressureUnit& unit) const;
+  bool HasAtmosphericPressure() const;
+  SEScalarPressure& GetAtmosphericPressure();
+  double GetAtmosphericPressure(const PressureUnit& unit) const;
 
-  virtual bool HasClothingResistance() const;
-  virtual SEScalarHeatResistanceArea& GetClothingResistance();
-  virtual double GetClothingResistance(const HeatResistanceAreaUnit& unit) const;
+  bool HasClothingResistance() const;
+  SEScalarHeatResistanceArea& GetClothingResistance();
+  double GetClothingResistance(const HeatResistanceAreaUnit& unit) const;
 
-  virtual bool HasEmissivity() const;
-  virtual SEScalarFraction& GetEmissivity();
-  virtual double GetEmissivity() const;
+  bool HasEmissivity() const;
+  SEScalarFraction& GetEmissivity();
+  double GetEmissivity() const;
 
-  virtual bool HasMeanRadiantTemperature() const;
-  virtual SEScalarTemperature& GetMeanRadiantTemperature();
-  virtual double GetMeanRadiantTemperature(const TemperatureUnit& unit) const;
+  bool HasMeanRadiantTemperature() const;
+  SEScalarTemperature& GetMeanRadiantTemperature();
+  double GetMeanRadiantTemperature(const TemperatureUnit& unit) const;
 
-  virtual bool HasRelativeHumidity() const;
-  virtual SEScalarFraction& GetRelativeHumidity();
-  virtual double GetRelativeHumidity() const;
+  bool HasRelativeHumidity() const;
+  SEScalarFraction& GetRelativeHumidity();
+  double GetRelativeHumidity() const;
 
-  virtual bool HasRespirationAmbientTemperature() const;
-  virtual SEScalarTemperature& GetRespirationAmbientTemperature();
-  virtual double GetRespirationAmbientTemperature(const TemperatureUnit& unit) const;
+  bool HasRespirationAmbientTemperature() const;
+  SEScalarTemperature& GetRespirationAmbientTemperature();
+  double GetRespirationAmbientTemperature(const TemperatureUnit& unit) const;
 
   bool HasAmbientGas() const;
   bool HasAmbientGas(const SESubstance& substance) const;
@@ -138,11 +142,11 @@ public:
   void RemoveAmbientAerosols();
 
 protected:
-  virtual void Unload(CDM::EnvironmentalConditionsData& data) const;
-  virtual void Merge(const SEEnvironmentalConditions& from);
+  void Unload(CDM::EnvironmentalConditionsData& data) const;
+  void Merge(const SEEnvironmentalConditions& from);
 
 protected:
-  CDM::enumSurroundingType::value m_SurroundingType;
+  SESurroundingType m_SurroundingType;
 
   std::string m_Name;
   SEScalarMassPerVolume* m_AirDensity;

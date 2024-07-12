@@ -37,10 +37,8 @@ namespace io {
     if (in.Name().present()) {
       out.SetName(in.Name().get());
     }
-    if (in.SurroundingType().present()) {
-      out.SetSurroundingType(in.SurroundingType().get());
-    }
-    // io::Environment::UnMarshall(in.SurroundingType(), out.m_SurroundingType);
+
+    io::Environment::UnMarshall(in.SurroundingType(), out.m_SurroundingType);
 
     io::Property::UnMarshall(in.AirDensity(), out.GetAirDensity());
     io::Property::UnMarshall(in.AirVelocity(), out.GetAirVelocity());
@@ -88,12 +86,10 @@ namespace io {
     } else {
       out.Name("Local Environment Conditions");
     }
-    if (in.HasSurroundingType()) {
-      out.SurroundingType(in.m_SurroundingType);
-    }
-    // auto item = std::make_unique<CDM::enumSurroundingType>();
-    // io::Environment::Marshall(in.m_SurroundingType, *item);
-    //out.SurroundingType(std::move(item));
+
+    auto item = std::make_unique<CDM::enumSurroundingType>();
+    io::Environment::Marshall(in.m_SurroundingType, *item);
+    out.SurroundingType(std::move(item));
 
     if (in.m_AirDensity && in.m_AirDensity->IsValid()) {
       io::Property::Marshall(*in.m_AirDensity, out.AirDensity());
@@ -153,8 +149,7 @@ namespace io {
   {
     out.Clear();
     if (in.State().present()) {
-      out.m_State = in.State().get();
-      //io::Property::UnMarshall(in.State().get(), out.m_State);
+      io::Property::UnMarshall(in.State().get(), out.m_State);
     }
     io::Property::UnMarshall(in.Temperature(), out.GetTemperature());
     io::Property::UnMarshall(in.SurfaceArea(), out.GetSurfaceArea());
@@ -165,8 +160,7 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Temperature);
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SurfaceArea);
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SurfaceAreaFraction);
-    out.State(in.m_State);
-    //io::Property::Marshall(in.m_State, out.State());
+    io::Property::Marshall(in.m_State, out.State());
   }
   //----------------------------------------------------------------------------------
   // class SEEnvironment

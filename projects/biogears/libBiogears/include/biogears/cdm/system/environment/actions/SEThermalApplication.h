@@ -24,7 +24,7 @@ class BIOGEARS_API SEThermalApplication : public SEEnvironmentAction {
   friend io::EnvironmentActions;
 
 public:
-  SEThermalApplication();
+  SEThermalApplication( Logger* = nullptr);
   virtual ~SEThermalApplication() override;
 
   static constexpr const char* TypeTag() { return "SEThermalApplication"; };
