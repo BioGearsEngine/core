@@ -225,6 +225,7 @@ TEST_F(TEST_FIXTURE_NAME, ComprehensiveMetabolicPanel)
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
 TEST_F(TEST_FIXTURE_NAME, Urinalysis)
 {
+  using namespace biogears;
   USING_TYPES(Urinalysis)
 
   biogears::Logger logger;
@@ -235,32 +236,32 @@ TEST_F(TEST_FIXTURE_NAME, Urinalysis)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetColorResult(CDM::enumUrineColor::Pink);
-  source.SetAppearanceResult(CDM::enumClarityIndicator::Cloudy);
-  source.SetGlucoseResult(CDM::enumPresenceIndicator::Positive);
-  source.SetKetoneResult(CDM::enumPresenceIndicator::Negative);
+  source.SetColorResult(SEUrineColor::Pink);
+  source.SetAppearanceResult(SEClarityIndicator::Cloudy);
+  source.SetGlucoseResult(SEPresenceIndicator::Positive);
+  source.SetKetoneResult(SEPresenceIndicator::Negative);
   source.GetBilirubinResult().SetValue(5);
   source.GetSpecificGravityResult().SetValue(9);
-  source.SetBloodResult(CDM::enumPresenceIndicator::Positive);
+  source.SetBloodResult(SEPresenceIndicator::Positive);
   source.GetPHResult().SetValue(2);
-  source.SetProteinResult(CDM::enumPresenceIndicator::Negative);
+  source.SetProteinResult(SEPresenceIndicator::Negative);
   source.GetUrobilinogenResult().SetValue(88, biogears::MassPerVolumeUnit::g_Per_mL);
-  source.SetNitriteResult(CDM::enumPresenceIndicator::Positive);
-  source.SetLeukocyteEsteraseResult(CDM::enumPresenceIndicator::Negative);
+  source.SetNitriteResult(SEPresenceIndicator::Positive);
+  source.SetLeukocyteEsteraseResult(SEPresenceIndicator::Negative);
 
   auto microscopic = new biogears::SEUrinalysisMicroscopic();
 
-  source.GetMicroscopicResult().SetObservationType(CDM::enumMicroscopicObservationType::LowPowerField);
+  source.GetMicroscopicResult().SetObservationType(SEMicroscopicObservationType::LowPowerField);
   source.GetMicroscopicResult().GetRedBloodCellsResult().SetValue(1, biogears::AmountUnit::mol);
   source.GetMicroscopicResult().GetWhiteBloodCellsResult().SetValue(2, biogears::AmountUnit::pmol);
 
-  source.GetMicroscopicResult().SetEpithelialCellsResult(CDM::enumMicroscopicObservationAmount::Many);
+  source.GetMicroscopicResult().SetEpithelialCellsResult(SEMicroscopicObservationAmount::Many);
   source.GetMicroscopicResult().GetCastsResult().SetValue(2, biogears::AmountUnit::pmol);
 
-  source.GetMicroscopicResult().SetCrystalsResult(CDM::enumMicroscopicObservationAmount::Few);
-  source.GetMicroscopicResult().SetBacteriaResult(CDM::enumMicroscopicObservationAmount::Moderate);
-  source.GetMicroscopicResult().SetTrichomonadsResult(CDM::enumMicroscopicObservationAmount::Many);
-  source.GetMicroscopicResult().SetYeastResult(CDM::enumMicroscopicObservationAmount::Few);
+  source.GetMicroscopicResult().SetCrystalsResult(SEMicroscopicObservationAmount::Few);
+  source.GetMicroscopicResult().SetBacteriaResult(SEMicroscopicObservationAmount::Moderate);
+  source.GetMicroscopicResult().SetTrichomonadsResult(SEMicroscopicObservationAmount::Many);
+  source.GetMicroscopicResult().SetYeastResult(SEMicroscopicObservationAmount::Few);
 
   EXPECT_NE(source, sink);
 
@@ -277,6 +278,7 @@ TEST_F(TEST_FIXTURE_NAME, Urinalysis)
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
 TEST_F(TEST_FIXTURE_NAME, UrinalysisMicroscopic)
 {
+  using namespace biogears;
   USING_TYPES(UrinalysisMicroscopic)
 
   biogears::Logger logger;
@@ -287,17 +289,17 @@ TEST_F(TEST_FIXTURE_NAME, UrinalysisMicroscopic)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetObservationType(CDM::enumMicroscopicObservationType::LowPowerField);
+  source.SetObservationType(SEMicroscopicObservationType::LowPowerField);
   source.GetRedBloodCellsResult().SetValue(1, biogears::AmountUnit::mol);
   source.GetWhiteBloodCellsResult().SetValue(2, biogears::AmountUnit::pmol);
 
-  source.SetEpithelialCellsResult(CDM::enumMicroscopicObservationAmount::Many);
+  source.SetEpithelialCellsResult(SEMicroscopicObservationAmount::Many);
   source.GetCastsResult().SetValue(2, biogears::AmountUnit::pmol);
 
-  source.SetCrystalsResult(CDM::enumMicroscopicObservationAmount::Few);
-  source.SetBacteriaResult(CDM::enumMicroscopicObservationAmount::Moderate);
-  source.SetTrichomonadsResult(CDM::enumMicroscopicObservationAmount::Many);
-  source.SetYeastResult(CDM::enumMicroscopicObservationAmount::Few);
+  source.SetCrystalsResult(SEMicroscopicObservationAmount::Few);
+  source.SetBacteriaResult(SEMicroscopicObservationAmount::Moderate);
+  source.SetTrichomonadsResult(SEMicroscopicObservationAmount::Many);
+  source.SetYeastResult(SEMicroscopicObservationAmount::Few);
 
   EXPECT_NE(source, sink);
 
@@ -326,7 +328,6 @@ TEST_F(TEST_FIXTURE_NAME, ProthrombinTime)
   auto sarin = mgr.GetSubstance("Sarin");
 
   source.GetInternationalNormalizedRatio().SetValue(.1);
- 
 
   EXPECT_NE(source, sink);
 

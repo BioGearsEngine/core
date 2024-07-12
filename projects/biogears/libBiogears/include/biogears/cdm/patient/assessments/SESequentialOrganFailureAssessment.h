@@ -11,8 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include "biogears/cdm/properties/SEScalar.h"
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
+#include <biogears/cdm/properties/SEScalar.h>
+
 #include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {

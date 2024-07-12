@@ -31,11 +31,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
+#include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/schema/cdm/PatientAssessments.hxx>
-#include <biogears/engine/BioGearsPhysiologyEngine.h>
-
 
 #include <biogears/string/manipulation.h>
 //!
@@ -95,15 +94,15 @@ bool action_env_change(std::unique_ptr<biogears::BioGearsEngine>& engine, biogea
 {
   auto environment = biogears::SEEnvironmentChange(engine->GetSubstanceManager());
 
-  //This example only uses three partial gasses. You could submit a vector of name/value pairs.
-  //Then this section could be modified to Get every substance in the pair list.
+  // This example only uses three partial gasses. You could submit a vector of name/value pairs.
+  // Then this section could be modified to Get every substance in the pair list.
   //
   auto* N2 = engine->GetSubstanceManager().GetSubstance("Nitrogen");
   auto* O2 = engine->GetSubstanceManager().GetSubstance("Oxygen");
   auto* CO2 = engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
 
   auto conditions = environment.GetConditions();
-  conditions.Clear(); //Reset he existing conditions
+  conditions.Clear(); // Reset he existing conditions
   conditions.SetSurroundingType(new_conditions.GetSurroundingType());
   conditions.GetAirVelocity().SetValue(new_conditions.GetAirVelocity().GetValue(biogears::LengthPerTimeUnit::m_Per_s), biogears::LengthPerTimeUnit::m_Per_s);
   conditions.GetAmbientTemperature().SetValue(new_conditions.GetAmbientTemperature().GetValue(biogears::TemperatureUnit::C), biogears::TemperatureUnit::C);
@@ -183,8 +182,8 @@ bool action_o2_mask(std::unique_ptr<biogears::BioGearsEngine>& engine, double o2
   config.GetOxygenBottleOne().GetVolume().SetValue(o2_volume1, biogears::VolumeUnit::L);
   config.GetOxygenBottleTwo().GetVolume().SetValue(o2_volume2, biogears::VolumeUnit::L);
 
-  //Any of these values could auso be adjusted, but I don't think its required
-  //for this example
+  // Any of these values could auso be adjusted, but I don't think its required
+  // for this example
   config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
   config.GetInletFlow().SetValue(2.0, biogears::VolumePerTimeUnit::L_Per_min);
   config.GetInspiratoryExpiratoryRatio().SetValue(.5);
@@ -237,8 +236,8 @@ bool action_bloodtransfuction(std::unique_ptr<biogears::BioGearsEngine>& engine,
 {
   auto* o_negative = engine->GetSubstanceManager().GetCompound("Blood_ONegative");
   auto transfusion = biogears::SESubstanceCompoundInfusion(*o_negative);
-  transfusion.GetBagVolume().SetValue(blood_volume_ml, biogears::VolumeUnit::mL); //the total volume in the bag
-  transfusion.GetRate().SetValue(flowrate_ml_Per_min, biogears::VolumePerTimeUnit::mL_Per_min); //The rate to admnister the compound in the bag
+  transfusion.GetBagVolume().SetValue(blood_volume_ml, biogears::VolumeUnit::mL); // the total volume in the bag
+  transfusion.GetRate().SetValue(flowrate_ml_Per_min, biogears::VolumePerTimeUnit::mL_Per_min); // The rate to admnister the compound in the bag
   if (transfusion.IsValid()) {
     engine->ProcessAction(transfusion);
     return true;
@@ -353,25 +352,27 @@ bool action_urinate(std::unique_ptr<biogears::BioGearsEngine>& engine)
 
 bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
 {
+  using namespace biogears;
+
   auto urineAnalysis = biogears::SEUrinalysis();
   const biogears::Renal* constRenalSystem = dynamic_cast<const biogears::Renal*>(engine->GetRenalSystem());
   biogears::Renal* renalSystem = const_cast<biogears::Renal*>(constRenalSystem);
 
   renalSystem->CalculateUrinalysis(urineAnalysis);
   if (urineAnalysis.HasColorResult()) {
-    mil::tatrc::physiology::datamodel::enumUrineColor eColor = urineAnalysis.GetColorResult();
+    SEUrineColor eColor = urineAnalysis.GetColorResult();
 
     switch (eColor) {
-    case mil::tatrc::physiology::datamodel::enumUrineColor::DarkYellow:
+    case SEUrineColor::DarkYellow:
       std::cout << "Urine Color: Dark Yellow";
       return true;
-    case mil::tatrc::physiology::datamodel::enumUrineColor::PaleYellow:
+    case SEUrineColor::PaleYellow:
       std::cout << "Urine Color: Pale Yellow";
       return true;
-    case mil::tatrc::physiology::datamodel::enumUrineColor::Pink:
+    case SEUrineColor::Pink:
       std::cout << "Urine Color: Pink";
       return true;
-    case mil::tatrc::physiology::datamodel::enumUrineColor::Yellow:
+    case SEUrineColor::Yellow:
       std::cout << "Urine Color: Yellow";
       return true;
     default:
@@ -384,7 +385,7 @@ bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
 }
 //-------------------------------------------------------------------------------
 //
-//Substance Management Functions
+// Substance Management Functions
 //
 //-------------------------------------------------------------------------------
 std::unique_ptr<biogears::SESubstanceCompound> substance_make_compound(std::unique_ptr<biogears::BioGearsEngine>& engine)
@@ -404,27 +405,26 @@ std::unique_ptr<biogears::SESubstanceCompound> substance_make_compound(std::uniq
 
 bool addCompoundComponents(std::unique_ptr<biogears::BioGearsEngine>& engine, std::unique_ptr<biogears::SESubstanceCompound>& compound, const char* substance_str, double concentration, biogears::MassPerVolumeUnit unit)
 {
-  
+
   if (biogears::SESubstance* substance = engine->GetSubstanceManager().GetSubstance(substance_str)) {
     auto substance_concentration = biogears::SESubstanceConcentration(*substance);
     substance_concentration.GetConcentration().SetValue(10.0, biogears::MassPerVolumeUnit::mg_Per_mL);
     compound->GetComponents().push_back(substance_concentration);
 
-    //Because the substance isn't register atat this point, it is possible to adjust the name based on the current mix.
-    //Active infusions are stored by substance name so once registered and infuse you can no longer modify the mix name;
+    // Because the substance isn't register atat this point, it is possible to adjust the name based on the current mix.
+    // Active infusions are stored by substance name so once registered and infuse you can no longer modify the mix name;
     return true;
 
   } else if (biogears::SESubstanceCompound* source_compound = engine->GetSubstanceManager().GetCompound(substance_str)) {
     for (auto& source_substance : source_compound->GetComponents()) {
       auto& destination_concentration = compound->GetComponent(source_substance.GetSubstance());
 
-      //The mixing of substanceCompounds is non trivial and this is mearly an example of feasability
-      //If one does not simply want to overwrite the existing concentration one may need to concider the
-      //relative volumes of the two compounds to determine the new concentration.
-      //Example Mixing Water 1:1 with Seawater  creates a very different sodium concentration then a 1:10 mix
-      
-      destination_concentration.GetConcentration() = source_substance.GetConcentration();
+      // The mixing of substanceCompounds is non trivial and this is mearly an example of feasability
+      // If one does not simply want to overwrite the existing concentration one may need to concider the
+      // relative volumes of the two compounds to determine the new concentration.
+      // Example Mixing Water 1:1 with Seawater  creates a very different sodium concentration then a 1:10 mix
 
+      destination_concentration.GetConcentration() = source_substance.GetConcentration();
     }
     return true;
   }
@@ -432,8 +432,8 @@ bool addCompoundComponents(std::unique_ptr<biogears::BioGearsEngine>& engine, st
 }
 std::string substance_register_compound(std::unique_ptr<biogears::BioGearsEngine>& engine, std::unique_ptr<biogears::SESubstanceCompound>&& compound)
 {
-  //This call registeres the substance with the substance manager. At this point we are going to release control of the memory to the biogears library who will
-  //delete it at the end of the run.  DLL boundries being what they are we may need to introduce a make_substancecompound function to the API.
+  // This call registeres the substance with the substance manager. At this point we are going to release control of the memory to the biogears library who will
+  // delete it at the end of the run.  DLL boundries being what they are we may need to introduce a make_substancecompound function to the API.
   std::string compound_name = compound->GetName_cStr();
   engine->GetSubstanceManager().AddCompound(*compound.release());
   return compound_name;
@@ -529,15 +529,15 @@ void BioGearsPlugin::run()
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_apply_tourniquet(_pimpl->engine, "LeftLeg", SETourniquetApplicationType::NotApplied);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          //The effectivness of this helper-function is called in to doubt, for such a simple tutorial
-          //But you could imagine creating a vector of common conditions and then pushing and poping them in to
-          //This function as the patient changes locations.
-          
+          // The effectivness of this helper-function is called in to doubt, for such a simple tutorial
+          // But you could imagine creating a vector of common conditions and then pushing and poping them in to
+          // This function as the patient changes locations.
+
           auto conditions = biogears::SEEnvironmentalConditions(_pimpl->engine->GetSubstanceManager());
           auto* N2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Nitrogen");
           auto* O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen");
           auto* CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
-          
+
           conditions.SetSurroundingType(CDM::enumSurroundingType::Water);
           conditions.GetAirVelocity().SetValue(0, LengthPerTimeUnit::m_Per_s);
           conditions.GetAmbientTemperature().SetValue(10.0, TemperatureUnit::C);
@@ -550,7 +550,7 @@ void BioGearsPlugin::run()
           conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(0.7901);
           conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.2095);
           conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
-          
+
           action_env_change(_pimpl->engine, conditions);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_tension_pneumothorax(_pimpl->engine, SESide::Left, SEPneumothoraxType::Open, 0.5);
@@ -565,7 +565,7 @@ void BioGearsPlugin::run()
 
           ///////////////////////////////////////
 
-          ///DRUGS
+          /// DRUGS
           auto customCompound = substance_make_compound(_pimpl->engine);
           auto mixSuccess = addCompoundComponents(_pimpl->engine, customCompound, "Saline", 2.17, MassPerVolumeUnit::kg_Per_L);
           mixSuccess &= addCompoundComponents(_pimpl->engine, customCompound, "Albumin", 10.0, MassPerVolumeUnit::mg_Per_mL);
@@ -573,8 +573,8 @@ void BioGearsPlugin::run()
 
           if (mixSuccess) {
             for (auto& component : customCompound->GetComponents()) {
-              //Example of creating data request for tracking the components of the new substance.
-              //Note: String based DataRequest will cause runtime instability if no Scalar matches the input string.
+              // Example of creating data request for tracking the components of the new substance.
+              // Note: String based DataRequest will cause runtime instability if no Scalar matches the input string.
               if (component.GetSubstance().HasPK()) {
                 _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component.GetSubstance().GetName()), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
               }
@@ -600,12 +600,12 @@ void BioGearsPlugin::run()
           action_active_heating(_pimpl->engine, 500, 0.5);
           _pimpl->engine->GetLogger()->Info(asprintf("ActiveHeating[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveHeating() ? "true" : "false")); // true
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          
+
           _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_active_cooling(_pimpl->engine, 500, 0.5);
           _pimpl->engine->GetLogger()->Info(asprintf("ActiveCooling[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasActiveCooling() ? "true" : "false"));
-          
+
           _pimpl->engine->GetLogger()->Info(asprintf("AppliedTempeture[%s]", _pimpl->engine->GetActions().GetEnvironmentActions().GetThermalApplication()->HasAppliedTemperature() ? "true" : "false"));
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_applied_temperature(_pimpl->engine, 37, 0.5);
@@ -614,9 +614,9 @@ void BioGearsPlugin::run()
           action_get_urine_color(_pimpl->engine);
           action_urinate(_pimpl->engine);
           try {
-          _pimpl->engine->SaveStateToFile("HowTo-API_Integration_FinalState.xml");
-            
-          } catch ( xsd::cxx::exception e) {
+            _pimpl->engine->SaveStateToFile("HowTo-API_Integration_FinalState.xml");
+
+          } catch (xsd::cxx::exception e) {
             std::cout << e.what();
           }
           _pimpl->simulation_finished.store(true);

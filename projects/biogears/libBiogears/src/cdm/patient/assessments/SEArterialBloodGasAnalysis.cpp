@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/schema/cdm/Properties.hxx>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SEArterialBloodGasAnalysis::SEArterialBloodGasAnalysis()
@@ -58,7 +59,7 @@ void SEArterialBloodGasAnalysis::Reset()
 //-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::Load(const CDM::ArterialBloodGasAnalysisData& in)
 {
-  SEPatientAssessment::Load(in);
+  io::PatientAssessments::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -71,19 +72,7 @@ CDM::ArterialBloodGasAnalysisData* SEArterialBloodGasAnalysis::Unload()
 //-------------------------------------------------------------------------------
 void SEArterialBloodGasAnalysis::Unload(CDM::ArterialBloodGasAnalysisData& data)
 {
-  SEPatientAssessment::Unload(data);
-  if (m_pH != nullptr)
-    data.pH(std::unique_ptr<CDM::ScalarData>(m_pH->Unload()));
-  if (m_PartialPressureOxygen != nullptr)
-    data.PartialPressureOxygen(std::unique_ptr<CDM::ScalarPressureData>(m_PartialPressureOxygen->Unload()));
-  if (m_PartialPressureCarbonDioxide != nullptr)
-    data.PartialPressureCarbonDioxide(std::unique_ptr<CDM::ScalarPressureData>(m_PartialPressureCarbonDioxide->Unload()));
-  if (m_BaseExcess != nullptr)
-    data.BaseExcess(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_BaseExcess->Unload()));
-  if (m_StandardBicarbonate != nullptr)
-    data.StandardBicarbonate(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_StandardBicarbonate->Unload()));
-  if (m_OxygenSaturation != nullptr)
-    data.OxygenSaturation(std::unique_ptr<CDM::ScalarData>(m_OxygenSaturation->Unload()));
+  io::PatientAssessments::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::HaspH()

@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SESequentialOrganFailureAssessment::SESequentialOrganFailureAssessment()
@@ -58,13 +59,7 @@ void SESequentialOrganFailureAssessment::Reset()
 //-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::Load(const CDM::SequentialOrganFailureAssessmentData& in)
 {
-  SEPatientAssessment::Load(in);
-  GetRespirationSOFA().Load(in.RespirationSOFA());
-  GetCoagulationSOFA().Load(in.CoagulationSOFA());
-  GetLiverSOFA().Load(in.LiverSOFA());
-  GetCardiovascularSOFA().Load(in.CardiovascularSOFA());
-  GetCentralNervousSOFA().Load(in.CentralNervousSOFA());
-  GetRenalSOFA().Load(in.RenalSOFA());
+  io::PatientAssessments::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -77,19 +72,7 @@ CDM::SequentialOrganFailureAssessmentData* SESequentialOrganFailureAssessment::U
 //-------------------------------------------------------------------------------
 void SESequentialOrganFailureAssessment::Unload(CDM::SequentialOrganFailureAssessmentData& data)
 {
-  SEPatientAssessment::Unload(data);
-  if (HasRespirationSOFA())
-    data.RespirationSOFA(std::unique_ptr<CDM::ScalarData>(m_RespirationSOFA->Unload()));
-  if (HasCoagulationSOFA())
-    data.CoagulationSOFA(std::unique_ptr<CDM::ScalarData>(m_CoagulationSOFA->Unload()));
-  if (HasLiverSOFA())
-    data.LiverSOFA(std::unique_ptr<CDM::ScalarData>(m_LiverSOFA->Unload()));
-  if (HasCardiovascularSOFA())
-    data.CardiovascularSOFA(std::unique_ptr<CDM::ScalarData>(m_CardiovascularSOFA->Unload()));
-  if (HasCentralNervousSOFA())
-    data.CentralNervousSOFA(std::unique_ptr<CDM::ScalarData>(m_CentralNervousSOFA->Unload()));
-  if (HasRenalSOFA())
-    data.RenalSOFA(std::unique_ptr<CDM::ScalarData>(m_RenalSOFA->Unload()));
+  io::PatientAssessments::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::HasRespirationSOFA()
