@@ -26,3 +26,5 @@ specific language governing permissions and limitations under the License.
 #include "cdm/enums/SEPropertyEnums.h"
 #include "cdm/enums/SESubstanceEnums.h"
 
+#include "engine/Controller/BioGearsEnums.h"
+

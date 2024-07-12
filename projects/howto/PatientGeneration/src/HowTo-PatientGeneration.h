@@ -12,18 +12,18 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+#include "biogears/BiogearsEnums.h"
 #include "biogears/cdm/engine/PhysiologyEngine.h"
 #include "biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h"
 #include "biogears/cdm/patient/actions/SESubstanceInfusion.h"
 #include <biogears/filesystem/path.h>
 
-
 constexpr double weeks(double n_weeks) { return n_weeks * 7. * 24. * 60.; } //< weeks -> minutes
-constexpr double days(double n_days) { return n_days * 24. * 60.; }//< days -> minutes
-constexpr double hours(double n_hours) { return n_hours * 60.; }//< hours -> minutes
-constexpr double minutes(double n_minutes) { return n_minutes; }//< minutes -> minutes
-constexpr double seconds(double n_seconds) { return n_seconds / 60.; }//< seconds -> minutes
-constexpr double to_seconds(double n_minutes) { return n_minutes * 60; }//< minutes -> seconds
+constexpr double days(double n_days) { return n_days * 24. * 60.; } //< days -> minutes
+constexpr double hours(double n_hours) { return n_hours * 60.; } //< hours -> minutes
+constexpr double minutes(double n_minutes) { return n_minutes; } //< minutes -> minutes
+constexpr double seconds(double n_seconds) { return n_seconds / 60.; } //< seconds -> minutes
+constexpr double to_seconds(double n_minutes) { return n_minutes * 60; } //< minutes -> seconds
 
 enum class TreatmentPlan {
   NONE,
@@ -93,10 +93,10 @@ protected:
   void nutrition_regimen();
 
 private:
-  //Configuration Details
+  // Configuration Details
   std::string _patient_name;
   char const* _infection_severity_str;
-  CDM::enumInfectionSeverity::value _infection_severity = CDM::enumInfectionSeverity::value::Eliminated;
+  biogears::SEInfectionSeverity _infection_severity = biogears::SEInfectionSeverity::Eliminated;
   char const* _treatment_plan_str;
   TreatmentPlan _treatment_plan = TreatmentPlan::STANDARD;
 
@@ -107,7 +107,7 @@ private:
   double _application_interval_m;
   double _duration_hr;
 
-  //Implementation Details
+  // Implementation Details
   biogears::SESubstanceCompoundInfusion* _PiperacillinTazobactam_bag = nullptr;
   biogears::SESubstanceCompoundInfusion* _Saline_bag = nullptr;
   biogears::SESubstanceCompoundInfusion* _maintenance_bag = nullptr;
@@ -125,15 +125,15 @@ private:
   bool _first_treatment_occured = false;
   bool _applying_antibiotics = false;
 
-  //REFRESH Implementation Details
+  // REFRESH Implementation Details
   RefreshState _refresh_state = RefreshState::NONE;
   double _time_to_reassessment_min = 60.;
   double _maintenance_fluids_remaining_min = 0.;
-  bool   _norepinphrine_titrate_active = false;
+  bool _norepinphrine_titrate_active = false;
   double _time_since_norepinphrine_titrage_active_min = 0.0;
   double _treatment_time_remaining_min = 360;
 
-  //EGDT Implementation Details
+  // EGDT Implementation Details
   EGDTState _egdt_state = EGDTState::NONE;
   double _persistent_low_map_min = 0.;
   double _persistant_stable_map_min = 0.;

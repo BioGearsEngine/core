@@ -121,7 +121,7 @@ NaloxoneThread::NaloxoneThread(const std::string logFile, double opioidDose, con
   m_opioid = new SESubstanceInfusion(*opioidSub);
   m_opiodBolus = new SESubstanceBolus(*opioidSub);
 
-  m_opiodBolus->SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  m_opiodBolus->SetAdminRoute(SEBolusAdministration::Intravenous);
 
   m_naloxone = new SESubstanceNasalDose(*nal);
 
@@ -290,7 +290,7 @@ void NaloxoneThread::FluidLoading(std::string overdoseSubstance, double opioidDo
     m_bg->GetEngineTrack()->GetDataTrack().Probe("totalNaloxone_mg", m_totalNaloxone_mg);
 
     //exit checks:
-    if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::IrreversibleState)) {
+    if (m_bg->GetPatient().IsEventActive(SEPatientEventType::IrreversibleState)) {
       //m_bg->GetLogger()->Info(std::stringstream() << "oh no!");
       m_bg->GetLogger()->Info("///////////////////////////////////////////////////////////////");
       m_runThread = false;

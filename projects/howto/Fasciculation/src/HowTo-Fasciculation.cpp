@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 // Include the various types you will be using in your code
+#include <biogears/BiogearsEnums.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -52,8 +53,8 @@ int HowToFaciculation()
   SESubstance* Ca = bg->GetSubstanceManager().GetSubstance("Calcium");
 
   double monitorTime = 200.0; //how long we're going to be on the look out for ion imbalances in the blood
-  CDM::enumOnOff::value lowKActive;
-  lowKActive = CDM::enumOnOff::Off;
+  SEOnOff lowKActive;
+  lowKActive = SEOnOff::Off;
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
   
@@ -75,8 +76,8 @@ int HowToFaciculation()
   K->GetMembraneResistance().SetValue(5.0, ElectricResistanceUnit::Ohm);
 
   while (bg->GetSimulationTime(TimeUnit::s) < monitorTime + 60.0) {
-    if (bg->GetPatient().IsEventActive(CDM::enumPatientEvent::MildHypokalemia) && (lowKActive == CDM::enumOnOff::Off)) {
-      lowKActive = CDM::enumOnOff::On;
+    if (bg->GetPatient().IsEventActive(SEPatientEventType::MildHypokalemia) && (lowKActive == SEOnOff::Off)) {
+      lowKActive = SEOnOff::On;
       message = "Patient has low serum potassium, muscle fasciculation may occur";
       bg->GetLogger()->Info(message);
     }

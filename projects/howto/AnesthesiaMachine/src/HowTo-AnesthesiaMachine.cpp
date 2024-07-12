@@ -91,15 +91,15 @@ int HowToAnesthesiaMachine()
 	// Modifying the class will keep any old settings that are not provided in the config
 	// Using a xml will set the anesthesia machine to only the property states specified in the file
 	SEIntubation intubate; 
-	intubate.SetType(CDM::enumIntubationType::Tracheal);
+	intubate.SetType(SEIntubationType::Tracheal);
 	SEAnesthesiaMachine& config = AMConfig.GetConfiguration();
 	config.SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
 	config.GetInletFlow().SetValue(2.0, VolumePerTimeUnit::L_Per_min);
 	config.GetInspiratoryExpiratoryRatio().SetValue(.5);
 	config.GetOxygenFraction().SetValue(.5);
-	config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
+  config.SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
 	config.GetPositiveEndExpiredPressure().SetValue(3.0, PressureUnit::cmH2O);
-	config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
+  config.SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
 	config.GetReliefValvePressure().SetValue(20.0, PressureUnit::cmH2O);
 	config.GetRespiratoryRate().SetValue(12, FrequencyUnit::Per_min);
 	config.GetVentilatorPressure().SetValue(22.0, PressureUnit::cmH2O);
@@ -127,7 +127,7 @@ int HowToAnesthesiaMachine()
 	SESubstanceBolus bolus(*succs);
 	bolus.GetConcentration().SetValue(4820, MassPerVolumeUnit::ug_Per_mL);
 	bolus.GetDose().SetValue(20, VolumeUnit::mL);
-	bolus.SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+	bolus.SetAdminRoute(SEBolusAdministration::Intravenous);
 	bg->ProcessAction(bolus);
 	
   bg->GetLogger()->Info("Giving the patient Succinylcholine to test machine-driven ventilation.");
