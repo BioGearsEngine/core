@@ -20,11 +20,7 @@ namespace io {
       out.SetAnnotation(in.Annotation().get());
     }
 
-    //Patient::UnMarshall(in.Sex(), out.m_Sex);
-    if (in.Sex().present()) {
-      out.m_Gender = in.Sex().get();
-      
-    }
+    Patient::UnMarshall(in.Sex(), out.m_Sex);
 
     io::Property::UnMarshall(in.Age(), out.GetAge());
     io::Property::UnMarshall(in.Weight(), out.GetWeight());
@@ -35,8 +31,7 @@ namespace io {
       out.m_BloodRh = in.BloodTypeRh().get();
     }
     if (in.BloodTypeABO().present()) {
-      out.m_BloodType = in.BloodTypeABO().get();
-      //io::Patient::UnMarshall(in.BloodTypeABO(), out.m_BloodType);
+      io::Patient::UnMarshall(in.BloodTypeABO(), out.m_BloodType);
     }
     io::Property::UnMarshall(in.BloodVolumeBaseline(), out.GetBloodVolumeBaseline());
     io::Property::UnMarshall(in.BodyDensity(), out.GetBodyDensity());
@@ -71,11 +66,9 @@ namespace io {
     SEPatientEventType key = SEPatientEventType::Invalid;
     for (auto e : in.ActiveEvent()) {
       io::Property::UnMarshall(e.Duration(), time);
-      //Patient::UnMarshall(e.Event(), key);
-      //out.m_EventState[key] = true;
-      //out.m_EventDuration_s[key] = time.GetValue(TimeUnit::s);
-      out.m_EventState[e.Event()] = true;
-      out.m_EventDuration_s[e.Event()] = time.GetValue(TimeUnit::s);
+      Patient::UnMarshall(e.Event(), key);
+      out.m_EventState[key] = true;
+      out.m_EventDuration_s[key] = time.GetValue(TimeUnit::s);
     }
   }
   void Patient::Marshall(const SEPatient& in, CDM::PatientData& out)
@@ -86,8 +79,7 @@ namespace io {
     if (in.HasAnnotation()) {
       out.Annotation(in.m_Annotation);
     }
-    //SE_OPTIONAL_PATIENT_ENUM_MARSHALL_HELPER(in, out, Sex)
-    out.Sex(in.m_Gender);
+    SE_OPTIONAL_PATIENT_ENUM_MARSHALL_HELPER(in, out, Sex)
 
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Age);
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Weight)
@@ -97,11 +89,7 @@ namespace io {
     if (in.HasBloodRh()) {
       out.BloodTypeRh(in.m_BloodRh);
     }
-    if (in.HasBloodType()) {
-      out.BloodTypeABO(in.m_BloodType);
-      
-    }
-    //Patient::Marshall(in.m_BloodType, out.BloodTypeABO());
+    Patient::Marshall(in.m_BloodType, out.BloodTypeABO());
 
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodVolumeBaseline)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BodyDensity)
@@ -148,8 +136,7 @@ namespace io {
       CDM::ActivePatientEventData* eData = new CDM::ActivePatientEventData();
 
       eData->Event(std::make_unique<std::remove_reference<decltype(eData->Event())>::type>());
-      //io::Patient::Marshall(itr.first, eData->Event());
-      eData->Event(itr.first);
+      io::Patient::Marshall(itr.first, eData->Event());
 
       io::Property::Marshall(time, eData->Duration());
       ;

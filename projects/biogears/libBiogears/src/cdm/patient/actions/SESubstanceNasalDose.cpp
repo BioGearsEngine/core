@@ -10,6 +10,8 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
+
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
@@ -46,8 +48,7 @@ bool SESubstanceNasalDose::IsActive() const
 //-------------------------------------------------------------------------------
 bool SESubstanceNasalDose::Load(const CDM::SubstanceNasalDoseData& in, std::default_random_engine *rd)
 {
-  SESubstanceAdministration::Load(in);
-  GetDose().Load(in.Dose(), rd);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -60,10 +61,7 @@ CDM::SubstanceNasalDoseData* SESubstanceNasalDose::Unload() const
 //-------------------------------------------------------------------------------
 void SESubstanceNasalDose::Unload(CDM::SubstanceNasalDoseData& data) const
 {
-  SESubstanceAdministration::Unload(data);
-  if (m_Dose != nullptr)
-    data.Dose(std::unique_ptr<CDM::ScalarMassData>(m_Dose->Unload()));
-  data.Substance(m_Substance.GetName());
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceNasalDose::HasDose() const

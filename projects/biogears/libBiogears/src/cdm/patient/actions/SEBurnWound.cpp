@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEBurnWound.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
@@ -24,7 +25,7 @@ SEBurnWound::SEBurnWound()
   , m_compartments(5)
 {
   m_Inflammation = false; // When the burn wound is constructed, the corresponding inflammation state has not been established
-  m_DegreeOfBurn = (CDM::enumBurnDegree::value)-1; // User input, burn degree afflicting specified TBSA
+  m_DegreeOfBurn = SEBurnDegree::Invalid; // User input, burn degree afflicting specified TBSA
   for (auto& sa : m_compartments) {
     sa.SetValue(0.0);
   }
@@ -41,7 +42,7 @@ void SEBurnWound::Clear()
   SEPatientAction::Clear();
   m_Inflammation = false;
   m_compartmentsAffected.clear();
-  m_DegreeOfBurn = (CDM::enumBurnDegree::value)-1;
+  m_DegreeOfBurn = SEBurnDegree::Invalid;
   m_burnInitiationTime = 0.;
   m_TBSA->Clear();
 }
@@ -58,35 +59,7 @@ bool SEBurnWound::IsActive() const
 //-----------------------------------------------------------------------------
 bool SEBurnWound::Load(const CDM::BurnWoundData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  SetTotalBodySurfaceArea(0.);
-  // The degree modifier is a v1.0 methodology for scaling burn response based on instantiated degree of burn specific to the minimal physiology response of first degree as compared to second and third.
-  // Minimal validation data exists differentiating the physiology of the three in the hours following a burn, so inital values for second and third are tuned to mimic TBSA data of both.
-
-  if (in.DegreeOfBurn().present()) {
-    SetDegreeOfBurn(in.DegreeOfBurn().get());
-  } else {
-    SetDegreeOfBurn(CDM::enumBurnDegree::Third);
-  }
-
-  if (in.BurnInitiationTime().present()) {
-    SetTimeOfBurn(in.BurnInitiationTime().get());
-  }
-
-  m_compartmentsAffected.clear();
-  std::string compt;
-  for (const std::string compData : in.Compartments()) {
-    AddCompartment(compData);
-  }
-
-  if (!HasCompartment()) {
-    Warning("No compartment declared for burn. BioGears will assume primarily trunk burn.");
-    m_compartmentsAffected.push_back("Trunk");
-  }
-
-  SetTotalBodySurfaceArea(in.TotalBodySurfaceArea().value());
-
-
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -99,17 +72,7 @@ CDM::BurnWoundData* SEBurnWound::Unload() const
 //-----------------------------------------------------------------------------
 void SEBurnWound::Unload(CDM::BurnWoundData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_TBSA != nullptr)
-    data.TotalBodySurfaceArea(std::unique_ptr<CDM::Scalar0To1Data>(m_TBSA->Unload()));
-  if (HasDegreeOfBurn())
-    data.DegreeOfBurn(m_DegreeOfBurn);
-  if (m_burnInitiationTime != 0.) {
-    data.BurnInitiationTime(m_burnInitiationTime);
-  }
-  for (std::string compData : m_compartmentsAffected) {
-    data.Compartments().push_back(compData);
-  }
+  io::PatientActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEBurnWound::HasTotalBodySurfaceArea() const
@@ -150,25 +113,25 @@ void SEBurnWound::SetTotalBodySurfaceArea(double rhs)
 //-----------------------------------------------------------------------------
 bool SEBurnWound::HasDegreeOfBurn() const
 {
-  return m_DegreeOfBurn == ((CDM::enumBurnDegree::value)-1) ? false : true;
+  return m_DegreeOfBurn == SEBurnDegree::Invalid ? false : true;
 }
 //-----------------------------------------------------------------------------
-CDM::enumBurnDegree::value SEBurnWound::GetDegreeOfBurn() const
+SEBurnDegree SEBurnWound::GetDegreeOfBurn() const
 {
   return m_DegreeOfBurn;
 }
 //-----------------------------------------------------------------------------
-void SEBurnWound::SetDegreeOfBurn(CDM::enumBurnDegree::value bd)
+void SEBurnWound::SetDegreeOfBurn(SEBurnDegree bd)
 {
   m_DegreeOfBurn = bd;
   switch (bd) {
-  case CDM::enumBurnDegree::First:
+  case SEBurnDegree::First:
     m_DegreeModifier = 0.05;
     break;
-  case CDM::enumBurnDegree::Second:
+  case SEBurnDegree::Second:
     m_DegreeModifier = 0.99;
     break;
-  case CDM::enumBurnDegree::Third:
+  case SEBurnDegree::Third:
     m_DegreeModifier = 1.0;
     break;
   default:
@@ -203,13 +166,13 @@ void SEBurnWound::SetInflammation(bool activate)
 //-----------------------------------------------------------------------------
 bool SEBurnWound::HasCompartment() const
 {
-  return m_compartmentsAffected.size() == 0 ? false : true;
+  return m_compartmentsAffected.empty() ? false : true;
 }
 //-----------------------------------------------------------------------------
 bool SEBurnWound::HasCompartment(const std::string compartment) const
 {
   for (const std::string ca : m_compartmentsAffected) {
-    if (compartment == ca && m_DegreeOfBurn != CDM::enumBurnDegree::First)
+    if (compartment == ca && m_DegreeOfBurn != SEBurnDegree::First)
       return true;
   }
   return false;

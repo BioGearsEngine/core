@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEEscharotomy.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
@@ -46,8 +47,7 @@ bool SEEscharotomy::IsActive() const
 
 bool SEEscharotomy::Load(const CDM::EscharotomyData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  m_Location = in.Location();
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 
@@ -60,9 +60,7 @@ CDM::EscharotomyData* SEEscharotomy::Unload() const
 
 void SEEscharotomy::Unload(CDM::EscharotomyData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (HasLocation())
-    data.Location(m_Location);
+  io::PatientActions::Marshall(*this, data);
 }
 
 //-------------------------------------------------------------------------------

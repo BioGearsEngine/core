@@ -259,7 +259,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentGases()
   SEScalarAmountPerVolume phosphate;
 
   albuminConcentration.SetValue(45.0, MassPerVolumeUnit::g_Per_L);
-  hematocrit.SetValue(m_data.GetPatient().GetGender() == CDM::enumSex::Male ? 0.45 : 0.40);
+  hematocrit.SetValue(m_data.GetPatient().GetSex() == SESex::Male ? 0.45 : 0.40);
   bodyTemp.SetValue(37.0, TemperatureUnit::C);
   strongIonDifference.SetValue(40.5, AmountPerVolumeUnit::mmol_Per_L);
   phosphate.SetValue(1.1, AmountPerVolumeUnit::mmol_Per_L);
@@ -911,16 +911,16 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
 
   SEScalarMassPerVolume A_concentration;
   SEScalarMassPerVolume B_concentration;
-  if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::A) {
+  if (m_data.GetPatient().GetBloodType() == SEBloodType::A) {
     A_concentration.SetValue(23.0, MassPerVolumeUnit::mg_Per_L); //Compounds spreadsheet
     B_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
-  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::B) {
+  } else if (m_data.GetPatient().GetBloodType() == SEBloodType::B) {
     A_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
     B_concentration.SetValue(19.0, MassPerVolumeUnit::mg_Per_L);
-  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::O) {
+  } else if (m_data.GetPatient().GetBloodType() == SEBloodType::O) {
     A_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
     B_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
-  } else if (m_data.GetPatient().GetBloodType() == CDM::enumBloodType::AB) {
+  } else if (m_data.GetPatient().GetBloodType() == SEBloodType::AB) {
     A_concentration.SetValue(11.5, MassPerVolumeUnit::mg_Per_L);
     B_concentration.SetValue(9.5, MassPerVolumeUnit::mg_Per_L);
   }

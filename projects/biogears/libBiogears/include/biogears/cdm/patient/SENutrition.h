@@ -42,7 +42,7 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::NutritionData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::NutritionData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::NutritionData* Unload() const;
 
 public:
@@ -91,6 +91,8 @@ public:
   virtual double GetWeight(const MassUnit& unit) const;
 
   virtual void ToString(std::ostream& str) const;
+
+  virtual bool IsValid() const;
 
 protected:
   virtual void Unload(CDM::NutritionData& data) const;

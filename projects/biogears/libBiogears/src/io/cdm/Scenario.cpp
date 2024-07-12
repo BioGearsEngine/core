@@ -3,6 +3,7 @@
 #include "Actions.h"
 #include "AnesthesiaActions.h"
 #include "DataRequests.h"
+#include "EngineConfiguration.h"
 #include "EnvironmentActions.h"
 #include "InhalerActions.h"
 #include "Patient.h"
@@ -46,7 +47,6 @@ namespace io {
 
   //-----------------------------------------------------------------------------
   // class SEScenario
-
   void Scenario::UnMarshall(const CDM::ScenarioData& in, SEScenario& out)
   {
 

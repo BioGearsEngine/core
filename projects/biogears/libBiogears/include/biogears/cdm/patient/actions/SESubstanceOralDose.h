@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
@@ -37,11 +38,11 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::SubstanceOralDoseData* Unload() const;
 
-  virtual CDM::enumOralAdministration::value GetAdminRoute() const;
-  virtual void SetAdminRoute(CDM::enumOralAdministration::value name);
+  virtual SEOralAdministrationType GetAdminRoute() const;
+  virtual void SetAdminRoute(SEOralAdministrationType name);
   virtual bool HasAdminRoute() const;
 
   virtual bool HasDose() const;
@@ -58,7 +59,7 @@ protected:
   virtual void Unload(CDM::SubstanceOralDoseData& data) const;
 
 private:
-  CDM::enumOralAdministration::value m_AdminRoute;
+  SEOralAdministrationType m_AdminRoute;
   SEScalarMass* m_Dose;
   const SESubstance& m_Substance;
 };
@@ -71,7 +72,7 @@ public:
   ~SETransmucosalState();
   virtual void Clear();
 
-  virtual bool Load(const CDM::TransmucosalStateData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::TransmucosalStateData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::TransmucosalStateData* Unload() const;
 
   bool Initialize(SEScalarMass& dose);

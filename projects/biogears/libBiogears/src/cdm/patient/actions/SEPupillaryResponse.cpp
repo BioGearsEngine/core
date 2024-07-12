@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 
+#include "io/cdm/Physiology.h"
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
 
 namespace biogears {
@@ -51,12 +52,7 @@ const SEScalar* SEPupillaryResponse::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SEPupillaryResponse::Load(const CDM::PupillaryResponseData& in)
 {
-  if (in.ReactivityModifier().present())
-    GetReactivityModifier().Load(in.ReactivityModifier().get());
-  if (in.ShapeModifier().present())
-    GetShapeModifier().Load(in.ShapeModifier().get());
-  if (in.SizeModifier().present())
-    GetSizeModifier().Load(in.SizeModifier().get());
+  io::Physiology::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -69,12 +65,7 @@ CDM::PupillaryResponseData* SEPupillaryResponse::Unload() const
 //-----------------------------------------------------------------------------
 void SEPupillaryResponse::Unload(CDM::PupillaryResponseData& data) const
 {
-  if (m_ReactivityModifier != nullptr)
-    data.ReactivityModifier(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_ReactivityModifier->Unload()));
-  if (m_ShapeModifier != nullptr)
-    data.ShapeModifier(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_ShapeModifier->Unload()));
-  if (m_SizeModifier != nullptr)
-    data.SizeModifier(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_SizeModifier->Unload()));
+  io::Physiology::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEPupillaryResponse::HasReactivityModifier() const

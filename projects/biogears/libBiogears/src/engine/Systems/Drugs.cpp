@@ -11,7 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Drugs.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/properties/SEScalarAmountPerMass.h>
@@ -106,8 +108,8 @@ void Drugs::Initialize()
   GetTidalVolumeChange().SetValue(0.0, VolumeUnit::mL);
   GetTubularPermeabilityChange().SetValue(0);
   GetCentralNervousResponse().SetValue(0.0);
-  m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase().SetValue(8.0 * 1e-9, AmountPerVolumeUnit::mol_Per_L); //Need to initialize here since Drugs processed before BloodChemistry
-  m_data.GetBloodChemistry().GetHemoglobinLostToUrine().SetValue(0.0, MassUnit::g); //Need to initialize here since Drugs processed before BloodChemistry
+  m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase().SetValue(8.0 * 1e-9, AmountPerVolumeUnit::mol_Per_L); // Need to initialize here since Drugs processed before BloodChemistry
+  m_data.GetBloodChemistry().GetHemoglobinLostToUrine().SetValue(0.0, MassUnit::g); // Need to initialize here since Drugs processed before BloodChemistry
   m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().SetValue(0.0, VolumeUnit::uL);
 
   m_SarinRbcAcetylcholinesteraseComplex_nM = 0.0;
@@ -209,7 +211,7 @@ void Drugs::SetUp()
   m_liverVascular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Liver);
   m_liverTissue = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Liver);
   m_IVToVenaCava = m_data.GetCircuits().GetCardiovascularCircuit().GetPath(BGE::CardiovascularPath::IVToVenaCava);
-  //Need to set up pointers for Sarin and Pralidoxime to handle nerve agent events since they use a different method to calculate effects
+  // Need to set up pointers for Sarin and Pralidoxime to handle nerve agent events since they use a different method to calculate effects
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
   m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
@@ -283,7 +285,7 @@ void Drugs::PostProcess()
 //--------------------------------------------------------------------------------------------------
 void Drugs::AdministerSubstanceBolus()
 {
-  //Need to loop over Bolus Dose Objects
+  // Need to loop over Bolus Dose Objects
   const std::map<const SESubstance*, SESubstanceBolus*>& boluses = m_data.GetActions().GetPatientActions().GetSubstanceBoluses();
   if (boluses.empty())
     return;
@@ -296,7 +298,7 @@ void Drugs::AdministerSubstanceBolus()
   double dose_mL;
   double concentration_ugPermL;
   double massIncrement_ug = 0;
-  double administrationTime_s = 10.0; //Default if not supplied by action
+  double administrationTime_s = 10.0; // Default if not supplied by action
 
   for (auto b : boluses) {
     sub = b.first;
@@ -314,13 +316,13 @@ void Drugs::AdministerSubstanceBolus()
     }
 
     switch (bolus->GetAdminRoute()) {
-    case CDM::enumBolusAdministration::Intraarterial:
+    case SEBolusAdministration::Intraarterial:
       subQ = m_aortaVascular->GetSubstanceQuantity(*sub);
       break;
-    case CDM::enumBolusAdministration::Intravenous:
+    case SEBolusAdministration::Intravenous:
       subQ = m_venaCavaVascular->GetSubstanceQuantity(*sub);
       break;
-    case CDM::enumBolusAdministration::Intramuscular:
+    case SEBolusAdministration::Intramuscular:
       subQ = m_muscleIntracellular->GetSubstanceQuantity(*sub);
       break;
     default:
@@ -360,7 +362,7 @@ void Drugs::AdministerSubstanceBolus()
 //--------------------------------------------------------------------------------------------------
 void Drugs::AdministerSubstanceInfusion()
 {
-  //Note:  Currently, user removes state by setting the infusion rate of the drug in question to 0.0
+  // Note:  Currently, user removes state by setting the infusion rate of the drug in question to 0.0
   const std::map<const SESubstance*, SESubstanceInfusion*>& infusions = m_data.GetActions().GetPatientActions().GetSubstanceInfusions();
   if (infusions.empty())
     return;
@@ -436,7 +438,7 @@ void Drugs::AdministerSubstanceNasal()
 
     SENasalState* nState = m_NasalStates[nSub];
     if (nState == nullptr) {
-      //If it doesn't exist yet, make a new model state for the substance and initialize it
+      // If it doesn't exist yet, make a new model state for the substance and initialize it
       nState = new SENasalState(*nSub);
       if (!nState->Initialize(nDose->GetDose())) {
         Error("SENasalState::Probable vector length mismatch");
@@ -446,27 +448,27 @@ void Drugs::AdministerSubstanceNasal()
 
     double newNasalDose_mg = nDose->GetDose().GetValue(MassUnit::mg);
     double transconst = 1.0;
-    double carrier = 1.8*(0.0000000001); //1.0;
+    double carrier = 1.8 * (0.0000000001); // 1.0;
     double absconst = 13.2;
     double degredation = 20.0;
-    //Rate constants in 1/s
-    const double nasalk1 = transconst*(0.00000001736111); //translocation rate constant of unreleased substance from the anterior to the posterior section
-    const double nasalk2 = carrier*(1000000); // rate constant of release from drug carrier in anterior section
-    const double nasalk3 = transconst*(0.00000001736111); // translocation rate constant of released substance from the anterior to the posterior section
-    const double nasalk4 = absconst*(0.000173); // absorption rate constant in anterior section
+    // Rate constants in 1/s
+    const double nasalk1 = transconst * (0.00000001736111); // translocation rate constant of unreleased substance from the anterior to the posterior section
+    const double nasalk2 = carrier * (1000000); // rate constant of release from drug carrier in anterior section
+    const double nasalk3 = transconst * (0.00000001736111); // translocation rate constant of released substance from the anterior to the posterior section
+    const double nasalk4 = absconst * (0.000173); // absorption rate constant in anterior section
     const double nasalk5 = 0.000000011575; // translocation rate constant of unreleased substance from the posterior to the gastrointestinal section
-    const double nasalk6 = carrier*(1000000); // rate constant of release from drug carrier in posterior section
-    const double nasalk7 = transconst*(0.00000011575); // translocation rate constant of released substance from the posterior to the gastrointestinal section
-    const double nasalk8 = absconst*(0.0000260); // absorption rate constant in posterior section
-    const double nasalk9 = carrier*(1000000); // rate constant of release from drug carrier in gastrointestinal section
-    const double nasalk10 = absconst*(0.0000000027); // absorption rate constant in gastrointestinal section
-    const double nasalk11 = degredation*(0.0001); // rate constant of released drug degradation in anterior section
-    const double nasalk12 = degredation*(0.0001); // rate constant of released drug degradation in posterior section
-    const double nasalk13 = degredation*(0.00001); // rate constant of released drug degradation in gastrointestinal section
+    const double nasalk6 = carrier * (1000000); // rate constant of release from drug carrier in posterior section
+    const double nasalk7 = transconst * (0.00000011575); // translocation rate constant of released substance from the posterior to the gastrointestinal section
+    const double nasalk8 = absconst * (0.0000260); // absorption rate constant in posterior section
+    const double nasalk9 = carrier * (1000000); // rate constant of release from drug carrier in gastrointestinal section
+    const double nasalk10 = absconst * (0.0000000027); // absorption rate constant in gastrointestinal section
+    const double nasalk11 = degredation * (0.0001); // rate constant of released drug degradation in anterior section
+    const double nasalk12 = degredation * (0.0001); // rate constant of released drug degradation in posterior section
+    const double nasalk13 = degredation * (0.00001); // rate constant of released drug degradation in gastrointestinal section
     const double nasalk14 = 0.000027777; // transit rate constant of unreleased drug through gastrointestinal section
     const double nasalk15 = 0.000027777; // transit rate constant of released drug through gastrointestinal section
 
-    //Initial Drug Distribution
+    // Initial Drug Distribution
     std::vector<double> unrelMass = nState->GetUnreleasedNasalMasses(MassUnit::mg);
     std::vector<double> relMass = nState->GetReleasedNasalMasses(MassUnit::mg);
 
@@ -483,15 +485,15 @@ void Drugs::AdministerSubstanceNasal()
     double nasalGastroUnreleasedInitial_mg = unrelMass[2]; // initial amount of unreleased drug in gastrointestinal section
     double nasalGastroReleasedInitial_mg = relMass[2]; // initial amount of released drug in gastrointestinal section
 
-    //Intermediate Values
-    const double nasalAlpha = nasalk1 + nasalk2; //alpha
-    const double nasalBeta = nasalk5 + nasalk6; //beta
-    const double nasalGamma = nasalk9 + nasalk14; //gamma
-    const double nasalDelta = nasalk3 + nasalk4 + nasalk11; //delta
-    const double nasalEpsilon = nasalk7 + nasalk8 + nasalk12; //epsilon
-    const double nasalOmega = nasalk10 + nasalk13 + nasalk15; //omega
+    // Intermediate Values
+    const double nasalAlpha = nasalk1 + nasalk2; // alpha
+    const double nasalBeta = nasalk5 + nasalk6; // beta
+    const double nasalGamma = nasalk9 + nasalk14; // gamma
+    const double nasalDelta = nasalk3 + nasalk4 + nasalk11; // delta
+    const double nasalEpsilon = nasalk7 + nasalk8 + nasalk12; // epsilon
+    const double nasalOmega = nasalk10 + nasalk13 + nasalk15; // omega
 
-    //Differential Equation Solution Constants
+    // Differential Equation Solution Constants
     const double nasalC1 = (nasalk1 * nasalAnteriorUnreleasedInitial_mg) / (nasalBeta - nasalAlpha);
     const double nasalC2 = nasalPosteriorUnreleasedInitial_mg - nasalC1;
     const double nasalC3 = (nasalk5 * nasalC1) / (nasalGamma - nasalAlpha);
@@ -511,14 +513,14 @@ void Drugs::AdministerSubstanceNasal()
     const double nasalCp2 = nasalPosteriorReleasedInitial_mg - nasalC7 - nasalC8 - nasalC9;
     const double nasalCp3 = nasalGastroReleasedInitial_mg - nasalC10 - nasalC11 - nasalC12 - nasalC13 - nasalC14;
 
-    //Amounts of Unreleased Drug - ODE style
+    // Amounts of Unreleased Drug - ODE style
     double dNasal_Anterior_Unreleased_Per_dt = -nasalAlpha * unrelMass[0];
     unrelMass[0] += (dNasal_Anterior_Unreleased_Per_dt * m_dt_s);
     double dNasal_Posterior_Unreleased_Per_dt = (nasalk1 * unrelMass[0]) - (nasalBeta * unrelMass[1]);
     unrelMass[1] += (dNasal_Posterior_Unreleased_Per_dt * m_dt_s);
     double dNasal_Gastro_Unreleased_Per_dt = (nasalk5 * unrelMass[1]) - (nasalGamma * unrelMass[2]);
     unrelMass[2] += (dNasal_Gastro_Unreleased_Per_dt * m_dt_s);
-    //Amounts of Released Drug - ODE style
+    // Amounts of Released Drug - ODE style
     double dNasal_Anterior_Released_Per_dt = (nasalk2 * unrelMass[0]) - (nasalDelta * relMass[0]);
     relMass[0] += (dNasal_Anterior_Released_Per_dt * m_dt_s);
     double dNasal_Posterior_Released_Per_dt = (nasalk6 * unrelMass[1]) + (nasalk3 * relMass[0]) - (nasalEpsilon * relMass[1]);
@@ -531,11 +533,11 @@ void Drugs::AdministerSubstanceNasal()
     nState->SetReleasedNasalMasses(relMass, MassUnit::mg);
     nDose->GetDose().SetValue(0.0, MassUnit::mg); // Once dose is distributed in model, set initial dose to zero. This allows for multiple doses.
 
-    //Rate of systemic absorption of the intact drug
+    // Rate of systemic absorption of the intact drug
     const double nasalSystemicAbsorptionRate_mg_Per_s = (nasalk4 * relMass[0]) + (nasalk8 * relMass[1]) + (nasalk10 * relMass[2]); // mg/s
     double totalDose_mg = unrelMass[0] + unrelMass[1] + unrelMass[2] + relMass[0] + relMass[1] + relMass[2];
 
-    //Systemic bioavailability of the intact drug
+    // Systemic bioavailability of the intact drug
     const double nasalBioavailability = (nasalk4 * (nasalC5 / (nasalAlpha + nasalC6 / nasalDelta)) + nasalk8 * (nasalC7 / nasalAlpha + nasalC8 / nasalBeta + nasalC9 / nasalDelta + nasalCp2 / nasalEpsilon) + nasalk10 * (nasalC10 / nasalAlpha + nasalC11 / nasalBeta + nasalC12 / nasalGamma + nasalC13 / nasalDelta + nasalC14 / nasalEpsilon + nasalCp3 / nasalOmega)) / totalDose_mg;
 
     m_venaCavaVascular->GetSubstanceQuantity(*nSub)->GetMass().IncrementValue(nasalSystemicAbsorptionRate_mg_Per_s * m_dt_s, MassUnit::mg);
@@ -561,7 +563,7 @@ void Drugs::AdministerSubstanceNasal()
 //--------------------------------------------------------------------------------------------------
 void Drugs::AdministerSubstanceOral()
 {
-  //Need to loop over oral dose Objects
+  // Need to loop over oral dose Objects
   const std::map<const SESubstance*, SESubstanceOralDose*>& oralDoses = m_data.GetActions().GetPatientActions().GetSubstanceOralDoses();
   if (oralDoses.empty())
     return;
@@ -573,49 +575,53 @@ void Drugs::AdministerSubstanceOral()
   for (auto od : oralDoses) {
     sub = od.first;
     oDose = od.second;
-    if (oDose->GetAdminRoute() == CDM::enumOralAdministration::Transmucosal) {
-      //Drug is being given transmucosally--get oral transmucosal (OT) state for this substance if it already exists
+
+    CDM::enumOralAdministration oaType;
+    io::PatientActions::Marshall(oDose->GetAdminRoute(), oaType);
+
+    if (oDose->GetAdminRoute() == SEOralAdministrationType::Transmucosal) {
+      // Drug is being given transmucosally--get oral transmucosal (OT) state for this substance if it already exists
       SETransmucosalState* otState = m_TransmucosalStates[sub];
       if (otState == nullptr) {
-        //If it doesn't exist yet, make a new model state for the substance and initialize it
+        // If it doesn't exist yet, make a new model state for the substance and initialize it
         otState = new SETransmucosalState(*sub);
         if (!otState->Initialize(oDose->GetDose())) {
           Error("SEOralTransmucosalState::Probable vector length mismatch");
         }
         m_TransmucosalStates[sub] = otState;
-        //Every OT state needs to initialize a GI absorption model state to account for drug that is swallowed.
-        //Clearly we are assuming that there is not already an active pill of the same substance already present in the GI (seems like a safe assumption).
+        // Every OT state needs to initialize a GI absorption model state to account for drug that is swallowed.
+        // Clearly we are assuming that there is not already an active pill of the same substance already present in the GI (seems like a safe assumption).
         m_data.GetGastrointestinal().NewDrugTransitState(sub);
-        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
+        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oaType)) {
           Error("SEGastrointestinalSystem::SEDrugAbsorptionTransitModelState: Probably vector length mismatch");
         }
       }
-      //Process the transmucosal model for this substance--the function returns the total amount of drug remaining in the oral mucosal layers and mouth
+      // Process the transmucosal model for this substance--the function returns the total amount of drug remaining in the oral mucosal layers and mouth
       double massRemaining_ug = OralTransmucosalModel(sub, otState);
-      //If 99.9% of the original dose has been removed from model (either through absorption or swallowing), deactivate the action and remove it
-      // from the TransmucosalStates map.  This will not effect the GI Transit state--drug in GI will still be processed.
+      // If 99.9% of the original dose has been removed from model (either through absorption or swallowing), deactivate the action and remove it
+      //  from the TransmucosalStates map.  This will not effect the GI Transit state--drug in GI will still be processed.
       if (massRemaining_ug < 0.001 * oDose->GetDose().GetValue(MassUnit::ug)) {
         deactiveSubs.emplace_back(sub);
       }
     } else {
-      //Oral dose is being given as a pill--initiate a GI absorption model state for it if it doesn't already exist.
+      // Oral dose is being given as a pill--initiate a GI absorption model state for it if it doesn't already exist.
       if (m_data.GetGastrointestinal().GetDrugTransitState(sub) == nullptr) {
         m_data.GetGastrointestinal().NewDrugTransitState(sub);
-        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
+        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oaType)) {
           Error("SEGastrointestinalSystem::SEDrugAbsorptionTransitModelState: Probably vector length mismatch");
         }
       } else {
-        //If the drug already has as an existing GI state, that means we are repeat dosing.  Get the drug state and add the new dose to the stomach
+        // If the drug already has as an existing GI state, that means we are repeat dosing.  Get the drug state and add the new dose to the stomach
         m_data.GetGastrointestinal().GetDrugTransitState(sub)->IncrementStomachSolidMass(oDose->GetDose().GetValue(MassUnit::mg), MassUnit::mg);
       }
-      //We can remove the action right away because the GI will keep processing the drug once the transit model state is initiated
-      //By deactivating the Oral Dose action right away, we will be able to detect repeat dose actions
+      // We can remove the action right away because the GI will keep processing the drug once the transit model state is initiated
+      // By deactivating the Oral Dose action right away, we will be able to detect repeat dose actions
       deactiveSubs.emplace_back(sub);
     }
   }
   for (auto deSub : deactiveSubs) {
-    if (oralDoses.at(deSub)->GetAdminRoute() == CDM::enumOralAdministration::Transmucosal) {
-      m_TransmucosalStates.erase(deSub); //This removes both key and element, which I think is the behavior that we want
+    if (oralDoses.at(deSub)->GetAdminRoute() == SEOralAdministrationType::Transmucosal) {
+      m_TransmucosalStates.erase(deSub); // This removes both key and element, which I think is the behavior that we want
     }
     m_data.GetActions().GetPatientActions().RemoveSubstanceOralDose(*deSub);
   }
@@ -636,7 +642,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     return;
 
   SEPatient& patient = m_data.GetPatient();
-  const CDM::enumBloodType::value patientBloodType = patient.GetBloodType();
+  const auto patientBloodType = patient.GetBloodType();
   SESubstanceCompoundInfusion* infusion;
   const SESubstanceCompound* compound;
   SELiquidSubstanceQuantity* subQ;
@@ -673,10 +679,10 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       double massIncrement_ug = volumeToAdminister_mL * component.GetConcentration(MassPerVolumeUnit::ug_Per_mL);
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
 
-      //Blood Transfusion//
+      // Blood Transfusion//
       if (component.GetSubstance().GetName() == "RedBloodCell") {
-        /* 
-         //Transfusiuon-Associated Circulatory Overload (TACO) CHECK 
+        /*
+         //Transfusiuon-Associated Circulatory Overload (TACO) CHECK
          if (totalRate_mL_Per_s >= 3) { // Rate should not exceed 2 mL/s plus a 50% deviation to be safe (little diagnostic research on the topic/underreported but common reaction)
            std::stringstream ss;
            ss << "Patient is experiencing Transfusion Associated Circulatory Overload (TACO) due to greater than reccomended infusion rate";
@@ -684,7 +690,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         }
         */
 
-        //Check for HTR
+        // Check for HTR
         SESubstance* m_AntigenA = m_data.GetSubstances().GetSubstance("Antigen_A");
         SESubstance* m_AntigenB = m_data.GetSubstances().GetSubstance("Antigen_B");
         const double AntigenA_ct_Per_uL = m_venaCavaVascular->GetSubstanceQuantity(*m_AntigenA)->GetMolarity(AmountPerVolumeUnit::ct_Per_uL);
@@ -694,13 +700,13 @@ void Drugs::AdministerSubstanceCompoundInfusion()
         // First check for AB type since AB is a universal acceptor
         // Second check for O type acceptor and ANY antigen presence since it would cause a reaction
         // Last check for A and B presence because if one or the either, both should not be present or else reaction
-        if (patientBloodType != (CDM::enumBloodType::AB)) {
-          if (patientBloodType == CDM::enumBloodType::O) {
+        if (patientBloodType != (SEBloodType::AB)) {
+          if (patientBloodType == SEBloodType::O) {
             if (AntigenA_ct_Per_uL > 0 || AntigenB_ct_Per_uL > 0) {
-              patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
+              patient.SetEvent(SEPatientEventType::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
             }
           } else if (AntigenA_ct_Per_uL > 0 && AntigenB_ct_Per_uL > 0) {
-            patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
+            patient.SetEvent(SEPatientEventType::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
           }
         }
 
@@ -711,12 +717,12 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       }
     }
 
-    if (!patient.IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction) && !patient.GetBloodRh() && compound->GetRhFactor()) {
+    if (!patient.IsEventActive(SEPatientEventType::HemolyticTransfusionReaction) && !patient.GetBloodRh() && compound->GetRhFactor()) {
       m_data.GetBloodChemistry().GetRhTransfusionReactionVolume().IncrementValue(volumeToAdminister_mL, VolumeUnit::mL);
-      patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
+      patient.SetEvent(SEPatientEventType::HemolyticTransfusionReaction, true, m_data.GetSimulationTime());
     }
 
-    if (compound->GetName() == "Saline" || compound->GetName() == "RingersLactate" || compound->GetName() == "Antibiotic") //Note: Saline and ringers lactate have different densities than pure water
+    if (compound->GetName() == "Saline" || compound->GetName() == "RingersLactate" || compound->GetName() == "Antibiotic") // Note: Saline and ringers lactate have different densities than pure water
     {
       SEScalarTemperature& ambientTemp = m_data.GetEnvironment().GetConditions().GetAmbientTemperature();
       SEScalarMassPerVolume densityFluid;
@@ -763,19 +769,19 @@ void Drugs::CalculatePartitionCoefficients()
   double EquationPartC = 0;
   double PartitionCoefficient = 0;
   double TissueToPlasmaProteinRatio = 0;
-  //Red blood cell constants for estimation of acidic phospholipid association constant (bases and zwitterions)
+  // Red blood cell constants for estimation of acidic phospholipid association constant (bases and zwitterions)
   double rbcNeutralLipids = 0.0012;
   double rbcNeutralPhospholipids = 0.0033;
   double rbcIntracellularWater = 0.603;
   double rbcAcidicPhospholipids = 0.57;
-  double rbcIntracellularPH = 7.2; //See Poulin2011Predictive:Part5
+  double rbcIntracellularPH = 7.2; // See Poulin2011Predictive:Part5
   double rbcPHEffects = 0.0;
-  //Constansts for zwitterions
+  // Constansts for zwitterions
   double hematocrit = m_data.GetBloodChemistry().GetHematocrit().GetValue();
   double bloodPlasmaUnboundRatio = 0.0;
   double AcidicPhospholipidAssociation = 0.0;
 
-  //Loop over tissue nodes
+  // Loop over tissue nodes
   for (SETissueCompartment* tissue : m_data.GetCompartments().GetTissueLeafCompartments()) {
     if (!tissue->HasMatrixVolume()) {
       continue;
@@ -783,7 +789,7 @@ void Drugs::CalculatePartitionCoefficients()
     SELiquidCompartment& ExtracellularFluid = m_data.GetCompartments().GetExtracellularFluid(*tissue);
     SELiquidCompartment& IntracellularFluid = m_data.GetCompartments().GetIntracellularFluid(*tissue);
 
-    //Loop over substances
+    // Loop over substances
     for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
       if (!sub->HasPK())
         continue;
@@ -793,8 +799,8 @@ void Drugs::CalculatePartitionCoefficients()
       SESubstancePhysicochemical& pk = sub->GetPK().GetPhysicochemicals();
       CDM::enumSubstanceIonicState::value IonicState = pk.GetIonicState();
       double pKA1 = pk.GetPrimaryPKA().GetValue();
-      double pKA2 = 0.0; //Only for zwitterions
-      double P = exp(log(10) * pk.GetLogP().GetValue()); //Getting P from logP value
+      double pKA2 = 0.0; // Only for zwitterions
+      double P = exp(log(10) * pk.GetLogP().GetValue()); // Getting P from logP value
       if (tissue == m_fatTissue) {
         P = 1.115 * pk.GetLogP().GetValue() - 1.35;
         P = exp(log(10) * P);
@@ -814,23 +820,23 @@ void Drugs::CalculatePartitionCoefficients()
         ss << tissue->GetName();
         Fatal(ss);
       }
-      //Choose correct set of equations to use given the ionic state of the drug
+      // Choose correct set of equations to use given the ionic state of the drug
       switch (IonicState) {
       case CDM::enumSubstanceIonicState::Base:
         PHEffectPower = pKA1 - IntracellularPH;
         IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
         PHEffectPower = pKA1 - PlasmaPH;
         PlasmaPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
-        //Method of Rogers/Rowland requires an estimate for association constant of bases with acidic phospholipids.  This value can be estimated using blood/plasma_unbound partition coefficient
-        bloodPlasmaUnboundRatio = (pk.GetBloodPlasmaRatio().GetValue() - (1.0 - hematocrit)) / (hematocrit * pk.GetFractionUnboundInPlasma().GetValue()); //See Hinderling1997Red:  Kb/p = Ke/pu * fu * hematocrit + (1- hematocrit)
-        //Recycle equation part A,B,C for determination of acidic phospholipid association
+        // Method of Rogers/Rowland requires an estimate for association constant of bases with acidic phospholipids.  This value can be estimated using blood/plasma_unbound partition coefficient
+        bloodPlasmaUnboundRatio = (pk.GetBloodPlasmaRatio().GetValue() - (1.0 - hematocrit)) / (hematocrit * pk.GetFractionUnboundInPlasma().GetValue()); // See Hinderling1997Red:  Kb/p = Ke/pu * fu * hematocrit + (1- hematocrit)
+        // Recycle equation part A,B,C for determination of acidic phospholipid association
         rbcPHEffects = 1.0 + std::pow(10.0, (pKA1 - rbcIntracellularPH));
         EquationPartA = (rbcPHEffects * rbcIntracellularWater) / PlasmaPHEffects;
         EquationPartB = (P * rbcNeutralLipids + (0.3 * P + 0.7) * rbcNeutralPhospholipids) / PlasmaPHEffects;
         EquationPartC = PlasmaPHEffects / (rbcAcidicPhospholipids * IntracellularPHEffects);
         AcidicPhospholipidAssociation = (bloodPlasmaUnboundRatio - EquationPartA - EquationPartB) * EquationPartC;
-        LLIM(AcidicPhospholipidAssociation, 0.0); //Poulin2011Predictive:Part5 notes that in corner cases this value can become negative and should be set to 0
-        //Now calculate features of partition coefficient
+        LLIM(AcidicPhospholipidAssociation, 0.0); // Poulin2011Predictive:Part5 notes that in corner cases this value can become negative and should be set to 0
+        // Now calculate features of partition coefficient
         EquationPartA = (IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue()) / PlasmaPHEffects;
         EquationPartB = AcidicPhospholipidAssociation * tissue->GetAcidicPhospohlipidConcentration().GetValue(MassPerMassUnit::mg_Per_g) * IntracellularPHEffects / PlasmaPHEffects;
         EquationPartC = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue()) / PlasmaPHEffects;
@@ -863,25 +869,25 @@ void Drugs::CalculatePartitionCoefficients()
           Fatal(ss);
         }
         pKA2 = pk.GetSecondaryPKA().GetValue();
-        //Using std::min/max below to make sure that more acidic and more basic pKa's are applied in proper place
+        // Using std::min/max below to make sure that more acidic and more basic pKa's are applied in proper place
         PlasmaPHEffects = 1.0 + std::pow(10.0, PlasmaPH - std::min(pKA1, pKA2)) + std::pow(10.0, std::max(pKA1, pKA2) - PlasmaPH);
         IntracellularPHEffects = 1.0 + std::pow(10.0, IntracellularPH - std::min(pKA1, pKA2)) + std::pow(10.0, std::max(pKA1, pKA2) - IntracellularPH);
-        //Method of Rogers/Rowland requires an estimate for association constant of zwitterions with acidic phospholipids.  This value can be estimated using blood/plasma_unbound partition coefficient
-        bloodPlasmaUnboundRatio = (pk.GetBloodPlasmaRatio().GetValue() - (1.0 - hematocrit)) / (hematocrit * pk.GetFractionUnboundInPlasma().GetValue()); //See Hinderling1997Red:  Kb/p = Ke/pu * fu * hematocrit + (1- hematocrit)
-        //Recycle equation part A,B,C for determination of acidic phospholipid association
+        // Method of Rogers/Rowland requires an estimate for association constant of zwitterions with acidic phospholipids.  This value can be estimated using blood/plasma_unbound partition coefficient
+        bloodPlasmaUnboundRatio = (pk.GetBloodPlasmaRatio().GetValue() - (1.0 - hematocrit)) / (hematocrit * pk.GetFractionUnboundInPlasma().GetValue()); // See Hinderling1997Red:  Kb/p = Ke/pu * fu * hematocrit + (1- hematocrit)
+        // Recycle equation part A,B,C for determination of acidic phospholipid association
         rbcPHEffects = 1.0 + std::pow(10.0, rbcIntracellularPH - std::min(pKA1, pKA2)) + std::pow(10.0, std::max(pKA1, pKA2) - rbcIntracellularPH);
         EquationPartA = (rbcPHEffects * rbcIntracellularWater) / PlasmaPHEffects;
         EquationPartB = (P * rbcNeutralLipids + (0.3 * P + 0.7) * rbcNeutralPhospholipids) / PlasmaPHEffects;
         EquationPartC = PlasmaPHEffects / (rbcAcidicPhospholipids * rbcPHEffects);
         AcidicPhospholipidAssociation = (bloodPlasmaUnboundRatio - EquationPartA - EquationPartB) * EquationPartC;
-        LLIM(AcidicPhospholipidAssociation, 0.0); //Poulin2011Predictive:Part5 notes that in corner cases this value can become negative and should be set to 0
-        //Now calculate features of partition coefficient
+        LLIM(AcidicPhospholipidAssociation, 0.0); // Poulin2011Predictive:Part5 notes that in corner cases this value can become negative and should be set to 0
+        // Now calculate features of partition coefficient
         EquationPartA = (IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue()) / PlasmaPHEffects;
         EquationPartB = (AcidicPhospholipidAssociation * tissue->GetAcidicPhospohlipidConcentration().GetValue(MassPerMassUnit::mg_Per_g) * std::pow(10.0, std::max(pKA1, pKA2) - IntracellularPH) + std::pow(10.0, IntracellularPH - std::min(pKA1, pKA2))) / PlasmaPHEffects;
         EquationPartC = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue()) / PlasmaPHEffects;
         break;
       default:
-        //Neutral ion
+        // Neutral ion
         IntracellularPHEffects = 1.0;
         PlasmaPHEffects = 1.0;
         EquationPartA = IntracellularPHEffects * IntracellularFluid.GetWaterVolumeFraction().GetValue() / PlasmaPHEffects;
@@ -889,7 +895,7 @@ void Drugs::CalculatePartitionCoefficients()
           / PlasmaPHEffects;
         EquationPartC = ((1.0 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction) / PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
       }
-      //Calculate the partition coefficient and set it on the substance compartment effects
+      // Calculate the partition coefficient and set it on the substance compartment effects
       PartitionCoefficient = EquationPartA + ExtracellularFluid.GetWaterVolumeFraction().GetValue() + EquationPartB + EquationPartC;
       PartitionCoefficient = PartitionCoefficient * pk.GetFractionUnboundInPlasma().GetValue() / pk.GetBloodPlasmaRatio().GetValue();
       sub->GetPK().GetTissueKinetics(tissue->GetName()).GetPartitionCoefficient().SetValue(PartitionCoefficient);
@@ -941,16 +947,16 @@ void Drugs::CalculateDrugEffects()
   double effect = 0.0;
   double antibioticEffect_Per_hr = 0.0;
 
-  //Naloxone reversal--we will need to get more generic with this code if we add other reversal agents
+  // Naloxone reversal--we will need to get more generic with this code if we add other reversal agents
   SESubstance* m_Naloxone = m_data.GetSubstances().GetSubstance("Naloxone");
   double inhibitorConcentration_ug_Per_mL = 0.0;
-  double inhibitorConstant_ug_Per_mL = 1.0; //Can't initialize to 0 lest we divide by 0.  Won't matter what it is when there is no inhibitor because this will get mulitplied by 0 anyway
+  double inhibitorConstant_ug_Per_mL = 1.0; // Can't initialize to 0 lest we divide by 0.  Won't matter what it is when there is no inhibitor because this will get mulitplied by 0 anyway
   if (m_data.GetSubstances().IsActive(*m_Naloxone)) {
     inhibitorConstant_ug_Per_mL = m_Naloxone->GetPD().GetCentralNervousModifier().GetEC50().GetValue(MassPerVolumeUnit::ug_Per_mL);
     inhibitorConcentration_ug_Per_mL = m_Naloxone->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
   }
 
-  //Loop over substances
+  // Loop over substances
   for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
     if (!sub->HasPD())
       continue;
@@ -960,33 +966,33 @@ void Drugs::CalculateDrugEffects()
     shapeParameter = pd.GetEMaxShapeParameter().GetValue();
     auto modifiers = pd.GetPharmacodynamicModifiers();
 
-    //Loop over all pharmacodynamic modifiers for substance and add them overall effect for each property
+    // Loop over all pharmacodynamic modifiers for substance and add them overall effect for each property
     for (auto mod : modifiers) {
       eMax = mod.second->GetEMax().GetValue();
       ec50_ug_Per_mL = mod.second->GetEC50(MassPerVolumeUnit::ug_Per_mL);
       if (std::abs(eMax) < ZERO_APPROX) {
-        continue; //If no effect (i.e. eMax = 0), move on to next effect.  Save some time and also don't run risk of dividing by 0 somewhere since non-defined EC50s are set to 0
+        continue; // If no effect (i.e. eMax = 0), move on to next effect.  Save some time and also don't run risk of dividing by 0 somewhere since non-defined EC50s are set to 0
       }
       if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * (std::pow(1.0 + (inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL), shapeParameter)) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       } else if (sub->GetName() == "Sarin") {
-        effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited); //0.8 is a tuning factor, validated by patient expected physiological response
+        effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited); // 0.8 is a tuning factor, validated by patient expected physiological response
       } else {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) + std::pow(ec50_ug_Per_mL, shapeParameter));
       }
       effects_unitless[mod.first] += effect;
     }
 
-    //Antibiotic Effects -- Do not evaluate unless the patient has inflammation casued by infection
+    // Antibiotic Effects -- Do not evaluate unless the patient has inflammation casued by infection
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
       double minimumInhibitoryConcentration_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
       if (sub->GetClassification() == CDM::enumSubstanceClass::Antibiotic) {
         ///\ @cite Regoes2004Pharmacodynamics
         // The model cited above parameterizes antibacterial activity by the maximum growth rate of the pathogen (kMax), the minimum growth rate exerted by the antibiotic (kMin < 0)
         // and a shape parameter.  The input to the function is the ratio of free antibiotic concentration to pathogen MIC.  The EC50 value for this
-        //curve is the ratio -kMin / kMax.  This structure imposes a net growth rate of 0 when antibiotic concentration = MIC (very useful result).
-        //This means that we will not use the EC50 value given in antibiotic sub xml files, but it also reduces the amount of parameter guesswork we do.
-        //For now, the max pathogen growth rate is constant (see BloodChemistry).  If that changes, we need to make sure that this function is aware.
+        // curve is the ratio -kMin / kMax.  This structure imposes a net growth rate of 0 when antibiotic concentration = MIC (very useful result).
+        // This means that we will not use the EC50 value given in antibiotic sub xml files, but it also reduces the amount of parameter guesswork we do.
+        // For now, the max pathogen growth rate is constant (see BloodChemistry).  If that changes, we need to make sure that this function is aware.
         double growthMax_Per_hr = 0.6;
         double growthMin_Per_hr = growthMax_Per_hr - pd.GetAntibacterialEffect(FrequencyUnit::Per_hr);
         if (growthMin_Per_hr > 0.0) {
@@ -1006,13 +1012,13 @@ void Drugs::CalculateDrugEffects()
     }
   }
 
-  //Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
+  // Translate Diastolic and Systolic Pressure to pulse pressure and mean pressure
   double systolicBaseline_mmHg = patient.GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
   double diastolicBaseline_mmHg = patient.GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
   double deltaMeanPressure_mmHg = (2.0 * diastolicBaseline_mmHg * effects_unitless["DiastolicPressure"] + systolicBaseline_mmHg * effects_unitless["SystolicPressure"]) / 3;
   double deltaPulsePressure_mmHg = (systolicBaseline_mmHg * effects_unitless["SystolicPressure"] - diastolicBaseline_mmHg * effects_unitless["DiastolicPressure"]);
 
-  //Set values on the CDM System Values
+  // Set values on the CDM System Values
   GetBronchodilationLevel().SetValue(effects_unitless["Bronchodilation"]);
   GetCentralNervousResponse().SetValue(effects_unitless["CentralNervous"]);
   GetFeverChange().SetValue(-37.0 * effects_unitless["Fever"], TemperatureUnit::C);
@@ -1029,48 +1035,48 @@ void Drugs::CalculateDrugEffects()
   GetAntibioticActivity().SetValue(antibioticEffect_Per_hr);
 
   //!
-  //! TODO:  minor patch to fix sarin pupil effects, logic is a bit wrong 
-  //! 
-  //! The next section of code is being saved 2022-01-19 To review reintroduction of the Sarin Gas Curve.  
-  //! Cumulitive applications of PupilSizeResponseLevel tended to Zero in most senarios making the 
-  //! PupilaryResponse less then useful. 
-  
-  //Assume drugs affecing pupil behavior do so equally on left/right sides (this might need to be deleted, logic is all wrong)
-  //const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervous().GetLeftEyePupillaryResponse();
-  //const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervous().GetRightEyePupillaryResponse();
-  //double leftPupilReactivityResponseLevel = leftPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
-  //double rightPupilReactivityResponseLevel = rightPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
-  //double leftPupilSizeResponseLevel = leftPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
-  //double rightPupilSizeResponseLevel = rightPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
+  //! TODO:  minor patch to fix sarin pupil effects, logic is a bit wrong
+  //!
+  //! The next section of code is being saved 2022-01-19 To review reintroduction of the Sarin Gas Curve.
+  //! Cumulitive applications of PupilSizeResponseLevel tended to Zero in most senarios making the
+  //! PupilaryResponse less then useful.
 
-  //We need to handle Sarin pupil effects (if Sarin is active) separately because technically they stem from contact and not systemic levels, meaning that they
-  //do not depend on the Sarin plasma concentration in the same way as other PD effects.  We still perform the calculation here because
-  //we cannot "contact" the eye, but scale them differently.  Sarin pupil effects are large and fast, so it's reasonable to
-  //overwrite other drug pupil effects (and we probably aren't modeling opioid addicts inhaling Sarin)
-  // 
-  //if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
-  //  leftPupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
-  //  rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
-  //}
+  // Assume drugs affecing pupil behavior do so equally on left/right sides (this might need to be deleted, logic is all wrong)
+  // const SEPupillaryResponse& leftPupillaryResponse = m_data.GetNervous().GetLeftEyePupillaryResponse();
+  // const SEPupillaryResponse& rightPupillaryResponse = m_data.GetNervous().GetRightEyePupillaryResponse();
+  // double leftPupilReactivityResponseLevel = leftPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
+  // double rightPupilReactivityResponseLevel = rightPupillaryResponse.GetReactivityModifier() * effects_unitless["PupilReactivity"];
+  // double leftPupilSizeResponseLevel = leftPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
+  // double rightPupilSizeResponseLevel = rightPupillaryResponse.GetSizeModifier() * effects_unitless["PupilSize"];
+
+  // We need to handle Sarin pupil effects (if Sarin is active) separately because technically they stem from contact and not systemic levels, meaning that they
+  // do not depend on the Sarin plasma concentration in the same way as other PD effects.  We still perform the calculation here because
+  // we cannot "contact" the eye, but scale them differently.  Sarin pupil effects are large and fast, so it's reasonable to
+  // overwrite other drug pupil effects (and we probably aren't modeling opioid addicts inhaling Sarin)
+  //
+  // if (m_data.GetSubstances().IsActive(*m_data.GetSubstances().GetSubstance("Sarin"))) {
+  //   leftPupilSizeResponseLevel = GeneralMath::LogisticFunction(-1, 0.0475, 250, m_data.GetSubstances().GetSubstance("Sarin")->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_L));
+  //   rightPupilSizeResponseLevel = leftPupilSizeResponseLevel;
+  // }
   ////Bound pupil modifiers
-  //BLIM(leftPupilReactivityResponseLevel, -1, 1);
-  //BLIM(rightPupilReactivityResponseLevel, -1, 1);
-  //BLIM(leftPupilSizeResponseLevel, -1, 1);
-  //BLIM(rightPupilSizeResponseLevel, -1, 1);
+  // BLIM(leftPupilReactivityResponseLevel, -1, 1);
+  // BLIM(rightPupilReactivityResponseLevel, -1, 1);
+  // BLIM(leftPupilSizeResponseLevel, -1, 1);
+  // BLIM(rightPupilSizeResponseLevel, -1, 1);
 
   m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
   m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(effects_unitless["PupilReactivity"]);
   m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
   m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(effects_unitless["PupilSize"]);
 
-  //m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
-  //m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(leftPupilSizeResponseLevel);
-  //m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
-  //m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
+  // m_data.GetNervous().GetLeftEyePupillaryResponse().GetReactivityModifier().SetValue(leftPupilReactivityResponseLevel);
+  // m_data.GetNervous().GetLeftEyePupillaryResponse().GetSizeModifier().SetValue(leftPupilSizeResponseLevel);
+  // m_data.GetNervous().GetRightEyePupillaryResponse().GetReactivityModifier().SetValue(rightPupilReactivityResponseLevel);
+  // m_data.GetNervous().GetRightEyePupillaryResponse().GetSizeModifier().SetValue(rightPupilSizeResponseLevel);
 
-  //Account for cardiovascular override actions
+  // Account for cardiovascular override actions
   if (m_data.GetActions().GetPatientActions().HasOverride()
-      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
+      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == SEOnOff::Off) {
     if (m_data.GetActions().GetPatientActions().GetOverride()->HasMAPOverride()) {
       GetMeanBloodPressureChange().SetValue(0.0, PressureUnit::mmHg);
     }
@@ -1101,7 +1107,7 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
   for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
 
     //--Assume that vena cava concentration is representative blood average (this is what we do in BloodChemistry) -
-    double bloodPlasmaRatio = 1.0; //Assume equal distribution for subs without a defined BP ratio
+    double bloodPlasmaRatio = 1.0; // Assume equal distribution for subs without a defined BP ratio
     double massInBlood_ug = 0.0;
     if (sub->GetPK().GetPhysicochemicals().HasBloodPlasmaRatio()) {
       bloodPlasmaRatio = sub->GetPK().GetPhysicochemicals().GetBloodPlasmaRatio().GetValue();
@@ -1109,17 +1115,17 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
     if (sub->HasMassInBlood()) {
       massInBlood_ug = sub->GetMassInBlood(MassUnit::ug);
     }
-    //Set blood concentration for substances with PK
+    // Set blood concentration for substances with PK
     sub->GetBloodConcentration().SetValue(massInBlood_ug / bloodVolume_mL, MassPerVolumeUnit::ug_Per_mL);
-    //Set plasma concentration assuming K_bp = Cb/Cp  ---> Cp = Cb/K_bp
+    // Set plasma concentration assuming K_bp = Cb/Cp  ---> Cp = Cb/K_bp
     double plasmaConcentration_ug_Per_mL = massInBlood_ug / bloodVolume_mL / bloodPlasmaRatio;
     sub->GetPlasmaConcentration().SetValue(plasmaConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL);
 
-    //Increment area under curve--should be done for subs w/ PK
+    // Increment area under curve--should be done for subs w/ PK
     double deltaT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
     sub->GetAreaUnderCurve().IncrementValue(plasmaConcentration_ug_Per_mL * deltaT_s, TimeMassPerVolumeUnit::s_ug_Per_mL);
 
-    //Get substance PD Data if it exists, including rate constant describing transfer to effect compartment and previous effect site concentration
+    // Get substance PD Data if it exists, including rate constant describing transfer to effect compartment and previous effect site concentration
     if (sub->HasPD()) {
       SESubstancePharmacodynamics& pd = sub->GetPD();
       rate_Per_s = pd.GetEffectSiteRateConstant(FrequencyUnit::Per_s);
@@ -1130,14 +1136,14 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
 
       effectConcentration = sub->GetEffectSiteConcentration(MassPerVolumeUnit::ug_Per_mL);
 
-      //If a substance has rate constant set to 0, no effect concentration is needed.  Just use plasma concentration as before
+      // If a substance has rate constant set to 0, no effect concentration is needed.  Just use plasma concentration as before
       if (rate_Per_s == 0) {
         effectConcentration = sub->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
       } else {
-        //For drugs with effect site rate constant, use first order difference equation to calculate transfer at next time step
+        // For drugs with effect site rate constant, use first order difference equation to calculate transfer at next time step
         effectConcentration += (pd.GetEffectSiteRateConstant(FrequencyUnit::Per_s)) * m_dt_s * (sub->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL) - effectConcentration);
       }
-      //Store effect site concentration for use in CalculateDrugEffects function
+      // Store effect site concentration for use in CalculateDrugEffects function
       sub->GetEffectSiteConcentration().SetValue(effectConcentration, MassPerVolumeUnit::ug_Per_mL);
     }
 
@@ -1172,30 +1178,30 @@ void Drugs::CalculateSubstanceClearance()
       continue;
     SESubstanceClearance& clearance = sub->GetClearance();
 
-    //Renal Volume Cleared - Clearance happens through the renal system
+    // Renal Volume Cleared - Clearance happens through the renal system
     RenalVolumeCleared_mL = (clearance.GetRenalClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg) * PatientWeight_kg * m_dt_s);
 
-    //Intrinsic Clearance
+    // Intrinsic Clearance
     IntrinsicClearance_mLPersPerkg = clearance.GetIntrinsicClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg);
     FractionUnboundInPlasma = clearance.GetFractionUnboundInPlasma().GetValue();
-    //Hepatic Clearance
+    // Hepatic Clearance
     double LiverVascularFlow_mL_Per_s = m_liverVascular->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
     HepaticClearance_mLPers = (LiverVascularFlow_mL_Per_s * FractionUnboundInPlasma * IntrinsicClearance_mLPersPerkg * PatientWeight_kg) / (LiverVascularFlow_mL_Per_s + (FractionUnboundInPlasma * IntrinsicClearance_mLPersPerkg * PatientWeight_kg));
     HepaticVolumeCleared_mL = HepaticClearance_mLPers * m_dt_s;
 
-    //Systemic Clearance
+    // Systemic Clearance
     TotalVolumeCleared_mL = clearance.GetSystemicClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg) * PatientWeight_kg * m_dt_s;
     OtherSystemicVolumeCleared_mL = TotalVolumeCleared_mL - RenalVolumeCleared_mL - HepaticVolumeCleared_mL;
     // The following makes it so that you cannot have more than the total systemic clearance for the substance.
     LLIM(OtherSystemicVolumeCleared_mL, 0.);
 
-    //Hepatic Clearance
+    // Hepatic Clearance
     m_data.GetSubstances().CalculateGenericClearance(HepaticVolumeCleared_mL, *m_liverTissue, *sub);
 
-    //Systemic Clearance
+    // Systemic Clearance
     m_data.GetSubstances().CalculateGenericClearance(OtherSystemicVolumeCleared_mL, *m_venaCavaVascular, *sub);
 
-    //Hepatic Excretion
+    // Hepatic Excretion
     m_data.GetSubstances().CalculateGenericExcretion(LiverVascularFlow_mL_Per_s, *m_liverTissue, *sub, clearance.GetFractionExcretedInFeces().GetValue(), m_dt_s);
   }
 }
@@ -1212,27 +1218,27 @@ void Drugs::CalculateSubstanceClearance()
 //--------------------------------------------------------------------------------------------------
 void Drugs::SarinKinetics()
 {
-  //Get Sarin and Pralidoxime (if active) concentrations and convert units to nM (units that all the rate equations are in)
+  // Get Sarin and Pralidoxime (if active) concentrations and convert units to nM (units that all the rate equations are in)
   double SarinConcentration_g_Per_L = m_Sarin->GetPlasmaConcentration(MassPerVolumeUnit::g_Per_L);
   double SarinMolarMass_g_Per_umol = m_Sarin->GetMolarMass(MassPerAmountUnit::g_Per_umol);
   double SarinConcentration_nM = SarinConcentration_g_Per_L / SarinMolarMass_g_Per_umol * 1000;
   double PralidoximeConcentration_nM = 0.0;
   double PralidoximeMolarMass_g_Per_umol = m_Pralidoxime->GetMolarMass(MassPerAmountUnit::g_Per_umol);
   double PralidoximeConcentration_g_Per_L = 0.0;
-  if ((m_data.GetSubstances().IsActive(*m_Pralidoxime)) && (m_Pralidoxime->HasPlasmaConcentration())) //Substance can get flagged active w/ null plasma concentration so need to check both for stabilization step
+  if ((m_data.GetSubstances().IsActive(*m_Pralidoxime)) && (m_Pralidoxime->HasPlasmaConcentration())) // Substance can get flagged active w/ null plasma concentration so need to check both for stabilization step
   {
     PralidoximeConcentration_g_Per_L = m_Pralidoxime->GetPlasmaConcentration(MassPerVolumeUnit::g_Per_L);
     PralidoximeConcentration_nM = PralidoximeConcentration_g_Per_L / PralidoximeMolarMass_g_Per_umol * 1000;
   }
 
-  //Get RBC-AChE concentration and create copies of all concentrations so that they are not overwritten in the rate equations
+  // Get RBC-AChE concentration and create copies of all concentrations so that they are not overwritten in the rate equations
   double RbcAcetylcholinesterase_nM = m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase(AmountPerVolumeUnit::mol_Per_L) * 1e9;
   double RbcAche_nM = RbcAcetylcholinesterase_nM;
   double SarinRbcAche_nM = m_SarinRbcAcetylcholinesteraseComplex_nM;
   double AgedSarin_nM = m_AgedRbcAcetylcholinesterase_nM;
   const double BaselineRbcAcetylcholinesterase_nM = 8.0;
 
-  //Rate constants
+  // Rate constants
   const double RateRbcAcheInhibition_per_nM_s = 4.50e-4; /// \cite gupta2009handbook \cite rodriguez2015model
   const double RateRbcAcheAging_per_s = 4.83e-5; /// \cite gupta2009handbook \cite rodriguez2015model
   const double RateRbcAcheSynthesis_nM_per_s = 8 * (9.33e-5); /// \cite grob1958effects
@@ -1240,10 +1246,10 @@ void Drugs::SarinKinetics()
   const double RatePralidoximeReversal_per_s = 0.7 * (4.22e-3); /// \cite rodriguez2015model
   const double PralidoximeDissociationConstant_nM = 27630.0; /// \cite rodriguez2015model
 
-  //Michaelis-Menten expression for rate of pralidoxime interaction with bound sarin/rbc-ache complex
+  // Michaelis-Menten expression for rate of pralidoxime interaction with bound sarin/rbc-ache complex
   double PralidoximeReversal = RatePralidoximeReversal_per_s * m_SarinRbcAcetylcholinesteraseComplex_nM * PralidoximeConcentration_nM / (PralidoximeDissociationConstant_nM + PralidoximeConcentration_nM); ///\cite rodriguez2015model
 
-  //Kinetic model equations adapted from
+  // Kinetic model equations adapted from
   ///\cite rodriguez2015model and \cite gupta2009handbook
   RbcAche_nM += m_dt_s * (-RateRbcAcheInhibition_per_nM_s * SarinConcentration_nM * RbcAcetylcholinesterase_nM - RateRbcAcheDegredation_per_s * RbcAcetylcholinesterase_nM + RateRbcAcheSynthesis_nM_per_s + PralidoximeReversal);
   SarinRbcAche_nM += m_dt_s * (RateRbcAcheInhibition_per_nM_s * SarinConcentration_nM * RbcAcetylcholinesterase_nM - RateRbcAcheAging_per_s * m_SarinRbcAcetylcholinesteraseComplex_nM - PralidoximeReversal);
@@ -1252,7 +1258,7 @@ void Drugs::SarinKinetics()
   PralidoximeConcentration_nM = -PralidoximeReversal;
   m_RbcAcetylcholinesteraseFractionInhibited = 1 - RbcAche_nM / BaselineRbcAcetylcholinesterase_nM;
 
-  //Update values for next time step
+  // Update values for next time step
   m_Sarin->GetPlasmaConcentration().SetValue(SarinConcentration_nM / 1000.0 * SarinMolarMass_g_Per_umol, MassPerVolumeUnit::g_Per_L);
   m_data.GetBloodChemistry().GetRedBloodCellAcetylcholinesterase().SetValue(RbcAche_nM * 1e-9, AmountPerVolumeUnit::mol_Per_L);
   m_SarinRbcAcetylcholinesteraseComplex_nM = SarinRbcAche_nM;
@@ -1280,28 +1286,28 @@ void Drugs::SarinKinetics()
 //--------------------------------------------------------------------------------------------------
 double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState* ot)
 {
-  //Concentrations from last time step--set to 0 and then check if they exist because on the first time step after admin so we don't pull a null pointer
+  // Concentrations from last time step--set to 0 and then check if they exist because on the first time step after admin so we don't pull a null pointer
   double plasmaConcentration_ug_Per_mL = 0.0;
   if (sub->HasPlasmaConcentration()) {
     plasmaConcentration_ug_Per_mL = sub->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
   }
-  //Physiochemical constants
+  // Physiochemical constants
   const double subLogP = sub->GetPK()->GetPhysicochemicals()->GetLogP();
   const double fracUnbound_plasma = sub->GetPK()->GetPhysicochemicals()->GetFractionUnboundInPlasma();
   const double subPka = sub->GetPK()->GetPhysicochemicals()->GetPrimaryPKA();
   const double subBloodPlasmaRatio = sub->GetPK()->GetPhysicochemicals()->GetBloodPlasmaRatio();
   const double molarMass_g_Per_mol = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
-  //Defining mass transfer rates to stomach here so that we can accout for both routes if need be
-  double rateSwallowedDrugToStomach_ug_Per_s = 0.0; //Transmucosal route
-  double rateDrugDissolutionInStomach_ug_Per_s = 0.0; //Gastrointestinal route
-  //Characteristic mouth parameters
-  const double salivaThickness_cm = 30.0e-4; //Tuned to get dissolution of OTFC in right time frame
+  // Defining mass transfer rates to stomach here so that we can accout for both routes if need be
+  double rateSwallowedDrugToStomach_ug_Per_s = 0.0; // Transmucosal route
+  double rateDrugDissolutionInStomach_ug_Per_s = 0.0; // Gastrointestinal route
+  // Characteristic mouth parameters
+  const double salivaThickness_cm = 30.0e-4; // Tuned to get dissolution of OTFC in right time frame
   const double buccalSA_cm2 = 60.0;
   const double buccalThickness_cm = 450.0e-4; //@cite Xia2015Development
   const double buccalH_cm = buccalThickness_cm / 6.0;
-  const double buccalLaminaThickness_cm = buccalH_cm; //This ensures that our mesh points are equally spaced
+  const double buccalLaminaThickness_cm = buccalH_cm; // This ensures that our mesh points are equally spaced
   const double volumeSaliva_mL = 1.0; //@cite Xia2015Development
-  const double volumeBuccalSlice_mL = buccalH_cm * buccalSA_cm2; //volume of the Nth epithelial layer
+  const double volumeBuccalSlice_mL = buccalH_cm * buccalSA_cm2; // volume of the Nth epithelial layer
   const double volumeBuccalLamina_mL = buccalLaminaThickness_cm * buccalSA_cm2;
   const double bloodSupplyBuccal_mL_Per_s = 2.4 / 60.0 * buccalSA_cm2; // @cite Sattar2014, buccal blood supply = 2.4 mL/min/cm2
   const double tongueSA_cm2 = 25.0; //@cite Xia2015Development
@@ -1312,13 +1318,13 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   const double volumeTongueLamina_mL = tongueLaminaThickness_cm * tongueSA_cm2;
   const double bloodSupplyTongue_mL_Per_s = 1.0 / 60.0 * tongueSA_cm2;
 
-  //Assumed substance particle paramters (for Noyes-Whitney equation)
+  // Assumed substance particle paramters (for Noyes-Whitney equation)
   const double rho_g_Per_mL = 1.2;
   const double sol_ug_Per_mL = 200.0;
   const double radius_cm = 5.0e-4;
 
-  //Derived physiochemical data
-  const double Kp_SalivaToEpithelium = 2.12 * std::exp(0.523 * subLogP); //Relationship from Xia2015Development
+  // Derived physiochemical data
+  const double Kp_SalivaToEpithelium = 2.12 * std::exp(0.523 * subLogP); // Relationship from Xia2015Development
   const double fracUnbound_tis = 1.0 / Kp_SalivaToEpithelium;
   double Diff_Mucosa_cm2_Per_s;
   if (subLogP < 3.0) {
@@ -1327,32 +1333,32 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   } else {
     Diff_Mucosa_cm2_Per_s = std::pow(10.0, -5.9514);
   }
-  const double Diff_Saliva_cm2_Per_s = 8.0e-6; //Tuned to fentanyl response
-  //Rate constants
-  const double kSwallow_mL_Per_s = 0.55 / 60; //Tuned so that 75% of fentanyl dose is swallowed, value is consistent with rate of saliva production between 0.36 and 0.5 mL/min (@cite Xia2015Development @cite Sattar2014)
-  const double kDis_mL_Per_s_g = 3.0 * Diff_Saliva_cm2_Per_s / (rho_g_Per_mL * radius_cm * salivaThickness_cm); //Noyes-Whitney equation
+  const double Diff_Saliva_cm2_Per_s = 8.0e-6; // Tuned to fentanyl response
+  // Rate constants
+  const double kSwallow_mL_Per_s = 0.55 / 60; // Tuned so that 75% of fentanyl dose is swallowed, value is consistent with rate of saliva production between 0.36 and 0.5 mL/min (@cite Xia2015Development @cite Sattar2014)
+  const double kDis_mL_Per_s_g = 3.0 * Diff_Saliva_cm2_Per_s / (rho_g_Per_mL * radius_cm * salivaThickness_cm); // Noyes-Whitney equation
   const double dT_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
-  //Values from last time step
+  // Values from last time step
   double mouthMass_ug = ot->GetMouthSolidMass().GetValue(MassUnit::ug);
   if (mouthMass_ug < ZERO_APPROX) {
-    mouthMass_ug = 0.0; //Make sure we don't take too big of a step near 0 and pull a negative mass
+    mouthMass_ug = 0.0; // Make sure we don't take too big of a step near 0 and pull a negative mass
   }
   double salivaConcentration_ug_Per_mL = ot->GetSalivaConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
   std::vector<double> buccalCon = ot->GetBuccalConcentrations(MassPerVolumeUnit::ug_Per_mL);
   std::vector<double> sublingualCon = ot->GetSublingualConcentrations(MassPerVolumeUnit::ug_Per_mL);
-  //Figure out total mass of drug in mouth--will use this check if it safe to remove substance admin action
+  // Figure out total mass of drug in mouth--will use this check if it safe to remove substance admin action
   double totalTransmucosalMass_ug = mouthMass_ug + salivaConcentration_ug_Per_mL * volumeSaliva_mL;
-  totalTransmucosalMass_ug += volumeTongueSlice_mL * std::accumulate(sublingualCon.begin(), sublingualCon.end(), 0.0); //can pull volume out and add concentrations because volumes for all sublingual slices are equal
-  totalTransmucosalMass_ug += volumeBuccalSlice_mL * std::accumulate(buccalCon.begin(), buccalCon.end(), 0.0); //can pull volume out and add concentrations because volumes for all buccal slices are equal
-  //Differential containers--could update this to Eigen implementation
+  totalTransmucosalMass_ug += volumeTongueSlice_mL * std::accumulate(sublingualCon.begin(), sublingualCon.end(), 0.0); // can pull volume out and add concentrations because volumes for all sublingual slices are equal
+  totalTransmucosalMass_ug += volumeBuccalSlice_mL * std::accumulate(buccalCon.begin(), buccalCon.end(), 0.0); // can pull volume out and add concentrations because volumes for all buccal slices are equal
+  // Differential containers--could update this to Eigen implementation
   std::vector<double> dBuccalMass(buccalCon.size());
   std::vector<double> dSublingualMass(sublingualCon.size());
-  //Intermediate expressions -- makes typing out equations easier
+  // Intermediate expressions -- makes typing out equations easier
   double rateMassDissolutionInMouth_ug_Per_s = (kDis_mL_Per_s_g / 1.0e6) * mouthMass_ug * (sol_ug_Per_mL - salivaConcentration_ug_Per_mL);
   rateSwallowedDrugToStomach_ug_Per_s = kSwallow_mL_Per_s * salivaConcentration_ug_Per_mL;
   double scaleBuccal_Per_s = Diff_Mucosa_cm2_Per_s / (buccalH_cm * buccalH_cm);
   double scaleTongue_Per_s = Diff_Mucosa_cm2_Per_s / (tongueH_cm * tongueH_cm);
-  //Figure out how to distribute mass in saliva and unbound in upper layers in buccal and sublingual
+  // Figure out how to distribute mass in saliva and unbound in upper layers in buccal and sublingual
   double totalMassSalivaInterface = salivaConcentration_ug_Per_mL * volumeSaliva_mL + fracUnbound_tis * buccalCon[0] * volumeBuccalSlice_mL + fracUnbound_tis * sublingualCon[0] * volumeTongueSlice_mL;
   double volumeSum_mL = volumeSaliva_mL + volumeBuccalSlice_mL + volumeTongueSlice_mL;
   double salivaMassNext = totalMassSalivaInterface * (volumeSaliva_mL / volumeSum_mL);
@@ -1361,17 +1367,17 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   double deltaMassSaliva = salivaConcentration_ug_Per_mL * volumeSaliva_mL - salivaMassNext;
   double deltaMassBuccal = fracUnbound_tis * buccalCon[0] * volumeBuccalSlice_mL - buccalMassNext;
   double deltaMassTongue = fracUnbound_tis * sublingualCon[0] * volumeTongueSlice_mL - tongueMassNext;
-  //Differential Expressions
+  // Differential Expressions
   double dm_MassMouth = -rateMassDissolutionInMouth_ug_Per_s;
   double dmSaliva = rateMassDissolutionInMouth_ug_Per_s - rateSwallowedDrugToStomach_ug_Per_s;
-  //Buccal epithelial layer
+  // Buccal epithelial layer
   dBuccalMass[0] = -scaleBuccal_Per_s * fracUnbound_tis * (buccalCon[0] - buccalCon[1]) * volumeBuccalSlice_mL;
   dBuccalMass[1] = scaleBuccal_Per_s * fracUnbound_tis * (buccalCon[0] - 2 * buccalCon[1] + buccalCon[2]) * volumeBuccalSlice_mL;
   dBuccalMass[2] = scaleBuccal_Per_s * fracUnbound_tis * (buccalCon[1] - 2 * buccalCon[2] + buccalCon[3]) * volumeBuccalSlice_mL;
   dBuccalMass[3] = scaleBuccal_Per_s * fracUnbound_tis * (buccalCon[2] - 2 * buccalCon[3] + buccalCon[4]) * volumeBuccalSlice_mL;
   dBuccalMass[4] = scaleBuccal_Per_s * fracUnbound_tis * (buccalCon[3] - 2 * buccalCon[4] + buccalCon[5]) * volumeBuccalSlice_mL;
   dBuccalMass[5] = scaleBuccal_Per_s * fracUnbound_tis * (buccalCon[4] - 2 * buccalCon[5] + buccalCon[6]) * volumeBuccalSlice_mL;
-  //Buccal Lamina propria layer
+  // Buccal Lamina propria layer
   dBuccalMass[6] = scaleBuccal_Per_s * fracUnbound_tis * (buccalCon[5] - buccalCon[6]) * volumeBuccalLamina_mL - bloodSupplyBuccal_mL_Per_s * subBloodPlasmaRatio * (fracUnbound_tis * buccalCon[6] / fracUnbound_plasma - plasmaConcentration_ug_Per_mL);
   ////Sublingual epithelial layer
   dSublingualMass[0] = -scaleTongue_Per_s * fracUnbound_tis * (sublingualCon[0] - sublingualCon[1]) * volumeTongueSlice_mL;
@@ -1380,12 +1386,12 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   dSublingualMass[3] = scaleTongue_Per_s * fracUnbound_tis * (sublingualCon[2] - 2 * sublingualCon[3] + sublingualCon[4]) * volumeTongueSlice_mL;
   dSublingualMass[4] = scaleTongue_Per_s * fracUnbound_tis * (sublingualCon[3] - 2 * sublingualCon[4] + sublingualCon[5]) * volumeTongueSlice_mL;
   dSublingualMass[5] = scaleTongue_Per_s * fracUnbound_tis * (sublingualCon[4] - 2 * sublingualCon[5] + sublingualCon[6]) * volumeTongueSlice_mL;
-  //Sublingual Lamina propria layer
+  // Sublingual Lamina propria layer
   dSublingualMass[6] = scaleTongue_Per_s * fracUnbound_tis * (sublingualCon[5] - sublingualCon[6]) * volumeTongueLamina_mL - bloodSupplyTongue_mL_Per_s * subBloodPlasmaRatio * (fracUnbound_tis * sublingualCon[6] / fracUnbound_plasma - plasmaConcentration_ug_Per_mL);
-  //Put substance in circulation
+  // Put substance in circulation
   double massIntoVasculature = bloodSupplyBuccal_mL_Per_s * subBloodPlasmaRatio * (fracUnbound_tis * buccalCon[6] / fracUnbound_plasma - plasmaConcentration_ug_Per_mL) + bloodSupplyTongue_mL_Per_s * subBloodPlasmaRatio * (fracUnbound_tis * sublingualCon[6] / fracUnbound_plasma - plasmaConcentration_ug_Per_mL);
   m_venaCavaVascular->GetSubstanceQuantity(*sub)->GetMass().IncrementValue(massIntoVasculature * dT_s, MassUnit::ug);
-  //Update states
+  // Update states
   ot->GetMouthSolidMass().IncrementValue(dm_MassMouth * dT_s, MassUnit::ug);
   ot->GetSalivaConcentration().IncrementValue((1.0 / volumeSaliva_mL) * (dmSaliva * dT_s - deltaMassSaliva), MassPerVolumeUnit::ug_Per_mL);
   buccalCon[0] += (1.0 / volumeBuccalSlice_mL) * (dBuccalMass[0] * dT_s - deltaMassBuccal);
@@ -1399,10 +1405,10 @@ double Drugs::OralTransmucosalModel(const SESubstance* sub, SETransmucosalState*
   ot->SetBuccalConcentrations(buccalCon, MassPerVolumeUnit::ug_Per_mL);
   ot->SetSublingualConcentrations(sublingualCon, MassPerVolumeUnit::ug_Per_mL);
 
-  //Put swallowed drug in GI transit model as dissolved drug in stomach
+  // Put swallowed drug in GI transit model as dissolved drug in stomach
   m_data.GetGastrointestinal().GetDrugTransitState(sub)->IncrementStomachDissolvedMass(rateSwallowedDrugToStomach_ug_Per_s * dT_s, MassUnit::ug);
 
-  //Return the amount of mass remaining in the transmucosal layers and mouth
+  // Return the amount of mass remaining in the transmucosal layers and mouth
   return totalTransmucosalMass_ug;
 }
 };

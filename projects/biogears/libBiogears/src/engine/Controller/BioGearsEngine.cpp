@@ -707,7 +707,7 @@ bool BioGearsEngine::AdvanceModelTime(bool appendDataTrack)
   if (!IsReady()) {
     return false;
   }
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::IrreversibleState)) {
+  if (m_Patient->IsEventActive(SEPatientEventType::IrreversibleState)) {
     return false;
   }
 
@@ -787,7 +787,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
     results_filepath = results_filepath.substr(0, results_filepath.find_last_of("."));
 
     switch (assessment->GetType()) {
-    case CDM::enumPatientAssessment::ArterialBloodGasAnalysis: {
+    case SEPatientAssessmentType::ArterialBloodGasAnalysis: {
       SEArterialBloodGasAnalysis abga;
       GetPatientAssessment(abga);
       if (results_filepath.empty()) {
@@ -804,7 +804,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::PulmonaryFunctionTest: {
+    case SEPatientAssessmentType::PulmonaryFunctionTest: {
       SEPulmonaryFunctionTest pft;
       GetPatientAssessment(pft);
       if (results_filepath.empty()) {
@@ -822,7 +822,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::ProthrombinTime: {
+    case SEPatientAssessmentType::ProthrombinTime: {
       SEProthrombinTime ptt;
       GetPatientAssessment(ptt);
       if (results_filepath.empty()) {
@@ -840,7 +840,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::PsychomotorVigilanceTask: {
+    case SEPatientAssessmentType::PsychomotorVigilanceTask: {
       SEPsychomotorVigilanceTask pvt;
       GetPatientAssessment(pvt);
       if (results_filepath.empty()) {
@@ -858,7 +858,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::Urinalysis: {
+    case SEPatientAssessmentType::Urinalysis: {
       SEUrinalysis upan;
       GetPatientAssessment(upan);
       if (results_filepath.empty()) {
@@ -875,7 +875,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::CompleteBloodCount: {
+    case SEPatientAssessmentType::CompleteBloodCount: {
       SECompleteBloodCount cbc;
       GetPatientAssessment(cbc);
       if (results_filepath.empty()) {
@@ -892,7 +892,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       break;
     }
 
-    case CDM::enumPatientAssessment::ComprehensiveMetabolicPanel: {
+    case SEPatientAssessmentType::ComprehensiveMetabolicPanel: {
       SEComprehensiveMetabolicPanel mp;
       GetPatientAssessment(mp);
       if (results_filepath.empty()) {
@@ -908,7 +908,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       stream.close();
       break;
     }
-    case CDM::enumPatientAssessment::SequentialOrganFailureAssessment: {
+    case SEPatientAssessmentType::SequentialOrganFailureAssessment: {
       SESequentialOrganFailureAssessment sofa;
       GetPatientAssessment(sofa);
       if (results_filepath.empty()) {

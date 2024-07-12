@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
@@ -40,9 +41,7 @@ void SESubstanceCompoundInfusion::Clear()
 //-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData& in, std::default_random_engine *rd)
 {
-  SESubstanceAdministration::Load(in);
-  GetRate().Load(in.Rate(), rd);
-  GetBagVolume().Load(in.BagVolume(), rd);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -65,12 +64,7 @@ CDM::SubstanceCompoundInfusionData* SESubstanceCompoundInfusion::Unload() const
 //-------------------------------------------------------------------------------
 void SESubstanceCompoundInfusion::Unload(CDM::SubstanceCompoundInfusionData& data) const
 {
-  SESubstanceAdministration::Unload(data);
-  if (m_Rate != nullptr)
-    data.Rate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_Rate->Unload()));
-  if (m_BagVolume != nullptr)
-    data.BagVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_BagVolume->Unload()));
-  data.SubstanceCompound(m_Compound.GetName());
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::HasRate() const

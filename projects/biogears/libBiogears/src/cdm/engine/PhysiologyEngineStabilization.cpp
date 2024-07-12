@@ -90,7 +90,6 @@ SEScalarTime& PhysiologyEngineStabilization::GetCurrentTime()
   return *m_CurrentTime;
 }
 //-------------------------------------------------------------------------------
-#pragma optimize("", off)
 bool PhysiologyEngineStabilization::operator==(PhysiologyEngineStabilization const& rhs) const
 {
   bool equivilant = m_Canceled == rhs.m_Canceled;
@@ -103,7 +102,6 @@ bool PhysiologyEngineStabilization::operator==(PhysiologyEngineStabilization con
       : m_StabilizationDuration == rhs.m_StabilizationDuration);
   return equivilant;
 }
-#pragma optimize("", on)
 bool PhysiologyEngineStabilization::operator!=(PhysiologyEngineStabilization const& rhs) const
 {
   return !(*this == rhs);

@@ -387,15 +387,15 @@ void Endocrine::OverrideControlLoop()
     currentGlucagonSynthesisOverride = override->GetGlucagonSynthesisRateOverride(AmountPerTimeUnit::pmol_Per_min);
   }
 
-  if ((currentInsulinSynthesisOverride < minInsulinSynthesisOverride || currentInsulinSynthesisOverride > maxInsulinSynthesisOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentInsulinSynthesisOverride < minInsulinSynthesisOverride || currentInsulinSynthesisOverride > maxInsulinSynthesisOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Insulin Synthesis Rate Override (Endocrine) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentGlucagonSynthesisOverride < minGlucagonSynthesisOverride || currentGlucagonSynthesisOverride > maxGlucagonSynthesisOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentGlucagonSynthesisOverride < minGlucagonSynthesisOverride || currentGlucagonSynthesisOverride > maxGlucagonSynthesisOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Glucagon Synthesis Rate Override (Endocrine) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   return;
 }

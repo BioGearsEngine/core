@@ -71,7 +71,7 @@ void SEScalarQuantity<Unit>::Invalidate()
     return;
 #endif
   }
-  m_value = NaN;
+  m_value = 0;
   m_unit = nullptr;
 }
 //-------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ bool SEScalarQuantity<Unit>::IsValid() const
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
-void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in, std::default_random_engine *rd)
+void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in, std::default_random_engine* rd)
 {
   this->Clear();
   SEProperty::Load(in);
@@ -169,12 +169,16 @@ template <typename Unit>
 double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
 {
 #if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
-  if (std::isnan(m_value)) {
+  if (std::isnan(m_value) && m_unit != nullptr) {
     throw CommonDataModelException("Value is NaN");
   }
 #else
-  assert(!std::isnan(m_value));
+  assert(!std::isnan(m_value) && m_unit != nullptr);
 #endif
+
+  if (m_unit == nullptr) {
+    return m_value;
+  }
   if (std::isinf(m_value))
     return m_value;
   if (m_value == 0)

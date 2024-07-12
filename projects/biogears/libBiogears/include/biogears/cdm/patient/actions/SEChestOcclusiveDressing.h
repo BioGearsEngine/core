@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
@@ -33,15 +34,16 @@ public:
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
-  virtual void SetActive(bool b);
+  
+  void SetActive(bool b);
 
-  virtual bool Load(const CDM::ChestOcclusiveDressingData& in, std::default_random_engine *rd = nullptr);
+  bool Load(const CDM::ChestOcclusiveDressingData& in, std::default_random_engine *rd = nullptr);
   virtual CDM::ChestOcclusiveDressingData* Unload() const override;
 
-  virtual CDM::enumSide::value GetSide() const;
-  virtual void SetSide(CDM::enumSide::value LeftOrRight);
-  virtual bool HasSide() const;
-  virtual void InvalidateSide();
+  SESide GetSide() const;
+  void SetSide(SESide LeftOrRight);
+  bool HasSide() const;
+  void InvalidateSide();
 
   virtual void ToString(std::ostream& str) const override;
     
@@ -53,7 +55,7 @@ protected:
 
 
 protected:
-  CDM::enumSide::value m_Side;
-  CDM::enumOnOff::value m_State;
+  SESide m_Side;
+  SEOnOff m_State;
 };
 }
