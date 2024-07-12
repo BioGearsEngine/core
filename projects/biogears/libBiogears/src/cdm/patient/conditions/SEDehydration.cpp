@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEDehydration.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEDehydration::SEDehydration()
@@ -38,8 +39,7 @@ bool SEDehydration::IsValid() const
 //-----------------------------------------------------------------------------
 bool SEDehydration::Load(const CDM::DehydrationData& in)
 {
-  SEPatientCondition::Load(in);
-  GetDehydrationFraction().Load(in.DehydrationFraction());
+  io::PatientConditions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -52,9 +52,7 @@ CDM::DehydrationData* SEDehydration::Unload() const
 //-----------------------------------------------------------------------------
 void SEDehydration::Unload(CDM::DehydrationData& data) const
 {
-  SEPatientCondition::Unload(data);
-  if (m_DehydrationFraction != nullptr)
-    data.DehydrationFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_DehydrationFraction->Unload()));
+  io::PatientConditions::Marshall(*this, data); 
 }
 //-----------------------------------------------------------------------------
 bool SEDehydration::HasDehydrationFraction() const
