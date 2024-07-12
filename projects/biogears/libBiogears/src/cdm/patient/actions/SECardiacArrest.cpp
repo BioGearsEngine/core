@@ -12,11 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SECardiacArrest::SECardiacArrest()
   : SEPatientAction()
 {
-  m_State = CDM::enumOnOff::Off;
+  m_State = SEOnOff::Off;
 }
 //-------------------------------------------------------------------------------
 SECardiacArrest::~SECardiacArrest()
@@ -27,7 +28,7 @@ SECardiacArrest::~SECardiacArrest()
 void SECardiacArrest::Clear()
 {
   SEPatientAction::Clear();
-  m_State = CDM::enumOnOff::Off;
+  m_State = SEOnOff::Off;
 }
 //-------------------------------------------------------------------------------
 bool SECardiacArrest::IsValid() const
@@ -37,18 +38,17 @@ bool SECardiacArrest::IsValid() const
 //-------------------------------------------------------------------------------
 bool SECardiacArrest::IsActive() const
 {
-  return IsValid() && m_State == CDM::enumOnOff::On;
+  return IsValid() && m_State == SEOnOff::On;
 }
 //-------------------------------------------------------------------------------
 void SECardiacArrest::SetActive(bool b)
 {
-  m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
+  m_State = b ? SEOnOff::On : SEOnOff::Off;
 }
 //-------------------------------------------------------------------------------
 bool SECardiacArrest::Load(const CDM::CardiacArrestData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  m_State = in.State();
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -61,8 +61,7 @@ CDM::CardiacArrestData* SECardiacArrest::Unload() const
 //-------------------------------------------------------------------------------
 void SECardiacArrest::Unload(CDM::CardiacArrestData& data) const
 {
-  SEPatientAction::Unload(data);
-  data.State(m_State);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SECardiacArrest::ToString(std::ostream& str) const

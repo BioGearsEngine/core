@@ -11,9 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
+
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
-
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEUseInhaler::SEUseInhaler()
   : SEConsciousRespirationCommand()
@@ -42,7 +43,7 @@ bool SEUseInhaler::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEUseInhaler::Load(const CDM::UseInhalerData& in, std::default_random_engine *rd)
 {
-  SEConsciousRespirationCommand::Load(in);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -55,7 +56,7 @@ CDM::UseInhalerData* SEUseInhaler::Unload() const
 //-------------------------------------------------------------------------------
 void SEUseInhaler::Unload(CDM::UseInhalerData& data) const
 {
-  SEConsciousRespirationCommand::Unload(data);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEUseInhaler::ToString(std::ostream& str) const

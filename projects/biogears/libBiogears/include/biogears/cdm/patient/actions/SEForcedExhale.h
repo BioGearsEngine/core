@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
@@ -30,12 +31,12 @@ public:
   SEForcedExhale();
   virtual ~SEForcedExhale();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear(); // clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::ForcedExhaleData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::ForcedExhaleData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::ForcedExhaleData* Unload() const;
 
 protected:

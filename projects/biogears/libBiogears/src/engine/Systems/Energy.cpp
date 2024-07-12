@@ -447,46 +447,46 @@ void Energy::CalculateVitalSigns()
   if (coreTemperature_degC > 32.0 && coreTemperature_degC < 35.0 ) /// \cite mallet2001hypothermia
   {
     /// \event Patient: Core temperature has fallen below 35 degrees Celsius. Patient is hypothermic.
-    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, true, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::MildHypothermia, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::ModerateHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::SevereHypothermia, false, m_data.GetSimulationTime());
   }
   if (coreTemperature_degC > 28.2 && coreTemperature_degC < 31.5) /// \cite mallet2001hypothermia
   {
     /// \event Patient: Core temperature has fallen below 35 degrees Celsius. Patient is hypothermic.
-    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::MildHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::SevereHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::ModerateHypothermia, true, m_data.GetSimulationTime());
   } 
   if (coreTemperature_degC < 28.0) /// \cite mallet2001hypothermia
   {
-    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::MildHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::ModerateHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::SevereHypothermia, true, m_data.GetSimulationTime());
   } 
       /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
   if (coreTemperature_degC < coreTempIrreversible_degC) {
     ss << "Core temperature is " << coreTemperature_degC << ". This is below 15 degrees C, patient is experiencing extreme hypothermia.";
     Warning(ss);
     if (!m_PatientActions->HasOverride()) {
-      m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+      m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
     } else {
-      if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-        m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+      if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+        m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
       }
     }
   } 
   
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::MildHypothermia) && coreTemperature_degC > 35.2) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
+  if (m_Patient->IsEventActive(SEPatientEventType::MildHypothermia) && coreTemperature_degC > 35.2) {
+    m_Patient->SetEvent(SEPatientEventType::MildHypothermia, false, m_data.GetSimulationTime());
   }
   //Hyperthermia check
   if (coreTemperature_degC > 38.8) // Note: Hyperthermia threshold varies; we'll use 38.8
   {
     /// \event Patient: Core temperature has exceeded 38.8 degrees Celsius. Patient is hyperthermic.
-    m_Patient->SetEvent(CDM::enumPatientEvent::Hyperthermia, true, m_data.GetSimulationTime());
-  } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hyperthermia) && coreTemperature_degC < 38.0) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::Hyperthermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::Hyperthermia, true, m_data.GetSimulationTime());
+  } else if (m_Patient->IsEventActive(SEPatientEventType::Hyperthermia) && coreTemperature_degC < 38.0) {
+    m_Patient->SetEvent(SEPatientEventType::Hyperthermia, false, m_data.GetSimulationTime());
   }
 
   /// \todo Move to blood chemistry
@@ -499,7 +499,7 @@ void Energy::CalculateVitalSigns()
   m_BloodpH.Sample(m_data.GetBloodChemistry().GetArterialBloodPH().GetValue());
   m_BicarbonateMolarity_mmol_Per_L.Sample(m_AortaHCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
   //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
     double bloodPH = m_BloodpH.Value();
     double bloodBicarbonate_mmol_Per_L = m_BicarbonateMolarity_mmol_Per_L.Value();
 
@@ -513,20 +513,20 @@ void Energy::CalculateVitalSigns()
         ss << " Arterial blood PH is " << bloodPH << ". This is below 6.5, patient is experiencing extreme metabolic acidosis and is in an irreversible state.";
         Warning(ss);
         if (!m_PatientActions->HasOverride()) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       } else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0) {
         /// \event The patient has exited the state state of metabolic acidosis
-        m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAcidosis, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::MetabolicAcidosis, false, m_data.GetSimulationTime());
       }
 
       if (bloodPH > 7.45 && bloodBicarbonate_mmol_Per_L > 26.0) {
         /// \event The patient is in a state of metabolic alkalosis
-        m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAlkalosis, true, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::MetabolicAlkalosis, true, m_data.GetSimulationTime());
       }
 
       /// \irreversible State: arterial blood pH has increased above 8.5.
@@ -534,17 +534,17 @@ void Energy::CalculateVitalSigns()
         ss << " Arterial blood PH is " << bloodPH << ". This is above 8.5, patient is experiencing extreme metabolic Alkalosis and is in an irreversible state.";
         Warning(ss);
         if (!m_PatientActions->HasOverride()) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       }
 
       else if (bloodPH < 7.42 && bloodBicarbonate_mmol_Per_L < 25.0) {
         /// \event The patient has exited the state of metabolic alkalosis
-        m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAlkalosis, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::MetabolicAlkalosis, false, m_data.GetSimulationTime());
       }
     }
     // Reset the running averages. Why do we need running averages here? Does the aorta pH fluctuate that much?
@@ -595,7 +595,7 @@ void Energy::CalculateMetabolicHeatGeneration()
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W); /// \cite mallet2002hypothermia
   } else if (coreTemperature_degC >= 34.0 && coreTemperature_degC < 36.8) //Patient is increasing heat generation via shivering. This caps out at the summit metabolism
   {
-    m_Patient->SetEvent(CDM::enumPatientEvent::Shivering, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::Shivering, true, m_data.GetSimulationTime());
     double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W);
     double scaleMR = 0.1;   //scaling factor to validate metabolic rate during shivering, the old model was far too rapid
     totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * scaleMR * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
@@ -830,7 +830,7 @@ void Energy::CalculateBasalMetabolicRate()
   //The basal metabolic rate is determined from the Harris-Benedict formula, with differences dependent on sex, age, height and mass
   /// \cite roza1984metabolic
   double patientBMR_kcal_Per_day = 0.0;
-  if (patient.GetGender() == CDM::enumSex::Male) {
+  if (patient.GetSex() == SESex::Male) {
     patientBMR_kcal_Per_day = 88.632 + 13.397 * PatientMass_kg + 4.799 * PatientHeight_cm - 5.677 * PatientAge_yr;
   } else {
     patientBMR_kcal_Per_day = 447.593 + 9.247 * PatientMass_kg + 3.098 * PatientHeight_cm - 4.330 * PatientAge_yr;
@@ -1027,94 +1027,94 @@ void Energy::OverrideControlLoop()
 
   if ((currentAcheivedExerciseOverride < minAcheivedExerciseOverride
        || currentAcheivedExerciseOverride > maxAcheivedExerciseOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Achieved Exercise Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentCoreTempOverride < minCoreTempOverride
        || currentCoreTempOverride > maxCoreTempOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Core Temperature Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentCreatinineOverride < minCreatinineOverride
        || currentCreatinineOverride > maxCreatinineOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Creatinine Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentExerciseMAPOverride < minExerciseMAPOverride
        || currentExerciseMAPOverride > maxExerciseMAPOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Exercise Mean Arterial Pressure Delta Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentFatigueOverride < minFatigueOverride
        || currentFatigueOverride > maxFatigueOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Fatigue Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentLactateOverride < minLactateOverride
        || currentLactateOverride > maxLactateOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Lactate Production Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentSkinTempOverride < minSkinTempOverride
        || currentSkinTempOverride > maxSkinTempOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Skin Temperature Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentSweatRateOverride < minSweatRateOverride
        || currentSweatRateOverride > maxSweatRateOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Sweat Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentTotalMetabolicOverride < minTotalMetabolicOverride
        || currentTotalMetabolicOverride > maxTotalMetabolicOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Total Metabolic Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentTotalWorkOverride < minTotalWorkOverride
        || currentTotalWorkOverride > maxTotalWorkOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Total Work Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentSodiumSweatOverride < minSodiumSweatOverride
        || currentSodiumSweatOverride > maxSodiumSweatOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Sodium Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentPotassiumSweatOverride < minPotassiumSweatOverride
        || currentPotassiumSweatOverride > maxPotassiumSweatOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Potassium Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentChlorideSweatOverride < minChlorideSweatOverride
        || currentChlorideSweatOverride > maxChlorideSweatOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Chloride Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   return;
 }

@@ -410,7 +410,7 @@ void BloodChemistry::Process()
   SESubstance& rbc = m_data.GetSubstances().GetRBC();
   double TotalBloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
 
-  if (m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction)) {
+  if (m_data.GetPatient().IsEventActive(SEPatientEventType::HemolyticTransfusionReaction)) {
     if (GetRhTransfusionReactionVolume().GetValue(VolumeUnit::uL) > 0) {
       CalculateHemolyticTransfusionReaction(true);
     } else {
@@ -663,22 +663,22 @@ void BloodChemistry::CheckRadiationSymptoms()
 
     //mild
     if (0.5 < lymph_ct_Per_L / xhat_ct_Per_L && lymph_ct_Per_L / xhat_ct_Per_L < 0.6) {
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, true, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, true, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, false, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereHeadache, false, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, true, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::MildDiarrhea, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::MildHeadache, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::SevereDiarrhea, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::SevereHeadache, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::Nausea, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::Vomiting, false, m_data.GetSimulationTime());
     }
 
     //severe
     if (lymph_ct_Per_L / xhat_ct_Per_L < 0.4) {
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, false, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, false, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, true, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereHeadache, true, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
-      m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::MildDiarrhea, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::MildHeadache, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::SevereDiarrhea, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::SevereHeadache, true, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::Nausea, false, m_data.GetSimulationTime());
+      m_data.GetPatient().SetEvent(SEPatientEventType::Vomiting, true, m_data.GetSimulationTime());
 
     }
 
@@ -702,26 +702,26 @@ void BloodChemistry::CheckRadiationSymptoms()
    }
    //mild
    if (2 < viralLoad && viralLoad < 9 && ondansetron_mg_Per_L < 0.1) {
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, true, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, true, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, false, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereHeadache, false, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, true, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::MildDiarrhea, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::MildHeadache, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::SevereDiarrhea, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::SevereHeadache, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::Nausea, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::Vomiting, false, m_data.GetSimulationTime());
    }
 
    //severe
    if (viralLoad > 10.0 && ondansetron_mg_Per_L < 0.1) {
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildDiarrhea, false, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::MildHeadache, false, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereDiarrhea, true, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::SevereHeadache, true, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::MildDiarrhea, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::MildHeadache, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::SevereDiarrhea, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::SevereHeadache, true, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::Nausea, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::Vomiting, true, m_data.GetSimulationTime());
    }
    if (ondansetron_mg_Per_L > 0.1) {
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Vomiting, false, m_data.GetSimulationTime());
-     m_data.GetPatient().SetEvent(CDM::enumPatientEvent::Nausea, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::Vomiting, false, m_data.GetSimulationTime());
+     m_data.GetPatient().SetEvent(SEPatientEventType::Nausea, false, m_data.GetSimulationTime());
    }
  }
 
@@ -749,7 +749,7 @@ void BloodChemistry::CheckBloodSubstanceLevels()
   m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
   m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
   //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
-  if (patient.IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  if (patient.IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
     double arterialOxygen_mmHg = m_ArterialOxygen_mmHg.Value();
     double arterialCarbonDioxide_mmHg = m_ArterialCarbonDioxide_mmHg.Value();
 
@@ -759,140 +759,140 @@ void BloodChemistry::CheckBloodSubstanceLevels()
       double carbonDioxideToxicity = 80.0; // \cite labertsen1971CarbonDioxideToxicity
       if (arterialCarbonDioxide_mmHg >= hypercapniaFlag) {
         /// \event Patient: Hypercapnia. The carbon dioxide partial pressure has risen above 60 mmHg. The patient is now hypercapnic.
-        patient.SetEvent(CDM::enumPatientEvent::Hypercapnia, true, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::Hypercapnia, true, m_data.GetSimulationTime());
 
         if (arterialCarbonDioxide_mmHg > carbonDioxideToxicity) {
           m_ss << "Arterial Carbon Dioxide partial pressure is " << arterialCarbonDioxide_mmHg << ". This is beyond 80 mmHg triggering extreme Hypercapnia, patient is in an irreversible state.";
           Warning(m_ss);
           /// \irreversible The carbon dioxide partial pressure is greater than 80 mmHg.
           if (!m_PatientActions->HasOverride()) {
-            patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+            patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           } else {
-            if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-              patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+            if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+              patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
             }
           }
         }
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::Hypercapnia) && arterialCarbonDioxide_mmHg < (hypercapniaFlag - 3)) {
+      } else if (patient.IsEventActive(SEPatientEventType::Hypercapnia) && arterialCarbonDioxide_mmHg < (hypercapniaFlag - 3)) {
         /// \event Patient: End Hypercapnia. The carbon dioxide partial pressure has fallen below 57 mmHg. The patient is no longer considered to be hypercapnic.
         /// This event is triggered if the patient was hypercapnic and is now considered to be recovered.
-        patient.SetEvent(CDM::enumPatientEvent::Hypercapnia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::Hypercapnia, false, m_data.GetSimulationTime());
       }
 
       // hypoxia check
       if (arterialOxygen_mmHg <= hypoxiaFlag) {
         /// \event Patient: Hypoxia Event. The oxygen partial pressure has fallen below 65 mmHg, indicating that the patient is hypoxic.
-        patient.SetEvent(CDM::enumPatientEvent::Hypoxia, true, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::Hypoxia, true, m_data.GetSimulationTime());
 
         if (arterialOxygen_mmHg < hypoxiaIrreversible) {
           m_ss << "Arterial Oxygen partial pressure is " << arterialOxygen_mmHg << ". This is below 15 mmHg triggering extreme Hypoxia, patient is in an irreversible state.";
           Warning(m_ss);
           /// \irreversible Arterial oxygen partial pressure has been critically reduced to below 15 mmHg.
           if (!m_PatientActions->HasOverride()) {
-            patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+            patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           } else {
-            if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-              patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+            if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+              patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
             }
           }
         }
       } else if (arterialOxygen_mmHg > (hypoxiaFlag + 3)) {
         /// \event Patient: End Hypoxia Event. The oxygen partial pressure has rise above 68 mmHg. If this occurs when the patient is hypoxic, it will reverse the hypoxic event.
         /// The patient is no longer considered to be hypoxic.
-        patient.SetEvent(CDM::enumPatientEvent::Hypoxia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::Hypoxia, false, m_data.GetSimulationTime());
       }
 
       //glucose checks
 
       //hypoglycemia
       if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemiaLevel_mg_Per_dL) {
-        patient.SetEvent(CDM::enumPatientEvent::Hypoglycemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::Hypoglycemia) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemiaLevel_mg_Per_dL + 5) {
-        patient.SetEvent(CDM::enumPatientEvent::Hypoglycemia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::Hypoglycemia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::Hypoglycemia) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemiaLevel_mg_Per_dL + 5) {
+        patient.SetEvent(SEPatientEventType::Hypoglycemia, false, m_data.GetSimulationTime());
       }
 
       //hypoglycemic shock
       if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicShockLevel_mg_Per_dL) {
-        patient.SetEvent(CDM::enumPatientEvent::HypoglycemicShock, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::HypoglycemicShock) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemicShockLevel_mg_Per_dL + 5) {
-        patient.SetEvent(CDM::enumPatientEvent::HypoglycemicShock, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::HypoglycemicShock, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::HypoglycemicShock) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemicShockLevel_mg_Per_dL + 5) {
+        patient.SetEvent(SEPatientEventType::HypoglycemicShock, false, m_data.GetSimulationTime());
       }
 
       //hypoglycemic coma - currently commented out until glucose balancing and nutrient consumption refined
       /*if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicComaLevel_mg_Per_dL) {
-        patient.SetEvent(CDM::enumPatientEvent::HypoglycemicComa, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::HypoglycemicComa) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemicComaLevel_mg_Per_dL + 3) {
-        patient.SetEvent(CDM::enumPatientEvent::HypoglycemicComa, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::HypoglycemicComa, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::HypoglycemicComa) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hypoglycemicComaLevel_mg_Per_dL + 3) {
+        patient.SetEvent(SEPatientEventType::HypoglycemicComa, false, m_data.GetSimulationTime());
       }*/
 
       //hyperglycemia
       if (m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > hyperglycemiaLevel_mg_Per_dL) {
-        patient.SetEvent(CDM::enumPatientEvent::Hyperglycemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::Hyperglycemia) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicShockLevel_mg_Per_dL - 10) {
-        patient.SetEvent(CDM::enumPatientEvent::Hyperglycemia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::Hyperglycemia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::Hyperglycemia) && m_venaCavaGlucose->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < hypoglycemicShockLevel_mg_Per_dL - 10) {
+        patient.SetEvent(SEPatientEventType::Hyperglycemia, false, m_data.GetSimulationTime());
       }
 
       //lactate check
       if (m_venaCavaLactate->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > lacticAcidosisLevel_mg_Per_dL) {
-        patient.SetEvent(CDM::enumPatientEvent::LacticAcidosis, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::LacticAcidosis) && m_venaCavaLactate->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < lacticAcidosisLevel_mg_Per_dL - 5) {
-        patient.SetEvent(CDM::enumPatientEvent::LacticAcidosis, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::LacticAcidosis, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::LacticAcidosis) && m_venaCavaLactate->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < lacticAcidosisLevel_mg_Per_dL - 5) {
+        patient.SetEvent(SEPatientEventType::LacticAcidosis, false, m_data.GetSimulationTime());
       }
 
       //ketones check
       if (m_venaCavaKetones->GetConcentration(MassPerVolumeUnit::mg_Per_dL) > ketoacidosisLevel_mg_Per_dL) {
-        patient.SetEvent(CDM::enumPatientEvent::Ketoacidosis, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::Ketoacidosis) && m_venaCavaKetones->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < ketoacidosisLevel_mg_Per_dL - 5) {
-        patient.SetEvent(CDM::enumPatientEvent::Ketoacidosis, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::Ketoacidosis, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::Ketoacidosis) && m_venaCavaKetones->GetConcentration(MassPerVolumeUnit::mg_Per_dL) < ketoacidosisLevel_mg_Per_dL - 5) {
+        patient.SetEvent(SEPatientEventType::Ketoacidosis, false, m_data.GetSimulationTime());
       }
 
       //sodium check
       //Mild and severe hyponatremia
       if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 136.0) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHyponatremia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::MildHyponatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 137.0) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHyponatremia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::MildHyponatremia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::MildHyponatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 137.0) {
+        patient.SetEvent(SEPatientEventType::MildHyponatremia, false, m_data.GetSimulationTime());
       }
 
       if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 120.0) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHyponatremia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHyponatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 121.0) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHyponatremia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::SevereHyponatremia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::SevereHyponatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 121.0) {
+        patient.SetEvent(SEPatientEventType::SevereHyponatremia, false, m_data.GetSimulationTime());
       }
       //Mild and severe hypernatremia
       if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 148.0) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHypernatremia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::MildHypernatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 147.0) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHypernatremia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::MildHypernatremia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::MildHypernatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 147.0) {
+        patient.SetEvent(SEPatientEventType::MildHypernatremia, false, m_data.GetSimulationTime());
       }
       if (m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 160.0) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHypernatremia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHypernatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 159.0) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHypernatremia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::SevereHypernatremia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::SevereHypernatremia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 159.0) {
+        patient.SetEvent(SEPatientEventType::SevereHypernatremia, false, m_data.GetSimulationTime());
       }
 
       //potassium check
       //mild and severe hypokalemia
       if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 3.2) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHypokalemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::MildHypokalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 3.3) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHypokalemia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::MildHypokalemia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::MildHypokalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 3.3) {
+        patient.SetEvent(SEPatientEventType::MildHypokalemia, false, m_data.GetSimulationTime());
       }
       if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 2.5) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHypokalemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHypokalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 2.6) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHypokalemia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::SevereHypokalemia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::SevereHypokalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 2.6) {
+        patient.SetEvent(SEPatientEventType::SevereHypokalemia, false, m_data.GetSimulationTime());
       }
       //mild and severe hyperkalemia
       if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 5.5) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHyperkalemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::MildHyperkalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 5.6) {
-        patient.SetEvent(CDM::enumPatientEvent::MildHyperkalemia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::MildHyperkalemia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::MildHyperkalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 5.6) {
+        patient.SetEvent(SEPatientEventType::MildHyperkalemia, false, m_data.GetSimulationTime());
       }
       if (m_venaCavaPotassium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) > 6.2) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHyperkalemia, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::SevereHyperkalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 6.1) {
-        patient.SetEvent(CDM::enumPatientEvent::SevereHyperkalemia, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::SevereHyperkalemia, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::SevereHyperkalemia) && m_venaCavaSodium->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) < 6.1) {
+        patient.SetEvent(SEPatientEventType::SevereHyperkalemia, false, m_data.GetSimulationTime());
       }
     }
 
@@ -908,18 +908,18 @@ void BloodChemistry::CheckBloodSubstanceLevels()
     // and from data presented in @cite purins2012brain and @cite doppenberg1998determination.
     if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) < 19.0) {
       /// \event Patient: Brain Oxygen Deficit Event. The oxygen partial pressure in the brain has dropped to a dangerously low level.
-      patient.SetEvent(CDM::enumPatientEvent::BrainOxygenDeficit, true, m_data.GetSimulationTime());
+      patient.SetEvent(SEPatientEventType::BrainOxygenDeficit, true, m_data.GetSimulationTime());
 
       // Irreversible damage occurs if the deficit has gone on too long
-      if (patient.GetEventDuration(CDM::enumPatientEvent::BrainOxygenDeficit, TimeUnit::s) > 1800.) {
-        m_ss << "Brain Oxygen partial pressure is " << m_brainO2->GetPartialPressure(PressureUnit::mmHg) << " and has been below the danger threshold for " << patient.GetEventDuration(CDM::enumPatientEvent::BrainOxygenDeficit, TimeUnit::s) << " seconds. Damage is irreversible.";
+      if (patient.GetEventDuration(SEPatientEventType::BrainOxygenDeficit, TimeUnit::s) > 1800.) {
+        m_ss << "Brain Oxygen partial pressure is " << m_brainO2->GetPartialPressure(PressureUnit::mmHg) << " and has been below the danger threshold for " << patient.GetEventDuration(SEPatientEventType::BrainOxygenDeficit, TimeUnit::s) << " seconds. Damage is irreversible.";
         Warning(m_ss);
         /// \irreversible Brain oxygen pressure has been dangerously low for more than 30 minutes.
         if (!m_PatientActions->HasOverride()) {
-          patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       }
@@ -927,56 +927,56 @@ void BloodChemistry::CheckBloodSubstanceLevels()
       // If the O2 tension is below a critical threshold, the irreversible damage occurs more quickly
       if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) < 10.0) {
         /// \event Patient: Critical Brain Oxygen Deficit Event. The oxygen partial pressure in the brain has dropped to a critically low level.
-        patient.SetEvent(CDM::enumPatientEvent::CriticalBrainOxygenDeficit, true, m_data.GetSimulationTime());
-      } else if (patient.IsEventActive(CDM::enumPatientEvent::CriticalBrainOxygenDeficit) && m_brainO2->GetPartialPressure(PressureUnit::mmHg) > 12.0) {
+        patient.SetEvent(SEPatientEventType::CriticalBrainOxygenDeficit, true, m_data.GetSimulationTime());
+      } else if (patient.IsEventActive(SEPatientEventType::CriticalBrainOxygenDeficit) && m_brainO2->GetPartialPressure(PressureUnit::mmHg) > 12.0) {
         /// \event Patient: End Brain Oxygen Deficit Event. The oxygen partial pressure has risen above 12 mmHg in the brain. If this occurs when the patient has a critical brain oxygen deficit event, it will reverse the event.
         /// The brain is not in a critical oxygen deficit.
-        patient.SetEvent(CDM::enumPatientEvent::CriticalBrainOxygenDeficit, false, m_data.GetSimulationTime());
+        patient.SetEvent(SEPatientEventType::CriticalBrainOxygenDeficit, false, m_data.GetSimulationTime());
       }
 
       // Irreversible damage occurs if the critical deficit has gone on too long
-      if (patient.IsEventActive(CDM::enumPatientEvent::CriticalBrainOxygenDeficit) && patient.GetEventDuration(CDM::enumPatientEvent::CriticalBrainOxygenDeficit, TimeUnit::s) > 600.) {
-        m_ss << "Brain Oxygen partial pressure is " << m_brainO2->GetPartialPressure(PressureUnit::mmHg) << " and has been below the critical threshold for " << patient.GetEventDuration(CDM::enumPatientEvent::CriticalBrainOxygenDeficit, TimeUnit::s) << " seconds. Damage is irreversible.";
+      if (patient.IsEventActive(SEPatientEventType::CriticalBrainOxygenDeficit) && patient.GetEventDuration(SEPatientEventType::CriticalBrainOxygenDeficit, TimeUnit::s) > 600.) {
+        m_ss << "Brain Oxygen partial pressure is " << m_brainO2->GetPartialPressure(PressureUnit::mmHg) << " and has been below the critical threshold for " << patient.GetEventDuration(SEPatientEventType::CriticalBrainOxygenDeficit, TimeUnit::s) << " seconds. Damage is irreversible.";
         Warning(m_ss);
         /// \irreversible Brain oxygen pressure has been critically low for more than 10 minutes.
         if (!m_PatientActions->HasOverride()) {
-          patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       }
     } else if (m_brainO2->GetPartialPressure(PressureUnit::mmHg) > 23.0) {
       /// \event Patient: End Brain Oxygen Deficit Event. The oxygen partial pressure has risen above 25 mmHg in the brain. If this occurs when the patient has a brain oxygen deficit event, it will reverse the event.
       /// The brain is getting oxygen.
-      patient.SetEvent(CDM::enumPatientEvent::BrainOxygenDeficit, false, m_data.GetSimulationTime());
+      patient.SetEvent(SEPatientEventType::BrainOxygenDeficit, false, m_data.GetSimulationTime());
       // The critical deficit event is also set to false just in case there is an unrealistically rapid transition in oxygen partial pressure.
-      patient.SetEvent(CDM::enumPatientEvent::CriticalBrainOxygenDeficit, false, m_data.GetSimulationTime());
+      patient.SetEvent(SEPatientEventType::CriticalBrainOxygenDeficit, false, m_data.GetSimulationTime());
     }
 
     //Myocardium Oxygen Check
     if (m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) < 5) {
       /// \event Patient: The heart is not receiving enough oxygen. Coronary arteries should dilate to increase blood flow to the heart.
-      patient.SetEvent(CDM::enumPatientEvent::MyocardiumOxygenDeficit, true, m_data.GetSimulationTime());
+      patient.SetEvent(SEPatientEventType::MyocardiumOxygenDeficit, true, m_data.GetSimulationTime());
 
-      if (patient.GetEventDuration(CDM::enumPatientEvent::MyocardiumOxygenDeficit, TimeUnit::s) > 2400) // \cite murry1986preconditioning
+      if (patient.GetEventDuration(SEPatientEventType::MyocardiumOxygenDeficit, TimeUnit::s) > 2400) // \cite murry1986preconditioning
       {
-        m_ss << "Myocardium oxygen partial pressure is  " << m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) << " and has been sustained for " << patient.GetEventDuration(CDM::enumPatientEvent::MyocardiumOxygenDeficit, TimeUnit::s) << "patient heart muscle has experienced necrosis and is in an irreversible state.";
+        m_ss << "Myocardium oxygen partial pressure is  " << m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) << " and has been sustained for " << patient.GetEventDuration(SEPatientEventType::MyocardiumOxygenDeficit, TimeUnit::s) << "patient heart muscle has experienced necrosis and is in an irreversible state.";
         Warning(m_ss);
         /// \irreversible Heart has not been receiving enough oxygen for more than 40 min.
         if (!m_PatientActions->HasOverride()) {
-          patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            patient.SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            patient.SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       }
     } else if (m_myocardiumO2->GetPartialPressure(PressureUnit::mmHg) > 8) {
       /// \event Patient: End Myocardium Oxygen Event. The heart is now receiving enough oxygen. If this occurs when the patient has a heart oxygen deficit event, it will reverse the event.
       /// The brain is getting oxygen.
-      patient.SetEvent(CDM::enumPatientEvent::MyocardiumOxygenDeficit, false, m_data.GetSimulationTime());
+      patient.SetEvent(SEPatientEventType::MyocardiumOxygenDeficit, false, m_data.GetSimulationTime());
     }
   }
 }
@@ -1138,13 +1138,13 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   }
 
   if (!rhMismatch) {
-    if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) {
+    if (m_data.GetPatient().GetBloodType() == (SEBloodType::O)) {
       donorAntigen_ct = AntA_initial_ct + AntB_initial_ct;
       patientAntigen_ct = 0.0;
-    } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::A)) {
+    } else if (m_data.GetPatient().GetBloodType() == (SEBloodType::A)) {
       donorAntigen_ct = AntB_initial_ct;
       patientAntigen_ct = AntA_initial_ct;
-    } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::B)) {
+    } else if (m_data.GetPatient().GetBloodType() == (SEBloodType::B)) {
       donorAntigen_ct = AntA_initial_ct;
       patientAntigen_ct = AntB_initial_ct;
     }
@@ -1219,7 +1219,7 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
   m_4Agglutinate_ct = newC4RBC;
   LLIM(m_4Agglutinate_ct, 0.0);
   if ((m_donorRBC_ct + m_2Agglutinate_ct + m_d3Agglutinate_ct) == 0.0) {
-    patient.SetEvent(CDM::enumPatientEvent::HemolyticTransfusionReaction, false, m_data.GetSimulationTime());
+    patient.SetEvent(SEPatientEventType::HemolyticTransfusionReaction, false, m_data.GetSimulationTime());
   }
 
   // Agglutination and cell death will likewise release items the blood cells were carrying into the blood stream and make them less useful to the body
@@ -1272,17 +1272,17 @@ void BloodChemistry::CalculateHemolyticTransfusionReaction(bool rhMismatch)
     compt->GetSubstanceQuantity(RBC_substance)->GetMolarity().SetValue(compt->GetSubstanceQuantity(RBC_substance)->GetMolarity().GetValue(AmountPerVolumeUnit::ct_Per_uL) * liveCells_percent, AmountPerVolumeUnit::ct_Per_uL);
     compt->GetSubstanceQuantity(RBC_substance)->Balance(BalanceLiquidBy::Molarity);
 
-    if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::O)) {
+    if (m_data.GetPatient().GetBloodType() == (SEBloodType::O)) {
       compt->GetSubstanceQuantity(AntigenA_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenA_substance)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
       compt->GetSubstanceQuantity(AntigenB_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenB_substance)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
       compt->GetSubstanceQuantity(AntigenA_substance)->Balance(BalanceLiquidBy::Mass);
       compt->GetSubstanceQuantity(AntigenB_substance)->Balance(BalanceLiquidBy::Mass);
-    } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::A)) {
+    } else if (m_data.GetPatient().GetBloodType() == (SEBloodType::A)) {
       compt->GetSubstanceQuantity(AntigenA_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenA_substance)->GetMass(MassUnit::ug) * livePatientCell_pct, MassUnit::ug);
       compt->GetSubstanceQuantity(AntigenB_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenB_substance)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
       compt->GetSubstanceQuantity(AntigenA_substance)->Balance(BalanceLiquidBy::Mass);
       compt->GetSubstanceQuantity(AntigenB_substance)->Balance(BalanceLiquidBy::Mass);
-    } else if (m_data.GetPatient().GetBloodType() == (CDM::enumBloodType::B)) {
+    } else if (m_data.GetPatient().GetBloodType() == (SEBloodType::B)) {
       compt->GetSubstanceQuantity(AntigenA_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenA_substance)->GetMass(MassUnit::ug) * liveDonorCell_pct, MassUnit::ug);
       compt->GetSubstanceQuantity(AntigenB_substance)->GetMass().SetValue(compt->GetSubstanceQuantity(AntigenB_substance)->GetMass(MassUnit::ug) * livePatientCell_pct, MassUnit::ug);
       compt->GetSubstanceQuantity(AntigenA_substance)->Balance(BalanceLiquidBy::Mass);
@@ -1383,13 +1383,13 @@ void BloodChemistry::InflammatoryResponse()
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Infection) == sources.end()) {
       double initialPathogen = 0.0;
       switch (m_data.GetActions().GetPatientActions().GetInfection()->GetSeverity()) {
-      case CDM::enumInfectionSeverity::Mild:
+      case SEInfectionSeverity::Mild:
         initialPathogen = 1.0e6;
         break;
-      case CDM::enumInfectionSeverity::Moderate:
+      case SEInfectionSeverity::Moderate:
         initialPathogen = 5.0e6;
         break;
-      case CDM::enumInfectionSeverity::Severe:
+      case SEInfectionSeverity::Severe:
         initialPathogen = 2.5e7;
         break;
       default:
@@ -1405,13 +1405,13 @@ void BloodChemistry::InflammatoryResponse()
     if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Ebola) == sources.end()) {
       double initialPathogen = 0.0;
       switch (m_data.GetActions().GetPatientActions().GetEbola()->GetSeverity()) {
-      case CDM::enumInfectionSeverity::Mild:
+      case SEInfectionSeverity::Mild:
         initialPathogen = 1.0e6;
         break;
-      case CDM::enumInfectionSeverity::Moderate:
+      case SEInfectionSeverity::Moderate:
         initialPathogen = 5.0e6;
         break;
-      case CDM::enumInfectionSeverity::Severe:
+      case SEInfectionSeverity::Severe:
         initialPathogen = 8.0e6;
         break;
       default:
@@ -1426,13 +1426,13 @@ void BloodChemistry::InflammatoryResponse()
   // mapping severity of the ebola infection to a tuning parameter to change inflammation dynamics
   if (m_data.GetActions().GetPatientActions().HasEbola()) {
     switch (m_data.GetActions().GetPatientActions().GetEbola()->GetSeverity()) {
-    case CDM::enumInfectionSeverity::Mild:
+    case SEInfectionSeverity::Mild:
       ebolaTemp = 0.1;
       break;
-    case CDM::enumInfectionSeverity::Moderate:
+    case SEInfectionSeverity::Moderate:
       ebolaTemp = 0.15;
       break;
-    case CDM::enumInfectionSeverity::Severe:
+    case SEInfectionSeverity::Severe:
       ebolaTemp = 0.2;
       break;
     }
@@ -1804,65 +1804,65 @@ void BloodChemistry::OverrideControlLoop()
     currentSodiumConcentrationOverride = override->GetSodiumConcentrationOverride(MassPerVolumeUnit::mg_Per_mL);
   }
 
-  if ((currentArtPHOverride < minArtPHOverride || currentArtPHOverride > maxArtPHOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentArtPHOverride < minArtPHOverride || currentArtPHOverride > maxArtPHOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Arterial Blood pH Override (BloodChemistry) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentVenPHOverride < minVenPHOverride || currentVenPHOverride > maxVenPHOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentVenPHOverride < minVenPHOverride || currentVenPHOverride > maxVenPHOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Venous Blood pH (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentCO2SaturationOverride < minCO2SaturationOverride || currentCO2SaturationOverride > maxCO2SaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentCO2SaturationOverride < minCO2SaturationOverride || currentCO2SaturationOverride > maxCO2SaturationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "CO2 Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentCOSaturationOverride < minCOSaturationOverride || currentCOSaturationOverride > maxCOSaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentCOSaturationOverride < minCOSaturationOverride || currentCOSaturationOverride > maxCOSaturationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "CO Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentO2SaturationOverride < minO2SaturationOverride || currentO2SaturationOverride > maxO2SaturationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentO2SaturationOverride < minO2SaturationOverride || currentO2SaturationOverride > maxO2SaturationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Oxygen Saturation (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentPhosphateOverride < minPhosphateOverride || currentPhosphateOverride > maxPhosphateOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentPhosphateOverride < minPhosphateOverride || currentPhosphateOverride > maxPhosphateOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Phosphate (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentTotalBilirubinOverride < minTotalBilirubinOverride || currentTotalBilirubinOverride > maxTotalBilirubinOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentTotalBilirubinOverride < minTotalBilirubinOverride || currentTotalBilirubinOverride > maxTotalBilirubinOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Total Bilirubin (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentCalciumConcentrationOverride < minCalciumConcentrationOverride || currentCalciumConcentrationOverride > maxCalciumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentCalciumConcentrationOverride < minCalciumConcentrationOverride || currentCalciumConcentrationOverride > maxCalciumConcentrationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Calcium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentGlucoseConcentrationOverride < minGlucoseConcentrationOverride || currentGlucoseConcentrationOverride > maxGlucoseConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentGlucoseConcentrationOverride < minGlucoseConcentrationOverride || currentGlucoseConcentrationOverride > maxGlucoseConcentrationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Glucose Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentLactateConcentrationOverride < minLactateConcentrationOverride || currentLactateConcentrationOverride > maxLactateConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentLactateConcentrationOverride < minLactateConcentrationOverride || currentLactateConcentrationOverride > maxLactateConcentrationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Lactate Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentPotassiumConcentrationOverride < minPotassiumConcentrationOverride || currentPotassiumConcentrationOverride > maxPotassiumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentPotassiumConcentrationOverride < minPotassiumConcentrationOverride || currentPotassiumConcentrationOverride > maxPotassiumConcentrationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Potassium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentSodiumConcentrationOverride < minSodiumConcentrationOverride || currentSodiumConcentrationOverride > maxSodiumConcentrationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentSodiumConcentrationOverride < minSodiumConcentrationOverride || currentSodiumConcentrationOverride > maxSodiumConcentrationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Sodium Concentration (BloodChemistry) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
 }
 }

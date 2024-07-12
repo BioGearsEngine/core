@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
@@ -22,6 +24,7 @@ namespace io {
 }
 class BIOGEARS_API SEPatientAssessmentRequest : public SEPatientAction {
   friend io::PatientActions;
+
 public:
   SEPatientAssessmentRequest();
   virtual ~SEPatientAssessmentRequest() override;
@@ -29,28 +32,29 @@ public:
   static constexpr const char* TypeTag() { return "SEPatientAssessmentRequest"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::PatientAssessmentRequestData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::PatientAssessmentRequestData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::PatientAssessmentRequestData* Unload() const override;
 
-  bool operator==( const SEPatientAssessmentRequest& rhs) const;
-  bool operator!=( const SEPatientAssessmentRequest& rhs) const;
+  bool operator==(const SEPatientAssessmentRequest& rhs) const;
+  bool operator!=(const SEPatientAssessmentRequest& rhs) const;
+
 protected:
   virtual void Unload(CDM::PatientAssessmentRequestData& data) const;
 
 public:
-  virtual CDM::enumPatientAssessment::value GetType() const;
-  virtual void SetType(CDM::enumPatientAssessment::value type);
+  virtual SEPatientAssessmentType GetType() const;
+  virtual void SetType(SEPatientAssessmentType type);
   virtual bool HasType() const;
   virtual void InvalidateType();
 
   virtual void ToString(std::ostream& str) const override;
 
 protected:
-  CDM::enumPatientAssessment::value m_Type;
+  SEPatientAssessmentType m_Type;
 };
 }

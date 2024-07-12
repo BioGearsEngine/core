@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/SEPatient.h>
 
+#include "io/cdm/Patient.h"
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
@@ -24,9 +25,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace std {
-template class map<CDM::enumPatientEvent::value, bool>;
-template class map<CDM::enumPatientEvent::value, void (*)(bool)>;
-template class map<CDM::enumPatientEvent::value, double>;
+template class map<biogears::SEPatientEventType, bool>;
+template class map<biogears::SEPatientEventType, void (*)(bool)>;
+template class map<biogears::SEPatientEventType, double>;
 }
 namespace biogears {
 SEPatient::SEPatient(Logger* logger)
@@ -35,7 +36,7 @@ SEPatient::SEPatient(Logger* logger)
   m_EventHandler = nullptr;
 
   m_Name = "";
-  m_Gender = (CDM::enumSex::value)-1;
+  m_Sex = SESex::Invalid;
   m_Age = nullptr;
   m_Weight = nullptr;
   m_Height = nullptr;
@@ -43,7 +44,7 @@ SEPatient::SEPatient(Logger* logger)
   m_AlveoliSurfaceArea = nullptr;
   m_BasalMetabolicRate = nullptr;
   m_BloodRh = true;
-  m_BloodType = (CDM::enumBloodType::value)-1;
+  m_BloodType = SEBloodType::Invalid;
   m_BloodVolumeBaseline = nullptr;
   m_BodyDensity = nullptr;
   m_BodyFatFraction = nullptr;
@@ -73,8 +74,10 @@ SEPatient::SEPatient(Logger* logger)
   m_TotalLungCapacity = nullptr;
   m_VitalCapacity = nullptr;
 
-  for (CDM::enumPatientEvent::value key = static_cast<CDM::enumPatientEvent::value>(0); key < CDM::enumPatientEvent::TotalPatientEvents; key = static_cast<CDM::enumPatientEvent::value>(key + 1)) {
-    // CDM::enumPatientEvent::value is a code generated C style enum.
+  for (SEPatientEventType key = SEPatientEventType::_begin;
+       key < SEPatientEventType::_end;
+       key = static_cast<SEPatientEventType>((size_t)key + 1)) {
+    // SEPatientEventType is a code generated C style enum.
     // To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
     // Short story is the goal is to set every possible enum to a value of false and accomidate future extensions ot the enum.
     m_EventState[key] = false;
@@ -126,8 +129,10 @@ void SEPatient::Clear()
 {
   m_EventHandler = nullptr;
 
-  for (CDM::enumPatientEvent::value key = static_cast<CDM::enumPatientEvent::value>(0); key < CDM::enumPatientEvent::TotalPatientEvents; key = static_cast<CDM::enumPatientEvent::value>(key + 1)) {
-    // CDM::enumPatientEvent::value is a code generated C style enum.
+  for (SEPatientEventType key = SEPatientEventType::_begin;
+       key < SEPatientEventType::_end;
+       key = static_cast<SEPatientEventType>((size_t)key + 1)) {
+    // SEPatientEventType is a code generated C style enum.
     // To my knowladge it must be conitnguous as XSD does not support assinigng manual values to XML Enums that are use dto generated C++ counterpart
     // Short story is the goal is to set every possible enum to a value of false and accomidate future extensions ot the enum.
     m_EventState[key] = false;
@@ -135,7 +140,7 @@ void SEPatient::Clear()
   }
 
   m_Name = "";
-  m_Gender = (CDM::enumSex::value)-1;
+  m_Sex = SESex::Invalid;
   SAFE_DELETE(m_Age);
   SAFE_DELETE(m_Weight);
   SAFE_DELETE(m_Height);
@@ -143,7 +148,7 @@ void SEPatient::Clear()
   SAFE_DELETE(m_AlveoliSurfaceArea);
   SAFE_DELETE(m_BasalMetabolicRate);
   m_BloodRh = true;
-  m_BloodType = (CDM::enumBloodType::value)-1;
+  m_BloodType = SEBloodType::Invalid;
   SAFE_DELETE(m_BloodVolumeBaseline);
   SAFE_DELETE(m_BodyDensity);
   SAFE_DELETE(m_BodyFatFraction);
@@ -253,138 +258,7 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SEPatient::Load(const CDM::PatientData& in)
 {
-  Clear();
-
-  m_Name = in.Name();
-  if (in.Annotation().present()) {
-    m_Annotation = in.Annotation().get();
-  }
-  if (in.Sex().present()) {
-    m_Gender = in.Sex().get();
-  }
-  if (in.Age().present()) {
-    GetAge().Load(in.Age().get());
-  }
-  if (in.Weight().present()) {
-    GetWeight().Load(in.Weight().get());
-  }
-  if (in.Height().present()) {
-    GetHeight().Load(in.Height().get());
-  }
-  if (in.BodyMassIndex().present()) {
-    if (!in.Weight().present() && in.Height().present()) {
-      CalculateWeightByBMI(in.BodyMassIndex().get());
-    } else if (in.Weight().present()  && !in.Height().present()) {
-      CalculateHeightByBMI(in.BodyMassIndex().get());
-    } else {
-      std::stringstream ss;
-      ss << "BodyMassIndex as an input must be provided with height OR weight (and not neither/both). BMI input value is not being used and default inputs will be used." << std::endl;
-      Warning(ss);
-    }
-  }
-  if (in.AlveoliSurfaceArea().present()) {
-    GetAlveoliSurfaceArea().Load(in.AlveoliSurfaceArea().get());
-  }
-  if (in.BasalMetabolicRate().present()) {
-    GetBasalMetabolicRate().Load(in.BasalMetabolicRate().get());
-  }
-  if (in.BloodTypeRh().present()) {
-    m_BloodRh = in.BloodTypeRh().get();
-  }
-  if (in.BloodTypeABO().present()) {
-    m_BloodType = in.BloodTypeABO().get();
-  }
-  if (in.BloodVolumeBaseline().present()) {
-    GetBloodVolumeBaseline().Load(in.BloodVolumeBaseline().get());
-  }
-  if (in.BodyDensity().present()) {
-    GetBodyDensity().Load(in.BodyDensity().get());
-  }
-  if (in.BodyFatFraction().present()) {
-    GetBodyFatFraction().Load(in.BodyFatFraction().get());
-  }
-  if (in.DiastolicArterialPressureBaseline().present()) {
-    GetDiastolicArterialPressureBaseline().Load(in.DiastolicArterialPressureBaseline().get());
-  }
-  if (in.ExpiratoryReserveVolume().present()) {
-    GetExpiratoryReserveVolume().Load(in.ExpiratoryReserveVolume().get());
-  }
-  if (in.FunctionalResidualCapacity().present()) {
-    GetFunctionalResidualCapacity().Load(in.FunctionalResidualCapacity().get());
-  }
-  if (in.HeartRateBaseline().present()) {
-    GetHeartRateBaseline().Load(in.HeartRateBaseline().get());
-  }
-  if (in.HeartRateMaximum().present()) {
-    GetHeartRateMaximum().Load(in.HeartRateMaximum().get());
-  }
-  if (in.HeartRateMinimum().present()) {
-    GetHeartRateMinimum().Load(in.HeartRateMinimum().get());
-  }
-  if (in.Hyperhidrosis().present()) {
-    GetHyperhidrosis().Load(in.Hyperhidrosis().get());
-  }
-  if (in.InspiratoryCapacity().present()) {
-    GetInspiratoryCapacity().Load(in.InspiratoryCapacity().get());
-  }
-  if (in.InspiratoryReserveVolume().present()) {
-    GetInspiratoryReserveVolume().Load(in.InspiratoryReserveVolume().get());
-  }
-  if (in.LeanBodyMass().present()) {
-    GetLeanBodyMass().Load(in.LeanBodyMass().get());
-  }
-  if (in.MaxWorkRate().present()) {
-    GetMaxWorkRate().Load(in.MaxWorkRate().get());
-  }
-  if (in.MuscleMass().present()) {
-    GetMuscleMass().Load(in.MuscleMass().get());
-  }
-  if (in.MeanArterialPressureBaseline().present()) {
-    GetMeanArterialPressureBaseline().Load(in.MeanArterialPressureBaseline().get());
-  }
-  if (in.PainSusceptibility().present()) {
-    GetPainSusceptibility().Load(in.PainSusceptibility().get());
-  }
-  if (in.ResidualVolume().present()) {
-    GetResidualVolume().Load(in.ResidualVolume().get());
-  }
-  if (in.RespirationRateBaseline().present()) {
-    GetRespirationRateBaseline().Load(in.RespirationRateBaseline().get());
-  }
-  if (in.RespiratoryDriverAmplitudeBaseline().present()) {
-    GetRespiratoryDriverAmplitudeBaseline().Load(in.RespiratoryDriverAmplitudeBaseline().get());
-  }
-  if (in.RightLungRatio().present()) {
-    GetRightLungRatio().Load(in.RightLungRatio().get());
-  }
-  if (in.SkinSurfaceArea().present()) {
-    GetSkinSurfaceArea().Load(in.SkinSurfaceArea().get());
-  }
-  if (in.SleepAmount().present()) {
-    GetSleepAmount().Load(in.SleepAmount().get());
-  }
-  if (in.SystolicArterialPressureBaseline().present()) {
-    GetSystolicArterialPressureBaseline().Load(in.SystolicArterialPressureBaseline().get());
-  }
-  if (in.TotalVentilationBaseline().present()) {
-    GetTotalVentilationBaseline().Load(in.TotalVentilationBaseline().get());
-  }
-  if (in.TidalVolumeBaseline().present()) {
-    GetTidalVolumeBaseline().Load(in.TidalVolumeBaseline().get());
-  }
-  if (in.TotalLungCapacity().present()) {
-    GetTotalLungCapacity().Load(in.TotalLungCapacity().get());
-  }
-  if (in.VitalCapacity().present()) {
-    GetVitalCapacity().Load(in.VitalCapacity().get());
-  }
-
-  SEScalarTime time;
-  for (auto e : in.ActiveEvent()) {
-    time.Load(e.Duration());
-    m_EventState[e.Event()] = true;
-    m_EventDuration_s[e.Event()] = time.GetValue(TimeUnit::s);
-  }
+  io::Patient::UnMarshall(in, *this);
 
   return true;
 }
@@ -398,146 +272,14 @@ CDM::PatientData* SEPatient::Unload() const
 //-----------------------------------------------------------------------------
 void SEPatient::Unload(CDM::PatientData& data) const
 {
-  if (HasName()) {
-    data.Name(m_Name);
-  }
-  if (HasAnnotation()) {
-    data.Annotation(m_Annotation);
-  }
-  if (HasGender()) {
-    data.Sex(m_Gender);
-  }
-  if (m_Age != nullptr) {
-    data.Age(std::unique_ptr<CDM::ScalarTimeData>(m_Age->Unload()));
-  }
-  if (m_Weight != nullptr) {
-    data.Weight(std::unique_ptr<CDM::ScalarMassData>(m_Weight->Unload()));
-  }
-  if (m_Height != nullptr) {
-    data.Height(std::unique_ptr<CDM::ScalarLengthData>(m_Height->Unload()));
-  }
-  if (m_AlveoliSurfaceArea != nullptr) {
-    data.AlveoliSurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_AlveoliSurfaceArea->Unload()));
-  }
-  if (m_BasalMetabolicRate != nullptr) {
-    data.BasalMetabolicRate(std::unique_ptr<CDM::ScalarPowerData>(m_BasalMetabolicRate->Unload()));
-  }
-  if (HasBloodRh()) {
-    data.BloodTypeRh(m_BloodRh);
-  }
-  if (HasBloodType()) {
-    data.BloodTypeABO(m_BloodType);
-  }
-  if (m_BloodVolumeBaseline != nullptr) {
-    data.BloodVolumeBaseline(std::unique_ptr<CDM::ScalarVolumeData>(m_BloodVolumeBaseline->Unload()));
-  }
-  if (m_BodyDensity != nullptr) {
-    data.BodyDensity(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BodyDensity->Unload()));
-  }
-  if (m_BodyFatFraction != nullptr) {
-    data.BodyFatFraction(std::unique_ptr<CDM::ScalarFractionData>(m_BodyFatFraction->Unload()));
-  }
-  if (m_DiastolicArterialPressureBaseline != nullptr) {
-    data.DiastolicArterialPressureBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_DiastolicArterialPressureBaseline->Unload()));
-  }
-  if (m_ExpiratoryReserveVolume != nullptr) {
-    data.ExpiratoryReserveVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ExpiratoryReserveVolume->Unload()));
-  }
-  if (m_FunctionalResidualCapacity != nullptr) {
-    data.FunctionalResidualCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_FunctionalResidualCapacity->Unload()));
-  }
-  if (m_HeartRateBaseline != nullptr) {
-    data.HeartRateBaseline(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateBaseline->Unload()));
-  }
-  if (m_HeartRateMaximum != nullptr) {
-    data.HeartRateMaximum(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateMaximum->Unload()));
-  }
-  if (m_HeartRateMinimum != nullptr) {
-    data.HeartRateMinimum(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRateMinimum->Unload()));
-  }
-  if (m_Hyperhidrosis != nullptr) {
-    data.Hyperhidrosis(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_Hyperhidrosis->Unload()));
-  }
-  if (m_InspiratoryCapacity != nullptr) {
-    data.InspiratoryCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_InspiratoryCapacity->Unload()));
-  }
-  if (m_InspiratoryReserveVolume != nullptr) {
-    data.InspiratoryReserveVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_InspiratoryReserveVolume->Unload()));
-  }
-  if (m_LeanBodyMass != nullptr) {
-    data.LeanBodyMass(std::unique_ptr<CDM::ScalarMassData>(m_LeanBodyMass->Unload()));
-  }
-  if (m_MaxWorkRate != nullptr) {
-    data.MaxWorkRate(std::unique_ptr<CDM::ScalarPowerData>(m_MaxWorkRate->Unload()));
-  }
-  if (m_MuscleMass != nullptr) {
-    data.MuscleMass(std::unique_ptr<CDM::ScalarMassData>(m_MuscleMass->Unload()));
-  }
-  if (m_MeanArterialPressureBaseline != nullptr) {
-    data.MeanArterialPressureBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressureBaseline->Unload()));
-  }
-  if (m_PainSusceptibility != nullptr) {
-    data.PainSusceptibility(std::unique_ptr<CDM::ScalarNeg1To1Data>(m_PainSusceptibility->Unload()));
-  }
-  if (m_ResidualVolume != nullptr) {
-    data.ResidualVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ResidualVolume->Unload()));
-  }
-  if (m_RespirationRateBaseline != nullptr) {
-    data.RespirationRateBaseline(std::unique_ptr<CDM::ScalarFrequencyData>(m_RespirationRateBaseline->Unload()));
-  }
-  if (m_RespiratoryDriverAmplitudeBaseline != nullptr) {
-    data.RespiratoryDriverAmplitudeBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_RespiratoryDriverAmplitudeBaseline->Unload()));
-  }
-  if (m_RightLungRatio != nullptr) {
-    data.RightLungRatio(std::unique_ptr<CDM::ScalarFractionData>(m_RightLungRatio->Unload()));
-  }
-  if (m_SkinSurfaceArea != nullptr) {
-    data.SkinSurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_SkinSurfaceArea->Unload()));
-  }
-  if (m_SleepAmount != nullptr) {
-    data.SleepAmount(std::unique_ptr<CDM::ScalarTimeData>(m_SleepAmount->Unload()));
-  }
-  if (m_SystolicArterialPressureBaseline != nullptr) {
-    data.SystolicArterialPressureBaseline(std::unique_ptr<CDM::ScalarPressureData>(m_SystolicArterialPressureBaseline->Unload()));
-  }
-  if (m_TotalVentilationBaseline != nullptr) {
-    data.TotalVentilationBaseline(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_TotalVentilationBaseline->Unload()));
-  }
-  if (m_TidalVolumeBaseline != nullptr) {
-    data.TidalVolumeBaseline(std::unique_ptr<CDM::ScalarVolumeData>(m_TidalVolumeBaseline->Unload()));
-  }
-  if (m_TotalLungCapacity != nullptr) {
-    data.TotalLungCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalLungCapacity->Unload()));
-  }
-  if (m_VitalCapacity != nullptr) {
-    data.VitalCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_VitalCapacity->Unload()));
-  }
-
-  SEScalarTime time;
-  for (auto itr : m_EventState) {
-    if (!itr.second) {
-      continue;
-    }
-
-    auto it2 = m_EventDuration_s.find(itr.first);
-    if (it2 == m_EventDuration_s.end()) // This should not happen...
-    {
-      time.SetValue(0, TimeUnit::s);
-    } else {
-      time.SetValue(it2->second, TimeUnit::s);
-    }
-    CDM::ActivePatientEventData* eData = new CDM::ActivePatientEventData();
-    eData->Event(itr.first);
-    eData->Duration(std::unique_ptr<CDM::ScalarTimeData>(time.Unload()));
-    data.ActiveEvent().push_back(std::unique_ptr<CDM::ActivePatientEventData>(eData));
-  }
+  io::Patient::Marshall(*this, data);
 };
-void SEPatient::SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)(bool))
+void SEPatient::SetEventCallback(SEPatientEventType type, void (*callback)(bool))
 {
   m_EventCallbacks[type] = callback;
 }
 //-----------------------------------------------------------------------------
-void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time)
+void SEPatient::SetEvent(SEPatientEventType type, bool active, const SEScalarTime& time)
 {
   if (m_EventState[type] == active) {
     return; // No Change
@@ -546,386 +288,386 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
     m_ss << "[Event] " << time << ", ";
     if (active) {
       switch (type) {
-      case CDM::enumPatientEvent::AcuteLungInjury:
+      case SEPatientEventType::AcuteLungInjury:
         m_ss << " Carrico Index < 300 mmHg:  Patient has Acute Lung Injury";
         break;
-      case CDM::enumPatientEvent::AcuteRespiratoryDistress:
+      case SEPatientEventType::AcuteRespiratoryDistress:
         m_ss << " Carrico Index < 200 mmHg: Patient has Acute Respiratory Distress";
         break;
-      case CDM::enumPatientEvent::Antidiuresis:
+      case SEPatientEventType::Antidiuresis:
         m_ss << " Patient has Antidiuresis";
         break;
-      case CDM::enumPatientEvent::Asystole:
+      case SEPatientEventType::Asystole:
         m_ss << " Patient has Asystole";
         break;
-      case CDM::enumPatientEvent::Bradycardia:
+      case SEPatientEventType::Bradycardia:
         m_ss << " Patient has Bradycardia";
         break;
-      case CDM::enumPatientEvent::Bradypnea:
+      case SEPatientEventType::Bradypnea:
         m_ss << " Patient has Bradypnea";
         break;
-      case CDM::enumPatientEvent::BrainOxygenDeficit:
+      case SEPatientEventType::BrainOxygenDeficit:
         m_ss << " Oxygen tension in the brain is dangerously low";
         break;
-      case CDM::enumPatientEvent::CardiacArrest:
+      case SEPatientEventType::CardiacArrest:
         m_ss << " Patient has Cardiac Arrest";
         break;
-      case CDM::enumPatientEvent::CardiogenicShock:
+      case SEPatientEventType::CardiogenicShock:
         m_ss << " Patient has Cardiogenic Shock";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_Abdominal:
+      case SEPatientEventType::CompartmentSyndromeAbdominal:
         m_ss << " Patient has Abdominal Compartment Syndrome";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_LeftArm:
+      case SEPatientEventType::CompartmentSyndromeLeftArm:
         m_ss << " Patient has Compartment Syndrome in the Left Arm";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg:
+      case SEPatientEventType::CompartmentSyndromeLeftLeg:
         m_ss << " Patient has Compartment Syndrome in the Left Leg";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_RightArm:
+      case SEPatientEventType::CompartmentSyndromeRightArm:
         m_ss << " Patient has Compartment Syndrome in the Right Arm";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_RightLeg:
+      case SEPatientEventType::CompartmentSyndromeRightLeg:
         m_ss << " Patient has Compartment Syndrome in the Right Leg";
         break;
-      case CDM::enumPatientEvent::CriticalBrainOxygenDeficit:
+      case SEPatientEventType::CriticalBrainOxygenDeficit:
         m_ss << " Oxygen tension in the brain is critically low";
         break;
-      case CDM::enumPatientEvent::Dehydration:
+      case SEPatientEventType::Dehydration:
         m_ss << " Patient has entered state of Dehydration";
         break;
-      case CDM::enumPatientEvent::MildDiarrhea:
+      case SEPatientEventType::MildDiarrhea:
         m_ss << " Patient has mild diarrhea";
         break;
-      case CDM::enumPatientEvent::SevereDiarrhea:
+      case SEPatientEventType::SevereDiarrhea:
         m_ss << " Patient has severe diarrhea";
         break;
-      case CDM::enumPatientEvent::Diuresis:
+      case SEPatientEventType::Diuresis:
         m_ss << " Patient has entered Diuresis";
         break;
-      case CDM::enumPatientEvent::Fasciculation:
+      case SEPatientEventType::Fasciculation:
         m_ss << "Patient has Fasciculation";
         break;
-      case CDM::enumPatientEvent::FlaccidParalysis:
+      case SEPatientEventType::FlaccidParalysis:
         m_ss << "Patient has Flaccid Paralysis";
         break;
-      case CDM::enumPatientEvent::FunctionalIncontinence:
+      case SEPatientEventType::FunctionalIncontinence:
         m_ss << " Patient has involuntarily emptied their bladder";
         break;
-      case CDM::enumPatientEvent::MildHeadache:
+      case SEPatientEventType::MildHeadache:
         m_ss << " Patient has a mild headache";
         break;
-      case CDM::enumPatientEvent::SevereHeadache:
+      case SEPatientEventType::SevereHeadache:
         m_ss << " Patient has a severe headache";
         break;
-      case CDM::enumPatientEvent::HemolyticTransfusionReaction:
+      case SEPatientEventType::HemolyticTransfusionReaction:
         m_ss << " Patient is undergoing an incompatible blood transfusion";
         break;
-      case CDM::enumPatientEvent::Hypercapnia:
+      case SEPatientEventType::Hypercapnia:
         m_ss << " Patient has Hypercapnia";
         break;
-      case CDM::enumPatientEvent::Hyperglycemia:
+      case SEPatientEventType::Hyperglycemia:
         m_ss << " Patient has Hyperglycemia";
         break;
-      case CDM::enumPatientEvent::Hyperthermia:
+      case SEPatientEventType::Hyperthermia:
         m_ss << " Patient is Hyperthermic";
         break;
-      case CDM::enumPatientEvent::Hypoglycemia:
+      case SEPatientEventType::Hypoglycemia:
         m_ss << " Patient has Hypoglycemia";
         break;
-      case CDM::enumPatientEvent::HypoglycemicShock:
+      case SEPatientEventType::HypoglycemicShock:
         m_ss << " Patient is in Hypoglycemic Shock";
         break;
-      case CDM::enumPatientEvent::HypoglycemicComa:
+      case SEPatientEventType::HypoglycemicComa:
         m_ss << " Patient has fallen into Hypoglycemic Coma";
         break;
-      case CDM::enumPatientEvent::MildHypothermia:
+      case SEPatientEventType::MildHypothermia:
         m_ss << " Patient is mildly Hypothermic";
         break;
-      case CDM::enumPatientEvent::ModerateHypothermia:
+      case SEPatientEventType::ModerateHypothermia:
         m_ss << " Patient is moderately Hypothermic";
         break;
-      case CDM::enumPatientEvent::SevereHypothermia:
+      case SEPatientEventType::SevereHypothermia:
         m_ss << " Patient is Severely Hypothermic";
         break;
-      case CDM::enumPatientEvent::Hypoxia:
+      case SEPatientEventType::Hypoxia:
         m_ss << " Patient has Hypoxia";
         break;
-      case CDM::enumPatientEvent::IntracranialHypertension:
+      case SEPatientEventType::IntracranialHypertension:
         m_ss << " Patient has Intracranial Hypertension";
         break;
-      case CDM::enumPatientEvent::IntracranialHypotension:
+      case SEPatientEventType::IntracranialHypotension:
         m_ss << " Patient has Intracranial Hypotension";
         break;
-      case CDM::enumPatientEvent::HypovolemicShock:
+      case SEPatientEventType::HypovolemicShock:
         m_ss << " Patient is in Hypovolemic Shock";
         break;
-      case CDM::enumPatientEvent::IrreversibleState:
+      case SEPatientEventType::IrreversibleState:
         m_ss << " Patient has entered irreversible state";
         break;
-      case CDM::enumPatientEvent::Ketoacidosis:
+      case SEPatientEventType::Ketoacidosis:
         m_ss << " Patient has Ketoacidosis";
         break;
-      case CDM::enumPatientEvent::LacticAcidosis:
+      case SEPatientEventType::LacticAcidosis:
         m_ss << " Patient has Lactic Acidosis";
         break;
-      case CDM::enumPatientEvent::LiverGlycogenDepleted:
+      case SEPatientEventType::LiverGlycogenDepleted:
         m_ss << " Patient's liver glycogen is depleted";
         break;
-      case CDM::enumPatientEvent::MaximumPulmonaryVentilationRate:
+      case SEPatientEventType::MaximumPulmonaryVentilationRate:
         m_ss << " Patient's Respiratory Driver has exceeded the maximum target pulmonary ventilation rate, setting value to the maximum allowable rate";
         break;
-      case CDM::enumPatientEvent::MetabolicAcidosis:
+      case SEPatientEventType::MetabolicAcidosis:
         m_ss << " The patient is in a state of metabolic acidosis";
         break;
-      case CDM::enumPatientEvent::MetabolicAlkalosis:
+      case SEPatientEventType::MetabolicAlkalosis:
         m_ss << " The patient is in a state of metabolic alkalosis";
         break;
-      case CDM::enumPatientEvent::MildDiaphoresis:
+      case SEPatientEventType::MildDiaphoresis:
         m_ss << " Patient has Mild Diaphoresis";
         break;
-      case CDM::enumPatientEvent::ModerateDiaphoresis:
+      case SEPatientEventType::ModerateDiaphoresis:
         m_ss << " Patient has Moderate Diaphoresis";
         break;
-      case CDM::enumPatientEvent::SevereDiaphoresis:
+      case SEPatientEventType::SevereDiaphoresis:
         m_ss << " Patient has Severe Diaphoresis";
         break;
-      case CDM::enumPatientEvent::MildSecretions:
+      case SEPatientEventType::MildSecretions:
         m_ss << " Patient has Mild Secretions";
         break;
-      case CDM::enumPatientEvent::ModerateSecretions:
+      case SEPatientEventType::ModerateSecretions:
         m_ss << " Patient has Moderate Secretions";
         break;
-      case CDM::enumPatientEvent::MildWeakness:
+      case SEPatientEventType::MildWeakness:
         m_ss << " Patient has Mild Weakness";
         break;
-      case CDM::enumPatientEvent::ModerateWeakness:
+      case SEPatientEventType::ModerateWeakness:
         m_ss << " Patient has Moderate Weakness";
         break;
-      case CDM::enumPatientEvent::MuscleCatabolism:
+      case SEPatientEventType::MuscleCatabolism:
         m_ss << " Patient has begun muscle catabolism";
         break;
-      case CDM::enumPatientEvent::MuscleGlycogenDepleted:
+      case SEPatientEventType::MuscleGlycogenDepleted:
         m_ss << " Patient's muscle glycogen is depleted";
         break;
-      case CDM::enumPatientEvent::MyocardiumOxygenDeficit:
+      case SEPatientEventType::MyocardiumOxygenDeficit:
         m_ss << " The patient's heart is not receiving enough oxygen";
         break;
-      case CDM::enumPatientEvent::Natriuresis:
+      case SEPatientEventType::Natriuresis:
         m_ss << " Patient has Natriuresis";
         break;
-      case CDM::enumPatientEvent::Nausea:
+      case SEPatientEventType::Nausea:
         m_ss << " Patient is Nauseous";
         break;
-      case CDM::enumPatientEvent::NutritionDepleted:
+      case SEPatientEventType::NutritionDepleted:
         m_ss << " Patient has depleted all nutrition in body";
         break;
-      case CDM::enumPatientEvent::PulselessRhythm:
+      case SEPatientEventType::PulselessRhythm:
         m_ss << " Patient has a Pulseless Rhythm";
         break;
-      case CDM::enumPatientEvent::RenalHypoperfusion:
+      case SEPatientEventType::RenalHypoperfusion:
         m_ss << " Patient has Renal Hypoperfusion";
         break;
-      case CDM::enumPatientEvent::Seizures:
+      case SEPatientEventType::Seizures:
         m_ss << " The patient is having a seizure";
         break;
-      case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
+      case SEPatientEventType::SevereAcuteRespiratoryDistress:
         m_ss << " Carrico Index < 100 : Patient has Severe Acute Respiratory Distress";
         break;
-      case CDM::enumPatientEvent::SevereSecretions:
+      case SEPatientEventType::SevereSecretions:
         m_ss << " The patient has severe Secretions";
         break;
-      case CDM::enumPatientEvent::SevereSepsis:
+      case SEPatientEventType::SevereSepsis:
         m_ss << " The patient has severe sepsis";
         break;
-      case CDM::enumPatientEvent::Shivering:
+      case SEPatientEventType::Shivering:
         m_ss << " The patient is shivering";
         break;
-      case CDM::enumPatientEvent::Tachycardia:
+      case SEPatientEventType::Tachycardia:
         m_ss << " Patient has Tachycardia";
         break;
-      case CDM::enumPatientEvent::Tachypnea:
+      case SEPatientEventType::Tachypnea:
         m_ss << " Patient has Tachypnea";
         break;
-      case CDM::enumPatientEvent::Fatigue:
+      case SEPatientEventType::Fatigue:
         m_ss << " Patient has fatigue";
         break;
-      case CDM::enumPatientEvent::Vomiting:
+      case SEPatientEventType::Vomiting:
         m_ss << " Patient is Vomiting";
         break;
-      case CDM::enumPatientEvent::StartOfCardiacCycle:
-      case CDM::enumPatientEvent::StartOfExhale:
-      case CDM::enumPatientEvent::StartOfInhale:
+      case SEPatientEventType::StartOfCardiacCycle:
+      case SEPatientEventType::StartOfExhale:
+      case SEPatientEventType::StartOfInhale:
         m_ss.str(""); // make m_ss empty and nothing will be logged, this event does not need to get logged each activation
         break;
       default:
-        m_ss << " Patient has entered state : " << type; // TODO CDM::enumPatientEvent::_xsd_enumPatientEvent_literals_[type];
+        m_ss << " Patient has entered state : " << type; // TODO SEPatientEventType::_xsd_enumPatientEvent_literals_[type];
       }
     } else {
       switch (type) {
-      case CDM::enumPatientEvent::AcuteLungInjury:
+      case SEPatientEventType::AcuteLungInjury:
         m_ss << " Patient no longer has Acute Lung Injury";
         break;
-      case CDM::enumPatientEvent::AcuteRespiratoryDistress:
+      case SEPatientEventType::AcuteRespiratoryDistress:
         m_ss << " Patient no longer has Acute Respiratory Distress";
         break;
-      case CDM::enumPatientEvent::Antidiuresis:
+      case SEPatientEventType::Antidiuresis:
         m_ss << " Patient no longer is in Antidiuresis";
         break;
-      case CDM::enumPatientEvent::Asystole:
+      case SEPatientEventType::Asystole:
         m_ss << " Patient no longer is in Asystole";
         break;
-      case CDM::enumPatientEvent::Bradycardia:
+      case SEPatientEventType::Bradycardia:
         m_ss << " Patient no longer has Bradycardia";
         break;
-      case CDM::enumPatientEvent::Bradypnea:
+      case SEPatientEventType::Bradypnea:
         m_ss << " Patient no longer has Bradypnea";
         break;
-      case CDM::enumPatientEvent::BrainOxygenDeficit:
+      case SEPatientEventType::BrainOxygenDeficit:
         m_ss << " Oxygen tension in the brain has increased above the danger threshold";
         break;
-      case CDM::enumPatientEvent::CardiacArrest:
+      case SEPatientEventType::CardiacArrest:
         m_ss << " Patient no longer has Cardiac Arrest";
         break;
-      case CDM::enumPatientEvent::CardiogenicShock:
+      case SEPatientEventType::CardiogenicShock:
         m_ss << " Patient no longer has Cardiogenic Shock";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_Abdominal:
+      case SEPatientEventType::CompartmentSyndromeAbdominal:
         m_ss << " Patient no longer has Abdominal Compartment Syndrome";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_LeftArm:
+      case SEPatientEventType::CompartmentSyndromeLeftArm:
         m_ss << " Patient no longer has Compartment Syndrome in the Left Arm";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg:
+      case SEPatientEventType::CompartmentSyndromeLeftLeg:
         m_ss << " Patient no longer has Compartment Syndrome in the Left Leg";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_RightArm:
+      case SEPatientEventType::CompartmentSyndromeRightArm:
         m_ss << " Patient no longer has Compartment Syndrome in the Right Arm";
         break;
-      case CDM::enumPatientEvent::CompartmentSyndrome_RightLeg:
+      case SEPatientEventType::CompartmentSyndromeRightLeg:
         m_ss << " Patient no longer has Compartment Syndrome in the Right Leg";
         break;
-      case CDM::enumPatientEvent::CriticalBrainOxygenDeficit:
+      case SEPatientEventType::CriticalBrainOxygenDeficit:
         m_ss << " Oxygen tension in the brain has increased above the critical threshold";
         break;
-      case CDM::enumPatientEvent::Dehydration:
+      case SEPatientEventType::Dehydration:
         m_ss << " Patient no longer is in Dehydration state";
         break;
-      case CDM::enumPatientEvent::Diuresis:
+      case SEPatientEventType::Diuresis:
         m_ss << " Patient no longer has Diuresis";
         break;
-      case CDM::enumPatientEvent::Fasciculation:
+      case SEPatientEventType::Fasciculation:
         m_ss << "Patient no longer has Fasciculation";
         break;
-      case CDM::enumPatientEvent::FunctionalIncontinence:
+      case SEPatientEventType::FunctionalIncontinence:
         m_ss << " Patient has an empty bladder";
         break;
-      case CDM::enumPatientEvent::HemolyticTransfusionReaction:
+      case SEPatientEventType::HemolyticTransfusionReaction:
         m_ss << " Patient is no longer undergoing a hemolytic transfusion reaction";
         break;
-      case CDM::enumPatientEvent::Hypercapnia:
+      case SEPatientEventType::Hypercapnia:
         m_ss << " Patient no longer has Hypercapnia";
         break;
-      case CDM::enumPatientEvent::Hyperglycemia:
+      case SEPatientEventType::Hyperglycemia:
         m_ss << " Patient no longer has Hyperglycemia";
         break;
-      case CDM::enumPatientEvent::Hyperthermia:
+      case SEPatientEventType::Hyperthermia:
         m_ss << " Patient is no longer has Hyperthermic";
         break;
-      case CDM::enumPatientEvent::Hypoglycemia:
+      case SEPatientEventType::Hypoglycemia:
         m_ss << " Patient no longer has Hypoglycemia";
         break;
-      case CDM::enumPatientEvent::HypoglycemicShock:
+      case SEPatientEventType::HypoglycemicShock:
         m_ss << " Patient is no longer in Hypoglycemic Shock";
         break;
-      case CDM::enumPatientEvent::HypoglycemicComa:
+      case SEPatientEventType::HypoglycemicComa:
         m_ss << " Patient is no longer in a Hypoglycemic Coma";
         break;
-      case CDM::enumPatientEvent::MildHypothermia:
+      case SEPatientEventType::MildHypothermia:
         m_ss << " Patient is no longer Mildly Hypothermic";
         break;
-      case CDM::enumPatientEvent::ModerateHypothermia:
+      case SEPatientEventType::ModerateHypothermia:
         m_ss << " Patient is no longer Moderately Hypothermic";
         break;
-      case CDM::enumPatientEvent::SevereHypothermia:
+      case SEPatientEventType::SevereHypothermia:
         m_ss << " Patient is no longer Severely Hypothermic";
         break;
-      case CDM::enumPatientEvent::Hypoxia:
+      case SEPatientEventType::Hypoxia:
         m_ss << " Patient no longer has Hypoxia";
         break;
-      case CDM::enumPatientEvent::HypovolemicShock:
+      case SEPatientEventType::HypovolemicShock:
         m_ss << " Patient is no longer in Hypovolemic Shock";
         break;
-      case CDM::enumPatientEvent::IntracranialHypertension:
+      case SEPatientEventType::IntracranialHypertension:
         m_ss << " Patient no longer has Intracranial Hypertension";
         break;
-      case CDM::enumPatientEvent::IntracranialHypotension:
+      case SEPatientEventType::IntracranialHypotension:
         m_ss << " Patient no longer has Intracranial Hypotension";
         break;
-      case CDM::enumPatientEvent::IrreversibleState:
+      case SEPatientEventType::IrreversibleState:
         m_ss << " Patient no longer is in irreversible state?!";
         break;
-      case CDM::enumPatientEvent::Ketoacidosis:
+      case SEPatientEventType::Ketoacidosis:
         m_ss << " Patient no longer has Ketoacidosis";
         break;
-      case CDM::enumPatientEvent::LacticAcidosis:
+      case SEPatientEventType::LacticAcidosis:
         m_ss << " Patient no longer has Lactic Acidosis";
         break;
-      case CDM::enumPatientEvent::LiverGlycogenDepleted:
+      case SEPatientEventType::LiverGlycogenDepleted:
         m_ss << " Patient's liver glycogen is no longer depleted";
         break;
-      case CDM::enumPatientEvent::MaximumPulmonaryVentilationRate:
+      case SEPatientEventType::MaximumPulmonaryVentilationRate:
         m_ss << " Patient's Respiratory Driver is no longer exceeding the maximum target pulmonary ventilation rate";
         break;
-      case CDM::enumPatientEvent::MetabolicAcidosis:
+      case SEPatientEventType::MetabolicAcidosis:
         m_ss << " The patient is no longer in a state of metabolic acidosis";
         break;
-      case CDM::enumPatientEvent::MetabolicAlkalosis:
+      case SEPatientEventType::MetabolicAlkalosis:
         m_ss << " The patient is no longer in a state of metabolic alkalosis";
         break;
-      case CDM::enumPatientEvent::MuscleGlycogenDepleted:
+      case SEPatientEventType::MuscleGlycogenDepleted:
         m_ss << " Patient's muscle glycogen is no longer depleted";
         break;
-      case CDM::enumPatientEvent::MyocardiumOxygenDeficit:
+      case SEPatientEventType::MyocardiumOxygenDeficit:
         m_ss << " Patient no longer has a Myocardium Oxygen Deficit";
         break;
-      case CDM::enumPatientEvent::Natriuresis:
+      case SEPatientEventType::Natriuresis:
         m_ss << " Patient no longer has Natriuresis";
         break;
-      case CDM::enumPatientEvent::NutritionDepleted:
+      case SEPatientEventType::NutritionDepleted:
         m_ss << " Patient has nutrition in body";
         break;
-      case CDM::enumPatientEvent::PulselessRhythm:
+      case SEPatientEventType::PulselessRhythm:
         m_ss << " Patient no longer has a Pulseless Rhythm";
         break;
-      case CDM::enumPatientEvent::RenalHypoperfusion:
+      case SEPatientEventType::RenalHypoperfusion:
         m_ss << " Patient no longer has Renal Hypoperfusion";
         break;
-      case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
+      case SEPatientEventType::SevereAcuteRespiratoryDistress:
         m_ss << " Patient no longer has a Severe Acute Respiratory Distress";
         break;
-      case CDM::enumPatientEvent::SevereSepsis:
+      case SEPatientEventType::SevereSepsis:
         m_ss << " Patient no longer has severe sepsis";
         break;
-      case CDM::enumPatientEvent::Shivering:
+      case SEPatientEventType::Shivering:
         m_ss << " Patient is longer shivering";
         break;
-      case CDM::enumPatientEvent::Tachycardia:
+      case SEPatientEventType::Tachycardia:
         m_ss << " Patient no longer has Tachycardia";
         break;
-      case CDM::enumPatientEvent::Tachypnea:
+      case SEPatientEventType::Tachypnea:
         m_ss << " Patient no longer has Tachypnea";
         break;
-      case CDM::enumPatientEvent::Fatigue:
+      case SEPatientEventType::Fatigue:
         m_ss << " Patient is no longer fatigued";
         break;
-      case CDM::enumPatientEvent::StartOfCardiacCycle:
-      case CDM::enumPatientEvent::StartOfExhale:
-      case CDM::enumPatientEvent::StartOfInhale:
+      case SEPatientEventType::StartOfCardiacCycle:
+      case SEPatientEventType::StartOfExhale:
+      case SEPatientEventType::StartOfInhale:
         m_ss.str(""); // make m_ss empty and nothing will be logged, this event does not need to get logged each activation
         break;
       default:
-        m_ss << " Patient has exited state : " << type; // TODO CDM::enumPatientEvent::_xsd_enumPatientEvent_literals_[type];
+        m_ss << " Patient has exited state : " << type; // TODO SEPatientEventType::_xsd_enumPatientEvent_literals_[type];
       }
     }
     if (!m_ss.str().empty())
@@ -934,19 +676,21 @@ void SEPatient::SetEvent(CDM::enumPatientEvent::value type, bool active, const S
   m_EventState[type] = active;
   m_EventDuration_s[type] = 0;
   if (m_EventHandler != nullptr) {
-    m_EventHandler->HandlePatientEvent(type, active, &time);
+    CDM::enumPatientEvent cdmType;
+    io::Patient::Marshall(type, cdmType);
+    m_EventHandler->HandlePatientEvent(cdmType, active, &time);
   }
   if (m_EventCallbacks[type] != nullptr) {
     m_EventCallbacks[type](active);
   }
 }
 //-----------------------------------------------------------------------------
-bool SEPatient::IsEventActive(CDM::enumPatientEvent::value type) const
+bool SEPatient::IsEventActive(SEPatientEventType type) const
 {
   return m_EventState.at(type);
 }
 //-----------------------------------------------------------------------------
-double SEPatient::GetEventDuration(CDM::enumPatientEvent::value type, const TimeUnit& unit) const
+double SEPatient::GetEventDuration(SEPatientEventType type, const TimeUnit& unit) const
 {
   auto i = m_EventDuration_s.find(type);
   if (i == m_EventDuration_s.end()) {
@@ -1027,44 +771,24 @@ void SEPatient::InvalidateAnnotation()
   m_Annotation = "";
 }
 //-----------------------------------------------------------------------------
-CDM::enumSex::value SEPatient::GetGender() const
+SESex SEPatient::GetSex() const
 {
-  return m_Gender;
+  return m_Sex;
 }
 //-----------------------------------------------------------------------------
-void SEPatient::SetGender(CDM::enumSex::value sex)
+void SEPatient::SetSex(SESex gender)
 {
-  m_Gender = sex;
+  m_Sex = gender;
 }
 //-----------------------------------------------------------------------------
-bool SEPatient::HasGender() const
+bool SEPatient::HasSex() const
 {
-  return m_Gender == ((CDM::enumSex::value)-1) ? false : true;
+  return m_Sex == (SESex::Invalid) ? false : true;
 }
 //-----------------------------------------------------------------------------
-void SEPatient::InvalidateGender()
+void SEPatient::InvalidateSex()
 {
-  m_Gender = (CDM::enumSex::value)-1;
-}
-//-----------------------------------------------------------------------------
-[[deprecated("Use GetGender instead")]] CDM::enumSex::value SEPatient::GetSex() const
-{
-  return m_Gender;
-}
-//-----------------------------------------------------------------------------
-[[deprecated("Use SetGender instead")]] void SEPatient::SetSex(CDM::enumSex::value gender)
-{
-  m_Gender = gender;
-}
-//-----------------------------------------------------------------------------
-[[deprecated("Use HasGender instead")]] bool SEPatient::HasSex() const
-{
-  return m_Gender == ((CDM::enumSex::value)-1) ? false : true;
-}
-//-----------------------------------------------------------------------------
-[[deprecated("Use InvalidateGender instead")]] void SEPatient::InvalidateSex()
-{
-  m_Gender = (CDM::enumSex::value)-1;
+  m_Sex = SESex::Invalid;
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::HasAge() const
@@ -1200,24 +924,24 @@ double SEPatient::GetBasalMetabolicRate(const PowerUnit& unit) const
   return m_BasalMetabolicRate->GetValue(unit);
 }
 //------------------------------------------------------------------------------
-CDM::enumBloodType::value SEPatient::GetBloodType() const
+SEBloodType SEPatient::GetBloodType() const
 {
   return m_BloodType;
 }
 //-----------------------------------------------------------------------------
-void SEPatient::SetBloodType(CDM::enumBloodType::value bloodAntigen)
+void SEPatient::SetBloodType(SEBloodType bloodAntigen)
 {
   m_BloodType = bloodAntigen;
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::HasBloodType() const
 {
-  return m_BloodType == ((CDM::enumBloodType::value)-1) ? false : true;
+  return m_BloodType == SEBloodType::Invalid ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SEPatient::InvalidateBloodType()
 {
-  m_BloodType = (CDM::enumBloodType::value)-1;
+  m_BloodType = SEBloodType::Invalid;
 }
 //-----------------------------------------------------------------------------
 bool SEPatient::GetBloodRh() const
@@ -1832,7 +1556,7 @@ bool SEPatient::operator==(SEPatient const& rhs) const
   return m_EventDuration_s == rhs.m_EventDuration_s
     && m_Name == rhs.m_Name
     && m_Annotation == rhs.m_Annotation
-    && m_Gender == rhs.m_Gender
+    && m_Sex == rhs.m_Sex
     && ((m_Age && rhs.m_Age)
           ? m_Age->operator==(*rhs.m_Age)
           : m_Age == rhs.m_Age)

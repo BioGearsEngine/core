@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/exports.h>
 
 #include <biogears/schema/cdm/Patient.hxx>
@@ -51,9 +52,9 @@ namespace io {
 }
 } // namespace biogears
 namespace std {
-BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, bool>;
-BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, void (*)(bool)>;
-BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, double>;
+BG_EXT template class BIOGEARS_API map<biogears::SEPatientEventType, bool>;
+BG_EXT template class BIOGEARS_API map<biogears::SEPatientEventType, void (*)(bool)>;
+BG_EXT template class BIOGEARS_API map<biogears::SEPatientEventType, double>;
 }
 namespace biogears {
 class BIOGEARS_API SEPatient : public Loggable {
@@ -83,11 +84,11 @@ public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  virtual const std::map<CDM::enumPatientEvent::value, bool>& GetEventStates() const { return m_EventState; }
-  virtual void SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time);
-  virtual void SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)(bool));
-  virtual bool IsEventActive(CDM::enumPatientEvent::value state) const;
-  virtual double GetEventDuration(CDM::enumPatientEvent::value type, const TimeUnit& unit) const;
+  virtual const std::map<SEPatientEventType, bool>& GetEventStates() const { return m_EventState; }
+  virtual void SetEvent(SEPatientEventType type, bool active, const SEScalarTime& time);
+  virtual void SetEventCallback(SEPatientEventType type, void (*callback)(bool));
+  virtual bool IsEventActive(SEPatientEventType state) const;
+  virtual double GetEventDuration(SEPatientEventType type, const TimeUnit& unit) const;
   virtual void UpdateEvents(const SEScalarTime& timeStep);
   /** @name ForwardEvents
    *  @brief - Set a callback class to invoke when any event changes
@@ -112,13 +113,8 @@ public:
   virtual bool HasAnnotation() const;
   virtual void InvalidateAnnotation();
 
-  virtual CDM::enumSex::value GetGender() const;
-  virtual void SetGender(CDM::enumSex::value sex);
-  virtual bool HasGender() const;
-  virtual void InvalidateGender();
-
-  virtual CDM::enumSex::value GetSex() const;
-  virtual void SetSex(CDM::enumSex::value sex);
+  virtual SESex GetSex() const;
+  virtual void SetSex(SESex sex);
   virtual bool HasSex() const;
   virtual void InvalidateSex();
 
@@ -142,8 +138,8 @@ public:
   virtual SEScalarPower& GetBasalMetabolicRate();
   virtual double GetBasalMetabolicRate(const PowerUnit& unit) const;
 
-  virtual CDM::enumBloodType::value GetBloodType() const;
-  virtual void SetBloodType(CDM::enumBloodType::value bloodAntigen);
+  virtual SEBloodType GetBloodType() const;
+  virtual void SetBloodType(SEBloodType bloodAntigen);
   virtual bool HasBloodType() const;
   virtual void InvalidateBloodType();
 
@@ -276,13 +272,13 @@ protected:
 protected:
   std::stringstream m_ss;
   mutable SEEventHandler* m_EventHandler;
-  std::map<CDM::enumPatientEvent::value, bool> m_EventState;
-  std::map<CDM::enumPatientEvent::value, void (*)(bool)> m_EventCallbacks;
-  std::map<CDM::enumPatientEvent::value, double> m_EventDuration_s;
+  std::map<SEPatientEventType, bool> m_EventState;
+  std::map<SEPatientEventType, void (*)(bool)> m_EventCallbacks;
+  std::map<SEPatientEventType, double> m_EventDuration_s;
 
   std::string m_Name;
   std::string m_Annotation;
-  CDM::enumSex::value m_Gender;
+  SESex m_Sex;
   SEScalarTime* m_Age;
   SEScalarMass* m_Weight;
   SEScalarLength* m_Height;
@@ -291,7 +287,7 @@ protected:
   SEScalarMass* m_LeanBodyMass;
   SEScalarPower* m_MaxWorkRate;
   SEScalarMass* m_MuscleMass;
-  CDM::enumBloodType::value m_BloodType;
+  SEBloodType m_BloodType;
   bool m_BloodRh; // true meaning rh positive and false meaning rh negative
 
   SEScalarArea* m_AlveoliSurfaceArea;

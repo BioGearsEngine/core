@@ -782,7 +782,7 @@ void Cardiovascular::PostProcess()
       && m_data.GetState() == EngineState::Active) {
     SEOverride* override = m_data.GetActions().GetPatientActions().GetOverride();
     if (override->HasCardiovascularOverride()
-        && override->GetOverrideConformance() == CDM::enumOnOff::Off) {
+        && override->GetOverrideConformance() == SEOnOff::Off) {
       ProcessOverride();
     }
   }
@@ -902,7 +902,7 @@ void Cardiovascular::CalculateVitalSigns()
     // Check for hypovolemic shock
     /// \event Patient: Hypovolemic Shock: blood volume below 70% of its normal value
     if (GetBloodVolume().GetValue(VolumeUnit::mL) <= (m_data.GetConfiguration().GetMinimumBloodVolumeFraction() * m_patient->GetBloodVolumeBaseline(VolumeUnit::mL))) {
-      m_patient->SetEvent(CDM::enumPatientEvent::HypovolemicShock, true, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::HypovolemicShock, true, m_data.GetSimulationTime());
 
       /// \event Patient: blood loss below 60%, irreversible state enacted
       // @cite champion2003profile
@@ -911,51 +911,51 @@ void Cardiovascular::CalculateVitalSigns()
         Warning(m_ss);
         /// \irreversible Over half the patients blood volume has been lost.
         if (!m_PatientActions->HasOverride()) {
-          m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          m_patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            m_patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       }
     } else {
-      m_patient->SetEvent(CDM::enumPatientEvent::HypovolemicShock, false, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::HypovolemicShock, false, m_data.GetSimulationTime());
     }
 
     //Check for cardiogenic shock
     if (GetCardiacIndex().GetValue(VolumePerTimeAreaUnit::L_Per_min_m2) < 2.2 && GetSystolicArterialPressure(PressureUnit::mmHg) < 90.0 && GetPulmonaryCapillariesWedgePressure(PressureUnit::mmHg) > 15.0) {
       /// \event Patient: Cardiogenic Shock: Cardiac Index has fallen below 2.2 L/min-m^2, Systolic Arterial Pressure is below 90 mmHg, and Pulmonary Capillary Wedge Pressure is above 15.0.
       /// \cite dhakam2008review
-      m_patient->SetEvent(CDM::enumPatientEvent::CardiogenicShock, true, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::CardiogenicShock, true, m_data.GetSimulationTime());
     } else {
-      m_patient->SetEvent(CDM::enumPatientEvent::CardiogenicShock, false, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::CardiogenicShock, false, m_data.GetSimulationTime());
     }
 
     //Check for Tachycardia, Bradycardia, and asystole
     /// \event Patient: Tachycardia: heart rate exceeds 100 beats per minute.  This state is alleviated if it decreases below 90.
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 90)
-      m_patient->SetEvent(CDM::enumPatientEvent::Tachycardia, false, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::Tachycardia, false, m_data.GetSimulationTime());
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 100)
-      m_patient->SetEvent(CDM::enumPatientEvent::Tachycardia, true, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::Tachycardia, true, m_data.GetSimulationTime());
     /// \event Patient: Bradycardia: heart rate falls below 60 beats per minute.  This state is alleviated if it increases above 65.
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 60)
-      m_patient->SetEvent(CDM::enumPatientEvent::Bradycardia, true, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::Bradycardia, true, m_data.GetSimulationTime());
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 65)
-      m_patient->SetEvent(CDM::enumPatientEvent::Bradycardia, false, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::Bradycardia, false, m_data.GetSimulationTime());
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 30) {
       if (GetHeartRhythm() != CDM::enumHeartRhythm::Asystole) {
-        m_patient->SetEvent(CDM::enumPatientEvent::Asystole, false, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::Asystole, false, m_data.GetSimulationTime());
       }
     }
     ///\event Patient: Asystole: Heart Rate has fallen below minimum value and is being set to 0.
     // @cite guinness2005lowest
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 27) {
       if (!m_PatientActions->HasOverride()) {
-        m_patient->SetEvent(CDM::enumPatientEvent::Asystole, true, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::Asystole, true, m_data.GetSimulationTime());
         SetHeartRhythm(CDM::enumHeartRhythm::Asystole);
       } else {
-        if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-          m_patient->SetEvent(CDM::enumPatientEvent::Asystole, true, m_data.GetSimulationTime());
+        if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+          m_patient->SetEvent(SEPatientEventType::Asystole, true, m_data.GetSimulationTime());
           SetHeartRhythm(CDM::enumHeartRhythm::Asystole);
         }
       }
@@ -964,19 +964,19 @@ void Cardiovascular::CalculateVitalSigns()
 
   // Irreversible state if asystole persists.
   if (GetHeartRhythm() == CDM::enumHeartRhythm::Asystole) {
-    m_patient->SetEvent(CDM::enumPatientEvent::Asystole, true, m_data.GetSimulationTime());
+    m_patient->SetEvent(SEPatientEventType::Asystole, true, m_data.GetSimulationTime());
 
     /// \event Patient: Irreversible State: heart has been in asystole for over 45 min:
-    if (m_patient->GetEventDuration(CDM::enumPatientEvent::Asystole, TimeUnit::s) > 2700.0) // \cite: Zijlmans2002EpilepticSeizuresAsystole
+    if (m_patient->GetEventDuration(SEPatientEventType::Asystole, TimeUnit::s) > 2700.0) // \cite: Zijlmans2002EpilepticSeizuresAsystole
     {
-      m_ss << "Asystole has occurred for " << m_patient->GetEventDuration(CDM::enumPatientEvent::Asystole, TimeUnit::s) << " seconds, patient is in irreversible state.";
+      m_ss << "Asystole has occurred for " << m_patient->GetEventDuration(SEPatientEventType::Asystole, TimeUnit::s) << " seconds, patient is in irreversible state.";
       Warning(m_ss);
       /// \irreversible Heart has been in asystole for over 45 min
       if (!m_PatientActions->HasOverride()) {
-        m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        m_patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
       } else {
-        if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-          m_patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+        if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+          m_patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         }
       }
     }
@@ -1155,6 +1155,7 @@ void Cardiovascular::TraumaticBrainInjury()
 /// Tourniquets can be applied to the extremities, which increase the resistance on the paths into and
 /// out of the heomrrhage compartment.
 //--------------------------------------------------------------------------------------------------
+#pragma optimize("", off)
 void Cardiovascular::Hemorrhage()
 {
   /// \todo Enforce limits and remove fatal errors.
@@ -1223,7 +1224,7 @@ void Cardiovascular::Hemorrhage()
   for (auto tPair : tourniquets) {
     tournCmpt = tPair.first;
     tourniquet = tPair.second;
-    CDM::enumTourniquetApplicationLevel::value tLevel = tourniquet->GetTourniquetLevel();
+    auto tLevel = tourniquet->GetTourniquetLevel();
     //Take advantage of the fact that extremities are all named as Aorta1ToLeftArm1 and LeftArm1ToLeftArm2
     std::string supplyPathName = "Aorta1To" + tournCmpt + "1";
     std::string returnPathName = tournCmpt + "1To" + tournCmpt + "2";
@@ -1233,13 +1234,13 @@ void Cardiovascular::Hemorrhage()
     const double returnBaseResistance = returnPath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
     double tResModifier;
     switch (tLevel) {
-    case CDM::enumTourniquetApplicationLevel::Applied:
+    case SETourniquetApplicationType::Applied:
       tResModifier = 100.0;
       break;
-    case CDM::enumTourniquetApplicationLevel::Misapplied:
+    case SETourniquetApplicationType::Misapplied:
       tResModifier = 3.0; //Slow blood flow, but don't stop entirely
       break;
-    case CDM::enumTourniquetApplicationLevel::None:
+    case SETourniquetApplicationType::NotApplied:
       //This case shouldn't get hit because "None" deactivates tourniquet, but account for it just in case
     default:
       tResModifier = 1.0;
@@ -1261,7 +1262,7 @@ void Cardiovascular::Hemorrhage()
 
   m_patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
 }
-
+#pragma optimize("", on)
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// The function initiates a flow source on the pericardium. It is used by both the action and condition.
@@ -1366,7 +1367,7 @@ void Cardiovascular::CPR()
   // Call for chest compression with an effective heart rhythm
   // In the future we may allow compressions on a beating heart, but that will require extensive testing
   // to evaluate the hemodynamic stability.
-  if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
+  if (!m_patient->IsEventActive(SEPatientEventType::CardiacArrest)) {
     Warning("CPR attempted on beating heart. Action ignored.");
     m_data.GetActions().GetPatientActions().RemoveChestCompression();
     return;
@@ -1473,8 +1474,8 @@ void Cardiovascular::CardiacArrest()
       m_EnterCardiacArrest = true;
     } else {
       m_data.GetActions().GetPatientActions().RemoveCardiacArrest();
-      m_patient->SetEvent(CDM::enumPatientEvent::CardiacArrest, false, m_data.GetSimulationTime());
-      m_patient->SetEvent(CDM::enumPatientEvent::Asystole, false, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::CardiacArrest, false, m_data.GetSimulationTime());
+      m_patient->SetEvent(SEPatientEventType::Asystole, false, m_data.GetSimulationTime());
       m_EnterCardiacArrest = false;
       m_StartSystole = true;
       SetHeartRhythm(CDM::enumHeartRhythm::NormalSinus);
@@ -1524,8 +1525,8 @@ void Cardiovascular::PericardialEffusionPressureApplication()
 void Cardiovascular::HeartDriver()
 {
   // Reset start cardiac cycle event if it was activated by BeginCardiacCycle() last time step
-  if (m_patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle))
-    m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, false, m_data.GetSimulationTime());
+  if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle))
+    m_patient->SetEvent(SEPatientEventType::StartOfCardiacCycle, false, m_data.GetSimulationTime());
 
   // m_StartSystole is set to true at the end of a cardiac cycle in order to setup the next cardiac cycle.
   // After the next cycle is prepared in BeginCardiacCycle, m_StartSystole is seet back to false.
@@ -1537,7 +1538,7 @@ void Cardiovascular::HeartDriver()
   if (GetHeartRhythm() == CDM::enumHeartRhythm::Asystole)
     m_EnterCardiacArrest = true;
 
-  if (!m_patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
+  if (!m_patient->IsEventActive(SEPatientEventType::CardiacArrest)) {
     if (m_CurrentCardiacCycleTime_s + m_dT_s > m_CardiacCyclePeriod_s) {
       m_StartSystole = true; // A new cardiac cycle will begin next time step
       m_CurrentCardiacCycleDuration_s += (m_CardiacCyclePeriod_s - m_CurrentCardiacCycleTime_s); //Add leftover time to current duration so Calc Heart Rate has an accuracte notion of how long this cycle lasted
@@ -1570,7 +1571,7 @@ void Cardiovascular::HeartDriver()
 //--------------------------------------------------------------------------------------------------
 void Cardiovascular::BeginCardiacCycle()
 {
-  m_patient->SetEvent(CDM::enumPatientEvent::StartOfCardiacCycle, true, m_data.GetSimulationTime());
+  m_patient->SetEvent(SEPatientEventType::StartOfCardiacCycle, true, m_data.GetSimulationTime());
 
   // Changes to the heart rate and other hemodynamic parameters are applied at the top of the cardiac cycle.
   // Parameters cannot change during the cardiac cycle because the heart beat is modeled as a changing compliance.
@@ -1593,7 +1594,7 @@ void Cardiovascular::BeginCardiacCycle()
   double diastolicOverride_mmHg = GetDiastolicArterialPressure().GetValue(PressureUnit::mmHg);
   double HeartDriverFrequency_Per_Min = m_patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
 
-  if (m_data.GetActions().GetPatientActions().HasOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
+  if (m_data.GetActions().GetPatientActions().HasOverride() && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == SEOnOff::On) {
     SEOverride* override = m_data.GetActions().GetPatientActions().GetOverride();
     m_OverrideOnOffCheck = true;
     m_overrideTime_s += m_data.GetTimeStep().GetValue(TimeUnit::s);
@@ -1680,7 +1681,7 @@ void Cardiovascular::BeginCardiacCycle()
 
   // Now set the cardiac cycle period and the cardiac arrest event if applicable
   if (m_EnterCardiacArrest) {
-    m_patient->SetEvent(CDM::enumPatientEvent::CardiacArrest, true, m_data.GetSimulationTime());
+    m_patient->SetEvent(SEPatientEventType::CardiacArrest, true, m_data.GetSimulationTime());
     m_CardiacCyclePeriod_s = 1.0e9;
     RecordAndResetCardiacCycle();
     GetHeartRate().SetValue(0.0, FrequencyUnit::Per_min);
@@ -2198,7 +2199,7 @@ void Cardiovascular::CalculateHeartRate()
   double HeartRate_Per_s = 0.0;
   if (m_data.GetActions().GetPatientActions().HasOverride()
       && m_data.GetActions().GetPatientActions().GetOverride()->HasHeartRateOverride()
-      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
+      && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == SEOnOff::Off) {
     HeartRate_Per_s = m_data.GetActions().GetPatientActions().GetOverride()->GetHeartRateOverride(FrequencyUnit::Per_s);
   } else {
     HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
@@ -2261,7 +2262,7 @@ void Cardiovascular::ProcessOverride()
     GetMeanArterialPressure().SetValue(override->GetMAPOverride(PressureUnit::mmHg), PressureUnit::mmHg);
   }
   if (override->HasHeartRateOverride()) {
-    if (override->GetOverrideConformance() == CDM::enumOnOff::Off) {
+    if (override->GetOverrideConformance() == SEOnOff::Off) {
       GetHeartRate().SetValue(override->GetHeartRateOverride(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
     }
   }
@@ -2323,40 +2324,40 @@ void Cardiovascular::OverrideControlLoop()
     currentSystolicArtPressureOverride = override->GetSystolicArterialPressureOverride(PressureUnit::mmHg);
   }
 
-  if ((currentBloodVolumeOverride < minBloodVolumeOverride || currentBloodVolumeOverride > maxBloodVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentBloodVolumeOverride < minBloodVolumeOverride || currentBloodVolumeOverride > maxBloodVolumeOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Blood Volume Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentCardiacOutput < minCardiacOutput || currentCardiacOutput > maxCardiacOutput) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentCardiacOutput < minCardiacOutput || currentCardiacOutput > maxCardiacOutput) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Cardiac Output Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentDiastolicArtPressureOverride < minDiastolicArtPressureOverride || currentDiastolicArtPressureOverride > maxDiastolicArtPressureOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentDiastolicArtPressureOverride < minDiastolicArtPressureOverride || currentDiastolicArtPressureOverride > maxDiastolicArtPressureOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Diastolic Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentMAPOverride < minMAPOverride || currentMAPOverride > maxMAPOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Mean Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentHROverride < minHROverride || currentHROverride > maxHROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentHROverride < minHROverride || currentHROverride > maxHROverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Heart Rate (Cardiovascular) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentHeartStrokeVolumeOverride < minHeartStrokeVolumeOverride || currentHeartStrokeVolumeOverride > maxHeartStrokeVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentHeartStrokeVolumeOverride < minHeartStrokeVolumeOverride || currentHeartStrokeVolumeOverride > maxHeartStrokeVolumeOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Heart Stroke Volume Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentSystolicArtPressureOverride < minSystolicArtPressureOverride || currentSystolicArtPressureOverride > maxSystolicArtPressureOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentSystolicArtPressureOverride < minSystolicArtPressureOverride || currentSystolicArtPressureOverride > maxSystolicArtPressureOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Systolic Arterial Pressure Override (Cardiovascular) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   return;
 }

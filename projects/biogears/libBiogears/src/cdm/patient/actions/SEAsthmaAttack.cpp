@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -44,8 +45,7 @@ bool SEAsthmaAttack::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEAsthmaAttack::Load(const CDM::AsthmaAttackData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -58,9 +58,7 @@ CDM::AsthmaAttackData* SEAsthmaAttack::Unload() const
 //-------------------------------------------------------------------------------
 void SEAsthmaAttack::Unload(CDM::AsthmaAttackData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEAsthmaAttack::HasSeverity() const

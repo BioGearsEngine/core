@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
@@ -46,10 +47,7 @@ bool SEForcedExhale::IsActive() const
 
 bool SEForcedExhale::Load(const CDM::ForcedExhaleData& in, std::default_random_engine *rd)
 {
-  SEConsciousRespirationCommand::Load(in);
-  
-  GetExpiratoryReserveVolumeFraction().Load(in.ExpiratoryReserveVolumeFraction(), rd);
-  GetPeriod().Load(in.Period(), rd);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 
@@ -62,11 +60,7 @@ CDM::ForcedExhaleData* SEForcedExhale::Unload() const
 
 void SEForcedExhale::Unload(CDM::ForcedExhaleData& data) const
 {
-  SEConsciousRespirationCommand::Unload(data);
-  if (m_ExpiratoryReserveVolumeFraction != nullptr)
-    data.ExpiratoryReserveVolumeFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_ExpiratoryReserveVolumeFraction->Unload()));
-  if (m_Period != nullptr)
-    data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 
 bool SEForcedExhale::HasExpiratoryReserveVolumeFraction() const

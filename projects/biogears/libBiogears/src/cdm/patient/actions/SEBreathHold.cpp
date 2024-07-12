@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
@@ -45,8 +46,7 @@ bool SEBreathHold::IsActive() const
 //-------------------------------------------------------------------------------
 bool SEBreathHold::Load(const CDM::BreathHoldData& in, std::default_random_engine *rd)
 {
-  SEConsciousRespirationCommand::Load(in);
-  GetPeriod().Load(in.Period(), rd);
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -59,9 +59,7 @@ CDM::BreathHoldData* SEBreathHold::Unload() const
 //-------------------------------------------------------------------------------
 void SEBreathHold::Unload(CDM::BreathHoldData& data) const
 {
-  SEConsciousRespirationCommand::Unload(data);
-  if (m_Period != nullptr)
-    data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEBreathHold::HasPeriod() const

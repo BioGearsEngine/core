@@ -36,7 +36,7 @@ PhysiologyEngineConfiguration::PhysiologyEngineConfiguration(Logger* logger)
   m_TimedStabilizationCriteria = nullptr;
   m_DynamicStabilizationCriteria = nullptr;
   m_TimeStep = nullptr;
-  m_WritePatientBaselineFile = SEOnOff(-1);
+  m_WritePatientBaselineFile = SEOnOff::Invalid;
 }
 
 //-----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ void PhysiologyEngineConfiguration::Clear()
   RemoveStabilizationCriteria();
   SAFE_DELETE(m_TimeStep);
 
-  m_WritePatientBaselineFile = SEOnOff(-1);
+  m_WritePatientBaselineFile = SEOnOff::Invalid;
 }
 //-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::Merge(const PhysiologyEngineConfiguration& from)

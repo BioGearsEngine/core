@@ -12,11 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEIntubation.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEIntubation::SEIntubation()
   : SEPatientAction()
 {
-  m_Type = (CDM::enumIntubationType::value)-1;
+  m_Type = SEIntubationType::Invalid;
 }
 //-------------------------------------------------------------------------------
 SEIntubation::~SEIntubation()
@@ -27,7 +28,7 @@ SEIntubation::~SEIntubation()
 void SEIntubation::Clear()
 {
   SEPatientAction::Clear();
-  m_Type = (CDM::enumIntubationType::value)-1;
+  m_Type = SEIntubationType::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEIntubation::IsValid() const
@@ -37,13 +38,12 @@ bool SEIntubation::IsValid() const
 //-------------------------------------------------------------------------------
 bool SEIntubation::IsActive() const
 {
-  return HasType() && GetType() != CDM::enumIntubationType::Off;
+  return HasType() && GetType() != SEIntubationType::Off;
 }
 //-------------------------------------------------------------------------------
 bool SEIntubation::Load(const CDM::IntubationData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  m_Type = in.Type();
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -56,29 +56,27 @@ CDM::IntubationData* SEIntubation::Unload() const
 //-------------------------------------------------------------------------------
 void SEIntubation::Unload(CDM::IntubationData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (HasType())
-    data.Type(m_Type);
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
-CDM::enumIntubationType::value SEIntubation::GetType() const
+SEIntubationType SEIntubation::GetType() const
 {
   return m_Type;
 }
 //-------------------------------------------------------------------------------
-void SEIntubation::SetType(CDM::enumIntubationType::value Type)
+void SEIntubation::SetType(SEIntubationType Type)
 {
   m_Type = Type;
 }
 //-------------------------------------------------------------------------------
 bool SEIntubation::HasType() const
 {
-  return m_Type == ((CDM::enumIntubationType::value)-1) ? false : true;
+  return m_Type == SEIntubationType::Invalid ? false : true;
 }
 //-------------------------------------------------------------------------------
 void SEIntubation::InvalidateType()
 {
-  m_Type = (CDM::enumIntubationType::value)-1;
+  m_Type = SEIntubationType::Invalid;
 }
 //-------------------------------------------------------------------------------
 void SEIntubation::ToString(std::ostream& str) const

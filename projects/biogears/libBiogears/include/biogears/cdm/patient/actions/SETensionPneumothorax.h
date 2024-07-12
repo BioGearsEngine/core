@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
@@ -31,21 +32,21 @@ public:
   static constexpr const char* TypeTag() { return "SETensionPneumothorax"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::TensionPneumothoraxData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::TensionPneumothoraxData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::TensionPneumothoraxData* Unload() const override;
 
-  virtual CDM::enumPneumothoraxType::value GetType() const;
-  virtual void SetType(CDM::enumPneumothoraxType::value name);
+  virtual SEPneumothoraxType GetType() const;
+  virtual void SetType(SEPneumothoraxType name);
   virtual bool HasType() const;
   virtual void InvalidateType();
 
-  virtual CDM::enumSide::value GetSide() const;
-  virtual void SetSide(CDM::enumSide::value name);
+  virtual SESide GetSide() const;
+  virtual void SetSide(SESide name);
   virtual bool HasSide() const;
   virtual void InvalidateSide();
 
@@ -53,16 +54,16 @@ public:
   virtual SEScalar0To1& GetSeverity();
 
   virtual void ToString(std::ostream& str) const override;
-         
-  bool operator==( const SETensionPneumothorax& rhs) const;
-  bool operator!=( const SETensionPneumothorax& rhs) const;
+
+  bool operator==(const SETensionPneumothorax& rhs) const;
+  bool operator!=(const SETensionPneumothorax& rhs) const;
 
 protected:
   virtual void Unload(CDM::TensionPneumothoraxData& data) const;
 
 protected:
-  CDM::enumPneumothoraxType::value m_Type;
-  CDM::enumSide::value m_Side;
+  SEPneumothoraxType m_Type;
+  SESide m_Side;
   SEScalar0To1* m_Severity;
 };
 }

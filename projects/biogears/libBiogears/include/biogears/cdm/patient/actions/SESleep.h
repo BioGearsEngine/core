@@ -11,10 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/exports.h>
+
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
@@ -27,23 +29,23 @@ class BIOGEARS_API SESleep : public SEPatientAction {
   friend class io::PatientActions;
 
 public:
-    SESleep();
+  SESleep();
   virtual ~SESleep() override;
 
   static constexpr const char* TypeTag() { return "SESleep"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Clear() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::SleepData& in, std::default_random_engine *rd = nullptr);
+  virtual bool Load(const CDM::SleepData& in, std::default_random_engine* rd = nullptr);
   virtual CDM::SleepData* Unload() const override;
 
   virtual bool HasSleepState() const;
-  virtual CDM::enumOnOff GetSleepState() const;
-  virtual void SetSleepState(CDM::enumOnOff::value t);
+  virtual SEOnOff GetSleepState() const;
+  virtual void SetSleepState(SEOnOff t);
 
   virtual void ToString(std::ostream& str) const override;
 
@@ -54,8 +56,6 @@ protected:
   virtual void Unload(CDM::SleepData& data) const;
 
 private:
-  CDM::enumOnOff::value m_SleepState;
-
-
-}; 
+  SEOnOff m_SleepState;
+};
 }

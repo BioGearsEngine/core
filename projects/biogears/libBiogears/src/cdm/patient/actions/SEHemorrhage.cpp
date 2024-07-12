@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
@@ -65,14 +66,7 @@ bool SEHemorrhage::IsActive() const
 //-----------------------------------------------------------------------------
 bool SEHemorrhage::Load(const CDM::HemorrhageData& in, std::default_random_engine *rd)
 {
-  SEPatientAction::Load(in);
-  m_Compartment = in.Compartment();
-  GetInitialRate().Load(in.InitialRate(), rd);
-  if ( in.BleedResistance().present() ){
-    GetBleedResistance().Load(in.BleedResistance().get(), rd);  
-  }
-  SetMCIS();
-
+  io::PatientActions::UnMarshall(in, *this, rd);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -85,13 +79,7 @@ CDM::HemorrhageData* SEHemorrhage::Unload() const
 //-----------------------------------------------------------------------------
 void SEHemorrhage::Unload(CDM::HemorrhageData& data) const
 {
-  SEPatientAction::Unload(data);
-  if (HasCompartment())
-    data.Compartment(m_Compartment);
-  if (HasInitialRate())
-    data.InitialRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_InitialRate->Unload()));
-  if (HasBleedResistance())
-    data.BleedResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_BleedResistance->Unload()));
+  io::PatientActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SEHemorrhage::SetMCIS()
@@ -177,7 +165,7 @@ void SEHemorrhage::InvalidateCompartment()
 //-----------------------------------------------------------------------------
 bool SEHemorrhage::HasInitialRate() const
 {
-  return m_InitialRate == nullptr ? false : true;
+  return m_InitialRate == nullptr ? false : m_InitialRate->IsValid();
 }
 //-----------------------------------------------------------------------------
 //!
@@ -199,7 +187,7 @@ SEScalarVolumePerTime const & SEHemorrhage::GetInitialRate() const
 //-----------------------------------------------------------------------------
 bool SEHemorrhage::HasBleedResistance() const
 {
-  return m_BleedResistance == nullptr ? false : true;
+  return m_BleedResistance == nullptr ? false : m_BleedResistance->IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarFlowResistance& SEHemorrhage::GetBleedResistance()
