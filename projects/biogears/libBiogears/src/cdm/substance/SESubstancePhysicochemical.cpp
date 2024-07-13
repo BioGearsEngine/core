@@ -9,9 +9,11 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/cdm/substance/SESubstancePhysicochemical.h>
+
+#include "io/cdm/Substance.h"
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
-#include <biogears/cdm/substance/SESubstancePhysicochemical.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
@@ -19,10 +21,10 @@ SESubstancePhysicochemical::SESubstancePhysicochemical(Logger* logger)
   : Loggable(logger)
 {
   m_AcidDissociationConstants.clear();
-  m_BindingProtein = (CDM::enumSubstanceBindingProtein::value)-1;
+  m_BindingProtein = (SESubstanceBindingProtein)-1;
   m_BloodPlasmaRatio = nullptr;
   m_FractionUnboundInPlasma = nullptr;
-  m_IonicState = (CDM::enumSubstanceIonicState::value)-1;
+  m_IonicState = (SESubstanceIonicState)-1;
   m_LogP = nullptr;
   m_HydrogenBondCount = nullptr;
   m_PolarSurfaceArea = nullptr;
@@ -36,10 +38,10 @@ SESubstancePhysicochemical::~SESubstancePhysicochemical()
 void SESubstancePhysicochemical::Clear()
 {
   m_AcidDissociationConstants.clear();
-  m_BindingProtein = (CDM::enumSubstanceBindingProtein::value)-1;
+  m_BindingProtein = (SESubstanceBindingProtein)-1;
   SAFE_DELETE(m_BloodPlasmaRatio);
   SAFE_DELETE(m_FractionUnboundInPlasma);
-  m_IonicState = (CDM::enumSubstanceIonicState::value)-1;
+  m_IonicState = (SESubstanceIonicState)-1;
   SAFE_DELETE(m_LogP);
   SAFE_DELETE(m_HydrogenBondCount);
   SAFE_DELETE(m_PolarSurfaceArea);
@@ -89,22 +91,7 @@ const SEScalar* SESubstancePhysicochemical::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemical::Load(const CDM::SubstancePhysicochemicalData& in)
 {
-  Clear();
-
-  for (auto pKa : in.AcidDissociationConstant()) {
-    SEScalar* pKScalar = new SEScalar();
-    pKScalar->Load(pKa);
-    m_AcidDissociationConstants.push_back(pKScalar);
-  }
-  m_BindingProtein = in.BindingProtein();
-  GetBloodPlasmaRatio().Load(in.BloodPlasmaRatio());
-  GetFractionUnboundInPlasma().Load(in.FractionUnboundInPlasma());
-  SetIonicState(in.IonicState());
-  GetLogP().Load(in.LogP());
-  if (in.HydrogenBondCount().present())
-    GetHydrogenBondCount().Load(in.HydrogenBondCount().get());
-  if (in.PolarSurfaceArea().present())
-    GetPolarSurfaceArea().Load(in.PolarSurfaceArea().get());
+  io::Substance::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -119,23 +106,7 @@ CDM::SubstancePhysicochemicalData* SESubstancePhysicochemical::Unload() const
 //-----------------------------------------------------------------------------
 void SESubstancePhysicochemical::Unload(CDM::SubstancePhysicochemicalData& data) const
 {
-  for (auto pKa : m_AcidDissociationConstants) {
-    data.AcidDissociationConstant().push_back(std::unique_ptr<CDM::ScalarData>(pKa->Unload()));
-  }
-  if (HasBindingProtein())
-    data.BindingProtein(m_BindingProtein);
-  if (HasBloodPlasmaRatio())
-    data.BloodPlasmaRatio(std::unique_ptr<CDM::ScalarData>(m_BloodPlasmaRatio->Unload()));
-  if (HasFractionUnboundInPlasma())
-    data.FractionUnboundInPlasma(std::unique_ptr<CDM::ScalarFractionData>(m_FractionUnboundInPlasma->Unload()));
-  if (HasIonicState())
-    data.IonicState(m_IonicState);
-  if (HasLogP())
-    data.LogP(std::unique_ptr<CDM::ScalarData>(m_LogP->Unload()));
-  if (HasHydrogenBondCount())
-    data.HydrogenBondCount(std::unique_ptr<CDM::ScalarData>(m_HydrogenBondCount->Unload()));
-  if (HasPolarSurfaceArea())
-    data.PolarSurfaceArea(std::unique_ptr<CDM::ScalarData>(m_PolarSurfaceArea->Unload()));
+  io::Substance::Marshall(*this, data);
 };
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemical::HasPrimaryPKA() const
@@ -176,21 +147,21 @@ double SESubstancePhysicochemical::GetSecondaryPKA() const
   return m_AcidDissociationConstants[1]->GetValue();
 }
 ////-----------------------------------------------------------------------------
-CDM::enumSubstanceBindingProtein::value SESubstancePhysicochemical::GetBindingProtein() const
+SESubstanceBindingProtein SESubstancePhysicochemical::GetBindingProtein() const
 {
   return m_BindingProtein;
 }
-void SESubstancePhysicochemical::SetBindingProtein(CDM::enumSubstanceBindingProtein::value protein)
+void SESubstancePhysicochemical::SetBindingProtein(SESubstanceBindingProtein protein)
 {
   m_BindingProtein = protein;
 }
 bool SESubstancePhysicochemical::HasBindingProtein() const
 {
-  return m_BindingProtein == ((CDM::enumSubstanceBindingProtein::value)-1) ? false : true;
+  return m_BindingProtein == SESubstanceBindingProtein::Invalid ? false : true;
 }
 void SESubstancePhysicochemical::InvalidateBindingProtein()
 {
-  m_BindingProtein = (CDM::enumSubstanceBindingProtein::value)-1;
+  m_BindingProtein = (SESubstanceBindingProtein)-1;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemical::HasBloodPlasmaRatio() const
@@ -227,21 +198,21 @@ double SESubstancePhysicochemical::GetFractionUnboundInPlasma() const
   return m_FractionUnboundInPlasma->GetValue();
 }
 //-----------------------------------------------------------------------------
-CDM::enumSubstanceIonicState::value SESubstancePhysicochemical::GetIonicState() const
+SESubstanceIonicState SESubstancePhysicochemical::GetIonicState() const
 {
   return m_IonicState;
 }
-void SESubstancePhysicochemical::SetIonicState(CDM::enumSubstanceIonicState::value state)
+void SESubstancePhysicochemical::SetIonicState(SESubstanceIonicState state)
 {
   m_IonicState = state;
 }
 bool SESubstancePhysicochemical::HasIonicState() const
 {
-  return m_IonicState == ((CDM::enumSubstanceIonicState::value)-1) ? false : true;
+  return m_IonicState == SESubstanceIonicState::Invalid ? false : true;
 }
 void SESubstancePhysicochemical::InvalidateIonicState()
 {
-  m_IonicState = (CDM::enumSubstanceIonicState::value)-1;
+  m_IonicState = (SESubstanceIonicState)-1;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePhysicochemical::HasLogP() const

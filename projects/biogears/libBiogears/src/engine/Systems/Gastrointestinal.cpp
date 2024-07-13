@@ -858,7 +858,7 @@ void Gastrointestinal::ProcessDrugCAT()
     const double bodyMass_g = m_data.GetPatient().GetWeight(MassUnit::g); //Used to estimate enterocyte volume, assuming density 1.0 g/mL
     //Physiochemical data
     const SESubstancePhysicochemical* subData = sub->GetPK()->GetPhysicochemicals();
-    const CDM::enumSubstanceIonicState ionState = sub->GetPK()->GetPhysicochemicals()->GetIonicState();
+    const SESubstanceIonicState ionState = sub->GetPK()->GetPhysicochemicals()->GetIonicState();
     const double hydrogenBondCount = subData->GetHydrogenBondCount();
     const double polarSurfaceArea = subData->GetPolarSurfaceArea();
     const double logP = subData->GetLogP();
@@ -903,15 +903,15 @@ void Gastrointestinal::ProcessDrugCAT()
     for (phIt = m_TransitPH.begin(), solIt = m_TransitBileSalts_mM.begin(); phIt != m_TransitPH.end() && solIt != m_TransitBileSalts_mM.end(); ++phIt, ++solIt) {
       //Permeability
       switch (ionState) {
-      case CDM::enumSubstanceIonicState::Acid:
+      case SESubstanceIonicState::Acid:
         ionTerm = 1.0 + std::pow(10.0, *phIt - pKa);
         break;
-      case CDM::enumSubstanceIonicState::WeakBase:
+      case SESubstanceIonicState::WeakBase:
         //Intentionally blank w/o break statement-->this way weak base and base flow to same place (same equation used)
-      case CDM::enumSubstanceIonicState::Base:
+      case SESubstanceIonicState::Base:
         ionTerm = 1.0 + std::pow(10.0, pKa - *phIt);
         break;
-      case CDM::enumSubstanceIonicState::Zwitterion:
+      case SESubstanceIonicState::Zwitterion:
         if (!subData->HasSecondaryPKA()) {
           std::stringstream ss;
           ss << "Gastrointestinal::ProcessCAT:  Zwitterions needs two pKa's defined" << std::endl;

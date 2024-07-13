@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
+#include "io/cdm/Substance.h"
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
@@ -122,10 +124,10 @@ void SESubstanceManager::AddActiveSubstance(SESubstance& substance)
 {
   if (IsActive(substance))
     return;
-  if (substance.GetState() == CDM::enumSubstanceState::Gas) {
+  if (substance.GetState() == SESubstanceState::Gas) {
     m_ActiveGases.push_back(&substance);
   }
-  if (substance.GetState() == CDM::enumSubstanceState::Liquid) {
+  if (substance.GetState() == SESubstanceState::Liquid) {
     m_ActiveLiquids.push_back(&substance);
   }
   if (substance.HasPK()) {

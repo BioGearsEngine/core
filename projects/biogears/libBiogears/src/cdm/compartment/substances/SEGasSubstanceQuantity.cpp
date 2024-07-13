@@ -29,7 +29,7 @@ SEGasSubstanceQuantity::SEGasSubstanceQuantity(SESubstance& sub, SEGasCompartmen
   m_Volume = nullptr;
   m_VolumeFraction = nullptr;
 
-  if (m_Substance.GetState() != CDM::enumSubstanceState::Gas)
+  if (m_Substance.GetState() != SESubstanceState::Gas)
     Fatal("The substance for a Gas Substance quantity must be a gas");
 }
 //-------------------------------------------------------------------------------

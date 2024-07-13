@@ -953,7 +953,7 @@ namespace io {
         throw CommonDataModelException("Substance not found : " + sfData.Name());
       }
       // if (sub->GetState() != SESubstanceState::Gas) {
-      if (sub->GetState() != CDM::enumSubstanceState::Gas) {
+      if (sub->GetState() != SESubstanceState::Gas) {
         throw CommonDataModelException("Substance not gas : " + sfData.Name());
       }
       auto subFrac = std::make_unique<SESubstanceFraction>(*sub);

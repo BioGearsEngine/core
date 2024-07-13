@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/schema/cdm/Substance.hxx>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 
 CDM_BIND_DECL(SubstancePhysicochemicalData)
 
@@ -48,8 +49,8 @@ public:
   virtual SEScalar& GetSecondaryPKA();
   virtual double GetSecondaryPKA() const;
 
-  virtual CDM::enumSubstanceBindingProtein::value GetBindingProtein() const;
-  virtual void SetBindingProtein(CDM::enumSubstanceBindingProtein::value state);
+  virtual SESubstanceBindingProtein GetBindingProtein() const;
+  virtual void SetBindingProtein(SESubstanceBindingProtein state);
   virtual bool HasBindingProtein() const;
   virtual void InvalidateBindingProtein();
 
@@ -61,8 +62,8 @@ public:
   virtual SEScalarFraction& GetFractionUnboundInPlasma();
   virtual double GetFractionUnboundInPlasma() const;
 
-  virtual CDM::enumSubstanceIonicState::value GetIonicState() const;
-  virtual void SetIonicState(CDM::enumSubstanceIonicState::value state);
+  virtual SESubstanceIonicState GetIonicState() const;
+  virtual void SetIonicState(SESubstanceIonicState state);
   virtual bool HasIonicState() const;
   virtual void InvalidateIonicState();
 
@@ -86,10 +87,10 @@ protected:
 
 protected:
   std::vector<SEScalar*> m_AcidDissociationConstants;
-  CDM::enumSubstanceBindingProtein::value m_BindingProtein;
+  SESubstanceBindingProtein m_BindingProtein;
   SEScalar* m_BloodPlasmaRatio;
   SEScalarFraction* m_FractionUnboundInPlasma;
-  CDM::enumSubstanceIonicState::value m_IonicState;
+  SESubstanceIonicState m_IonicState;
   SEScalar* m_LogP;
   SEScalar* m_HydrogenBondCount;
   SEScalar* m_PolarSurfaceArea;

@@ -20,6 +20,7 @@
 
 #include <gtest/gtest.h>
 
+#include <biogears/BiogearsEnums.h>
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
 #include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
@@ -143,12 +144,12 @@ TEST_F(TEST_FIXTURE_NAME, SubstancePharmacokinetics)
   auto sarin = mgr.GetSubstance("Sarin");
 
   auto& chemicals = source.GetPhysicochemicals();
-  chemicals.SetBindingProtein(CDM::enumSubstanceBindingProtein::AAG);
+  chemicals.SetBindingProtein(biogears::SESubstanceBindingProtein::AAG);
   chemicals.GetPrimaryPKA().SetValue(9);
   chemicals.GetSecondaryPKA().SetValue(4);
   chemicals.GetBloodPlasmaRatio().SetValue(1.0);
   chemicals.GetFractionUnboundInPlasma().SetValue(1.0);
-  chemicals.SetIonicState(CDM::enumSubstanceIonicState::Acid);
+  chemicals.SetIonicState(biogears::SESubstanceIonicState::Acid);
   chemicals.GetLogP().SetValue(1.0);
   chemicals.GetHydrogenBondCount().SetValue(1.0);
   chemicals.GetPolarSurfaceArea().SetValue(1.0);
@@ -182,12 +183,12 @@ TEST_F(TEST_FIXTURE_NAME, SubstancePhysicochemical)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetBindingProtein(CDM::enumSubstanceBindingProtein::AAG);
+  source.SetBindingProtein(biogears::SESubstanceBindingProtein::AAG);
   source.GetPrimaryPKA().SetValue(9);
   source.GetSecondaryPKA().SetValue(4);
   source.GetBloodPlasmaRatio().SetValue(1.0);
   source.GetFractionUnboundInPlasma().SetValue(1.0);
-  source.SetIonicState(CDM::enumSubstanceIonicState::Acid);
+  source.SetIonicState(biogears::SESubstanceIonicState::Acid);
   source.GetLogP().SetValue(1.0);
   source.GetHydrogenBondCount().SetValue(1.0);
   source.GetPolarSurfaceArea().SetValue(1.0);
@@ -294,7 +295,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceClearance)
 
   source.SetSystemic(true);
   source.SetCellular(false);
-  source.SetChargeInBlood(CDM::enumCharge::Negative);
+  source.SetChargeInBlood(biogears::SECharge::Negative);
 
   source.GetCellBirthRate().SetValue(1.0, biogears::FrequencyUnit::Hz);
   source.GetCellDeathRate().SetValue(1.0, biogears::FrequencyUnit::Hz);
@@ -341,8 +342,8 @@ TEST_F(TEST_FIXTURE_NAME, Substance)
   CDMType data;
 
   source.SetName("SubstanceTest");
-  source.SetClassification(CDM::enumSubstanceClass::Anesthetic);
-  source.SetState(CDM::enumSubstanceState::Solid);
+  source.SetClassification(biogears::SESubstanceClass::Anesthetic);
+  source.SetState(biogears::SESubstanceState::Solid);
 
   source.GetMichaelisCoefficient().SetValue(1.0);
   source.GetRelativeDiffusionCoefficient().SetValue(1.0);
@@ -388,7 +389,7 @@ TEST_F(TEST_FIXTURE_NAME, Substance)
   source.GetAerosolization().GetParticulateSizeDistribution().SetLengthUnit(biogears::LengthUnit::m);
   source.GetClearance().SetSystemic(true);
   source.GetClearance().SetCellular(false);
-  source.GetClearance().SetChargeInBlood(CDM::enumCharge::Negative);
+  source.GetClearance().SetChargeInBlood(biogears::SECharge::Negative);
 
   source.GetClearance().GetCellBirthRate().SetValue(1.0, biogears::FrequencyUnit::Hz);
   source.GetClearance().GetCellDeathRate().SetValue(1.0, biogears::FrequencyUnit::Hz);
@@ -443,7 +444,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompound)
   auto sarin = mgr.GetSubstance("Sarin");
 
   source.SetName("SubstanceCompoundTest");
-  source.SetClassification(CDM::enumSubstanceClass::Anesthetic);
+  source.SetClassification(biogears::SESubstanceClass::Anesthetic);
   source.SetRhFactor(true);
 
   biogears::SESubstanceConcentration sub { *sarin };

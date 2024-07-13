@@ -74,14 +74,12 @@ namespace io {
       out.m_AcidDissociationConstants.push_back(pKScalar);
     }
 
-    out.m_BindingProtein = in.BindingProtein();
-    // UnMarshall(in.BindingProtein(), out.m_BindingProtein);
+    UnMarshall(in.BindingProtein(), out.m_BindingProtein);
 
     io::Property::UnMarshall(in.BloodPlasmaRatio(), out.GetBloodPlasmaRatio());
     io::Property::UnMarshall(in.FractionUnboundInPlasma(), out.GetFractionUnboundInPlasma());
 
-    out.SetIonicState(in.IonicState());
-    // UnMarshall(in.IonicState(), out.m_IonicState);
+    UnMarshall(in.IonicState(), out.m_IonicState);
 
     io::Property::UnMarshall(in.LogP(), out.GetLogP());
     io::Property::UnMarshall(in.HydrogenBondCount(), out.GetHydrogenBondCount());
@@ -95,15 +93,8 @@ namespace io {
       io::Property::Marshall(*pKa, out.AcidDissociationConstant().back());
     }
 
-    if (in.HasBindingProtein()) {
-      out.BindingProtein(in.m_BindingProtein);
-    }
-    if (in.HasIonicState()) {
-      out.IonicState(in.m_IonicState);
-    }
-
-    // SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, BindingProtein)
-    // SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, IonicState)
+    SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, BindingProtein)
+    SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, IonicState)
 
     CDM_PROPERTY_MARSHALL_HELPER(in, out, BloodPlasmaRatio)
     CDM_PROPERTY_MARSHALL_HELPER(in, out, FractionUnboundInPlasma)
@@ -221,8 +212,7 @@ namespace io {
     if (in.RenalDynamics().present()) {
       if (in.RenalDynamics()->Regulation().present()) {
         out.m_RenalDynamic = RenalDynamic::Regulation;
-        out.SetChargeInBlood(in.RenalDynamics()->Regulation().get().ChargeInBlood());
-        // UnMarshall(in.RenalDynamics()->Regulation().get().ChargeInBlood(), out.m_ChargeInBlood);
+        UnMarshall(in.RenalDynamics()->Regulation().get().ChargeInBlood(), out.m_ChargeInBlood);
 
         io::Property::UnMarshall(in.RenalDynamics()->Regulation().get().FractionUnboundInPlasma(), out.GetFractionUnboundInPlasma());
         io::Property::UnMarshall(in.RenalDynamics()->Regulation().get().ReabsorptionRatio(), out.GetRenalReabsorptionRatio());
@@ -277,10 +267,7 @@ namespace io {
         rd.Regulation(std::make_unique<CDM::Regulation>());
         auto& rd_regulation = rd.Regulation().get();
 
-        if (in.HasChargeInBlood()) {
-          rd_regulation.ChargeInBlood(in.m_ChargeInBlood);
-        }
-        // SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in,rd_regulation,ChargeInBlood)
+        SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in, rd_regulation, ChargeInBlood)
 
         if (in.m_FractionUnboundInPlasma && in.m_FractionUnboundInPlasma->IsValid()) {
           out.RenalDynamics()->Regulation()->FractionUnboundInPlasma(std::make_unique<std::remove_reference<decltype(out.RenalDynamics()->Regulation()->FractionUnboundInPlasma())>::type>());
@@ -338,49 +325,44 @@ namespace io {
     out.Clear();
     out.m_Name = in.Name();
 
-    if (in.State().present()) {
-      out.m_State = in.State().get();
-    }
-    if (in.Classification().present()) {
-      out.m_Classification = in.Classification().get();
-      // io::Substance::UnMarshall(in.State(), out.m_State);
-      // io::Substance::UnMarshall(in.Classification(), out.m_Classification);
+    io::Substance::UnMarshall(in.State(), out.m_State);
+    io::Substance::UnMarshall(in.Classification(), out.m_Classification);
 
-      io::Property::UnMarshall(in.Density(), out.GetDensity());
-      io::Property::UnMarshall(in.MolarMass(), out.GetMolarMass());
+    io::Property::UnMarshall(in.Density(), out.GetDensity());
+    io::Property::UnMarshall(in.MolarMass(), out.GetMolarMass());
 
-      io::Property::UnMarshall(in.MaximumDiffusionFlux(), out.GetMaximumDiffusionFlux());
-      io::Property::UnMarshall(in.MichaelisCoefficient(), out.GetMichaelisCoefficient());
-      io::Property::UnMarshall(in.MembraneResistance(), out.GetMembraneResistance());
-      io::Property::UnMarshall(in.BloodConcentration(), out.GetBloodConcentration());
-      io::Property::UnMarshall(in.MassInBody(), out.GetMassInBody());
-      io::Property::UnMarshall(in.MassInBlood(), out.GetMassInBlood());
-      io::Property::UnMarshall(in.MassInTissue(), out.GetMassInTissue());
-      io::Property::UnMarshall(in.PlasmaConcentration(), out.GetPlasmaConcentration());
-      io::Property::UnMarshall(in.EffectSiteConcentration(), out.GetEffectSiteConcentration());
-      io::Property::UnMarshall(in.SystemicMassCleared(), out.GetSystemicMassCleared());
-      io::Property::UnMarshall(in.TissueConcentration(), out.GetTissueConcentration());
-      io::Property::UnMarshall(in.AlveolarTransfer(), out.GetAlveolarTransfer());
-      io::Property::UnMarshall(in.DiffusingCapacity(), out.GetDiffusingCapacity());
-      io::Property::UnMarshall(in.EndTidalFraction(), out.GetEndTidalFraction());
-      io::Property::UnMarshall(in.EndTidalPressure(), out.GetEndTidalPressure());
-      io::Property::UnMarshall(in.RelativeDiffusionCoefficient(), out.GetRelativeDiffusionCoefficient());
-      io::Property::UnMarshall(in.SolubilityCoefficient(), out.GetSolubilityCoefficient());
-      io::Property::UnMarshall(in.AreaUnderCurve(), out.GetAreaUnderCurve());
+    io::Property::UnMarshall(in.MaximumDiffusionFlux(), out.GetMaximumDiffusionFlux());
+    io::Property::UnMarshall(in.MichaelisCoefficient(), out.GetMichaelisCoefficient());
+    io::Property::UnMarshall(in.MembraneResistance(), out.GetMembraneResistance());
+    io::Property::UnMarshall(in.BloodConcentration(), out.GetBloodConcentration());
+    io::Property::UnMarshall(in.MassInBody(), out.GetMassInBody());
+    io::Property::UnMarshall(in.MassInBlood(), out.GetMassInBlood());
+    io::Property::UnMarshall(in.MassInTissue(), out.GetMassInTissue());
+    io::Property::UnMarshall(in.PlasmaConcentration(), out.GetPlasmaConcentration());
+    io::Property::UnMarshall(in.EffectSiteConcentration(), out.GetEffectSiteConcentration());
+    io::Property::UnMarshall(in.SystemicMassCleared(), out.GetSystemicMassCleared());
+    io::Property::UnMarshall(in.TissueConcentration(), out.GetTissueConcentration());
+    io::Property::UnMarshall(in.AlveolarTransfer(), out.GetAlveolarTransfer());
+    io::Property::UnMarshall(in.DiffusingCapacity(), out.GetDiffusingCapacity());
+    io::Property::UnMarshall(in.EndTidalFraction(), out.GetEndTidalFraction());
+    io::Property::UnMarshall(in.EndTidalPressure(), out.GetEndTidalPressure());
+    io::Property::UnMarshall(in.RelativeDiffusionCoefficient(), out.GetRelativeDiffusionCoefficient());
+    io::Property::UnMarshall(in.SolubilityCoefficient(), out.GetSolubilityCoefficient());
+    io::Property::UnMarshall(in.AreaUnderCurve(), out.GetAreaUnderCurve());
 
-      UnMarshall(in.Aerosolization(), out.GetAerosolization());
-      UnMarshall(in.Clearance(), out.GetClearance());
-      UnMarshall(in.Pharmacokinetics(), out.GetPK());
-      UnMarshall(in.Pharmacodynamics(), out.GetPD());
+    UnMarshall(in.Aerosolization(), out.GetAerosolization());
+    UnMarshall(in.Clearance(), out.GetClearance());
+    UnMarshall(in.Pharmacokinetics(), out.GetPK());
+    UnMarshall(in.Pharmacodynamics(), out.GetPD());
 
-      if (out.HasClearance() && out.HasPK() && out.GetPK().HasPhysicochemicals()
-          && out.GetClearance().HasFractionUnboundInPlasma()
-          && !out.GetClearance().GetFractionUnboundInPlasma().Equals(out.GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma())) {
+    if (out.HasClearance() && out.HasPK() && out.GetPK().HasPhysicochemicals()
+        && out.GetClearance().HasFractionUnboundInPlasma()
+        && !out.GetClearance().GetFractionUnboundInPlasma().Equals(out.GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma())) {
 
-        throw CommonDataModelException("Multiple FractionUnboundInPlasma values specified, but not the same. These must match at this time.");
-      }
+      throw CommonDataModelException("Multiple FractionUnboundInPlasma values specified, but not the same. These must match at this time.");
     }
   }
+
   void Substance::Marshall(const SESubstance& in, CDM::SubstanceData& out)
   {
     if (in.HasName()) {
@@ -389,15 +371,8 @@ namespace io {
       out.Name("Unknown Substance");
     }
 
-    if (in.HasState()) {
-      out.State(in.m_State);
-    }
-    if (in.HasClassification()) {
-      out.Classification(in.m_Classification);
-    }
-
-    // SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, State)
-    // SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, Classification)
+    SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, State)
+    SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, Classification)
 
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Density)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MolarMass)
@@ -440,8 +415,7 @@ namespace io {
     }
 
     if (in.Classification().present()) {
-      out.SetClassification(in.Classification().get()); 
-      // UnMarshall(in.Classification().get(), out.m_Classification);
+      UnMarshall(in.Classification().get(), out.m_Classification);
     }
 
     std::string err;
@@ -472,10 +446,9 @@ namespace io {
       out.BloodRHFactor(in.GetRhFactor());
     }
 
-    CDM_ENUM_MARSHALL_HELPER(in, out, Classification)
-    //if (in.HasClassification()) {
-    //  io::Substance::Marshall(in.m_Classification, out.Classification());
-    //}
+    if (in.HasClassification()) {
+      io::Substance::Marshall(in.m_Classification, out.Classification());
+    }
 
     std::vector<SESubstanceConcentration> m_Components;
 
