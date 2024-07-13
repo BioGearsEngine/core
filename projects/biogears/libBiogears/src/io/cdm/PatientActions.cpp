@@ -169,7 +169,7 @@ namespace io {
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ChestOcclusiveDressing, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ConsciousRespiration, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ConsumeNutrients, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Ebola, PatientActions, rd)
+      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Exercise, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Ebola, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Escharotomy, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ExampleAction, PatientActions, rd)

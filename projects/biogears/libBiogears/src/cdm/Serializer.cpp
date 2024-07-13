@@ -105,12 +105,15 @@ bool ErrorHandler::handleError(const xercesc::DOMError& err)
   char* uri(xercesc::XMLString::transcode(loc->getURI()));
   char* msg(xercesc::XMLString::transcode(err.getMessage()));
 
+  std::stringstream  error_;
   error_.str() = "";
   error_ << uri << ":"
          << loc->getLineNumber() << ":" << loc->getColumnNumber() << " "
          << (warn ? "warning: " : "error: ") << msg << std::ends;
   /// \error Invalid schema file
-  std::cerr << std::flush << error_.str() << "\n" << err.getRelatedData() << "\n" << err.getRelatedException() << std::endl;
+  std::cerr << std::flush << uri << ":" << loc->getLineNumber() << ":" << loc->getColumnNumber() << " "
+         << (warn ? "warning: " : "error: ") << msg << "\n" 
+         << err.getRelatedData() << "\n" << err.getRelatedException() << std::endl;
   
   
   xercesc::XMLString::release(&uri);

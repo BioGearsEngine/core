@@ -316,12 +316,12 @@ bool SENutrition::IsValid() const {
   //Todo: Refine the meaning if IsValid nutrition. Is it a meal with all members at least at Zero 
   //      or is it a meal with a Name and at least one member.
   return HasName()
-    && HasCarbohydrate()
-    && HasFat()
-    && HasProtein()
-    && HasCalcium()
-    && HasSodium()
-    && HasWater();
+    && (HasCarbohydrate()
+    || HasFat()
+    || HasProtein()
+    || HasCalcium()
+    || HasSodium()
+    || HasWater());
 }
 //-----------------------------------------------------------------------------
 void SENutrition::ToString(std::ostream& str) const
