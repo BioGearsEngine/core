@@ -85,7 +85,7 @@ bool SEEnvironmentActionCollection::ProcessAction(const CDM::EnvironmentActionDa
 bool SEEnvironmentActionCollection::IsValid(const SEEnvironmentAction& action)
 {
   if (!action.IsValid()) {
-    Error("Invalid Inhaler Environment Action");
+    Error("Invalid Environment Action");
     return false;
   }
   return true;

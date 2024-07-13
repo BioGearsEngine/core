@@ -24,6 +24,7 @@ namespace biogears {
 class SEEnvironmentAction;
 class SEEnvironmentChange;
 class SEThermalApplication;
+class SEAction;
 
 #define CDM_ENVIRONMENT_ACTIONS_MARSHALL_HELPER(in, out, func)                              \
   if (in.m_##func) {                                                                 \
@@ -55,6 +56,7 @@ namespace io {
     static void Marshall(const SEThermalApplication& in, CDM::ThermalApplicationData& out);
     // Factories
     static std::unique_ptr<CDM::EnvironmentActionData> factory(const SEEnvironmentAction*);
+
 
     //-----------------------------------------------------------------------------
     static void Copy(const SEEnvironmentAction& in, SEEnvironmentAction& out);

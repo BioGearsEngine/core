@@ -9,6 +9,27 @@
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
+
+#define POLYMORPHIC_MARSHALL(paramName, typeName)                               \
+  if (auto typeName = dynamic_cast<SE##typeName const*>(paramName); typeName) { \
+    auto typeName##Data = std::make_unique<CDM::typeName##Data>();              \
+    Marshall(*typeName, *typeName##Data);                                       \
+    return std::move(typeName##Data);                                           \
+  }
+
+#define POLYMORPHIC_UNMARSHALL(paramName, typeName, schema)                                        \
+  if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
+    auto typeName = std::make_unique<SE##typeName>();                                              \
+    schema::UnMarshall(*typeName##Data, *typeName);                                                \
+    return std::move(typeName);                                                                    \
+  }
+
+#define STOCASTIC_POLYMORPHIC_UNMARSHALL(paramName, typeName, schema, engine)                      \
+  if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
+    auto typeName = std::make_unique<SE##typeName>();                                              \
+    schema::UnMarshall(*typeName##Data, *typeName, engine);                                        \
+    return std::move(typeName);                                                                    \
+  }
 namespace biogears {
 namespace io {
   // class SEEnvironmentAction
@@ -89,18 +110,10 @@ namespace io {
   //! Can throw NULLPTR to indicate a failure
   std::unique_ptr<CDM::EnvironmentActionData> EnvironmentActions::factory(const SEEnvironmentAction* environmentAction)
   {
-    if (auto environmentChangeAction = dynamic_cast<SEEnvironmentChange const*>(environmentAction); environmentChangeAction) {
-      auto environmentChangeActionData = std::make_unique<CDM::EnvironmentChangeData>();
-      Marshall(*environmentChangeAction, *environmentChangeActionData);
-      return std::move(environmentChangeActionData);
-    }
+    POLYMORPHIC_MARSHALL(environmentAction, EnvironmentChange)
+    POLYMORPHIC_MARSHALL(environmentAction, ThermalApplication)
 
-    if (auto thermalApplication = dynamic_cast<SEThermalApplication const*>(environmentAction); thermalApplication) {
-      auto thermalApplicationData = std::make_unique<CDM::EnvironmentChangeData>();
-      Marshall(*thermalApplication, *thermalApplicationData);
-      return std::move(thermalApplicationData);
-    }
     throw biogears::CommonDataModelException("EnvironmentActions::factory does not support the derived SEEnvironmentAction. If you are not a developer contact upstream for support.");
   }
-}
-}
+} //namespace io
+} //namespace biogears
