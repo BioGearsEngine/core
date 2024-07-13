@@ -53,13 +53,17 @@ file(GLOB_RECURSE biogears_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/biogears/*.
 file(GLOB_RECURSE cdm_xsd_list "${PROJECT_SOURCE_DIR}/share/xsd/cdm/*.xsd")
 
 set (BIOGEARS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set (BIOGEARS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/$<CONFIG>)
-set (BIOGEARS_BINARY_BARE_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/)
-
+if (NOT APPLE)
+  set (GENERATED_PREFIX generated/$<CONFIG>)
+else()
+  set (GENERATED_PREFIX generated/)
+endif()
+set (BIOGEARS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/${GENERATED_PREFIX})
+set (BIOGEARS_BINARY_BARE_DIR ${CMAKE_CURRENT_BINARY_DIR}/${GENERATED_PREFIX})
 
 REGISTER_XSD_DIR( "${PROJECT_SOURCE_DIR}/share/xsd/"
                     CONFIG "${PROJECT_SOURCE_DIR}/share/xsd/BioGearsDataModel.cfg"
-                    PROJECT "generated/$<CONFIG>/biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
+                    PROJECT "${GENERATED_PREFIX}/biogears" COMPONENT "schema" RESOURCE_FOLDER "resources/schema"
                     NO_TARGETS SOURCES_VAR XSD_SRCS HEADERS_VAR XSD_HDRS VERBOSITY 1)
 
 

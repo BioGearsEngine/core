@@ -26,7 +26,7 @@ if( Biogears_BUILD_CIRCUIT_TESTS)
     COMPILE_PDB_NAME "biogears_circuit_test"
     PROJECT_LABEL "libbiogears_circuit_test"
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
-    CXX_STANDARD 14
+    CXX_STANDARD 20
     )
   set_target_properties(libbiogears_circuit_test PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
   ###############################################################################
