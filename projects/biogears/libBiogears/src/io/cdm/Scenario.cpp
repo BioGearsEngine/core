@@ -75,9 +75,7 @@ namespace io {
       }
 
       for (auto& action : actionList->Action()) {
-
         auto new_action = PatientActions::factory(&action, scenario.m_SubMgr, default_random_engine.get());
-
         if (new_action != nullptr) {
           scenario.m_Actions.push_back(new_action.release());
         }

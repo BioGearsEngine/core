@@ -10,6 +10,7 @@
 #include "PatientNutrition.h"
 #include "Property.h"
 #include "Scenario.h"
+#include "Substance.h"
 
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 #include <biogears/schema/cdm/EnvironmentActions.hxx>
@@ -321,11 +322,13 @@ namespace io {
     POLYMORPHIC_MARSHALL(patientAction, Tourniquet)
     POLYMORPHIC_MARSHALL(patientAction, Sleep)
 
-    POLYMORPHIC_MARSHALL(patientAction, SubstanceBolus)
-    POLYMORPHIC_MARSHALL(patientAction, SubstanceCompoundInfusion)
-    POLYMORPHIC_MARSHALL(patientAction, SubstanceInfusion)
-    POLYMORPHIC_MARSHALL(patientAction, SubstanceNasalDose)
-    POLYMORPHIC_MARSHALL(patientAction, SubstanceOralDose)
+    if (auto substanceAdministration = dynamic_cast<SESubstanceAdministration const*>(patientAction); substanceAdministration) {
+      POLYMORPHIC_MARSHALL(patientAction, SubstanceBolus)
+      POLYMORPHIC_MARSHALL(patientAction, SubstanceCompoundInfusion)
+      POLYMORPHIC_MARSHALL(patientAction, SubstanceInfusion)
+      POLYMORPHIC_MARSHALL(patientAction, SubstanceOralDose)
+      POLYMORPHIC_MARSHALL(patientAction, SubstanceNasalDose)
+    }
 
     POLYMORPHIC_MARSHALL(patientAction, Urinate)
     throw biogears::CommonDataModelException("InhalerActions::factory does not support the derived SEInhalerAction. If you are not a developer contact upstream for support.");
@@ -922,7 +925,7 @@ namespace io {
     out.Clear();
 
     PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
- 
+
     io::PatientActions::UnMarshall(in.Type(), out.m_Type);
   }
   void PatientActions::Marshall(const SEIntubation& in, CDM::IntubationData& out)
@@ -1518,13 +1521,12 @@ namespace io {
   {
     out.Clear();
     PatientActions::UnMarshall(static_cast<CDM::SubstanceAdministrationData const&>(in), static_cast<SESubstanceAdministration&>(out));
-
-    io::PatientActions::UnMarshall((CDM::SubstanceAdministrationData const&)in, (SESubstanceAdministration&)out);
     io::Property::UnMarshall(in.Dose(), out.GetDose(), rd);
   }
   void PatientActions::Marshall(const SESubstanceNasalDose& in, CDM::SubstanceNasalDoseData& out)
   {
     io::PatientActions::Marshall(static_cast<SESubstanceAdministration const&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
+    out.Substance(in.GetSubstance().GetName());
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Dose);
   }
   //----------------------------------------------------------------------------------
