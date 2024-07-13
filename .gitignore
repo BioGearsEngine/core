@@ -9,6 +9,8 @@ build*/
 CMakeUserPresets.json
 *~*.TMP
 
+.DS_Store
+
 .idea/*
 .vs/*
 .vscode/*
