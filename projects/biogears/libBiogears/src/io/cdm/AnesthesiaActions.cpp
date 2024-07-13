@@ -278,9 +278,8 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEOxygenTankPressureLoss& in, CDM::OxygenTankPressureLossData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    out.State(in.IsActive() ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
-    //out.State(std::make_unique<std::remove_reference<decltype(out.State())>::type>()); 
-    //io::Property::Marshall(in.m_State, out.State());
+    out.State(std::make_unique<std::remove_reference<decltype(out.State())>::type>()); 
+    io::Property::Marshall(in.m_State, out.State());
   }
 
   //----------------------------------------------------------------------------------

@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const InversePressureUnit InversePressureUnit::Inverse_Pa("1/Pa");

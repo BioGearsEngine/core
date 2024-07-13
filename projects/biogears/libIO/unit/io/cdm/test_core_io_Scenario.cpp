@@ -20,14 +20,14 @@
 
 #include <gtest/gtest.h>
 
-#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/enums/SEPropertyEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/Logger.h>
 
+#include <io/cdm/DataRequests.h>
 #include <io/cdm/Property.h>
 #include <io/cdm/Scenario.h>
-#include <io/cdm/DataRequests.h>
 
 #ifdef DISABLE_BIOGEARS_Scenario_TEST
 #define TEST_FIXTURE_NAME DISABLED_ScenarioFixture
@@ -389,6 +389,7 @@ TEST_F(TEST_FIXTURE_NAME, DataRequestManager)
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 TEST_F(TEST_FIXTURE_NAME, Scenario)
 {
+  using namespace biogears;
   USING_TYPES(Scenario)
 
   biogears::Logger logger;
@@ -479,9 +480,9 @@ TEST_F(TEST_FIXTURE_NAME, Scenario)
   source.GetInitialParameters().GetPatient().GetVitalCapacity().SetValue(30.0, biogears::VolumeUnit::L);
 
   source.GetAutoSerialization().GetPeriod().SetValue(10, biogears::TimeUnit::s);
-  source.GetAutoSerialization().SetPeriodTimeStamps(CDM::enumOnOff::On);
-  source.GetAutoSerialization().SetAfterActions(CDM::enumOnOff::On);
-  source.GetAutoSerialization().SetReloadState(CDM::enumOnOff::On);
+  source.GetAutoSerialization().SetPeriodTimeStamps(SEOnOff::On);
+  source.GetAutoSerialization().SetAfterActions(SEOnOff::On);
+  source.GetAutoSerialization().SetReloadState(SEOnOff::On);
   source.GetAutoSerialization().SetDirectory("SetDirectory:");
   source.GetAutoSerialization().SetFileName("SetFileName:");
   source.GetDataRequestManager();
@@ -616,6 +617,7 @@ TEST_F(TEST_FIXTURE_NAME, ScenarioInitialParameters)
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 TEST_F(TEST_FIXTURE_NAME, ScenarioAutoSerialization)
 {
+  using namespace biogears;
   USING_TYPES(ScenarioAutoSerialization)
 
   biogears::Logger logger;
@@ -628,9 +630,9 @@ TEST_F(TEST_FIXTURE_NAME, ScenarioAutoSerialization)
 
   source.GetPeriod().SetValue(1.0, biogears::TimeUnit::hr);
 
-  source.SetPeriodTimeStamps(CDM::enumOnOff::Off);
-  source.SetAfterActions(CDM::enumOnOff::On);
-  source.SetReloadState(CDM::enumOnOff::Off);
+  source.SetPeriodTimeStamps(SEOnOff::Off);
+  source.SetAfterActions(SEOnOff::On);
+  source.SetReloadState(SEOnOff::Off);
 
   source.SetDirectory("Something Something");
   source.SetFileName("Nothing Nothing");

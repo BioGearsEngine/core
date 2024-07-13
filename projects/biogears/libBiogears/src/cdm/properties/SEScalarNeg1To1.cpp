@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 SEScalarNeg1To1::SEScalarNeg1To1()

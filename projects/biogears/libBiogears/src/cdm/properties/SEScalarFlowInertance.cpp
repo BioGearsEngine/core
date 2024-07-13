@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarFlowInertance.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const FlowInertanceUnit FlowInertanceUnit::mmHg_s2_Per_mL("mmHg s^2/mL");

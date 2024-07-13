@@ -10,6 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 AmountPerVolumeUnit AmountPerVolumeUnit::mol_Per_L("mol/L");

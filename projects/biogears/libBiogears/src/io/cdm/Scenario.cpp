@@ -237,21 +237,17 @@ namespace io {
     out.Clear();
     io::Property::UnMarshall(in.Period(), out.GetPeriod());
 
-    out.SetPeriodTimeStamps(in.PeriodTimeStamps());
-    out.SetAfterActions(in.AfterActions());
-    out.SetReloadState(in.ReloadState());
+     auto periodTimeStamp = out.GetPeriodTimeStamps();
+     io::Property::UnMarshall(in.PeriodTimeStamps(), periodTimeStamp);
+     out.SetPeriodTimeStamps(periodTimeStamp);
 
-    // auto periodTimeStamp = out.GetPeriodTimeStamps();
-    // io::Property::UnMarshall(in.PeriodTimeStamps(), periodTimeStamp);
-    // out.SetPeriodTimeStamps(periodTimeStamp);
+     auto afterActions = out.GetAfterActions();
+     io::Property::UnMarshall(in.AfterActions(), afterActions);
+     out.SetAfterActions(afterActions);
 
-    // auto afterActions = out.GetAfterActions();
-    // io::Property::UnMarshall(in.AfterActions(), afterActions);
-    // out.SetAfterActions(afterActions);
-
-    // auto reloadState = out.GetReloadState();
-    // io::Property::UnMarshall(in.ReloadState(), reloadState);
-    // out.SetReloadState(reloadState);
+     auto reloadState = out.GetReloadState();
+     io::Property::UnMarshall(in.ReloadState(), reloadState);
+     out.SetReloadState(reloadState);
 
     out.SetDirectory(in.Directory());
     out.SetFileName(in.FileName());
@@ -260,22 +256,12 @@ namespace io {
   {
     CDM_PROPERTY_MARSHALL_HELPER(in, out, Period)
 
-    // SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, PeriodTimeStamps)
-    // SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, AfterActions)
-    // SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, ReloadState)
 
-    if (in.HasPeriodTimeStamps()) {
-      out.PeriodTimeStamps(in.m_PeriodTimeStamps);
-      // Property::Marshall(in.m_PeriodTimeStamps, out.PeriodTimeStamps());
-    }
-    if (in.HasAfterActions()) {
-      out.AfterActions(in.m_AfterActions);
-      // Property::Marshall(in.m_AfterActions, out.AfterActions());
-    }
-    if (in.HasReloadState()) {
-      out.ReloadState(in.m_ReloadState);
-      // Property::Marshall(in.m_ReloadState, out.ReloadState());
-    }
+    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, PeriodTimeStamps)
+    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, AfterActions)
+    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, ReloadState)
+
+
     if (in.HasDirectory()) {
       out.Directory(in.m_Directory);
     }

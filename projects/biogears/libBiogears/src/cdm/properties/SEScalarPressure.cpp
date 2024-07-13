@@ -11,7 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 
+#include "io/cdm/Property.h"
+    
 namespace biogears {
 const PressureUnit PressureUnit::Pa("Pa");
 const PressureUnit PressureUnit::mmHg("mmHg");

@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 
+#include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>

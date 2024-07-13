@@ -11,6 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <limits>
 
+#include <biogears/cdm/properties/SEScalarQuantity.h>
+
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -86,19 +90,7 @@ bool SEScalarQuantity<Unit>::IsValid() const
 template <typename Unit>
 void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in, std::default_random_engine* rd)
 {
-  this->Clear();
-  SEProperty::Load(in);
-  if (in.unit().present()) {
-    if (in.deviation().present() && rd) {
-      auto nd = std::normal_distribution(in.value(), in.deviation().get());
-      this->SetValue(nd(*rd), Unit::GetCompoundUnit(in.unit().get()));
-    } else {
-      this->SetValue(in.value(), Unit::GetCompoundUnit(in.unit().get()));
-    }
-
-  } else
-    throw CommonDataModelException("ScalarQuantity attempted to load a ScalarData with no unit, must have a unit.");
-  m_readOnly = in.readOnly();
+  io::Property::UnMarshall(in, *this, rd);
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -114,10 +106,7 @@ CDM::ScalarData* SEScalarQuantity<Unit>::Unload() const
 template <typename Unit>
 void SEScalarQuantity<Unit>::Unload(CDM::ScalarData& data) const
 {
-  SEProperty::Unload(data);
-  data.value(m_value);
-  data.unit(m_unit->GetString());
-  data.readOnly(m_readOnly);
+  io::Property::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 template <typename Unit>
@@ -176,14 +165,12 @@ double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
   assert(!std::isnan(m_value) && m_unit != nullptr);
 #endif
 
-  if (m_unit == nullptr) {
-    return m_value;
-  }
-  if (std::isinf(m_value))
-    return m_value;
-  if (m_value == 0)
-    return m_value;
-  if (m_unit == &unit)
+  if (std::isnan(m_value)
+      || std::isinf(m_value)
+      || (m_value == 0)
+      || (m_unit == &unit)
+      || (m_unit == nullptr)
+      )
     return m_value;
   return Convert(m_value, *m_unit, unit);
 }
