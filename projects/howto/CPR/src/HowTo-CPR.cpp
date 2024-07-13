@@ -49,7 +49,7 @@ public:
     log->Info(ss);
   }
 
-  void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time) override
+  void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time) override
   {
     std::stringstream ss;
     ss <<  "Recieved Anesthesia Machine Event : " << type;

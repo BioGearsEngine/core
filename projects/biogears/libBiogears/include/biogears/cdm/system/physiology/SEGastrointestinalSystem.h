@@ -12,7 +12,10 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/SENutrition.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 #include <map>
@@ -28,7 +31,7 @@ class SEDrugTransitState;
 namespace io {
   class Physiology;
 }
-} //namespace biogears
+} // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
@@ -92,23 +95,23 @@ public:
   virtual bool Load(const CDM::DrugTransitStateData& in);
   virtual CDM::DrugTransitStateData* Unload() const;
 
-  bool Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route);
+  bool Initialize(SEScalarMass& dose, SEOralAdministrationType route);
 
   std::vector<double> GetLumenSolidMasses(const MassUnit& unit);
   std::vector<double> GetLumenDissolvedMasses(const MassUnit& unit);
   std::vector<double> GetEnterocyteMasses(const MassUnit& unit);
-  
+
   bool SetLumenSolidMasses(std::vector<double>& tsolid, const MassUnit& unit);
   bool SetLumenDissolvedMasses(std::vector<double>& tdis, const MassUnit& unit);
   bool SetEnterocyteMasses(std::vector<double>& esolid, const MassUnit& unit);
-  
+
   void IncrementStomachDissolvedMass(double value, const MassUnit& unit);
   void IncrementStomachSolidMass(double value, const MassUnit& unit);
-  
+
   double GetTotalSolidMassInLumen(const MassUnit& unit);
   double GetTotalDissolvedMassInLumen(const MassUnit& unit);
   double GetTotalMassInEnterocytes(const MassUnit& unit);
-  
+
   SEScalarMass& GetTotalMassMetabolized();
   SEScalarMass& GetTotalMassExcreted();
 

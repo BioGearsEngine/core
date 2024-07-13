@@ -82,7 +82,7 @@ public:
   {
   }
   void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time = nullptr) override { }
-  void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) override { }
+  void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr) override { }
 };
 
 //--------------------------------------------------------------------------------------------------

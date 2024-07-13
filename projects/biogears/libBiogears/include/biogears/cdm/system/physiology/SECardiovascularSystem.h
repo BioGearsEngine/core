@@ -11,7 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/schema/cdm/Physiology.hxx>
 
 namespace biogears {
@@ -119,8 +123,8 @@ public:
   SEScalarFrequency& GetHeartRate();
   double GetHeartRate(const FrequencyUnit& unit) const;
 
-  CDM::enumHeartRhythm::value GetHeartRhythm() const;
-  void SetHeartRhythm(CDM::enumHeartRhythm::value Rhythm);
+  SEHeartRhythm GetHeartRhythm() const;
+  void SetHeartRhythm(SEHeartRhythm Rhythm);
   bool HasHeartRhythm() const;
   void InvalidateHeartRhythm();
 
@@ -219,7 +223,7 @@ protected:
   SEScalarPressure* m_ExtremityPressureRightLeg;
   SEScalarFraction* m_HeartEjectionFraction;
   SEScalarFrequency* m_HeartRate;
-  CDM::enumHeartRhythm::value m_HeartRhythm;
+  SEHeartRhythm m_HeartRhythm;
   SEScalarVolume* m_HeartStrokeVolume;
   SEScalarPressure* m_IntracranialPressure;
   SEScalarPressure* m_MeanArterialPressure;

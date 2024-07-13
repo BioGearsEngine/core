@@ -27,6 +27,6 @@ public:
   virtual ~SEEventHandler() = default;
 
   virtual void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time = nullptr) = 0;
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
+  virtual void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr) = 0;
 };
 }

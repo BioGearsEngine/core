@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {

@@ -79,7 +79,7 @@ void Nervous::Initialize()
   BioGearsSystem::Initialize();
   m_FeedbackActive = false;
   m_blockActive = false;
-  SetSleepState(CDM::enumSleepState::Awake);  //patient always starts awake
+  SetSleepState(SESleepState::Awake);  //patient always starts awake
   m_AfferentChemoreceptor_Hz = 3.55;
   m_AfferentPulmonaryStretchReceptor_Hz = 12.0;
   m_AorticBaroreceptorStrain = 0.04226;
@@ -507,7 +507,7 @@ void Nervous::CentralSignalProcess()
   //Model fatigue of sympathetic peripheral response during sepsis -- Future work should investigate relevance of fatigue in other scenarios
   //Currently applying only to the peripheral signal because the literature notes that vascular smooth muscle shows depressed responsiveness to sympathetic activiy,
   //(Sayk et al., 2008 and Brassard et al., 2016) which would inhibit ability to increase peripheral resistance
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Infection)) {
     double fatigueThreshold = 6.0;
     double fatigueTimeConstant_hr = 2.0;
     double dFatigueScale_hr = 0.0;
@@ -732,7 +732,7 @@ void Nervous::BaroreceptorFeedback()
   //Update baroreceptor setpoint -- the study from which this time constant was obtained focused on hemorrhagic shock.  The time scale is much different
   //than septic shock and so it is not clear how (or if) this value would change for sepsis.  For now, we will track baroreceptor adaptation and sympathetic fatigue
   //separately.  Future work should try to consolidate these two phenomena into a single model
-  if (m_data.GetState() > EngineState::SecondaryStabilization && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+  if (m_data.GetState() > EngineState::SecondaryStabilization && !m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Infection)) {
     //Pruett2013Population assumes ~16 hr half-time for baroreceptor adaptation to new setpoint (They varied this parameter up to 1-2 days half-time)
     const double kAdapt_Per_hr = 0.042;
     const double dSetpointAdjust_mmHg_Per_hr = kAdapt_Per_hr * (systolicPressure_mmHg - m_BaroreceptorOperatingPoint_mmHg);
@@ -1362,7 +1362,7 @@ bool Nervous::CalculatePsychomotorVigilanceTask(SEPsychomotorVigilanceTask& pvt)
 void Nervous::CalculateSleepEffects()
 {
   //Calculate wake/sleep ratio to determine parameter scaling
-  CDM::enumSleepState sleepState = GetSleepState();
+  SESleepState sleepState = GetSleepState();
   double sleepTime = GetSleepTime().GetValue(TimeUnit::min);   //update value from last computation
   double wakeTime = GetWakeTime().GetValue(TimeUnit::min);   //update value from last computation
   m_BiologicalDebt = GetBiologicalDebt().GetValue();   //update value from last computation
@@ -1394,7 +1394,7 @@ void Nervous::CalculateSleepEffects()
   double count = 1.0;
   
 
-  if (sleepState == CDM::enumSleepState::Asleep) {
+  if (sleepState == SESleepState::Sleeping) {
     rwt *= rwSleepScale;
     rbt *= rbSleepScale;
   }
@@ -1414,22 +1414,22 @@ void Nervous::CalculateSleepEffects()
   //lets try an improved scheme
   m_BiologicalDebt = m_BiologicalDebt + m_dt_s * 0.5*(k1 +  k2);
 
-  if (sleepState == CDM::enumSleepState::Awake) {
+  if (sleepState == SESleepState::Awake) {
     wakeTime += (m_dt_s / 60);
   }
-  else if (sleepState == CDM::enumSleepState::Asleep) {
+  else if (sleepState == SESleepState::Sleeping) {
     sleepTime += (m_dt_s / 60);
   }
 
   //Calculate alertness metric 
-  if(sleepRatio > 3.0 && sleepState == CDM::enumSleepState::Awake) {
+  if(sleepRatio > 3.0 && sleepState == SESleepState::Awake) {
     m_AttentionLapses = aSlope * m_TiredTime_hr + aIntercept;
     m_ReactionTime_s = rSlope * m_TiredTime_hr + rIntercept;
     m_TiredTime_hr += m_dt_s / 3600.0;
   }
 
   //reset if patient has had enough sleep, recovery requires 8 hours (in any combination)
-  if(sleepState > (420.0 * count) + m_data.GetPatient().GetSleepAmount(TimeUnit::min)) {
+  if (sleepRatio > (420.0 * count) + m_data.GetPatient().GetSleepAmount(TimeUnit::min)) {
     m_AttentionLapses = aIntercept;
     m_ReactionTime_s = rIntercept;
     count += 1.0;
@@ -1457,11 +1457,11 @@ void biogears::Nervous::UpdateSleepState()
 {
   //update state from the action
   if (m_data.GetActions().GetPatientActions().HasSleepState() && m_data.GetActions().GetPatientActions().GetSleepState()->IsActive()) {
-    SetSleepState(CDM::enumSleepState::Asleep);
+    SetSleepState(SESleepState::Sleeping);
     return;
   }
   else {
-    SetSleepState(CDM::enumSleepState::Awake);
+    SetSleepState(SESleepState::Awake);
   }
   return;
 }

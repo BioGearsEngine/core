@@ -1535,7 +1535,7 @@ void Renal::CalculateVitalSigns()
         m_patient->SetEvent(SEPatientEventType::Natriuresis, false, m_data.GetSimulationTime());
       }
 
-      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Infection)) {
         double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
         if (systolicBP <= 100.0 && GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) <= 0.5) {
           m_patient->SetEvent(SEPatientEventType::SevereSepsis, true, m_data.GetSimulationTime());

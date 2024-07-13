@@ -737,7 +737,7 @@ void Energy::UpdateHeatResistance()
     double weightedAvgSegmentedTemperature_C = normalSkinTemperature_C;
     double burnTemperature = GetBurnSkinTemperature().GetValue(TemperatureUnit::C);
     SEThermalCircuitPath* metabolicHeatPath;
-    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
       SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
       std::vector<std::string> burnComptVector = burnAction->GetCompartments();
       // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
