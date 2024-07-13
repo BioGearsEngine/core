@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 
+#include "io/cdm/SubstanceQuantity.h"
+
 #include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
@@ -58,15 +60,7 @@ void SEGasSubstanceQuantity::Clear()
 //-------------------------------------------------------------------------------
 bool SEGasSubstanceQuantity::Load(const CDM::GasSubstanceQuantityData& in)
 {
-  SESubstanceQuantity::Load(in);
-  if (!m_Compartment.HasChildren()) {
-    if (in.PartialPressure().present())
-      GetPartialPressure().Load(in.PartialPressure().get());
-    if (in.Volume().present())
-      GetVolume().Load(in.Volume().get());
-    if (in.VolumeFraction().present())
-      GetVolumeFraction().Load(in.VolumeFraction().get());
-  }
+  io::SubstanceQuantity::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -79,14 +73,7 @@ CDM::GasSubstanceQuantityData* SEGasSubstanceQuantity::Unload()
 //-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::Unload(CDM::GasSubstanceQuantityData& data)
 {
-  SESubstanceQuantity::Unload(data);
-  // Even if you have children, I am unloading everything, this makes the xml actually usefull...
-  if (HasPartialPressure())
-    data.PartialPressure(std::unique_ptr<CDM::ScalarPressureData>(GetPartialPressure().Unload()));
-  if (HasVolume())
-    data.Volume(std::unique_ptr<CDM::ScalarVolumeData>(GetVolume().Unload()));
-  if (HasVolumeFraction())
-    data.VolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(GetVolumeFraction().Unload()));
+  io::SubstanceQuantity::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::SetToZero()
@@ -239,15 +226,16 @@ void SEGasSubstanceQuantity::AddChild(SEGasSubstanceQuantity& subQ)
 }
 //-----------------------------------------------------------------------------
 
+#pragma optimize("", off)
 bool SEGasSubstanceQuantity::operator==(SEGasSubstanceQuantity const& rhs) const
 {
   if (this == &rhs)
     return true;
 
-  bool equivilant = ((m_PartialPressure && rhs.m_PartialPressure) ? m_PartialPressure->operator==(*rhs.m_PartialPressure) : m_PartialPressure == rhs.m_PartialPressure)
-    && ((m_Volume && rhs.m_Volume) ? m_Volume->operator==(*rhs.m_Volume) : m_Volume == rhs.m_Volume)
-    && ((m_VolumeFraction && rhs.m_VolumeFraction) ? m_VolumeFraction->operator==(*rhs.m_VolumeFraction) : m_VolumeFraction == rhs.m_VolumeFraction)
-    && m_Compartment.operator==(rhs.m_Compartment);
+  bool equivilant = ((m_PartialPressure && rhs.m_PartialPressure) ? m_PartialPressure->operator==(*rhs.m_PartialPressure) : m_PartialPressure == rhs.m_PartialPressure);
+  equivilant &= ((m_Volume && rhs.m_Volume) ? m_Volume->operator==(*rhs.m_Volume) : m_Volume == rhs.m_Volume);
+  equivilant &= ((m_VolumeFraction && rhs.m_VolumeFraction) ? m_VolumeFraction->operator==(*rhs.m_VolumeFraction) : m_VolumeFraction == rhs.m_VolumeFraction);
+  equivilant &= m_Compartment.operator==(rhs.m_Compartment);
 
   if (equivilant) {
     for (auto i = 0; i < m_Children.size(); ++i) {
@@ -259,7 +247,7 @@ bool SEGasSubstanceQuantity::operator==(SEGasSubstanceQuantity const& rhs) const
 
   return equivilant;
 }
-
+#pragma optimize("", on)
 bool SEGasSubstanceQuantity::operator!=(SEGasSubstanceQuantity const& rhs) const
 {
   return !(*this == rhs);

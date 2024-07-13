@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEActionManager.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 
+#include "io/cdm/Scenario.h"
+
 namespace biogears {
 SEActionManager::SEActionManager(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())

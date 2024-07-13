@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 
+#include "io/cdm/Scenario.h"
+
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/scenario/SECondition.h>
@@ -47,29 +49,7 @@ void SEScenarioInitialParameters::Clear()
 //-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::Load(const CDM::ScenarioInitialParametersData& in)
 {
-  Clear();
-
-  if (in.Configuration().present())
-    GetConfiguration().Load(in.Configuration().get());
-
-  if (in.PatientFile().present())
-    m_PatientFile = in.PatientFile().get();
-  else if (in.Patient().present())
-    GetPatient().Load(in.Patient().get());
-  else {
-    Error("No patient provided");
-    return false;
-  }
-
-  for (unsigned int i = 0; i < in.Condition().size(); i++) {
-    SECondition* c = SECondition::newFromBind(in.Condition()[i], m_SubMgr);
-    if (c != nullptr)
-      m_Conditions.push_back(c);
-  }
-
-  if (in.TrackStabilization().present()) {
-    m_DoTrackStabilization = in.TrackStabilization().get();
-  }
+  io::Scenario::UnMarshall(in, *this);
   return IsValid();
 }
 //-----------------------------------------------------------------------------
@@ -82,15 +62,7 @@ CDM::ScenarioInitialParametersData* SEScenarioInitialParameters::Unload() const
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::Unload(CDM::ScenarioInitialParametersData& data) const
 {
-  if (HasPatientFile())
-    data.PatientFile(m_PatientFile);
-  else if (HasPatient())
-    data.Patient(std::unique_ptr<CDM::PatientData>(m_Patient->Unload()));
-  for (SECondition* c : m_Conditions)
-    data.Condition().push_back(std::unique_ptr<CDM::ConditionData>(c->Unload()));
-  if (HasConfiguration())
-    data.Configuration(std::unique_ptr<CDM::PhysiologyEngineConfigurationData>(m_Configuration->Unload()));
-  data.TrackStabilization((m_DoTrackStabilization) ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
+  io::Scenario::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::IsValid() const
@@ -206,6 +178,7 @@ void SEScenarioInitialParameters::SetTrackStabilization(bool flag)
   m_DoTrackStabilization = flag;
 }
 //-----------------------------------------------------------------------------
+#pragma optimize("", off)
 bool SEScenarioInitialParameters::operator==(SEScenarioInitialParameters const& rhs) const
 {
   if (this == &rhs)
@@ -224,8 +197,9 @@ bool SEScenarioInitialParameters::operator==(SEScenarioInitialParameters const& 
     equivilant = false;
   }
 
-  ;return equivilant;
+  return equivilant;
 }
+#pragma optimize("", on)
 bool SEScenarioInitialParameters::operator!=(SEScenarioInitialParameters const& rhs) const
 {
     return !(*this == rhs);

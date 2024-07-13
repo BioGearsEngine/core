@@ -51,8 +51,8 @@ void BioGearsEngineTest::SolverSpeedTest(const std::string& rptDirectory)
   BioGears bg(tsSolverSpeed.GetLogger());
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(CDM::enumOnOff::On);
-  bg.m_Config->EnableTissue(CDM::enumOnOff::On);
+  bg.m_Config->EnableRenal(SEOnOff::On);
+  bg.m_Config->EnableTissue(SEOnOff::On);
   bg.CreateCircuitsAndCompartments();
 
   SEFluidCircuitCalculator fluidCalc(tsSolverSpeed.GetLogger());

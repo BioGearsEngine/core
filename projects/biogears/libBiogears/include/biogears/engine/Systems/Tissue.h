@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
@@ -102,7 +103,7 @@ protected:
   void FatStorageAndRelease();
 
   // Process Methods
-  double CalculateBurnIntensity(double burnTBSA, CDM::enumBurnDegree::value degreeOfBurn) const;
+  double CalculateBurnIntensity(double burnTBSA, SEBurnDegree degreeOfBurn) const;
   void CalculateCompartmentalBurn();
   void CalculateDiffusion();
   void CalculatePulmonaryCapillarySubstanceTransfer();

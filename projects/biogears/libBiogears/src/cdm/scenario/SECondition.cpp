@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SECondition.h>
 
+#include "io/cdm/Conditions.h"
+
 #include <biogears/cdm/patient/conditions/SEChronicAnemia.h>
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
 #include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>
@@ -131,9 +133,7 @@ SECondition* SECondition::newFromBind(const CDM::ConditionData& data, SESubstanc
 //-------------------------------------------------------------------------------
 bool SECondition::Load(const CDM::ConditionData& in)
 {
-  Clear();
-  if (in.Comment().present())
-    m_Comment = in.Comment().get();
+  io::Conditions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -146,8 +146,7 @@ CDM::ConditionData* SECondition::Unload() const
 //-------------------------------------------------------------------------------
 void SECondition::Unload(CDM::ConditionData& data) const
 {
-  if (HasComment())
-    data.Comment(m_Comment);
+  io::Conditions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 const char* SECondition::GetComment_cStr() const

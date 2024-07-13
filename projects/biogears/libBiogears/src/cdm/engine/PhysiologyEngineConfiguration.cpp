@@ -98,63 +98,7 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
 
 bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& in)
 {
-  if (!m_Merge)
-    Clear(); // Reset only if we are not merging
-
-  if (in.TimeStep().present())
-    GetTimeStep().Load(in.TimeStep().get());
-  if (in.WritePatientBaselineFile().present())
-    io::Property::UnMarshall(in.WritePatientBaselineFile(), m_WritePatientBaselineFile);
-
-  if (in.ElectroCardioGramInterpolatorFile().present()) {
-    if (!GetECGInterpolator().LoadWaveforms(in.ElectroCardioGramInterpolatorFile().get())) {
-      Error("Unable to load ElectroCardioGram Waveforms file");
-      return false;
-    }
-  } else if (in.ElectroCardioGramInterpolator().present()) {
-    if (!GetECGInterpolator().Load(in.ElectroCardioGramInterpolator().get())) {
-      Error("Unable to load ElectroCardioGram Waveforms");
-      return false;
-    }
-  }
-
-  std::unique_ptr<CDM::ObjectData> sData;
-  const CDM::PhysiologyEngineTimedStabilizationData* tData = nullptr;
-  const CDM::PhysiologyEngineDynamicStabilizationData* dData = nullptr;
-  if (in.StabilizationCriteriaFile().present()) {
-    auto io = m_Logger->GetIoManager().lock();
-    auto possible_path = io->FindConfigFile(in.StabilizationCriteriaFile().get().c_str());
-    if (possible_path.empty()) {
-#ifdef BIOGEARS_IO_PRESENT
-      size_t content_size;
-      auto content = io::get_embedded_config_file(in.StabilizationCriteriaFile().get().c_str(), content_size);
-      sData = Serializer::ReadBuffer((XMLByte*)content, content_size, m_Logger);
-#endif
-    } else {
-      sData = Serializer::ReadFile(possible_path, m_Logger);
-    }
-    if (sData == nullptr) {
-      Error("Unable to load Stabilization Criteria file");
-      return false;
-    }
-    tData = dynamic_cast<const CDM::PhysiologyEngineTimedStabilizationData*>(sData.get());
-    dData = dynamic_cast<const CDM::PhysiologyEngineDynamicStabilizationData*>(sData.get());
-  } else if (in.StabilizationCriteria().present()) {
-    tData = dynamic_cast<const CDM::PhysiologyEngineTimedStabilizationData*>(&in.StabilizationCriteria().get());
-    dData = dynamic_cast<const CDM::PhysiologyEngineDynamicStabilizationData*>(&in.StabilizationCriteria().get());
-  }
-  if (tData != nullptr) {
-    if (!GetTimedStabilizationCriteria().Load(*tData)) {
-      Error("Unable to load Stabilization Criteria");
-      return false;
-    }
-  } else if (dData != nullptr) {
-    if (!GetDynamicStabilizationCriteria().Load(*dData)) {
-      Error("Unable to load Stabilization Criteria");
-      return false;
-    }
-  }
-
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -167,14 +111,7 @@ CDM::PhysiologyEngineConfigurationData* PhysiologyEngineConfiguration::Unload() 
 //-----------------------------------------------------------------------------
 void PhysiologyEngineConfiguration::Unload(CDM::PhysiologyEngineConfigurationData& data) const
 {
-  if (HasECGInterpolator())
-    data.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(m_ECGInterpolator->Unload()));
-  if (HasStabilizationCriteria())
-    data.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(m_StabilizationCriteria->Unload()));
-  if (HasTimeStep())
-    data.TimeStep(std::unique_ptr<CDM::ScalarTimeData>(m_TimeStep->Unload()));
-  if (HasWritePatientBaselineFile())
-    io::Property::Marshall(m_WritePatientBaselineFile, data.WritePatientBaselineFile());    
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasECGInterpolator() const

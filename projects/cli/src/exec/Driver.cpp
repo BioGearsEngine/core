@@ -754,12 +754,27 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   }
   scenario_stream.close();
 
-  auto split_scenario_path = filesystem::path(trimed_scenario_path);
-  auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
+  std::string patient_no_extension = "";
+  std::string scenario_no_extension = "";
+  filesystem::path split_scenario_path = "";
 
-  std::string trimed_patient_path(trim(ex.Patient()));
-  auto split_patient_path = filesystem::path(trimed_patient_path);
-  auto patient_no_extension = split(split_patient_path.back(), '.').front();
+  if (ex.State().size()) {  
+      split_scenario_path = filesystem::path(trimed_scenario_path);
+      scenario_no_extension = split(split_scenario_path.back(), '.').front();
+
+      std::string trimed_patient_path(trim(ex.State()));
+      auto split_patient_path = filesystem::path(trimed_patient_path);
+      patient_no_extension = split(split_patient_path.back(), '.').front();
+  }
+
+  if (ex.Patient().size()) {
+      split_scenario_path = filesystem::path(trimed_scenario_path);
+      scenario_no_extension = split(split_scenario_path.back(), '.').front();
+
+      std::string trimed_patient_path(trim(ex.Patient()));
+      auto split_patient_path = filesystem::path(trimed_patient_path);
+      patient_no_extension = split(split_patient_path.back(), '.').front();
+  }
 
   // NOTE: This loses non relative prefixes as the split will eat the leading path_separator
   filesystem::path parent_dir = split_scenario_path.parent_path();
@@ -768,7 +783,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   //   ex.Name(ex.Name() + "-" + patient_no_extension);
   // }
 
-  std::string base_file_name = (multi_patient_run) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
+  std::string base_file_name = (multi_patient_run && patient_no_extension.size() ) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
   std::string console_file = base_file_name + ".log";
   std::string log_file = base_file_name + "Results.log";
   std::string results_file = base_file_name + "Results.csv";
@@ -805,7 +820,11 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
 
   if (!ex.Patient().empty()) {
     sce.GetInitialParameters().SetPatientFile(ex.Patient());
-  } else if (!ex.Scenario().empty()) {
+  } 
+  else if (!ex.State().empty()) {
+    sce.SetEngineStateFile(ex.State());
+  }
+  else if (!ex.Scenario().empty()) {
     sce.GetInitialParameters().SetPatientFile(ex.Scenario());
   } else {
     auto logger = eng->GetLogger();

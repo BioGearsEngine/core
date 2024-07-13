@@ -72,8 +72,8 @@ void BioGearsEngineTest::BrainInjuryTest(const std::string& sTestDirectory)
   bg.SetupPatient();
 
   //Renal and Tissue are on
-  bg.m_Config->EnableRenal(CDM::enumOnOff::On);
-  bg.m_Config->EnableTissue(CDM::enumOnOff::On);
+  bg.m_Config->EnableRenal(SEOnOff::On);
+  bg.m_Config->EnableTissue(SEOnOff::On);
   bg.CreateCircuitsAndCompartments();
 
   Cardiovascular& cv = (Cardiovascular&)bg.GetCardiovascular();

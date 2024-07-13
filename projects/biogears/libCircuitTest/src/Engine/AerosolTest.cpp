@@ -254,8 +254,8 @@ void BioGearsEngineTest::DepositionFractionTest(SETestSuite& suite, SESubstance&
   BioGears bg(m_Logger);
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
-  bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
+  bg.m_Config->EnableRenal(SEOnOff::Off);
+  bg.m_Config->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
   bg.GetSubstances().InitializeGasCompartments();
   SEEnvironmentalConditions& env = bg.GetEnvironment().GetConditions();

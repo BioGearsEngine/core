@@ -368,16 +368,7 @@ void PhysiologyEngineDynamicStabilization::Clear()
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineDynamicStabilization::Load(const CDM::PhysiologyEngineDynamicStabilizationData& in)
 {
-  PhysiologyEngineStabilization::Load(in);
-  GetRestingCriteria().Load(in.RestingStabilizationCriteria());
-  if (in.FeedbackStabilizationCriteria().present())
-    GetFeedbackCriteria().Load(in.FeedbackStabilizationCriteria().get());
-  for (auto cData : in.ConditionStabilization()) {
-    PhysiologyEngineDynamicStabilizationCriteria* c = new PhysiologyEngineDynamicStabilizationCriteria(GetLogger());
-    c->Load(cData.Criteria());
-    c->SetName(cData.Name());
-    AddConditionCriteria(*c);
-  }
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -390,16 +381,7 @@ CDM::PhysiologyEngineDynamicStabilizationData* PhysiologyEngineDynamicStabilizat
 //-----------------------------------------------------------------------------
 void PhysiologyEngineDynamicStabilization::Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const
 {
-  PhysiologyEngineStabilization::Unload(data);
-  data.RestingStabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaData>(GetRestingCriteria().Unload()));
-  if (HasFeedbackCriteria())
-    data.FeedbackStabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaData>(GetFeedbackCriteria()->Unload()));
-  for (auto& c : m_ConditionCriteria) {
-    std::unique_ptr<CDM::PhysiologyEngineDynamicConditionStabilizationData> csData(new CDM::PhysiologyEngineDynamicConditionStabilizationData());
-    csData->Criteria(std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaData>(c->Unload()));
-    csData->Name(c->GetName());
-    data.ConditionStabilization().push_back(*csData);
-  }
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineDynamicStabilization::Load(const char* file)
