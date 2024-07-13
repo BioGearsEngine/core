@@ -151,28 +151,28 @@ namespace io {
     }
 
     if (auto patientActionData = dynamic_cast<CDM::PatientActionData const*>(actionData); patientActionData) {
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PatientAssessmentRequest, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AcuteStress, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ExampleAction, PatientActions, rd)
+      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AcuteRespiratoryDistress, PatientActions, rd)
+      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AsthmaAttack, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AirwayObstruction, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Apnea, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, BrainInjury, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, BurnWound, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Escharotomy, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Bronchoconstriction, PatientActions, rd)
+      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, BurnWound, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, CardiacArrest, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AsthmaAttack, PatientActions, rd)
-
       if (auto chestCompressionData = dynamic_cast<CDM::ChestCompressionData const*>(actionData); chestCompressionData) {
         STOCASTIC_POLYMORPHIC_UNMARSHALL(chestCompressionData, ChestCompressionForce, PatientActions, rd)
         STOCASTIC_POLYMORPHIC_UNMARSHALL(chestCompressionData, ChestCompressionForceScale, PatientActions, rd)
       }
-
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ChestOcclusiveDressing, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ConsciousRespiration, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ConsumeNutrients, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Ebola, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Ebola, PatientActions, rd)
+
+      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Escharotomy, PatientActions, rd)
+      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ExampleAction, PatientActions, rd)
+
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Intubation, PatientActions, rd)
 
       POLYMORPHIC_UNMARSHALL(patientActionData, MechanicalVentilation, PatientActions)
@@ -182,6 +182,7 @@ namespace io {
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Override, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Hemorrhage, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PainStimulus, PatientActions, rd)
+      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PatientAssessmentRequest, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PericardialEffusion, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Infection, PatientActions, rd)
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, TensionPneumothorax, PatientActions, rd)
@@ -241,12 +242,9 @@ namespace io {
 
       STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Urinate, PatientActions, rd)
       throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Patient Action Received.");
-
     }
-    
-    if (auto anesthesiaMachineActionData = dynamic_cast<CDM::AnesthesiaMachineActionData const*>(actionData); anesthesiaMachineActionData) 
-    {
 
+    if (auto anesthesiaMachineActionData = dynamic_cast<CDM::AnesthesiaMachineActionData const*>(actionData); anesthesiaMachineActionData) {
 
       if (auto AnesthesiaMachineConfigurationData = dynamic_cast<CDM::AnesthesiaMachineConfigurationData const*>(anesthesiaMachineActionData); AnesthesiaMachineConfigurationData) {
         auto AnesthesiaMachineConfiguration = std::make_unique<SEAnesthesiaMachineConfiguration>(substances);
