@@ -401,6 +401,8 @@ int main(int argc, char** argv)
         g_run_drug_validation = true;
       } else if (test == "system") {
         g_run_system_validation = true;
+      } else if (test == "verify") {
+        g_run_verification_routine = true;
       } else if (test == "all") {
         g_run_patient_validation = g_run_drug_validation = g_run_system_validation = g_run_verification_routine = true;
       } else if (test == "custom") {
