@@ -585,7 +585,7 @@ void BioGearsEngine::SaveStateToFile(const std::string& file)
     try {
       BioGearsState(stream, dynamic_cast<CDM::BioGearsStateData&>(*state), map);
     } catch (std::exception& ex) {
-      m_Logger->Error(ex.what());
+      m_Logger->Fatal(ex.what());
     }
     stream.close();
   }

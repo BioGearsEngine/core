@@ -24,7 +24,7 @@ BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*,
 }
 
 
-#define ELECTRICAL_CIRCUIT_TYPES CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData;
+#define ELECTRICAL_CIRCUIT_TYPES CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData
 #define ELECTRICAL_LEDGER_TYPES SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit
 
 namespace biogears {

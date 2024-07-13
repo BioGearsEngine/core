@@ -23,12 +23,12 @@ public:
   virtual ~SEScalar0To1();
 
   void Load(const CDM::ScalarData& in, std::default_random_engine *rd = nullptr) override;
-  CDM::Scalar0To1Data* Unload() const;
+  CDM::Scalar0To1Data* Unload() const override;
 
-  double GetValue() const { return SEScalar::GetValue(); }
+  double GetValue() const override { return SEScalar::GetValue(); } 
   double GetValue(const NoUnit& unitless) { return SEScalar::GetValue(); }
 
-  void SetValue(double d);
+  void SetValue(double d) override;
   void SetValue(double d, const NoUnit& unitless);
 
   bool operator==(const SEScalar0To1&) const;

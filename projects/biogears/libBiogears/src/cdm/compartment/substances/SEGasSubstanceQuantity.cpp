@@ -12,15 +12,16 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
 
 #include "io/cdm/SubstanceQuantity.h"
-
-#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
+#include <biogears/cdm/utils/GeneralMath.h>
 
 namespace biogears {
 SEGasSubstanceQuantity::SEGasSubstanceQuantity(SESubstance& sub, SEGasCompartment& compartment)
@@ -226,7 +227,7 @@ void SEGasSubstanceQuantity::AddChild(SEGasSubstanceQuantity& subQ)
 }
 //-----------------------------------------------------------------------------
 
-#pragma optimize("", off)
+
 bool SEGasSubstanceQuantity::operator==(SEGasSubstanceQuantity const& rhs) const
 {
   if (this == &rhs)
@@ -247,7 +248,7 @@ bool SEGasSubstanceQuantity::operator==(SEGasSubstanceQuantity const& rhs) const
 
   return equivilant;
 }
-#pragma optimize("", on)
+
 bool SEGasSubstanceQuantity::operator!=(SEGasSubstanceQuantity const& rhs) const
 {
   return !(*this == rhs);
