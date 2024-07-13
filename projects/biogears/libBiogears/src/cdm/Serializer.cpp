@@ -105,12 +105,14 @@ bool ErrorHandler::handleError(const xercesc::DOMError& err)
   char* uri(xercesc::XMLString::transcode(loc->getURI()));
   char* msg(xercesc::XMLString::transcode(err.getMessage()));
 
+  error_.str() = "";
   error_ << uri << ":"
          << loc->getLineNumber() << ":" << loc->getColumnNumber() << " "
          << (warn ? "warning: " : "error: ") << msg << std::ends;
   /// \error Invalid schema file
   std::cerr << std::flush << error_.str() << "\n" << err.getRelatedData() << "\n" << err.getRelatedException() << std::endl;
-
+  
+  
   xercesc::XMLString::release(&uri);
   xercesc::XMLString::release(&msg);
 
@@ -329,6 +331,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, s
     } else {
       std::cerr << err.str();
     }
+    err.str() = "";
     return std::unique_ptr<CDM::ObjectData>();
   }
   // Let's see what kind of object this is
@@ -376,6 +379,7 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, s
   } else {
     std::cerr << err.str();
   }
+  err.str() = "";
   return obj;
 }
 
