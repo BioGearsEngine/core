@@ -21,21 +21,21 @@ public:
   SEChronicHeartFailure();
   virtual ~SEChronicHeartFailure();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override; //clear memory
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override;
 
   virtual bool Load(const CDM::ChronicHeartFailureData& in);
-  virtual CDM::ChronicHeartFailureData* Unload() const;
+  virtual CDM::ChronicHeartFailureData* Unload() const override;
 
-  bool operator==(SECondition const& rhs) const = 0;
-  bool operator!=(SECondition const& rhs) const = 0;
+  bool operator==(SECondition const& rhs) const override = 0 ;
+  bool operator!=(SECondition const& rhs) const override = 0 ;
 
 protected:
   virtual void Unload(CDM::ChronicHeartFailureData& data) const;
 
 public:
-  virtual void ToString(std::ostream& str) const = 0;
+  virtual void ToString(std::ostream& str) const override = 0 ;
 
 protected:
 };

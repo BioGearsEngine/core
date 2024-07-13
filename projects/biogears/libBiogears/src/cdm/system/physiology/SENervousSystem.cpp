@@ -561,7 +561,6 @@ Tree<const char*> SENervousSystem::GetPhysiologyRequestGraph() const
     .emplace_back(idWakeTime);
 }
 //-------------------------------------------------------------------------------
-#pragma optimize("", off)
 bool SENervousSystem::operator==(SENervousSystem const& rhs) const
 {
   if (this == &rhs)
@@ -596,4 +595,3 @@ bool SENervousSystem::operator!=(SENervousSystem const& rhs) const
 }
 //-------------------------------------------------------------------------------
 }
-#pragma optimize("", on)

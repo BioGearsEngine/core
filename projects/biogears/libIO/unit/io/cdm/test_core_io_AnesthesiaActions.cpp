@@ -64,7 +64,6 @@ protected:
 
 void TEST_FIXTURE_NAME::SetUp()
 {
-  using namespace biogears;
   if (!mgr) {
     mgr = new biogears::SESubstanceManager(&logger);
     mgr->LoadSubstanceDirectory();
@@ -76,13 +75,13 @@ void TEST_FIXTURE_NAME::SetUp()
   auto oxygen = mgr->GetSubstance("Oxygen");
   auto nitrogen = mgr->GetSubstance("Nitrogen");
 
-  machine->SetConnection(SEAnesthesiaMachineConnection::Mask);
+  machine->SetConnection(biogears::SEAnesthesiaMachineConnection::Mask);
   machine->GetInletFlow().SetValue(33, biogears::VolumePerTimeUnit::mL_Per_day);
   machine->GetInspiratoryExpiratoryRatio().SetValue(0.5);
   machine->GetOxygenFraction().SetValue(.04);
-  machine->SetOxygenSource(SEAnesthesiaMachineOxygenSource::BottleTwo);
+  machine->SetOxygenSource(biogears::SEAnesthesiaMachineOxygenSource::BottleTwo);
   machine->GetPositiveEndExpiredPressure().SetValue(55, biogears::PressureUnit::mmHg);
-  machine->SetPrimaryGas(SEAnesthesiaMachinePrimaryGas::Nitrogen);
+  machine->SetPrimaryGas(biogears::SEAnesthesiaMachinePrimaryGas::Nitrogen);
   machine->GetRespiratoryRate().SetValue(66, biogears::FrequencyUnit::Per_hr);
   machine->GetReliefValvePressure().SetValue(77, biogears::PressureUnit::mmHg);
   machine->GetVentilatorPressure().SetValue(88, biogears::PressureUnit::mmHg);
@@ -90,11 +89,11 @@ void TEST_FIXTURE_NAME::SetUp()
   biogears::SEAnesthesiaMachineChamber lChamber(*mgr), rChamber(*mgr);
   biogears::SEAnesthesiaMachineOxygenBottle lBootle(&logger), rBottle(&logger);
 
-  machine->GetRightChamber().SetState(SEOnOff::On);
+  machine->GetRightChamber().SetState(biogears::SEOnOff::On);
   machine->GetRightChamber().GetSubstanceFraction().SetValue(.05);
   machine->GetRightChamber().SetSubstance(*oxygen);
 
-  machine->GetLeftChamber().SetState(SEOnOff::On);
+  machine->GetLeftChamber().SetState(biogears::SEOnOff::On);
   machine->GetLeftChamber().GetSubstanceFraction().SetValue(.05);
   machine->GetLeftChamber().SetSubstance(*nitrogen);
 
@@ -121,7 +120,6 @@ void TEST_FIXTURE_NAME::TearDown()
 //! static void Marshall(const SEAnesthesiaMachineConfiguration& in, CDM::AnesthesiaMachineConfigurationData& out);
 TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineConfiguration)
 {
-  using namespace biogears;
   USING_TYPES(AnesthesiaMachineConfiguration)
 
   biogears::Logger logger;
@@ -133,20 +131,20 @@ TEST_F(TEST_FIXTURE_NAME, AnesthesiaMachineConfiguration)
   auto oxygen = mgr.GetSubstance("Oxygen");
   auto nitrogen = mgr.GetSubstance("Nitrogen");
 
-  source.GetConfiguration().SetConnection(SEAnesthesiaMachineConnection::Mask);
+  source.GetConfiguration().SetConnection(biogears::SEAnesthesiaMachineConnection::Mask);
   source.GetConfiguration().GetInletFlow().SetValue(33, biogears::VolumePerTimeUnit::mL_Per_day);
   source.GetConfiguration().GetInspiratoryExpiratoryRatio().SetValue(0.5);
   source.GetConfiguration().GetOxygenFraction().SetValue(0.5);
-  source.GetConfiguration().SetOxygenSource(SEAnesthesiaMachineOxygenSource::BottleTwo);
+  source.GetConfiguration().SetOxygenSource(biogears::SEAnesthesiaMachineOxygenSource::BottleTwo);
   source.GetConfiguration().GetPositiveEndExpiredPressure().SetValue(55, biogears::PressureUnit::mmHg);
-  source.GetConfiguration().SetPrimaryGas(SEAnesthesiaMachinePrimaryGas::Nitrogen);
+  source.GetConfiguration().SetPrimaryGas(biogears::SEAnesthesiaMachinePrimaryGas::Nitrogen);
   source.GetConfiguration().GetRespiratoryRate().SetValue(66, biogears::FrequencyUnit::Per_hr);
   source.GetConfiguration().GetReliefValvePressure().SetValue(77, biogears::PressureUnit::mmHg);
   source.GetConfiguration().GetVentilatorPressure().SetValue(88, biogears::PressureUnit::mmHg);
-  source.GetConfiguration().GetRightChamber().SetState(SEOnOff::On);
+  source.GetConfiguration().GetRightChamber().SetState(biogears::SEOnOff::On);
   source.GetConfiguration().GetRightChamber().GetSubstanceFraction().SetValue(0.5);
   source.GetConfiguration().GetRightChamber().SetSubstance(*oxygen);
-  source.GetConfiguration().GetLeftChamber().SetState(SEOnOff::On);
+  source.GetConfiguration().GetLeftChamber().SetState(biogears::SEOnOff::On);
   source.GetConfiguration().GetLeftChamber().GetSubstanceFraction().SetValue(0.5);
   source.GetConfiguration().GetLeftChamber().SetSubstance(*nitrogen);
   source.GetConfiguration().GetOxygenBottleOne().GetVolume().SetValue(3, biogears::VolumeUnit::L);

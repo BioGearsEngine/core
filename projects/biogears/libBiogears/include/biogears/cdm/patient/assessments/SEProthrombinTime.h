@@ -33,11 +33,11 @@ public:
   static constexpr const char* TypeTag() { return "SEProthrombinTime"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset(); // reset values
-  virtual void Clear(); // clear memory
+  virtual void Reset() override ; // reset values
+  virtual void Clear() override ; // clear memory
 
   virtual bool Load(const CDM::ProthrombinTimeData& in);
-  virtual CDM::ProthrombinTimeData* Unload();
+  virtual CDM::ProthrombinTimeData* Unload() override ;
 
 protected:
   virtual void Unload(CDM::ProthrombinTimeData& data);

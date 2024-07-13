@@ -20,7 +20,6 @@
 
 #include <gtest/gtest.h>
 
-#include <biogears/BiogearsEnums.h>
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
 #include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/enums/SESubstanceEnums.h>

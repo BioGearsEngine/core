@@ -868,8 +868,6 @@ BioGears::~BioGears()
 
   m_Patient = nullptr;
 
-  m_Substances;
-
   m_CurrentTime = nullptr;
   m_SimulationTime = nullptr;
   m_managedLogger = nullptr;

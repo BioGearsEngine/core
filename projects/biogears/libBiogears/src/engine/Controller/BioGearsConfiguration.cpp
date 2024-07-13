@@ -236,7 +236,7 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_VentilatoryOcclusionPressure);
 
   //Tissue
-  m_TissueEnabled = SEOnOff::Invalid;
+  m_TissueEnabled = SEOnOff(-1);
 }
 
 void BioGearsConfiguration::Initialize()

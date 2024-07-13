@@ -46,8 +46,8 @@ specific language governing permissions and limitations under the License.
 //!    Some biogears events happen very often and this class will be called everytime any event triggers
 //!    Not just the ones you code for
 //! 
-//!    virtual void HandlePatientEvent(SEPatientEventType::value type, bool active, const SEScalarTime* time = nullptr) = 0;
-//!    virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
+//!    virtual void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time = nullptr) = 0;
+//!    virtual void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr) = 0;
 //! 
 //!    The alternative method is to provide callback functions for a single event. This is a more narrow approach where if you choose the same handler
 //!    Could be assigned to multiple events or seperate handlers for each event you wish to react to. As of biogears 7.0 this is the preferred and more 
@@ -68,7 +68,7 @@ public:
     : SEEventHandler()
   {
   }
-  void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time = nullptr) override
+  virtual void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time = nullptr)
   {
 
     static int event_count = 0;
@@ -264,6 +264,9 @@ public:
     case SEPatientEventType::_TotalPatientEvents:
       event = "TotalPatientEvents";
       break;
+    default:
+      event = "Unknown";
+      break;
     }
     std::string state = (active) ? "(On)" : "(Off)";
     if (event.size() < marquee_1.size()) {
@@ -286,7 +289,7 @@ public:
     std::cout << "  0--0--0      0  0      0       0     0        0        0    \n";
     std::cout << std::endl;
   }
-  void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr) override
+  virtual void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr)
   {
   }
 };

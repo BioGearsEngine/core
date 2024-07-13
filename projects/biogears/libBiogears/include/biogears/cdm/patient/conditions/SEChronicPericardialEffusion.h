@@ -29,12 +29,12 @@ public:
   SEChronicPericardialEffusion();
   virtual ~SEChronicPericardialEffusion();
 
-  virtual void Clear();
+  virtual void Clear() override ;
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override ;
 
   virtual bool Load(const CDM::ChronicPericardialEffusionData& in);
-  virtual CDM::ChronicPericardialEffusionData* Unload() const;
+  virtual CDM::ChronicPericardialEffusionData* Unload() const override ;
 
   bool operator==(SEChronicPericardialEffusion const&) const;
   bool operator!=(SEChronicPericardialEffusion const&) const;
@@ -45,13 +45,13 @@ protected:
   virtual void Unload(CDM::ChronicPericardialEffusionData& data) const;
 
 public:
-  virtual std::string GetName() const { return "ChronicPericardialEffusion"; }
-  virtual const char* GetName_cStr() const { return "ChronicPericardialEffusion"; }
+  virtual std::string GetName() const  override { return "ChronicPericardialEffusion"; }
+  virtual const char* GetName_cStr() const  override { return "ChronicPericardialEffusion"; }
 
   virtual bool HasAccumulatedVolume() const;
   virtual SEScalarVolume& GetAccumulatedVolume();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SEScalarVolume* m_AccumulatedVolume;

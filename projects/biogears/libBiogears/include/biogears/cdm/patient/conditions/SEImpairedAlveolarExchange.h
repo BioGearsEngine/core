@@ -27,12 +27,12 @@ public:
   SEImpairedAlveolarExchange();
   virtual ~SEImpairedAlveolarExchange();
 
-  virtual void Clear();
+  virtual void Clear() override ;
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override ;
 
   virtual bool Load(const CDM::ImpairedAlveolarExchangeData& in);
-  virtual CDM::ImpairedAlveolarExchangeData* Unload() const;
+  virtual CDM::ImpairedAlveolarExchangeData* Unload() const override ;
 
   bool operator==(SEImpairedAlveolarExchange const&) const;
   bool operator!=(SEImpairedAlveolarExchange const&) const;
@@ -43,8 +43,8 @@ protected:
   virtual void Unload(CDM::ImpairedAlveolarExchangeData& data) const;
 
 public:
-  virtual std::string GetName() const { return "ImpairedAlveolarExchange"; }
-  virtual const char* GetName_cStr() const { return "ImpairedAlveolarExchange"; }
+  virtual std::string GetName() const  override { return "ImpairedAlveolarExchange"; }
+  virtual const char* GetName_cStr() const  override { return "ImpairedAlveolarExchange"; }
 
   virtual bool HasImpairedSurfaceArea() const;
   virtual SEScalarArea& GetImpairedSurfaceArea();
@@ -54,7 +54,7 @@ public:
   virtual SEScalar0To1& GetImpairedFraction();
   virtual double GetImpairedFraction() const;
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SEScalarArea* m_ImpairedSurfaceArea;
