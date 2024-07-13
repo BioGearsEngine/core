@@ -922,6 +922,7 @@ namespace io {
     out.Clear();
 
     PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+ 
     io::PatientActions::UnMarshall(in.Type(), out.m_Type);
   }
   void PatientActions::Marshall(const SEIntubation& in, CDM::IntubationData& out)
@@ -1807,6 +1808,9 @@ namespace io {
       case CDM::enumIntubationType::Tracheal:
         out = SEIntubationType::Tracheal;
         break;
+      case CDM::enumIntubationType::Off:
+        out = SEIntubationType::Off;
+        break;
       default:
         out = SEIntubationType::Invalid;
         break;
@@ -1829,6 +1833,9 @@ namespace io {
       break;
     case SEIntubationType::Tracheal:
       out = CDM::enumIntubationType::Tracheal;
+      break;
+    case SEIntubationType::Off:
+      out = CDM::enumIntubationType::Off;
       break;
     default:
       out = "";

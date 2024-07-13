@@ -8,6 +8,27 @@
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
+#define POLYMORPHIC_MARSHALL(paramName, typeName)                               \
+  if (auto typeName = dynamic_cast<SE##typeName const*>(paramName); typeName) { \
+    auto typeName##Data = std::make_unique<CDM::typeName##Data>();              \
+    Marshall(*typeName, *typeName##Data);                                       \
+    return std::move(typeName##Data);                                           \
+  }
+
+#define POLYMORPHIC_UNMARSHALL(paramName, typeName, schema)                                        \
+  if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
+    auto typeName = std::make_unique<SE##typeName>();                                              \
+    schema::UnMarshall(*typeName##Data, *typeName);                                                \
+    return std::move(typeName);                                                                    \
+  }
+
+#define STOCASTIC_POLYMORPHIC_UNMARSHALL(paramName, typeName, schema, engine)                      \
+  if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
+    auto typeName = std::make_unique<SE##typeName>();                                              \
+    schema::UnMarshall(*typeName##Data, *typeName, engine);                                        \
+    return std::move(typeName);                                                                    \
+  }
+
 namespace biogears {
 namespace io {
   // class SEInhalerAction
@@ -44,11 +65,8 @@ namespace io {
   // Factories
   std::unique_ptr<CDM::InhalerActionData> InhalerActions::factory(const SEInhalerAction* inhalerAction)
   {
-    if (auto inhalerConfiguration = dynamic_cast<SEInhalerConfiguration const*>(inhalerAction); inhalerConfiguration) {
-      auto inhalerConfigurationData = std::make_unique<CDM::InhalerConfigurationData>();
-      Marshall(*inhalerConfiguration, *inhalerConfigurationData);
-      return std::move(inhalerConfigurationData);
-    }
+    POLYMORPHIC_MARSHALL(inhalerAction, InhalerConfiguration)
+
     throw biogears::CommonDataModelException("InhalerActions::factory does not support the derived SEInhalerAction. If you are not a developer contact upstream for support.");
   }
 }

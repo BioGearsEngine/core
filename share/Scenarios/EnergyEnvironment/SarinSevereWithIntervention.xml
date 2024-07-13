@@ -2,8 +2,7 @@
 <Scenario xmlns="uri:/mil/tatrc/physiology/datamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contentVersion="BioGears_6.1.0-beta" xsi:schemaLocation="">
     <Name>Sarin Moderate Long</Name>
     <Description>Exposure to low concentration of Sarin for an extended time period, provoking moderate physiological response</Description>
-	<EngineStateFile>./states/StandardMale@0s.xml</EngineStateFile>
-	
+	<InitialParameters><PatientFile>StandardMale.xml</PatientFile></InitialParameters>
 	<!-- Base system data required for all scenario verification -->
   <DataRequests SamplesPerSecond="3.0">
     <DataRequest xsi:type="PatientDataRequestData"    Name="Weight"                            Unit="kg"           Precision="1"/>
