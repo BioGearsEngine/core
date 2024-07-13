@@ -152,6 +152,8 @@ int HowToHemorrhage()
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   ;
   bg->GetLogger()->Info("Finished");
+
+  return 0;
 }
 
 void ParseMCIS(SEHemorrhage& hem, std::vector<unsigned int>& mcis)

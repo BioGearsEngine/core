@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarArea.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const AreaUnit AreaUnit::cm2("cm^2");
@@ -28,7 +31,8 @@ AreaUnit::AreaUnit(const std::string& u)
 {
 }
 //-----------------------------------------------------------------------------
-AreaUnit::~AreaUnit(){
+AreaUnit::~AreaUnit()
+{
 }
 //-----------------------------------------------------------------------------
 SEScalarArea::SEScalarArea()

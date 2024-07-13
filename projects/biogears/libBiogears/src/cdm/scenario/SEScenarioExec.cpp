@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 
+#include "io/cdm/Scenario.h"
+
 #include <biogears/filesystem/path.h>
 
 #include <biogears/cdm/Serializer.h>
@@ -95,7 +97,7 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
 
       auto& params = memory_safe_scenario->GetInitialParameters();
-      m_Engine.SetTrackStabilizationFlag(params.TrackingStabilization() == CDM::enumOnOff::On);
+      m_Engine.SetTrackStabilizationFlag(params.TrackingStabilization() );
 
       // Do we have any conditions
       std::vector<const SECondition*> conditions;
@@ -274,11 +276,11 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
               serializationTime_s = 0;
               serializationFileName.str("");
               serializationFileName << serializationFileNameBase;
-              if (scenario.GetAutoSerialization().GetPeriodTimeStamps() == CDM::enumOnOff::On)
+              if (scenario.GetAutoSerialization().GetPeriodTimeStamps() == SEOnOff::On)
                 serializationFileName << "@" << m_Engine.GetSimulationTime(TimeUnit::s);
               serializationFileName << ".xml";
               m_Engine.SaveStateToFile(serializationFileName.str());
-              if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
+              if (scenario.GetAutoSerialization().GetReloadState() == SEOnOff::On) {
                 m_Engine.LoadState(*m_Engine.GetStateData());
                 m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
               }
@@ -289,7 +291,7 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
             serializationFileName.str("");
             serializationFileName << serializationFileNameBase << "-" << actionName << "-@" << m_Engine.GetSimulationTime(TimeUnit::s) << ".xml";
             m_Engine.SaveStateToFile(serializationFileName.str());
-            if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
+            if (scenario.GetAutoSerialization().GetReloadState() == SEOnOff::On) {
               m_Engine.LoadState(*m_Engine.GetStateData());
               m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
             }
@@ -322,7 +324,7 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
       break;
     }
 
-    if (scenario.GetAutoSerialization().IsValid() && scenario.GetAutoSerialization().GetAfterActions() == CDM::enumOnOff::On) { // If we are testing force serialization after any action with this
+    if (scenario.GetAutoSerialization().IsValid() && scenario.GetAutoSerialization().GetAfterActions() == SEOnOff::On) { // If we are testing force serialization after any action with this
       // Pull out the action type/name for file naming
       m_ss << *a;
       size_t start = m_ss.str().find(": ") + 2;
@@ -333,7 +335,7 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
       serializationFileName.str("");
       serializationFileName << serializationFileNameBase << "-" << actionName << "-@" << m_Engine.GetSimulationTime(TimeUnit::s) << ".xml";
       m_Engine.SaveStateToFile(serializationFileName.str());
-      if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
+      if (scenario.GetAutoSerialization().GetReloadState() == SEOnOff::On) {
         m_Engine.LoadState(*m_Engine.GetStateData());
         m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
       }
