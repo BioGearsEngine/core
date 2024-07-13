@@ -418,8 +418,8 @@ void BioGearsEngineTest::EigenDiffusionTest(const std::string& rptDirectory)
   Tissue& tsu = (Tissue&)bg.GetTissue();
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
-  bg.m_Config->EnableTissue(CDM::enumOnOff::On);
+  bg.m_Config->EnableRenal(SEOnOff::Off);
+  bg.m_Config->EnableTissue(SEOnOff::On);
   bg.CreateCircuitsAndCompartments();
 
   std::string matrixFile = rptDirectory + "/EigenDiffusionTest.csv";
@@ -693,8 +693,8 @@ void BioGearsEngineTest::TissueCombinedTransportTest(const std::string& rptDirec
   DiffusionCalculator& diffCalc = (DiffusionCalculator&)bg.GetDiffusionCalculator();
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(CDM::enumOnOff::Off);
-  bg.m_Config->EnableTissue(CDM::enumOnOff::Off);
+  bg.m_Config->EnableRenal(SEOnOff::Off);
+  bg.m_Config->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   SESubstance& Na = bg.GetSubstances().GetSodium();

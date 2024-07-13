@@ -13,7 +13,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-#include <io/cdm/Actions.h>
+#include "io/cdm/Actions.h"
+#include "io/cdm/Scenario.h"
+
 namespace biogears {
 SESerializeState::SESerializeState()
   : SEAction()
@@ -39,12 +41,10 @@ bool SESerializeState::IsValid() const
   return HasFilename() && HasType();
 }
 //-----------------------------------------------------------------------------
-bool SESerializeState::Load(const CDM::SerializeStateData& in, std::default_random_engine *rd)
+bool SESerializeState::Load(const CDM::SerializeStateData& in, std::default_random_engine* rd)
 {
 
-  SEAction::Load(in);
-  io::Actions::UnMarshall(in.Type(), m_Type);
-  SetFilename(in.Filename());
+  io::Actions::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -57,12 +57,7 @@ CDM::SerializeStateData* SESerializeState::Unload() const
 //-----------------------------------------------------------------------------
 void SESerializeState::Unload(CDM::SerializeStateData& data) const
 {
-  SEAction::Unload(data);
-  data.Filename(m_Filename);
-  if (HasType()) {
-    data.Type(std::make_unique<CDM::enumSerializationType>());
-    io::Actions::Marshall(m_Type, data.Type());
-  }
+  io::Actions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SESerializeState::ToString(std::ostream& str) const
@@ -102,7 +97,7 @@ std::string SESerializeState::GetFilename() const
 {
   return m_Filename;
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 const char* SESerializeState::GetFilename_cStr() const
 {
   return m_Filename.c_str();

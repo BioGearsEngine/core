@@ -804,7 +804,7 @@ void Respiratory::MechanicalVentilation()
   if (m_data.GetActions().GetPatientActions().HasMechanicalVentilation()) {
     SEMechanicalVentilation* mv = m_data.GetActions().GetPatientActions().GetMechanicalVentilation();
     // You only get here if action is On
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::MechanicalVentilator);
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::MechanicalVentilator);
 
     //Set the substance volume fractions ********************************************
     std::vector<SESubstanceFraction*> gasFractions = mv->GetGasFractions();
@@ -856,9 +856,9 @@ void Respiratory::MechanicalVentilation()
       //Pressure is same as ambient
       m_GroundToConnection->GetNextPressureSource().SetValue(0.0, PressureUnit::cmH2O);
     }
-  } else if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::MechanicalVentilator) {
+  } else if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::MechanicalVentilator) {
     // Was just turned off
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
   }
 }
 
@@ -875,7 +875,7 @@ void Respiratory::NasalCannula()
   if (m_data.GetActions().GetPatientActions().HasNasalCannula()) {
     SENasalCannula* nc = m_data.GetActions().GetPatientActions().GetNasalCannula();
     // You only get here if action is On
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::NasalCannula);
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::NasalCannula);
 
     double flow_L_Per_min = 0.0;
     SEFluidCircuit* RespirationCircuit = &m_data.GetCircuits().GetActiveRespiratoryCircuit();
@@ -897,9 +897,9 @@ void Respiratory::NasalCannula()
     double tankResistance_cmH2O_s_Per_L = tankPressure_cmH2O / (flow_L_Per_min / 60.0);
     OxygenTankToNosepiece->GetNextResistance().SetValue(tankResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
 
-  } else if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::NasalCannula) {
+  } else if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::NasalCannula) {
     // Was just turned off
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
   }
 }
 //--------------------------------------------------------------------------------------------------
@@ -997,7 +997,7 @@ void Respiratory::RespiratoryDriver()
 
     Apnea();
 
-    if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::AnesthesiaMachine || m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::MechanicalVentilator) {
+    if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::AnesthesiaMachine || m_data.GetAirwayMode() == SEBioGearsAirwayMode::MechanicalVentilator) {
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
       m_BreathingCycleTime_s = m_ElapsedBreathingCycleTime_min * 60.0; //Set driver cycle to match elapsed cycle (dictated by ventilator) so that when we turn machine off we re-start spontaneous breathing in a good place
     }
@@ -1278,7 +1278,7 @@ void Respiratory::Intubation()
   }
 
   if (m_PatientActions->HasIntubation()) {
-    m_data.SetIntubation(CDM::enumOnOff::On);
+    m_data.SetIntubation(SEOnOff::On);
     SEIntubation* intubation = m_PatientActions->GetIntubation();
     switch (intubation->GetType()) {
     case SEIntubationType::Tracheal: {
@@ -1307,7 +1307,7 @@ void Respiratory::Intubation()
       break;
     }
   } else {
-    m_data.SetIntubation(CDM::enumOnOff::Off);
+    m_data.SetIntubation(SEOnOff::Off);
   }
 }
 
@@ -1812,16 +1812,16 @@ void Respiratory::CalculateVitalSigns()
   double arterialPartialPressureO2_mmHg = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
   double fractionInspiredO2 = 0.0;
   switch (m_data.GetAirwayMode()) {
-  case CDM::enumBioGearsAirwayMode::Free:
+  case SEBioGearsAirwayMode::Free:
     fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
     break;
-  case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
+  case SEBioGearsAirwayMode::AnesthesiaMachine:
     fractionInspiredO2 = m_data.GetAnesthesiaMachine().GetOxygenFraction().GetValue();
     break;
-  case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
+  case SEBioGearsAirwayMode::MechanicalVentilator:
     fractionInspiredO2 = m_data.GetActions().GetPatientActions().GetMechanicalVentilation()->GetGasFraction(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
     break;
-  case CDM::enumBioGearsAirwayMode::Inhaler:
+  case SEBioGearsAirwayMode::Inhaler:
     //Unclear what O2 fraction in an inhaler is, let this case flow into default for now.
   default:
     //Use environment as default
@@ -1940,12 +1940,12 @@ void Respiratory::CalculateVitalSigns()
   }
 
   //at the end check to see if they are not breathing and update respiration rate, dont update if anesthesia machine is connected
-  if (m_bNotBreathing && m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::Free) {
+  if (m_bNotBreathing && m_data.GetAirwayMode() == SEBioGearsAirwayMode::Free) {
     GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
   }
 
     //there is an issue with the driver logic where the elapsed breathing time doesn't update when you set anesthesia to zero
-  if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::AnesthesiaMachine && m_data.GetAnesthesiaMachine().GetRespiratoryRate().GetValue() == 0) {
+  if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::AnesthesiaMachine && m_data.GetAnesthesiaMachine().GetRespiratoryRate().GetValue() == 0) {
     GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
   }
 

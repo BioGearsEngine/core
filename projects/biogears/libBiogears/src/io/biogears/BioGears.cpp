@@ -52,10 +52,8 @@ namespace io {
       }
     }
 
-    out.m_AirwayMode = in.AirwayMode();
-    out.m_Intubation = in.Intubation();
-    // io::BioGears::UnMarshall(in.AirwayMode(), out.m_AirwayMode);
-    // io::Property::UnMarshall(in.Intubation(), out.m_Intubation);
+    io::BioGears::UnMarshall(in.AirwayMode(), out.m_AirwayMode);
+    io::Property::UnMarshall(in.Intubation(), out.m_Intubation);
 
     /// Patient //
     if (!in.Patient().present()) {
@@ -145,10 +143,8 @@ namespace io {
     if (in.m_EngineTrack.GetDataRequestManager().HasDataRequests()) {
       out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_EngineTrack.GetDataRequestManager().Unload()));
     }
-    out.AirwayMode(in.m_AirwayMode);
-    out.Intubation(in.m_Intubation);
-    // io::BioGears::Marshall(in.m_AirwayMode, out.AirwayMode());
-    // io::Property::Marshall(in.m_Intubation, out.Intubation());
+    io::BioGears::Marshall(in.m_AirwayMode, out.AirwayMode());
+    io::Property::Marshall(in.m_Intubation, out.Intubation());
     //  Patient
     out.Patient(std::unique_ptr<CDM::PatientData>(in.m_Patient->Unload()));
     // Conditions

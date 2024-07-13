@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/scenario/SEInhalerActionCollection.h>
 
+#include "io/cdm/Scenario.h"
+
 namespace biogears {
 SEInhalerActionCollection::SEInhalerActionCollection(SESubstanceManager& substances)
   : Loggable(substances.GetLogger())

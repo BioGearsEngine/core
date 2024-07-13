@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/substances/SESubstanceQuantity.h>
 
+#include "io/cdm/SubstanceQuantity.h"
 #include <biogears/cdm/substance/SESubstance.h>
 
 namespace biogears {
@@ -26,12 +27,12 @@ SESubstanceQuantity::~SESubstanceQuantity()
 //-------------------------------------------------------------------------------
 bool SESubstanceQuantity::Load(const CDM::SubstanceQuantityData& in)
 {
-  Clear();
+  io::SubstanceQuantity::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
 void SESubstanceQuantity::Unload(CDM::SubstanceQuantityData& data)
 {
-  data.Substance(m_Substance.GetName());
+  io::SubstanceQuantity::Marshall(*this, data);
 }
 }

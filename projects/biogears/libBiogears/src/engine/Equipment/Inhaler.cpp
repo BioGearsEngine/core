@@ -153,7 +153,7 @@ void Inhaler::PreProcess()
       Info("Inhaler removed!");
       m_InhalerDrug = nullptr;
       m_State = SEOnOff::Off;
-      m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+      m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
     }
   }
 }
@@ -188,7 +188,7 @@ void Inhaler::Administer()
   // Alert the user that the inhaler is actuated
   Info("Inhaler actuated!");
   m_State = SEOnOff::On;
-  m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Inhaler);
+  m_data.SetAirwayMode(SEBioGearsAirwayMode::Inhaler);
 
   // Initialize pressure in the inhaler node to ambient
   double dAmbientPressure = m_AmbientEnv->GetPressure(PressureUnit::cmH2O);

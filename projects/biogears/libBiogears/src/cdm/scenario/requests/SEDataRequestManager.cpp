@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEDataRequestManager.h>
 
+#include "io/cdm/DataRequests.h"
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
@@ -85,51 +87,7 @@ void SEDataRequestManager::Clear()
 //-----------------------------------------------------------------------------
 bool SEDataRequestManager::Load(const CDM::DataRequestManagerData& in, SESubstanceManager& subMgr)
 {
-  Clear();
-  if (in.Filename().present())
-    m_ResultsFile = in.Filename().get();
-  if (in.SamplesPerSecond().present())
-    m_SamplesPerSecond = in.SamplesPerSecond().get();
-  if (in.DefaultDecimalFormatting().present())
-    GetDefaultDecimalFormatting().Load(in.DefaultDecimalFormatting().get());
-  if (in.OverrideDecimalFormatting().present())
-    GetOverrideDecimalFormatting().Load(in.OverrideDecimalFormatting().get());
-
-  if (in.DataRequestFile().present()) {
-    biogears::filesystem::path dataRequestFile = in.DataRequestFile().get();
-    auto weak_io = subMgr.GetLogger()->GetIoManager();
-    auto iom = weak_io.lock();
-
-    if (dataRequestFile.exists()) {
-      auto sData = Serializer::ReadFile(dataRequestFile.ToString(), subMgr.GetLogger());
-      if (auto requestList = dynamic_cast<CDM::DataRequestManagerData*>(sData.get())) {
-        // We are ignoring recursive ActionListData where an ActionListData has an ActionFile reference
-        if (requestList->DataRequestFile().present()) {
-          throw CommonDataModelException("DatarequestFiles may not contain <DataRequestFile> and instead must be a list of <DataRequest>");
-        }
-        for (auto& request : requestList->DataRequest()) {
-          SEDataRequest* dr = newFromBind(request, subMgr, m_DefaultDecimalFormatting);
-          if (dr != nullptr && !DuplicateRequest(dr)) {
-            if (HasOverrideDecimalFormatting())
-              ((SEDecimalFormat*)dr)->Set(*m_OverrideDecimalFormatting);
-            m_Requests.push_back(dr);
-          }
-        }
-      }
-    } else {
-      throw CommonDataModelException("Can not find " + dataRequestFile.ToString());
-    }
-
-  } else {
-    for (unsigned int i = 0; i < in.DataRequest().size(); i++) {
-      SEDataRequest* dr = newFromBind(in.DataRequest()[i], subMgr, m_DefaultDecimalFormatting);
-      if (dr != nullptr && !DuplicateRequest(dr)) {
-        if (HasOverrideDecimalFormatting())
-          ((SEDecimalFormat*)dr)->Set(*m_OverrideDecimalFormatting);
-        m_Requests.push_back(dr);
-      }
-    }
-  }
+  io::DataRequests::UnMarshall(in, subMgr, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -142,21 +100,7 @@ CDM::DataRequestManagerData* SEDataRequestManager::Unload() const
 //-----------------------------------------------------------------------------
 void SEDataRequestManager::Unload(CDM::DataRequestManagerData& data) const
 {
-  data.SamplesPerSecond(m_SamplesPerSecond);
-  if (HasResultsFilename()) {
-    data.Filename(m_ResultsFile);
-  }
-  if (HasDefaultDecimalFormatting()) {
-    data.DefaultDecimalFormatting(std::unique_ptr<CDM::DecimalFormatData>(m_DefaultDecimalFormatting->Unload()));
-  }
-  if (HasOverrideDecimalFormatting()) {
-    data.OverrideDecimalFormatting(std::unique_ptr<CDM::DecimalFormatData>(m_OverrideDecimalFormatting->Unload()));
-  }
-  for (auto& dr : m_Requests) {
-    auto ptr = dr->Unload();
-    auto uptr = std::unique_ptr<CDM::DataRequestData>(ptr);
-    data.DataRequest().push_back(std::move(uptr));
-  }
+  io::DataRequests::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEDataRequestManager::HasDefaultDecimalFormatting() const

@@ -141,15 +141,7 @@ void PhysiologyEngineTimedStabilization::Clear()
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const CDM::PhysiologyEngineTimedStabilizationData& in)
 {
-  PhysiologyEngineStabilization::Load(in);
-  GetRestingStabilizationTime().Load(in.RestingStabilizationTime());
-  if (in.FeedbackStabilizationTime().present())
-    GetFeedbackStabilizationTime().Load(in.FeedbackStabilizationTime().get());
-  for (auto cc : in.ConditionStabilization()) {
-    PhysiologyEngineTimedStabilizationCriteria* sc = new PhysiologyEngineTimedStabilizationCriteria(nullptr);
-    sc->Load(cc);
-    m_ConditionCriteria.push_back(sc);
-  }
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -162,13 +154,7 @@ CDM::PhysiologyEngineTimedStabilizationData* PhysiologyEngineTimedStabilization:
 //-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilization::Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const
 {
-  PhysiologyEngineStabilization::Unload(data);
-  data.RestingStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_RestingStabilizationTime.Unload()));
-  if (HasFeedbackStabilizationTime())
-    data.FeedbackStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_FeedbackStabilizationTime->Unload()));
-  for (auto cc : m_ConditionCriteria) {
-    data.ConditionStabilization().push_back(std::unique_ptr<CDM::PhysiologyEngineTimedConditionStabilizationData>(cc->Unload()));
-  }
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const char* file)

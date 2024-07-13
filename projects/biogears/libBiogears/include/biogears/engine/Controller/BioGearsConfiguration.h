@@ -238,12 +238,12 @@ protected:
   /** Drugs */
   ////////////
 public:
-  virtual bool HasUsePDModel() const { return m_PDEnabled != (CDM::enumOnOff::value)-1; }
-  virtual bool IsPDEnabled() const { return m_PDEnabled == CDM::enumOnOff::On; }
-  virtual void UsePDModel(CDM::enumOnOff::value s) { m_PDEnabled = s; }
+  virtual bool HasUsePDModel() const { return m_PDEnabled != SEOnOff::Invalid; }
+  virtual bool IsPDEnabled() const { return m_PDEnabled == SEOnOff::On; }
+  virtual void UsePDModel(SEOnOff s) { m_PDEnabled = s; }
 
 protected:
-  CDM::enumOnOff::value m_PDEnabled;
+  SEOnOff m_PDEnabled;
 
   /////////////
   /** Energy */
@@ -381,21 +381,21 @@ public:
   virtual SEScalarLength& GetPupilDiameterBaseline();
   virtual double GetPupilDiameterBaseline(const LengthUnit& unit) const;
 
-  virtual bool HasEnableCerebral() const { return m_CerebralEnabled != (CDM::enumOnOff::value)-1; }
-  virtual bool IsCerebralEnabled() const { return m_CerebralEnabled == CDM::enumOnOff::On; }
-  virtual void EnableCerebral(CDM::enumOnOff::value s) { m_CerebralEnabled = s; }
+  virtual bool HasEnableCerebral() const { return m_CerebralEnabled != SEOnOff::Invalid; }
+  virtual bool IsCerebralEnabled() const { return m_CerebralEnabled == SEOnOff::On; }
+  virtual void EnableCerebral(SEOnOff s) { m_CerebralEnabled = s; }
 
 protected:
-  CDM::enumOnOff::value m_CerebralEnabled;
+  SEOnOff m_CerebralEnabled;
   SEScalarLength* m_PupilDiameterBaseline;
 
   ////////////
   /** Renal */
   ////////////
 public:
-  virtual bool HasEnableRenal() const { return m_RenalEnabled != (CDM::enumOnOff::value)-1; }
-  virtual bool IsRenalEnabled() const { return m_RenalEnabled == CDM::enumOnOff::On; }
-  virtual void EnableRenal(CDM::enumOnOff::value s) { m_RenalEnabled = s; }
+  virtual bool HasEnableRenal() const { return m_RenalEnabled != SEOnOff::Invalid; }
+  virtual bool IsRenalEnabled() const { return m_RenalEnabled == SEOnOff::On; }
+  virtual void EnableRenal(SEOnOff s) { m_RenalEnabled = s; }
 
   virtual bool HasPlasmaSodiumConcentrationSetPoint() const;
   virtual SEScalarMassPerVolume& GetPlasmaSodiumConcentrationSetPoint();
@@ -449,7 +449,7 @@ public:
   virtual SEScalarMassPerTime& GetTargetSodiumDelivery();
 
 protected:
-  CDM::enumOnOff::value m_RenalEnabled;
+  SEOnOff m_RenalEnabled;
 
   SEScalarMassPerVolume* m_PlasmaSodiumConcentrationSetPoint;
   SEScalarMassPerVolume* m_PeritubularPotassiumConcentrationSetPoint;
@@ -494,11 +494,11 @@ protected:
   /** Tissue */
   /////////////
 public:
-  virtual bool HasEnableTissue() const { return m_TissueEnabled != (CDM::enumOnOff::value)-1; }
-  virtual bool IsTissueEnabled() const { return m_TissueEnabled == CDM::enumOnOff::On; }
-  virtual void EnableTissue(CDM::enumOnOff::value s) { m_TissueEnabled = s; }
+  virtual bool HasEnableTissue() const { return m_TissueEnabled != SEOnOff::Invalid; }
+  virtual bool IsTissueEnabled() const { return m_TissueEnabled == SEOnOff::On; }
+  virtual void EnableTissue(SEOnOff s) { m_TissueEnabled = s; }
 
 protected:
-  CDM::enumOnOff::value m_TissueEnabled;
+  SEOnOff m_TissueEnabled;
 };
 }

@@ -240,18 +240,18 @@ void AnesthesiaMachine::SetConnection(SEAnesthesiaMachineConnection c)
     return; // No Change
   // Update the BioGears airway mode when this changes
   SEAnesthesiaMachine::SetConnection(c);
-  if (c == SEAnesthesiaMachineConnection::Mask && m_data.GetIntubation() == CDM::enumOnOff::Off) {
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::AnesthesiaMachine);
+  if (c == SEAnesthesiaMachineConnection::Mask && m_data.GetIntubation() == SEOnOff::Off) {
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::AnesthesiaMachine);
     return;
-  } else if (c == SEAnesthesiaMachineConnection::Tube && m_data.GetIntubation() == CDM::enumOnOff::On) {
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::AnesthesiaMachine);
+  } else if (c == SEAnesthesiaMachineConnection::Tube && m_data.GetIntubation() == SEOnOff::On) {
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::AnesthesiaMachine);
     return;
-  } else if (c == SEAnesthesiaMachineConnection::Mask && m_data.GetIntubation() == CDM::enumOnOff::On)
+  } else if (c == SEAnesthesiaMachineConnection::Mask && m_data.GetIntubation() == SEOnOff::On)
     Error("Connection failed : Cannot apply anesthesia machine mask if patient is intubated.");
-  else if (c == SEAnesthesiaMachineConnection::Tube && m_data.GetIntubation() == CDM::enumOnOff::Off)
+  else if (c == SEAnesthesiaMachineConnection::Tube && m_data.GetIntubation() == SEOnOff::Off)
     Error("Connection failed : Cannot apply anesthesia machine to tube if patient is not intubated.");
   // Make sure we are active to make sure we go back to free
-  m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+  m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -265,7 +265,7 @@ void AnesthesiaMachine::SetConnection(SEAnesthesiaMachineConnection c)
 void AnesthesiaMachine::InvalidateConnection()
 {
   // Set airway mode to free
-  m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+  m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
   // THEN invalidate
   SEAnesthesiaMachine::InvalidateConnection();
 }
@@ -281,16 +281,16 @@ void AnesthesiaMachine::InvalidateConnection()
 void AnesthesiaMachine::SetConnection()
 {
   switch (m_data.GetAirwayMode()) {
-  case CDM::enumBioGearsAirwayMode::Free:
+  case SEBioGearsAirwayMode::Free:
     // Basically a full leak to ground
     m_pAnesthesiaConnectionToEnvironment->GetNextResistance().SetValue(m_dSwitchClosedResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
     break;
-  case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
+  case SEBioGearsAirwayMode::AnesthesiaMachine:
     if (m_Connection == SEAnesthesiaMachineConnection::Mask) {
       if (m_data.GetIntubation() == SEOnOff::On) // Somebody intubated while we had the mask on
       {
         Info("Anesthesia Machine has been disconnected due to an intubation.");
-        m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+        m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
         return;
       }
 
@@ -300,7 +300,7 @@ void AnesthesiaMachine::SetConnection()
       if (m_data.GetIntubation() == SEOnOff::Off) // Somebody removed intubated while we were connected to it
       {
         Info("Anesthesia Machine has been disconnected removal of intubation.");
-        m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+        m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
         return;
       }
 
@@ -572,9 +572,9 @@ void AnesthesiaMachine::CalculateEquipmentLeak()
 {
   // Note: You should be able to stack failures, if you're so inclined
 
-  if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::Free) {
+  if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::Free) {
     return;
-  } else if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::AnesthesiaMachine) {
+  } else if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::AnesthesiaMachine) {
     if (m_Connection == SEAnesthesiaMachineConnection::Tube) {
       if (m_actions->HasTubeCuffLeak() || m_actions->HasYPieceDisconnect()) {
         double CuffLeakSeverity = 0.0;

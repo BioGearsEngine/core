@@ -105,15 +105,13 @@ namespace io {
   {
     // Drugs
     if (in.PDModel().present())
-      out.UsePDModel(in.PDModel().get());
-      //io::Property::UnMarshall(in.PDModel().get(), out.m_PDEnabled);
+      io::Property::UnMarshall(in.PDModel().get(), out.m_PDEnabled);
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::DrugsConfigurationData& out)
   {
     // Drugs
     if (in.HasUsePDModel())
-      out.PDModel(in.m_PDEnabled);
-      //io::Property::Marshall(in.m_PDEnabled, out.PDModel());
+      io::Property::Marshall(in.m_PDEnabled, out.PDModel());
   }
   // class EnergyConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::EnergyConfigurationData& in, BioGearsConfiguration& out)
@@ -210,16 +208,14 @@ namespace io {
 
     // Nervous
     if (in.EnableCerebral().present())
-      out.EnableCerebral(in.EnableCerebral().get());
-      //io::Property::UnMarshall(in.EnableCerebral().get(), out.m_CerebralEnabled);
+      io::Property::UnMarshall(in.EnableCerebral().get(), out.m_CerebralEnabled);
     io::Property::UnMarshall(in.PupilDiameterBaseline(), out.GetPupilDiameterBaseline());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::NervousConfigurationData& out)
   {
     // Nervous
     if (in.HasEnableCerebral())
-      out.EnableCerebral(in.m_CerebralEnabled);
-      //io::Property::Marshall(in.m_CerebralEnabled, out.EnableCerebral());
+      io::Property::Marshall(in.m_CerebralEnabled, out.EnableCerebral());
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PupilDiameterBaseline)
   }
   // class RenalConfiguration
@@ -228,8 +224,7 @@ namespace io {
 
     // Renal
     if (in.EnableRenal().present())
-      out.EnableRenal(in.EnableRenal().get());
-      //io::Property::UnMarshall(in.EnableRenal().get(), out.m_RenalEnabled);
+      io::Property::UnMarshall(in.EnableRenal().get(), out.m_RenalEnabled);
 
     io::Property::UnMarshall(in.PlasmaSodiumConcentrationSetPoint(), out.GetPlasmaSodiumConcentrationSetPoint());
 
@@ -251,8 +246,7 @@ namespace io {
   {
     // Renal
     if (in.HasEnableRenal())
-      out.EnableRenal(in.m_RenalEnabled);
-      //io::Property::Marshall(in.m_RenalEnabled, out.EnableRenal());
+      io::Property::Marshall(in.m_RenalEnabled, out.EnableRenal());
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PlasmaSodiumConcentrationSetPoint)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularFilteringSurfaceAreaBaseline)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularFluidPermeabilityBaseline)
@@ -289,15 +283,13 @@ namespace io {
 
     // Tissue
     if (in.EnableTissue().present())
-      out.EnableTissue(in.EnableTissue().get());
-      //io::Property::UnMarshall(in.EnableTissue().get(), out.m_TissueEnabled);
+      io::Property::UnMarshall(in.EnableTissue().get(), out.m_TissueEnabled);
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::TissueConfigurationData& out)
   {
     // Tissue
     if (in.HasEnableTissue())
-      out.EnableTissue(in.m_TissueEnabled);
-      //io::Property::Marshall(in.m_TissueEnabled, out.EnableTissue());
+      io::Property::Marshall(in.m_TissueEnabled, out.EnableTissue());
   }
   // class BioGearsConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::BioGearsConfigurationData& in, BioGearsConfiguration& out)
