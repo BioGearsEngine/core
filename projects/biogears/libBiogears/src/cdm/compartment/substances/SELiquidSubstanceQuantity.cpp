@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include "io/cdm/SubstanceQuantity.h"
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
-#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
@@ -24,6 +23,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/GeneralMath.h>
 
 namespace biogears {
@@ -561,6 +562,9 @@ void SELiquidSubstanceQuantity::AddChild(SELiquidSubstanceQuantity& subQ)
 //-----------------------------------------------------------------------------
 bool SELiquidSubstanceQuantity::operator==(SELiquidSubstanceQuantity const& rhs) const
 {
+  if (this == &rhs)
+    return true;
+
   bool equivilant = ((m_Concentration && rhs.m_Concentration) ? m_Concentration->operator==(*rhs.m_Concentration) : m_Concentration == rhs.m_Concentration);
   equivilant &= ((m_Mass && rhs.m_Mass) ? m_Mass->operator==(*rhs.m_Mass) : m_Mass == rhs.m_Mass);
   equivilant &= ((m_MassCleared && rhs.m_MassCleared) ? m_MassCleared->operator==(*rhs.m_MassCleared) : m_MassCleared == rhs.m_MassCleared);
@@ -570,6 +574,7 @@ bool SELiquidSubstanceQuantity::operator==(SELiquidSubstanceQuantity const& rhs)
   equivilant &= ((m_PartialPressure && rhs.m_PartialPressure) ? m_PartialPressure->operator==(*rhs.m_PartialPressure) : m_PartialPressure == rhs.m_PartialPressure);
   equivilant &= ((m_Saturation && rhs.m_Saturation) ? m_Saturation->operator==(*rhs.m_Saturation) : m_Saturation == rhs.m_Saturation);
   equivilant &= m_Compartment.operator==(rhs.m_Compartment);
+
   // m_Children is not part of the serializtion of SELiquidSubstanceQuantity so we will not
   //            concider it as part of the equivilance
   // if (equivilant) {
@@ -581,6 +586,7 @@ bool SELiquidSubstanceQuantity::operator==(SELiquidSubstanceQuantity const& rhs)
   // }
   equivilant &= m_isO2 == rhs.m_isO2 && m_isCO == rhs.m_isCO && m_isCO2 == rhs.m_isCO2;
   // Inorder to caluclate a hierarchical saturation, we need these substances
+
   equivilant &= ((m_Hb && rhs.m_Hb) ? m_Hb->operator==(*rhs.m_Hb) : m_Hb == rhs.m_Hb);
   equivilant &= ((m_HbO2 && rhs.m_HbO2) ? m_HbO2->operator==(*rhs.m_HbO2) : m_HbO2 == rhs.m_HbO2);
   equivilant &= ((m_HbCO2 && rhs.m_HbCO2) ? m_HbCO2->operator==(*rhs.m_HbCO2) : m_HbCO2 == rhs.m_HbCO2);

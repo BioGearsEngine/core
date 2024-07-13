@@ -75,7 +75,7 @@ void SEScalarQuantity<Unit>::Invalidate()
     return;
 #endif
   }
-  m_value = 0;
+  m_value = NaN;
   m_unit = nullptr;
 }
 //-------------------------------------------------------------------------------
@@ -159,18 +159,15 @@ double SEScalarQuantity<Unit>::GetValue(const Unit& unit) const
 {
 #if defined(BIOGEARS_THROW_NAN_EXCEPTIONS)
   if (std::isnan(m_value) && m_unit != nullptr) {
-    throw CommonDataModelException("Value is NaN");
+     throw CommonDataModelException("Value is NaN");
   }
 #else
-  assert(!std::isnan(m_value) && m_unit != nullptr);
+  assert(!std::isnan(m_value));
 #endif
-
   if (std::isnan(m_value)
       || std::isinf(m_value)
       || (m_value == 0)
-      || (m_unit == &unit)
-      || (m_unit == nullptr)
-      )
+      || (m_unit == &unit))
     return m_value;
   return Convert(m_value, *m_unit, unit);
 }
@@ -235,8 +232,8 @@ bool SEScalarQuantity<Unit>::Equals(const SEScalarQuantity<Unit>& rhs) const
     }
 
     if (m_unit == rhs.m_unit) {
-      if (std::isinf(m_value) && std::isinf(rhs.m_value) // This implies -> -inf == +inf
-          || (std::isnan(m_value) && std::isnan(rhs.m_value))) // This Violates C++ Spec
+      if (  (std::isinf(m_value) && std::isinf(rhs.m_value)) // This implies -> -inf == +inf
+          || ((std::isnan(m_value) && std::isnan(rhs.m_value)))) // This Violates C++ Spec
       {
         return true;
       }

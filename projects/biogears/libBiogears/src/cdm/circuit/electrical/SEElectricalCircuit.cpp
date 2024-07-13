@@ -48,7 +48,7 @@ void SEElectricalCircuit::Unload(CDM::ElectricalCircuitData& data) const
 }
 bool SEElectricalCircuit::Load(const CDM::ElectricalCircuitData& in, SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit> const& ledger)
 { // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
-  io::Circuit::UnMarshall(in, ledger, *this);   
+  io::Circuit::UnMarshall(in, ledger, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
