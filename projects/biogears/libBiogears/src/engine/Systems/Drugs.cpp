@@ -576,9 +576,6 @@ void Drugs::AdministerSubstanceOral()
     sub = od.first;
     oDose = od.second;
 
-    CDM::enumOralAdministration oaType;
-    io::PatientActions::Marshall(oDose->GetAdminRoute(), oaType);
-
     if (oDose->GetAdminRoute() == SEOralAdministrationType::Transmucosal) {
       // Drug is being given transmucosally--get oral transmucosal (OT) state for this substance if it already exists
       SETransmucosalState* otState = m_TransmucosalStates[sub];
@@ -592,7 +589,7 @@ void Drugs::AdministerSubstanceOral()
         // Every OT state needs to initialize a GI absorption model state to account for drug that is swallowed.
         // Clearly we are assuming that there is not already an active pill of the same substance already present in the GI (seems like a safe assumption).
         m_data.GetGastrointestinal().NewDrugTransitState(sub);
-        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oaType)) {
+        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
           Error("SEGastrointestinalSystem::SEDrugAbsorptionTransitModelState: Probably vector length mismatch");
         }
       }
@@ -607,7 +604,7 @@ void Drugs::AdministerSubstanceOral()
       // Oral dose is being given as a pill--initiate a GI absorption model state for it if it doesn't already exist.
       if (m_data.GetGastrointestinal().GetDrugTransitState(sub) == nullptr) {
         m_data.GetGastrointestinal().NewDrugTransitState(sub);
-        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oaType)) {
+        if (!m_data.GetGastrointestinal().GetDrugTransitState(sub)->Initialize(oDose->GetDose(), oDose->GetAdminRoute())) {
           Error("SEGastrointestinalSystem::SEDrugAbsorptionTransitModelState: Probably vector length mismatch");
         }
       } else {
@@ -984,7 +981,7 @@ void Drugs::CalculateDrugEffects()
     }
 
     // Antibiotic Effects -- Do not evaluate unless the patient has inflammation casued by infection
-    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Infection)) {
       double minimumInhibitoryConcentration_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
       if (sub->GetClassification() == SESubstanceClass::Antibiotic) {
         ///\ @cite Regoes2004Pharmacodynamics

@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/properties/SEScalarFlowResistance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
@@ -78,7 +80,7 @@ SECardiovascularSystem::SECardiovascularSystem(Logger* logger)
   m_ExtremityPressureRightLeg = nullptr;
   m_HeartEjectionFraction = nullptr;
   m_HeartRate = nullptr;
-  m_HeartRhythm = (CDM::enumHeartRhythm::value)-1;
+  m_HeartRhythm = (SEHeartRhythm)-1;
   m_HeartStrokeVolume = nullptr;
   m_IntracranialPressure = nullptr;
   m_MeanArterialPressure = nullptr;
@@ -126,7 +128,7 @@ void SECardiovascularSystem::Clear()
   SAFE_DELETE(m_ExtremityPressureRightLeg);
   SAFE_DELETE(m_HeartEjectionFraction);
   SAFE_DELETE(m_HeartRate);
-  m_HeartRhythm = (CDM::enumHeartRhythm::value)-1;
+  m_HeartRhythm = (SEHeartRhythm)-1;
   SAFE_DELETE(m_HeartStrokeVolume);
   SAFE_DELETE(m_IntracranialPressure);
   SAFE_DELETE(m_MeanArterialPressure);
@@ -230,78 +232,7 @@ const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
 
 bool SECardiovascularSystem::Load(const CDM::CardiovascularSystemData& in)
 {
-  SESystem::Load(in);
-
-  if (in.ArterialPressure().present())
-    GetArterialPressure().Load(in.ArterialPressure().get());
-  if (in.BloodVolume().present())
-    GetBloodVolume().Load(in.BloodVolume().get());
-  if (in.CardiacIndex().present())
-    GetCardiacIndex().Load(in.CardiacIndex().get());
-  if (in.CardiacOutput().present())
-    GetCardiacOutput().Load(in.CardiacOutput().get());
-  if (in.CentralVenousPressure().present())
-    GetCentralVenousPressure().Load(in.CentralVenousPressure().get());
-  if (in.CerebralBloodFlow().present())
-    GetCerebralBloodFlow().Load(in.CerebralBloodFlow().get());
-  if (in.CerebralPerfusionPressure().present())
-    GetCerebralPerfusionPressure().Load(in.CerebralPerfusionPressure().get());
-  if (in.DiastolicArterialPressure().present())
-    GetDiastolicArterialPressure().Load(in.DiastolicArterialPressure().get());
-  if (in.ExtremityPressureLeftArm().present())
-    GetExtremityPressureLeftArm().Load(in.ExtremityPressureLeftArm().get());
-  if (in.ExtremityPressureLeftLeg().present())
-    GetExtremityPressureLeftLeg().Load(in.ExtremityPressureLeftLeg().get());
-  if (in.ExtremityPressureRightArm().present())
-    GetExtremityPressureRightArm().Load(in.ExtremityPressureRightArm().get());
-  if (in.ExtremityPressureRightLeg().present())
-    GetExtremityPressureRightLeg().Load(in.ExtremityPressureRightLeg().get());
-  if (in.HeartEjectionFraction().present())
-    GetHeartEjectionFraction().Load(in.HeartEjectionFraction().get());
-  if (in.HeartRate().present())
-    GetHeartRate().Load(in.HeartRate().get());
-  if (in.HeartRhythm().present())
-    SetHeartRhythm(in.HeartRhythm().get());
-  if (in.HeartStrokeVolume().present())
-    GetHeartStrokeVolume().Load(in.HeartStrokeVolume().get());
-  if (in.IntracranialPressure().present())
-    GetIntracranialPressure().Load(in.IntracranialPressure().get());
-  if (in.MeanArterialPressure().present())
-    GetMeanArterialPressure().Load(in.MeanArterialPressure().get());
-  if (in.MeanArterialCarbonDioxidePartialPressure().present())
-    GetMeanArterialCarbonDioxidePartialPressure().Load(in.MeanArterialCarbonDioxidePartialPressure().get());
-  if (in.MeanArterialCarbonDioxidePartialPressureDelta().present())
-    GetMeanArterialCarbonDioxidePartialPressureDelta().Load(in.MeanArterialCarbonDioxidePartialPressureDelta().get());
-  if (in.MeanCentralVenousPressure().present())
-    GetMeanCentralVenousPressure().Load(in.MeanCentralVenousPressure().get());
-  if (in.MeanSkinFlow().present())
-    GetMeanSkinFlow().Load(in.MeanSkinFlow().get());
-  if (in.PulmonaryArterialPressure().present())
-    GetPulmonaryArterialPressure().Load(in.PulmonaryArterialPressure().get());
-  if (in.PulmonaryCapillariesWedgePressure().present())
-    GetPulmonaryCapillariesWedgePressure().Load(in.PulmonaryCapillariesWedgePressure().get());
-  if (in.PulmonaryDiastolicArterialPressure().present())
-    GetPulmonaryDiastolicArterialPressure().Load(in.PulmonaryDiastolicArterialPressure().get());
-  if (in.PulmonaryMeanArterialPressure().present())
-    GetPulmonaryMeanArterialPressure().Load(in.PulmonaryMeanArterialPressure().get());
-  if (in.PulmonaryMeanCapillaryFlow().present())
-    GetPulmonaryMeanCapillaryFlow().Load(in.PulmonaryMeanCapillaryFlow().get());
-  if (in.PulmonaryMeanShuntFlow().present())
-    GetPulmonaryMeanShuntFlow().Load(in.PulmonaryMeanShuntFlow().get());
-  if (in.PulmonarySystolicArterialPressure().present())
-    GetPulmonarySystolicArterialPressure().Load(in.PulmonarySystolicArterialPressure().get());
-  if (in.PulmonaryVascularResistance().present())
-    GetPulmonaryVascularResistance().Load(in.PulmonaryVascularResistance().get());
-  if (in.PulmonaryVascularResistanceIndex().present())
-    GetPulmonaryVascularResistanceIndex().Load(in.PulmonaryVascularResistanceIndex().get());
-  if (in.PulsePressure().present())
-    GetPulsePressure().Load(in.PulsePressure().get());
-  if (in.SystemicVascularResistance().present())
-    GetSystemicVascularResistance().Load(in.SystemicVascularResistance().get());
-  if (in.SystolicArterialPressure().present())
-    GetSystolicArterialPressure().Load(in.SystolicArterialPressure().get());
-  if (in.TotalBloodVolumeLost().present())
-    GetTotalBloodVolumeLost().Load(in.TotalBloodVolumeLost().get());
+  io::Physiology::UnMarshall(in, *this);
 
   return true;
 }
@@ -317,78 +248,7 @@ CDM::CardiovascularSystemData* SECardiovascularSystem::Unload() const
 
 void SECardiovascularSystem::Unload(CDM::CardiovascularSystemData& data) const
 {
-  SESystem::Unload(data);
-
-  if (m_ArterialPressure != nullptr)
-    data.ArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_ArterialPressure->Unload()));
-  if (m_BloodVolume != nullptr)
-    data.BloodVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_BloodVolume->Unload()));
-  if (m_CardiacIndex != nullptr)
-    data.CardiacIndex(std::unique_ptr<CDM::ScalarVolumePerTimeAreaData>(m_CardiacIndex->Unload()));
-  if (m_CardiacOutput != nullptr)
-    data.CardiacOutput(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CardiacOutput->Unload()));
-  if (m_CentralVenousPressure != nullptr)
-    data.CentralVenousPressure(std::unique_ptr<CDM::ScalarPressureData>(m_CentralVenousPressure->Unload()));
-  if (m_CerebralBloodFlow != nullptr)
-    data.CerebralBloodFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_CerebralBloodFlow->Unload()));
-  if (m_CerebralPerfusionPressure != nullptr)
-    data.CerebralPerfusionPressure(std::unique_ptr<CDM::ScalarPressureData>(m_CerebralPerfusionPressure->Unload()));
-  if (m_DiastolicArterialPressure != nullptr)
-    data.DiastolicArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_DiastolicArterialPressure->Unload()));
-  if (m_ExtremityPressureLeftArm != nullptr)
-    data.ExtremityPressureLeftArm(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureLeftArm->Unload()));
-  if (m_ExtremityPressureLeftLeg != nullptr)
-    data.ExtremityPressureLeftLeg(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureLeftLeg->Unload()));
-  if (m_ExtremityPressureRightArm != nullptr)
-    data.ExtremityPressureRightArm(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureRightArm->Unload()));
-  if (m_ExtremityPressureRightLeg != nullptr)
-    data.ExtremityPressureRightLeg(std::unique_ptr<CDM::ScalarPressureData>(m_ExtremityPressureRightLeg->Unload()));
-  if (m_HeartEjectionFraction != nullptr)
-    data.HeartEjectionFraction(std::unique_ptr<CDM::ScalarFractionData>(m_HeartEjectionFraction->Unload()));
-  if (m_HeartRate != nullptr)
-    data.HeartRate(std::unique_ptr<CDM::ScalarFrequencyData>(m_HeartRate->Unload()));
-  if (HasHeartRhythm())
-    data.HeartRhythm(m_HeartRhythm);
-  if (m_HeartStrokeVolume != nullptr)
-    data.HeartStrokeVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_HeartStrokeVolume->Unload()));
-  if (m_IntracranialPressure != nullptr)
-    data.IntracranialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_IntracranialPressure->Unload()));
-  if (m_MeanArterialPressure != nullptr)
-    data.MeanArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialPressure->Unload()));
-  if (m_MeanArterialCarbonDioxidePartialPressure != nullptr)
-    data.MeanArterialCarbonDioxidePartialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialCarbonDioxidePartialPressure->Unload()));
-  if (m_MeanArterialCarbonDioxidePartialPressureDelta != nullptr)
-    data.MeanArterialCarbonDioxidePartialPressureDelta(std::unique_ptr<CDM::ScalarPressureData>(m_MeanArterialCarbonDioxidePartialPressureDelta->Unload()));
-  if (m_MeanCentralVenousPressure != nullptr)
-    data.MeanCentralVenousPressure(std::unique_ptr<CDM::ScalarPressureData>(m_MeanCentralVenousPressure->Unload()));
-  if (m_MeanSkinFlow != nullptr)
-    data.MeanSkinFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_MeanSkinFlow->Unload()));
-  if (m_PulmonaryArterialPressure != nullptr)
-    data.PulmonaryArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonaryArterialPressure->Unload()));
-  if (m_PulmonaryCapillariesWedgePressure != nullptr)
-    data.PulmonaryCapillariesWedgePressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonaryCapillariesWedgePressure->Unload()));
-  if (m_PulmonaryDiastolicArterialPressure != nullptr)
-    data.PulmonaryDiastolicArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonaryDiastolicArterialPressure->Unload()));
-  if (m_PulmonaryMeanArterialPressure != nullptr)
-    data.PulmonaryMeanArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonaryMeanArterialPressure->Unload()));
-  if (m_PulmonaryMeanCapillaryFlow != nullptr)
-    data.PulmonaryMeanCapillaryFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_PulmonaryMeanCapillaryFlow->Unload()));
-  if (m_PulmonaryMeanShuntFlow != nullptr)
-    data.PulmonaryMeanShuntFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_PulmonaryMeanShuntFlow->Unload()));
-  if (m_PulmonarySystolicArterialPressure != nullptr)
-    data.PulmonarySystolicArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulmonarySystolicArterialPressure->Unload()));
-  if (m_PulmonaryVascularResistance != nullptr)
-    data.PulmonaryVascularResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_PulmonaryVascularResistance->Unload()));
-  if (m_PulmonaryVascularResistanceIndex != nullptr)
-    data.PulmonaryVascularResistanceIndex(std::unique_ptr<CDM::ScalarPressureTimePerVolumeAreaData>(m_PulmonaryVascularResistanceIndex->Unload()));
-  if (m_PulsePressure != nullptr)
-    data.PulsePressure(std::unique_ptr<CDM::ScalarPressureData>(m_PulsePressure->Unload()));
-  if (m_SystemicVascularResistance != nullptr)
-    data.SystemicVascularResistance(std::unique_ptr<CDM::ScalarFlowResistanceData>(m_SystemicVascularResistance->Unload()));
-  if (m_SystolicArterialPressure != nullptr)
-    data.SystolicArterialPressure(std::unique_ptr<CDM::ScalarPressureData>(m_SystolicArterialPressure->Unload()));
-  if (m_TotalBloodVolumeLost != nullptr)
-    data.TotalBloodVolumeLost(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalBloodVolumeLost->Unload()));
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 
@@ -667,24 +527,24 @@ double SECardiovascularSystem::GetHeartRate(const FrequencyUnit& unit) const
 }
 //-------------------------------------------------------------------------------
 
-CDM::enumHeartRhythm::value SECardiovascularSystem::GetHeartRhythm() const
+SEHeartRhythm SECardiovascularSystem::GetHeartRhythm() const
 {
   return m_HeartRhythm;
 }
 //-------------------------------------------------------------------------------
-void SECardiovascularSystem::SetHeartRhythm(CDM::enumHeartRhythm::value rhythm)
+void SECardiovascularSystem::SetHeartRhythm(SEHeartRhythm rhythm)
 {
   m_HeartRhythm = rhythm;
 }
 //-------------------------------------------------------------------------------
 bool SECardiovascularSystem::HasHeartRhythm() const
 {
-  return m_HeartRhythm == ((CDM::enumHeartRhythm::value)-1) ? false : true;
+  return m_HeartRhythm == ((SEHeartRhythm)-1) ? false : true;
 }
 //-------------------------------------------------------------------------------
 void SECardiovascularSystem::InvalidateHeartRhythm()
 {
-  m_HeartRhythm = (CDM::enumHeartRhythm::value)-1;
+  m_HeartRhythm = (SEHeartRhythm)-1;
 }
 //-------------------------------------------------------------------------------
 

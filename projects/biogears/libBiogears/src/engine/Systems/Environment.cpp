@@ -353,7 +353,7 @@ void Environment::ProcessActions()
   m_ActiveSwitchPath->SetNextSwitch(SEOpenClosed::Open);
 
   //Check for actions that modify environment resistances
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
     //In the event of a burn, modify the skin to clothing, clothing to enclosure (radiation), and clothing to environment (convection)
     //paths based on the burn surface area fraction.  Reducing skin to clothing resistance assumes that burn patient will have large
     //surface area uncovered. We calculate change in evaporative resistance in CalcEvaporation since that involves adjustment of funtion level parameters
@@ -386,7 +386,7 @@ void Environment::ProcessActions()
     const double burnRampGain = 1.0e-5;
     for (SEThermalCircuitPath* skinToClothing : m_SkinToClothingPaths) {
       double burnSurfaceAreaFraction = 0.0;
-      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
         SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
         std::vector<std::string> burnComptVector = burnAction->GetCompartments();
         // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
@@ -757,12 +757,12 @@ void Environment::CalculateEvaporation()
       double skinWettednessDiffusion = 0.06;
 
       auto& inflamationSources = m_data.GetBloodChemistry().GetInflammatoryResponse().GetInflammationSources();
-      auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), CDM::enumInflammationSource::Burn);
+      auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), SEInflammationSource::Burn);
       if (burn_inflamation != inflamationSources.end()) {
         if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
           bool isBurnWoundLocal = false;
           double localBurnIntensity = 0.0;
-          if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+          if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
             SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
             std::vector<std::string> burnComptVector = burnAction->GetCompartments();
             // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head

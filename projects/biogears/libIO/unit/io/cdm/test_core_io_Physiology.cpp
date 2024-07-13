@@ -20,8 +20,8 @@
 
 #include <gtest/gtest.h>
 
-#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/BiogearsEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/Logger.h>
@@ -105,7 +105,7 @@ TEST_F(TEST_FIXTURE_NAME, PupillaryResponse)
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 TEST_F(TEST_FIXTURE_NAME, InflammatoryResponse)
 {
-
+  using namespace biogears;
   USING_TYPES(InflammatoryResponse)
 
   biogears::Logger logger;
@@ -120,7 +120,7 @@ TEST_F(TEST_FIXTURE_NAME, InflammatoryResponse)
   source.GetLocalMacrophage().SetValue(0.13);
   source.GetLocalNeutrophil().SetValue(0.12);
   source.GetLocalBarrier().SetValue(0.11);
-  source.SetActiveTLR(CDM::enumOnOff::Off);
+  source.SetActiveTLR(SEOnOff::Off);
   source.GetAutonomicResponseLevel().SetValue(0.34);
   source.GetCatecholamines().SetValue(0.33);
   source.GetConstitutiveNOS().SetValue(0.32);
@@ -140,7 +140,7 @@ TEST_F(TEST_FIXTURE_NAME, InflammatoryResponse)
   source.GetTrauma().SetValue(0.98);
   source.GetTumorNecrosisFactor().SetValue(0.97);
   source.GetInflammationTime().SetValue(0.9, biogears::TimeUnit::s);
-  source.GetInflammationSources().push_back(CDM::enumInflammationSource::Hemorrhage);
+  source.GetInflammationSources().push_back(SEInflammationSource::Hemorrhage);
 
   EXPECT_NE(source, sink);
 
@@ -157,6 +157,7 @@ TEST_F(TEST_FIXTURE_NAME, InflammatoryResponse)
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 TEST_F(TEST_FIXTURE_NAME, BloodChemistrySystem)
 {
+  using namespace biogears;
   USING_TYPES(BloodChemistrySystem)
 
   biogears::Logger logger;
@@ -209,7 +210,7 @@ TEST_F(TEST_FIXTURE_NAME, BloodChemistrySystem)
   source.GetInflammatoryResponse().GetLocalMacrophage().SetValue(0.13);
   source.GetInflammatoryResponse().GetLocalNeutrophil().SetValue(0.12);
   source.GetInflammatoryResponse().GetLocalBarrier().SetValue(0.11);
-  source.GetInflammatoryResponse().SetActiveTLR(CDM::enumOnOff::Off);
+  source.GetInflammatoryResponse().SetActiveTLR(SEOnOff::Off);
   source.GetInflammatoryResponse().GetAutonomicResponseLevel().SetValue(0.34);
   source.GetInflammatoryResponse().GetCatecholamines().SetValue(0.33);
   source.GetInflammatoryResponse().GetConstitutiveNOS().SetValue(0.32);
@@ -229,7 +230,7 @@ TEST_F(TEST_FIXTURE_NAME, BloodChemistrySystem)
   source.GetInflammatoryResponse().GetTrauma().SetValue(0.98);
   source.GetInflammatoryResponse().GetTumorNecrosisFactor().SetValue(0.97);
   source.GetInflammatoryResponse().GetInflammationTime().SetValue(0.9, biogears::TimeUnit::s);
-  source.GetInflammatoryResponse().GetInflammationSources().push_back(CDM::enumInflammationSource::Hemorrhage);
+  source.GetInflammatoryResponse().GetInflammationSources().push_back(SEInflammationSource::Hemorrhage);
 
   EXPECT_NE(source, sink);
 
@@ -246,6 +247,7 @@ TEST_F(TEST_FIXTURE_NAME, BloodChemistrySystem)
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 TEST_F(TEST_FIXTURE_NAME, CardiovascularSystem)
 {
+  using namespace biogears;
   USING_TYPES(CardiovascularSystem)
 
   biogears::Logger logger;
@@ -256,7 +258,7 @@ TEST_F(TEST_FIXTURE_NAME, CardiovascularSystem)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetHeartRhythm(CDM::enumHeartRhythm::NormalSinus);
+  source.SetHeartRhythm(SEHeartRhythm::NormalSinus);
   source.GetBloodVolume().SetValue(3.0, biogears::VolumeUnit::L);
 
   source.GetCardiacIndex().SetValue(4., biogears::VolumePerTimeAreaUnit::mL_Per_min_m2);
@@ -517,6 +519,7 @@ TEST_F(TEST_FIXTURE_NAME, HepaticSystem)
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
 TEST_F(TEST_FIXTURE_NAME, NervousSystem)
 {
+  using namespace biogears;
   USING_TYPES(NervousSystem)
 
   biogears::Logger logger;
@@ -527,7 +530,7 @@ TEST_F(TEST_FIXTURE_NAME, NervousSystem)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  source.SetSleepState(CDM::enumSleepState::Asleep);
+  source.SetSleepState(SESleepState::Sleeping);
 
   source.GetComplianceScale().SetValue(1.0);
   source.GetHeartRateScale().SetValue(2.0);

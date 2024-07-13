@@ -286,7 +286,7 @@ public:
     std::cout << "  0--0--0      0  0      0       0     0        0        0    \n";
     std::cout << std::endl;
   }
-  void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) override
+  void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr) override
   {
   }
 };

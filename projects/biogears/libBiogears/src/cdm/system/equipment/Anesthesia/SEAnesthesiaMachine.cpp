@@ -252,11 +252,8 @@ void SEAnesthesiaMachine::SetEvent(SEAnesthesiaMachineEvent type, bool active, c
   m_EventState[type] = active;
   m_EventDuration_s[type] = 0;
 
-  CDM::enumAnesthesiaMachineEvent cdmType = CDM::enumAnesthesiaMachineEvent::OxygenBottle1Exhausted;
-  io::Anesthesia::Marshall(type, cdmType);
-
   if (m_EventHandler != nullptr)
-    m_EventHandler->HandleAnesthesiaMachineEvent(cdmType, active, &time);
+    m_EventHandler->HandleAnesthesiaMachineEvent(type, active, &time);
 }
 //-----------------------------------------------------------------------------
 bool SEAnesthesiaMachine::IsEventActive(SEAnesthesiaMachineEvent type) const

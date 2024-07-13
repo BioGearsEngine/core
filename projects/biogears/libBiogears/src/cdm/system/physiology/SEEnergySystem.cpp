@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -165,52 +167,7 @@ const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
 
 bool SEEnergySystem::Load(const CDM::EnergySystemData& in)
 {
-  SESystem::Load(in);
-
-  if (in.AchievedExerciseLevel().present())
-    GetAchievedExerciseLevel().Load(in.AchievedExerciseLevel().get());
-  if (in.ChlorideLostToSweat().present())
-    GetChlorideLostToSweat().Load(in.ChlorideLostToSweat().get());
-  if (in.CoreTemperature().present())
-    GetCoreTemperature().Load(in.CoreTemperature().get());
-  if (in.CreatinineProductionRate().present())
-    GetCreatinineProductionRate().Load(in.CreatinineProductionRate().get());
-  if (in.EnergyDeficit().present())
-    GetEnergyDeficit().Load(in.EnergyDeficit().get());
-  if (in.ExerciseEnergyDemand().present())
-    GetExerciseEnergyDemand().Load(in.ExerciseEnergyDemand().get());
-  if (in.ExerciseMeanArterialPressureDelta().present())
-    GetExerciseMeanArterialPressureDelta().Load(in.ExerciseMeanArterialPressureDelta().get());
-  if (in.FatigueLevel().present())
-    GetFatigueLevel().Load(in.FatigueLevel().get());
-  if (in.LactateProductionRate().present())
-    GetLactateProductionRate().Load(in.LactateProductionRate().get());
-  if (in.PotassiumLostToSweat().present())
-    GetPotassiumLostToSweat().Load(in.PotassiumLostToSweat().get());
-  if (in.SkinTemperature().present())
-    GetSkinTemperature().Load(in.SkinTemperature().get());
-  if (in.SkinTemperatureTorso().present())
-    GetSkinTemperatureTorso().Load(in.SkinTemperatureTorso().get());
-  if (in.SkinTemperatureHead().present())
-    GetSkinTemperatureHead().Load(in.SkinTemperatureHead().get());
-  if (in.SkinTemperatureLeftArm().present())
-    GetSkinTemperatureLeftArm().Load(in.SkinTemperatureLeftArm().get());
-  if (in.SkinTemperatureRightArm().present())
-    GetSkinTemperatureRightArm().Load(in.SkinTemperatureRightArm().get());
-  if (in.SkinTemperatureLeftLeg().present())
-    GetSkinTemperatureLeftLeg().Load(in.SkinTemperatureLeftLeg().get());
-  if (in.SkinTemperatureRightLeg().present())
-    GetSkinTemperatureRightLeg().Load(in.SkinTemperatureRightLeg().get());
-  if (in.BurnSkinTemperature().present())
-    GetBurnSkinTemperature().Load(in.BurnSkinTemperature().get());
-  if (in.SodiumLostToSweat().present())
-    GetSodiumLostToSweat().Load(in.SodiumLostToSweat().get());
-  if (in.SweatRate().present())
-    GetSweatRate().Load(in.SweatRate().get());
-  if (in.TotalMetabolicRate().present())
-    GetTotalMetabolicRate().Load(in.TotalMetabolicRate().get());
-  if (in.TotalWorkRateLevel().present())
-    GetTotalWorkRateLevel().Load(in.TotalWorkRateLevel().get());
+  io::Physiology::UnMarshall(in, *this);
 
   return true;
 }
@@ -226,52 +183,7 @@ CDM::EnergySystemData* SEEnergySystem::Unload() const
 
 void SEEnergySystem::Unload(CDM::EnergySystemData& data) const
 {
-  SESystem::Unload(data);
-
-  if (m_AchievedExerciseLevel != nullptr)
-    data.AchievedExerciseLevel(std::unique_ptr<CDM::ScalarFractionData>(m_AchievedExerciseLevel->Unload()));
-  if (m_ChlorideLostToSweat != nullptr)
-    data.ChlorideLostToSweat(std::unique_ptr<CDM::ScalarMassData>(m_ChlorideLostToSweat->Unload()));
-  if (m_CoreTemperature != nullptr)
-    data.CoreTemperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_CoreTemperature->Unload()));
-  if (m_CreatinineProductionRate != nullptr)
-    data.CreatinineProductionRate(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_CreatinineProductionRate->Unload()));
-  if (m_EnergyDeficit != nullptr)
-    data.EnergyDeficit(std::unique_ptr<CDM::ScalarPowerData>(m_EnergyDeficit->Unload()));
-  if (m_ExerciseEnergyDemand != nullptr)
-    data.ExerciseEnergyDemand(std::unique_ptr<CDM::ScalarPowerData>(m_ExerciseEnergyDemand->Unload()));
-  if (m_ExerciseMeanArterialPressureDelta != nullptr)
-    data.ExerciseMeanArterialPressureDelta(std::unique_ptr<CDM::ScalarPressureData>(m_ExerciseMeanArterialPressureDelta->Unload()));
-  if (m_FatigueLevel != nullptr)
-    data.FatigueLevel(std::unique_ptr<CDM::ScalarFractionData>(m_FatigueLevel->Unload()));
-  if (m_LactateProductionRate != nullptr)
-    data.LactateProductionRate(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_LactateProductionRate->Unload()));
-  if (m_PotassiumLostToSweat != nullptr)
-    data.PotassiumLostToSweat(std::unique_ptr<CDM::ScalarMassData>(m_PotassiumLostToSweat->Unload()));
-  if (m_SkinTemperature != nullptr)
-    data.SkinTemperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperature->Unload()));
-  if (m_SkinTemperatureTorso != nullptr)
-    data.SkinTemperatureTorso(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureTorso->Unload()));
-  if (m_SkinTemperatureHead != nullptr)
-    data.SkinTemperatureHead(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureHead->Unload()));
-  if (m_SkinTemperatureLeftArm != nullptr)
-    data.SkinTemperatureLeftArm(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureLeftArm->Unload()));
-  if (m_SkinTemperatureRightArm != nullptr)
-    data.SkinTemperatureRightArm(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureRightArm->Unload()));
-  if (m_SkinTemperatureLeftLeg != nullptr)
-    data.SkinTemperatureLeftLeg(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureLeftLeg->Unload()));
-  if (m_SkinTemperatureRightLeg != nullptr)
-    data.SkinTemperatureRightLeg(std::unique_ptr<CDM::ScalarTemperatureData>(m_SkinTemperatureRightLeg->Unload()));
-  if (m_BurnSkinTemperature != nullptr)
-    data.BurnSkinTemperature(std::unique_ptr<CDM::ScalarTemperatureData>(m_BurnSkinTemperature->Unload()));
-  if (m_SodiumLostToSweat != nullptr)
-    data.SodiumLostToSweat(std::unique_ptr<CDM::ScalarMassData>(m_SodiumLostToSweat->Unload()));
-  if (m_SweatRate != nullptr)
-    data.SweatRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_SweatRate->Unload()));
-  if (m_TotalMetabolicRate != nullptr)
-    data.TotalMetabolicRate(std::unique_ptr<CDM::ScalarPowerData>(m_TotalMetabolicRate->Unload()));
-  if (m_TotalWorkRateLevel != nullptr)
-    data.TotalWorkRateLevel(std::unique_ptr<CDM::ScalarFractionData>(m_TotalWorkRateLevel->Unload()));
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 

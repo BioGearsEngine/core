@@ -88,7 +88,7 @@ public:
       return; //Unhandled Event
     }
   }
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr)
+  virtual void HandleAnesthesiaMachineEvent(biogears::SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr)
   {
   }
 };

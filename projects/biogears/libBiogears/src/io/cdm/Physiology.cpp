@@ -39,9 +39,9 @@ namespace io {
   // class SEInflammationState
   void Physiology::UnMarshall(const CDM::InflammatoryResponseData& in, SEInflammatoryResponse& out)
   {
-    out.SetActiveTLR(in.ActiveTLR());
-    // auto& activeTLR = out.GetActiveTLR();
-    // io::Property::UnMarshall(in.ActiveTLR(), activeTLR);
+    auto activeTLR = out.GetActiveTLR();
+    io::Property::UnMarshall(in.ActiveTLR(), activeTLR);
+    out.SetActiveTLR(activeTLR);
 
     io::Property::UnMarshall(in.LocalPathogen(), out.GetLocalPathogen());
     io::Property::UnMarshall(in.LocalMacrophage(), out.GetLocalMacrophage());
@@ -69,15 +69,13 @@ namespace io {
 
     SEInflammationSource conversion;
     for (auto src : in.Source()) {
-      out.m_InflammationSources.push_back(src);
-      // UnMarshall(src, conversion);
-      // out.m_InflammationSources.push_back(conversion);
+      UnMarshall(src, conversion);
+      out.m_InflammationSources.push_back(conversion);
     }
   }
   void Physiology::Marshall(const SEInflammatoryResponse& in, CDM::InflammatoryResponseData& out)
   {
-    CDM_ENUM_MARSHALL_HELPER(in, out, ActiveTLR);
-    // SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, ActiveTLR);
+    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, ActiveTLR);
 
     CDM_PROPERTY_MARSHALL_HELPER(in, out, LocalPathogen)
     CDM_PROPERTY_MARSHALL_HELPER(in, out, LocalMacrophage)
@@ -105,9 +103,8 @@ namespace io {
 
     CDM::enumInflammationSource conversion;
     for (auto src : in.m_InflammationSources) {
-      out.Source().push_back(src);
-      // Marshall(src, conversion);
-      // out.Source().push_back(conversion);
+      Marshall(src, conversion);
+      out.Source().push_back(conversion);
     }
   }
   //----------------------------------------------------------------------------------
@@ -208,10 +205,7 @@ namespace io {
   {
     System::UnMarshall(static_cast<const CDM::SystemData&>(in), static_cast<SESystem&>(out));
 
-    if (in.HeartRhythm().present()) {
-      out.SetHeartRhythm(in.HeartRhythm().get());
-    }
-    // UnMarshall(in.HeartRhythm(), out.m_HeartRhythm);
+    UnMarshall(in.HeartRhythm(), out.m_HeartRhythm);
 
     io::Property::UnMarshall(in.ArterialPressure(), out.GetArterialPressure());
     io::Property::UnMarshall(in.BloodVolume(), out.GetBloodVolume());
@@ -252,10 +246,7 @@ namespace io {
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
 
-    if (in.HasHeartRhythm()) {
-      out.HeartRhythm(in.m_HeartRhythm);
-    }
-    // SE_OPTIONAL_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, HeartRhythm)
+    SE_OPTIONAL_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, HeartRhythm)
 
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ArterialPressure)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodVolume)
@@ -457,8 +448,7 @@ namespace io {
     io::Property::UnMarshall(in.SleepTime(), out.GetSleepTime());
     io::Property::UnMarshall(in.WakeTime(), out.GetWakeTime());
 
-    out.SetSleepState(in.SleepState().get());
-    // UnMarshall(in.SleepState(), out.m_SleepState);
+    UnMarshall(in.SleepState(), out.m_SleepState);
 
     io::Property::UnMarshall(in.BiologicalDebt(), out.GetBiologicalDebt());
     io::Property::UnMarshall(in.ReactionTime(), out.GetReactionTime());
@@ -485,8 +475,7 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SleepTime)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WakeTime)
 
-    out.SleepState(in.m_SleepState);
-    // SE_OPTIONAL_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, SleepState)
+    SE_OPTIONAL_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, SleepState)
 
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BiologicalDebt)
 

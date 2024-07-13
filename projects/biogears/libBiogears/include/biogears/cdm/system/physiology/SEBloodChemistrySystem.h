@@ -11,9 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-
-#include <biogears/cdm/system/SESystem.h>
 #include <biogears/exports.h>
+
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
+#include <biogears/cdm/system/SESystem.h>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {
@@ -517,9 +519,9 @@ public:
   SEScalar& GetLocalNeutrophil();
   double GetLocalNeutrophil() const;
 
-  bool HasActiveTLR() const { return m_ActiveTLR == CDM::enumOnOff::value(-1) ? false : true; };
-  CDM::enumOnOff GetActiveTLR() { return m_ActiveTLR; };
-  void SetActiveTLR(CDM::enumOnOff value) { m_ActiveTLR = value; };
+  bool HasActiveTLR() const { return m_ActiveTLR == SEOnOff(-1) ? false : true; };
+  SEOnOff GetActiveTLR() { return m_ActiveTLR; };
+  void SetActiveTLR(SEOnOff value) { m_ActiveTLR = value; };
 
   bool HasAutonomicResponseLevel() const;
   SEScalar& GetAutonomicResponseLevel();
@@ -598,8 +600,8 @@ public:
   double GetInflammationTime(const TimeUnit& unit) const;
 
   bool HasInflammationSources() const;
-  std::vector<CDM::enumInflammationSource>& GetInflammationSources();
-  bool HasInflammationSource(CDM::enumInflammationSource::value src);
+  std::vector<SEInflammationSource>& GetInflammationSources();
+  bool HasInflammationSource(SEInflammationSource src);
 
   Tree<const char*> GetPhysiologyRequestGraph() const;
 
@@ -608,7 +610,7 @@ protected:
   SEScalar* m_LocalMacrophage;
   SEScalar* m_LocalNeutrophil;
   SEScalar* m_LocalBarrier;
-  CDM::enumOnOff::value m_ActiveTLR;
+  SEOnOff m_ActiveTLR;
   SEScalar* m_AutonomicResponseLevel;
   SEScalar* m_Catecholamines;
   SEScalar* m_ConstitutiveNOS;
@@ -628,6 +630,6 @@ protected:
   SEScalar* m_Trauma;
   SEScalar* m_TumorNecrosisFactor;
   SEScalarTime* m_InflammationTime;
-  std::vector<CDM::enumInflammationSource> m_InflammationSources;
+  std::vector<SEInflammationSource> m_InflammationSources;
 };
 }

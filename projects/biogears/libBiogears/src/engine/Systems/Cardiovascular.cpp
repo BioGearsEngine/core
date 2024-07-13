@@ -160,7 +160,7 @@ void Cardiovascular::Initialize()
 {
   BioGearsSystem::Initialize();
 
-  m_HeartRhythm = CDM::enumHeartRhythm::NormalSinus;
+  m_HeartRhythm = SEHeartRhythm::NormalSinus;
 
   m_StartSystole = true;
   m_HeartFlowDetected = false;
@@ -943,7 +943,7 @@ void Cardiovascular::CalculateVitalSigns()
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 65)
       m_patient->SetEvent(SEPatientEventType::Bradycardia, false, m_data.GetSimulationTime());
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) > 30) {
-      if (GetHeartRhythm() != CDM::enumHeartRhythm::Asystole) {
+      if (GetHeartRhythm() != SEHeartRhythm::Asystole) {
         m_patient->SetEvent(SEPatientEventType::Asystole, false, m_data.GetSimulationTime());
       }
     }
@@ -952,18 +952,18 @@ void Cardiovascular::CalculateVitalSigns()
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 27) {
       if (!m_PatientActions->HasOverride()) {
         m_patient->SetEvent(SEPatientEventType::Asystole, true, m_data.GetSimulationTime());
-        SetHeartRhythm(CDM::enumHeartRhythm::Asystole);
+        SetHeartRhythm(SEHeartRhythm::Asystole);
       } else {
         if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
           m_patient->SetEvent(SEPatientEventType::Asystole, true, m_data.GetSimulationTime());
-          SetHeartRhythm(CDM::enumHeartRhythm::Asystole);
+          SetHeartRhythm(SEHeartRhythm::Asystole);
         }
       }
     }
   }
 
   // Irreversible state if asystole persists.
-  if (GetHeartRhythm() == CDM::enumHeartRhythm::Asystole) {
+  if (GetHeartRhythm() == SEHeartRhythm::Asystole) {
     m_patient->SetEvent(SEPatientEventType::Asystole, true, m_data.GetSimulationTime());
 
     /// \event Patient: Irreversible State: heart has been in asystole for over 45 min:
@@ -1478,7 +1478,7 @@ void Cardiovascular::CardiacArrest()
       m_patient->SetEvent(SEPatientEventType::Asystole, false, m_data.GetSimulationTime());
       m_EnterCardiacArrest = false;
       m_StartSystole = true;
-      SetHeartRhythm(CDM::enumHeartRhythm::NormalSinus);
+      SetHeartRhythm(SEHeartRhythm::NormalSinus);
       GetHeartRate().SetValue(m_patient->GetHeartRateBaseline().GetValue(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
       m_CurrentCardiacCycleDuration_s = 1. / m_patient->GetHeartRateBaseline().GetValue(FrequencyUnit::Per_s);
       m_CardiacCyclePeriod_s = .0;
@@ -1535,7 +1535,7 @@ void Cardiovascular::HeartDriver()
 
   // If any system set the rhythm to asystole (or other rhythms in the future) then trip the cardiac arrest flag so that we can deal with it at the top of the next cardiac cycle
   // This prevents the heart from stopping in the middle of a contraction.
-  if (GetHeartRhythm() == CDM::enumHeartRhythm::Asystole)
+  if (GetHeartRhythm() == SEHeartRhythm::Asystole)
     m_EnterCardiacArrest = true;
 
   if (!m_patient->IsEventActive(SEPatientEventType::CardiacArrest)) {

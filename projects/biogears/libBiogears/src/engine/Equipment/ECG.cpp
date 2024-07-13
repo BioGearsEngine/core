@@ -158,7 +158,7 @@ void ECG::Process()
     m_HeartRhythmPeriod.SetValue(1 / m_data.GetCardiovascular().GetHeartRate(FrequencyUnit::Per_s), TimeUnit::s);
     // Currently we  have one data set for all currently supported Heart Rhythms
     // Eventually we will support multiple rhythmic data
-    if (m_data.GetCardiovascular().GetHeartRhythm() == CDM::enumHeartRhythm::NormalSinus)
+    if (m_data.GetCardiovascular().GetHeartRhythm() == SEHeartRhythm::NormalSinus)
       m_Waveforms.StartNewCycle(SEHeartRhythm::NormalSinus);
     else {
       m_ss << m_data.GetCardiovascular().GetHeartRhythm() << " is not a supported Heart Rhythm for ECG";

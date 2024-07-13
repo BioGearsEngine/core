@@ -1375,12 +1375,12 @@ void BloodChemistry::ManageSIRS()
 //--------------------------------------------------------------------------------------------------
 void BloodChemistry::InflammatoryResponse()
 {
-  std::vector<CDM::enumInflammationSource> sources = m_InflammatoryResponse->GetInflammationSources();
+  std::vector<SEInflammationSource> sources = m_InflammatoryResponse->GetInflammationSources();
   double burnTotalBodySurfaceAreaIntensity = 0.0;
   double ebolaTemp = 0.0;
 
   if (m_data.GetActions().GetPatientActions().HasInfection()) {
-    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Infection) == sources.end()) {
+    if (std::find(sources.begin(), sources.end(), SEInflammationSource::Infection) == sources.end()) {
       double initialPathogen = 0.0;
       switch (m_data.GetActions().GetPatientActions().GetInfection()->GetSeverity()) {
       case SEInfectionSeverity::Mild:
@@ -1397,12 +1397,12 @@ void BloodChemistry::InflammatoryResponse()
       }
 
       m_InflammatoryResponse->GetLocalPathogen().SetValue(initialPathogen);
-      m_InflammatoryResponse->SetActiveTLR(CDM::enumOnOff::On);
-      m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Infection);
+      m_InflammatoryResponse->SetActiveTLR(SEOnOff::On);
+      m_InflammatoryResponse->GetInflammationSources().push_back(SEInflammationSource::Infection);
     }
   }
   if (m_data.GetActions().GetPatientActions().HasEbola()) {
-    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Ebola) == sources.end()) {
+    if (std::find(sources.begin(), sources.end(), SEInflammationSource::Ebola) == sources.end()) {
       double initialPathogen = 0.0;
       switch (m_data.GetActions().GetPatientActions().GetEbola()->GetSeverity()) {
       case SEInfectionSeverity::Mild:
@@ -1419,8 +1419,8 @@ void BloodChemistry::InflammatoryResponse()
       }
 
       m_InflammatoryResponse->GetLocalPathogen().SetValue(initialPathogen);
-      m_InflammatoryResponse->SetActiveTLR(CDM::enumOnOff::On);
-      m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Ebola);
+      m_InflammatoryResponse->SetActiveTLR(SEOnOff::On);
+      m_InflammatoryResponse->GetInflammationSources().push_back(SEInflammationSource::Ebola);
     }
   }
   // mapping severity of the ebola infection to a tuning parameter to change inflammation dynamics
@@ -1440,16 +1440,16 @@ void BloodChemistry::InflammatoryResponse()
   }
   if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
     burnTotalBodySurfaceAreaIntensity = m_data.GetActions().GetPatientActions().GetBurnWound()->GetBurnIntensity();
-    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Burn) == sources.end()) {
+    if (std::find(sources.begin(), sources.end(), SEInflammationSource::Burn) == sources.end()) {
       m_InflammatoryResponse->GetTrauma().SetValue(burnTotalBodySurfaceAreaIntensity); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
-      m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Burn);
+      m_InflammatoryResponse->GetInflammationSources().push_back(SEInflammationSource::Burn);
     }
   }
   if (m_data.GetActions().GetPatientActions().HasHemorrhage()) {
-    if (std::find(sources.begin(), sources.end(), CDM::enumInflammationSource::Hemorrhage) == sources.end()) {
+    if (std::find(sources.begin(), sources.end(), SEInflammationSource::Hemorrhage) == sources.end()) {
       m_InflammatoryResponse->GetTrauma().SetValue(1.0);
       m_InflammatoryResponse->GetAutonomicResponseLevel().SetValue(1.0);
-      m_InflammatoryResponse->GetInflammationSources().push_back(CDM::enumInflammationSource::Hemorrhage);
+      m_InflammatoryResponse->GetInflammationSources().push_back(SEInflammationSource::Hemorrhage);
     }
   }
 
@@ -1459,31 +1459,31 @@ void BloodChemistry::InflammatoryResponse()
   }
 
   //------------------Previous State--------------------------------------
-  double PT = 0.0, MT = 0.0, NT = 0.0, B = 0.0, PB = 0.0, MR = 0.0, MA = 0.0, NR = 0.0, NA = 0.0, ER = 0.0, EA = 0.0, eNOS = 0.0, iNOSd = 0.0, iNOS = 0.0, NO3 = 0.0, NO = 0.0, I6 = 0.0, I10 = 0.0, I12 = 0.0, TNF = 0.0, TI = 0.0, TR = 0.0, R = 0.0, A = 0.0, CA = 0.0, iTime = 0.0;
-  PT = m_InflammatoryResponse->GetLocalPathogen().GetValue(); //Local tissue pathogen
-  MT = m_InflammatoryResponse->GetLocalMacrophage().GetValue(); //Local tissue macrophages
-  NT = m_InflammatoryResponse->GetLocalNeutrophil().GetValue(); //Local tissue neutrophil
-  B = m_InflammatoryResponse->GetLocalBarrier().GetValue(); //Local tissue barrier integrity
-  CDM::enumOnOff::value TLR = m_InflammatoryResponse->GetActiveTLR(); //Toll-like receptors:  When active, promote degradation of local tissue barrier integrity
-  PB = m_InflammatoryResponse->GetBloodPathogen().GetValue(); //Pathogen that has passed through local tissue barrier into bloodstream
-  MR = m_InflammatoryResponse->GetMacrophageResting().GetValue(); //Resting blood macrophages
-  MA = m_InflammatoryResponse->GetMacrophageActive().GetValue(); //Active blood macrophages
-  NR = m_InflammatoryResponse->GetNeutrophilResting().GetValue(); //Resting blood neutrophils
-  NA = m_InflammatoryResponse->GetNeutrophilActive().GetValue(); //Active blood neutrophils
-  eNOS = m_InflammatoryResponse->GetConstitutiveNOS().GetValue(); //Blood nitrogen oxide synthase (constituitive)
-  iNOSd = m_InflammatoryResponse->GetInducibleNOSPre().GetValue(); //Blood nitrogen oxide synthase (pre-inducible)
-  iNOS = m_InflammatoryResponse->GetInducibleNOS().GetValue(); //Blood nitrogen oxide syntase (induced)
-  NO3 = m_InflammatoryResponse->GetNitrate().GetValue(); //Blood nitrate--product of NO (unstable radical)
-  NO = m_InflammatoryResponse->GetNitricOxide().GetValue(); //Blood nitric oxide
-  I6 = m_InflammatoryResponse->GetInterleukin6().GetValue(); //Blood interleukin-6
-  I10 = m_InflammatoryResponse->GetInterleukin10().GetValue(); //Blood interleukin-10
-  I12 = m_InflammatoryResponse->GetInterleukin12().GetValue(); //Blood interleukin-12
-  TNF = m_InflammatoryResponse->GetTumorNecrosisFactor().GetValue(); //Blood tumor-necrosis factor
-  CA = m_InflammatoryResponse->GetCatecholamines().GetValue();
-  A = m_InflammatoryResponse->GetAutonomicResponseLevel().GetValue();
-  TI = m_InflammatoryResponse->GetTissueIntegrity().GetValue(); //Global tissue integrity
-  TR = m_InflammatoryResponse->GetTrauma().GetValue(); //Trauma
-  iTime = m_InflammatoryResponse->GetInflammationTime(TimeUnit::hr);
+  auto R = 0.0;
+  auto  PT = m_InflammatoryResponse->GetLocalPathogen().GetValue(); //Local tissue pathogen
+  auto  MT = m_InflammatoryResponse->GetLocalMacrophage().GetValue(); //Local tissue macrophages
+  auto  NT = m_InflammatoryResponse->GetLocalNeutrophil().GetValue(); //Local tissue neutrophil
+  auto  B = m_InflammatoryResponse->GetLocalBarrier().GetValue(); //Local tissue barrier integrity
+  auto TLR = m_InflammatoryResponse->GetActiveTLR(); //Toll-like receptors:  When active, promote degradation of local tissue barrier integrity
+  auto PB = m_InflammatoryResponse->GetBloodPathogen().GetValue(); //Pathogen that has passed through local tissue barrier into bloodstream
+  auto MR = m_InflammatoryResponse->GetMacrophageResting().GetValue(); //Resting blood macrophages
+  auto MA = m_InflammatoryResponse->GetMacrophageActive().GetValue(); //Active blood macrophages
+  auto NR = m_InflammatoryResponse->GetNeutrophilResting().GetValue(); //Resting blood neutrophils
+  auto NA = m_InflammatoryResponse->GetNeutrophilActive().GetValue(); //Active blood neutrophils
+  auto eNOS = m_InflammatoryResponse->GetConstitutiveNOS().GetValue(); //Blood nitrogen oxide synthase (constituitive)
+  auto iNOSd = m_InflammatoryResponse->GetInducibleNOSPre().GetValue(); //Blood nitrogen oxide synthase (pre-inducible)
+  auto iNOS = m_InflammatoryResponse->GetInducibleNOS().GetValue(); //Blood nitrogen oxide syntase (induced)
+  auto NO3 = m_InflammatoryResponse->GetNitrate().GetValue(); //Blood nitrate--product of NO (unstable radical)
+  auto NO = m_InflammatoryResponse->GetNitricOxide().GetValue(); //Blood nitric oxide
+  auto I6 = m_InflammatoryResponse->GetInterleukin6().GetValue(); //Blood interleukin-6
+  auto I10 = m_InflammatoryResponse->GetInterleukin10().GetValue(); //Blood interleukin-10
+  auto I12 = m_InflammatoryResponse->GetInterleukin12().GetValue(); //Blood interleukin-12
+  auto TNF = m_InflammatoryResponse->GetTumorNecrosisFactor().GetValue(); //Blood tumor-necrosis factor
+  auto CA = m_InflammatoryResponse->GetCatecholamines().GetValue();
+  auto A = m_InflammatoryResponse->GetAutonomicResponseLevel().GetValue();
+  auto TI = m_InflammatoryResponse->GetTissueIntegrity().GetValue(); //Global tissue integrity
+  auto TR = m_InflammatoryResponse->GetTrauma().GetValue(); //Trauma
+  auto iTime = m_InflammatoryResponse->GetInflammationTime(TimeUnit::hr);
 
   //------------------------------Model Parameters-----------------------------
   double scale = 1.0; //This parameter can be set very high to investigate state equation trajectores (i.e. set to 60 to simulate 30 hrs in 30 min).  Note that there is no guarantee of validity of other BG outputs
@@ -1559,7 +1559,7 @@ void BloodChemistry::InflammatoryResponse()
     kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
   }
-  if (m_InflammatoryResponse->HasInflammationSource(CDM::enumInflammationSource::Ebola)) {
+  if (m_InflammatoryResponse->HasInflammationSource(SEInflammationSource::Ebola)) {
     //for ebola we assume the patient has been incubating for 8 days, after this time inflammation will occur on a rapid time scale.  These parameters were tuned for infecton--return to nominal values
     //kapP *= ebolaTemp;
     //thetaP *= 0.1;
@@ -1569,7 +1569,7 @@ void BloodChemistry::InflammatoryResponse()
   if (PB > ZERO_APPROX) {
     ManageSIRS();
   }
-  if (m_InflammatoryResponse->HasInflammationSource(CDM::enumInflammationSource::Hemorrhage)) {
+  if (m_InflammatoryResponse->HasInflammationSource(SEInflammationSource::Hemorrhage)) {
     double volumeEffect = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);
     volumeEffect = std::min(volumeEffect, 1.0);
     if (volumeEffect < 1.0) {
@@ -1589,16 +1589,16 @@ void BloodChemistry::InflammatoryResponse()
   //TLR state depends on the last TLR state and the tissue pathogen populaton
   if (PT > pUpper) {
     R = 1.0; //TLR always active if pathogen above max threshold
-    TLR = CDM::enumOnOff::On;
+    TLR = SEOnOff::On;
   } else if (PT > pLower) {
-    if (TLR == CDM::enumOnOff::On) {
+    if (TLR == SEOnOff::On) {
       R = 1.0; //If pathogen between min/max threshold, it remains at its previous values
     } else {
       R = 0.0;
     }
   } else {
     R = 0.0; //If pathogen below min threshold, it is always inactive
-    TLR = CDM::enumOnOff::Off;
+    TLR = SEOnOff::Off;
   }
   //Process equations
   dPT = (kapP / uP) * PT * (1.0 - PT) - thetaP * PT / (1.0 + epsPB * B) - psiPN * NT * PT - psiPM * MT * PT;
