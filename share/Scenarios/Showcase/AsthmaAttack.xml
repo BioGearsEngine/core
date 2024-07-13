@@ -10,6 +10,6 @@
   </DataRequests>
   
 	<Actions>
-		<ActionFile>Timelines/AsthmaAttack.xml</ActionFile>
+		<ActionFile>timelines/AsthmaAttack.xml</ActionFile>
 	</Actions>		
 </Scenario>
