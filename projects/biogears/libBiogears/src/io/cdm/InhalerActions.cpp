@@ -10,7 +10,7 @@
 
 namespace biogears {
 namespace io {
-  //class SEInhalerAction
+  // class SEInhalerAction
   void InhalerActions::UnMarshall(const CDM::InhalerActionData& in, SEInhalerAction& out)
   {
     io::Actions::UnMarshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));
@@ -21,7 +21,7 @@ namespace io {
     io::Actions::Marshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
   }
   //----------------------------------------------------------------------------------
-  //class SEInhalerConfiguration
+  // class SEInhalerConfiguration
   void InhalerActions::UnMarshall(const CDM::InhalerConfigurationData& in, SEInhalerConfiguration& out)
   {
     io::Actions::UnMarshall(static_cast<const CDM::ActionData&>(in), static_cast<SEAction&>(out));

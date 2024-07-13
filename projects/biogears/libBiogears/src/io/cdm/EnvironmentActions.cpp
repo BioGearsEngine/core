@@ -94,7 +94,7 @@ namespace io {
       Marshall(*environmentChangeAction, *environmentChangeActionData);
       return std::move(environmentChangeActionData);
     }
-    
+
     if (auto thermalApplication = dynamic_cast<SEThermalApplication const*>(environmentAction); thermalApplication) {
       auto thermalApplicationData = std::make_unique<CDM::EnvironmentChangeData>();
       Marshall(*thermalApplication, *thermalApplicationData);

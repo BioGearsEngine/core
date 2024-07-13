@@ -17,8 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <type_traits>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/properties/SEDecimalFormat.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
 // Question: To Serialize Invalid units or not to Serialize?
@@ -194,16 +194,6 @@ namespace io {
     static void UnMarshall(const CDM::enumErrorType& in, SEErrorType& out);
     static void Marshall(const SEErrorType& in, CDM::enumErrorType& out);
 
-    template <typename SE, typename XSD>
-    static typename std::enable_if<std::is_enum<SE>::type>::type
-    UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out, std::default_random_engine* rd)
-    {
-      if (!option_in.present()) {
-        out = SE::Invalid;
-      } else {
-        UnMarshall(option_in.get(), out);
-      }
-    }
   };
 
   //-------------------------------------------------------------------------------
@@ -229,13 +219,17 @@ namespace io {
     out.value(in.m_value);
     out.unit(in.m_unit->GetString());
     out.readOnly(in.m_readOnly);
+
+//    out.value(std::make_unique<std::remove_reference<decltype(out.value())>::type>(in.m_value));
+//    out.unit(std::make_unique<std::remove_reference<decltype(out.unit())>::type>(in.m_unit->GetString()));
+//    out.readOnly(std::make_unique<std::remove_reference<decltype(out.readOnly())>::type>(in.m_readOnly));
   }
   //----------------------------------------------------------------------------------
 
   template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>*>
   void Property::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
-    if (!option_in.present()) {
+    if (!option_in.present() || option_in->empty()) {
       out = SE::Invalid;
     } else {
       UnMarshall(option_in.get(), out);

@@ -126,15 +126,15 @@ namespace io {
   std::unique_ptr<SEAction> PatientActions::factory(CDM::ActionData const* actionData, SESubstanceManager& substances)
   {
     if (auto advData = dynamic_cast<CDM::AdvanceTimeData const*>(actionData); advData) {
-      auto a = std::make_unique<SEAdvanceTime>();
-      Actions::UnMarshall(*advData, *a);
-      return a;
+      auto advanceTime = std::make_unique<SEAdvanceTime>();
+      Actions::UnMarshall(*advData, *advanceTime);
+      return advanceTime;
     }
 
     if (auto stData = dynamic_cast<CDM::SerializeStateData const*>(actionData); stData) {
-      auto a = std::make_unique<SESerializeState>();
-      Actions::UnMarshall(*stData, *a);
-      return a;
+      auto serializeState = std::make_unique<SESerializeState>();
+      Actions::UnMarshall(*stData, *serializeState);
+      return serializeState;
     }
 
     if (auto environmentActionData = dynamic_cast<CDM::EnvironmentActionData const*>(actionData); environmentActionData) {
@@ -583,6 +583,7 @@ namespace io {
 
     out.State(std::make_unique<std::remove_reference<decltype(out.State())>::type>());
     io::Property::Marshall(in.m_State, out.State());
+
     SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
@@ -952,7 +953,6 @@ namespace io {
       if (sub == nullptr) {
         throw CommonDataModelException("Substance not found : " + sfData.Name());
       }
-      // if (sub->GetState() != SESubstanceState::Gas) {
       if (sub->GetState() != SESubstanceState::Gas) {
         throw CommonDataModelException("Substance not gas : " + sfData.Name());
       }
@@ -1038,6 +1038,7 @@ namespace io {
     out.Clear();
 
     PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+    ;
     Property::UnMarshall(in.Side(), out.m_Side);
     Property::UnMarshall(in.State(), out.m_State);
   }
@@ -1548,6 +1549,7 @@ namespace io {
     PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
 
     io::Property::UnMarshall(in.Severity(), out.GetSeverity(), rd);
+
     io::PatientActions::UnMarshall(in.Type(), out.m_Type);
     io::Property::UnMarshall(in.Side(), out.m_Side);
   }
@@ -1626,19 +1628,23 @@ namespace io {
   // SEBrainInjuryType
   void PatientActions::UnMarshall(const CDM::enumBrainInjuryType& in, SEBrainInjuryType& out)
   {
-    switch (in) {
-    case CDM::enumBrainInjuryType::Diffuse:
-      out = SEBrainInjuryType::Diffuse;
-      break;
-    case CDM::enumBrainInjuryType::LeftFocal:
-      out = SEBrainInjuryType::LeftFocal;
-      break;
-    case CDM::enumBrainInjuryType::RightFocal:
-      out = SEBrainInjuryType::RightFocal;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumBrainInjuryType::Diffuse:
+        out = SEBrainInjuryType::Diffuse;
+        break;
+      case CDM::enumBrainInjuryType::LeftFocal:
+        out = SEBrainInjuryType::LeftFocal;
+        break;
+      case CDM::enumBrainInjuryType::RightFocal:
+        out = SEBrainInjuryType::RightFocal;
+        break;
+      default:
+        out = SEBrainInjuryType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEBrainInjuryType::Invalid;
-      break;
     }
   }
   void PatientActions::Marshall(const SEBrainInjuryType& in, CDM::enumBrainInjuryType& out)
@@ -1654,26 +1660,30 @@ namespace io {
       out = CDM::enumBrainInjuryType::RightFocal;
       break;
     default:
-      out = (CDM::enumBrainInjuryType::value)-1;
+      out = "";
       break;
     }
   }
   // SEBolusAdministration
   void PatientActions::UnMarshall(const CDM::enumBolusAdministration& in, SEBolusAdministration& out)
   {
-    switch (in) {
-    case CDM::enumBolusAdministration::Intraarterial:
-      out = SEBolusAdministration::Intraarterial;
-      break;
-    case CDM::enumBolusAdministration::Intramuscular:
-      out = SEBolusAdministration::Intramuscular;
-      break;
-    case CDM::enumBolusAdministration::Intravenous:
-      out = SEBolusAdministration::Intravenous;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumBolusAdministration::Intraarterial:
+        out = SEBolusAdministration::Intraarterial;
+        break;
+      case CDM::enumBolusAdministration::Intramuscular:
+        out = SEBolusAdministration::Intramuscular;
+        break;
+      case CDM::enumBolusAdministration::Intravenous:
+        out = SEBolusAdministration::Intravenous;
+        break;
+      default:
+        out = SEBolusAdministration::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEBolusAdministration::Invalid;
-      break;
     }
   }
   void PatientActions::Marshall(const SEBolusAdministration& in, CDM::enumBolusAdministration& out)
@@ -1689,26 +1699,30 @@ namespace io {
       out = CDM::enumBolusAdministration::Intravenous;
       break;
     default:
-      out = (CDM::enumBolusAdministration::value)-1;
+      out = "";
       break;
     }
   }
   // SEBurnDegree
   void PatientActions::UnMarshall(const CDM::enumBurnDegree& in, SEBurnDegree& out)
   {
-    switch (in) {
-    case CDM::enumBurnDegree::First:
-      out = SEBurnDegree::First;
-      break;
-    case CDM::enumBurnDegree::Second:
-      out = SEBurnDegree::Second;
-      break;
-    case CDM::enumBurnDegree::Third:
-      out = SEBurnDegree::Third;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumBurnDegree::First:
+        out = SEBurnDegree::First;
+        break;
+      case CDM::enumBurnDegree::Second:
+        out = SEBurnDegree::Second;
+        break;
+      case CDM::enumBurnDegree::Third:
+        out = SEBurnDegree::Third;
+        break;
+      default:
+        out = SEBurnDegree::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEBurnDegree::Invalid;
-      break;
     }
   }
   void PatientActions::Marshall(const SEBurnDegree& in, CDM::enumBurnDegree& out)
@@ -1724,29 +1738,33 @@ namespace io {
       out = CDM::enumBurnDegree::Third;
       break;
     default:
-      out = (CDM::enumBurnDegree::value)-1;
+      out = "";
       break;
     }
   }
   //  SEInfectionSeverity
   void PatientActions::UnMarshall(const CDM::enumInfectionSeverity& in, SEInfectionSeverity& out)
   {
-    switch (in) {
-    case CDM::enumInfectionSeverity::Eliminated:
-      out = SEInfectionSeverity::Eliminated;
-      break;
-    case CDM::enumInfectionSeverity::Mild:
-      out = SEInfectionSeverity::Mild;
-      break;
-    case CDM::enumInfectionSeverity::Moderate:
-      out = SEInfectionSeverity::Moderate;
-      break;
-    case CDM::enumInfectionSeverity::Severe:
-      out = SEInfectionSeverity::Severe;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumInfectionSeverity::Eliminated:
+        out = SEInfectionSeverity::Eliminated;
+        break;
+      case CDM::enumInfectionSeverity::Mild:
+        out = SEInfectionSeverity::Mild;
+        break;
+      case CDM::enumInfectionSeverity::Moderate:
+        out = SEInfectionSeverity::Moderate;
+        break;
+      case CDM::enumInfectionSeverity::Severe:
+        out = SEInfectionSeverity::Severe;
+        break;
+      default:
+        out = SEInfectionSeverity::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEInfectionSeverity::Invalid;
-      break;
     }
   }
   void PatientActions::Marshall(const SEInfectionSeverity& in, CDM::enumInfectionSeverity& out)
@@ -1765,29 +1783,33 @@ namespace io {
       out = CDM::enumInfectionSeverity::Severe;
       break;
     default:
-      out = (CDM::enumInfectionSeverity::value)-1;
+      out = "";
       break;
     }
   }
   // SEIntubationType
   void PatientActions::UnMarshall(const CDM::enumIntubationType& in, SEIntubationType& out)
   {
-    switch (in) {
-    case CDM::enumIntubationType::Esophageal:
-      out = SEIntubationType::Esophageal;
-      break;
-    case CDM::enumIntubationType::LeftMainstem:
-      out = SEIntubationType::LeftMainstem;
-      break;
-    case CDM::enumIntubationType::RightMainstem:
-      out = SEIntubationType::RightMainstem;
-      break;
-    case CDM::enumIntubationType::Tracheal:
-      out = SEIntubationType::Tracheal;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumIntubationType::Esophageal:
+        out = SEIntubationType::Esophageal;
+        break;
+      case CDM::enumIntubationType::LeftMainstem:
+        out = SEIntubationType::LeftMainstem;
+        break;
+      case CDM::enumIntubationType::RightMainstem:
+        out = SEIntubationType::RightMainstem;
+        break;
+      case CDM::enumIntubationType::Tracheal:
+        out = SEIntubationType::Tracheal;
+        break;
+      default:
+        out = SEIntubationType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEIntubationType::Invalid;
-      break;
     }
   }
   void PatientActions::Marshall(const SEIntubationType& in, CDM::enumIntubationType& out)
@@ -1806,41 +1828,45 @@ namespace io {
       out = CDM::enumIntubationType::Tracheal;
       break;
     default:
-      out = (CDM::enumIntubationType::value)-1;
+      out = "";
       break;
     }
   }
   // SEPatientAssessmentType
   void PatientActions::UnMarshall(const CDM::enumPatientAssessment& in, SEPatientAssessmentType& out)
   {
-    switch (in) {
-    case CDM::enumPatientAssessment::ArterialBloodGasAnalysis:
-      out = SEPatientAssessmentType::ArterialBloodGasAnalysis;
-      break;
-    case CDM::enumPatientAssessment::PulmonaryFunctionTest:
-      out = SEPatientAssessmentType::PulmonaryFunctionTest;
-      break;
-    case CDM::enumPatientAssessment::ProthrombinTime:
-      out = SEPatientAssessmentType::ProthrombinTime;
-      break;
-    case CDM::enumPatientAssessment::PsychomotorVigilanceTask:
-      out = SEPatientAssessmentType::PsychomotorVigilanceTask;
-      break;
-    case CDM::enumPatientAssessment::CompleteBloodCount:
-      out = SEPatientAssessmentType::CompleteBloodCount;
-      break;
-    case CDM::enumPatientAssessment::ComprehensiveMetabolicPanel:
-      out = SEPatientAssessmentType::ComprehensiveMetabolicPanel;
-      break;
-    case CDM::enumPatientAssessment::SequentialOrganFailureAssessment:
-      out = SEPatientAssessmentType::SequentialOrganFailureAssessment;
-      break;
-    case CDM::enumPatientAssessment::Urinalysis:
-      out = SEPatientAssessmentType::Urinalysis;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumPatientAssessment::ArterialBloodGasAnalysis:
+        out = SEPatientAssessmentType::ArterialBloodGasAnalysis;
+        break;
+      case CDM::enumPatientAssessment::PulmonaryFunctionTest:
+        out = SEPatientAssessmentType::PulmonaryFunctionTest;
+        break;
+      case CDM::enumPatientAssessment::ProthrombinTime:
+        out = SEPatientAssessmentType::ProthrombinTime;
+        break;
+      case CDM::enumPatientAssessment::PsychomotorVigilanceTask:
+        out = SEPatientAssessmentType::PsychomotorVigilanceTask;
+        break;
+      case CDM::enumPatientAssessment::CompleteBloodCount:
+        out = SEPatientAssessmentType::CompleteBloodCount;
+        break;
+      case CDM::enumPatientAssessment::ComprehensiveMetabolicPanel:
+        out = SEPatientAssessmentType::ComprehensiveMetabolicPanel;
+        break;
+      case CDM::enumPatientAssessment::SequentialOrganFailureAssessment:
+        out = SEPatientAssessmentType::SequentialOrganFailureAssessment;
+        break;
+      case CDM::enumPatientAssessment::Urinalysis:
+        out = SEPatientAssessmentType::Urinalysis;
+        break;
+      default:
+        out = SEPatientAssessmentType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEPatientAssessmentType::Invalid;
-      break;
     }
   }
   void PatientActions::Marshall(const SEPatientAssessmentType& in, CDM::enumPatientAssessment& out)
@@ -1871,23 +1897,27 @@ namespace io {
       out = CDM::enumPatientAssessment::Urinalysis;
       break;
     default:
-      out = (CDM::enumPatientAssessment::value)-1;
+      out = "";
       break;
     }
   }
   // SEPneumothoraxType
   void PatientActions::UnMarshall(const CDM::enumPneumothoraxType& in, SEPneumothoraxType& out)
   {
-    switch (in) {
-    case CDM::enumPneumothoraxType::Open:
-      out = SEPneumothoraxType::Open;
-      break;
-    case CDM::enumPneumothoraxType::Closed:
-      out = SEPneumothoraxType::Closed;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumPneumothoraxType::Open:
+        out = SEPneumothoraxType::Open;
+        break;
+      case CDM::enumPneumothoraxType::Closed:
+        out = SEPneumothoraxType::Closed;
+        break;
+      default:
+        out = SEPneumothoraxType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEPneumothoraxType::Invalid;
-      break;
     }
   }
   void PatientActions::Marshall(const SEPneumothoraxType& in, CDM::enumPneumothoraxType& out)
@@ -1900,23 +1930,27 @@ namespace io {
       out = CDM::enumPneumothoraxType::Closed;
       break;
     default:
-      out = (CDM::enumPneumothoraxType::value)-1;
+      out = "";
       break;
     }
   }
   // SEOralAdministrationType
   void PatientActions::UnMarshall(const CDM::enumOralAdministration in, SEOralAdministrationType& out)
   {
-    switch (in) {
-    case CDM::enumOralAdministration::Transmucosal:
-      out = SEOralAdministrationType::Transmucosal;
-      break;
-    case CDM::enumOralAdministration::Gastrointestinal:
-      out = SEOralAdministrationType::Gastrointestinal;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumOralAdministration::Transmucosal:
+        out = SEOralAdministrationType::Transmucosal;
+        break;
+      case CDM::enumOralAdministration::Gastrointestinal:
+        out = SEOralAdministrationType::Gastrointestinal;
+        break;
+      default:
+        out = SEOralAdministrationType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEOralAdministrationType::Invalid;
-      break;
     }
   }
   void PatientActions::Marshall(const SEOralAdministrationType& in, CDM::enumOralAdministration& out)
@@ -1929,26 +1963,30 @@ namespace io {
       out = CDM::enumOralAdministration::Gastrointestinal;
       break;
     default:
-      out = (CDM::enumOralAdministration::value)-1;
+      out = "";
       break;
     }
   }
   //  SETourniquetApplicationType
   void PatientActions::UnMarshall(const CDM::enumTourniquetApplicationLevel& in, SETourniquetApplicationType& out)
   {
-    switch (in) {
-    case CDM::enumTourniquetApplicationLevel::Applied:
-      out = SETourniquetApplicationType::Applied;
-      break;
-    case CDM::enumTourniquetApplicationLevel::Misapplied:
-      out = SETourniquetApplicationType::Misapplied;
-      break;
-    case CDM::enumTourniquetApplicationLevel::None:
-      out = SETourniquetApplicationType::NotApplied;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumTourniquetApplicationLevel::Applied:
+        out = SETourniquetApplicationType::Applied;
+        break;
+      case CDM::enumTourniquetApplicationLevel::Misapplied:
+        out = SETourniquetApplicationType::Misapplied;
+        break;
+      case CDM::enumTourniquetApplicationLevel::None:
+        out = SETourniquetApplicationType::NotApplied;
+        break;
+      default:
+        out = SETourniquetApplicationType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SETourniquetApplicationType::Invalid;
-      break;
     }
   }
   void PatientActions::Marshall(const SETourniquetApplicationType& in, CDM::enumTourniquetApplicationLevel& out)
@@ -1964,7 +2002,7 @@ namespace io {
       out = CDM::enumTourniquetApplicationLevel::None;
       break;
     default:
-      out = (CDM::enumTourniquetApplicationLevel::value)-1;
+      out = "";
       break;
     }
   }
@@ -1982,7 +2020,7 @@ bool operator==(CDM::enumBrainInjuryType const& lhs, SEBrainInjuryType const& rh
   case SEBrainInjuryType::RightFocal:
     return (CDM::enumBrainInjuryType::RightFocal == lhs);
   case SEBrainInjuryType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumBrainInjuryType::value)-1 == lhs);
   default:
     return false;
   }
@@ -1997,7 +2035,7 @@ bool operator==(CDM::enumBolusAdministration const& lhs, SEBolusAdministration c
   case SEBolusAdministration::Intravenous:
     return (CDM::enumBolusAdministration::Intravenous == lhs);
   case SEBolusAdministration::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumBolusAdministration::value)-1 == lhs);
   default:
     return false;
   }
@@ -2012,7 +2050,7 @@ bool operator==(CDM::enumBurnDegree const& lhs, SEBurnDegree const& rhs)
   case SEBurnDegree::Third:
     return (CDM::enumBurnDegree::Third == lhs);
   case SEBurnDegree::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumBurnDegree::value)-1 == lhs);
   default:
     return false;
   }
@@ -2029,7 +2067,7 @@ bool operator==(CDM::enumInfectionSeverity const& lhs, SEInfectionSeverity const
   case SEInfectionSeverity::Severe:
     return (CDM::enumInfectionSeverity::Severe == lhs);
   case SEInfectionSeverity::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumInfectionSeverity::value)-1 == lhs);
   default:
     return false;
   }
@@ -2048,7 +2086,7 @@ bool operator==(CDM::enumIntubationType const& lhs, SEIntubationType const& rhs)
   case SEIntubationType::Tracheal:
     return (CDM::enumIntubationType::Tracheal == lhs);
   case SEIntubationType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumIntubationType::value)-1 == lhs);
   default:
     return false;
   }
@@ -2074,7 +2112,7 @@ bool operator==(CDM::enumPatientAssessment const& lhs, SEPatientAssessmentType c
   case SEPatientAssessmentType::Urinalysis:
     return (CDM::enumPatientAssessment::Urinalysis == lhs);
   case SEPatientAssessmentType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumPatientAssessment::value)-1 == lhs);
   default:
     return false;
   }
@@ -2087,7 +2125,7 @@ bool operator==(CDM::enumPneumothoraxType const& lhs, SEPneumothoraxType const& 
   case SEPneumothoraxType::Closed:
     return (CDM::enumPneumothoraxType::Closed == lhs);
   case SEPneumothoraxType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumPneumothoraxType::value)-1 == lhs);
   default:
     return false;
   }
@@ -2100,7 +2138,7 @@ bool operator==(CDM::enumOralAdministration const& lhs, SEOralAdministrationType
   case SEOralAdministrationType::Transmucosal:
     return (CDM::enumOralAdministration::Transmucosal == lhs);
   case SEOralAdministrationType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumOralAdministration::value)-1 == lhs);
   default:
     return false;
   }
@@ -2115,7 +2153,7 @@ bool operator==(CDM::enumTourniquetApplicationLevel const& lhs, SETourniquetAppl
   case SETourniquetApplicationType::Applied:
     return (CDM::enumTourniquetApplicationLevel::Applied == lhs);
   case SETourniquetApplicationType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumTourniquetApplicationLevel::value)-1 == lhs);
   default:
     return false;
   }

@@ -69,12 +69,14 @@ namespace io {
 
     SEInflammationSource conversion;
     for (auto src : in.Source()) {
+
       UnMarshall(src, conversion);
       out.m_InflammationSources.push_back(conversion);
     }
   }
   void Physiology::Marshall(const SEInflammatoryResponse& in, CDM::InflammatoryResponseData& out)
   {
+
     SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, ActiveTLR);
 
     CDM_PROPERTY_MARSHALL_HELPER(in, out, LocalPathogen)
@@ -103,6 +105,7 @@ namespace io {
 
     CDM::enumInflammationSource conversion;
     for (auto src : in.m_InflammationSources) {
+
       Marshall(src, conversion);
       out.Source().push_back(conversion);
     }
@@ -430,31 +433,48 @@ namespace io {
   {
     System::UnMarshall(static_cast<const CDM::SystemData&>(in), static_cast<SESystem&>(out));
 
-    io::Property::UnMarshall(in.ComplianceScale(), out.GetComplianceScale());
-    io::Property::UnMarshall(in.HeartRateScale(), out.GetHeartRateScale());
-    io::Property::UnMarshall(in.HeartElastanceScale(), out.GetHeartElastanceScale());
-    io::Property::UnMarshall(in.MentalStatus(), out.GetMentalStatus());
+    if (in.ComplianceScale().present())
+      io::Property::UnMarshall(in.ComplianceScale(), out.GetComplianceScale());
+    if (in.HeartRateScale().present())
+      io::Property::UnMarshall(in.HeartRateScale(), out.GetHeartRateScale());
+    if (in.HeartElastanceScale().present())
+      io::Property::UnMarshall(in.HeartElastanceScale(), out.GetHeartElastanceScale());
+    if (in.MentalStatus().present())
+      io::Property::UnMarshall(in.MentalStatus(), out.GetMentalStatus());
+    if (in.GlasgowComaScalar().present())
+      io::Property::UnMarshall(in.GlasgowComaScalar(), out.GetGlasgowComaScalar());
 
-    io::Property::UnMarshall(in.GlasgowComaScalar(), out.GetGlasgowComaScalar());
+    if (in.LeftEyePupillaryResponse().present())
+      UnMarshall(in.LeftEyePupillaryResponse(), out.GetLeftEyePupillaryResponse());
+    if (in.RightEyePupillaryResponse().present())
+      UnMarshall(in.RightEyePupillaryResponse(), out.GetRightEyePupillaryResponse());
 
-    UnMarshall(in.LeftEyePupillaryResponse(), out.GetLeftEyePupillaryResponse());
-    UnMarshall(in.RightEyePupillaryResponse(), out.GetRightEyePupillaryResponse());
+    if (in.PainVisualAnalogueScale().present())
+      io::Property::UnMarshall(in.PainVisualAnalogueScale(), out.GetPainVisualAnalogueScale());
+    if (in.ResistanceScaleExtrasplanchnic().present())
+      io::Property::UnMarshall(in.ResistanceScaleExtrasplanchnic(), out.GetResistanceScaleExtrasplanchnic());
+    if (in.ResistanceScaleMuscle().present())
+      io::Property::UnMarshall(in.ResistanceScaleMuscle(), out.GetResistanceScaleMuscle());
+    if (in.ResistanceScaleMyocardium().present())
+      io::Property::UnMarshall(in.ResistanceScaleMyocardium(), out.GetResistanceScaleMyocardium());
+    if (in.ResistanceScaleSplanchnic().present())
+      io::Property::UnMarshall(in.ResistanceScaleSplanchnic(), out.GetResistanceScaleSplanchnic());
+    if (in.SleepTime().present())
+      io::Property::UnMarshall(in.SleepTime(), out.GetSleepTime());
+    if (in.WakeTime().present())
+      io::Property::UnMarshall(in.WakeTime(), out.GetWakeTime());
 
-    io::Property::UnMarshall(in.PainVisualAnalogueScale(), out.GetPainVisualAnalogueScale());
-    io::Property::UnMarshall(in.ResistanceScaleExtrasplanchnic(), out.GetResistanceScaleExtrasplanchnic());
-    io::Property::UnMarshall(in.ResistanceScaleMuscle(), out.GetResistanceScaleMuscle());
-    io::Property::UnMarshall(in.ResistanceScaleMyocardium(), out.GetResistanceScaleMyocardium());
-    io::Property::UnMarshall(in.ResistanceScaleSplanchnic(), out.GetResistanceScaleSplanchnic());
-    io::Property::UnMarshall(in.SleepTime(), out.GetSleepTime());
-    io::Property::UnMarshall(in.WakeTime(), out.GetWakeTime());
+    if (in.SleepState().present())
+      UnMarshall(in.SleepState(), out.m_SleepState);
 
-    UnMarshall(in.SleepState(), out.m_SleepState);
-
-    io::Property::UnMarshall(in.BiologicalDebt(), out.GetBiologicalDebt());
-    io::Property::UnMarshall(in.ReactionTime(), out.GetReactionTime());
-    io::Property::UnMarshall(in.AttentionLapses(), out.GetAttentionLapses());
-
-    io::Property::UnMarshall(in.RichmondAgitationSedationScale(), out.GetRichmondAgitationSedationScale());
+    if (in.BiologicalDebt().present())
+      io::Property::UnMarshall(in.BiologicalDebt(), out.GetBiologicalDebt());
+    if (in.ReactionTime().present())
+      io::Property::UnMarshall(in.ReactionTime(), out.GetReactionTime());
+    if (in.AttentionLapses().present())
+      io::Property::UnMarshall(in.AttentionLapses(), out.GetAttentionLapses());
+    if (in.RichmondAgitationSedationScale().present())
+      io::Property::UnMarshall(in.RichmondAgitationSedationScale(), out.GetRichmondAgitationSedationScale());
   }
   void Physiology::Marshall(const SENervousSystem& in, CDM::NervousSystemData& out)
   {
@@ -717,22 +737,26 @@ namespace io {
   // SEInflammationSource
   void Physiology::UnMarshall(const CDM::enumInflammationSource& in, SEInflammationSource& out)
   {
-    switch (in) {
-    case CDM::enumInflammationSource::Burn:
-      out = SEInflammationSource::Burn;
-      break;
-    case CDM::enumInflammationSource::Hemorrhage:
-      out = SEInflammationSource::Hemorrhage;
-      break;
-    case CDM::enumInflammationSource::Infection:
-      out = SEInflammationSource::Infection;
-      break;
-    case CDM::enumInflammationSource::Ebola:
-      out = SEInflammationSource::Ebola;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumInflammationSource::Burn:
+        out = SEInflammationSource::Burn;
+        break;
+      case CDM::enumInflammationSource::Hemorrhage:
+        out = SEInflammationSource::Hemorrhage;
+        break;
+      case CDM::enumInflammationSource::Infection:
+        out = SEInflammationSource::Infection;
+        break;
+      case CDM::enumInflammationSource::Ebola:
+        out = SEInflammationSource::Ebola;
+        break;
+      default:
+        out = SEInflammationSource::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEInflammationSource::Invalid;
-      break;
     }
   }
   void Physiology::Marshall(const SEInflammationSource& in, CDM::enumInflammationSource& out)
@@ -751,23 +775,27 @@ namespace io {
       out = CDM::enumInflammationSource::Ebola;
       break;
     default:
-      out = (CDM::enumInflammationSource::value)-1;
+      out = "";
       break;
     }
   }
   // SEHeartRhythm
   void Physiology::UnMarshall(const CDM::enumHeartRhythm& in, SEHeartRhythm& out)
   {
-    switch (in) {
-    case CDM::enumHeartRhythm::Asystole:
-      out = SEHeartRhythm::Asystole;
-      break;
-    case CDM::enumHeartRhythm::NormalSinus:
-      out = SEHeartRhythm::NormalSinus;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumHeartRhythm::Asystole:
+        out = SEHeartRhythm::Asystole;
+        break;
+      case CDM::enumHeartRhythm::NormalSinus:
+        out = SEHeartRhythm::NormalSinus;
+        break;
+      default:
+        out = SEHeartRhythm::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEHeartRhythm::Invalid;
-      break;
     }
   }
   void Physiology::Marshall(const SEHeartRhythm& in, CDM::enumHeartRhythm& out)
@@ -780,23 +808,27 @@ namespace io {
       out = CDM::enumHeartRhythm::NormalSinus;
       break;
     default:
-      out = (CDM::enumHeartRhythm::value)-1;
+      out = "";
       break;
     }
   }
   // SESleepState
   void Physiology::UnMarshall(const CDM::enumSleepState& in, SESleepState& out)
   {
-    switch (in) {
-    case CDM::enumSleepState::Asleep:
-      out = SESleepState::Sleeping;
-      break;
-    case CDM::enumSleepState::Awake:
-      out = SESleepState::Awake;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumSleepState::Asleep:
+        out = SESleepState::Sleeping;
+        break;
+      case CDM::enumSleepState::Awake:
+        out = SESleepState::Awake;
+        break;
+      default:
+        out = SESleepState::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SESleepState::Invalid;
-      break;
     }
   }
   void Physiology::Marshall(const SESleepState& in, CDM::enumSleepState& out)
@@ -809,7 +841,7 @@ namespace io {
       out = CDM::enumSleepState::Awake;
       break;
     default:
-      out = (CDM::enumSleepState::value)-1;
+      out = "";
       break;
     }
   }
@@ -827,7 +859,7 @@ bool operator==(CDM::enumInflammationSource const& lhs, SEInflammationSource con
   case SEInflammationSource::Ebola:
     return (CDM::enumInflammationSource::Ebola == lhs);
   case SEInflammationSource::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumInflammationSource::value)-1 == lhs);
   default:
     return false;
   }
@@ -840,7 +872,7 @@ bool operator==(CDM::enumHeartRhythm const& lhs, SEHeartRhythm const& rhs)
   case SEHeartRhythm::NormalSinus:
     return (CDM::enumHeartRhythm::NormalSinus == lhs);
   case SEHeartRhythm::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumHeartRhythm::value)-1 == lhs);
   default:
     return false;
   }
@@ -853,7 +885,7 @@ bool operator==(CDM::enumSleepState const& lhs, SESleepState const& rhs)
   case SESleepState::Sleeping:
     return (CDM::enumSleepState::Asleep == lhs);
   case SESleepState::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSleepState::value)-1 == lhs);
   default:
     return false;
   }

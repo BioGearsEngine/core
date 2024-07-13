@@ -1,11 +1,10 @@
 #include "Conditions.h"
 
-#include "Property.h"
 #include "Actions.h"
+#include "Property.h"
 
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/scenario/SEConditionManager.h>
-
 
 #include <biogears/BiogearsEnums.h>
 

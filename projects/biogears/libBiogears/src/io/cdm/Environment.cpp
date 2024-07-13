@@ -211,16 +211,20 @@ namespace io {
   // class SESurroundingType;
   void Environment::UnMarshall(const CDM::enumSurroundingType& in, SESurroundingType& out)
   {
-    switch (in) {
-    case CDM::enumSurroundingType::Air:
-      out = SESurroundingType::Air;
-      break;
-    case CDM::enumSurroundingType::Water:
-      out = SESurroundingType::Water;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumSurroundingType::Air:
+        out = SESurroundingType::Air;
+        break;
+      case CDM::enumSurroundingType::Water:
+        out = SESurroundingType::Water;
+        break;
+      default:
+        out = SESurroundingType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SESurroundingType::Invalid;
-      break;
     }
   }
   void Environment::Marshall(const SESurroundingType& in, CDM::enumSurroundingType& out)
@@ -233,7 +237,7 @@ namespace io {
       out = CDM::enumSurroundingType::Water;
       break;
     default:
-      out = (CDM::enumSurroundingType::value)-1;
+      out = "";
       break;
     }
   }
@@ -247,7 +251,7 @@ bool operator==(CDM::enumSurroundingType const& lhs, SESurroundingType const& rh
   case SESurroundingType ::Water:
     return (CDM::enumSurroundingType::Water == lhs);
   case SESurroundingType ::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSurroundingType::value)-1 == lhs);
   default:
     return false;
   }

@@ -9,7 +9,7 @@
 
 namespace biogears {
 namespace io {
-  //class SEEnvironmentCondition
+  // class SEEnvironmentCondition
   void EnvironmentConditions::UnMarshall(const CDM::EnvironmentConditionData& in, SEEnvironmentCondition& out)
   {
     io::Conditions::UnMarshall(static_cast<const CDM::ConditionData&>(in), static_cast<SECondition&>(out));
@@ -20,7 +20,7 @@ namespace io {
     io::Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
   }
   //----------------------------------------------------------------------------------
-  //class SEInitialEnvironment
+  // class SEInitialEnvironment
   void EnvironmentConditions::UnMarshall(const CDM::InitialEnvironmentData& in, SEInitialEnvironment& out)
   {
     io::Conditions::UnMarshall(static_cast<const CDM::EnvironmentConditionData&>(in), static_cast<SEEnvironmentCondition&>(out));

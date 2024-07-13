@@ -761,16 +761,20 @@ namespace io {
   // SESide
   void Property::UnMarshall(const CDM::enumSide& in, SESide& out)
   {
-    switch (in) {
-    case CDM::enumSide::Left:
-      out = SESide::Left;
-      break;
-    case CDM::enumSide::Right:
-      out = SESide::Right;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumSide::Left:
+        out = SESide::Left;
+        break;
+      case CDM::enumSide::Right:
+        out = SESide::Right;
+        break;
+      default:
+        out = SESide::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SESide::Invalid;
-      break;
     }
   }
   void Property::Marshall(const SESide& in, CDM::enumSide& out)
@@ -783,23 +787,27 @@ namespace io {
       out = CDM::enumSide::Right;
       break;
     default:
-      out = (CDM::enumSide::value)-1;
+      // out = (CDM::enumSide::value)-1;
       break;
     }
   }
   // SEOpenClosed
   void Property::UnMarshall(const CDM::enumOpenClosed& in, SEOpenClosed& out)
   {
-    switch (in) {
-    case CDM::enumOpenClosed::Open:
-      out = SEOpenClosed::Open;
-      break;
-    case CDM::enumOpenClosed::Closed:
-      out = SEOpenClosed::Closed;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumOpenClosed::Open:
+        out = SEOpenClosed::Open;
+        break;
+      case CDM::enumOpenClosed::Closed:
+        out = SEOpenClosed::Closed;
+        break;
+      default:
+        out = SEOpenClosed::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEOpenClosed::Invalid;
-      break;
     }
   }
   void Property::Marshall(const SEOpenClosed& in, CDM::enumOpenClosed& out)
@@ -812,23 +820,27 @@ namespace io {
       out = CDM::enumOpenClosed::Closed;
       break;
     default:
-      out = (CDM::enumOpenClosed::value)-1;
+      // out = (CDM::enumOpenClosed::value)-1;
       break;
     }
   }
   // SEOnOff
   void Property::UnMarshall(const CDM::enumOnOff& in, SEOnOff& out)
   {
-    switch (in) {
-    case CDM::enumOnOff::On:
-      out = SEOnOff::On;
-      break;
-    case CDM::enumOnOff::Off:
-      out = SEOnOff::Off;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumOnOff::On:
+        out = SEOnOff::On;
+        break;
+      case CDM::enumOnOff::Off:
+        out = SEOnOff::Off;
+        break;
+      default:
+        out = SEOnOff::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEOnOff::Invalid;
-      break;
     }
   }
   void Property::Marshall(const SEOnOff& in, CDM::enumOnOff& out)
@@ -841,20 +853,24 @@ namespace io {
       out = CDM::enumOnOff::Off;
       break;
     default:
-      out = (CDM::enumOnOff::value)-1;
+      // out = (CDM::enumOnOff::value)-1;
       break;
     }
   }
   //  SEErrorType
   void Property::UnMarshall(const CDM::enumErrorType& in, SEErrorType& out)
   {
-    switch (in) {
-    case CDM::enumErrorType::Standard:
-      out = SEErrorType::Standard;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumErrorType::Standard:
+        out = SEErrorType::Standard;
+        break;
+      default:
+        out = SEErrorType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEErrorType::Invalid;
-      break;
     }
   }
   void Property::Marshall(const SEErrorType& in, CDM::enumErrorType& out)
@@ -864,7 +880,7 @@ namespace io {
       out = CDM::enumErrorType::Standard;
       break;
     default:
-      out = (CDM::enumErrorType::value)-1;
+      // out = (CDM::enumErrorType::value)-1;
       break;
     }
   }
@@ -879,7 +895,7 @@ bool operator==(CDM::enumSide const& lhs, SESide const& rhs)
   case SESide::Right:
     return (CDM::enumSide::Right == lhs);
   case SESide::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSide::value)-1 == lhs);
   default:
     return false;
   }
@@ -892,7 +908,7 @@ bool operator==(CDM::enumOpenClosed const& lhs, SEOpenClosed const& rhs)
   case SEOpenClosed::Closed:
     return (CDM::enumOpenClosed::Closed == lhs);
   case SEOpenClosed::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumOpenClosed::value)-1 == lhs);
   default:
     return false;
   }
@@ -905,7 +921,7 @@ bool operator==(CDM::enumOnOff const& lhs, SEOnOff const& rhs)
   case SEOnOff::Off:
     return (CDM::enumOnOff::Off == lhs);
   case SEOnOff::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumOnOff::value)-1 == lhs);
   default:
     return false;
   }
@@ -916,7 +932,7 @@ bool operator==(CDM::enumErrorType const& lhs, SEErrorType const& rhs)
   case SEErrorType::Standard:
     return (CDM::enumErrorType::Standard == lhs);
   case SEErrorType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumErrorType::value)-1 == lhs);
   default:
     return false;
   }

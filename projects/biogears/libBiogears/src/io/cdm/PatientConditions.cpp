@@ -25,17 +25,17 @@
 
 #include "biogears/cdm/substance/SESubstanceManager.h"
 
-#define PATIENT_CONDITION_POLYMORPHIC_MARSHALL(paramName, typeName)           \
+#define PATIENT_CONDITION_POLYMORPHIC_MARSHALL(paramName, typeName)             \
   if (auto typeName = dynamic_cast<SE##typeName const*>(paramName); typeName) { \
     auto typeName##Data = std::make_unique<CDM::typeName##Data>();              \
-    Marshall(*typeName, *typeName##Data);                                     \
+    Marshall(*typeName, *typeName##Data);                                       \
     return std::move(typeName##Data);                                           \
   }
 
-#define PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(paramName, typeName, schema)                        \
+#define PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(paramName, typeName, schema)                      \
   if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
     auto typeName = std::make_unique<SE##typeName>();                                              \
-    schema::UnMarshall(*typeName##Data, *typeName);                                                  \
+    schema::UnMarshall(*typeName##Data, *typeName);                                                \
     return std::move(typeName);                                                                    \
   }
 

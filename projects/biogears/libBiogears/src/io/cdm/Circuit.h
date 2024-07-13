@@ -19,13 +19,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/circuit/SECircuit.h>
+#include <biogears/cdm/enums/SECircuitEnums.h>
 #include <biogears/cdm/circuit/SECircuitLedger.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
-#include <biogears/cdm/enums/SECircuitEnums.h>
 #include <biogears/schema/cdm/Circuit.hxx>
 
 #define CDM_CIRCUIT_MARSHALL_HELPER(in, out, func)                                   \
@@ -189,7 +189,8 @@ namespace io {
   template <CIRCUIT_PATH_TEMPLATE>
   void Circuit::UnMarshall(const CDM::CircuitPathData& in, SECircuitPath<CIRCUIT_PATH_TYPES>& out)
   {
-    out.Clear(); // TO Clear or not to Clear
+    // out.Clear();
+
     io::Property::UnMarshall(in.Switch(), out.m_Switch);
     io::Property::UnMarshall(in.NextSwitch(), out.m_NextSwitch);
     io::Property::UnMarshall(in.Valve(), out.m_Valve);
@@ -204,6 +205,7 @@ namespace io {
     out.Name(in.m_Name);
     out.SourceNode(in.m_SourceNode.GetName());
     out.TargetNode(in.m_TargetNode.GetName());
+
     if (in.HasSwitch()) {
       io::Property::Marshall(in.m_Switch, out.Switch());
     }

@@ -212,6 +212,7 @@ namespace io {
     if (in.RenalDynamics().present()) {
       if (in.RenalDynamics()->Regulation().present()) {
         out.m_RenalDynamic = RenalDynamic::Regulation;
+
         UnMarshall(in.RenalDynamics()->Regulation().get().ChargeInBlood(), out.m_ChargeInBlood);
 
         io::Property::UnMarshall(in.RenalDynamics()->Regulation().get().FractionUnboundInPlasma(), out.GetFractionUnboundInPlasma());
@@ -362,7 +363,6 @@ namespace io {
       throw CommonDataModelException("Multiple FractionUnboundInPlasma values specified, but not the same. These must match at this time.");
     }
   }
-
   void Substance::Marshall(const SESubstance& in, CDM::SubstanceData& out)
   {
     if (in.HasName()) {
@@ -544,22 +544,26 @@ namespace io {
   // SESubstanceState
   void Substance::UnMarshall(const CDM::enumSubstanceState& in, SESubstanceState& out)
   {
-    switch (in) {
-    case CDM::enumSubstanceState::Solid:
-      out = SESubstanceState::Solid;
-      break;
-    case CDM::enumSubstanceState::Liquid:
-      out = SESubstanceState::Liquid;
-      break;
-    case CDM::enumSubstanceState::Gas:
-      out = SESubstanceState::Gas;
-      break;
-    case CDM::enumSubstanceState::Molecular:
-      out = SESubstanceState::Molecular;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumSubstanceState::Solid:
+        out = SESubstanceState::Solid;
+        break;
+      case CDM::enumSubstanceState::Liquid:
+        out = SESubstanceState::Liquid;
+        break;
+      case CDM::enumSubstanceState::Gas:
+        out = SESubstanceState::Gas;
+        break;
+      case CDM::enumSubstanceState::Molecular:
+        out = SESubstanceState::Molecular;
+        break;
+      default:
+        out = SESubstanceState::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SESubstanceState::Invalid;
-      break;
     }
   }
   void Substance::Marshall(const SESubstanceState& in, CDM::enumSubstanceState& out)
@@ -578,32 +582,36 @@ namespace io {
       out = CDM::enumSubstanceState::Molecular;
       break;
     default:
-      out = (CDM::enumSubstanceState::value)-1;
+      out = "";
       break;
     }
   }
   // SESubstanceIonicState
   void Substance::UnMarshall(const CDM::enumSubstanceIonicState& in, SESubstanceIonicState& out)
   {
-    switch (in) {
-    case CDM::enumSubstanceIonicState::WeakBase:
-      out = SESubstanceIonicState::WeakBase;
-      break;
-    case CDM::enumSubstanceIonicState::Base:
-      out = SESubstanceIonicState::Base;
-      break;
-    case CDM::enumSubstanceIonicState::Acid:
-      out = SESubstanceIonicState::Acid;
-      break;
-    case CDM::enumSubstanceIonicState::Neutral:
-      out = SESubstanceIonicState::Neutral;
-      break;
-    case CDM::enumSubstanceIonicState::Zwitterion:
-      out = SESubstanceIonicState::Zwitterion;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumSubstanceIonicState::WeakBase:
+        out = SESubstanceIonicState::WeakBase;
+        break;
+      case CDM::enumSubstanceIonicState::Base:
+        out = SESubstanceIonicState::Base;
+        break;
+      case CDM::enumSubstanceIonicState::Acid:
+        out = SESubstanceIonicState::Acid;
+        break;
+      case CDM::enumSubstanceIonicState::Neutral:
+        out = SESubstanceIonicState::Neutral;
+        break;
+      case CDM::enumSubstanceIonicState::Zwitterion:
+        out = SESubstanceIonicState::Zwitterion;
+        break;
+      default:
+        out = SESubstanceIonicState::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SESubstanceIonicState::Invalid;
-      break;
     }
   }
   void Substance::Marshall(const SESubstanceIonicState& in, CDM::enumSubstanceIonicState& out)
@@ -625,26 +633,30 @@ namespace io {
       out = CDM::enumSubstanceIonicState::Zwitterion;
       break;
     default:
-      out = (CDM::enumSubstanceIonicState::value)-1;
+      out = "";
       break;
     }
   }
   // SESubstanceBindingProtein
   void Substance::UnMarshall(const CDM::enumSubstanceBindingProtein& in, SESubstanceBindingProtein& out)
   {
-    switch (in) {
-    case CDM::enumSubstanceBindingProtein::Albumin:
-      out = SESubstanceBindingProtein::Albumin;
-      break;
-    case CDM::enumSubstanceBindingProtein::Lipoprotein:
-      out = SESubstanceBindingProtein::Lipoprotein;
-      break;
-    case CDM::enumSubstanceBindingProtein::AAG:
-      out = SESubstanceBindingProtein::AAG;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumSubstanceBindingProtein::Albumin:
+        out = SESubstanceBindingProtein::Albumin;
+        break;
+      case CDM::enumSubstanceBindingProtein::Lipoprotein:
+        out = SESubstanceBindingProtein::Lipoprotein;
+        break;
+      case CDM::enumSubstanceBindingProtein::AAG:
+        out = SESubstanceBindingProtein::AAG;
+        break;
+      default:
+        out = SESubstanceBindingProtein::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SESubstanceBindingProtein::Invalid;
-      break;
     }
   }
   void Substance::Marshall(const SESubstanceBindingProtein& in, CDM::enumSubstanceBindingProtein& out)
@@ -660,26 +672,30 @@ namespace io {
       out = CDM::enumSubstanceBindingProtein::AAG;
       break;
     default:
-      out = (CDM::enumSubstanceBindingProtein::value)-1;
+      out = "";
       break;
     }
   }
   //  SECharge
   void Substance::UnMarshall(const CDM::enumCharge& in, SECharge& out)
   {
-    switch (in) {
-    case CDM::enumCharge::Positive:
-      out = SECharge::Positive;
-      break;
-    case CDM::enumCharge::Neutral:
-      out = SECharge::Neutral;
-      break;
-    case CDM::enumCharge::Negative:
-      out = SECharge::Negative;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumCharge::Positive:
+        out = SECharge::Positive;
+        break;
+      case CDM::enumCharge::Neutral:
+        out = SECharge::Neutral;
+        break;
+      case CDM::enumCharge::Negative:
+        out = SECharge::Negative;
+        break;
+      default:
+        out = SECharge::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SECharge::Invalid;
-      break;
     }
   }
   void Substance::Marshall(const SECharge& in, CDM::enumCharge& out)
@@ -695,38 +711,42 @@ namespace io {
       out = CDM::enumCharge::Negative;
       break;
     default:
-      out = (CDM::enumCharge::value)-1;
+      out = "";
       break;
     }
   }
   //  SESubstanceClass
   void Substance::UnMarshall(const CDM::enumSubstanceClass& in, SESubstanceClass& out)
   {
-    switch (in) {
-    case CDM::enumSubstanceClass::Anesthetic:
-      out = SESubstanceClass::Anesthetic;
-      break;
-    case CDM::enumSubstanceClass::Antibiotic:
-      out = SESubstanceClass::Antibiotic;
-      break;
-    case CDM::enumSubstanceClass::WholeBlood:
-      out = SESubstanceClass::WholeBlood;
-      break;
-    case CDM::enumSubstanceClass::Ion:
-      out = SESubstanceClass::Ion;
-      break;
-    case CDM::enumSubstanceClass::Opioid:
-      out = SESubstanceClass::Opioid;
-      break;
-    case CDM::enumSubstanceClass::ReversalAgent:
-      out = SESubstanceClass::ReversalAgent;
-      break;
-    case CDM::enumSubstanceClass::Sedative:
-      out = SESubstanceClass::Sedative;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumSubstanceClass::Anesthetic:
+        out = SESubstanceClass::Anesthetic;
+        break;
+      case CDM::enumSubstanceClass::Antibiotic:
+        out = SESubstanceClass::Antibiotic;
+        break;
+      case CDM::enumSubstanceClass::WholeBlood:
+        out = SESubstanceClass::WholeBlood;
+        break;
+      case CDM::enumSubstanceClass::Ion:
+        out = SESubstanceClass::Ion;
+        break;
+      case CDM::enumSubstanceClass::Opioid:
+        out = SESubstanceClass::Opioid;
+        break;
+      case CDM::enumSubstanceClass::ReversalAgent:
+        out = SESubstanceClass::ReversalAgent;
+        break;
+      case CDM::enumSubstanceClass::Sedative:
+        out = SESubstanceClass::Sedative;
+        break;
+      default:
+        out = SESubstanceClass::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SESubstanceClass::Invalid;
-      break;
     }
   }
   void Substance::Marshall(const SESubstanceClass& in, CDM::enumSubstanceClass& out)
@@ -754,7 +774,7 @@ namespace io {
       out = CDM::enumSubstanceClass::Sedative;
       break;
     default:
-      out = (CDM::enumSubstanceClass::value)-1;
+      out = "";
       break;
     }
   }
@@ -774,7 +794,7 @@ bool operator==(CDM::enumSubstanceState const& lhs, SESubstanceState const& rhs)
   case SESubstanceState::Molecular:
     return (CDM::enumSubstanceState::Molecular == lhs);
   case SESubstanceState::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSubstanceState::value)-1 == lhs);
   default:
     return false;
   }
@@ -794,7 +814,7 @@ bool operator==(CDM::enumSubstanceIonicState const& lhs, SESubstanceIonicState c
   case SESubstanceIonicState::Zwitterion:
     return (CDM::enumSubstanceIonicState::Zwitterion == lhs);
   case SESubstanceIonicState::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSubstanceIonicState::value)-1 == lhs);
   default:
     return false;
   }
@@ -810,7 +830,7 @@ bool operator==(CDM::enumSubstanceBindingProtein const& lhs, SESubstanceBindingP
   case SESubstanceBindingProtein::AAG:
     return (CDM::enumSubstanceBindingProtein::AAG == lhs);
   case SESubstanceBindingProtein::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSubstanceBindingProtein::value)-1 == lhs);
   default:
     return false;
   }
@@ -826,7 +846,7 @@ bool operator==(CDM::enumCharge const& lhs, SECharge const& rhs)
   case SECharge::Negative:
     return (CDM::enumCharge::Negative == lhs);
   case SECharge::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumCharge::value)-1 == lhs);
   default:
     return false;
   }
@@ -850,7 +870,7 @@ bool operator==(CDM::enumSubstanceClass const& lhs, SESubstanceClass const& rhs)
   case SESubstanceClass::Sedative:
     return (CDM::enumSubstanceClass::Sedative == lhs);
   case SESubstanceClass::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSubstanceClass::value)-1 == lhs);
   default:
     return false;
   }
