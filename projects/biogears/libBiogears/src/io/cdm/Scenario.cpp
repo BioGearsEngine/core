@@ -47,6 +47,7 @@ namespace io {
 
   //-----------------------------------------------------------------------------
   // class SEScenario
+
   void Scenario::UnMarshall(const CDM::ScenarioData& in, SEScenario& out)
   {
 
@@ -237,17 +238,17 @@ namespace io {
     out.Clear();
     io::Property::UnMarshall(in.Period(), out.GetPeriod());
 
-     auto periodTimeStamp = out.GetPeriodTimeStamps();
-     io::Property::UnMarshall(in.PeriodTimeStamps(), periodTimeStamp);
-     out.SetPeriodTimeStamps(periodTimeStamp);
+    auto periodTimeStamp = out.GetPeriodTimeStamps();
+    io::Property::UnMarshall(in.PeriodTimeStamps(), periodTimeStamp);
+    out.SetPeriodTimeStamps(periodTimeStamp);
 
-     auto afterActions = out.GetAfterActions();
-     io::Property::UnMarshall(in.AfterActions(), afterActions);
-     out.SetAfterActions(afterActions);
+    auto afterActions = out.GetAfterActions();
+    io::Property::UnMarshall(in.AfterActions(), afterActions);
+    out.SetAfterActions(afterActions);
 
-     auto reloadState = out.GetReloadState();
-     io::Property::UnMarshall(in.ReloadState(), reloadState);
-     out.SetReloadState(reloadState);
+    auto reloadState = out.GetReloadState();
+    io::Property::UnMarshall(in.ReloadState(), reloadState);
+    out.SetReloadState(reloadState);
 
     out.SetDirectory(in.Directory());
     out.SetFileName(in.FileName());
@@ -260,7 +261,6 @@ namespace io {
     SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, PeriodTimeStamps)
     SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, AfterActions)
     SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, ReloadState)
-
 
     if (in.HasDirectory()) {
       out.Directory(in.m_Directory);
@@ -285,7 +285,7 @@ namespace io {
     }
 
     if (auto serilizeAction = dynamic_cast<biogears::SESerializeState const*>(action); serilizeAction) {
-      auto serilizeActionData = std::make_unique<CDM::AdvanceTimeData>();
+      auto serilizeActionData = std::make_unique<CDM::SerializeStateData>();
       Actions::Marshall(*serilizeAction, *serilizeActionData);
       return std::move(serilizeActionData);
     }

@@ -137,7 +137,11 @@ namespace io {
       }
 
       CDM::ActiveAnesthesiaMachineEventData* eData = new CDM::ActiveAnesthesiaMachineEventData();
+
       eData->Event(std::make_unique<std::remove_reference<decltype(eData->Event())>::type>());
+      io::Anesthesia::Marshall(itr.first, eData->Event());
+
+      // ::mil::tatrc::physiology::datamodel::enumAnesthesiaMachineEvent
       Anesthesia::Marshall(itr.first, eData->Event());
 
       eData->Duration(std::make_unique<std::remove_reference<decltype(eData->Duration())>::type>());
@@ -198,19 +202,23 @@ namespace io {
   // SEAnesthesiaMachineEvent
   void Anesthesia::UnMarshall(const CDM::enumAnesthesiaMachineEvent& in, SEAnesthesiaMachineEvent& out)
   {
-    switch (in) {
-    case CDM::enumAnesthesiaMachineEvent::OxygenBottle1Exhausted:
-      out = SEAnesthesiaMachineEvent::OxygenBottle1Exhausted;
-      break;
-    case CDM::enumAnesthesiaMachineEvent::OxygenBottle2Exhausted:
-      out = SEAnesthesiaMachineEvent::OxygenBottle2Exhausted;
-      break;
-    case CDM::enumAnesthesiaMachineEvent::ReliefValveActive:
-      out = SEAnesthesiaMachineEvent::ReliefValveActive;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumAnesthesiaMachineEvent::OxygenBottle1Exhausted:
+        out = SEAnesthesiaMachineEvent::OxygenBottle1Exhausted;
+        break;
+      case CDM::enumAnesthesiaMachineEvent::OxygenBottle2Exhausted:
+        out = SEAnesthesiaMachineEvent::OxygenBottle2Exhausted;
+        break;
+      case CDM::enumAnesthesiaMachineEvent::ReliefValveActive:
+        out = SEAnesthesiaMachineEvent::ReliefValveActive;
+        break;
+      default:
+        out = SEAnesthesiaMachineEvent::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEAnesthesiaMachineEvent::Invalid;
-      break;
     }
   }
   void Anesthesia::Marshall(const SEAnesthesiaMachineEvent& in, CDM::enumAnesthesiaMachineEvent& out)
@@ -227,26 +235,30 @@ namespace io {
       break;
 
     default:
-      out = (CDM::enumAnesthesiaMachineEvent::value)-1;
+      out = "";
       break;
     }
   }
   // SEAnesthesiaMachineOxygenSource
   void Anesthesia::UnMarshall(const CDM::enumAnesthesiaMachineOxygenSource& in, SEAnesthesiaMachineOxygenSource& out)
   {
-    switch (in) {
-    case CDM::enumAnesthesiaMachineOxygenSource::BottleOne:
-      out = SEAnesthesiaMachineOxygenSource::BottleOne;
-      break;
-    case CDM::enumAnesthesiaMachineOxygenSource::BottleTwo:
-      out = SEAnesthesiaMachineOxygenSource::BottleTwo;
-      break;
-    case CDM::enumAnesthesiaMachineOxygenSource::Wall:
-      out = SEAnesthesiaMachineOxygenSource::Wall;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumAnesthesiaMachineOxygenSource::BottleOne:
+        out = SEAnesthesiaMachineOxygenSource::BottleOne;
+        break;
+      case CDM::enumAnesthesiaMachineOxygenSource::BottleTwo:
+        out = SEAnesthesiaMachineOxygenSource::BottleTwo;
+        break;
+      case CDM::enumAnesthesiaMachineOxygenSource::Wall:
+        out = SEAnesthesiaMachineOxygenSource::Wall;
+        break;
+      default:
+        out = SEAnesthesiaMachineOxygenSource::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEAnesthesiaMachineOxygenSource::Invalid;
-      break;
     }
   }
   void Anesthesia::Marshall(const SEAnesthesiaMachineOxygenSource& in, CDM::enumAnesthesiaMachineOxygenSource& out)
@@ -262,23 +274,27 @@ namespace io {
       out = CDM::enumAnesthesiaMachineOxygenSource::Wall;
       break;
     default:
-      out = (CDM::enumAnesthesiaMachineOxygenSource::value)-1;
+      out = "";
       break;
     }
   }
   // SEAnesthesiaMachinePrimaryGas
   void Anesthesia::UnMarshall(const CDM::enumAnesthesiaMachinePrimaryGas& in, SEAnesthesiaMachinePrimaryGas& out)
   {
-    switch (in) {
-    case CDM::enumAnesthesiaMachinePrimaryGas::Air:
-      out = SEAnesthesiaMachinePrimaryGas::Air;
-      break;
-    case CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen:
-      out = SEAnesthesiaMachinePrimaryGas::Nitrogen;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumAnesthesiaMachinePrimaryGas::Air:
+        out = SEAnesthesiaMachinePrimaryGas::Air;
+        break;
+      case CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen:
+        out = SEAnesthesiaMachinePrimaryGas::Nitrogen;
+        break;
+      default:
+        out = SEAnesthesiaMachinePrimaryGas::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEAnesthesiaMachinePrimaryGas::Invalid;
-      break;
     }
   }
   void Anesthesia::Marshall(const SEAnesthesiaMachinePrimaryGas& in, CDM::enumAnesthesiaMachinePrimaryGas& out)
@@ -291,26 +307,30 @@ namespace io {
       out = CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen;
       break;
     default:
-      out = (CDM::enumAnesthesiaMachinePrimaryGas::value)-1;
+      out = "";
       break;
     }
   }
   // SEAnesthesiaMachineConnection
   void Anesthesia::UnMarshall(const CDM::enumAnesthesiaMachineConnection& in, SEAnesthesiaMachineConnection& out)
   {
-    switch (in) {
-    case CDM::enumAnesthesiaMachineConnection::Mask:
-      out = SEAnesthesiaMachineConnection::Mask;
-      break;
-    case CDM::enumAnesthesiaMachineConnection::Off:
-      out = SEAnesthesiaMachineConnection::Off;
-      break;
-    case CDM::enumAnesthesiaMachineConnection::Tube:
-      out = SEAnesthesiaMachineConnection::Tube;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumAnesthesiaMachineConnection::Mask:
+        out = SEAnesthesiaMachineConnection::Mask;
+        break;
+      case CDM::enumAnesthesiaMachineConnection::Off:
+        out = SEAnesthesiaMachineConnection::Off;
+        break;
+      case CDM::enumAnesthesiaMachineConnection::Tube:
+        out = SEAnesthesiaMachineConnection::Tube;
+        break;
+      default:
+        out = SEAnesthesiaMachineConnection::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEAnesthesiaMachineConnection::Invalid;
-      break;
     }
   }
   void Anesthesia::Marshall(const SEAnesthesiaMachineConnection& in, CDM::enumAnesthesiaMachineConnection& out)
@@ -326,7 +346,7 @@ namespace io {
       out = CDM::enumAnesthesiaMachineConnection::Tube;
       break;
     default:
-      out = (CDM::enumAnesthesiaMachineConnection::value)-1;
+      out = "";
       break;
     }
   }
@@ -342,7 +362,7 @@ bool operator==(CDM::enumAnesthesiaMachineEvent const& lhs, SEAnesthesiaMachineE
   case SEAnesthesiaMachineEvent::ReliefValveActive:
     return (CDM::enumAnesthesiaMachineEvent::ReliefValveActive == lhs);
   case SEAnesthesiaMachineEvent::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumAnesthesiaMachineEvent::value)-1 == lhs);
   default:
     return false;
   }
@@ -357,7 +377,7 @@ bool operator==(CDM::enumAnesthesiaMachineOxygenSource const& lhs, SEAnesthesiaM
   case SEAnesthesiaMachineOxygenSource::Wall:
     return (CDM::enumAnesthesiaMachineOxygenSource::Wall == lhs);
   case SEAnesthesiaMachineOxygenSource::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumAnesthesiaMachineOxygenSource::value)-1 == lhs);
   default:
     return false;
   }
@@ -370,7 +390,7 @@ bool operator==(CDM::enumAnesthesiaMachinePrimaryGas const& lhs, SEAnesthesiaMac
   case SEAnesthesiaMachinePrimaryGas::Nitrogen:
     return (CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen == lhs);
   case SEAnesthesiaMachinePrimaryGas::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumAnesthesiaMachinePrimaryGas::value)-1 == lhs);
   default:
     return false;
   }
@@ -385,7 +405,7 @@ bool operator==(CDM::enumAnesthesiaMachineConnection const& lhs, SEAnesthesiaMac
   case SEAnesthesiaMachineConnection::Tube:
     return (CDM::enumAnesthesiaMachineConnection::Tube == lhs);
   case SEAnesthesiaMachineConnection::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumAnesthesiaMachineConnection::value)-1 == lhs);
   default:
     return false;
   }

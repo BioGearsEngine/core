@@ -213,7 +213,7 @@ namespace io {
     }
   }
 
-    //-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
   std::unique_ptr<SEDataRequest> DataRequests::factory(const CDM::DataRequestData& in, SESubstanceManager const& substances, const SEDecimalFormat* df)
   {
     const CDM::DataRequestData* drData = &in;

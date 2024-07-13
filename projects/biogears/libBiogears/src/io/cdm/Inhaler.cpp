@@ -18,9 +18,9 @@ namespace io {
     if (in.State().present())
       io::Property::UnMarshall(in.State().get(), out.m_State);
 
-      io::Property::UnMarshall(in.MeteredDose(), out.GetMeteredDose());
-      io::Property::UnMarshall(in.NozzleLoss(), out.GetNozzleLoss());
-      io::Property::UnMarshall(in.SpacerVolume(), out.GetSpacerVolume());
+    io::Property::UnMarshall(in.MeteredDose(), out.GetMeteredDose());
+    io::Property::UnMarshall(in.NozzleLoss(), out.GetNozzleLoss());
+    io::Property::UnMarshall(in.SpacerVolume(), out.GetSpacerVolume());
 
     if (in.Substance().present())
       out.SetSubstance(out.m_Substances.GetSubstance(in.Substance().get()));

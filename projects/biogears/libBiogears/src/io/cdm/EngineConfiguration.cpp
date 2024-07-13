@@ -25,11 +25,10 @@ namespace io {
       out.Clear(); // Reset only if we are not merging
 
     if (in.TimeStep().present())
-
       io::Property::UnMarshall(in.TimeStep(), out.GetTimeStep());
-    if (in.WritePatientBaselineFile().present()) {
-      io::Property::UnMarshall(in.WritePatientBaselineFile(), out.m_WritePatientBaselineFile);
-    }
+
+    io::Property::UnMarshall(in.WritePatientBaselineFile(), out.m_WritePatientBaselineFile);
+
     if (in.ElectroCardioGramInterpolatorFile().present()) {
       if (!out.GetECGInterpolator().LoadWaveforms(in.ElectroCardioGramInterpolatorFile().get())) {
         throw CommonDataModelException("Unable to load ElectroCardioGram Waveforms file");
@@ -84,11 +83,11 @@ namespace io {
     if (in.HasStabilizationCriteria())
       out.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(in.m_StabilizationCriteria->Unload()));
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TimeStep)
-    if (in.HasWritePatientBaselineFile())     
     io::Property::Marshall(in.m_WritePatientBaselineFile, out.WritePatientBaselineFile());
   }
   //----------------------------------------------------------------------------------
   // class PhysiologyEngineStabilization
+#pragma optmize("", off)
   void EngineConfiguration::UnMarshall(const CDM::PhysiologyEngineStabilizationData& in, PhysiologyEngineStabilization& out)
   {
     out.Clear();
@@ -102,6 +101,7 @@ namespace io {
     if (in.LogProgress().present())
       out.m_LogProgress = in.LogProgress().get();
   }
+#pragma optmize("", on)
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineStabilization& in, CDM::PhysiologyEngineStabilizationData& out)
   {

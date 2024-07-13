@@ -36,7 +36,7 @@ namespace io {
   {
     Marshall(static_cast<const SESubstanceQuantity&>(in), static_cast<CDM::SubstanceQuantityData&>(out));
     // Even if you have children, I am unloading everything, this makes the xml actually usefull...
-    
+
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PartialPressure)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Volume)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VolumeFraction)

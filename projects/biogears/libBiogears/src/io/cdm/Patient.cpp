@@ -4,8 +4,8 @@
 
 #include <biogears/cdm/properties/SEProperties.h>
 
-#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/enums/SEPatientEnums.h>
+#include <biogears/cdm/patient/SEPatient.h>
 
 namespace biogears {
 namespace io {
@@ -89,6 +89,7 @@ namespace io {
     if (in.HasBloodRh()) {
       out.BloodTypeRh(in.m_BloodRh);
     }
+
     Patient::Marshall(in.m_BloodType, out.BloodTypeABO());
 
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodVolumeBaseline)
@@ -138,6 +139,7 @@ namespace io {
       eData->Event(std::make_unique<std::remove_reference<decltype(eData->Event())>::type>());
       io::Patient::Marshall(itr.first, eData->Event());
 
+      eData->Duration(std::make_unique<std::remove_reference<decltype(eData->Duration())>::type>());
       io::Property::Marshall(time, eData->Duration());
       ;
       out.ActiveEvent().push_back(std::unique_ptr<CDM::ActivePatientEventData>(eData));
@@ -147,16 +149,20 @@ namespace io {
   // SEOpenClosed
   void Patient::UnMarshall(const CDM::enumSex& in, SESex& out)
   {
-    switch (in) {
-    case CDM::enumSex::Male:
-      out = SESex::Male;
-      break;
-    case CDM::enumSex::Female:
-      out = SESex::Female;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumSex::Male:
+        out = SESex::Male;
+        break;
+      case CDM::enumSex::Female:
+        out = SESex::Female;
+        break;
+      default:
+        out = SESex::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SESex::Invalid;
-      break;
     }
   }
   void Patient::Marshall(const SESex& in, CDM::enumSex& out)
@@ -169,7 +175,7 @@ namespace io {
       out = CDM::enumSex::Female;
       break;
     default:
-      out = (CDM::enumSex::value)-1;
+      out = "";
       break;
     }
   }
@@ -177,22 +183,26 @@ namespace io {
   // SEOnOff
   void Patient::UnMarshall(const CDM::enumBloodType& in, SEBloodType& out)
   {
-    switch (in) {
-    case CDM::enumBloodType::A:
-      out = SEBloodType::A;
-      break;
-    case CDM::enumBloodType::B:
-      out = SEBloodType::B;
-      break;
-    case CDM::enumBloodType::AB:
-      out = SEBloodType::AB;
-      break;
-    case CDM::enumBloodType::O:
-      out = SEBloodType::O;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumBloodType::A:
+        out = SEBloodType::A;
+        break;
+      case CDM::enumBloodType::B:
+        out = SEBloodType::B;
+        break;
+      case CDM::enumBloodType::AB:
+        out = SEBloodType::AB;
+        break;
+      case CDM::enumBloodType::O:
+        out = SEBloodType::O;
+        break;
+      default:
+        out = SEBloodType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEBloodType::Invalid;
-      break;
     }
   }
   void Patient::Marshall(const SEBloodType& in, CDM::enumBloodType& out)
@@ -211,7 +221,7 @@ namespace io {
       out = CDM::enumBloodType::O;
       break;
     default:
-      out = (CDM::enumBloodType::value)-1;
+      out = "";
       break;
     }
   }
@@ -219,256 +229,260 @@ namespace io {
   //  SEErrorType
   void Patient::UnMarshall(const CDM::enumPatientEvent& in, SEPatientEventType& out)
   {
-    switch (in) {
-    case CDM::enumPatientEvent::AcuteLungInjury:
-      out = SEPatientEventType::AcuteLungInjury;
-      break;
-    case CDM::enumPatientEvent::AcuteRespiratoryDistress:
-      out = SEPatientEventType::AcuteRespiratoryDistress;
-      break;
-    case CDM::enumPatientEvent::Antidiuresis:
-      out = SEPatientEventType::Antidiuresis;
-      break;
-    case CDM::enumPatientEvent::Asystole:
-      out = SEPatientEventType::Asystole;
-      break;
-    case CDM::enumPatientEvent::Bradycardia:
-      out = SEPatientEventType::Bradycardia;
-      break;
-    case CDM::enumPatientEvent::Bradypnea:
-      out = SEPatientEventType::Bradypnea;
-      break;
-    case CDM::enumPatientEvent::BrainOxygenDeficit:
-      out = SEPatientEventType::BrainOxygenDeficit;
-      break;
-    case CDM::enumPatientEvent::CardiacArrest:
-      out = SEPatientEventType::CardiacArrest;
-      break;
-    case CDM::enumPatientEvent::CardiogenicShock:
-      out = SEPatientEventType::CardiogenicShock;
-      break;
-    case CDM::enumPatientEvent::CompartmentSyndrome_LeftArm:
-      out = SEPatientEventType::CompartmentSyndromeLeftArm;
-      break;
-    case CDM::enumPatientEvent::CompartmentSyndrome_RightArm:
-      out = SEPatientEventType::CompartmentSyndromeRightArm;
-      break;
-    case CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg:
-      out = SEPatientEventType::CompartmentSyndromeLeftLeg;
-      break;
-    case CDM::enumPatientEvent::CompartmentSyndrome_RightLeg:
-      out = SEPatientEventType::CompartmentSyndromeRightLeg;
-      break;
-    case CDM::enumPatientEvent::CompartmentSyndrome_Abdominal:
-      out = SEPatientEventType::CompartmentSyndromeAbdominal;
-      break;
-    case CDM::enumPatientEvent::CriticalBrainOxygenDeficit:
-      out = SEPatientEventType::CriticalBrainOxygenDeficit;
-      break;
-    case CDM::enumPatientEvent::Dehydration:
-      out = SEPatientEventType::Dehydration;
-      break;
-    case CDM::enumPatientEvent::Diuresis:
-      out = SEPatientEventType::Diuresis;
-      break;
-    case CDM::enumPatientEvent::MildDiarrhea:
-      out = SEPatientEventType::MildDiarrhea;
-      break;
-    case CDM::enumPatientEvent::SevereDiarrhea:
-      out = SEPatientEventType::SevereDiarrhea;
-      break;
-    case CDM::enumPatientEvent::Fasciculation:
-      out = SEPatientEventType::Fasciculation;
-      break;
-    case CDM::enumPatientEvent::Fatigue:
-      out = SEPatientEventType::Fatigue;
-      break;
-    case CDM::enumPatientEvent::FlaccidParalysis:
-      out = SEPatientEventType::FlaccidParalysis;
-      break;
-    case CDM::enumPatientEvent::FunctionalIncontinence:
-      out = SEPatientEventType::FunctionalIncontinence;
-      break;
-    case CDM::enumPatientEvent::MildHeadache:
-      out = SEPatientEventType::MildHeadache;
-      break;
-    case CDM::enumPatientEvent::SevereHeadache:
-      out = SEPatientEventType::SevereHeadache;
-      break;
-    case CDM::enumPatientEvent::HemolyticTransfusionReaction:
-      out = SEPatientEventType::HemolyticTransfusionReaction;
-      break;
-    case CDM::enumPatientEvent::Hypercapnia:
-      out = SEPatientEventType::Hypercapnia;
-      break;
-    case CDM::enumPatientEvent::Hyperglycemia:
-      out = SEPatientEventType::Hyperglycemia;
-      break;
-    case CDM::enumPatientEvent::MildDiaphoresis:
-      out = SEPatientEventType::MildDiaphoresis;
-      break;
-    case CDM::enumPatientEvent::ModerateDiaphoresis:
-      out = SEPatientEventType::ModerateDiaphoresis;
-      break;
-    case CDM::enumPatientEvent::SevereDiaphoresis:
-      out = SEPatientEventType::SevereDiaphoresis;
-      break;
-    case CDM::enumPatientEvent::MildHyperkalemia:
-      out = SEPatientEventType::MildHyperkalemia;
-      break;
-    case CDM::enumPatientEvent::SevereHyperkalemia:
-      out = SEPatientEventType::SevereHyperkalemia;
-      break;
-    case CDM::enumPatientEvent::MildHypernatremia:
-      out = SEPatientEventType::MildHypernatremia;
-      break;
-    case CDM::enumPatientEvent::SevereHypernatremia:
-      out = SEPatientEventType::SevereHypernatremia;
-      break;
-    case CDM::enumPatientEvent::Hyperthermia:
-      out = SEPatientEventType::Hyperthermia;
-      break;
-    case CDM::enumPatientEvent::Hypoglycemia:
-      out = SEPatientEventType::Hypoglycemia;
-      break;
-    case CDM::enumPatientEvent::HypoglycemicShock:
-      out = SEPatientEventType::HypoglycemicShock;
-      break;
-    case CDM::enumPatientEvent::HypoglycemicComa:
-      out = SEPatientEventType::HypoglycemicComa;
-      break;
-    case CDM::enumPatientEvent::MildHypothermia:
-      out = SEPatientEventType::MildHypothermia;
-      break;
-    case CDM::enumPatientEvent::ModerateHypothermia:
-      out = SEPatientEventType::ModerateHypothermia;
-      break;
-    case CDM::enumPatientEvent::SevereHypothermia:
-      out = SEPatientEventType::SevereHypothermia;
-      break;
-    case CDM::enumPatientEvent::MildHypokalemia:
-      out = SEPatientEventType::MildHypokalemia;
-      break;
-    case CDM::enumPatientEvent::SevereHypokalemia:
-      out = SEPatientEventType::SevereHypokalemia;
-      break;
-    case CDM::enumPatientEvent::MildHyponatremia:
-      out = SEPatientEventType::MildHyponatremia;
-      break;
-    case CDM::enumPatientEvent::SevereHyponatremia:
-      out = SEPatientEventType::SevereHyponatremia;
-      break;
-    case CDM::enumPatientEvent::Hypoxia:
-      out = SEPatientEventType::Hypoxia;
-      break;
-    case CDM::enumPatientEvent::HypovolemicShock:
-      out = SEPatientEventType::HypovolemicShock;
-      break;
-    case CDM::enumPatientEvent::IntracranialHypertension:
-      out = SEPatientEventType::IntracranialHypertension;
-      break;
-    case CDM::enumPatientEvent::IntracranialHypotension:
-      out = SEPatientEventType::IntracranialHypotension;
-      break;
-    case CDM::enumPatientEvent::IrreversibleState:
-      out = SEPatientEventType::IrreversibleState;
-      break;
-    case CDM::enumPatientEvent::Ketoacidosis:
-      out = SEPatientEventType::Ketoacidosis;
-      break;
-    case CDM::enumPatientEvent::LacticAcidosis:
-      out = SEPatientEventType::LacticAcidosis;
-      break;
-    case CDM::enumPatientEvent::LiverGlycogenDepleted:
-      out = SEPatientEventType::LiverGlycogenDepleted;
-      break;
-    case CDM::enumPatientEvent::MaximumPulmonaryVentilationRate:
-      out = SEPatientEventType::MaximumPulmonaryVentilationRate;
-      break;
-    case CDM::enumPatientEvent::MetabolicAcidosis:
-      out = SEPatientEventType::MetabolicAcidosis;
-      break;
-    case CDM::enumPatientEvent::MetabolicAlkalosis:
-      out = SEPatientEventType::MetabolicAlkalosis;
-      break;
-    case CDM::enumPatientEvent::MildWeakness:
-      out = SEPatientEventType::MildWeakness;
-      break;
-    case CDM::enumPatientEvent::ModerateWeakness:
-      out = SEPatientEventType::ModerateWeakness;
-      break;
-    case CDM::enumPatientEvent::MildSecretions:
-      out = SEPatientEventType::MildSecretions;
-      break;
-    case CDM::enumPatientEvent::ModerateSecretions:
-      out = SEPatientEventType::ModerateSecretions;
-      break;
-    case CDM::enumPatientEvent::MuscleCatabolism:
-      out = SEPatientEventType::MuscleCatabolism;
-      break;
-    case CDM::enumPatientEvent::MuscleGlycogenDepleted:
-      out = SEPatientEventType::MuscleGlycogenDepleted;
-      break;
-    case CDM::enumPatientEvent::MyocardiumOxygenDeficit:
-      out = SEPatientEventType::MyocardiumOxygenDeficit;
-      break;
-    case CDM::enumPatientEvent::Natriuresis:
-      out = SEPatientEventType::Natriuresis;
-      break;
-    case CDM::enumPatientEvent::Nausea:
-      out = SEPatientEventType::Nausea;
-      break;
-    case CDM::enumPatientEvent::NutritionDepleted:
-      out = SEPatientEventType::NutritionDepleted;
-      break;
-    case CDM::enumPatientEvent::PulselessRhythm:
-      out = SEPatientEventType::PulselessRhythm;
-      break;
-    case CDM::enumPatientEvent::RenalHypoperfusion:
-      out = SEPatientEventType::RenalHypoperfusion;
-      break;
-    case CDM::enumPatientEvent::RespiratoryAcidosis:
-      out = SEPatientEventType::RespiratoryAcidosis;
-      break;
-    case CDM::enumPatientEvent::RespiratoryAlkalosis:
-      out = SEPatientEventType::RespiratoryAlkalosis;
-      break;
-    case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
-      out = SEPatientEventType::SevereAcuteRespiratoryDistress;
-      break;
-    case CDM::enumPatientEvent::SevereSecretions:
-      out = SEPatientEventType::SevereSecretions;
-      break;
-    case CDM::enumPatientEvent::Seizures:
-      out = SEPatientEventType::Seizures;
-      break;
-    case CDM::enumPatientEvent::Shivering:
-      out = SEPatientEventType::Shivering;
-      break;
-    case CDM::enumPatientEvent::StartOfCardiacCycle:
-      out = SEPatientEventType::StartOfCardiacCycle;
-      break;
-    case CDM::enumPatientEvent::StartOfExhale:
-      out = SEPatientEventType::StartOfExhale;
-      break;
-    case CDM::enumPatientEvent::StartOfInhale:
-      out = SEPatientEventType::StartOfInhale;
-      break;
-    case CDM::enumPatientEvent::SevereSepsis:
-      out = SEPatientEventType::SevereSepsis;
-      break;
-    case CDM::enumPatientEvent::Tachycardia:
-      out = SEPatientEventType::Tachycardia;
-      break;
-    case CDM::enumPatientEvent::Tachypnea:
-      out = SEPatientEventType::Tachypnea;
-      break;
-    case CDM::enumPatientEvent::Vomiting:
-      out = SEPatientEventType::Vomiting;
-      break;
-    default:
+    try {
+      switch (in) {
+      case CDM::enumPatientEvent::AcuteLungInjury:
+        out = SEPatientEventType::AcuteLungInjury;
+        break;
+      case CDM::enumPatientEvent::AcuteRespiratoryDistress:
+        out = SEPatientEventType::AcuteRespiratoryDistress;
+        break;
+      case CDM::enumPatientEvent::Antidiuresis:
+        out = SEPatientEventType::Antidiuresis;
+        break;
+      case CDM::enumPatientEvent::Asystole:
+        out = SEPatientEventType::Asystole;
+        break;
+      case CDM::enumPatientEvent::Bradycardia:
+        out = SEPatientEventType::Bradycardia;
+        break;
+      case CDM::enumPatientEvent::Bradypnea:
+        out = SEPatientEventType::Bradypnea;
+        break;
+      case CDM::enumPatientEvent::BrainOxygenDeficit:
+        out = SEPatientEventType::BrainOxygenDeficit;
+        break;
+      case CDM::enumPatientEvent::CardiacArrest:
+        out = SEPatientEventType::CardiacArrest;
+        break;
+      case CDM::enumPatientEvent::CardiogenicShock:
+        out = SEPatientEventType::CardiogenicShock;
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftArm:
+        out = SEPatientEventType::CompartmentSyndromeLeftArm;
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightArm:
+        out = SEPatientEventType::CompartmentSyndromeRightArm;
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg:
+        out = SEPatientEventType::CompartmentSyndromeLeftLeg;
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_RightLeg:
+        out = SEPatientEventType::CompartmentSyndromeRightLeg;
+        break;
+      case CDM::enumPatientEvent::CompartmentSyndrome_Abdominal:
+        out = SEPatientEventType::CompartmentSyndromeAbdominal;
+        break;
+      case CDM::enumPatientEvent::CriticalBrainOxygenDeficit:
+        out = SEPatientEventType::CriticalBrainOxygenDeficit;
+        break;
+      case CDM::enumPatientEvent::Dehydration:
+        out = SEPatientEventType::Dehydration;
+        break;
+      case CDM::enumPatientEvent::Diuresis:
+        out = SEPatientEventType::Diuresis;
+        break;
+      case CDM::enumPatientEvent::MildDiarrhea:
+        out = SEPatientEventType::MildDiarrhea;
+        break;
+      case CDM::enumPatientEvent::SevereDiarrhea:
+        out = SEPatientEventType::SevereDiarrhea;
+        break;
+      case CDM::enumPatientEvent::Fasciculation:
+        out = SEPatientEventType::Fasciculation;
+        break;
+      case CDM::enumPatientEvent::Fatigue:
+        out = SEPatientEventType::Fatigue;
+        break;
+      case CDM::enumPatientEvent::FlaccidParalysis:
+        out = SEPatientEventType::FlaccidParalysis;
+        break;
+      case CDM::enumPatientEvent::FunctionalIncontinence:
+        out = SEPatientEventType::FunctionalIncontinence;
+        break;
+      case CDM::enumPatientEvent::MildHeadache:
+        out = SEPatientEventType::MildHeadache;
+        break;
+      case CDM::enumPatientEvent::SevereHeadache:
+        out = SEPatientEventType::SevereHeadache;
+        break;
+      case CDM::enumPatientEvent::HemolyticTransfusionReaction:
+        out = SEPatientEventType::HemolyticTransfusionReaction;
+        break;
+      case CDM::enumPatientEvent::Hypercapnia:
+        out = SEPatientEventType::Hypercapnia;
+        break;
+      case CDM::enumPatientEvent::Hyperglycemia:
+        out = SEPatientEventType::Hyperglycemia;
+        break;
+      case CDM::enumPatientEvent::MildDiaphoresis:
+        out = SEPatientEventType::MildDiaphoresis;
+        break;
+      case CDM::enumPatientEvent::ModerateDiaphoresis:
+        out = SEPatientEventType::ModerateDiaphoresis;
+        break;
+      case CDM::enumPatientEvent::SevereDiaphoresis:
+        out = SEPatientEventType::SevereDiaphoresis;
+        break;
+      case CDM::enumPatientEvent::MildHyperkalemia:
+        out = SEPatientEventType::MildHyperkalemia;
+        break;
+      case CDM::enumPatientEvent::SevereHyperkalemia:
+        out = SEPatientEventType::SevereHyperkalemia;
+        break;
+      case CDM::enumPatientEvent::MildHypernatremia:
+        out = SEPatientEventType::MildHypernatremia;
+        break;
+      case CDM::enumPatientEvent::SevereHypernatremia:
+        out = SEPatientEventType::SevereHypernatremia;
+        break;
+      case CDM::enumPatientEvent::Hyperthermia:
+        out = SEPatientEventType::Hyperthermia;
+        break;
+      case CDM::enumPatientEvent::Hypoglycemia:
+        out = SEPatientEventType::Hypoglycemia;
+        break;
+      case CDM::enumPatientEvent::HypoglycemicShock:
+        out = SEPatientEventType::HypoglycemicShock;
+        break;
+      case CDM::enumPatientEvent::HypoglycemicComa:
+        out = SEPatientEventType::HypoglycemicComa;
+        break;
+      case CDM::enumPatientEvent::MildHypothermia:
+        out = SEPatientEventType::MildHypothermia;
+        break;
+      case CDM::enumPatientEvent::ModerateHypothermia:
+        out = SEPatientEventType::ModerateHypothermia;
+        break;
+      case CDM::enumPatientEvent::SevereHypothermia:
+        out = SEPatientEventType::SevereHypothermia;
+        break;
+      case CDM::enumPatientEvent::MildHypokalemia:
+        out = SEPatientEventType::MildHypokalemia;
+        break;
+      case CDM::enumPatientEvent::SevereHypokalemia:
+        out = SEPatientEventType::SevereHypokalemia;
+        break;
+      case CDM::enumPatientEvent::MildHyponatremia:
+        out = SEPatientEventType::MildHyponatremia;
+        break;
+      case CDM::enumPatientEvent::SevereHyponatremia:
+        out = SEPatientEventType::SevereHyponatremia;
+        break;
+      case CDM::enumPatientEvent::Hypoxia:
+        out = SEPatientEventType::Hypoxia;
+        break;
+      case CDM::enumPatientEvent::HypovolemicShock:
+        out = SEPatientEventType::HypovolemicShock;
+        break;
+      case CDM::enumPatientEvent::IntracranialHypertension:
+        out = SEPatientEventType::IntracranialHypertension;
+        break;
+      case CDM::enumPatientEvent::IntracranialHypotension:
+        out = SEPatientEventType::IntracranialHypotension;
+        break;
+      case CDM::enumPatientEvent::IrreversibleState:
+        out = SEPatientEventType::IrreversibleState;
+        break;
+      case CDM::enumPatientEvent::Ketoacidosis:
+        out = SEPatientEventType::Ketoacidosis;
+        break;
+      case CDM::enumPatientEvent::LacticAcidosis:
+        out = SEPatientEventType::LacticAcidosis;
+        break;
+      case CDM::enumPatientEvent::LiverGlycogenDepleted:
+        out = SEPatientEventType::LiverGlycogenDepleted;
+        break;
+      case CDM::enumPatientEvent::MaximumPulmonaryVentilationRate:
+        out = SEPatientEventType::MaximumPulmonaryVentilationRate;
+        break;
+      case CDM::enumPatientEvent::MetabolicAcidosis:
+        out = SEPatientEventType::MetabolicAcidosis;
+        break;
+      case CDM::enumPatientEvent::MetabolicAlkalosis:
+        out = SEPatientEventType::MetabolicAlkalosis;
+        break;
+      case CDM::enumPatientEvent::MildWeakness:
+        out = SEPatientEventType::MildWeakness;
+        break;
+      case CDM::enumPatientEvent::ModerateWeakness:
+        out = SEPatientEventType::ModerateWeakness;
+        break;
+      case CDM::enumPatientEvent::MildSecretions:
+        out = SEPatientEventType::MildSecretions;
+        break;
+      case CDM::enumPatientEvent::ModerateSecretions:
+        out = SEPatientEventType::ModerateSecretions;
+        break;
+      case CDM::enumPatientEvent::MuscleCatabolism:
+        out = SEPatientEventType::MuscleCatabolism;
+        break;
+      case CDM::enumPatientEvent::MuscleGlycogenDepleted:
+        out = SEPatientEventType::MuscleGlycogenDepleted;
+        break;
+      case CDM::enumPatientEvent::MyocardiumOxygenDeficit:
+        out = SEPatientEventType::MyocardiumOxygenDeficit;
+        break;
+      case CDM::enumPatientEvent::Natriuresis:
+        out = SEPatientEventType::Natriuresis;
+        break;
+      case CDM::enumPatientEvent::Nausea:
+        out = SEPatientEventType::Nausea;
+        break;
+      case CDM::enumPatientEvent::NutritionDepleted:
+        out = SEPatientEventType::NutritionDepleted;
+        break;
+      case CDM::enumPatientEvent::PulselessRhythm:
+        out = SEPatientEventType::PulselessRhythm;
+        break;
+      case CDM::enumPatientEvent::RenalHypoperfusion:
+        out = SEPatientEventType::RenalHypoperfusion;
+        break;
+      case CDM::enumPatientEvent::RespiratoryAcidosis:
+        out = SEPatientEventType::RespiratoryAcidosis;
+        break;
+      case CDM::enumPatientEvent::RespiratoryAlkalosis:
+        out = SEPatientEventType::RespiratoryAlkalosis;
+        break;
+      case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress:
+        out = SEPatientEventType::SevereAcuteRespiratoryDistress;
+        break;
+      case CDM::enumPatientEvent::SevereSecretions:
+        out = SEPatientEventType::SevereSecretions;
+        break;
+      case CDM::enumPatientEvent::Seizures:
+        out = SEPatientEventType::Seizures;
+        break;
+      case CDM::enumPatientEvent::Shivering:
+        out = SEPatientEventType::Shivering;
+        break;
+      case CDM::enumPatientEvent::StartOfCardiacCycle:
+        out = SEPatientEventType::StartOfCardiacCycle;
+        break;
+      case CDM::enumPatientEvent::StartOfExhale:
+        out = SEPatientEventType::StartOfExhale;
+        break;
+      case CDM::enumPatientEvent::StartOfInhale:
+        out = SEPatientEventType::StartOfInhale;
+        break;
+      case CDM::enumPatientEvent::SevereSepsis:
+        out = SEPatientEventType::SevereSepsis;
+        break;
+      case CDM::enumPatientEvent::Tachycardia:
+        out = SEPatientEventType::Tachycardia;
+        break;
+      case CDM::enumPatientEvent::Tachypnea:
+        out = SEPatientEventType::Tachypnea;
+        break;
+      case CDM::enumPatientEvent::Vomiting:
+        out = SEPatientEventType::Vomiting;
+        break;
+      default:
+        out = SEPatientEventType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
       out = SEPatientEventType::Invalid;
-      break;
     }
   }
   void Patient::Marshall(const SEPatientEventType& in, CDM::enumPatientEvent& out)
@@ -721,7 +735,7 @@ namespace io {
       out = CDM::enumPatientEvent::Vomiting;
       break;
     default:
-      out = (CDM::enumPatientEvent::value)-1;
+      out = "";
       break;
     }
   }
@@ -736,7 +750,7 @@ bool operator==(CDM::enumSex const& lhs, SESex const& rhs)
   case SESex::Female:
     return (CDM::enumSex::Female == lhs);
   case SESex::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumSex::value)-1 == lhs);
   default:
     return false;
   }
@@ -753,7 +767,7 @@ bool operator==(CDM::enumBloodType const& lhs, SEBloodType const& rhs)
   case SEBloodType::O:
     return (CDM::enumBloodType::O == lhs);
   case SEBloodType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumBloodType::value)-1 == lhs);
   default:
     return false;
   }
@@ -926,7 +940,7 @@ bool operator==(CDM::enumPatientEvent const& lhs, SEPatientEventType const& rhs)
   case SEPatientEventType::Vomiting:
     return (CDM::enumPatientEvent::Vomiting == lhs);
   case SEPatientEventType::Invalid:
-    return (-1 == lhs);
+    return ((CDM::enumPatientEvent::value)-1 == lhs);
   default:
     return false;
   }

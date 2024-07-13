@@ -6,9 +6,10 @@
 #include <biogears/cdm/circuit/SECircuit.h>
 
 #include <biogears/cdm/circuit/SECircuit.h>
+#include <biogears/cdm/enums/SECircuitEnums.h>
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/SECircuitNode.inl>
-#include <biogears/cdm/circuit/SECircuitPath.h>
+#include <biogears/cdm/circuit/SECircuitPath.h> 
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
@@ -18,7 +19,6 @@
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
-#include <biogears/cdm/enums/SECircuitEnums.h>
 namespace biogears {
 namespace io {
   // class SEElectricalCircuit
@@ -50,6 +50,7 @@ namespace io {
     }
     out.StateChange();
   }
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SEElectricalCircuit& in, CDM::ElectricalCircuitData& out)
   {
     out.Name(in.m_Name);
@@ -73,6 +74,7 @@ namespace io {
     io::Property::UnMarshall(in.NextCharge(), out.GetNextCharge());
     io::Property::UnMarshall(in.ChargeBaseline(), out.GetChargeBaseline());
   }
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SEElectricalCircuitNode& in, CDM::ElectricalCircuitNodeData& out)
   {
     Marshall(static_cast<const SECircuitNode<SEScalarElectricPotential, SEScalarElectricCharge>&>(in), static_cast<CDM::CircuitNodeData&>(out));
@@ -114,6 +116,7 @@ namespace io {
     io::Property::UnMarshall(in.VoltageSourceBaseline(), out.GetVoltageSourceBaseline());
     io::Property::UnMarshall(in.ValveBreakdownVoltage(), out.GetValveBreakdownVoltage());
   }
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SEElectricalCircuitPath& in, CDM::ElectricalCircuitPathData& out)
   {
 
@@ -204,6 +207,7 @@ namespace io {
     }
     out.StateChange();
   }
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SEFluidCircuit& in, CDM::FluidCircuitData& out)
   {
     out.Name(in.m_Name);
@@ -228,6 +232,7 @@ namespace io {
     io::Property::UnMarshall(in.NextVolume(), out.GetNextVolume());
     io::Property::UnMarshall(in.VolumeBaseline(), out.GetVolumeBaseline());
   }
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SEFluidCircuitNode& in, CDM::FluidCircuitNodeData& out)
   {
     Marshall(static_cast<const SECircuitNode<FLUID_CIRCUIT_NODE>&>(in), static_cast<CDM::CircuitNodeData&>(out));
@@ -267,6 +272,7 @@ namespace io {
     io::Property::UnMarshall(in.PressureSourceBaseline(), out.GetPressureSourceBaseline());
     io::Property::UnMarshall(in.ValveBreakdownPressure(), out.GetValveBreakdownPressure());
   }
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SEFluidCircuitPath& in, CDM::FluidCircuitPathData& out)
   {
     Marshall(static_cast<const SECircuitPath<FLUID_CIRCUIT_PATH>&>(in), static_cast<CDM::CircuitPathData&>(out));
@@ -355,6 +361,7 @@ namespace io {
     }
     out.StateChange();
   }
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SEThermalCircuit& in, CDM::ThermalCircuitData& out)
   {
     out.Name(in.m_Name);
@@ -379,6 +386,7 @@ namespace io {
     io::Property::UnMarshall(in.NextHeat(), out.GetNextHeat());
     io::Property::UnMarshall(in.HeatBaseline(), out.GetHeatBaseline());
   }
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SEThermalCircuitNode& in, CDM::ThermalCircuitNodeData& out)
   {
 
@@ -418,6 +426,7 @@ namespace io {
     io::Property::UnMarshall(in.TemperatureSourceBaseline(), out.GetTemperatureSourceBaseline());
     io::Property::UnMarshall(in.ValveBreakdownTemperature(), out.GetValveBreakdownTemperature());
   }
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SEThermalCircuitPath& in, CDM::ThermalCircuitPathData& out)
   {
     Marshall(static_cast<const SECircuitPath<THERMAL_CIRCUIT_PATH>&>(in), static_cast<CDM::CircuitPathData&>(out));
@@ -533,6 +542,8 @@ namespace io {
       io::Circuit::UnMarshall(c, out.m_ThermalLedger, out.CreateCircuit<THERMAL_LEDGER_TYPES>(c.Name(), out.m_ThermalLedger));
     }
   }
+
+  //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SECircuitManager& in, CDM::CircuitManagerData& out)
   {
     for (auto itr : in.m_ElectricalLedger.nodes) {

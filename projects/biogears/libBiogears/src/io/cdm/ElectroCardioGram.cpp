@@ -58,7 +58,6 @@ namespace io {
     out.Clear();
     io::Physiology::UnMarshall(in.Rhythm(), out.m_Rhythm);
 
-    
     out.m_LeadNumber = in.Lead();
     io::Property::UnMarshall(in.Data(), out.GetData());
     if (in.TimeStep().present())

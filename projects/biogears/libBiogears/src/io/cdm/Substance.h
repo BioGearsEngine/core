@@ -125,7 +125,7 @@ namespace io {
   template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>*>
   void Substance::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
-    if (!option_in.present()) {
+    if (!option_in.present() || option_in->empty()) {
       out = SE::Invalid;
     } else {
       io::Substance::UnMarshall(option_in.get(), out);

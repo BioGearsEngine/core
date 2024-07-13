@@ -298,7 +298,7 @@ namespace io {
   template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>*>
   void PatientActions::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
-    if (!option_in.present()) {
+    if (!option_in.present() || option_in->empty()) {
       out = SE::Invalid;
     } else {
       io::PatientActions::UnMarshall(option_in.get(), out);
@@ -424,7 +424,7 @@ inline bool operator!=(SEBurnDegree const& lhs, CDM::enumBurnDegree const& rhs)
 }
 inline bool operator!=(SEInfectionSeverity const& lhs, CDM::enumInfectionSeverity const& rhs)
 {
-
+ return !(rhs == lhs);
 } // Namespace Biogears
 inline bool operator!=(SEIntubationType const& lhs, CDM::enumIntubationType const& rhs)
 {
