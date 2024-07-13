@@ -33,24 +33,12 @@ namespace io {
     if (!in.m_Name.empty()) {
       out.Name(in.m_Name);
     }
-    if (in.m_Carbohydrate != nullptr) {
-      io::Property::Marshall(*in.m_Carbohydrate, out.Carbohydrate());
-    }
-    if (in.m_Fat != nullptr) {
-      io::Property::Marshall(*in.m_Fat, out.Fat());
-    }
-    if (in.m_Protein != nullptr) {
-      io::Property::Marshall(*in.m_Protein, out.Protein());
-    }
-    if (in.m_Calcium != nullptr) {
-      io::Property::Marshall(*in.m_Calcium, out.Calcium());
-    }
-    if (in.m_Sodium != nullptr) {
-      io::Property::Marshall(*in.m_Sodium, out.Sodium());
-    }
-    if (in.m_Water != nullptr) {
-      io::Property::Marshall(*in.m_Water, out.Water());
-    }
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Carbohydrate)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Fat)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Protein)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Calcium)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Sodium)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Water)
   }
   //----------------------------------------------------------------------------------
 }
