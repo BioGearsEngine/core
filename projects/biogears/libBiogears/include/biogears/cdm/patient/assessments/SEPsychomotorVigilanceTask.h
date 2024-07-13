@@ -34,11 +34,11 @@ public:
   static constexpr const char* TypeTag() { return "SEArterialBloodGasAnalysis"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset(); // reset values
-  virtual void Clear(); // clear memory
+  virtual void Reset() override ; // reset values
+  virtual void Clear() override ; // clear memory
 
   virtual bool Load(const CDM::PsychomotorVigilanceTaskData& in);
-  virtual CDM::PsychomotorVigilanceTaskData* Unload();
+  virtual CDM::PsychomotorVigilanceTaskData* Unload() override ;
 
 protected:
   virtual void Unload(CDM::PsychomotorVigilanceTaskData& data);

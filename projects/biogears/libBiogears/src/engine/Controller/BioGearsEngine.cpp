@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/string/manipulation.h>
 
 #include "io/biogears/BioGears.h"
+#include "io/cdm/Patient.h"
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/SECircuit.h>
@@ -516,13 +517,21 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
     state->DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(m_EngineTrack.GetDataRequestManager().Unload()));
   }
 
+  ((CDM::BioGearsStateData*)state.get())->AirwayMode((std::make_unique<CDM::enumBioGearsAirwayMode>()));
   io::BioGears::Marshall(m_AirwayMode, ((CDM::BioGearsStateData*)state.get())->AirwayMode());
+
+  ((CDM::BioGearsStateData*)state.get())->Intubation((std::make_unique<CDM::enumOnOff>()));
   io::Property::Marshall(m_Intubation, ((CDM::BioGearsStateData*)state.get())->Intubation());
+
+
+
   // Patient
-  state->Patient(std::unique_ptr<CDM::PatientData>(m_Patient->Unload()));
+  state->Patient(std::make_unique<CDM::PatientData>());
+  io::Patient::Marshall(*m_Patient, ((CDM::BioGearsStateData*)state.get())->Patient());
   // Conditions
   std::vector<CDM::ConditionData*> conditions;
   m_Conditions->Unload(conditions);
+
   for (CDM::ConditionData* cData : conditions) {
     state->Condition().push_back(std::unique_ptr<CDM::ConditionData>(cData));
   }
@@ -569,6 +578,7 @@ void BioGearsEngine::SaveStateToFile(const char* file)
 {
   SaveStateToFile(std::string { file });
 }
+
 //-------------------------------------------------------------------------------
 void BioGearsEngine::SaveStateToFile(const std::string& file)
 {

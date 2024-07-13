@@ -70,7 +70,7 @@ double Token::as_double()
 //-----------------------------------------------------------------------------
 int Token::as_integral()
 {
-  return strtol(value.c_str(), nullptr, 0);
+  return (int)strtol(value.c_str(), nullptr, 0);
 }
 //-----------------------------------------------------------------------------
 bool Token::operator==(const std::string& rhs) const

@@ -23,12 +23,12 @@ public:
   SEChronicVentricularSystolicDysfunction();
   virtual ~SEChronicVentricularSystolicDysfunction();
 
-  virtual void Clear(); //clear memory
+  virtual void Clear() override ; //clear memory
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override ;
 
   virtual bool Load(const CDM::ChronicVentricularSystolicDysfunctionData& in);
-  virtual CDM::ChronicVentricularSystolicDysfunctionData* Unload() const;
+  virtual CDM::ChronicVentricularSystolicDysfunctionData* Unload() const override ;
 
   bool operator==(SEChronicVentricularSystolicDysfunction const&) const;
   bool operator!=(SEChronicVentricularSystolicDysfunction const&) const;
@@ -39,10 +39,10 @@ protected:
   virtual void Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const;
 
 public:
-  virtual std::string GetName() const { return "ChronicVentricularSystolicDysfunction"; }
-  virtual const char* GetName_cStr() const { return "ChronicVentricularSystolicDysfunction"; }
+  virtual std::string GetName() const  override { return "ChronicVentricularSystolicDysfunction"; }
+  virtual const char* GetName_cStr() const  override { return "ChronicVentricularSystolicDysfunction"; }
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
 };

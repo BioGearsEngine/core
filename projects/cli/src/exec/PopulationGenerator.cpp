@@ -33,7 +33,10 @@
 #include <set>
 #include <strstream>
 #include <vector>
+#include <chrono>
+#include <format>
 
+#include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/string/manipulation.h>
 
 namespace mil {
@@ -89,7 +92,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.normals) {
     if (result.first.size() <= key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -97,7 +100,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.weighted_discretes) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -105,7 +108,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.continuous_uniforms) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -113,7 +116,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.discrete_uniforms) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -121,7 +124,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.bernoullis) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -129,7 +132,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.sequences) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -137,7 +140,7 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
   for (auto const& [key, distribution] : collection.cycles) {
     if (result.first.size() < key.size()
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
-            || key.size() == 1 && key.contains(default_key))) {
+            || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
     }
   }
@@ -334,7 +337,7 @@ numeric_type sample_population(std::set<std::string> key, DistributionCollection
       //                     when the user gives a bad min and max
       std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
       std::chrono::steady_clock::time_point now = begin;
-      while (roll_value < min_value || roll_value > max_value && std::chrono::duration_cast<std::chrono::seconds>(now - begin).count() < 1) {
+      while (roll_value < min_value || (roll_value > max_value && std::chrono::duration_cast<std::chrono::seconds>(now - begin).count() < 1)) {
         roll_value = distribution(rd);
         now = std::chrono::steady_clock::now();
       }
@@ -394,7 +397,7 @@ eType generate_cdm_enum(std::set<std::string> key, DistributionCollection& colle
     auto& [key, distribution] = *ptr;
     auto roll_value = distribution(rd);
 
-    return eType::value(std::round(roll_value));
+    return typename eType::value(std::round(roll_value));
   }
 
   if (auto ptr = collection.weighted_discrete_distributions.find(key); ptr != collection.weighted_discrete_distributions.end()) {
@@ -408,26 +411,26 @@ eType generate_cdm_enum(std::set<std::string> key, DistributionCollection& colle
     auto& [key, distribution] = *ptr;
     auto roll_value = distribution(rd);
 
-    return eType::value(std::round(roll_value));
+    return typename eType::value(std::round(roll_value));
   }
 
   if (auto ptr = collection.discrete_uniform_distributions.find(key); ptr != collection.discrete_uniform_distributions.end()) {
     auto& [key, distribution] = *ptr;
     auto roll_value = distribution(rd);
 
-    return eType::value(roll_value);
+    return typename eType::value(roll_value);
   }
 
   if (auto ptr = collection.bernoulli_distributions.find(key); ptr != collection.bernoulli_distributions.end()) {
     auto& [key, distribution] = *ptr;
     auto roll_value = distribution(rd);
 
-    return eType::value(roll_value);
+    return typename eType::value(roll_value);
   }
 
   if (auto ptr = collection.sequence_values.find(key); ptr != collection.sequence_values.end()) {
     auto& [key, count] = *ptr;
-    return eType::value(count++);
+    return typename eType::value(count++);
   }
 
   if (auto ptr = collection.cycles_positions.find(key); ptr != collection.cycles_positions.end()) {
@@ -437,7 +440,7 @@ eType generate_cdm_enum(std::set<std::string> key, DistributionCollection& colle
     return eType(v);
   }
 
-  return eType::value(0);
+  return typename eType::value(0);
 }
 
 //-------------------------------------------------------------------------------
@@ -452,8 +455,15 @@ void PopulationGenerator::Generate()
   std::mt19937 gen { rd() };
   std::string unit_str = "";
 
-  auto const time = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
-  std::string population_pool_dir = std::format("Patients_{:%Y%m%dT%H%M}/", time);
+  #ifdef WIN32
+    auto const time = std::chrono::current_zone()->to_local(std::chrono::system_clock::now());
+    std::string population_pool_dir = std::format("Patients_{:%Y%m%dT%H%M}/", time);
+  #else
+    auto end = std::chrono::system_clock::now();
+     	std::time_t now = std::chrono::system_clock::to_time_t(end);
+        std::stringstream ss; ss << std::put_time(std::localtime(&now), "Patients_%Y%m%dT%H%M/");
+        std::string population_pool_dir = ss.str();
+  #endif 
 
   for (auto& run : _runs) {
     auto const& config_file = run;
@@ -482,8 +492,11 @@ void PopulationGenerator::Generate()
 
         for (auto i = 0; i < profile.count; ++i) {
           CDM::PatientData patient;
-
-          patient.Name(std::format("id{1:03}_{0}", profile.name, ++file_count));
+          #ifdef WIN32
+            patient.Name(std::format("id{1:03}_{0}", profile.name, ++file_count));
+          #else
+            patient.Name(biogears::asprintf("id%03d_%s", ++file_count, profile.name.c_str()));
+          #endif
           if (distributions.find(Heterogametic_Sex) != distributions.end()) {
             auto [best_match, unit] = find_best_match(profile.tags, distributions[Heterogametic_Sex]);
             if (best_match.size() != 0) {

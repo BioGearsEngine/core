@@ -794,14 +794,15 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
     ex.Computed("");
   }
   filesystem::path logfilepath = filesystem::path(ex.Computed()) / parent_dir / console_file;
-  Logger file_logger(logfilepath);
+
   try {
-    file_logger.SetConsoleLogLevel(Logger::eWarning);
-    file_logger.SetConsoleConversionPattern("[{%H:%M}] " + ex.Name() + " <:priority:> :message::endline:");
+
     console_logger.SetConsoleConversionPattern("[{%H:%M}] :message::endline:");
     console_logger.FormatMessages(true);
 
-    eng = std::make_unique<BioGearsEngine>(&file_logger);
+    eng = std::make_unique<BioGearsEngine>(logfilepath);
+    eng->GetLogger()->SetConsoleLogLevel(Logger::eWarning);
+    eng->GetLogger()->SetConsoleConversionPattern("[{%H:%M}] " + ex.Name() + " <:priority:> :message::endline:");
   } catch (std::exception e) {
     std::cout << e.what();
     _thread_count -= 1;

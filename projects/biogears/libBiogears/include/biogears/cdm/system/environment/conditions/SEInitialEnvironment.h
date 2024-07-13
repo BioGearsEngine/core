@@ -25,12 +25,12 @@ public:
   SEInitialEnvironment(SESubstanceManager& substances);
   virtual ~SEInitialEnvironment();
 
-  virtual void Clear();
+  virtual void Clear() override ;
 
-  virtual bool IsValid() const;
+  virtual bool IsValid() const override ;
 
   virtual bool Load(const CDM::InitialEnvironmentData& in);
-  virtual CDM::InitialEnvironmentData* Unload() const;
+  virtual CDM::InitialEnvironmentData* Unload() const override ;
 
   bool operator==(SEInitialEnvironment const& rhs) const;
   bool operator!=(SEInitialEnvironment const& rhs) const;
@@ -41,8 +41,8 @@ protected:
   virtual void Unload(CDM::InitialEnvironmentData& data) const;
 
 public:
-  virtual std::string GetName() const { return "InitialEnvironment"; }
-  virtual const char* GetName_cStr() const { return "InitialEnvironment"; }
+  virtual std::string GetName() const  override { return "InitialEnvironment"; }
+  virtual const char* GetName_cStr() const  override { return "InitialEnvironment"; }
 
   virtual bool HasConditions() const;
   virtual SEEnvironmentalConditions& GetConditions();
@@ -55,7 +55,7 @@ public:
   virtual bool HasConditionsFile() const;
   virtual void InvalidateConditionsFile();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SESubstanceManager& m_Substances;

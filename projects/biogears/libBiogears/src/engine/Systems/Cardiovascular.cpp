@@ -451,6 +451,8 @@ void Cardiovascular::SetUp()
         case SEResistancePathType::Splanchnic:
           m_splanchnicResistancePaths.push_back(path);
           break;
+        default:
+          break;
         }
         m_systemicResistancePaths.push_back(path);
         venousNodes.push_back(&path->GetTargetNode());
@@ -477,9 +479,10 @@ void Cardiovascular::SetUp()
               m_splanchnicResistancePaths.push_back(path);
               break;
             case SEResistancePathType::Cerebral:
-               m_cerebralResistancePaths.push_back(path);
+              m_cerebralResistancePaths.push_back(path);
               break;
-
+            default:
+              break;
             }
           }
           m_systemicResistancePaths.push_back(path);
@@ -1156,7 +1159,6 @@ void Cardiovascular::TraumaticBrainInjury()
 /// Tourniquets can be applied to the extremities, which increase the resistance on the paths into and
 /// out of the heomrrhage compartment.
 //--------------------------------------------------------------------------------------------------
-#pragma optimize("", off)
 void Cardiovascular::Hemorrhage()
 {
   /// \todo Enforce limits and remove fatal errors.
@@ -1263,7 +1265,7 @@ void Cardiovascular::Hemorrhage()
 
   m_patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
 }
-#pragma optimize("", on)
+
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// The function initiates a flow source on the pericardium. It is used by both the action and condition.

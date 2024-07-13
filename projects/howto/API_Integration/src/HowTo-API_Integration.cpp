@@ -353,27 +353,23 @@ bool action_urinate(std::unique_ptr<biogears::BioGearsEngine>& engine)
 
 bool action_get_urine_color(std::unique_ptr<biogears::BioGearsEngine>& engine)
 {
-  using namespace biogears;
-
   auto urineAnalysis = biogears::SEUrinalysis();
   const biogears::Renal* constRenalSystem = dynamic_cast<const biogears::Renal*>(engine->GetRenalSystem());
   biogears::Renal* renalSystem = const_cast<biogears::Renal*>(constRenalSystem);
 
   renalSystem->CalculateUrinalysis(urineAnalysis);
   if (urineAnalysis.HasColorResult()) {
-    SEUrineColor eColor = urineAnalysis.GetColorResult();
-
-    switch (eColor) {
-    case SEUrineColor::DarkYellow:
+    switch (urineAnalysis.GetColorResult()) {
+    case biogears::SEUrineColor::DarkYellow:
       std::cout << "Urine Color: Dark Yellow";
       return true;
-    case SEUrineColor::PaleYellow:
+    case biogears::SEUrineColor::PaleYellow:
       std::cout << "Urine Color: Pale Yellow";
       return true;
-    case SEUrineColor::Pink:
+    case biogears::SEUrineColor::Pink:
       std::cout << "Urine Color: Pink";
       return true;
-    case SEUrineColor::Yellow:
+    case biogears::SEUrineColor::Yellow:
       std::cout << "Urine Color: Yellow";
       return true;
     default:
@@ -479,7 +475,7 @@ BioGearsPlugin::BioGearsPlugin(std::string name)
       _pimpl->engine->GetLogger()->Warning("Could not load patient falling back to manually creating a patient.");
       biogears::SEPatient patient { _pimpl->engine->GetLogger() };
       patient.SetName("StandardMale");
-      patient.SetSex(SESex::Male);
+      patient.SetSex(biogears::SESex::Male);
       patient.GetAge().SetValue(44, biogears::TimeUnit::yr);
       patient.GetWeight().SetValue(170, biogears::MassUnit::lb);
       patient.GetHeight().SetValue(71, biogears::LengthUnit::inch);
@@ -554,9 +550,9 @@ void BioGearsPlugin::run()
 
           action_env_change(_pimpl->engine, conditions);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_tension_pneumothorax(_pimpl->engine, SESide::Left, SEPneumothoraxType::Open, 0.5);
+          action_tension_pneumothorax(_pimpl->engine, biogears::SESide::Left, SEPneumothoraxType::Open, 0.5);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
-          action_needle_decompression(_pimpl->engine, SESide::Left, true);
+          action_needle_decompression(_pimpl->engine, biogears::SESide::Left, true);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
           action_o2_mask(_pimpl->engine, .5, 3., 0.);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);

@@ -575,7 +575,6 @@ void Drugs::AdministerSubstanceOral()
   for (auto od : oralDoses) {
     sub = od.first;
     oDose = od.second;
-
     if (oDose->GetAdminRoute() == SEOralAdministrationType::Transmucosal) {
       // Drug is being given transmucosally--get oral transmucosal (OT) state for this substance if it already exists
       SETransmucosalState* otState = m_TransmucosalStates[sub];
@@ -639,7 +638,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
     return;
 
   SEPatient& patient = m_data.GetPatient();
-  const auto patientBloodType = patient.GetBloodType();
+  const SEBloodType patientBloodType = patient.GetBloodType();
   SESubstanceCompoundInfusion* infusion;
   const SESubstanceCompound* compound;
   SELiquidSubstanceQuantity* subQ;

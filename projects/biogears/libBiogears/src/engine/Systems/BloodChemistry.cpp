@@ -1435,6 +1435,9 @@ void BloodChemistry::InflammatoryResponse()
     case SEInfectionSeverity::Severe:
       ebolaTemp = 0.2;
       break;
+    default:
+      break;
+   
     }
     m_InflammatoryResponse->GetTrauma().SetValue(ebolaTemp); //This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
   }

@@ -80,8 +80,8 @@ int HowToTensionPneumothorax()
   pneumo.GetSeverity().SetValue(0.75);
 
   // It can be on the Left or right side
-  pneumo.SetSide(SESide::Right);
-  //pneumo.SetSide(SESide::Left);
+  pneumo.SetSide(biogears::SESide ::Right);
+  //pneumo.SetSide(biogears::SESide ::Left);
   pneumo.SetComment("ICD-9: 860.0");
   //pneumo.SetComment('ICD-9: 860.0');
   bg->ProcessAction(pneumo);
@@ -108,8 +108,8 @@ int HowToTensionPneumothorax()
   needleDecomp.SetActive(false);
 
   // It can be on the Left or right side (it's a good idea to do it on the side of the pneumothorax ;)
-  needleDecomp.SetSide(SESide::Right);
-  //needleDecomp.SetSide(SESide::Left);
+  needleDecomp.SetSide(biogears::SESide ::Right);
+  //needleDecomp.SetSide(biogears::SESide ::Left);
 
   bg->ProcessAction(needleDecomp);
   bg->GetLogger()->Info("Giving the patient a needle decompression");

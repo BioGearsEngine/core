@@ -87,7 +87,6 @@ namespace io {
   }
   //----------------------------------------------------------------------------------
   // class PhysiologyEngineStabilization
-#pragma optmize("", off)
   void EngineConfiguration::UnMarshall(const CDM::PhysiologyEngineStabilizationData& in, PhysiologyEngineStabilization& out)
   {
     out.Clear();
@@ -101,7 +100,6 @@ namespace io {
     if (in.LogProgress().present())
       out.m_LogProgress = in.LogProgress().get();
   }
-#pragma optmize("", on)
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineStabilization& in, CDM::PhysiologyEngineStabilizationData& out)
   {
