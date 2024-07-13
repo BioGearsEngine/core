@@ -743,7 +743,7 @@ void Respiratory::ProcessAerosolSubstances()
 
     // Apply the BronchioleModifier dilation effect
     // This is all just tuned to Albuterol - it'll work for other substances, and can be tuned using the other parameters (especially BronchioleModifier)
-    if (subQ->GetSubstance().GetState() == CDM::enumSubstanceState::Liquid) {
+    if (subQ->GetSubstance().GetState() == SESubstanceState::Liquid) {
       // Sum the Bronchiole Effects
       // Must be positive
       double bronchioleModifier = subQ->GetSubstance().GetAerosolization().GetBronchioleModifier().GetValue();

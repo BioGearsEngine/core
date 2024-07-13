@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include "biogears/cdm/properties/SEScalarVolume.h"
 #include "biogears/cdm/properties/SEScalarVolumePerTime.h"
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 
 #include <map>
 #include <vector>
@@ -33,19 +34,18 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 
 template <typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportAmount ;
+class SESubstanceTransportAmount;
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportVertex ;
+class SESubstanceTransportVertex;
 template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportEdge ;
+class SESubstanceTransportEdge;
 template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportGraph ;
+class SESubstanceTransportGraph;
 template <SUBSTANCE_TRANSPORTER_TEMPLATE>
 class SESubstanceTransporter;
 
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
 bool operator==(SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& lhs, SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& rhs);
-
 
 template <typename ExtensiveScalar, typename IntensiveScalar>
 class SESubstanceTransportAmount {
@@ -78,8 +78,8 @@ template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveS
 class SESubstanceTransportVertex {
   template <SUBSTANCE_TRANSPORTER_TEMPLATE>
   friend class SESubstanceTransporter;
- 
-  friend bool operator==<>(SESubstanceTransportVertex const& lhs, SESubstanceTransportVertex const& rhs);
+
+  friend bool operator== <>(SESubstanceTransportVertex const& lhs, SESubstanceTransportVertex const& rhs);
 
 public:
   virtual ~SESubstanceTransportVertex() { }
@@ -92,7 +92,7 @@ protected:
   virtual QuantityScalar& GetQuantity() = 0;
 
   virtual std::vector<SESubstanceTransportAmount<TRANSPORT_AMOUNT_TYPES>*>& GetTransportSubstances() = 0;
-  virtual std::vector<SESubstanceTransportAmount<TRANSPORT_AMOUNT_TYPES>*> const & GetTransportSubstances() const= 0;
+  virtual std::vector<SESubstanceTransportAmount<TRANSPORT_AMOUNT_TYPES>*> const& GetTransportSubstances() const = 0;
 };
 
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>

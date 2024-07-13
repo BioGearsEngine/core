@@ -789,7 +789,7 @@ void Renal::CalculateActiveTransport()
 
   unsigned int i = 0;
   for (SESubstance* sub : m_data.GetCompartments().GetLiquidCompartmentSubstances()) {
-    if (sub->GetClassification() == mil::tatrc::physiology::datamodel::enumSubstanceClass::WholeBlood) {
+    if (sub->GetClassification() == SESubstanceClass::WholeBlood) {
       CalculateGolmerularReabsorption(*sub);
     }
     if (!sub->HasClearance())
@@ -979,15 +979,15 @@ void Renal::CalculateFilterability(SESubstance& sub)
     filterability = 0.0;
   } else {
     switch (sub.GetClearance().GetChargeInBlood()) {
-    case CDM::enumCharge::Positive:
+    case SECharge::Positive:
       filterability = 0.0386 * std::pow(molecularRadius_nm, 4.0) - 0.431 * std::pow(molecularRadius_nm, 3.0)
         + 1.61 * std::pow(molecularRadius_nm, 2.0) - 2.6162 * molecularRadius_nm + 2.607;
       break;
-    case CDM::enumCharge::Neutral:
+    case SECharge::Neutral:
       filterability = -0.0908 * std::pow(molecularRadius_nm, 4.0) + 1.2135 * std::pow(molecularRadius_nm, 3.0)
         - 5.76 * std::pow(molecularRadius_nm, 2.0) + 11.013 * molecularRadius_nm - 6.2792;
       break;
-    case CDM::enumCharge::Negative:
+    case SECharge::Negative:
       // Subtracting 0.01 to account for not enough significant digits given by the best fit - tuned looking at data table from report and confirmed for Albumin
       filterability = 0.0616 * std::pow(molecularRadius_nm, 4.0) - 0.8781 * std::pow(molecularRadius_nm, 3.0)
         + 4.6699 * std::pow(molecularRadius_nm, 2.0) - 10.995 * molecularRadius_nm + 9.6959 - 0.01;

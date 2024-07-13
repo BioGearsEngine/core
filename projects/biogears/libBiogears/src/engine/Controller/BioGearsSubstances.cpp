@@ -1222,7 +1222,7 @@ void BioGearsSubstances::AddActiveSubstance(SESubstance& substance)
     return; // If its already active, don't do anything
 
   SESubstanceManager::AddActiveSubstance(substance);
-  if (substance.GetState() == CDM::enumSubstanceState::Gas)
+  if (substance.GetState() == SESubstanceState::Gas)
     m_data.GetCompartments().AddGasCompartmentSubstance(substance);
   m_data.GetCompartments().AddLiquidCompartmentSubstance(substance);
 

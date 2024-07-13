@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
+
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/schema/cdm/Substance.hxx>
 
 namespace biogears {

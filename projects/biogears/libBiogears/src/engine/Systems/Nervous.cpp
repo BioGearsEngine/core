@@ -671,7 +671,7 @@ void Nervous::BaroreceptorFeedback()
     painEffect = 0.5 * painVAS * m_BaroreceptorOperatingPoint_mmHg;
   }
   for (SESubstance* drug : m_data.GetSubstances().GetActiveDrugs()) {
-    if ((drug->GetClassification() == CDM::enumSubstanceClass::Anesthetic) || (drug->GetClassification() == CDM::enumSubstanceClass::Sedative) || (drug->GetClassification() == CDM::enumSubstanceClass::Opioid)) {
+    if ((drug->GetClassification() == SESubstanceClass::Anesthetic) || (drug->GetClassification() == SESubstanceClass::Sedative) || (drug->GetClassification() == SESubstanceClass::Opioid)) {
       drugEffect = m_data.GetDrugs().GetMeanBloodPressureChange(PressureUnit::mmHg); // / m_data.GetPatient().GetMeanArterialPressureBaseline(PressureUnit::mmHg);
       break;
       //Only want to apply the blood pressure change ONCE (In case there are multiple sedative/opioids/etc)

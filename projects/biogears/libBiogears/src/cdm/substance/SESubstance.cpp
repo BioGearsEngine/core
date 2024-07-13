@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstance.h>
 
+#include "io/cdm/Substance.h"
+
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -35,8 +37,8 @@ SESubstance::SESubstance(Logger* logger)
   : Loggable(logger)
 {
   m_Name = "";
-  m_State = (CDM::enumSubstanceState::value)-1;
-  m_Classification = (CDM::enumSubstanceClass::value)-1;
+  m_State = SESubstanceState::Invalid;
+  m_Classification = SESubstanceClass::Invalid;
   m_Density = nullptr;
   m_MolarMass = nullptr;
 
@@ -75,8 +77,8 @@ SESubstance::~SESubstance()
 void SESubstance::Clear()
 {
   m_Name = "";
-  m_State = (CDM::enumSubstanceState::value)-1;
-  m_Classification = (CDM::enumSubstanceClass::value)-1;
+  m_State = SESubstanceState::Invalid;
+  m_Classification = SESubstanceClass::Invalid;
   SAFE_DELETE(m_Density);
   SAFE_DELETE(m_MolarMass);
 
@@ -175,69 +177,7 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SESubstance::Load(const CDM::SubstanceData& in)
 {
-  Clear();
-  m_Name = in.Name();
-
-  if (in.State().present())
-    m_State = in.State().get();
-  if (in.Classification().present())
-    m_Classification = in.Classification().get();
-  if (in.Density().present())
-    GetDensity().Load(in.Density().get());
-  if (in.MolarMass().present())
-    GetMolarMass().Load(in.MolarMass().get());
-
-  if (in.MaximumDiffusionFlux().present())
-    GetMaximumDiffusionFlux().Load(in.MaximumDiffusionFlux().get());
-  if (in.MichaelisCoefficient().present())
-    GetMichaelisCoefficient().Load(in.MichaelisCoefficient().get());
-  if (in.MembraneResistance().present())
-    GetMembraneResistance().Load(in.MembraneResistance().get());
-  if (in.AreaUnderCurve().present())
-    GetAreaUnderCurve().Load(in.AreaUnderCurve().get());
-  if (in.BloodConcentration().present())
-    GetBloodConcentration().Load(in.BloodConcentration().get());
-  if (in.EffectSiteConcentration().present())
-    GetEffectSiteConcentration().Load(in.EffectSiteConcentration().get());
-  if (in.MassInBody().present())
-    GetMassInBody().Load(in.MassInBody().get());
-  if (in.MassInBlood().present())
-    GetMassInBlood().Load(in.MassInBlood().get());
-  if (in.MassInTissue().present())
-    GetMassInTissue().Load(in.MassInTissue().get());
-  if (in.PlasmaConcentration().present())
-    GetPlasmaConcentration().Load(in.PlasmaConcentration().get());
-  if (in.SystemicMassCleared().present())
-    GetSystemicMassCleared().Load(in.SystemicMassCleared().get());
-  if (in.TissueConcentration().present())
-    GetTissueConcentration().Load(in.TissueConcentration().get());
-
-  if (in.AlveolarTransfer().present())
-    GetAlveolarTransfer().Load(in.AlveolarTransfer().get());
-  if (in.DiffusingCapacity().present())
-    GetDiffusingCapacity().Load(in.DiffusingCapacity().get());
-  if (in.EndTidalFraction().present())
-    GetEndTidalFraction().Load(in.EndTidalFraction().get());
-  if (in.EndTidalPressure().present())
-    GetEndTidalPressure().Load(in.EndTidalPressure().get());
-  if (in.RelativeDiffusionCoefficient().present())
-    GetRelativeDiffusionCoefficient().Load(in.RelativeDiffusionCoefficient().get());
-  if (in.SolubilityCoefficient().present())
-    GetSolubilityCoefficient().Load(in.SolubilityCoefficient().get());
-
-  if (in.Aerosolization().present())
-    GetAerosolization().Load(in.Aerosolization().get());
-  if (in.Clearance().present())
-    GetClearance().Load(in.Clearance().get());
-  if (in.Pharmacokinetics().present())
-    GetPK().Load(in.Pharmacokinetics().get());
-  if (in.Pharmacodynamics().present())
-    GetPD().Load(in.Pharmacodynamics().get());
-
-  if (HasClearance() && HasPK() && GetPK().HasPhysicochemicals() && GetClearance().HasFractionUnboundInPlasma() && !GetClearance().GetFractionUnboundInPlasma().Equals(GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma())) {
-    Fatal("Multiple FractionUnboundInPlasma values specified, but not the same. These must match at this time.");
-  }
-
+  io::Substance::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -250,66 +190,7 @@ CDM::SubstanceData* SESubstance::Unload() const
 //-----------------------------------------------------------------------------
 void SESubstance::Unload(CDM::SubstanceData& data) const
 {
-  if (HasName()) {
-    data.Name(m_Name);
-  } else {
-    data.Name("Unknown Substance");
-  }
-  if (HasState())
-    data.State(m_State);
-  if (HasClassification())
-    data.Classification(m_Classification);
-  if (HasDensity())
-    data.Density(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Density->Unload()));
-  if (HasMolarMass())
-    data.MolarMass(std::unique_ptr<CDM::ScalarMassPerAmountData>(m_MolarMass->Unload()));
-
-  if (HasMaximumDiffusionFlux())
-    data.MaximumDiffusionFlux(std::unique_ptr<CDM::ScalarMassPerAreaTimeData>(m_MaximumDiffusionFlux->Unload()));
-  if (HasMichaelisCoefficient())
-    data.MichaelisCoefficient(std::unique_ptr<CDM::ScalarData>(m_MichaelisCoefficient->Unload()));
-  if (HasMembraneResistance())
-    data.MembraneResistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_MembraneResistance->Unload()));
-  if (HasAreaUnderCurve())
-    data.AreaUnderCurve(std::unique_ptr<CDM::ScalarTimeMassPerVolumeData>(m_AreaUnderCurve->Unload()));
-  if (HasBloodConcentration())
-    data.BloodConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodConcentration->Unload()));
-  if (HasEffectSiteConcentration())
-    data.EffectSiteConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_EffectSiteConcentration->Unload()));
-  if (HasMassInBody())
-    data.MassInBody(std::unique_ptr<CDM::ScalarMassData>(m_MassInBody->Unload()));
-  if (HasMassInBlood())
-    data.MassInBlood(std::unique_ptr<CDM::ScalarMassData>(m_MassInBlood->Unload()));
-  if (HasMassInTissue())
-    data.MassInTissue(std::unique_ptr<CDM::ScalarMassData>(m_MassInTissue->Unload()));
-  if (HasPlasmaConcentration())
-    data.PlasmaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_PlasmaConcentration->Unload()));
-  if (HasSystemicMassCleared())
-    data.SystemicMassCleared(std::unique_ptr<CDM::ScalarMassData>(m_SystemicMassCleared->Unload()));
-  if (HasTissueConcentration())
-    data.TissueConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TissueConcentration->Unload()));
-
-  if (HasAlveolarTransfer())
-    data.AlveolarTransfer(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_AlveolarTransfer->Unload()));
-  if (HasDiffusingCapacity())
-    data.DiffusingCapacity(std::unique_ptr<CDM::ScalarVolumePerTimePressureData>(m_DiffusingCapacity->Unload()));
-  if (HasEndTidalFraction())
-    data.EndTidalFraction(std::unique_ptr<CDM::ScalarFractionData>(m_EndTidalFraction->Unload()));
-  if (HasEndTidalPressure())
-    data.EndTidalPressure(std::unique_ptr<CDM::ScalarPressureData>(m_EndTidalPressure->Unload()));
-  if (HasSolubilityCoefficient())
-    data.SolubilityCoefficient(std::unique_ptr<CDM::ScalarInversePressureData>(m_SolubilityCoefficient->Unload()));
-  if (HasRelativeDiffusionCoefficient())
-    data.RelativeDiffusionCoefficient(std::unique_ptr<CDM::ScalarData>(m_RelativeDiffusionCoefficient->Unload()));
-
-  if (HasAerosolization())
-    data.Aerosolization(std::unique_ptr<CDM::SubstanceAerosolizationData>(m_Aerosolization->Unload()));
-  if (HasClearance())
-    data.Clearance(std::unique_ptr<CDM::SubstanceClearanceData>(m_Clearance->Unload()));
-  if (HasPK())
-    data.Pharmacokinetics(std::unique_ptr<CDM::SubstancePharmacokineticsData>(m_Pharmacokinetics->Unload()));
-  if (HasPD())
-    data.Pharmacodynamics(std::unique_ptr<CDM::SubstancePharmacodynamicsData>(m_Pharmacodynamics->Unload()));
+  io::Substance::Marshall(*this, data);
 };
 //-----------------------------------------------------------------------------
 std::string SESubstance::GetName() const
@@ -342,44 +223,44 @@ void SESubstance::InvalidateName()
   m_Name = "";
 }
 //-----------------------------------------------------------------------------
-CDM::enumSubstanceState::value SESubstance::GetState() const
+SESubstanceState SESubstance::GetState() const
 {
   return m_State;
 }
 //-----------------------------------------------------------------------------
-void SESubstance::SetState(CDM::enumSubstanceState::value state)
+void SESubstance::SetState(SESubstanceState state)
 {
   m_State = state;
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasState() const
 {
-  return m_State == ((CDM::enumSubstanceState::value)-1) ? false : true;
+  return m_State == (SESubstanceState::Invalid) ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::InvalidateState()
 {
-  m_State = (CDM::enumSubstanceState::value)-1;
+  m_State = SESubstanceState::Invalid;
 }
 //-----------------------------------------------------------------------------
-CDM::enumSubstanceClass::value SESubstance::GetClassification() const
+SESubstanceClass SESubstance::GetClassification() const
 {
   return m_Classification;
 }
 //-----------------------------------------------------------------------------
-void SESubstance::SetClassification(CDM::enumSubstanceClass::value subClass)
+void SESubstance::SetClassification(SESubstanceClass subClass)
 {
   m_Classification = subClass;
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasClassification() const
 {
-  return m_Classification == ((CDM::enumSubstanceClass::value)-1) ? false : true;
+  return m_Classification == (SESubstanceClass::Invalid) ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::InvalidateClassification()
 {
-  m_Classification = (CDM::enumSubstanceClass::value)-1;
+  m_Classification = SESubstanceClass::Invalid;
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasDensity() const

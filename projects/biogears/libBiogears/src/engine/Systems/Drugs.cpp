@@ -797,7 +797,7 @@ void Drugs::CalculatePartitionCoefficients()
         continue;
 
       SESubstancePhysicochemical& pk = sub->GetPK().GetPhysicochemicals();
-      CDM::enumSubstanceIonicState::value IonicState = pk.GetIonicState();
+      SESubstanceIonicState IonicState = pk.GetIonicState();
       double pKA1 = pk.GetPrimaryPKA().GetValue();
       double pKA2 = 0.0; // Only for zwitterions
       double P = exp(log(10) * pk.GetLogP().GetValue()); // Getting P from logP value
@@ -805,11 +805,11 @@ void Drugs::CalculatePartitionCoefficients()
         P = 1.115 * pk.GetLogP().GetValue() - 1.35;
         P = exp(log(10) * P);
       }
-      if (pk.GetBindingProtein() == CDM::enumSubstanceBindingProtein::AAG) {
+      if (pk.GetBindingProtein() == SESubstanceBindingProtein::AAG) {
         TissueToPlasmaProteinRatio = tissue->GetTissueToPlasmaAlphaAcidGlycoproteinRatio().GetValue();
-      } else if (pk.GetBindingProtein() == CDM::enumSubstanceBindingProtein::Albumin) {
+      } else if (pk.GetBindingProtein() == SESubstanceBindingProtein::Albumin) {
         TissueToPlasmaProteinRatio = tissue->GetTissueToPlasmaAlbuminRatio().GetValue();
-      } else if (pk.GetBindingProtein() == CDM::enumSubstanceBindingProtein::Lipoprotein) {
+      } else if (pk.GetBindingProtein() == SESubstanceBindingProtein::Lipoprotein) {
         TissueToPlasmaProteinRatio = tissue->GetTissueToPlasmaLipoproteinRatio().GetValue();
       } else {
         /// \error Fatal: Binding Protein not supported
@@ -822,7 +822,7 @@ void Drugs::CalculatePartitionCoefficients()
       }
       // Choose correct set of equations to use given the ionic state of the drug
       switch (IonicState) {
-      case CDM::enumSubstanceIonicState::Base:
+      case SESubstanceIonicState::Base:
         PHEffectPower = pKA1 - IntracellularPH;
         IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
         PHEffectPower = pKA1 - PlasmaPH;
@@ -841,7 +841,7 @@ void Drugs::CalculatePartitionCoefficients()
         EquationPartB = AcidicPhospholipidAssociation * tissue->GetAcidicPhospohlipidConcentration().GetValue(MassPerMassUnit::mg_Per_g) * IntracellularPHEffects / PlasmaPHEffects;
         EquationPartC = (P * tissue->GetNeutralLipidsVolumeFraction().GetValue() + (0.3 * P + 0.7) * tissue->GetNeutralPhospholipidsVolumeFraction().GetValue()) / PlasmaPHEffects;
         break;
-      case CDM::enumSubstanceIonicState::Acid:
+      case SESubstanceIonicState::Acid:
         PHEffectPower = IntracellularPH - pKA1;
         IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
         PHEffectPower = PlasmaPH - pKA1;
@@ -851,7 +851,7 @@ void Drugs::CalculatePartitionCoefficients()
           / PlasmaPHEffects;
         EquationPartC = ((1.0 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction) / PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
         break;
-      case CDM::enumSubstanceIonicState::WeakBase:
+      case SESubstanceIonicState::WeakBase:
         PHEffectPower = pKA1 - IntracellularPH;
         IntracellularPHEffects = 1.0 + std::pow(10.0, PHEffectPower);
         PHEffectPower = pKA1 - PlasmaPH;
@@ -861,7 +861,7 @@ void Drugs::CalculatePartitionCoefficients()
           / PlasmaPHEffects;
         EquationPartC = ((1.0 / pk.GetFractionUnboundInPlasma().GetValue()) - 1.0 - ((P * NeutralLipidInPlasmaVolumeFraction + (0.3 * P + 0.7) * NeutralPhosphoLipidInPlasmaVolumeFraction) / PlasmaPHEffects)) * TissueToPlasmaProteinRatio;
         break;
-      case CDM::enumSubstanceIonicState::Zwitterion:
+      case SESubstanceIonicState::Zwitterion:
         if (!pk.HasSecondaryPKA()) {
           std::stringstream ss;
           ss << "A zwitterion requires two acid dissociation constants to calculate partition coefficients:  Substance =  ";
@@ -973,7 +973,7 @@ void Drugs::CalculateDrugEffects()
       if (std::abs(eMax) < ZERO_APPROX) {
         continue; // If no effect (i.e. eMax = 0), move on to next effect.  Save some time and also don't run risk of dividing by 0 somewhere since non-defined EC50s are set to 0
       }
-      if (sub->GetClassification() == CDM::enumSubstanceClass::Opioid) {
+      if (sub->GetClassification() == SESubstanceClass::Opioid) {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(ec50_ug_Per_mL, shapeParameter) * (std::pow(1.0 + (inhibitorConcentration_ug_Per_mL / inhibitorConstant_ug_Per_mL), shapeParameter)) + std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter));
       } else if (sub->GetName() == "Sarin") {
         effect = 0.8 * (m_RbcAcetylcholinesteraseFractionInhibited); // 0.8 is a tuning factor, validated by patient expected physiological response
@@ -986,7 +986,7 @@ void Drugs::CalculateDrugEffects()
     // Antibiotic Effects -- Do not evaluate unless the patient has inflammation casued by infection
     if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Infection)) {
       double minimumInhibitoryConcentration_ug_Per_mL = m_data.GetActions().GetPatientActions().GetInfection()->GetMinimumInhibitoryConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
-      if (sub->GetClassification() == CDM::enumSubstanceClass::Antibiotic) {
+      if (sub->GetClassification() == SESubstanceClass::Antibiotic) {
         ///\ @cite Regoes2004Pharmacodynamics
         // The model cited above parameterizes antibacterial activity by the maximum growth rate of the pathogen (kMax), the minimum growth rate exerted by the antibiotic (kMin < 0)
         // and a shape parameter.  The input to the function is the ratio of free antibiotic concentration to pathogen MIC.  The EC50 value for this

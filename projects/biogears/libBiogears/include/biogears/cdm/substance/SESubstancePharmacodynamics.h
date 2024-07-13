@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Substance.hxx>
 
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 
 CDM_BIND_DECL(SubstancePharmacodynamicsData)
 CDM_BIND_DECL(PharmacodynamicModifierData)

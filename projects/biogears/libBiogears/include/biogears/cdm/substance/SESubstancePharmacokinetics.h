@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstancePhysicochemical.h>
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 #include <biogears/schema/cdm/Substance.hxx>
@@ -24,7 +25,7 @@ namespace biogears {
 namespace io {
   class Substance;
 }
-} //namespace biogears
+} // namespace biogears
 
 namespace std {
 BG_EXT template class BIOGEARS_API map<string, biogears::SESubstanceTissuePharmacokinetics*>;
