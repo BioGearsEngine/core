@@ -52,11 +52,11 @@
         <Rate value="200" unit="mL/min"/>
     </Action>
 	<!-- 1 Unit/min of Vasopressin infused at 200 mL/hr (2 uU = 5 pg)-->
-    <Action xsi:type="SubstanceCompoundInfusionData">
+    <!-- <Action xsi:type="SubstanceCompoundInfusionData">
         <SubstanceCompound>VasopressinInSaline</SubstanceCompound>
         <BagVolume value="500" unit="mL"/>
         <Rate value="0.5" unit="mL/min"/>
-    </Action>
+    </Action> -->
 	<Action xsi:type="AdvanceTimeData">
         <Time value="15" unit="min"/>       
     </Action>
@@ -87,4 +87,3 @@
 	
   </Actions>
 </Scenario>
-
