@@ -74,7 +74,7 @@ void SEEnvironmentalConditions::Clear()
 //-----------------------------------------------------------------------------
 bool SEEnvironmentalConditions::IsValid()
 {
-  return m_SurroundingType != SESurroundingType::Invalid
+  return (m_SurroundingType != SESurroundingType::Invalid)
     && (m_AmbientTemperature != nullptr
         || m_AirDensity != nullptr
         || m_AirVelocity != nullptr

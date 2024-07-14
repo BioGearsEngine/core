@@ -38,7 +38,11 @@ namespace io {
       out.SetName(in.Name().get());
     }
 
-    io::Environment::UnMarshall(in.SurroundingType(), out.m_SurroundingType);
+    if (!in.SurroundingType().present() || in.SurroundingType()->empty()) {
+      out.m_SurroundingType = SESurroundingType::Air;
+    } else {
+      io::Environment::UnMarshall(in.SurroundingType().get(), out.m_SurroundingType);
+    }
 
     io::Property::UnMarshall(in.AirDensity(), out.GetAirDensity());
     io::Property::UnMarshall(in.AirVelocity(), out.GetAirVelocity());

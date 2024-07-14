@@ -1,6 +1,7 @@
 #include "EnvironmentActions.h"
 
 #include "Actions.h"
+#include "Environment.h"
 
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/cdm/system/environment/SEActiveCooling.h>
@@ -47,19 +48,23 @@ namespace io {
   void EnvironmentActions::UnMarshall(const CDM::EnvironmentChangeData& in, SEEnvironmentChange& out)
   {
     UnMarshall(static_cast<const CDM::EnvironmentActionData&>(in), static_cast<SEEnvironmentAction&>(out));
-    if (in.ConditionsFile().present())
+    if (in.ConditionsFile().present()) {
       out.SetConditionsFile(in.ConditionsFile().get());
-    else if (in.Conditions().present())
-      out.GetConditions().Load(in.Conditions().get());
+    } else if (in.Conditions().present()) {
+      Environment::UnMarshall(in.Conditions(), out.GetConditions());
+    }
   }
   //----------------------------------------------------------------------------------
   void EnvironmentActions::Marshall(const SEEnvironmentChange& in, CDM::EnvironmentChangeData& out)
   {
     io::Actions::Marshall(static_cast<const SEEnvironmentAction&>(in), static_cast<CDM::EnvironmentActionData&>(out));
-    if (in.HasConditions())
-      out.Conditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(in.m_Conditions->Unload()));
-    else if (in.HasConditionsFile())
+  
+    if (in.m_Conditions && in.m_Conditions->IsValid()) {
+      io::Environment::Marshall(*in.m_Conditions, out.Conditions());
+    }
+    else if (in.HasConditionsFile()) {
       out.ConditionsFile(in.m_ConditionsFile);
+    }
   }
   //----------------------------------------------------------------------------------
   // class SEThermalApplication
@@ -115,5 +120,5 @@ namespace io {
 
     throw biogears::CommonDataModelException("EnvironmentActions::factory does not support the derived SEEnvironmentAction. If you are not a developer contact upstream for support.");
   }
-} //namespace io
-} //namespace biogears
+} // namespace io
+} // namespace biogears
