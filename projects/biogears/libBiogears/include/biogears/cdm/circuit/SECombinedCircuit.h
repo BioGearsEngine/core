@@ -26,11 +26,6 @@ public:
 
   virtual void Clear() override; //clear memory
 
-  bool Load(const CombinedCircuitBindType& in);
-  CombinedCircuitBindType* Unload() const;
-
-protected:
-  void Unload(CombinedCircuitBindType& data) const;
 
 public:
   virtual void AddCircuit(CircuitType& c) override;

@@ -42,8 +42,6 @@ public:
   SEScalarArea();
   virtual ~SEScalarArea();
 
-  CDM::ScalarAreaData* Unload() const override;
-
   using SEScalarQuantity<AreaUnit>::SetValue;
   using SEScalarQuantity<AreaUnit>::GetValue;
 };

@@ -49,27 +49,6 @@ void SEFunction::Invalidate()
   Clear();
 }
 
-bool SEFunction::Load(const CDM::FunctionData& in)
-{
-  io::Property::UnMarshall(in, *this);
-  return IsValid();
-}
-
-CDM::FunctionData* SEFunction::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::FunctionData* data(new CDM::FunctionData());
-  Unload(*data);
-  return data;
-}
-
-void SEFunction::Unload(CDM::FunctionData& data) const
-{
-  io::Property::Marshall(*this, data);
-  
-}
-
 unsigned int SEFunction::Length()
 {
   if (IsValid())

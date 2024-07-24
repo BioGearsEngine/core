@@ -24,15 +24,7 @@ SEScalarNeg1To1::SEScalarNeg1To1()
 SEScalarNeg1To1::~SEScalarNeg1To1()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarNeg1To1Data* SEScalarNeg1To1::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarNeg1To1Data* data(new CDM::ScalarNeg1To1Data());
-  SEScalar::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 double SEScalarNeg1To1::GetValue(const NoUnit& unitless) const
 {

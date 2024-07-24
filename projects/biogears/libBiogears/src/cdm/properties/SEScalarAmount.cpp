@@ -43,15 +43,7 @@ AmountUnit::AmountUnit(const std::string& u)
 AmountUnit::~AmountUnit()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarAmountData* SEScalarAmount::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAmountData* data(new CDM::ScalarAmountData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool AmountUnit::IsValidUnit(const char* unit)
 {

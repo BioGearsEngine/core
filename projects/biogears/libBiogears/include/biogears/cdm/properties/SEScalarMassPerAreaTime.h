@@ -40,8 +40,6 @@ public:
   SEScalarMassPerAreaTime();
   virtual ~SEScalarMassPerAreaTime();
 
-  CDM::ScalarMassPerAreaTimeData* Unload() const override;
-
   using SEScalarQuantity<MassPerAreaTimeUnit>::SetValue;
   using SEScalarQuantity<MassPerAreaTimeUnit>::GetValue;
 

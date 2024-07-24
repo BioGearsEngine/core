@@ -42,15 +42,7 @@ SEScalarOsmolality::SEScalarOsmolality()
 SEScalarOsmolality::~SEScalarOsmolality()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarOsmolalityData* SEScalarOsmolality::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarOsmolalityData* data(new CDM::ScalarOsmolalityData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool OsmolalityUnit::IsValidUnit(const char* unit)
 {

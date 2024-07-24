@@ -60,14 +60,9 @@ public:
 
   void Clear() override;
 
-  virtual bool Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits = nullptr);
-  CDM::FluidCompartmentData* Unload() override = 0;
-
   virtual bool operator==(SEFluidCompartment const&) const = 0;
   virtual bool operator!=(SEFluidCompartment const&) const = 0;
 
-protected:
-  virtual void Unload(CDM::FluidCompartmentData& data);
 
 public:
   std::string GetName() const override;

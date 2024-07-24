@@ -46,8 +46,6 @@ public:
   SEScalarAmountPerTime();
   virtual ~SEScalarAmountPerTime();
 
-  CDM::ScalarAmountPerTimeData* Unload() const override;
-
   using SEScalarQuantity<AmountPerTimeUnit>::SetValue;
   using SEScalarQuantity<AmountPerTimeUnit>::GetValue;
 };

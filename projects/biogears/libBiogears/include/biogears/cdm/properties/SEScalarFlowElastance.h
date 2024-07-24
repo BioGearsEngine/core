@@ -42,8 +42,6 @@ public:
   SEScalarFlowElastance();
   virtual ~SEScalarFlowElastance();
 
-  CDM::ScalarFlowElastanceData* Unload() const override;
-
   using SEScalarQuantity<FlowElastanceUnit>::SetValue;
   using SEScalarQuantity<FlowElastanceUnit>::GetValue;
 };

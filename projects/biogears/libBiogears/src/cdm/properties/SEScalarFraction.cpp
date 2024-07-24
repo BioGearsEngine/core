@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include "io/cdm/Property.h"
 
 namespace biogears {
-SEScalarFraction::SEScalarFraction( double value, bool readOnly)
+SEScalarFraction::SEScalarFraction(double value, bool readOnly)
   : SEScalar(value, readOnly)
 {
 }
@@ -25,19 +25,12 @@ SEScalarFraction::SEScalarFraction()
 {
 }
 //-------------------------------------------------------------------------------
-SEScalarFraction::~SEScalarFraction() {
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarFractionData* SEScalarFraction::Unload() const
+SEScalarFraction::~SEScalarFraction()
 {
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarFractionData* data(new CDM::ScalarFractionData());
-  SEScalar::Unload(*data);
-  return data;
 }
+
 //-------------------------------------------------------------------------------
-//double SEScalarFraction::GetValue() const {
+// double SEScalarFraction::GetValue() const {
 //  return SEScalar::GetValue();
 //}
 //-------------------------------------------------------------------------------
@@ -46,7 +39,7 @@ double SEScalarFraction::GetValue(const NoUnit& unitless) const
   return SEScalar::GetValue();
 }
 //-------------------------------------------------------------------------------
-//void SEScalarFraction::SetValue(double d)
+// void SEScalarFraction::SetValue(double d)
 //{
 //  SEScalar::SetValue(d);
 //}
@@ -58,7 +51,7 @@ void SEScalarFraction::SetValue(double d, const NoUnit& unitless)
 //-------------------------------------------------------------------------------
 bool SEScalarFraction::operator==(const SEScalarFraction& obj) const
 {
-  return  m_value == obj.m_value;
+  return m_value == obj.m_value;
 }
 //-------------------------------------------------------------------------------
 bool SEScalarFraction::operator!=(const SEScalarFraction& obj) const

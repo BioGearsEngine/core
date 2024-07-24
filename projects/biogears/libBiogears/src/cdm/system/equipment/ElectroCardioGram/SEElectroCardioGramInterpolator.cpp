@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 
 #include "io/cdm/ElectroCardioGram.h"
+#include "io/cdm/property.h"
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
@@ -148,7 +149,11 @@ void SEElectroCardioGramInterpolator::Interpolate(SEElectroCardioGramInterpolati
       currentTime_s += timeStep_s;
     }
     SEFunctionElectricPotentialVsTime* iWaveForm = data.InterpolateToTime(iTime, TimeUnit::s); // creates the new waveform data
-    CDM_COPY(iWaveForm, (&data));
+
+    auto bind = CDM::FunctionElectricPotentialVsTimeData();
+    io::Property::Marshall(*iWaveForm, bind);
+    io::Property::UnMarshall(bind, data);
+
     delete iWaveForm;
   }
 }

@@ -45,15 +45,7 @@ SEScalarPressure::SEScalarPressure()
 SEScalarPressure::~SEScalarPressure()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarPressureData* SEScalarPressure::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPressureData* data(new CDM::ScalarPressureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool PressureUnit::IsValidUnit(const char* unit)
 {

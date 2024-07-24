@@ -69,9 +69,8 @@ namespace io {
   {
     out.Clear();
     for (auto pKa : in.AcidDissociationConstant()) {
-      SEScalar* pKScalar = new SEScalar();
-      pKScalar->Load(pKa);
-      out.m_AcidDissociationConstants.push_back(pKScalar);
+      out.m_AcidDissociationConstants.push_back(new SEScalar());
+      io::Property::UnMarshall(pKa, *out.m_AcidDissociationConstants.back());
     }
 
     UnMarshall(in.BindingProtein(), out.m_BindingProtein);

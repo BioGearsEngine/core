@@ -41,15 +41,6 @@ SEScalarElectricInductance::~SEScalarElectricInductance()
 {
 }
 //-----------------------------------------------------------------------------
-CDM::ScalarElectricInductanceData* SEScalarElectricInductance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricInductanceData* data(new CDM::ScalarElectricInductanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
 bool ElectricInductanceUnit::IsValidUnit(const char* unit)
 {
   if (strcmp(H.GetString(), unit) == 0)

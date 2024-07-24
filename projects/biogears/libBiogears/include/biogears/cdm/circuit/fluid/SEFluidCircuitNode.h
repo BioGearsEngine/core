@@ -32,12 +32,6 @@ public:
 
   virtual void Clear(); //clear memory
 
-  virtual bool Load(const CDM::FluidCircuitNodeData& in);
-  virtual CDM::FluidCircuitNodeData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::FluidCircuitNodeData& data) const;
-
 public:
   virtual bool HasPressure() const;
   virtual SEScalarPressure& GetPressure();

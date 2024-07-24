@@ -37,12 +37,6 @@ public:
   virtual void Reset();
   virtual void Set(const SEDecimalFormat& f);
 
-  virtual bool Load(const CDM::DecimalFormatData& in);
-  virtual CDM::DecimalFormatData* Unload();
-
-protected:
-  virtual void Unload(CDM::DecimalFormatData& to) const;
-
 public:
   void SetPrecision(std::streamsize p);
   std::streamsize GetPrecision();

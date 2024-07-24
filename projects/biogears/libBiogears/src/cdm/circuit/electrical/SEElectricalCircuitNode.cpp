@@ -34,25 +34,6 @@ void SEElectricalCircuitNode::Clear()
   SECircuitNode::Clear();
 }
 //-------------------------------------------------------------------------------
-bool SEElectricalCircuitNode::Load(const CDM::ElectricalCircuitNodeData& in)
-{
-  io::Circuit::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ElectricalCircuitNodeData* SEElectricalCircuitNode::Unload() const
-{
-  CDM::ElectricalCircuitNodeData* data = new CDM::ElectricalCircuitNodeData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEElectricalCircuitNode::Unload(CDM::ElectricalCircuitNodeData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
-
-//-------------------------------------------------------------------------------
 bool SEElectricalCircuitNode::HasVoltage() const
 {
   return HasPotential();

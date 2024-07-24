@@ -30,12 +30,6 @@ SEGasCompartmentLink::SEGasCompartmentLink(SEGasCompartment& src, SEGasCompartme
   : SEFluidCompartmentLink(src, tgt, name)
 {
 }
-//-----------------------------------------------------------------------------
-CDM::GasCompartmentLinkData* SEGasCompartmentLink::Unload()
-{
-  CDM::GasCompartmentLinkData* data = new CDM::GasCompartmentLinkData();
-  SEFluidCompartmentLink::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 }

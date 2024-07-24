@@ -36,26 +36,6 @@ void SEFunctionVolumeVsTime::Clear()
   m_VolumeUnit = nullptr;
 }
 
-bool SEFunctionVolumeVsTime::Load(const CDM::FunctionVolumeVsTimeData& in)
-{
-  io::Property::UnMarshall(in, *this);
-  return IsValid();
-}
-
-CDM::FunctionVolumeVsTimeData* SEFunctionVolumeVsTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::FunctionVolumeVsTimeData* data(new CDM::FunctionVolumeVsTimeData());
-  Unload(*data);
-  return data;
-}
-
-void SEFunctionVolumeVsTime::Unload(CDM::FunctionVolumeVsTimeData& data) const
-{
-  io::Property::Marshall(*this, data);
-}
-
 double SEFunctionVolumeVsTime::GetTimeValue(unsigned int index, const TimeUnit& unit)
 {
   if (m_TimeUnit == nullptr)

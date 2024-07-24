@@ -42,12 +42,6 @@ public:
 
   virtual void Clear(); // clear memory
 
-  bool Load(const CDM::FluidCircuitPathData& in);
-  CDM::FluidCircuitPathData* Unload() const;
-
-protected:
-  void Unload(CDM::FluidCircuitPathData& data) const;
-
 public:
   virtual SEFluidCircuitNode& GetSourceNode() const { return m_FluidSourceNode; }
   virtual SEFluidCircuitNode& GetTargetNode() const { return m_FluidTargetNode; }

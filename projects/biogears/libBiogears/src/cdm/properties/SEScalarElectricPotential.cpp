@@ -39,15 +39,7 @@ ElectricPotentialUnit::~ElectricPotentialUnit()
 SEScalarElectricPotential::~SEScalarElectricPotential()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarElectricPotentialData* SEScalarElectricPotential::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricPotentialData* data(new CDM::ScalarElectricPotentialData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool ElectricPotentialUnit::IsValidUnit(const char* unit)
 {

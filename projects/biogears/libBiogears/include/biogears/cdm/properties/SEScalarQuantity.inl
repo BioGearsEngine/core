@@ -86,28 +86,7 @@ bool SEScalarQuantity<Unit>::IsValid() const
     return false;
   return !std::isnan(m_value);
 }
-//-------------------------------------------------------------------------------
-template <typename Unit>
-void SEScalarQuantity<Unit>::Load(const CDM::ScalarData& in, std::default_random_engine* rd)
-{
-  io::Property::UnMarshall(in, *this, rd);
-}
-//-------------------------------------------------------------------------------
-template <typename Unit>
-CDM::ScalarData* SEScalarQuantity<Unit>::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarData* data = new CDM::ScalarData();
-  this->Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-template <typename Unit>
-void SEScalarQuantity<Unit>::Unload(CDM::ScalarData& data) const
-{
-  io::Property::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 template <typename Unit>
 bool SEScalarQuantity<Unit>::Set(const SEScalarQuantity<Unit>& s)

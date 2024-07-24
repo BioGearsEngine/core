@@ -43,15 +43,7 @@ SEScalarForce::SEScalarForce()
 SEScalarForce::~SEScalarForce()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarForceData* SEScalarForce::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarForceData* data(new CDM::ScalarForceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool ForceUnit::IsValidUnit(const char* unit)
 {

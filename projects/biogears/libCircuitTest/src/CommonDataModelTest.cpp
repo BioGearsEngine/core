@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 
 #include <fstream>
 
+#include "io/cdm/Circuit.h"
+#include "io/cdm/Compartment.h"
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
@@ -46,7 +49,7 @@ bool CommonDataModelTest::RunTest(const std::string& testName, const std::string
 {
   const std::string variant_name = testName + "Test";
   try {
-    //If you find the test name, run it
+    // If you find the test name, run it
     if (cdmMap.find(testName) != cdmMap.end()) {
       testFunction func = cdmMap.at(testName);
       (this->*func)(sOutputDirectory);
@@ -72,7 +75,7 @@ bool CommonDataModelTest::RunTest(const std::string& testName, const std::string
 
 void CommonDataModelTest::FillFunctionMap()
 {
-  //Fill a map that ties unit test names to their actual functions
+  // Fill a map that ties unit test names to their actual functions
   cdmMap.insert(std::make_pair("BasicCircuitTest", &CommonDataModelTest::BasicCircuitTest));
 
   cdmMap.insert(std::make_pair("SeriesRCDCTest", &CommonDataModelTest::SeriesRCDCTest));
@@ -262,7 +265,10 @@ void CommonDataModelTest::TestCompartmentSerialization(SECompartmentManager& mgr
   xml_schema::namespace_infomap map;
   map[""].name = "uri:/mil/tatrc/physiology/datamodel";
 
-  CDM::CompartmentManager(stream, dynamic_cast<CDM::CompartmentManagerData&>(*mgr.Unload()), map);
+  auto cdm_mgr = std::make_unique<CDM::CompartmentManagerData>();
+  io::Compartment::Marshall(mgr, *cdm_mgr.get());
+  CDM::CompartmentManager(stream, *cdm_mgr, map);
+
   stream.close();
   std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(fileName, m_Logger);
   CDM::CompartmentManagerData* data = dynamic_cast<CDM::CompartmentManagerData*>(bind.get());

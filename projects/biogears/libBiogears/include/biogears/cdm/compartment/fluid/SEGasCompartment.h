@@ -40,16 +40,11 @@ protected:
 public:
   virtual ~SEGasCompartment();
 
-  virtual bool Load(const CDM::GasCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::GasCompartmentData* Unload() override;
-
   bool operator==(SEGasCompartment const&) const;
   bool operator!=(SEGasCompartment const&) const;
   bool operator==(SEFluidCompartment const&) const override;
   bool operator!=(SEFluidCompartment const&) const override;
 
-protected:
-  virtual void Unload(CDM::GasCompartmentData& data);
 
 public:
   virtual void StateChange() override;

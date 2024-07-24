@@ -98,19 +98,7 @@ void SECircuitPath<CIRCUIT_PATH_TYPES>::Clear()
   SAFE_DELETE(m_PotentialSourceBaseline);
   SAFE_DELETE(m_ValveBreakdownPotential);
 }
-//-------------------------------------------------------------------------------
-template <CIRCUIT_PATH_TEMPLATE>
-bool SECircuitPath<CIRCUIT_PATH_TYPES>::Load(const CDM::CircuitPathData& in)
-{
-  io::Circuit::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-template <CIRCUIT_PATH_TEMPLATE>
-void SECircuitPath<CIRCUIT_PATH_TYPES>::Unload(CDM::CircuitPathData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 template <CIRCUIT_PATH_TEMPLATE>
 std::string SECircuitPath<CIRCUIT_PATH_TYPES>::GetName() const

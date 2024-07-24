@@ -45,15 +45,7 @@ SEScalarVolumePerTimeArea::~SEScalarVolumePerTimeArea()
 {
 
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarVolumePerTimeAreaData* SEScalarVolumePerTimeArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarVolumePerTimeAreaData* data(new CDM::ScalarVolumePerTimeAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool VolumePerTimeAreaUnit::IsValidUnit(const char* unit)
 {

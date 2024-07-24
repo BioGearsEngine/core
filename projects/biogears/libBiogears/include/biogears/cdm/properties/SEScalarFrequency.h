@@ -43,8 +43,6 @@ public:
   SEScalarFrequency();
   virtual ~SEScalarFrequency();
 
-  CDM::ScalarFrequencyData* Unload() const override;
-
   using SEScalarQuantity<FrequencyUnit>::SetValue;
   using SEScalarQuantity<FrequencyUnit>::GetValue;
 };

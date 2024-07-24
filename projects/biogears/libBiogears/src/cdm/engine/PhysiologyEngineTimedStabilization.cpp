@@ -308,9 +308,7 @@ void PhysiologyEngineTimedStabilizationCriteria::Clear()
 //-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilizationCriteria::Load(const CDM::PhysiologyEngineTimedConditionStabilizationData& in)
 {
-  Clear();
-  SetName(in.Name());
-  GetTime().Load(in.Time());
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -323,8 +321,7 @@ CDM::PhysiologyEngineTimedConditionStabilizationData* PhysiologyEngineTimedStabi
 //-------------------------------------------------------------------------------
 void PhysiologyEngineTimedStabilizationCriteria::Unload(CDM::PhysiologyEngineTimedConditionStabilizationData& data) const
 {
-  data.Name(m_Name);
-  data.Time(std::unique_ptr<CDM::ScalarTimeData>(GetTime().Unload()));
+  io::EngineConfiguration::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 std::string PhysiologyEngineTimedStabilizationCriteria::GetName() const

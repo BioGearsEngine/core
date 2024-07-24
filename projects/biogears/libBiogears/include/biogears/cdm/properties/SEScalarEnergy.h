@@ -43,8 +43,6 @@ public:
   SEScalarEnergy();
   virtual ~SEScalarEnergy();
 
-  CDM::ScalarEnergyData* Unload() const override;
-
   using SEScalarQuantity<EnergyUnit>::SetValue;
   using SEScalarQuantity<EnergyUnit>::GetValue;
 };

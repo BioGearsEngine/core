@@ -44,15 +44,7 @@ SEScalarHeatResistance::SEScalarHeatResistance()
 SEScalarHeatResistance::~SEScalarHeatResistance()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatResistanceData* SEScalarHeatResistance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatResistanceData* data(new CDM::ScalarHeatResistanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool HeatResistanceUnit::IsValidUnit(const char* unit)
 {

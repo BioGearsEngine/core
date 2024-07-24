@@ -41,12 +41,6 @@ public:
 
   virtual void Clear(); //clear memory
 
-  bool Load(const CDM::ElectricalCircuitPathData& in);
-  CDM::ElectricalCircuitPathData* Unload() const;
-
-protected:
-  void Unload(CDM::ElectricalCircuitPathData& data) const;
-
 public:
   virtual SEElectricalCircuitNode& GetSourceNode() const { return m_ElectricalSourceNode; }
   virtual SEElectricalCircuitNode& GetTargetNode() const { return m_ElectricalTargetNode; }

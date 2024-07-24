@@ -41,8 +41,6 @@ public:
   SEScalarPressureTimePerArea();
   virtual ~SEScalarPressureTimePerArea();
 
-  CDM::ScalarPressureTimePerAreaData* Unload() const override;
-
   using SEScalarQuantity<PressureTimePerAreaUnit>::SetValue;
   using SEScalarQuantity<PressureTimePerAreaUnit>::GetValue;
 };

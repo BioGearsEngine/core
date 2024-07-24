@@ -23,21 +23,7 @@ SEScalar0To1::SEScalar0To1()
 SEScalar0To1::~SEScalar0To1()
 {
 }
-//-------------------------------------------------------------------------------
-void SEScalar0To1::Load(const CDM::ScalarData& in, std::default_random_engine *rd)
-{
-  io::Property::UnMarshall(in, *this);
-}
 
-//-------------------------------------------------------------------------------
-CDM::Scalar0To1Data* SEScalar0To1::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::Scalar0To1Data* data(new CDM::Scalar0To1Data());
-  SEScalar::Unload(*data);
-  return data;
-}
 //-------------------------------------------------------------------------------
 void SEScalar0To1::SetValue(double d)
 {

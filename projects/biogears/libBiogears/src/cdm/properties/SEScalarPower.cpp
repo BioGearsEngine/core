@@ -46,15 +46,7 @@ SEScalarPower::SEScalarPower()
 SEScalarPower::~SEScalarPower()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarPowerData* SEScalarPower::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPowerData* data(new CDM::ScalarPowerData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool PowerUnit::IsValidUnit(const char* unit)
 {

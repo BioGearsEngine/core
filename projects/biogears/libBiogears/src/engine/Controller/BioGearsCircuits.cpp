@@ -13,6 +13,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
+
+#include "io/cdm/Circuit.h"
+
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -54,8 +57,8 @@ void BioGearsCircuits::Clear()
 
 bool BioGearsCircuits::Load(const CDM::CircuitManagerData& in)
 {
-  if (!SECircuitManager::Load(in))
-    return false;
+  io::Circuit::UnMarshall(in, *this);
+  
   m_CombinedCardiovascularCircuit = GetFluidCircuit(BGE::Circuits::FullCardiovascular);
   if (m_CombinedCardiovascularCircuit == nullptr) {
     Error("BioGearsCircuits::Load could not find circuit : " + std::string(BGE::Circuits::FullCardiovascular));

@@ -41,15 +41,7 @@ SEScalarMassPerMass::SEScalarMassPerMass()
 SEScalarMassPerMass::~SEScalarMassPerMass()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerMassData* SEScalarMassPerMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerMassData* data(new CDM::ScalarMassPerMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool MassPerMassUnit::IsValidUnit(const char* unit)
 {

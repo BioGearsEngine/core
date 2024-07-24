@@ -45,15 +45,7 @@ SEScalarFlowInertance::SEScalarFlowInertance()
 SEScalarFlowInertance::~SEScalarFlowInertance()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarFlowInertanceData* SEScalarFlowInertance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarFlowInertanceData* data(new CDM::ScalarFlowInertanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool FlowInertanceUnit::IsValidUnit(const char* unit)
 {

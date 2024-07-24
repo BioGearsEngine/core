@@ -24,8 +24,6 @@ public:
   bool operator==(const SEScalarNeg1To1&) const;
   bool operator!=(const SEScalarNeg1To1&) const;
 
-  CDM::ScalarNeg1To1Data* Unload() const override;
-
   using SEScalar::GetValue;
   double GetValue(const NoUnit& unitless) const;
   void SetValue(double d) override;

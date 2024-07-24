@@ -30,12 +30,6 @@ public:
   virtual ~SECompartmentTransportGraph();
 
   virtual void Clear() override;
-  /*
-  virtual bool Load(const BindType& in);
-  virtual BindType* Unload() = 0;
-protected:
-  virtual void Unload(BindType& data);
-*/
 
 public:
   virtual std::string GetName() const override;

@@ -41,15 +41,7 @@ SEScalarElectricResistance::SEScalarElectricResistance()
 SEScalarElectricResistance::~SEScalarElectricResistance()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarElectricResistanceData* SEScalarElectricResistance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricResistanceData* data(new CDM::ScalarElectricResistanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool ElectricResistanceUnit::IsValidUnit(const char* unit)
 {

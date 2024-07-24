@@ -42,15 +42,7 @@ SEScalarArea::SEScalarArea()
 SEScalarArea::~SEScalarArea()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarAreaData* SEScalarArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAreaData* data(new CDM::ScalarAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool AreaUnit::IsValidUnit(const char* unit)
 {

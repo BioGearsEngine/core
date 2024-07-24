@@ -44,8 +44,6 @@ public:
   SEScalarVolume();
   virtual ~SEScalarVolume();
 
-  CDM::ScalarVolumeData* Unload() const override;
-
   using SEScalarQuantity<VolumeUnit>::SetValue;
   using SEScalarQuantity<VolumeUnit>::GetValue;
 };

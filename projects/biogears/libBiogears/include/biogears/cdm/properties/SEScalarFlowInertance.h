@@ -44,8 +44,6 @@ public:
   SEScalarFlowInertance();
   virtual ~SEScalarFlowInertance();
 
-  CDM::ScalarFlowInertanceData* Unload() const override;
-
   using SEScalarQuantity<FlowInertanceUnit>::SetValue;
   using SEScalarQuantity<FlowInertanceUnit>::GetValue;
 };

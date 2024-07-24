@@ -42,16 +42,7 @@ SEThermalCircuit::~SEThermalCircuit()
 {
   Clear();
 }
-//-------------------------------------------------------------------------------
-void SEThermalCircuit::Unload(CDM::ThermalCircuitData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
-bool SEThermalCircuit::Load(const CDM::ThermalCircuitData& in, SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit> const& ledger)
-{ // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
-  io::Circuit::UnMarshall(in, ledger, *this);
-  return true;
-}
+
 //-------------------------------------------------------------------------------
 SEThermalCircuitNode& SEThermalCircuit::CreateNode(const char* name)
 {

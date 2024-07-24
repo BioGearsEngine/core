@@ -42,8 +42,6 @@ public:
   SEScalarForce();
   virtual ~SEScalarForce();
 
-  CDM::ScalarForceData* Unload() const override;
-
   using SEScalarQuantity<ForceUnit>::SetValue;
   using SEScalarQuantity<ForceUnit>::GetValue;
 };

@@ -40,15 +40,7 @@ SEScalarVolumePerTimePressureArea::SEScalarVolumePerTimePressureArea()
 SEScalarVolumePerTimePressureArea::~SEScalarVolumePerTimePressureArea()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarVolumePerTimePressureAreaData* SEScalarVolumePerTimePressureArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarVolumePerTimePressureAreaData* data(new CDM::ScalarVolumePerTimePressureAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool VolumePerTimePressureAreaUnit::IsValidUnit(const char* unit)
 {

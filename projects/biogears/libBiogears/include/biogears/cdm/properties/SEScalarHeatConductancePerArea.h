@@ -42,8 +42,6 @@ public:
   SEScalarHeatConductancePerArea();
   virtual ~SEScalarHeatConductancePerArea();
 
-  CDM::ScalarHeatConductancePerAreaData* Unload() const override;
-
   using SEScalarQuantity<HeatConductancePerAreaUnit>::SetValue;
   using SEScalarQuantity<HeatConductancePerAreaUnit>::GetValue;
 

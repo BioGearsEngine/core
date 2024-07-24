@@ -47,15 +47,7 @@ MassPerVolumeUnit::MassPerVolumeUnit(const std::string& u)
 MassPerVolumeUnit::~MassPerVolumeUnit()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerVolumeData* SEScalarMassPerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerVolumeData* data(new CDM::ScalarMassPerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool MassPerVolumeUnit::IsValidUnit(const char* unit)
 {

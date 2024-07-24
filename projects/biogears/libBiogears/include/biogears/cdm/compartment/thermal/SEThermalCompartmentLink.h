@@ -39,16 +39,11 @@ public:
 
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::ThermalCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::ThermalCompartmentLinkData* Unload() override;
 
   bool operator==(const SEThermalCompartmentLink& rhs) const;
   bool operator!=(const SEThermalCompartmentLink& rhs) const;
   bool operator==(const SECompartmentLink& rhs) const final;
   bool operator!=(const SECompartmentLink& rhs) const final;
-
-protected:
-  virtual void Unload(CDM::ThermalCompartmentLinkData& data);
 
 public:
   virtual const SEScalar* GetScalar(const char* name) override;

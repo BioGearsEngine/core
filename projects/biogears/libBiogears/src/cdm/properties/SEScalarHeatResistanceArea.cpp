@@ -44,15 +44,6 @@ SEScalarHeatResistanceArea::~SEScalarHeatResistanceArea()
 }
 
 //-------------------------------------------------------------------------------
-CDM::ScalarHeatResistanceAreaData* SEScalarHeatResistanceArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatResistanceAreaData* data(new CDM::ScalarHeatResistanceAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
 bool HeatResistanceAreaUnit::IsValidUnit(const char* unit)
 {
   if (strcmp(rsi.GetString(), unit) == 0)

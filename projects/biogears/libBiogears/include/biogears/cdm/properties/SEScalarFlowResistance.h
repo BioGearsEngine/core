@@ -44,8 +44,6 @@ public:
   SEScalarFlowResistance();
   virtual ~SEScalarFlowResistance();
 
-  CDM::ScalarFlowResistanceData* Unload() const override;
-
   using SEScalarQuantity<FlowResistanceUnit>::SetValue;
   using SEScalarQuantity<FlowResistanceUnit>::GetValue;
 };

@@ -45,8 +45,6 @@ public:
   SEScalarTimeMassPerVolume();
   virtual ~SEScalarTimeMassPerVolume();
 
-  CDM::ScalarTimeMassPerVolumeData* Unload() const override;
-
   using SEScalarQuantity<TimeMassPerVolumeUnit>::SetValue;
   using SEScalarQuantity<TimeMassPerVolumeUnit>::GetValue;
 };

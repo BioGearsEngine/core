@@ -36,11 +36,6 @@ public:
 
   virtual void Clear(); // clear memory
 
-  virtual CircuitBindType* Unload() const;
-
-protected:
-  virtual void Unload(CircuitBindType& data) const = 0;
-
 public:
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;

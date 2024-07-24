@@ -46,15 +46,7 @@ SEScalarLength::SEScalarLength()
 SEScalarLength::~SEScalarLength()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarLengthData* SEScalarLength::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarLengthData* data(new CDM::ScalarLengthData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool LengthUnit::IsValidUnit(const char* unit)
 {

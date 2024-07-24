@@ -44,15 +44,7 @@ SEScalarHeatCapacitance::SEScalarHeatCapacitance()
 SEScalarHeatCapacitance::~SEScalarHeatCapacitance()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatCapacitanceData* SEScalarHeatCapacitance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatCapacitanceData* data(new CDM::ScalarHeatCapacitanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool HeatCapacitanceUnit::IsValidUnit(const char* unit)
 {

@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -14,6 +15,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/testing/SETestCase.h>
 #include <biogears/schema/cdm/TestReport.hxx>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 SETestCase::SETestCase(Logger* logger)
@@ -51,8 +54,8 @@ bool SETestCase::Load(const CDM::TestCaseData& in)
   Reset();
 
   m_Name = in.Name();
-  GetDuration().Load(in.Duration());
-
+  io::Property::UnMarshall(in.Duration(), m_Duration);
+ 
   SETestErrorStatistics* ex;
   CDM::TestErrorStatisticsData* eData;
   for (unsigned int i = 0; i < in.CaseEqualError().size(); i++) {
@@ -82,7 +85,8 @@ void SETestCase::Unload(CDM::TestCaseData& data) const
 {
   data.Name(m_Name);
 
-  data.Duration(std::unique_ptr<CDM::ScalarTimeData>(m_Duration.Unload()));
+  data.Duration(std::make_unique<CDM::ScalarTimeData>());
+  io::Property::Marshall(m_Duration, data.Duration());
 
   for (unsigned int i = 0; i < m_Failure.size(); i++) {
     data.Failure().push_back(m_Failure.at(i));

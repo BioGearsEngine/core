@@ -46,15 +46,7 @@ SEScalarTimeMassPerVolume::SEScalarTimeMassPerVolume()
 SEScalarTimeMassPerVolume::~SEScalarTimeMassPerVolume()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarTimeMassPerVolumeData* SEScalarTimeMassPerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarTimeMassPerVolumeData* data(new CDM::ScalarTimeMassPerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool TimeMassPerVolumeUnit::IsValidUnit(const char* unit)
 {

@@ -27,10 +27,5 @@ public:
 
   virtual void Invalidate() = 0;
   virtual bool IsValid() const = 0;
-
-  virtual bool Load(const CDM::PropertyData& in);
-
-protected:
-  virtual void Unload(CDM::PropertyData& data) const;
 };
 }

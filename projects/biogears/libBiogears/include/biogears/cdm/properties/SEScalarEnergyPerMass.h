@@ -43,8 +43,6 @@ public:
   SEScalarEnergyPerMass();
   virtual ~SEScalarEnergyPerMass();
 
-  CDM::ScalarEnergyPerMassData* Unload() const override;   
-
   using SEScalarQuantity<EnergyPerMassUnit>::SetValue;
   using SEScalarQuantity<EnergyPerMassUnit>::GetValue;
 };

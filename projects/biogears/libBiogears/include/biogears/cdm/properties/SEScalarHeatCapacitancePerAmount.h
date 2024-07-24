@@ -40,8 +40,6 @@ public:
   SEScalarHeatCapacitancePerAmount();
   virtual ~SEScalarHeatCapacitancePerAmount();
 
-  CDM::ScalarHeatCapacitancePerAmountData* Unload() const override;
-
   using SEScalarQuantity<HeatCapacitancePerAmountUnit>::SetValue;
   using SEScalarQuantity<HeatCapacitancePerAmountUnit>::GetValue;
 };

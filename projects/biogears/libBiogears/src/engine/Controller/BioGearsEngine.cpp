@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 
 #include "io/biogears/BioGears.h"
 #include "io/cdm/Patient.h"
+#include "io/cdm/Compartment.h"
+#include "io/cdm/Circuit.h"
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/SECircuit.h>
@@ -226,8 +228,8 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
     m_SimulationTime->Set(*simTime);
   } else {
     if (state.SimulationTime().present()) {
-      m_CurrentTime->Load(state.SimulationTime().get());
-      m_SimulationTime->Load(state.SimulationTime().get());
+      io::Property::UnMarshall(state.SimulationTime(), *m_CurrentTime);
+      io::Property::UnMarshall(state.SimulationTime(), *m_SimulationTime);
     } else {
       m_CurrentTime->SetValue(0, TimeUnit::s);
       m_SimulationTime->SetValue(0, TimeUnit::s);
@@ -512,7 +514,9 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
 
   state->contentVersion(branded_version_string());
 
-  state->SimulationTime(std::unique_ptr<CDM::ScalarTimeData>(m_SimulationTime->Unload()));
+  state->SimulationTime(std::make_unique<CDM::ScalarTimeData>());
+  io::Property::Marshall(*m_SimulationTime, state->SimulationTime());
+
   if (m_EngineTrack.GetDataRequestManager().HasDataRequests()) {
     state->DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(m_EngineTrack.GetDataRequestManager().Unload()));
   }
@@ -565,11 +569,18 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
   state->System().push_back(std::unique_ptr<CDM::BioGearsElectroCardioGramData>(m_ECG->Unload()));
   state->System().push_back(std::unique_ptr<CDM::BioGearsInhalerData>(m_Inhaler->Unload()));
   // Compartments
-  state->CompartmentManager(std::unique_ptr<CDM::CompartmentManagerData>(m_Compartments->Unload()));
+  //state->CompartmentManager(std::unique_ptr<CDM::CompartmentManagerData>(m_Compartments->Unload()));
+  auto compartments = std::make_unique<CDM::CompartmentManagerData>();
+  io::Compartment::Marshall(*static_cast<SECompartmentManager*>(m_Compartments.get()),*compartments);
+  state->CompartmentManager(std::move(compartments));
   // Configuration
   state->Configuration(std::unique_ptr<CDM::PhysiologyEngineConfigurationData>(m_Config->Unload()));
-  // Circuitsk
-  state->CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(m_Circuits->Unload()));
+  // Circuits
+
+  //state->CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(m_Circuits->Unload()));
+  auto circuits = std::make_unique<CDM::CircuitManagerData>();
+  io::Circuit::Marshall(*static_cast<SECircuitManager*>(m_Circuits.get()), *circuits);
+  state->CircuitManager(std::move(circuits));
 
   return state;
 }

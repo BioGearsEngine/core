@@ -47,15 +47,7 @@ SEScalarVolumePerTimeMass::~SEScalarVolumePerTimeMass()
 {
 
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarVolumePerTimeMassData* SEScalarVolumePerTimeMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarVolumePerTimeMassData* data(new CDM::ScalarVolumePerTimeMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool VolumePerTimeMassUnit::IsValidUnit(const char* unit)
 {

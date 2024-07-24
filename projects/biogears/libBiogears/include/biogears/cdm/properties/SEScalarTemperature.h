@@ -43,8 +43,6 @@ public:
   SEScalarTemperature();
   virtual ~SEScalarTemperature();
 
-  CDM::ScalarTemperatureData* Unload() const override;
-
   using SEScalarQuantity<TemperatureUnit>::SetValue;
   double GetValue(const TemperatureUnit& unit) const override; // Zero is not Zero for all units, gotta remove that logic for this scalar type    
 };

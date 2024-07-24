@@ -140,14 +140,7 @@ void AnesthesiaMachine::Initialize()
 
 bool AnesthesiaMachine::Load(const CDM::BioGearsAnesthesiaMachineData& in)
 {
-  if (!SEAnesthesiaMachine::Load(in))
-    return false;
-  BioGearsSystem::LoadState();
-  m_inhaling = in.Inhaling();
-  m_currentbreathingCycleTime.Load(in.CurrentBreathingCycleTime());
-  m_inspirationTime.Load(in.InspirationTime());
-  m_O2InletVolumeFraction.Load(in.OxygenInletVolumeFraction());
-  m_totalBreathingCycleTime.Load(in.TotalBreathingCycleTime());
+  io::Anesthesia::UnMarshall(in, *this);
   return true;
 }
 CDM::BioGearsAnesthesiaMachineData* AnesthesiaMachine::Unload() const
@@ -158,12 +151,7 @@ CDM::BioGearsAnesthesiaMachineData* AnesthesiaMachine::Unload() const
 }
 void AnesthesiaMachine::Unload(CDM::BioGearsAnesthesiaMachineData& data) const
 {
-  SEAnesthesiaMachine::Unload(data);
-  data.Inhaling(m_inhaling);
-  data.CurrentBreathingCycleTime(std::unique_ptr<CDM::ScalarTimeData>(m_currentbreathingCycleTime.Unload()));
-  data.InspirationTime(std::unique_ptr<CDM::ScalarTimeData>(m_inspirationTime.Unload()));
-  data.OxygenInletVolumeFraction(std::unique_ptr<CDM::ScalarData>(m_O2InletVolumeFraction.Unload()));
-  data.TotalBreathingCycleTime(std::unique_ptr<CDM::ScalarTimeData>(m_totalBreathingCycleTime.Unload()));
+  io::Anesthesia::Marshall(*this, data);
 }
 
 //--------------------------------------------------------------------------------------------------

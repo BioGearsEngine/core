@@ -43,8 +43,6 @@ public:
   SEScalarHeatResistance();
   virtual ~SEScalarHeatResistance();
 
-  CDM::ScalarHeatResistanceData* Unload() const override;
-
   using SEScalarQuantity<HeatResistanceUnit>::SetValue;
   using SEScalarQuantity<HeatResistanceUnit>::GetValue;
 

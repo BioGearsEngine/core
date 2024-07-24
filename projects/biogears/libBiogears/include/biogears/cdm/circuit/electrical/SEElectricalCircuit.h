@@ -42,11 +42,6 @@ protected:
 public:
   virtual ~SEElectricalCircuit();
 
-  //-----------------------------------------------------------------------------
-
-  void Unload(CDM::ElectricalCircuitData& data) const override;
-  bool Load(const CDM::ElectricalCircuitData& in, SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit> const& ledger);
-
   SEElectricalCircuitNode& CreateNode(const std::string& name);
   SEElectricalCircuitNode& CreateNode(const char* name);
   SEElectricalCircuitPath& CreatePath(SEElectricalCircuitNode& src, SEElectricalCircuitNode& tgt, const std::string& name);

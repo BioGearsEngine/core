@@ -186,7 +186,7 @@ namespace io {
     io::Property::Marshall(in.m_CardiacCycleSkinFlow_mL_Per_s, out.CardiacCycleSkinFlow_mL_Per_s());
   }
 
-  // class Cardiovascular
+  // class DrugSystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsDrugSystemData& in, const SESubstanceManager& substances, Drugs& out)
   {
     out.Clear();
@@ -267,7 +267,7 @@ namespace io {
       }
     }
   }
-  // class Cardiovascular
+  // class EndocrineSystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsEndocrineSystemData& in, const SESubstanceManager& substances, Endocrine& out)
   {
     out.Clear();
@@ -278,7 +278,7 @@ namespace io {
   {
     io::System::Marshall(in, out);
   }
-  // class Cardiovascular
+  // class EnergySystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsEnergySystemData& in, const SESubstanceManager& substances, Energy& out)
   {
     out.Clear();
@@ -297,7 +297,7 @@ namespace io {
     out.PackOn(in.m_packOn);
     out.PreviousWeightPack_kg(in.m_previousWeightPack_kg);
   }
-  // class Cardiovascular
+  // class GastrointestinalSystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsGastrointestinalSystemData& in, const SESubstanceManager& substances, Gastrointestinal& out)
   {
     out.Clear();
@@ -324,7 +324,7 @@ namespace io {
   {
     io::System::Marshall(in, out);
   }
-  // class Cardiovascular
+  // class HepaticSystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsHepaticSystemData& in, const SESubstanceManager& substances, Hepatic& out)
   {
     out.Clear();
@@ -447,7 +447,7 @@ namespace io {
     out.SympatheticPeripheralSignalFatigue(in.m_SympatheticPeripheralSignalFatigue);
     out.VagalSignalBaseline(in.m_VagalSignalBaseline_Hz);
   }
-  // class Cardiovascular
+  // class RenalSystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsRenalSystemData& in, const SESubstanceManager& substances, Renal& out)
   {
     out.Clear();
@@ -489,7 +489,7 @@ namespace io {
     io::Property::Marshall(in.m_leftRenalArterialPressure_mmHg_runningAvg, out.LeftRenalArterialPressure_mmHg());
     io::Property::Marshall(in.m_rightRenalArterialPressure_mmHg_runningAvg, out.RightRenalArterialPressure_mmHg());
   }
-  // class Cardiovascular
+  // class RespiratorySystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsRespiratorySystemData& in, const SESubstanceManager& substances, Respiratory& out)
   {
     out.Clear();
@@ -591,7 +591,7 @@ namespace io {
     out.HadAirwayObstruction(in.m_HadAirwayObstruction);
     out.HadBronchoconstriction(in.m_HadBronchoconstriction);
   }
-  // class Cardiovascular
+  // class TissueSystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsTissueSystemData& in, const SESubstanceManager& substances, Tissue& out)
   {
     out.Clear();

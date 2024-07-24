@@ -43,8 +43,6 @@ public:
   SEScalarInversePressure();
   virtual ~SEScalarInversePressure();
 
-  CDM::ScalarInversePressureData* Unload() const override;
-
   using SEScalarQuantity<InversePressureUnit>::SetValue;
   using SEScalarQuantity<InversePressureUnit>::GetValue;
 };

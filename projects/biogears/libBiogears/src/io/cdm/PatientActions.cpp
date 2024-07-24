@@ -1008,15 +1008,13 @@ namespace io {
     io::Property::UnMarshall(in.TotalNasalDose(), out.GetTotalNasalDose(), rd);
     out.m_UnreleasedDrugMasses.clear();
     for (auto umData : in.UnreleasedDrugMasses()) {
-      SEScalarMass unrelMass;
-      unrelMass.Load(umData);
-      out.m_UnreleasedDrugMasses.push_back(unrelMass);
+      out.m_UnreleasedDrugMasses.emplace_back();
+      io::Property::UnMarshall(umData, out.m_UnreleasedDrugMasses.back());
     }
     out.m_ReleasedDrugMasses.clear();
     for (auto rmData : in.ReleasedDrugMasses()) {
-      SEScalarMass relMass;
-      relMass.Load(rmData);
-      out.m_ReleasedDrugMasses.push_back(relMass);
+      out.m_ReleasedDrugMasses.emplace_back();
+      io::Property::UnMarshall(rmData, out.m_ReleasedDrugMasses.back());
     }
   }
   void PatientActions::Marshall(const SENasalState& in, CDM::NasalStateData& out)
@@ -1590,13 +1588,16 @@ namespace io {
   }
   void PatientActions::Marshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out)
   {
-    out.MouthSolidMass(std::unique_ptr<CDM::ScalarMassData>(in.m_MouthSolidMass->Unload()));
-    out.SalivaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(in.m_SalivaConcentration->Unload()));
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, MouthSolidMass)
+    CDM_PROPERTY_MARSHALL_HELPER(in, out, SalivaConcentration)
+
     for (auto bcData : in.m_BuccalConcentrations) {
-      out.BuccalConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(bcData.Unload()));
+      out.BuccalConcentrations().push_back(std::make_unique<CDM::ScalarMassPerVolumeData>());
+      io::Property::Marshall(bcData, out.BuccalConcentrations().back());
     }
     for (auto slData : in.m_SublingualConcentrations) {
-      out.SublingualConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(slData.Unload()));
+      out.SublingualConcentrations().push_back(std::make_unique<CDM::ScalarMassPerVolumeData>());
+      io::Property::Marshall(slData, out.SublingualConcentrations().back());
     }
     out.Substance(in.m_Substance->GetName());
   }

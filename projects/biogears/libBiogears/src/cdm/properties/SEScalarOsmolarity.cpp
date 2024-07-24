@@ -35,20 +35,14 @@ OsmolarityUnit::~OsmolarityUnit()
 {
 }
 //-------------------------------------------------------------------------------
- SEScalarOsmolarity::SEScalarOsmolarity(){
- }
- //-------------------------------------------------------------------------------
-  SEScalarOsmolarity::~SEScalarOsmolarity(){
-  }
-//-------------------------------------------------------------------------------
-CDM::ScalarOsmolarityData* SEScalarOsmolarity::Unload() const
+SEScalarOsmolarity::SEScalarOsmolarity()
 {
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarOsmolarityData* data(new CDM::ScalarOsmolarityData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
+//-------------------------------------------------------------------------------
+SEScalarOsmolarity::~SEScalarOsmolarity()
+{
+}
+
 //-------------------------------------------------------------------------------
 bool OsmolarityUnit::IsValidUnit(const char* unit)
 {

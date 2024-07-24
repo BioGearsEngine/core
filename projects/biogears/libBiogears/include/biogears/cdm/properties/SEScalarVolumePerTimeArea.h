@@ -42,8 +42,6 @@ public:
   SEScalarVolumePerTimeArea();
   virtual ~SEScalarVolumePerTimeArea();
 
-  CDM::ScalarVolumePerTimeAreaData* Unload() const override;
-
   using SEScalarQuantity<VolumePerTimeAreaUnit>::SetValue;
   using SEScalarQuantity<VolumePerTimeAreaUnit>::GetValue;
 

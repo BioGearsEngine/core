@@ -43,15 +43,7 @@ SEScalarInversePressure::SEScalarInversePressure()
 SEScalarInversePressure::~SEScalarInversePressure()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarInversePressureData* SEScalarInversePressure::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarInversePressureData* data(new CDM::ScalarInversePressureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool InversePressureUnit::IsValidUnit(const char* unit)
 {

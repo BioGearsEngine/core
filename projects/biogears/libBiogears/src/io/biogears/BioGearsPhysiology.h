@@ -58,7 +58,6 @@ namespace io {
     // class Cardiovascular
     static void UnMarshall(const CDM::BioGearsCardiovascularSystemData& in, const SESubstanceManager& substances, Cardiovascular& out);
     static void Marshall(const Cardiovascular& in, CDM::BioGearsCardiovascularSystemData& out);
-
     // class Drugs
     static void UnMarshall(const CDM::BioGearsDrugSystemData& in, const SESubstanceManager& substances, Drugs& out);
     static void Marshall(const Drugs& in, CDM::BioGearsDrugSystemData& out);

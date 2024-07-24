@@ -44,15 +44,7 @@ SEScalarHeatConductancePerArea::SEScalarHeatConductancePerArea()
 SEScalarHeatConductancePerArea::~SEScalarHeatConductancePerArea()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatConductancePerAreaData* SEScalarHeatConductancePerArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatConductancePerAreaData* data(new CDM::ScalarHeatConductancePerAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool HeatConductancePerAreaUnit::IsValidUnit(const char* unit)
 {

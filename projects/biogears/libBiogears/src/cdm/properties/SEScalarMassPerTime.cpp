@@ -48,15 +48,7 @@ SEScalarMassPerTime::SEScalarMassPerTime()
 SEScalarMassPerTime::~SEScalarMassPerTime()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerTimeData* SEScalarMassPerTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerTimeData* data(new CDM::ScalarMassPerTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool MassPerTimeUnit::IsValidUnit(const char* unit)
 {

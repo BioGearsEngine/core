@@ -71,46 +71,6 @@ void SEScalar::Clear()
 }
 
 //-------------------------------------------------------------------------------
-void SEScalar::Load(const CDM::ScalarData& in, std::default_random_engine *rd)
-{
-  Clear();
-  SEProperty::Load(in);
-
-  if (in.deviation().present() && rd) {
-    auto nd = std::normal_distribution(in.value(), in.deviation().get());
-    SetValue( nd(*rd) );
-  } else {
-    SetValue(in.value()); 
-  }
-  if (in.unit().present()) {
-    std::string u = in.unit().get();
-    if (!("unitless" == u || "" == u || u.empty())) {
-      throw CommonDataModelException("CDM::Scalar API is intended to be unitless, You are trying to load a ScalarData with a unit defined");
-    }
-  }
-  m_readOnly = in.readOnly();
-}
-
-//-------------------------------------------------------------------------------
-CDM::ScalarData* SEScalar::Unload() const
-{
-  if (!IsValid()) {
-    return nullptr;
-  }
-  CDM::ScalarData* data(new CDM::ScalarData());
-  Unload(*data);
-  return data;
-}
-
-//-------------------------------------------------------------------------------
-void SEScalar::Unload(CDM::ScalarData& data) const
-{
-  SEProperty::Unload(data);
-  data.value(m_value);
-  data.readOnly(m_readOnly);
-}
-
-//-------------------------------------------------------------------------------
 bool SEScalar::Set(const SEScalar& s)
 {
   if (!s.IsValid()) {

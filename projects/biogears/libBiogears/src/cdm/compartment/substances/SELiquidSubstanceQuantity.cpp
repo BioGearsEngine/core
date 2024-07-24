@@ -96,24 +96,7 @@ void SELiquidSubstanceQuantity::Clear()
   SAFE_DELETE(m_Saturation);
   m_Children.clear();
 }
-//-----------------------------------------------------------------------------
-bool SELiquidSubstanceQuantity::Load(const CDM::LiquidSubstanceQuantityData& in)
-{
-  io::SubstanceQuantity::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::LiquidSubstanceQuantityData* SELiquidSubstanceQuantity::Unload()
-{
-  CDM::LiquidSubstanceQuantityData* data = new CDM::LiquidSubstanceQuantityData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SELiquidSubstanceQuantity::Unload(CDM::LiquidSubstanceQuantityData& data)
-{
-  io::SubstanceQuantity::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::SetToZero()
 {

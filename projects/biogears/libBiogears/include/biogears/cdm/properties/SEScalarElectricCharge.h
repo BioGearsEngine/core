@@ -40,8 +40,6 @@ public:
   SEScalarElectricCharge();
   virtual ~SEScalarElectricCharge();
 
-  CDM::ScalarElectricChargeData* Unload() const override;   
-
   using SEScalarQuantity<ElectricChargeUnit>::SetValue;
   using SEScalarQuantity<ElectricChargeUnit>::GetValue;
 

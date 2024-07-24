@@ -516,12 +516,7 @@ void PhysiologyEngineDynamicStabilizationCriteria::Clear()
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineDynamicStabilizationCriteria::Load(const CDM::PhysiologyEngineDynamicStabilizationCriteriaData& in)
 {
-  Clear();
-  GetConvergenceTime().Load(in.ConvergenceTime());
-  GetMinimumReactionTime().Load(in.MinimumReactionTime());
-  GetMaximumAllowedStabilizationTime().Load(in.MaximumAllowedStabilizationTime());
-  for (auto pcData : in.PropertyConvergence())
-    CreateSystemPropertyConvergence(pcData.PercentDifference(), pcData.Name());
+  io::EngineConfiguration::UnMarshall(in, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -534,21 +529,7 @@ CDM::PhysiologyEngineDynamicStabilizationCriteriaData* PhysiologyEngineDynamicSt
 //-----------------------------------------------------------------------------
 void PhysiologyEngineDynamicStabilizationCriteria::Unload(CDM::PhysiologyEngineDynamicStabilizationCriteriaData& data) const
 {
-  if (m_ConvergenceTime) {
-    data.ConvergenceTime(std::unique_ptr<CDM::ScalarTimeData>(m_ConvergenceTime->Unload()));
-  }
-  if (m_MinimumReactionTime) {
-    data.MinimumReactionTime(std::unique_ptr<CDM::ScalarTimeData>(m_MinimumReactionTime->Unload()));
-  }
-  if (m_MaximumAllowedStabilizationTime) {
-    data.MaximumAllowedStabilizationTime(std::unique_ptr<CDM::ScalarTimeData>(m_MaximumAllowedStabilizationTime->Unload()));
-  }
-  for (auto pc : m_PropertyConvergence) {
-    std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData> pcData(new CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData());
-    pcData->Name(pc->GetDataRequest().GetName());
-    pcData->PercentDifference(pc->m_Target);
-    data.PropertyConvergence().push_back(*pcData.get());
-  }
+ io::EngineConfiguration::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 std::string PhysiologyEngineDynamicStabilizationCriteria::GetName() const

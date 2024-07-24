@@ -52,8 +52,6 @@ public:
   Note that this does not affect bounds
   */
   virtual void Invalidate();
-  virtual void Load(const CDM::ScalarData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ScalarData* Unload() const;
 
   /**
    * Copies ONLY the value and unit
@@ -120,9 +118,6 @@ public:
   SEScalar operator*(const SEScalar& rhs) const;
   SEScalar& operator*=(const SEScalar& rhs);
 
-
-protected:
-  virtual void Unload(CDM::ScalarData& s) const;
 };
 //-------------------------------------------------------------------------------
 inline SEScalar operator+(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Increment(rhs); };

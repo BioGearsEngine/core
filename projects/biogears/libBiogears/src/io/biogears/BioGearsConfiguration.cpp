@@ -20,10 +20,14 @@ namespace io {
   // class BloodChemistryConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::BloodChemistryConfigurationData& in, BioGearsConfiguration& out)
   {
-    io::Property::UnMarshall(in.MeanCorpuscularVolume(), out.GetMeanCorpuscularVolume());
-    io::Property::UnMarshall(in.MeanCorpuscularHemoglobin(), out.GetMeanCorpuscularHemoglobin());
-    io::Property::UnMarshall(in.StandardDiffusionDistance(), out.GetStandardDiffusionDistance());
-    io::Property::UnMarshall(in.StandardOxygenDiffusionCoefficient(), out.GetStandardOxygenDiffusionCoefficient());
+    if (in.MeanCorpuscularVolume().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.MeanCorpuscularVolume(), out.GetMeanCorpuscularVolume());
+    if (in.MeanCorpuscularHemoglobin().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.MeanCorpuscularHemoglobin(), out.GetMeanCorpuscularHemoglobin());
+    if (in.StandardDiffusionDistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.StandardDiffusionDistance(), out.GetStandardDiffusionDistance());
+    if (in.StandardOxygenDiffusionCoefficient().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.StandardOxygenDiffusionCoefficient(), out.GetStandardOxygenDiffusionCoefficient());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::BloodChemistryConfigurationData& out)
   {
@@ -37,12 +41,18 @@ namespace io {
   void BiogearsEngineConfiguration::UnMarshall(const CDM::CardiovascularConfigurationData& in, BioGearsConfiguration& out)
   {
     // Cardiovascular
-    io::Property::UnMarshall(in.LeftHeartElastanceMaximum(), out.GetLeftHeartElastanceMaximum());
-    io::Property::UnMarshall(in.LeftHeartElastanceMinimum(), out.GetLeftHeartElastanceMinimum());
-    io::Property::UnMarshall(in.MinimumBloodVolumeFraction(), out.GetMinimumBloodVolumeFraction());
-    io::Property::UnMarshall(in.RightHeartElastanceMaximum(), out.GetRightHeartElastanceMaximum());
-    io::Property::UnMarshall(in.RightHeartElastanceMinimum(), out.GetRightHeartElastanceMinimum());
-    io::Property::UnMarshall(in.StandardPulmonaryCapillaryCoverage(), out.GetStandardPulmonaryCapillaryCoverage());
+    if (in.LeftHeartElastanceMaximum().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.LeftHeartElastanceMaximum(), out.GetLeftHeartElastanceMaximum());
+    if (in.LeftHeartElastanceMinimum().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.LeftHeartElastanceMinimum(), out.GetLeftHeartElastanceMinimum());
+    if (in.MinimumBloodVolumeFraction().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.MinimumBloodVolumeFraction(), out.GetMinimumBloodVolumeFraction());
+    if (in.RightHeartElastanceMaximum().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.RightHeartElastanceMaximum(), out.GetRightHeartElastanceMaximum());
+    if (in.RightHeartElastanceMinimum().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.RightHeartElastanceMinimum(), out.GetRightHeartElastanceMinimum());
+    if (in.StandardPulmonaryCapillaryCoverage().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.StandardPulmonaryCapillaryCoverage(), out.GetStandardPulmonaryCapillaryCoverage());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::CardiovascularConfigurationData& out)
   {
@@ -58,17 +68,28 @@ namespace io {
   void BiogearsEngineConfiguration::UnMarshall(const CDM::CircuitConfigurationData& in, BioGearsConfiguration& out)
   {
     // Circuit
-    io::Property::UnMarshall(in.CardiovascularOpenResistance(), out.GetCardiovascularOpenResistance());
-    io::Property::UnMarshall(in.DefaultOpenElectricResistance(), out.GetDefaultOpenElectricResistance());
-    io::Property::UnMarshall(in.DefaultOpenFlowResistance(), out.GetDefaultOpenFlowResistance());
-    io::Property::UnMarshall(in.DefaultOpenHeatResistance(), out.GetDefaultOpenHeatResistance());
-    io::Property::UnMarshall(in.DefaultClosedElectricResistance(), out.GetDefaultClosedElectricResistance());
-    io::Property::UnMarshall(in.DefaultClosedFlowResistance(), out.GetDefaultClosedFlowResistance());
-    io::Property::UnMarshall(in.DefaultClosedHeatResistance(), out.GetDefaultClosedHeatResistance());
-    io::Property::UnMarshall(in.MachineClosedResistance(), out.GetMachineClosedResistance());
-    io::Property::UnMarshall(in.MachineOpenResistance(), out.GetMachineOpenResistance());
-    io::Property::UnMarshall(in.RespiratoryClosedResistance(), out.GetRespiratoryClosedResistance());
-    io::Property::UnMarshall(in.RespiratoryOpenResistance(), out.GetRespiratoryOpenResistance());
+    if (in.CardiovascularOpenResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.CardiovascularOpenResistance(), out.GetCardiovascularOpenResistance());
+    if (in.DefaultOpenElectricResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.DefaultOpenElectricResistance(), out.GetDefaultOpenElectricResistance());
+    if (in.DefaultOpenFlowResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.DefaultOpenFlowResistance(), out.GetDefaultOpenFlowResistance());
+    if (in.DefaultOpenHeatResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.DefaultOpenHeatResistance(), out.GetDefaultOpenHeatResistance());
+    if (in.DefaultClosedElectricResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.DefaultClosedElectricResistance(), out.GetDefaultClosedElectricResistance());
+    if (in.DefaultClosedFlowResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.DefaultClosedFlowResistance(), out.GetDefaultClosedFlowResistance());
+    if (in.DefaultClosedHeatResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.DefaultClosedHeatResistance(), out.GetDefaultClosedHeatResistance());
+    if (in.MachineClosedResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.MachineClosedResistance(), out.GetMachineClosedResistance());
+    if (in.MachineOpenResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.MachineOpenResistance(), out.GetMachineOpenResistance());
+    if (in.RespiratoryClosedResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.RespiratoryClosedResistance(), out.GetRespiratoryClosedResistance());
+    if (in.RespiratoryOpenResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.RespiratoryOpenResistance(), out.GetRespiratoryOpenResistance());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::CircuitConfigurationData& out)
   {
@@ -89,9 +110,12 @@ namespace io {
   void BiogearsEngineConfiguration::UnMarshall(const CDM::ConstantsConfigurationData& in, BioGearsConfiguration& out)
   {
     // Constants
-    io::Property::UnMarshall(in.OxygenMetabolicConstant(), out.GetOxygenMetabolicConstant());
-    io::Property::UnMarshall(in.StefanBoltzmann(), out.GetStefanBoltzmann());
-    io::Property::UnMarshall(in.UniversalGasConstant(), out.GetUniversalGasConstant());
+    if (in.OxygenMetabolicConstant().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.OxygenMetabolicConstant(), out.GetOxygenMetabolicConstant());
+    if (in.StefanBoltzmann().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.StefanBoltzmann(), out.GetStefanBoltzmann());
+    if (in.UniversalGasConstant().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.UniversalGasConstant(), out.GetUniversalGasConstant());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::ConstantsConfigurationData& out)
   {
@@ -104,7 +128,7 @@ namespace io {
   void BiogearsEngineConfiguration::UnMarshall(const CDM::DrugsConfigurationData& in, BioGearsConfiguration& out)
   {
     // Drugs
-    if (in.PDModel().present())
+    if (in.PDModel().present() || !out.m_Merge)
       io::Property::UnMarshall(in.PDModel().get(), out.m_PDEnabled);
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::DrugsConfigurationData& out)
@@ -117,14 +141,22 @@ namespace io {
   void BiogearsEngineConfiguration::UnMarshall(const CDM::EnergyConfigurationData& in, BioGearsConfiguration& out)
   {
     // Energy
-    io::Property::UnMarshall(in.BodySpecificHeat(), out.GetBodySpecificHeat());
-    io::Property::UnMarshall(in.CoreTemperatureLow(), out.GetCoreTemperatureLow());
-    io::Property::UnMarshall(in.CoreTemperatureHigh(), out.GetCoreTemperatureHigh());
-    io::Property::UnMarshall(in.DeltaCoreTemperatureLow(), out.GetDeltaCoreTemperatureLow());
-    io::Property::UnMarshall(in.EnergyPerATP(), out.GetEnergyPerATP());
-    io::Property::UnMarshall(in.SweatHeatTransfer(), out.GetSweatHeatTransfer());
-    io::Property::UnMarshall(in.VaporizationEnergy(), out.GetVaporizationEnergy());
-    io::Property::UnMarshall(in.VaporSpecificHeat(), out.GetVaporSpecificHeat());
+    if (in.BodySpecificHeat().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.BodySpecificHeat(), out.GetBodySpecificHeat());
+    if (in.CoreTemperatureLow().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.CoreTemperatureLow(), out.GetCoreTemperatureLow());
+    if (in.CoreTemperatureHigh().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.CoreTemperatureHigh(), out.GetCoreTemperatureHigh());
+    if (in.DeltaCoreTemperatureLow().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.DeltaCoreTemperatureLow(), out.GetDeltaCoreTemperatureLow());
+    if (in.EnergyPerATP().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.EnergyPerATP(), out.GetEnergyPerATP());
+    if (in.SweatHeatTransfer().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.SweatHeatTransfer(), out.GetSweatHeatTransfer());
+    if (in.VaporizationEnergy().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.VaporizationEnergy(), out.GetVaporizationEnergy());
+    if (in.VaporSpecificHeat().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.VaporSpecificHeat(), out.GetVaporSpecificHeat());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::EnergyConfigurationData& out)
   {
@@ -143,15 +175,20 @@ namespace io {
   {
 
     // Environment
-    io::Property::UnMarshall(in.AirDensity(), out.GetAirDensity());
-    io::Property::UnMarshall(in.AirSpecificHeat(), out.GetAirSpecificHeat());
-    io::Property::UnMarshall(in.MolarMassOfDryAir(), out.GetMolarMassOfDryAir());
-    io::Property::UnMarshall(in.MolarMassOfWaterVapor(), out.GetMolarMassOfWaterVapor());
-    if (in.InitialEnvironmentalConditionsFile().present()) {
+    if (in.AirDensity().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.AirDensity(), out.GetAirDensity());
+    if (in.AirSpecificHeat().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.AirSpecificHeat(), out.GetAirSpecificHeat());
+    if (in.MolarMassOfDryAir().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.MolarMassOfDryAir(), out.GetMolarMassOfDryAir());
+    if (in.MolarMassOfWaterVapor().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.MolarMassOfWaterVapor(), out.GetMolarMassOfWaterVapor());
+
+    if (in.InitialEnvironmentalConditionsFile().present() || !out.m_Merge) {
       if (!out.GetInitialEnvironmentalConditions().Load(in.InitialEnvironmentalConditionsFile().get())) {
         throw biogears::CommonDataModelException("Unable to load InitialEnvironmentalConditions file");
       }
-    } else if (in.InitialEnvironmentalConditions().present()) {
+    } else if (in.InitialEnvironmentalConditions().present() || !out.m_Merge) {
       if (!out.GetInitialEnvironmentalConditions().Load(in.InitialEnvironmentalConditions().get())) {
         throw biogears::CommonDataModelException("Unable to load InitialEnvironmentalConditions");
       }
@@ -174,21 +211,28 @@ namespace io {
   void BiogearsEngineConfiguration::UnMarshall(const CDM::GastrointestinalConfigurationData& in, BioGearsConfiguration& out)
   {
     // Gastrointestinal
-    io::Property::UnMarshall(in.CalciumAbsorptionFraction(), out.GetCalciumAbsorptionFraction());
-    io::Property::UnMarshall(in.CalciumDigestionRate(), out.GetCalciumDigestionRate());
-    io::Property::UnMarshall(in.CarbohydrateAbsorptionFraction(), out.GetCarbohydrateAbsorptionFraction());
-    if (in.DefaultStomachContentsFile().present()) {
+    if (in.CalciumAbsorptionFraction().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.CalciumAbsorptionFraction(), out.GetCalciumAbsorptionFraction());
+    if (in.CalciumDigestionRate().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.CalciumDigestionRate(), out.GetCalciumDigestionRate());
+    if (in.CarbohydrateAbsorptionFraction().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.CarbohydrateAbsorptionFraction(), out.GetCarbohydrateAbsorptionFraction());
+
+    if (in.DefaultStomachContentsFile().present() || !out.m_Merge) {
       if (!out.GetDefaultStomachContents().Load(in.DefaultStomachContentsFile().get())) {
         throw biogears::CommonDataModelException("Unable to load Standard Stomach Contents file");
       }
-    } else if (in.DefaultStomachContents().present()) {
+    } else if (in.DefaultStomachContents().present() || !out.m_Merge) {
       if (!out.GetDefaultStomachContents().Load(in.DefaultStomachContents().get())) {
         throw biogears::CommonDataModelException("Unable to load Standard Stomach Contents");
       }
     }
-    io::Property::UnMarshall(in.FatAbsorptionFraction(), out.GetFatAbsorptionFraction());
-    io::Property::UnMarshall(in.ProteinToUreaFraction(), out.GetProteinToUreaFraction());
-    io::Property::UnMarshall(in.WaterDigestionRate(), out.GetWaterDigestionRate());
+    if (in.FatAbsorptionFraction().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.FatAbsorptionFraction(), out.GetFatAbsorptionFraction());
+    if (in.ProteinToUreaFraction().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.ProteinToUreaFraction(), out.GetProteinToUreaFraction());
+    if (in.WaterDigestionRate().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.WaterDigestionRate(), out.GetWaterDigestionRate());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::GastrointestinalConfigurationData& out)
   {
@@ -207,9 +251,10 @@ namespace io {
   {
 
     // Nervous
-    if (in.EnableCerebral().present())
+    if (in.EnableCerebral().present() || !out.m_Merge)
       io::Property::UnMarshall(in.EnableCerebral().get(), out.m_CerebralEnabled);
-    io::Property::UnMarshall(in.PupilDiameterBaseline(), out.GetPupilDiameterBaseline());
+    if (in.PupilDiameterBaseline().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.PupilDiameterBaseline(), out.GetPupilDiameterBaseline());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::NervousConfigurationData& out)
   {
@@ -223,24 +268,34 @@ namespace io {
   {
 
     // Renal
-    if (in.EnableRenal().present())
-      io::Property::UnMarshall(in.EnableRenal().get(), out.m_RenalEnabled);
+    if (in.EnableRenal().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.EnableRenal(), out.m_RenalEnabled);
+    if (in.PlasmaSodiumConcentrationSetPoint().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.PlasmaSodiumConcentrationSetPoint(), out.GetPlasmaSodiumConcentrationSetPoint());
+    if (in.LeftGlomerularFluidPermeabilityBaseline().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.LeftGlomerularFluidPermeabilityBaseline(), out.GetLeftGlomerularFluidPermeabilityBaseline());
+    if (in.LeftGlomerularFilteringSurfaceAreaBaseline().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.LeftGlomerularFilteringSurfaceAreaBaseline(), out.GetLeftGlomerularFilteringSurfaceAreaBaseline());
+    if (in.LeftTubularReabsorptionFluidPermeabilityBaseline().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.LeftTubularReabsorptionFluidPermeabilityBaseline(), out.GetLeftTubularReabsorptionFluidPermeabilityBaseline());
+    if (in.LeftTubularReabsorptionFilteringSurfaceAreaBaseline().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.LeftTubularReabsorptionFilteringSurfaceAreaBaseline(), out.GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline());
 
-    io::Property::UnMarshall(in.PlasmaSodiumConcentrationSetPoint(), out.GetPlasmaSodiumConcentrationSetPoint());
+    if (in.MaximumAfferentResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.MaximumAfferentResistance(), out.GetMaximumAfferentResistance());
+    if (in.MinimumAfferentResistance().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.MinimumAfferentResistance(), out.GetMinimumAfferentResistance());
 
-    io::Property::UnMarshall(in.LeftGlomerularFluidPermeabilityBaseline(), out.GetLeftGlomerularFluidPermeabilityBaseline());
-    io::Property::UnMarshall(in.LeftGlomerularFilteringSurfaceAreaBaseline(), out.GetLeftGlomerularFilteringSurfaceAreaBaseline());
-    io::Property::UnMarshall(in.LeftTubularReabsorptionFluidPermeabilityBaseline(), out.GetLeftTubularReabsorptionFluidPermeabilityBaseline());
-    io::Property::UnMarshall(in.LeftTubularReabsorptionFilteringSurfaceAreaBaseline(), out.GetLeftTubularReabsorptionFilteringSurfaceAreaBaseline());
-
-    io::Property::UnMarshall(in.MaximumAfferentResistance(), out.GetMaximumAfferentResistance());
-    io::Property::UnMarshall(in.MinimumAfferentResistance(), out.GetMinimumAfferentResistance());
-
-    io::Property::UnMarshall(in.RightGlomerularFluidPermeabilityBaseline(), out.GetRightGlomerularFluidPermeabilityBaseline());
-    io::Property::UnMarshall(in.RightGlomerularFilteringSurfaceAreaBaseline(), out.GetRightGlomerularFilteringSurfaceAreaBaseline());
-    io::Property::UnMarshall(in.RightTubularReabsorptionFluidPermeabilityBaseline(), out.GetRightTubularReabsorptionFluidPermeabilityBaseline());
-    io::Property::UnMarshall(in.RightTubularReabsorptionFilteringSurfaceAreaBaseline(), out.GetRightTubularReabsorptionFilteringSurfaceAreaBaseline());
-    io::Property::UnMarshall(in.TargetSodiumDelivery(), out.GetTargetSodiumDelivery());
+    if (in.RightGlomerularFluidPermeabilityBaseline().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.RightGlomerularFluidPermeabilityBaseline(), out.GetRightGlomerularFluidPermeabilityBaseline());
+    if (in.RightGlomerularFilteringSurfaceAreaBaseline().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.RightGlomerularFilteringSurfaceAreaBaseline(), out.GetRightGlomerularFilteringSurfaceAreaBaseline());
+    if (in.RightTubularReabsorptionFluidPermeabilityBaseline().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.RightTubularReabsorptionFluidPermeabilityBaseline(), out.GetRightTubularReabsorptionFluidPermeabilityBaseline());
+    if (in.RightTubularReabsorptionFilteringSurfaceAreaBaseline().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.RightTubularReabsorptionFilteringSurfaceAreaBaseline(), out.GetRightTubularReabsorptionFilteringSurfaceAreaBaseline());
+    if (in.TargetSodiumDelivery().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.TargetSodiumDelivery(), out.GetTargetSodiumDelivery());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::RenalConfigurationData& out)
   {
@@ -266,9 +321,12 @@ namespace io {
   {
 
     // Respiratory
-    io::Property::UnMarshall(in.PleuralComplianceSensitivity(), out.GetPleuralComplianceSensitivity());
-    io::Property::UnMarshall(in.PulmonaryVentilationRateMaximum(), out.GetPulmonaryVentilationRateMaximum());
-    io::Property::UnMarshall(in.VentilatoryOcclusionPressure(), out.GetVentilatoryOcclusionPressure());
+    if (in.PleuralComplianceSensitivity().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.PleuralComplianceSensitivity(), out.GetPleuralComplianceSensitivity());
+    if (in.PulmonaryVentilationRateMaximum().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.PulmonaryVentilationRateMaximum(), out.GetPulmonaryVentilationRateMaximum());
+    if (in.VentilatoryOcclusionPressure().present() || !out.m_Merge)
+      io::Property::UnMarshall(in.VentilatoryOcclusionPressure(), out.GetVentilatoryOcclusionPressure());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::RespiratoryConfigurationData& out)
   {
@@ -282,7 +340,7 @@ namespace io {
   {
 
     // Tissue
-    if (in.EnableTissue().present())
+    if (in.EnableTissue().present() || !out.m_Merge)
       io::Property::UnMarshall(in.EnableTissue().get(), out.m_TissueEnabled);
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::TissueConfigurationData& out)

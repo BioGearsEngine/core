@@ -34,12 +34,6 @@ public:
 
   virtual void Clear(); // clear memory
 
-  virtual bool Load(const CDM::CircuitManagerData& in);
-  virtual CDM::CircuitManagerData* Unload() const;
-
-protected:
-  void Unload(CDM::CircuitManagerData& data) const;
-
 public:
   void SetReadOnly(bool b);
 

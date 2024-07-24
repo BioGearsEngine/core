@@ -44,12 +44,6 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::CompartmentData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::CompartmentData* Unload() = 0;
-
-protected:
-  virtual void Unload(CDM::CompartmentData& data);
-
 public:
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;

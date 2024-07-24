@@ -45,8 +45,6 @@ public:
   SEScalarAmountPerVolume();
   virtual ~SEScalarAmountPerVolume();
 
-  CDM::ScalarAmountPerVolumeData* Unload() const override;   
-
   using SEScalarQuantity<AmountPerVolumeUnit>::SetValue;
   using SEScalarQuantity<AmountPerVolumeUnit>::GetValue;
 };

@@ -7,6 +7,7 @@
 
 #include <biogears/cdm/properties/SEProperties.h>
 
+#include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
@@ -413,6 +414,54 @@ namespace io {
     CDM_OPTIONAL_PATIENT_NUTRITION_MARSHALL_HELPER(in, out, StomachContents)
   }
   //----------------------------------------------------------------------------------
+  // class SEDrugTransitState
+  void Physiology::UnMarshall(const CDM::DrugTransitStateData& in, SEDrugTransitState& out) {
+    out.m_LumenDissolvedMasses.clear();
+    SEScalarMass mass;
+    for (auto disMass : in.LumenDissolvedMasses()) {
+      io::Property::UnMarshall(disMass, mass);
+      out.m_LumenDissolvedMasses.push_back(mass);
+    }
+    out.m_LumenSolidMasses.clear();
+    for (auto solMass : in.LumenSolidMasses()) {
+      io::Property::UnMarshall(solMass, mass);
+      out.m_LumenSolidMasses.push_back(mass);
+    }
+    out.m_EnterocyteMasses.clear();
+    for (auto entMass : in.EnterocyteMasses()) {
+      io::Property::UnMarshall(entMass, mass);
+      out.m_EnterocyteMasses.push_back(mass);
+    }
+    io::Property::UnMarshall(in.MassExcreted(), out.GetTotalMassExcreted());
+    io::Property::UnMarshall(in.MassMetabolized(), out.GetTotalMassMetabolized());
+  
+  }
+
+  void Physiology::Marshall(const SEDrugTransitState& in, CDM::DrugTransitStateData& out) {
+    for (auto tdMass : in.m_LumenDissolvedMasses) {
+      out.LumenDissolvedMasses().push_back(std::unique_ptr<CDM::ScalarMassData>());
+      io::Property::Marshall(tdMass, out.LumenDissolvedMasses().back());
+    }
+    for (auto tsMass : in.m_LumenSolidMasses) {
+      out.LumenSolidMasses().push_back(std::unique_ptr<CDM::ScalarMassData>());
+      io::Property::Marshall(tsMass, out.LumenSolidMasses().back());
+    }
+    for (auto eMass : in.m_EnterocyteMasses) {
+      out.EnterocyteMasses().push_back(std::unique_ptr<CDM::ScalarMassData>());
+      io::Property::Marshall(eMass, out.EnterocyteMasses().back());
+    }
+    if (in.m_TotalMassMetabolized && in.m_TotalMassMetabolized->IsValid()) {
+      out.MassMetabolized(std::make_unique<std::remove_reference<decltype(out.MassMetabolized())>::type>());
+      io::Property::Marshall(*in.m_TotalMassMetabolized, out.MassMetabolized());
+    }
+    if (in.m_TotalMassExcreted && in.m_TotalMassExcreted->IsValid()) {
+      out.MassExcreted(std::make_unique<std::remove_reference<decltype(out.MassExcreted())>::type>());
+      io::Property::Marshall(*in.m_TotalMassMetabolized, out.MassExcreted());
+    }
+
+    out.Substance(in.m_Substance->GetName());
+  }
+  //----------------------------------------------------------------------------------
   // class SEHepaticSystem
   void Physiology::UnMarshall(const CDM::HepaticSystemData& in, SEHepaticSystem& out)
   {
@@ -733,7 +782,6 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StoredFat)
   }
   //----------------------------------------------------------------------------------
-
   // SEInflammationSource
   void Physiology::UnMarshall(const CDM::enumInflammationSource& in, SEInflammationSource& out)
   {
@@ -779,6 +827,7 @@ namespace io {
       break;
     }
   }
+  //----------------------------------------------------------------------------------
   // SEHeartRhythm
   void Physiology::UnMarshall(const CDM::enumHeartRhythm& in, SEHeartRhythm& out)
   {
@@ -812,6 +861,7 @@ namespace io {
       break;
     }
   }
+  //----------------------------------------------------------------------------------
   // SESleepState
   void Physiology::UnMarshall(const CDM::enumSleepState& in, SESleepState& out)
   {
@@ -845,6 +895,7 @@ namespace io {
       break;
     }
   }
+  //----------------------------------------------------------------------------------
 }
 
 bool operator==(CDM::enumInflammationSource const& lhs, SEInflammationSource const& rhs)

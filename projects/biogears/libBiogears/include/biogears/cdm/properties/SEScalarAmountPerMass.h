@@ -45,7 +45,5 @@ public:
   using SEScalarQuantity<AmountPerMassUnit>::SetValue;
   using SEScalarQuantity<AmountPerMassUnit>::GetValue;
 
-  CDM::ScalarAmountPerMassData* Unload() const override;    
-
 };
 }

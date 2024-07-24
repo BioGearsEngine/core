@@ -11,10 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGearsCompartments.h>
 
-//Standard Includes
+#include "io/cdm/Compartment.h"
+
+// Standard Includes
 #include <string>
 #include <vector>
-//Project Includes
+// Project Includes
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
@@ -88,8 +90,7 @@ void BioGearsCompartments::Clear()
 
 bool BioGearsCompartments::Load(const CDM::CompartmentManagerData& in, SECircuitManager* circuits)
 {
-  if (!SECompartmentManager::Load(in, circuits))
-    return false;
+  io::Compartment::UnMarshall(in, *this, circuits);
 
   m_CombinedCardiovascularGraph = GetLiquidGraph(BGE::Graph::ActiveCardiovascular);
   if (m_CombinedCardiovascularGraph == nullptr) {
@@ -187,19 +188,19 @@ void BioGearsCompartments::StateChange()
     m_ExtracellularFluid.clear();
     m_IntracellularFluid.clear();
     for (SETissueCompartment* t : m_TissueLeafCompartments) {
-      cmpt = GetLiquidCompartment(std::string{ t->GetName() } + "Extracellular");
+      cmpt = GetLiquidCompartment(std::string { t->GetName() } + "Extracellular");
       if (cmpt == nullptr)
-        Fatal(std::string{ "Could not find the tissue " } + t->GetName() + " Extracellular compartment");
+        Fatal(std::string { "Could not find the tissue " } + t->GetName() + " Extracellular compartment");
       m_ExtracellularFluid[t] = cmpt;
-      cmpt = GetLiquidCompartment(std::string{ t->GetName() } + "Intracellular");
+      cmpt = GetLiquidCompartment(std::string { t->GetName() } + "Intracellular");
       if (cmpt == nullptr)
-        Fatal(std::string{ "Could not find the tissue " } + t->GetName() + " Intracellular compartment");
+        Fatal(std::string { "Could not find the tissue " } + t->GetName() + " Intracellular compartment");
       m_IntracellularFluid[t] = cmpt;
     }
   }
   if (m_data.GetConfiguration().IsRenalEnabled()) {
     SORT_CMPTS(Urine, Liquid);
-  } 
+  }
   SORT_CMPTS(Vascular, Liquid);
   // Equipment
   SORT_CMPTS(AnesthesiaMachine, Gas);

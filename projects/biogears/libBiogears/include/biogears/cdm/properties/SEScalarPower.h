@@ -45,8 +45,6 @@ public:
   SEScalarPower();
   virtual ~SEScalarPower();
 
-  CDM::ScalarPowerData* Unload() const override;
-
   using SEScalarQuantity<PowerUnit>::SetValue;
   using SEScalarQuantity<PowerUnit>::GetValue;
 

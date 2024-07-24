@@ -45,8 +45,6 @@ public:
   SEScalarLength();
   virtual ~SEScalarLength();
 
-  CDM::ScalarLengthData* Unload() const override;
-
   using SEScalarQuantity<LengthUnit>::SetValue;
   using SEScalarQuantity<LengthUnit>::GetValue;
 };

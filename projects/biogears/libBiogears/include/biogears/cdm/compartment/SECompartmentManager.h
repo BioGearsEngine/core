@@ -67,12 +67,6 @@ public:
 
   virtual void Clear(); // clear memory
 
-  virtual bool Load(const CDM::CompartmentManagerData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::CompartmentManagerData* Unload() const;
-
-protected:
-  void Unload(CDM::CompartmentManagerData& data) const;
-
 public:
   virtual void StateChange(); // Identify leaves and other bookkeeping
   virtual void UpdateLinks();

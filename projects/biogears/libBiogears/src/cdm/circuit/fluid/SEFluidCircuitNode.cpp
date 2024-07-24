@@ -35,24 +35,6 @@ void SEFluidCircuitNode::Clear()
   SECircuitNode::Clear();
 }
 //-----------------------------------------------------------------------------
-bool SEFluidCircuitNode::Load(const CDM::FluidCircuitNodeData& in)
-{
-  io::Circuit::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::FluidCircuitNodeData* SEFluidCircuitNode::Unload() const
-{
-  CDM::FluidCircuitNodeData* data = new CDM::FluidCircuitNodeData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEFluidCircuitNode::Unload(CDM::FluidCircuitNodeData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SEFluidCircuitNode::HasPressure() const
 {
   return HasPotential();

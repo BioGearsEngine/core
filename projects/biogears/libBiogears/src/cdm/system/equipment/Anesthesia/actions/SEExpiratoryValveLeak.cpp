@@ -45,7 +45,7 @@ bool SEExpiratoryValveLeak::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEExpiratoryValveLeak::Load(const CDM::ExpiratoryValveLeakData& in, std::default_random_engine *rd)
+bool SEExpiratoryValveLeak::Load(const CDM::ExpiratoryValveLeakData& in, std::default_random_engine* rd)
 {
   io::AnesthesiaActions::UnMarshall(in, *this, rd);
   return true;
@@ -60,9 +60,7 @@ CDM::ExpiratoryValveLeakData* SEExpiratoryValveLeak::Unload() const
 //-------------------------------------------------------------------------------
 void SEExpiratoryValveLeak::Unload(CDM::ExpiratoryValveLeakData& data) const
 {
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
+  io::AnesthesiaActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEExpiratoryValveLeak::HasSeverity() const

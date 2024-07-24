@@ -41,12 +41,6 @@ public:
 
   virtual void Clear() override; //clear memory
 
-  bool Load(const CDM::ThermalCircuitPathData& in);
-  CDM::ThermalCircuitPathData* Unload() const override;
-
-protected:
-  void Unload(CDM::ThermalCircuitPathData& data) const;
-
 public:
   virtual SEThermalCircuitNode& GetSourceNode() const override { return m_ThermalSourceNode; }
   virtual SEThermalCircuitNode& GetTargetNode() const override { return m_ThermalTargetNode; }

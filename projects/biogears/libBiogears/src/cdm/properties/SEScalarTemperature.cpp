@@ -35,15 +35,7 @@ TemperatureUnit::TemperatureUnit(const std::string& u)
   : CCompoundUnit(u)
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarTemperatureData* SEScalarTemperature::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarTemperatureData* data(new CDM::ScalarTemperatureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool TemperatureUnit::IsValidUnit(const char* unit)
 {

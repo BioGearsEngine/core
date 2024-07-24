@@ -34,12 +34,6 @@ public:
 
   virtual void Clear(); //clear memory
 
-  virtual bool Load(const CDM::ElectricalCircuitNodeData& in);
-  virtual CDM::ElectricalCircuitNodeData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::ElectricalCircuitNodeData& data) const;
-
 public:
   virtual bool HasVoltage() const;
   virtual SEScalarElectricPotential& GetVoltage();

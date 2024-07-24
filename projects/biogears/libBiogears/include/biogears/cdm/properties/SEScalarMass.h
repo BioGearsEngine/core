@@ -44,8 +44,6 @@ public:
   SEScalarMass( double value, MassUnit const& unit);
   virtual ~SEScalarMass();
 
-  CDM::ScalarMassData* Unload() const override;
-
   using SEScalarQuantity<MassUnit>::SetValue;
   using SEScalarQuantity<MassUnit>::GetValue;
 };

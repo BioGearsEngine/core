@@ -51,25 +51,6 @@ bool SEHistogramFractionVsLength::IsVaild() const
   return true;
 }
 
-bool SEHistogramFractionVsLength::Load(const CDM::HistogramFractionVsLengthData& in)
-{
-  io::Property::UnMarshall(in, *this);
-  return IsValid();
-}
-
-CDM::HistogramFractionVsLengthData* SEHistogramFractionVsLength::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::HistogramFractionVsLengthData* data(new CDM::HistogramFractionVsLengthData());
-  Unload(*data);
-  return data;
-}
-
-void SEHistogramFractionVsLength::Unload(CDM::HistogramFractionVsLengthData& data) const
-{
-  io::Property::Marshall(*this, data);  
-}
 
 double SEHistogramFractionVsLength::GetLengthValue(unsigned int index, const LengthUnit& unit) const
 {

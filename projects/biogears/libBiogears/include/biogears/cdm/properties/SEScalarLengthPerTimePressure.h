@@ -43,8 +43,6 @@ public:
   SEScalarLengthPerTimePressure();
   virtual ~SEScalarLengthPerTimePressure();
 
-  CDM::ScalarLengthPerTimePressureData* Unload() const override;
-
   using SEScalarQuantity<LengthPerTimePressureUnit>::SetValue;
   using SEScalarQuantity<LengthPerTimePressureUnit>::GetValue;
 };

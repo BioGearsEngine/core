@@ -41,15 +41,7 @@ SEScalarMassPerAreaTime::SEScalarMassPerAreaTime()
 SEScalarMassPerAreaTime::~SEScalarMassPerAreaTime()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerAreaTimeData* SEScalarMassPerAreaTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerAreaTimeData* data(new CDM::ScalarMassPerAreaTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool MassPerAreaTimeUnit::IsValidUnit(const char* unit)
 {

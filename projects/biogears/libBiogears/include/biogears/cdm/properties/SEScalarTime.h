@@ -44,8 +44,6 @@ public:
   SEScalarTime();
   virtual ~SEScalarTime();
 
-  CDM::ScalarTimeData* Unload() const override; 
-
   using SEScalarQuantity<TimeUnit>::SetValue;
   using SEScalarQuantity<TimeUnit>::GetValue;
 };

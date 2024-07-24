@@ -28,12 +28,6 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::FunctionVolumeVsTimeData& in);
-  virtual CDM::FunctionVolumeVsTimeData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::FunctionVolumeVsTimeData& data) const;
-
 public:
   double GetIndependentValue(unsigned int index) = delete;
   virtual double GetTimeValue(unsigned int index, const TimeUnit& unit);

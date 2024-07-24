@@ -47,8 +47,6 @@ public:
   SEScalarMassPerTime();
   virtual ~SEScalarMassPerTime();
 
-  CDM::ScalarMassPerTimeData* Unload() const override;
-
   using SEScalarQuantity<MassPerTimeUnit>::SetValue;
   using SEScalarQuantity<MassPerTimeUnit>::GetValue;
 };

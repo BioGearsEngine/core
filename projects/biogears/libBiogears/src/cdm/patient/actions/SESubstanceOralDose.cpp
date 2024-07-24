@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 
 #include "io/cdm/PatientActions.h"
+
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -48,7 +49,7 @@ bool SESubstanceOralDose::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine *rd)
+bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine* rd)
 {
   io::PatientActions::UnMarshall(in, *this, rd);
   return true;
@@ -126,8 +127,8 @@ bool SESubstanceOralDose::operator!=(const SESubstanceOralDose& rhs) const
 // Oral Transmucosal State methods
 SETransmucosalState::SETransmucosalState(const SESubstance& sub)
   : m_Substance(&sub)
-  ,m_NumBuccalRegions(7) // Hard-coded for current model implementation!
-  ,m_NumSublingualRegions(7) // Hard-coded for current model implementation!
+  , m_NumBuccalRegions(7) // Hard-coded for current model implementation!
+  , m_NumSublingualRegions(7) // Hard-coded for current model implementation!
 {
   m_MouthSolidMass = nullptr;
   m_SalivaConcentration = nullptr;
@@ -157,23 +158,9 @@ bool SETransmucosalState::Initialize(SEScalarMass& dose)
   return (bucSet && subSet);
 }
 //-------------------------------------------------------------------------------
-bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in, std::default_random_engine *rd)
+bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in, std::default_random_engine* rd)
 {
-
-  GetMouthSolidMass().Load(in.MouthSolidMass());
-  GetSalivaConcentration().Load(in.SalivaConcentration());
-  m_BuccalConcentrations.clear();
-  for (auto brData : in.BuccalConcentrations()) {
-    SEScalarMassPerVolume buc;
-    buc.Load(brData, rd);
-    m_BuccalConcentrations.push_back(buc);
-  }
-  m_SublingualConcentrations.clear();
-  for (auto slData : in.SublingualConcentrations()) {
-    SEScalarMassPerVolume sl;
-    sl.Load(slData, rd);
-    m_SublingualConcentrations.push_back(sl);
-  }
+  io::PatientActions::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -186,15 +173,7 @@ CDM::TransmucosalStateData* SETransmucosalState::Unload() const
 //-------------------------------------------------------------------------------
 void SETransmucosalState::Unload(CDM::TransmucosalStateData& data) const
 {
-  data.MouthSolidMass(std::unique_ptr<CDM::ScalarMassData>(m_MouthSolidMass->Unload()));
-  data.SalivaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_SalivaConcentration->Unload()));
-  for (auto bcData : m_BuccalConcentrations) {
-    data.BuccalConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(bcData.Unload()));
-  }
-  for (auto slData : m_SublingualConcentrations) {
-    data.SublingualConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(slData.Unload()));
-  }
-  data.Substance(m_Substance->GetName());
+  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 SEScalarMass& SETransmucosalState::GetMouthSolidMass()

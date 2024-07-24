@@ -40,8 +40,6 @@ public:
   SEScalarElectricResistance();
   virtual ~SEScalarElectricResistance();
 
-  CDM::ScalarElectricResistanceData* Unload() const override;
-
   using SEScalarQuantity<ElectricResistanceUnit>::SetValue;
   using SEScalarQuantity<ElectricResistanceUnit>::GetValue;
 

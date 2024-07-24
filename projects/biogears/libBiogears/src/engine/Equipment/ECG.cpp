@@ -11,15 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGears.h>
 
-#include <biogears/engine/Equipment/ECG.h>
-#include <biogears/engine/Systems/Cardiovascular.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
+#include <biogears/engine/Equipment/ECG.h>
+#include <biogears/engine/Systems/Cardiovascular.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
@@ -74,10 +76,10 @@ void ECG::Initialize()
   m_HeartRhythmPeriod.SetValue(0, TimeUnit::s);
   CDM_COPY(m_data.GetConfiguration().GetECGInterpolator(), (&m_Waveforms));
   // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
-  /* Code to write out the ECG data in a format easy to view in plotting tools 
+  /* Code to write out the ECG data in a format easy to view in plotting tools
   std::vector<double> original_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
   std::vector<double> original_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
-  DataTrack Original;  
+  DataTrack Original;
   for (size_t i = 0; i < original_s.size(); i++)
     Original.Track("Original_ECG",original_s[i], original_mV[i]);
   Original.WriteTrackToFile("OriginalECG.csv");
@@ -99,8 +101,8 @@ bool ECG::Load(const CDM::BioGearsElectroCardioGramData& in)
   if (!SEElectroCardioGram::Load(in))
     return false;
   BioGearsSystem::LoadState();
-  m_HeartRhythmTime.Load(in.HeartRythmTime());
-  m_HeartRhythmPeriod.Load(in.HeartRythmPeriod());
+  io::Property::UnMarshall(in.HeartRythmTime(), m_HeartRhythmTime);
+  io::Property::UnMarshall(in.HeartRythmPeriod(), m_HeartRhythmPeriod);
   m_Waveforms.Load(in.Waveforms());
   m_Waveforms.SetLeadElectricPotential(3, GetLead3ElectricPotential());
   return true;
@@ -114,8 +116,16 @@ CDM::BioGearsElectroCardioGramData* ECG::Unload() const
 void ECG::Unload(CDM::BioGearsElectroCardioGramData& data) const
 {
   SEElectroCardioGram::Unload(data);
-  data.HeartRythmTime(std::unique_ptr<CDM::ScalarTimeData>(m_HeartRhythmTime.Unload()));
-  data.HeartRythmPeriod(std::unique_ptr<CDM::ScalarTimeData>(m_HeartRhythmPeriod.Unload()));
+
+  if (this->m_HeartRhythmTime.IsValid()) {
+    data.HeartRythmTime(std::make_unique<std::remove_reference<decltype(data.HeartRythmTime())>::type>());
+    io::Property::Marshall(this->m_HeartRhythmTime, data.HeartRythmTime());
+  }
+  if (this->m_HeartRhythmPeriod.IsValid()) {
+    data.HeartRythmPeriod(std::make_unique<std::remove_reference<decltype(data.HeartRythmPeriod())>::type>());
+    io::Property::Marshall(this->m_HeartRhythmPeriod, data.HeartRythmPeriod());
+  }
+
   data.Waveforms(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(m_Waveforms.Unload()));
 }
 

@@ -43,8 +43,6 @@ public:
   SEScalarHeatCapacitancePerMass();
   virtual ~SEScalarHeatCapacitancePerMass();
 
-  CDM::ScalarHeatCapacitancePerMassData* Unload() const override;
-
   using SEScalarQuantity<HeatCapacitancePerMassUnit>::SetValue;
   using SEScalarQuantity<HeatCapacitancePerMassUnit>::GetValue;
 

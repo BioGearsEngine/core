@@ -44,8 +44,6 @@ public:
   SEScalarPressure();
   virtual ~SEScalarPressure();
 
-  CDM::ScalarPressureData* Unload() const override;
-
   using SEScalarQuantity<PressureUnit>::SetValue;
   using SEScalarQuantity<PressureUnit>::GetValue;
 };

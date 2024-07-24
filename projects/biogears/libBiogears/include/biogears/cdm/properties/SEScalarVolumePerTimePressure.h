@@ -43,8 +43,6 @@ public:
   SEScalarVolumePerTimePressure();
   virtual ~SEScalarVolumePerTimePressure();
 
-  CDM::ScalarVolumePerTimePressureData* Unload() const override;
-
   using SEScalarQuantity<VolumePerTimePressureUnit>::SetValue;
   using SEScalarQuantity<VolumePerTimePressureUnit>::GetValue;
 

@@ -41,8 +41,6 @@ public:
   SEScalarPressurePerVolume();
   virtual ~SEScalarPressurePerVolume();
 
-  CDM::ScalarPressurePerVolumeData* Unload() const override;
-
   using SEScalarQuantity<PressurePerVolumeUnit>::SetValue;
   using SEScalarQuantity<PressurePerVolumeUnit>::GetValue;
 };

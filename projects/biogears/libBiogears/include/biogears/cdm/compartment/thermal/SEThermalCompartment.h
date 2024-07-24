@@ -46,14 +46,8 @@ public:
 
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::ThermalCompartmentData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::ThermalCompartmentData* Unload() override;
-
   bool operator==(SEThermalCompartment const&) const;
   bool operator!=(SEThermalCompartment const&) const;
-
-protected:
-  virtual void Unload(CDM::ThermalCompartmentData& data);
 
 public:
   virtual const SEScalar* GetScalar(const std::string& name) override;

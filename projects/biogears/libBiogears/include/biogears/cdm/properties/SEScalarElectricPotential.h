@@ -41,8 +41,6 @@ public:
   using SEScalarQuantity::SEScalarQuantity;
   virtual ~SEScalarElectricPotential();
 
-  CDM::ScalarElectricPotentialData* Unload() const override;
-
   using SEScalarQuantity<ElectricPotentialUnit>::SetValue;
   using SEScalarQuantity<ElectricPotentialUnit>::GetValue;
 };

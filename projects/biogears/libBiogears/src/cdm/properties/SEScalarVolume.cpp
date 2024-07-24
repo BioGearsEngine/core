@@ -45,15 +45,7 @@ SEScalarVolume::SEScalarVolume()
 SEScalarVolume::~SEScalarVolume()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarVolumeData* SEScalarVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarVolumeData* data(new CDM::ScalarVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool VolumeUnit::IsValidUnit(const char* unit)
 {

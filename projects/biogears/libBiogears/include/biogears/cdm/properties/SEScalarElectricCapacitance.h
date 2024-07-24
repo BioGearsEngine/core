@@ -40,8 +40,6 @@ public:
   SEScalarElectricCapacitance();
   virtual ~SEScalarElectricCapacitance();
 
-  CDM::ScalarElectricCapacitanceData* Unload() const override;
-
   using SEScalarQuantity<ElectricCapacitanceUnit>::SetValue;
   using SEScalarQuantity<ElectricCapacitanceUnit>::GetValue;
 };

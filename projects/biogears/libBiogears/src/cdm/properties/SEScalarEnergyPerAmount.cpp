@@ -42,15 +42,7 @@ SEScalarEnergyPerAmount::SEScalarEnergyPerAmount()
 SEScalarEnergyPerAmount::~SEScalarEnergyPerAmount()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarEnergyPerAmountData* SEScalarEnergyPerAmount::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarEnergyPerAmountData* data(new CDM::ScalarEnergyPerAmountData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool EnergyPerAmountUnit::IsValidUnit(const char* unit)
 {

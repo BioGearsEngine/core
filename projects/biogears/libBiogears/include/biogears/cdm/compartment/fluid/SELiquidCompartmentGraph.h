@@ -52,11 +52,6 @@ public:
 
   void AddGraph(SELiquidCompartmentGraph& graph);
 
-  virtual bool Load(const CDM::LiquidCompartmentGraphData& in, SECompartmentManager& cmptMgr);
-  virtual CDM::LiquidCompartmentGraphData* Unload();
-
-protected:
-  virtual void Unload(CDM::LiquidCompartmentGraphData& data);
 
 protected:
   void BalanceByIntensive() override;

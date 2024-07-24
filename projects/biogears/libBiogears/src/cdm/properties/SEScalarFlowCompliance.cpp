@@ -44,15 +44,7 @@ SEScalarFlowCompliance::SEScalarFlowCompliance()
 SEScalarFlowCompliance::~SEScalarFlowCompliance()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarFlowComplianceData* SEScalarFlowCompliance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarFlowComplianceData* data(new CDM::ScalarFlowComplianceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool FlowComplianceUnit::IsValidUnit(const char* unit)
 {

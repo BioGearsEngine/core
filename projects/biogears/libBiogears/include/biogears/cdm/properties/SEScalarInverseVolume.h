@@ -40,7 +40,5 @@ class BIOGEARS_API SEScalarInverseVolume : public SEScalarQuantity<InverseVolume
 public:
   SEScalarInverseVolume();
   virtual ~SEScalarInverseVolume();
-
-  CDM::ScalarInverseVolumeData* Unload() const override;
 };
 }

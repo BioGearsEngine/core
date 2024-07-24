@@ -41,8 +41,6 @@ public:
   SEScalarOsmolality();
   virtual ~SEScalarOsmolality();
 
-  CDM::ScalarOsmolalityData* Unload() const override;
-
   using SEScalarQuantity<OsmolalityUnit>::SetValue;
   using SEScalarQuantity<OsmolalityUnit>::GetValue;
 

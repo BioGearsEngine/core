@@ -45,15 +45,7 @@ namespace biogears
   SEScalarVolumePerTimePressure::~SEScalarVolumePerTimePressure()
   {
   }
-  //-------------------------------------------------------------------------------
-  CDM::ScalarVolumePerTimePressureData* SEScalarVolumePerTimePressure::Unload() const
-  {
-    if (!IsValid())
-      return nullptr;
-    CDM::ScalarVolumePerTimePressureData* data(new CDM::ScalarVolumePerTimePressureData());
-    SEScalarQuantity::Unload(*data);
-    return data;
-  }
+
   //-------------------------------------------------------------------------------
   bool VolumePerTimePressureUnit::IsValidUnit(const char* unit)
   {

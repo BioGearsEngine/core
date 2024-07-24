@@ -42,9 +42,6 @@ protected:
   SEThermalCircuit(const char* name, SECircuitManager& mgr);
   SEThermalCircuit(const std::string& name, SECircuitManager& mgr);
 
-  void Unload(CDM::ThermalCircuitData& data) const override;
-  bool Load(const CDM::ThermalCircuitData& in, SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit> const& ledger);
-
 public:
   virtual ~SEThermalCircuit() override;
 

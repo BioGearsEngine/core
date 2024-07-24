@@ -203,26 +203,7 @@ void SEDrugTransitState::Clear()
 //-------------------------------------------------------------------------------
 bool SEDrugTransitState::Load(const CDM::DrugTransitStateData& in)
 {
-  m_LumenDissolvedMasses.clear();
-  for (auto disMass : in.LumenDissolvedMasses()) {
-    SEScalarMass dMass;
-    dMass.Load(disMass);
-    m_LumenDissolvedMasses.push_back(dMass);
-  }
-  m_LumenSolidMasses.clear();
-  for (auto solMass : in.LumenSolidMasses()) {
-    SEScalarMass sMass;
-    sMass.Load(solMass);
-    m_LumenSolidMasses.push_back(sMass);
-  }
-  m_EnterocyteMasses.clear();
-  for (auto entMass : in.EnterocyteMasses()) {
-    SEScalarMass eMass;
-    eMass.Load(entMass);
-    m_EnterocyteMasses.push_back(eMass);
-  }
-  GetTotalMassExcreted().Load(in.MassExcreted());
-  GetTotalMassMetabolized().Load(in.MassMetabolized());
+  io::Physiology::UnMarshall(in, *this);
   return true;
 }
 CDM::DrugTransitStateData* SEDrugTransitState::Unload() const
@@ -234,18 +215,7 @@ CDM::DrugTransitStateData* SEDrugTransitState::Unload() const
 //-------------------------------------------------------------------------------
 void SEDrugTransitState::Unload(CDM::DrugTransitStateData& data) const
 {
-  for (auto tdMass : m_LumenDissolvedMasses) {
-    data.LumenDissolvedMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(tdMass.Unload()));
-  }
-  for (auto tsMass : m_LumenSolidMasses) {
-    data.LumenSolidMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(tsMass.Unload()));
-  }
-  for (auto eMass : m_EnterocyteMasses) {
-    data.EnterocyteMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(eMass.Unload()));
-  }
-  data.MassMetabolized(std::unique_ptr<CDM::ScalarMassData>(m_TotalMassMetabolized->Unload()));
-  data.MassExcreted(std::unique_ptr<CDM::ScalarMassData>(m_TotalMassExcreted->Unload()));
-  data.Substance(m_Substance->GetName());
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEDrugTransitState::Initialize(SEScalarMass& dose, SEOralAdministrationType route)

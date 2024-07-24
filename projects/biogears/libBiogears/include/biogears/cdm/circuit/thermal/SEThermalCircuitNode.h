@@ -33,12 +33,6 @@ public:
 
   virtual void Clear(); //clear memory
 
-  virtual bool Load(const CDM::ThermalCircuitNodeData& in);
-  virtual CDM::ThermalCircuitNodeData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::ThermalCircuitNodeData& data) const;
-
 public:
   virtual bool HasTemperature() const;
   virtual SEScalarTemperature& GetTemperature();

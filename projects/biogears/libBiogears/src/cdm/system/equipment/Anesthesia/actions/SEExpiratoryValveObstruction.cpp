@@ -60,9 +60,7 @@ CDM::ExpiratoryValveObstructionData* SEExpiratoryValveObstruction::Unload() cons
 //-------------------------------------------------------------------------------
 void SEExpiratoryValveObstruction::Unload(CDM::ExpiratoryValveObstructionData& data) const
 {
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
+  io::AnesthesiaActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEExpiratoryValveObstruction::HasSeverity() const

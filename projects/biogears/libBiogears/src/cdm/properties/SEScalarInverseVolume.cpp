@@ -42,15 +42,7 @@ SEScalarInverseVolume::SEScalarInverseVolume()
 SEScalarInverseVolume::~SEScalarInverseVolume()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarInverseVolumeData* SEScalarInverseVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarInverseVolumeData* data(new CDM::ScalarInverseVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool InverseVolumeUnit::IsValidUnit(const char* unit)
 {

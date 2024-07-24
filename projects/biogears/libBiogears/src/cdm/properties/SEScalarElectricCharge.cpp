@@ -30,30 +30,22 @@ ElectricChargeUnit::ElectricChargeUnit(const std::string& u)
 {
 }
 //-----------------------------------------------------------------------------
-ElectricChargeUnit::~ElectricChargeUnit(){
-
-}
-//-----------------------------------------------------------------------------
-SEScalarElectricCharge::SEScalarElectricCharge(){
-
-}
-//-----------------------------------------------------------------------------
-SEScalarElectricCharge::~SEScalarElectricCharge(){
-
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarElectricChargeData* SEScalarElectricCharge::Unload() const
+ElectricChargeUnit::~ElectricChargeUnit()
 {
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricChargeData* data(new CDM::ScalarElectricChargeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
+//-----------------------------------------------------------------------------
+SEScalarElectricCharge::SEScalarElectricCharge()
+{
+}
+//-----------------------------------------------------------------------------
+SEScalarElectricCharge::~SEScalarElectricCharge()
+{
+}
+
 //-----------------------------------------------------------------------------
 bool ElectricChargeUnit::IsValidUnit(const char* unit)
 {
-  if (strcmp(C.GetString(),unit) == 0)
+  if (strcmp(C.GetString(), unit) == 0)
     return true;
   return false;
 }
@@ -65,7 +57,7 @@ bool ElectricChargeUnit::IsValidUnit(const std::string& unit)
 //-----------------------------------------------------------------------------
 const ElectricChargeUnit& ElectricChargeUnit::GetCompoundUnit(const char* unit)
 {
-  if (strcmp(C.GetString(),unit) == 0)
+  if (strcmp(C.GetString(), unit) == 0)
     return C;
   std::stringstream err;
   err << unit << " is not a valid ElectricCharge unit";

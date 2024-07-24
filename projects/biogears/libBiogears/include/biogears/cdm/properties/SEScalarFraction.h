@@ -26,8 +26,6 @@ public:
   bool operator==(const SEScalarFraction&) const;
   bool operator!=(const SEScalarFraction&) const;
 
-  CDM::ScalarFractionData* Unload() const;
-
   using SEScalar::GetValue;
   double GetValue(const NoUnit& unitless) const;
   using SEScalar::SetValue;

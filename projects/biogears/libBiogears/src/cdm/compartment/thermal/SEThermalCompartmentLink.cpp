@@ -34,24 +34,7 @@ SEThermalCompartmentLink::SEThermalCompartmentLink(SEThermalCompartment& src, SE
 SEThermalCompartmentLink::~SEThermalCompartmentLink()
 {
 }
-//-------------------------------------------------------------------------------
-bool SEThermalCompartmentLink::Load(const CDM::ThermalCompartmentLinkData& in, SECircuitManager* circuits)
-{
-  io::Compartment::UnMarshall(in, *this, circuits);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ThermalCompartmentLinkData* SEThermalCompartmentLink::Unload()
-{
-  CDM::ThermalCompartmentLinkData* data = new CDM::ThermalCompartmentLinkData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEThermalCompartmentLink::Unload(CDM::ThermalCompartmentLinkData& data)
-{
-  io::Compartment::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 void SEThermalCompartmentLink::Clear()
 {

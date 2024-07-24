@@ -49,6 +49,7 @@ class SEDrugSystem;
 class SEEndocrineSystem;
 class SEEnergySystem;
 class SEGastrointestinalSystem;
+class SEDrugTransitState;
 class SEHepaticSystem;
 class SENervousSystem;
 class SERenalSystem;
@@ -89,6 +90,9 @@ namespace io {
     // class SEGastrointestinalSystem
     static void UnMarshall(const CDM::GastrointestinalSystemData& in, SEGastrointestinalSystem& out);
     static void Marshall(const SEGastrointestinalSystem& in, CDM::GastrointestinalSystemData& out);
+    // class SEDrugTransitState
+    static void UnMarshall(const CDM::DrugTransitStateData& in, SEDrugTransitState& out);
+    static void Marshall(const SEDrugTransitState& in, CDM::DrugTransitStateData& out);
     // class SEHepaticSystem
     static void UnMarshall(const CDM::HepaticSystemData& in, SEHepaticSystem& out);
     static void Marshall(const SEHepaticSystem& in, CDM::HepaticSystemData& out);

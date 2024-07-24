@@ -44,15 +44,7 @@ SEScalarLengthPerTimePressure::SEScalarLengthPerTimePressure()
 SEScalarLengthPerTimePressure::~SEScalarLengthPerTimePressure()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarLengthPerTimePressureData* SEScalarLengthPerTimePressure::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarLengthPerTimePressureData* data(new CDM::ScalarLengthPerTimePressureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool LengthPerTimePressureUnit::IsValidUnit(const char* unit)
 {

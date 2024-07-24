@@ -28,11 +28,6 @@ public:
 
   virtual void Clear(); //clear memory
 
-  virtual bool Load(const CDM::HistogramData& in);
-  virtual CDM::HistogramData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::HistogramData& data) const;
 
 public:
   virtual bool IsValid() const;

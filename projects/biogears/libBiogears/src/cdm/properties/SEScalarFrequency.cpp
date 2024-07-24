@@ -44,15 +44,7 @@ SEScalarFrequency::SEScalarFrequency()
 SEScalarFrequency::~SEScalarFrequency()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarFrequencyData* SEScalarFrequency::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarFrequencyData* data(new CDM::ScalarFrequencyData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool FrequencyUnit::IsValidUnit(const char* unit)
 {

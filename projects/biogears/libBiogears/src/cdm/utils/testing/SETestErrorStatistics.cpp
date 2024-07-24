@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/utils/testing/SETestErrorStatistics.h>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEFunction.h>
 #include <biogears/schema/cdm/TestReport.hxx>
 
@@ -90,8 +92,9 @@ void SETestErrorStatistics::Unload(CDM::TestErrorStatisticsData& data) const
   data.PercentTolerance(m_PercentTolerance);
   if (!m_PropertyName.empty())
     data.PropertyName(m_PropertyName);
-  if (m_PercentToleranceVsNumErrors != nullptr) {
-    data.PercentToleranceVsNumErrors(std::unique_ptr<CDM::FunctionData>(m_PercentToleranceVsNumErrors->Unload()));
+  if (m_PercentToleranceVsNumErrors != nullptr && m_PercentToleranceVsNumErrors->IsValid()) {
+    data.PercentToleranceVsNumErrors(std::make_unique<CDM::FunctionData>());
+    io::Property::Marshall(*m_PercentToleranceVsNumErrors, data.PercentToleranceVsNumErrors());
   }
 }
 //-------------------------------------------------------------------------------

@@ -24,15 +24,5 @@ SESubstanceQuantity::SESubstanceQuantity(SESubstance& sub)
 SESubstanceQuantity::~SESubstanceQuantity()
 {
 }
-//-------------------------------------------------------------------------------
-bool SESubstanceQuantity::Load(const CDM::SubstanceQuantityData& in)
-{
-  io::SubstanceQuantity::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceQuantity::Unload(CDM::SubstanceQuantityData& data)
-{
-  io::SubstanceQuantity::Marshall(*this, data);
-}
+
 }

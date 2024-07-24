@@ -41,15 +41,7 @@ SEScalarElectricCurrent::SEScalarElectricCurrent()
 SEScalarElectricCurrent::~SEScalarElectricCurrent()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarElectricCurrentData* SEScalarElectricCurrent::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricCurrentData* data(new CDM::ScalarElectricCurrentData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool ElectricCurrentUnit::IsValidUnit(const char* unit)
 {

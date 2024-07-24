@@ -42,15 +42,7 @@ SEScalarPressureTimePerArea::SEScalarPressureTimePerArea()
 SEScalarPressureTimePerArea::~SEScalarPressureTimePerArea()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarPressureTimePerAreaData* SEScalarPressureTimePerArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPressureTimePerAreaData* data(new CDM::ScalarPressureTimePerAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool PressureTimePerAreaUnit::IsValidUnit(const char* unit)
 {

@@ -40,8 +40,6 @@ public:
   SEScalarMassPerMass();
   virtual ~SEScalarMassPerMass();
 
-  CDM::ScalarMassPerMassData* Unload() const override;
-
   using SEScalarQuantity<MassPerMassUnit>::SetValue;
   using SEScalarQuantity<MassPerMassUnit>::GetValue;
 };

@@ -46,15 +46,7 @@ SEScalarLengthPerTime::SEScalarLengthPerTime()
 SEScalarLengthPerTime::~SEScalarLengthPerTime()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarLengthPerTimeData* SEScalarLengthPerTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarLengthPerTimeData* data(new CDM::ScalarLengthPerTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool LengthPerTimeUnit::IsValidUnit(const char* unit)
 {

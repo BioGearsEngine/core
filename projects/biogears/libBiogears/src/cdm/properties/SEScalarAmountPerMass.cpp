@@ -43,15 +43,7 @@ SEScalarAmountPerMass::SEScalarAmountPerMass()
 SEScalarAmountPerMass::~SEScalarAmountPerMass()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarAmountPerMassData* SEScalarAmountPerMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAmountPerMassData* data(new CDM::ScalarAmountPerMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool AmountPerMassUnit::IsValidUnit(const char* unit)
 {

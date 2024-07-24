@@ -103,34 +103,34 @@ bool SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Load(const CombinedCircuitBindTy
   StateChange();
   return true;
 }
-//-----------------------------------------------------------------------------
-template <COMBINED_CIRCUIT_TEMPLATE>
-CombinedCircuitBindType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload() const
-{
-  CombinedCircuitBindType* data = new CombinedCircuitBindType();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-template <COMBINED_CIRCUIT_TEMPLATE>
-void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload(CombinedCircuitBindType& data) const
-{ // Note we don't call SECircuit::Load, we will do things ourselves, OUR way (sometimes, parents just don't understand...)
-  data.Name(m_Name);
-  if (HasReferenceNode()) {
-    for (NodeType* n : m_ReferenceNodes)
-      data.ReferenceNode().push_back(n->GetName());
-  }
-  for (auto itr : m_Circuits)
-    data.Circuit().push_back(std::unique_ptr<CircuitBindType>(itr.second->Unload()));
-  for (auto* n : m_LinkNodes)
-    data.Node().push_back(std::unique_ptr<CircuitNodeBindType>(n->Unload()));
-  for (auto* p : m_LinkPaths)
-    data.Path().push_back(std::unique_ptr<CircuitPathBindType>(p->Unload()));
-  for (auto s : m_RemovedNodes)
-    data.RemovedNode().push_back(s);
-  for (auto s : m_RemovedPaths)
-    data.RemovedPath().push_back(s);
-}
+////-----------------------------------------------------------------------------
+//template <COMBINED_CIRCUIT_TEMPLATE>
+//CombinedCircuitBindType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload() const
+//{
+//  CombinedCircuitBindType* data = new CombinedCircuitBindType();
+//  Unload(*data);
+//  return data;
+//}
+////-----------------------------------------------------------------------------
+//template <COMBINED_CIRCUIT_TEMPLATE>
+//void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload(CombinedCircuitBindType& data) const
+//{ // Note we don't call SECircuit::Load, we will do things ourselves, OUR way (sometimes, parents just don't understand...)
+//  data.Name(m_Name);
+//  if (HasReferenceNode()) {
+//    for (NodeType* n : m_ReferenceNodes)
+//      data.ReferenceNode().push_back(n->GetName());
+//  }
+//  for (auto itr : m_Circuits)
+//    data.Circuit().push_back(std::unique_ptr<CircuitBindType>(itr.second->Unload()));
+//  for (auto* n : m_LinkNodes)
+//    data.Node().push_back(std::unique_ptr<CircuitNodeBindType>(n->Unload()));
+//  for (auto* p : m_LinkPaths)
+//    data.Path().push_back(std::unique_ptr<CircuitPathBindType>(p->Unload()));
+//  for (auto s : m_RemovedNodes)
+//    data.RemovedNode().push_back(s);
+//  for (auto s : m_RemovedPaths)
+//    data.RemovedPath().push_back(s);
+//}
 //-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
 void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::AddCircuit(CircuitType& c)

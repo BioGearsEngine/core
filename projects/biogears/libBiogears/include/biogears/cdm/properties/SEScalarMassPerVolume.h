@@ -55,8 +55,6 @@ public:
   SEScalarMassPerVolume(double, const MassPerVolumeUnit&);
   virtual ~SEScalarMassPerVolume();
 
-  CDM::ScalarMassPerVolumeData* Unload() const override;
-
   using SEScalarQuantity<MassPerVolumeUnit>::SetValue;
   using SEScalarQuantity<MassPerVolumeUnit>::GetValue;
 };

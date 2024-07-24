@@ -41,8 +41,6 @@ public:
   SEScalarEnergyPerAmount();
   virtual ~SEScalarEnergyPerAmount();
 
-  CDM::ScalarEnergyPerAmountData* Unload() const override;   
-
   using SEScalarQuantity<EnergyPerAmountUnit>::SetValue;
   using SEScalarQuantity<EnergyPerAmountUnit>::GetValue;
 };

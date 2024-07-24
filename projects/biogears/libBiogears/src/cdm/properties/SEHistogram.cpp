@@ -54,25 +54,6 @@ void SEHistogram::Invalidate()
   Clear();
 }
 
-bool SEHistogram::Load(const CDM::HistogramData& in)
-{
-  io::Property::UnMarshall(in, *this);
-  return IsValid();
-}
-
-CDM::HistogramData* SEHistogram::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::HistogramData* data(new CDM::HistogramData());
-  Unload(*data);
-  return data;
-}
-
-void SEHistogram::Unload(CDM::HistogramData& data) const
-{
-  io::Property::Marshall(*this, data);
-}
 
 unsigned int SEHistogram::NumberOfBins() const
 {

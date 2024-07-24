@@ -44,15 +44,7 @@ SEScalarVolumePerPressure::~SEScalarVolumePerPressure()
 {
 
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarVolumePerPressureData* SEScalarVolumePerPressure::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarVolumePerPressureData* data(new CDM::ScalarVolumePerPressureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool VolumePerPressureUnit::IsValidUnit(const char* unit)
 {

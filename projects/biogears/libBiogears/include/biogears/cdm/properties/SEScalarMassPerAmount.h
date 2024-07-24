@@ -50,8 +50,6 @@ public:
   SEScalarMassPerAmount();
   virtual ~SEScalarMassPerAmount();
 
-  CDM::ScalarMassPerAmountData* Unload() const override;
-
   using SEScalarQuantity<MassPerAmountUnit>::SetValue;
   using SEScalarQuantity<MassPerAmountUnit>::GetValue;
 };

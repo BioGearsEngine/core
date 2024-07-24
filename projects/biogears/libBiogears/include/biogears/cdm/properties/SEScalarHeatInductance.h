@@ -40,8 +40,6 @@ public:
   SEScalarHeatInductance();
   virtual ~SEScalarHeatInductance();
 
-  CDM::ScalarHeatInductanceData* Unload() const override;
-
   using SEScalarQuantity<HeatInductanceUnit>::SetValue;
   using SEScalarQuantity<HeatInductanceUnit>::GetValue;
 

@@ -34,20 +34,14 @@ ElectricCapacitanceUnit::~ElectricCapacitanceUnit()
 {
 }
 //-----------------------------------------------------------------------------
-SEScalarElectricCapacitance::SEScalarElectricCapacitance(){
-}
-//-----------------------------------------------------------------------------
-SEScalarElectricCapacitance::~SEScalarElectricCapacitance(){
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarElectricCapacitanceData* SEScalarElectricCapacitance::Unload() const
+SEScalarElectricCapacitance::SEScalarElectricCapacitance()
 {
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricCapacitanceData* data(new CDM::ScalarElectricCapacitanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
+//-----------------------------------------------------------------------------
+SEScalarElectricCapacitance::~SEScalarElectricCapacitance()
+{
+}
+
 //-----------------------------------------------------------------------------
 bool ElectricCapacitanceUnit::IsValidUnit(const char* unit)
 {

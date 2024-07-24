@@ -48,15 +48,7 @@ SEScalarAmountPerTime::SEScalarAmountPerTime()
 SEScalarAmountPerTime::~SEScalarAmountPerTime()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarAmountPerTimeData* SEScalarAmountPerTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAmountPerTimeData* data(new CDM::ScalarAmountPerTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool AmountPerTimeUnit::IsValidUnit(const char* unit)
 {

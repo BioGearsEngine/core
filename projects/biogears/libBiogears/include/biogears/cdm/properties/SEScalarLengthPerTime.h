@@ -44,8 +44,6 @@ public:
   SEScalarLengthPerTime();
   virtual ~SEScalarLengthPerTime();
 
-  CDM::ScalarLengthPerTimeData* Unload() const override;
-
   using SEScalarQuantity<LengthPerTimeUnit>::SetValue;
   using SEScalarQuantity<LengthPerTimeUnit>::GetValue;
 };

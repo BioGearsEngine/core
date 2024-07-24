@@ -40,8 +40,6 @@ public:
   SEScalarPowerPerAreaTemperatureToTheFourth();
   virtual ~SEScalarPowerPerAreaTemperatureToTheFourth();
 
-  CDM::ScalarPowerPerAreaTemperatureToTheFourthData* Unload() const override;
-
   using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::SetValue;
   using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::GetValue;
 };

@@ -32,12 +32,6 @@ public:
   virtual bool operator==(SESubstanceQuantity const&) const = 0;
   virtual bool operator!=(SESubstanceQuantity const&) const = 0;
 
-  virtual bool Load(const CDM::SubstanceQuantityData& in);
-  virtual CDM::SubstanceQuantityData* Unload() = 0;
-
-protected:
-  virtual void Unload(CDM::SubstanceQuantityData& data);
-
 public:
   virtual SESubstance& GetSubstance() const { return m_Substance; }
 

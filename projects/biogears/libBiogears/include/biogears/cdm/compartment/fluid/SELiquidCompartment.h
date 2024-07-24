@@ -50,16 +50,10 @@ public:
 
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::LiquidCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::LiquidCompartmentData* Unload() override;
-
   bool operator==(SELiquidCompartment const&) const;
   bool operator!=(SELiquidCompartment const&) const;
   bool operator==(SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> const&) const override;
   bool operator!=(SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> const&) const override;
-
-protected:
-  virtual void Unload(CDM::LiquidCompartmentData& data);
 
 public:
   virtual const SEScalar* GetScalar(const char* name) override;

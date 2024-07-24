@@ -86,6 +86,7 @@ protected:
 };
 
 class BIOGEARS_API SEDrugTransitState {
+  friend io::Physiology;
 public:
   SEDrugTransitState(const SESubstance& sub);
   ~SEDrugTransitState();

@@ -37,22 +37,6 @@ SELiquidCompartmentGraph::SELiquidCompartmentGraph(const std::string& name, Logg
 
 SELiquidCompartmentGraph::~SELiquidCompartmentGraph() { }
 
-bool SELiquidCompartmentGraph::Load(const CDM::LiquidCompartmentGraphData& in, SECompartmentManager& cmptMgr)
-{
-  io::Compartment::UnMarshall(in, *this, cmptMgr);
-  return true;
-}
-CDM::LiquidCompartmentGraphData* SELiquidCompartmentGraph::Unload()
-{
-  CDM::LiquidCompartmentGraphData* data = new CDM::LiquidCompartmentGraphData();
-  Unload(*data);
-  return data;
-}
-void SELiquidCompartmentGraph::Unload(CDM::LiquidCompartmentGraphData& data)
-{
-  io::Compartment::Marshall(*this, data);
-}
-
 void SELiquidCompartmentGraph::BalanceByIntensive()
 {
   for (auto cmpt : GetCompartments())

@@ -40,8 +40,6 @@ public:
   SEScalarElectricCurrent();
   virtual ~SEScalarElectricCurrent();
 
-  CDM::ScalarElectricCurrentData* Unload() const override;
-
   using SEScalarQuantity<ElectricCurrentUnit>::SetValue;
   using SEScalarQuantity<ElectricCurrentUnit>::GetValue;
 

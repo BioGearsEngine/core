@@ -42,7 +42,6 @@ public:
   SEScalarAmount();
   virtual ~SEScalarAmount();
 
-  virtual CDM::ScalarAmountData* Unload() const override;   
 
   using SEScalarQuantity<AmountUnit>::SetValue;
   using SEScalarQuantity<AmountUnit>::GetValue;

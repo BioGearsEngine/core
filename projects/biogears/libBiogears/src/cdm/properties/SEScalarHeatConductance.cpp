@@ -44,15 +44,7 @@ SEScalarHeatConductance::SEScalarHeatConductance()
 SEScalarHeatConductance::~SEScalarHeatConductance()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatConductanceData* SEScalarHeatConductance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatConductanceData* data(new CDM::ScalarHeatConductanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool HeatConductanceUnit::IsValidUnit(const char* unit)
 {

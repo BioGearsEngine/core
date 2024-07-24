@@ -50,9 +50,6 @@ protected:
 public:
   virtual ~SEFluidCircuit();
 
-  void Unload(CDM::FluidCircuitData& data) const override;
-  bool Load(const CDM::FluidCircuitData& in, SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit> const& ledger);
-
   SEFluidCircuitNode& CreateNode(const std::string& name);
   SEFluidCircuitNode& CreateNode(const char* name);
   SEFluidCircuitPath& CreatePath(SEFluidCircuitNode& src, SEFluidCircuitNode& tgt, const std::string& name);

@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 #include <functional>
 #include <numeric>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/schema/cdm/TestReport.hxx>
@@ -107,7 +109,10 @@ void SETestSuite::Unload(CDM::TestSuiteData& data) const
   data.Performed(m_Performed);
   if (GetNumberOfTests() != 0) {
     data.Tests(GetNumberOfTests());
-    data.Duration(std::unique_ptr<CDM::ScalarTimeData>(GetDuration().Unload()));
+
+    data.Duration(std::make_unique<std::remove_reference<decltype(data.Duration())>::type>());
+    io::Property::Marshall(m_Duration, data.Duration());
+
     data.Errors(GetNumberOfErrors());
   }
 

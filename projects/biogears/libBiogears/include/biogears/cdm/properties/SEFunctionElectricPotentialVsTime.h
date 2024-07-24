@@ -28,12 +28,6 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::FunctionElectricPotentialVsTimeData& in);
-  virtual CDM::FunctionElectricPotentialVsTimeData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::FunctionElectricPotentialVsTimeData& data) const;
-
 public:
   double GetIndependentValue(unsigned int index) = delete;
   virtual double GetTimeValue(unsigned int index, const TimeUnit& unit);

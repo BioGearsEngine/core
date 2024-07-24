@@ -48,15 +48,7 @@ SEScalarTime::SEScalarTime()
 SEScalarTime::~SEScalarTime()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarTimeData* SEScalarTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarTimeData* data(new CDM::ScalarTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool TimeUnit::IsValidUnit(const char* unit)
 {

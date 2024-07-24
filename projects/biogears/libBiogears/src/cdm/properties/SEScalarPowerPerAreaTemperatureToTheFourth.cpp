@@ -41,15 +41,7 @@ SEScalarPowerPerAreaTemperatureToTheFourth::SEScalarPowerPerAreaTemperatureToThe
 SEScalarPowerPerAreaTemperatureToTheFourth::~SEScalarPowerPerAreaTemperatureToTheFourth()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarPowerPerAreaTemperatureToTheFourthData* SEScalarPowerPerAreaTemperatureToTheFourth::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPowerPerAreaTemperatureToTheFourthData* data(new CDM::ScalarPowerPerAreaTemperatureToTheFourthData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit(const char* unit)
 {

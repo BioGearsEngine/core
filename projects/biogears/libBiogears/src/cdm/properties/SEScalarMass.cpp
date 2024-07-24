@@ -51,15 +51,7 @@ SEScalarMass::SEScalarMass(double value, MassUnit const& unit)
 SEScalarMass::~SEScalarMass()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarMassData* SEScalarMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassData* data(new CDM::ScalarMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool MassUnit::IsValidUnit(const char* unit)
 {

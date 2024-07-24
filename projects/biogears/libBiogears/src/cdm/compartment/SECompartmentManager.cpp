@@ -97,25 +97,6 @@ void SECompartmentManager::Clear()
   m_TissueName2Compartments.clear();
 }
 
-
-
-bool SECompartmentManager::Load(const CDM::CompartmentManagerData& in, SECircuitManager* circuits)
-{       
-  io::Compartment::UnMarshall(in, *this, circuits);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::CompartmentManagerData* SECompartmentManager::Unload() const
-{
-  CDM::CompartmentManagerData* data = new CDM::CompartmentManagerData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SECompartmentManager::Unload(CDM::CompartmentManagerData& data) const
-{
-  io::Compartment::Marshall(*this, data);
-}
 //-------------------------------------------------------------------------------
 bool SECompartmentManager::HasCompartment(SECompartmentType type, const char* name) const
 {

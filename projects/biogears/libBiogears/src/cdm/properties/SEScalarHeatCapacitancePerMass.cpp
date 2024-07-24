@@ -44,15 +44,7 @@ SEScalarHeatCapacitancePerMass::SEScalarHeatCapacitancePerMass()
 SEScalarHeatCapacitancePerMass::~SEScalarHeatCapacitancePerMass()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatCapacitancePerMassData* SEScalarHeatCapacitancePerMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatCapacitancePerMassData* data(new CDM::ScalarHeatCapacitancePerMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool HeatCapacitancePerMassUnit::IsValidUnit(const char* unit)
 {

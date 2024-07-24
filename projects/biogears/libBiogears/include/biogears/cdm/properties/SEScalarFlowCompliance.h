@@ -43,8 +43,6 @@ public:
   SEScalarFlowCompliance();
   virtual ~SEScalarFlowCompliance();
 
-  CDM::ScalarFlowComplianceData* Unload() const override;
-
   using SEScalarQuantity<FlowComplianceUnit>::SetValue;
   using SEScalarQuantity<FlowComplianceUnit>::GetValue;
 
