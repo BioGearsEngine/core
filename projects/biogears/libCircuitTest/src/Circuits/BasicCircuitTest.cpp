@@ -11,7 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/test/CommonDataModelTest.h>
 
+#include "io/cdm/Circuit.h"
+
 #include <biogears/cdm/Serializer.h>
+#include <biogears/string/manipulation.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitCalculator.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
@@ -5134,14 +5137,18 @@ void CommonDataModelTest::TestCircuitSerialization(const std::string& fileName)
   std::ofstream stream(io->ResolveResultsFileLocation(fileName));
   xml_schema::namespace_infomap map;
   map[""].name = "uri:/mil/tatrc/physiology/datamodel";
-
-  CDM::CircuitManager(stream, dynamic_cast<CDM::CircuitManagerData&>(*m_Circuits.Unload()), map);
+  auto cdmData = std::make_unique<CDM::CircuitManagerData>();
+  io::Circuit::Marshall(m_Circuits, *cdmData);
+  CDM::CircuitManager(stream, *cdmData, map);
   stream.close();
   std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(fileName, m_Logger);
   CDM::CircuitManagerData* data = dynamic_cast<CDM::CircuitManagerData*>(bind.get());
   if (data != nullptr) {
-    if (!m_Circuits.Load(*data))
-      Error("Could not load Circuit Data");
+    try {
+      io::Circuit::UnMarshall(*data, m_Circuits);
+    } catch (CommonDataModelException ex) {
+      Error(biogears::asprintf("When loading Circuit: %s", ex.what() ));
+    }
   } else
     Error("Could not cast loaded Circuit Data");
 }

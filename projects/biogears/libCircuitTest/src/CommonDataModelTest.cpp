@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/Compartment.hxx>
+#include <biogears/string/manipulation.h>
 
 namespace biogears {
 CommonDataModelTest::CommonDataModelTest()
@@ -273,8 +274,11 @@ void CommonDataModelTest::TestCompartmentSerialization(SECompartmentManager& mgr
   std::unique_ptr<CDM::ObjectData> bind = Serializer::ReadFile(fileName, m_Logger);
   CDM::CompartmentManagerData* data = dynamic_cast<CDM::CompartmentManagerData*>(bind.get());
   if (data != nullptr) {
-    if (!mgr.Load(*data, &m_Circuits))
-      Error("Could not load Compartment Manager Data");
+    try {
+      io::Compartment::UnMarshall(*data, mgr, &m_Circuits);
+    } catch (CommonDataModelException ex) {
+      Error(biogears::asprintf("When loading Circuit: %s", ex.what()));
+    }
   } else {
     Error("Could not cast loaded Compartment Manager Data");
   }
