@@ -207,7 +207,7 @@ namespace io {
       }
       SESubstanceBolusState* bolusState = new SESubstanceBolusState(*sub);
       out.m_BolusAdministrations[sub] = bolusState;
-      bolusState->Load(bData);
+      io::PatientActions::UnMarshall(bData, *bolusState);
     }
 
     for (const CDM::TransmucosalStateData& otData : in.TransmucosalStates()) {
@@ -231,7 +231,8 @@ namespace io {
       }
       SENasalState* nState = new SENasalState(*sub);
       out.m_NasalStates[sub] = nState;
-      nState->Load(nData);
+      io::PatientActions::UnMarshall(nData, *nState);
+
     }
 
     out.BioGearsSystem::LoadState();

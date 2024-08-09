@@ -46,24 +46,6 @@ namespace biogears {
     return IsValid();
   }
   //-----------------------------------------------------------------------------
-  bool SEConsumeNutrients::Load(const CDM::ConsumeNutrientsData& in, std::default_random_engine *rd)
-  {
-    io::PatientActions::UnMarshall(in, *this, rd);
-    return true;
-  }
-  //-----------------------------------------------------------------------------
-  CDM::ConsumeNutrientsData* SEConsumeNutrients::Unload() const
-  {
-    CDM::ConsumeNutrientsData* data(new CDM::ConsumeNutrientsData());
-    Unload(*data);
-    return data;
-  }
-  //-----------------------------------------------------------------------------
-  void SEConsumeNutrients::Unload(CDM::ConsumeNutrientsData& data) const
-  {
-    io::PatientActions::Marshall(*this, data);
-  }
-  //-----------------------------------------------------------------------------
   bool SEConsumeNutrients::HasNutrition() const
   {
     return m_Nutrition != nullptr && m_Nutrition->IsValid();

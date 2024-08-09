@@ -46,24 +46,6 @@ bool SEBrainInjury::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEBrainInjury::Load(const CDM::BrainInjuryData& in, std::default_random_engine* rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::BrainInjuryData* SEBrainInjury::Unload() const
-{
-  CDM::BrainInjuryData* data(new CDM::BrainInjuryData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEBrainInjury::Unload(CDM::BrainInjuryData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEBrainInjury::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();

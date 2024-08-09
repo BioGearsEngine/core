@@ -40,9 +40,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::SleepData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::SleepData* Unload() const override;
-
   virtual bool HasSleepState() const;
   virtual SEOnOff GetSleepState() const;
   virtual void SetSleepState(SEOnOff t);
@@ -51,9 +48,6 @@ public:
 
   bool operator==(const SESleep& rhs) const;
   bool operator!=(const SESleep& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SleepData& data) const;
 
 private:
   SEOnOff m_SleepState;

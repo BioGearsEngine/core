@@ -55,12 +55,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::OverrideData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::OverrideData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::OverrideData& data) const;
-
 public:
   SEOnOff GetOverrideState() const;
   void SetOverrideState(SEOnOff state);

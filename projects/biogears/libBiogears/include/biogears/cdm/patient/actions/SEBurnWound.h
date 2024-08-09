@@ -48,9 +48,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::BurnWoundData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::BurnWoundData* Unload() const override;
-
   bool HasTotalBodySurfaceArea() const;
   double GetTotalBodySurfaceArea() const;
   void SetTotalBodySurfaceArea(double);
@@ -95,7 +92,6 @@ public:
   double getRightLegBurnIntensity() const;
 
 protected:
-  virtual void Unload(CDM::BurnWoundData& data) const;
   void calculateCompartmentDistribution();
 
 private:

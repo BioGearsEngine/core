@@ -37,9 +37,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::TensionPneumothoraxData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::TensionPneumothoraxData* Unload() const override;
-
   virtual SEPneumothoraxType GetType() const;
   virtual void SetType(SEPneumothoraxType name);
   virtual bool HasType() const;
@@ -57,9 +54,6 @@ public:
 
   bool operator==(const SETensionPneumothorax& rhs) const;
   bool operator!=(const SETensionPneumothorax& rhs) const;
-
-protected:
-  virtual void Unload(CDM::TensionPneumothoraxData& data) const;
 
 protected:
   SEPneumothoraxType m_Type;

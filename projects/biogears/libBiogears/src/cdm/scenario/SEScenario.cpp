@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 
 #include "io/cdm/Scenario.h"
+#include "io/cdm/PatientActions.h"
+#include "io/cdm/Actions.h"
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
@@ -313,9 +315,10 @@ void SEScenario::RemoveAutoSerialization()
 //-----------------------------------------------------------------------------
 void SEScenario::AddAction(const SEAction& a)
 {
-  CDM::ActionData* bind = a.Unload();
+   
+  auto bind = io::Actions::factory(&a);
   m_Actions.push_back(SEAction::newFromBind(*bind, m_SubMgr));
-  delete bind;
+
 }
 //-----------------------------------------------------------------------------
 bool SEScenario::AddActionAfter(const SEAction& ref, const SEAction& after)
@@ -323,9 +326,8 @@ bool SEScenario::AddActionAfter(const SEAction& ref, const SEAction& after)
   bool success = false;
   auto refItr = std::find(m_Actions.begin(), m_Actions.end(), &ref);
   if (refItr != m_Actions.end()) {
-    CDM::ActionData* bind = after.Unload();
+    auto bind = io::Actions::factory(&after);
     m_Actions.insert(refItr, SEAction::newFromBind(*bind, m_SubMgr));
-    delete bind;
     success = true;
   }
   return success;

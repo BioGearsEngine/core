@@ -47,14 +47,8 @@ public:
 
   static SEAction* newFromBind(const CDM::ActionData& action, SESubstanceManager& substances, std::default_random_engine *rd = nullptr);
 
-  virtual bool Load(const CDM::ActionData& in);
-  virtual CDM::ActionData* Unload() const;
-
   bool operator==(const SEAction& rhs) const;
   bool operator!=(const SEAction& rhs) const;
-
-protected:
-  void Unload(CDM::ActionData& data) const;
 
 public:
   virtual const char* GetComment() const;

@@ -44,24 +44,6 @@ bool SERadiationAbsorbedDose::IsActive() const
   return IsValid() ? !m_RadiationDose->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SERadiationAbsorbedDose::Load(const CDM::RadiationAbsorbedDoseData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::RadiationAbsorbedDoseData* SERadiationAbsorbedDose::Unload() const
-{
-  CDM::RadiationAbsorbedDoseData* data(new CDM::RadiationAbsorbedDoseData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SERadiationAbsorbedDose::Unload(CDM::RadiationAbsorbedDoseData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::HasDose() const
 {
   return m_RadiationDose == nullptr ? false : m_RadiationDose->IsValid();

@@ -39,12 +39,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::TourniquetData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::TourniquetData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::TourniquetData& data) const;
-
 public:
   virtual const char* GetCompartment_cStr() const;
   virtual std::string GetCompartment() const;

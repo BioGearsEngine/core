@@ -11,7 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Drugs.h>
 
+#include "io/cdm/Actions.h"
 #include "io/cdm/PatientActions.h"
+
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -136,7 +138,7 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     }
     SESubstanceBolusState* bolusState = new SESubstanceBolusState(*sub);
     m_BolusAdministrations[sub] = bolusState;
-    bolusState->Load(bData);
+    io::PatientActions::UnMarshall(bData, *bolusState);
   }
 
   for (const CDM::TransmucosalStateData& otData : in.TransmucosalStates()) {
@@ -160,7 +162,7 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     }
     SENasalState* nState = new SENasalState(*sub);
     m_NasalStates[sub] = nState;
-    nState->Load(nData);
+    io::PatientActions::UnMarshall(nData, *nState);
   }
 
   return true;
@@ -178,8 +180,11 @@ void Drugs::Unload(CDM::BioGearsDrugSystemData& data) const
   data.AgedRbcAcetylcholinesterase_nM(m_AgedRbcAcetylcholinesterase_nM);
 
   for (auto itr : m_BolusAdministrations) {
-    if (itr.second != nullptr)
-      data.BolusAdministration().push_back(std::unique_ptr<CDM::SubstanceBolusStateData>(itr.second->Unload()));
+    if (itr.second != nullptr) {
+      auto substanceBolusStateData = std::make_unique<CDM::SubstanceBolusStateData>();
+      io::PatientActions::Marshall(*itr.second, *substanceBolusStateData);
+      data.BolusAdministration().push_back(std::move(substanceBolusStateData));
+    }
   }
 
   for (auto itr : m_TransmucosalStates) {
@@ -188,8 +193,11 @@ void Drugs::Unload(CDM::BioGearsDrugSystemData& data) const
   }
 
   for (auto itr : m_NasalStates) {
-    if (itr.second != nullptr)
-      data.NasalStates().push_back(std::unique_ptr<CDM::NasalStateData>(itr.second->Unload()));
+    if (itr.second != nullptr) {
+      auto nasalStateData = std::make_unique<CDM::NasalStateData>();
+      io::PatientActions::Marshall(*itr.second, *nasalStateData);
+      data.NasalStates().push_back(std::move(nasalStateData));
+    }
   }
 }
 

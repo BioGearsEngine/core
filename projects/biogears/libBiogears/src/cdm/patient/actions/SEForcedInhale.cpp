@@ -45,24 +45,6 @@ bool SEForcedInhale::IsActive() const
   return SEConsciousRespirationCommand::IsActive();
 }
 //-------------------------------------------------------------------------------
-bool SEForcedInhale::Load(const CDM::ForcedInhaleData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ForcedInhaleData* SEForcedInhale::Unload() const
-{
-  CDM::ForcedInhaleData* data(new CDM::ForcedInhaleData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEForcedInhale::Unload(CDM::ForcedInhaleData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEForcedInhale::HasInspiratoryCapacityFraction() const
 {
   return m_InspiratoryCapacityFraction == nullptr ? false : m_InspiratoryCapacityFraction->IsValid();

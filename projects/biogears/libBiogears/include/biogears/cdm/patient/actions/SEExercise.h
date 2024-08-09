@@ -86,14 +86,10 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ExerciseData& in, std::default_random_engine* rd = nullptr);
-
   virtual bool HasGenericExercise() const;
   virtual bool HasCyclingExercise() const;
   virtual bool HasRunningExercise() const;
   virtual bool HasStrengthExercise() const;
-
-  virtual CDM::ExerciseData* Unload() const override;
 
   virtual ExerciseType GetExerciseType() const;
   virtual SEGeneric GetGenericExercise() const;
@@ -115,9 +111,6 @@ public:
 
   bool operator==(const SEExercise& rhs) const;
   bool operator!=(const SEExercise& rhs) const;
-
-protected:
-  virtual void Unload(CDM::ExerciseData& data) const;
 
 private:
   ExerciseType m_mode;

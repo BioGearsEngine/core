@@ -36,10 +36,6 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceInfusionData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::SubstanceInfusionData* Unload() const;
-
-public:
   virtual bool HasConcentration() const;
   virtual SEScalarMassPerVolume& GetConcentration();
 
@@ -52,9 +48,6 @@ public:
 
   bool operator==(const SESubstanceInfusion& rhs) const;
   bool operator!=(const SESubstanceInfusion& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceInfusionData& data) const;
 
 protected:
   SEScalarMassPerVolume* m_Concentration;

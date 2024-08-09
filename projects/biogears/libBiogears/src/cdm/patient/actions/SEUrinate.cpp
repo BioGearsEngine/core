@@ -39,24 +39,6 @@ bool SEUrinate::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SEUrinate::Load(const CDM::UrinateData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::UrinateData* SEUrinate::Unload() const
-{
-  CDM::UrinateData* data(new CDM::UrinateData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEUrinate::Unload(CDM::UrinateData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 void SEUrinate::ToString(std::ostream& str) const
 {
   str << "Patient Action : Urinate";

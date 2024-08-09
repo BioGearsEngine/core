@@ -41,24 +41,6 @@ bool SEIntubation::IsActive() const
   return HasType() && GetType() != SEIntubationType::Off;
 }
 //-------------------------------------------------------------------------------
-bool SEIntubation::Load(const CDM::IntubationData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::IntubationData* SEIntubation::Unload() const
-{
-  CDM::IntubationData* data(new CDM::IntubationData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEIntubation::Unload(CDM::IntubationData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 SEIntubationType SEIntubation::GetType() const
 {
   return m_Type;

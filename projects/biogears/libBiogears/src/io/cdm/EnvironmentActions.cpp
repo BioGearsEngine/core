@@ -31,6 +31,7 @@
     schema::UnMarshall(*typeName##Data, *typeName, engine);                                        \
     return std::move(typeName);                                                                    \
   }
+
 namespace biogears {
 namespace io {
   // class SEEnvironmentAction
@@ -58,11 +59,10 @@ namespace io {
   void EnvironmentActions::Marshall(const SEEnvironmentChange& in, CDM::EnvironmentChangeData& out)
   {
     io::Actions::Marshall(static_cast<const SEEnvironmentAction&>(in), static_cast<CDM::EnvironmentActionData&>(out));
-  
+
     if (in.m_Conditions && in.m_Conditions->IsValid()) {
       io::Environment::Marshall(*in.m_Conditions, out.Conditions());
-    }
-    else if (in.HasConditionsFile()) {
+    } else if (in.HasConditionsFile()) {
       out.ConditionsFile(in.m_ConditionsFile);
     }
   }
@@ -119,6 +119,19 @@ namespace io {
     POLYMORPHIC_MARSHALL(environmentAction, ThermalApplication)
 
     throw biogears::CommonDataModelException("EnvironmentActions::factory does not support the derived SEEnvironmentAction. If you are not a developer contact upstream for support.");
+  }
+
+  std::unique_ptr<SEAction> EnvironmentActions::factory(CDM::EnvironmentActionData const* environmentActionData, SESubstanceManager& substances, std::default_random_engine* rd)
+  {
+    if (auto EnvironmentChangeData = dynamic_cast<CDM::EnvironmentChangeData const*>(environmentActionData); EnvironmentChangeData) {
+      auto EnvironmentChange = std::make_unique<SEEnvironmentChange>(substances);
+      EnvironmentActions::UnMarshall(*EnvironmentChangeData, *EnvironmentChange);
+      return std::move(EnvironmentChange);
+    }
+
+    POLYMORPHIC_UNMARSHALL(environmentActionData, ThermalApplication, EnvironmentActions)
+
+    throw biogears::CommonDataModelException("PatientActions::factory: Unsupported Environment Action.");
   }
 } // namespace io
 } // namespace biogears

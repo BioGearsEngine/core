@@ -49,24 +49,6 @@ bool SESubstanceOralDose::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine* rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceOralDoseData* SESubstanceOralDose::Unload() const
-{
-  CDM::SubstanceOralDoseData* data(new CDM::SubstanceOralDoseData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceOralDose::Unload(CDM::SubstanceOralDoseData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 SEOralAdministrationType SESubstanceOralDose::GetAdminRoute() const
 {
   return m_AdminRoute;

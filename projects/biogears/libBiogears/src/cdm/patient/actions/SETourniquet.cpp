@@ -44,23 +44,6 @@ bool SETourniquet::IsValid() const
 bool SETourniquet::IsActive() const
 {
   return IsValid() ? !(m_TourniquetLevel == (SETourniquetApplicationType::NotApplied)) : false;
-}//-----------------------------------------------------------------------------
-bool SETourniquet::Load(const CDM::TourniquetData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::TourniquetData* SETourniquet::Unload() const
-{
-  CDM::TourniquetData* data(new CDM::TourniquetData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SETourniquet::Unload(CDM::TourniquetData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 const char* SETourniquet::GetCompartment_cStr() const

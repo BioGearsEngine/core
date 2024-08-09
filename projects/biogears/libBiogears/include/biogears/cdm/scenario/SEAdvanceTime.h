@@ -39,14 +39,8 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::AdvanceTimeData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::AdvanceTimeData* Unload() const override;
-
   bool operator==(SEAdvanceTime const&) const;
   bool operator!=(SEAdvanceTime const&) const;
-
-protected:
-  virtual void Unload(CDM::AdvanceTimeData& data) const;
 
 public:
   virtual void ToString(std::ostream& str) const override;

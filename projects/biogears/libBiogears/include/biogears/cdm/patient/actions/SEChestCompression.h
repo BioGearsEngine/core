@@ -33,17 +33,10 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ChestCompressionData& in);
-  virtual CDM::ChestCompressionData* Unload() const override;
-
   virtual void ToString(std::ostream& str) const override;
 
   bool operator==( const SEChestCompression& rhs) const;
   bool operator!=( const SEChestCompression& rhs) const;
 
-protected:
-  virtual void Unload(CDM::ChestCompressionData& data) const;
-
-private:
 };
 }

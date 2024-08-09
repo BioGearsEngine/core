@@ -37,9 +37,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::BronchoconstrictionData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::BronchoconstrictionData* Unload() const override;
-
   bool operator==( const SEBronchoconstriction& rhs) const;
   bool operator!=( const SEBronchoconstriction& rhs) const;
 
@@ -47,10 +44,6 @@ public:
   virtual SEScalar0To1& GetSeverity();
 
   virtual void ToString(std::ostream& str) const override;
-
-protected:
-  virtual void Unload(CDM::BronchoconstrictionData& data) const;
-
 
 protected:
   SEScalar0To1* m_Severity;

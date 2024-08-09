@@ -37,9 +37,6 @@ public:
 
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::IntubationData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::IntubationData* Unload() const override;
-
   virtual SEIntubationType GetType() const;
   virtual void SetType(SEIntubationType t);
   virtual bool HasType() const;
@@ -49,9 +46,6 @@ public:
 
   bool operator==(const SEIntubation& rhs) const;
   bool operator!=(const SEIntubation& rhs) const;
-
-protected:
-  virtual void Unload(CDM::IntubationData& data) const;
 
 protected:
   SEIntubationType m_Type;

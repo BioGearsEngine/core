@@ -23,69 +23,53 @@ SEChestCompressionForceScale::SEChestCompressionForceScale()
   m_ForceScale = nullptr;
   m_ForcePeriod = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEChestCompressionForceScale::~SEChestCompressionForceScale()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEChestCompressionForceScale::Clear()
 {
   SEChestCompression::Clear();
   SAFE_DELETE(m_ForceScale);
   SAFE_DELETE(m_ForcePeriod);
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompressionForceScale::IsValid() const
 {
   return SEChestCompression::IsValid() && HasForceScale();
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompressionForceScale::IsActive() const
 {
   return IsValid() ? !m_ForceScale->IsZero() : false;
 }
-
-bool SEChestCompressionForceScale::Load(const CDM::ChestCompressionForceScaleData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-
-CDM::ChestCompressionForceScaleData* SEChestCompressionForceScale::Unload() const
-{
-  CDM::ChestCompressionForceScaleData* data(new CDM::ChestCompressionForceScaleData());
-  Unload(*data);
-  return data;
-}
-
-void SEChestCompressionForceScale::Unload(CDM::ChestCompressionForceScaleData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-
+//-------------------------------------------------------------------------------
 bool SEChestCompressionForceScale::HasForceScale() const
 {
   return m_ForceScale == nullptr ? false : m_ForceScale->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEChestCompressionForceScale::GetForceScale()
 {
   if (m_ForceScale == nullptr)
     m_ForceScale = new SEScalar0To1();
   return *m_ForceScale;
 }
-
+//-------------------------------------------------------------------------------
 bool SEChestCompressionForceScale::HasForcePeriod() const
 {
   return m_ForcePeriod == nullptr ? false : m_ForcePeriod->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTime& SEChestCompressionForceScale::GetForcePeriod()
 {
   if (m_ForcePeriod == nullptr)
     m_ForcePeriod = new SEScalarTime();
   return *m_ForcePeriod;
 }
-
+//-------------------------------------------------------------------------------
 void SEChestCompressionForceScale::ToString(std::ostream& str) const
 {
   str << "Patient Action : Chest Compression";

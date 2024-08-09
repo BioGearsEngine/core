@@ -114,170 +114,102 @@
 
 namespace biogears {
 namespace io {
-  // class SEActionList
-  std::vector<std::unique_ptr<SEAction>> PatientActions::action_factory(const CDM::ActionListData& in, SESubstanceManager& substances, std::default_random_engine* rd)
-  {
-    std::vector<std::unique_ptr<SEAction>> r_vec;
-    for (auto action_data : in.Action()) {
-      r_vec.emplace_back(factory(&action_data, substances, rd));
-    }
-    return std::move(r_vec);
-  }
 #pragma optimize("", off)
-  std::unique_ptr<SEAction> PatientActions::factory(CDM::ActionData const* actionData, SESubstanceManager& substances, std::default_random_engine* rd)
+  std::unique_ptr<SEAction> PatientActions::factory(CDM::PatientActionData const* patientActionData, SESubstanceManager& substances, std::default_random_engine* rd)
   {
-    if (auto advData = dynamic_cast<CDM::AdvanceTimeData const*>(actionData); advData) {
-      auto advanceTime = std::make_unique<SEAdvanceTime>();
-      Actions::UnMarshall(*advData, *advanceTime, rd);
-      return advanceTime;
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AcuteStress, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AcuteRespiratoryDistress, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AsthmaAttack, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AirwayObstruction, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Apnea, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, BrainInjury, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Bronchoconstriction, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, BurnWound, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, CardiacArrest, PatientActions, rd)
+
+    if (auto chestCompressionData = dynamic_cast<CDM::ChestCompressionData const*>(patientActionData); chestCompressionData) {
+      STOCASTIC_POLYMORPHIC_UNMARSHALL(chestCompressionData, ChestCompressionForce, PatientActions, rd)
+      STOCASTIC_POLYMORPHIC_UNMARSHALL(chestCompressionData, ChestCompressionForceScale, PatientActions, rd)
+      throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported ChestCompression Action Received.");
     }
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ChestOcclusiveDressing, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ConsciousRespiration, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ConsumeNutrients, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Exercise, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Ebola, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Escharotomy, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ExampleAction, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Intubation, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Infection, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Hemorrhage, PatientActions, rd)
+    POLYMORPHIC_UNMARSHALL(patientActionData, MechanicalVentilation, PatientActions)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, NasalCannula, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, NeedleDecompression, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Override, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PainStimulus, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PatientAssessmentRequest, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PericardialEffusion, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PulmonaryShunt, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, RadiationAbsorbedDose, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, TensionPneumothorax, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Tourniquet, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Sleep, PatientActions, rd)
 
-    if (auto stData = dynamic_cast<CDM::SerializeStateData const*>(actionData); stData) {
-      auto serializeState = std::make_unique<SESerializeState>();
-      Actions::UnMarshall(*stData, *serializeState);
-      return serializeState;
-    }
-
-    if (auto environmentActionData = dynamic_cast<CDM::EnvironmentActionData const*>(actionData); environmentActionData) {
-
-      if (auto EnvironmentChangeData = dynamic_cast<CDM::EnvironmentChangeData const*>(environmentActionData); EnvironmentChangeData) {
-        auto EnvironmentChange = std::make_unique<SEEnvironmentChange>(substances);
-        EnvironmentActions::UnMarshall(*EnvironmentChangeData, *EnvironmentChange);
-        return std::move(EnvironmentChange);
+    if (auto substanceAdministrationActionData = dynamic_cast<CDM::SubstanceAdministrationData const*>(patientActionData); substanceAdministrationActionData) {
+      if (auto substanceBolusData = dynamic_cast<CDM::SubstanceBolusData const*>(substanceAdministrationActionData); substanceBolusData) {
+        auto substance = substances.GetSubstance(substanceBolusData->Substance());
+        if (substance == nullptr) {
+          throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceBolusData->Substance());
+        }
+        auto substanceBolusaction = std::make_unique<SESubstanceBolus>(*substance);
+        PatientActions::UnMarshall(*substanceBolusData, *substanceBolusaction, rd);
+        return substanceBolusaction;
       }
 
-      POLYMORPHIC_UNMARSHALL(environmentActionData, ThermalApplication, EnvironmentActions)
-
-      throw biogears::CommonDataModelException("PatientActions::factory: Unsupported Environment Action.");
-    }
-
-    if (auto patientActionData = dynamic_cast<CDM::PatientActionData const*>(actionData); patientActionData) {
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AcuteStress, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AcuteRespiratoryDistress, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AsthmaAttack, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AirwayObstruction, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Apnea, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, BrainInjury, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Bronchoconstriction, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, BurnWound, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, CardiacArrest, PatientActions, rd)
-
-      if (auto chestCompressionData = dynamic_cast<CDM::ChestCompressionData const*>(actionData); chestCompressionData) {
-        STOCASTIC_POLYMORPHIC_UNMARSHALL(chestCompressionData, ChestCompressionForce, PatientActions, rd)
-        STOCASTIC_POLYMORPHIC_UNMARSHALL(chestCompressionData, ChestCompressionForceScale, PatientActions, rd)
-        throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported ChestCompression Action Received.");
-      }
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ChestOcclusiveDressing, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ConsciousRespiration, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ConsumeNutrients, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Exercise, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Ebola, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Escharotomy, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ExampleAction, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Intubation, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Infection, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Hemorrhage, PatientActions, rd)
-      POLYMORPHIC_UNMARSHALL(patientActionData, MechanicalVentilation, PatientActions)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, NasalCannula, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, NeedleDecompression, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Override, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PainStimulus, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PatientAssessmentRequest, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PericardialEffusion, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, PulmonaryShunt, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, RadiationAbsorbedDose, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, TensionPneumothorax, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Tourniquet, PatientActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Sleep, PatientActions, rd)
-
-      if (auto substanceAdministrationActionData = dynamic_cast<CDM::SubstanceAdministrationData const*>(actionData); substanceAdministrationActionData) {
-        if (auto substanceBolusData = dynamic_cast<CDM::SubstanceBolusData const*>(substanceAdministrationActionData); substanceBolusData) {
-          auto substance = substances.GetSubstance(substanceBolusData->Substance());
-          if (substance == nullptr) {
-            throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceBolusData->Substance());
-          }
-          auto substanceBolusaction = std::make_unique<SESubstanceBolus>(*substance);
-          PatientActions::UnMarshall(*substanceBolusData, *substanceBolusaction, rd);
-          return substanceBolusaction;
+      if (auto substanceOralDoseData = dynamic_cast<CDM::SubstanceOralDoseData const*>(substanceAdministrationActionData); substanceOralDoseData) {
+        auto substance = substances.GetSubstance(substanceOralDoseData->Substance());
+        if (substance == nullptr) {
+          throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceOralDoseData->Substance());
         }
-
-        if (auto substanceOralDoseData = dynamic_cast<CDM::SubstanceOralDoseData const*>(substanceAdministrationActionData); substanceOralDoseData) {
-          auto substance = substances.GetSubstance(substanceOralDoseData->Substance());
-          if (substance == nullptr) {
-            throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceOralDoseData->Substance());
-          }
-          auto od = std::make_unique<SESubstanceOralDose>(*substance);
-          PatientActions::UnMarshall(*substanceOralDoseData, *od, rd);
-          return od;
-        }
-
-        if (auto substanceNasalDoseData = dynamic_cast<CDM::SubstanceNasalDoseData const*>(substanceAdministrationActionData); substanceNasalDoseData) {
-          auto substance = substances.GetSubstance(substanceNasalDoseData->Substance());
-          if (substance == nullptr) {
-            throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceNasalDoseData->Substance());
-          }
-          auto substanceNasalDoseAction = std::make_unique<SESubstanceNasalDose>(*substance);
-          PatientActions::UnMarshall(*substanceNasalDoseData, *substanceNasalDoseAction, rd);
-          return substanceNasalDoseAction;
-        }
-
-        if (auto substanceInfusionData = dynamic_cast<CDM::SubstanceInfusionData const*>(substanceAdministrationActionData); substanceInfusionData) {
-          auto substance = substances.GetSubstance(substanceInfusionData->Substance());
-          if (substance == nullptr) {
-            throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceInfusionData->Substance());
-          }
-          auto substanceInfusionAction = std::make_unique<SESubstanceInfusion>(*substance);
-          PatientActions::UnMarshall(*substanceInfusionData, *substanceInfusionAction, rd);
-          return substanceInfusionAction;
-        }
-
-        if (auto substanceCompoundInfusionData = dynamic_cast<CDM::SubstanceCompoundInfusionData const*>(substanceAdministrationActionData); substanceCompoundInfusionData) {
-          auto compound = substances.GetCompound(substanceCompoundInfusionData->SubstanceCompound());
-          if (compound == nullptr) {
-            throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceCompoundInfusionData->SubstanceCompound());
-          }
-          auto substanceCompoundInfusionAction = std::make_unique<SESubstanceCompoundInfusion>(*compound);
-          PatientActions::UnMarshall(*substanceCompoundInfusionData, *substanceCompoundInfusionAction, rd);
-          return substanceCompoundInfusionAction;
-        }
-        throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported SubstanceAdministration Action Received.");
+        auto od = std::make_unique<SESubstanceOralDose>(*substance);
+        PatientActions::UnMarshall(*substanceOralDoseData, *od, rd);
+        return od;
       }
 
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Urinate, PatientActions, rd)
-      throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Patient Action Received.");
-    }
-
-    if (auto anesthesiaMachineActionData = dynamic_cast<CDM::AnesthesiaMachineActionData const*>(actionData); anesthesiaMachineActionData) {
-
-      if (auto AnesthesiaMachineConfigurationData = dynamic_cast<CDM::AnesthesiaMachineConfigurationData const*>(anesthesiaMachineActionData); AnesthesiaMachineConfigurationData) {
-        auto AnesthesiaMachineConfiguration = std::make_unique<SEAnesthesiaMachineConfiguration>(substances);
-        AnesthesiaActions::UnMarshall(*AnesthesiaMachineConfigurationData, *AnesthesiaMachineConfiguration, rd);
-        return std::move(AnesthesiaMachineConfiguration);
+      if (auto substanceNasalDoseData = dynamic_cast<CDM::SubstanceNasalDoseData const*>(substanceAdministrationActionData); substanceNasalDoseData) {
+        auto substance = substances.GetSubstance(substanceNasalDoseData->Substance());
+        if (substance == nullptr) {
+          throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceNasalDoseData->Substance());
+        }
+        auto substanceNasalDoseAction = std::make_unique<SESubstanceNasalDose>(*substance);
+        PatientActions::UnMarshall(*substanceNasalDoseData, *substanceNasalDoseAction, rd);
+        return substanceNasalDoseAction;
       }
 
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, OxygenWallPortPressureLoss, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, OxygenTankPressureLoss, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, ExpiratoryValveLeak, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, ExpiratoryValveObstruction, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, InspiratoryValveLeak, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, InspiratoryValveObstruction, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, MaskLeak, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, SodaLimeFailure, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, TubeCuffLeak, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, VaporizerFailure, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, VentilatorPressureLoss, AnesthesiaActions, rd)
-      STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, YPieceDisconnect, AnesthesiaActions, rd)
-      throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Anesthesia Machine Action Received.");
+      if (auto substanceInfusionData = dynamic_cast<CDM::SubstanceInfusionData const*>(substanceAdministrationActionData); substanceInfusionData) {
+        auto substance = substances.GetSubstance(substanceInfusionData->Substance());
+        if (substance == nullptr) {
+          throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceInfusionData->Substance());
+        }
+        auto substanceInfusionAction = std::make_unique<SESubstanceInfusion>(*substance);
+        PatientActions::UnMarshall(*substanceInfusionData, *substanceInfusionAction, rd);
+        return substanceInfusionAction;
+      }
+
+      if (auto substanceCompoundInfusionData = dynamic_cast<CDM::SubstanceCompoundInfusionData const*>(substanceAdministrationActionData); substanceCompoundInfusionData) {
+        auto compound = substances.GetCompound(substanceCompoundInfusionData->SubstanceCompound());
+        if (compound == nullptr) {
+          throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceCompoundInfusionData->SubstanceCompound());
+        }
+        auto substanceCompoundInfusionAction = std::make_unique<SESubstanceCompoundInfusion>(*compound);
+        PatientActions::UnMarshall(*substanceCompoundInfusionData, *substanceCompoundInfusionAction, rd);
+        return substanceCompoundInfusionAction;
+      }
+      throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported SubstanceAdministration Action Received.");
     }
 
-    if (auto inhalerActionData = dynamic_cast<CDM::InhalerActionData const*>(actionData); inhalerActionData) {
-      if (auto InhalerConfigurationData = dynamic_cast<CDM::InhalerConfigurationData const*>(inhalerActionData); InhalerConfigurationData) {
-        auto InhalerConfiguration = std::make_unique<SEInhalerConfiguration>(substances);
-        InhalerActions::UnMarshall(*InhalerConfigurationData, *InhalerConfiguration);
-        return std::move(InhalerConfiguration);
-      }
-      throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Inhaler Action Received.");
-    }
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Urinate, PatientActions, rd)
+    throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Patient Action Received.");
 
     throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Action Received.");
   }

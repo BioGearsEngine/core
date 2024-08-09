@@ -46,24 +46,6 @@ bool SENasalCannula::IsActive() const
   return IsValid() ? ! (m_FlowRate->GetValue(VolumePerTimeUnit::mL_Per_min) <= ZERO_APPROX) : false;
 }
 //-------------------------------------------------------------------------------
-bool SENasalCannula::Load(const CDM::NasalCannulaData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::NasalCannulaData* SENasalCannula::Unload() const
-{
-  CDM::NasalCannulaData* data(new CDM::NasalCannulaData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SENasalCannula::Unload(CDM::NasalCannulaData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SENasalCannula::HasFlowRate() const
 {
   return m_FlowRate == nullptr ? false : m_FlowRate->IsValid();

@@ -28,14 +28,8 @@ public:
 
   virtual bool IsValid() const;
 
-  virtual bool Load(const CDM::PatientActionData& in);
-  virtual CDM::PatientActionData* Unload() const = 0;
-
   bool operator==(const SEPatientAction& rhs) const;
   bool operator!=(const SEPatientAction& rhs) const;
-
-protected:
-  virtual void Unload(CDM::PatientActionData& data) const;
 
 public:
   using SEAction::ToString;

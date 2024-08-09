@@ -39,9 +39,6 @@ public:
   virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
-  virtual bool Load(const CDM::NeedleDecompressionData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::NeedleDecompressionData* Unload() const override;
-
   virtual SESide GetSide() const;
   virtual void SetSide(SESide LeftOrRight);
   virtual bool HasSide() const;
@@ -51,9 +48,6 @@ public:
 
   bool operator==(const SENeedleDecompression& rhs) const;
   bool operator!=(const SENeedleDecompression& rhs) const;
-
-protected:
-  virtual void Unload(CDM::NeedleDecompressionData& data) const;
 
 protected:
   SESide m_Side;

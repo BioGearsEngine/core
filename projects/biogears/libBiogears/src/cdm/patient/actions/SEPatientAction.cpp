@@ -34,17 +34,6 @@ bool SEPatientAction::IsValid() const
   return SEAction::IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SEPatientAction::Load(const CDM::PatientActionData& in)
-{
-  io::PatientActions::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-void SEPatientAction::Unload(CDM::PatientActionData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEPatientAction::operator==(const SEPatientAction& rhs) const
 {
   return SEAction::operator==(rhs);

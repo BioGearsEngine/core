@@ -36,12 +36,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::EscharotomyData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::EscharotomyData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::EscharotomyData& data) const;
-
 public:
   virtual std::string GetLocation() const;
   virtual bool HasLocation() const;

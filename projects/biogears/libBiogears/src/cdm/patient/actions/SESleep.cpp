@@ -40,24 +40,6 @@ namespace biogears
     return m_SleepState == SEOnOff::Off ? false : true;
   }
   //-------------------------------------------------------------------------------
-  bool SESleep::Load(const CDM::SleepData& in, std::default_random_engine *rd)
-  {
-    io::PatientActions::UnMarshall(in, *this, rd);
-    return true;
-  }
-  //-------------------------------------------------------------------------------
-  CDM::SleepData* SESleep::Unload() const
-  {
-    CDM::SleepData* data(new CDM::SleepData());
-    Unload(*data);
-    return data;
-  }
-  //-------------------------------------------------------------------------------
-  void SESleep::Unload(CDM::SleepData& data) const
-  {
-    io::PatientActions::Marshall(*this, data);
-  }
-  //-------------------------------------------------------------------------------
   SEOnOff SESleep::GetSleepState() const
   {
         return m_SleepState;

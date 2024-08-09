@@ -8,6 +8,7 @@
 
 #include <biogears/cdm/scenario/SEAnesthesiaMachineActionCollection.h>
 
+#include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
@@ -33,14 +34,14 @@
 
 #define POLYMORPHIC_UNMARSHALL(paramName, typeName, schema)                                        \
   if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
-    auto typeName = std::make_unique<SE##typeName>();                                              \
+    auto typeName = std::make_unique<SE##typeName>();                                    \
     schema::UnMarshall(*typeName##Data, *typeName);                                                \
     return std::move(typeName);                                                                    \
   }
 
 #define STOCASTIC_POLYMORPHIC_UNMARSHALL(paramName, typeName, schema, engine)                      \
   if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
-    auto typeName = std::make_unique<SE##typeName>();                                              \
+    auto typeName = std::make_unique<SE##typeName>();                                    \
     schema::UnMarshall(*typeName##Data, *typeName, engine);                                        \
     return std::move(typeName);                                                                    \
   }
@@ -284,7 +285,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEOxygenWallPortPressureLoss& in, CDM::OxygenWallPortPressureLossData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    
+
     out.State(in.IsActive() ? CDM::enumOnOff::On : CDM::enumOnOff::Off);
   }
   //----------------------------------------------------------------------------------
@@ -299,7 +300,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEOxygenTankPressureLoss& in, CDM::OxygenTankPressureLossData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    out.State(std::make_unique<std::remove_reference<decltype(out.State())>::type>()); 
+    out.State(std::make_unique<std::remove_reference<decltype(out.State())>::type>());
     io::Property::Marshall(in.m_State, out.State());
   }
 
@@ -321,6 +322,30 @@ namespace io {
     POLYMORPHIC_MARSHALL(anesthesiaMachineAction, AnesthesiaMachineConfiguration)
 
     throw biogears::CommonDataModelException("AnesthesiaActions::factory does not support the derived SEAnesthesiaMachineAction. If you are not a developer contact upstream for support.");
+  }
+
+  std::unique_ptr<SEAction> AnesthesiaActions::factory(CDM::AnesthesiaMachineActionData const* anesthesiaMachineActionData, SESubstanceManager& substances, std::default_random_engine* rd)
+  {
+
+    if (auto AnesthesiaMachineConfigurationData = dynamic_cast<CDM::AnesthesiaMachineConfigurationData const*>(anesthesiaMachineActionData); AnesthesiaMachineConfigurationData) {
+      auto AnesthesiaMachineConfiguration = std::make_unique<SEAnesthesiaMachineConfiguration>(substances);
+      AnesthesiaActions::UnMarshall(*AnesthesiaMachineConfigurationData, *AnesthesiaMachineConfiguration, rd);
+      return std::move(AnesthesiaMachineConfiguration);
+    }
+
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, OxygenWallPortPressureLoss, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, OxygenTankPressureLoss, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, ExpiratoryValveLeak, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, ExpiratoryValveObstruction, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, InspiratoryValveLeak, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, InspiratoryValveObstruction, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, MaskLeak, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, SodaLimeFailure, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, TubeCuffLeak, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, VaporizerFailure, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, VentilatorPressureLoss, AnesthesiaActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, YPieceDisconnect, AnesthesiaActions, rd)
+    throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Anesthesia Machine Action Received.");
   }
 }
 }

@@ -39,17 +39,6 @@ bool SESubstanceAdministration::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceAdministration::Load(const CDM::SubstanceAdministrationData& in)
-{
-  io::PatientActions::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceAdministration::Unload(CDM::SubstanceAdministrationData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SESubstanceAdministration::operator==(const SESubstanceAdministration& rhs) const
 {
   return m_Comment == rhs.m_Comment;

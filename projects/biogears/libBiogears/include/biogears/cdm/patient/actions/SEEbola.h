@@ -41,9 +41,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::EbolaData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::EbolaData* Unload() const override;
-
   virtual bool HasSeverity() const;
   virtual SEInfectionSeverity GetSeverity() const;
   virtual void SetSeverity(SEInfectionSeverity t);
@@ -53,9 +50,6 @@ public:
 
   bool operator==(const SEEbola& rhs) const;
   bool operator!=(const SEEbola& rhs) const;
-
-protected:
-  virtual void Unload(CDM::EbolaData& data) const;
 
 protected:
   SEInfectionSeverity m_Severity;

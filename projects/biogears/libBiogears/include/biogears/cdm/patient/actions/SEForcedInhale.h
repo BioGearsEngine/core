@@ -36,9 +36,6 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::ForcedInhaleData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ForcedInhaleData* Unload() const;
-
   virtual bool HasInspiratoryCapacityFraction() const;
   virtual SEScalar0To1& GetInspiratoryCapacityFraction();
 
@@ -49,9 +46,6 @@ public:
   
   bool operator==( const SEForcedInhale& rhs) const;
   bool operator!=( const SEForcedInhale& rhs) const;
-
-protected:
-  virtual void Unload(CDM::ForcedInhaleData& data) const;
 
 protected:
   SEScalar0To1* m_InspiratoryCapacityFraction;

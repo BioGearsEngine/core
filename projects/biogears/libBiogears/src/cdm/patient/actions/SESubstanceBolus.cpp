@@ -55,24 +55,6 @@ bool SESubstanceBolus::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceBolus::Load(const CDM::SubstanceBolusData& in, std::default_random_engine* rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceBolusData* SESubstanceBolus::Unload() const
-{
-  CDM::SubstanceBolusData* data(new CDM::SubstanceBolusData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceBolus::Unload(CDM::SubstanceBolusData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasAdminTime() const
 {
   return m_AdminTime == nullptr ? false : m_AdminTime->IsValid();
@@ -159,24 +141,6 @@ SESubstanceBolusState::SESubstanceBolusState(const SESubstance& sub)
 //-------------------------------------------------------------------------------
 SESubstanceBolusState::~SESubstanceBolusState()
 {
-}
-//-------------------------------------------------------------------------------
-bool SESubstanceBolusState::Load(const CDM::SubstanceBolusStateData& in, std::default_random_engine* rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceBolusStateData* SESubstanceBolusState::Unload() const
-{
-  CDM::SubstanceBolusStateData* data = new CDM::SubstanceBolusStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceBolusState::Unload(CDM::SubstanceBolusStateData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceBolus::operator==(const SESubstanceBolus& rhs) const

@@ -46,24 +46,6 @@ bool SESubstanceNasalDose::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceNasalDose::Load(const CDM::SubstanceNasalDoseData& in, std::default_random_engine* rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceNasalDoseData* SESubstanceNasalDose::Unload() const
-{
-  CDM::SubstanceNasalDoseData* data(new CDM::SubstanceNasalDoseData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceNasalDose::Unload(CDM::SubstanceNasalDoseData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SESubstanceNasalDose::HasDose() const
 {
   return m_Dose == nullptr ? false : m_Dose->IsValid();
@@ -136,24 +118,6 @@ bool SENasalState::Initialize(SEScalarMass& dose)
   bool unrelSet = SetUnreleasedNasalMasses(initUnreleasedMasses, MassUnit::mg);
   bool relSet = SetReleasedNasalMasses(initReleasedMasses, MassUnit::mg);
   return (unrelSet && relSet);
-}
-//-------------------------------------------------------------------------------
-bool SENasalState::Load(const CDM::NasalStateData& in, std::default_random_engine* rd)
-{
-  io::PatientActions::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::NasalStateData* SENasalState::Unload() const
-{
-  CDM::NasalStateData* data = new CDM::NasalStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SENasalState::Unload(CDM::NasalStateData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 SEScalarMass& SENasalState::GetTotalNasalDose()

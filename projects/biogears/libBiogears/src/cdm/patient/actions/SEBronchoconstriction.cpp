@@ -43,24 +43,6 @@ bool SEBronchoconstriction::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEBronchoconstriction::Load(const CDM::BronchoconstrictionData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::BronchoconstrictionData* SEBronchoconstriction::Unload() const
-{
-  CDM::BronchoconstrictionData* data(new CDM::BronchoconstrictionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEBronchoconstriction::Unload(CDM::BronchoconstrictionData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEBronchoconstriction::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();

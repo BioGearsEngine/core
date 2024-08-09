@@ -41,24 +41,6 @@ bool SEPatientAssessmentRequest::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SEPatientAssessmentRequest::Load(const CDM::PatientAssessmentRequestData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PatientAssessmentRequestData* SEPatientAssessmentRequest::Unload() const
-{
-  CDM::PatientAssessmentRequestData* data(new CDM::PatientAssessmentRequestData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEPatientAssessmentRequest::Unload(CDM::PatientAssessmentRequestData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 SEPatientAssessmentType SEPatientAssessmentRequest::GetType() const
 {
   return m_Type;

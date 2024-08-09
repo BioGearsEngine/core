@@ -46,24 +46,6 @@ bool SEPainStimulus::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-----------------------------------------------------------------------------
-bool SEPainStimulus::Load(const CDM::PainStimulusData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::PainStimulusData* SEPainStimulus::Unload() const
-{
-  CDM::PainStimulusData* data(new CDM::PainStimulusData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEPainStimulus::Unload(CDM::PainStimulusData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SEPainStimulus::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();

@@ -38,9 +38,6 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::SubstanceOralDoseData* Unload() const;
-
   virtual SEOralAdministrationType GetAdminRoute() const;
   virtual void SetAdminRoute(SEOralAdministrationType name);
   virtual bool HasAdminRoute() const;
@@ -54,9 +51,6 @@ public:
 
   bool operator==(const SESubstanceOralDose& rhs) const;
   bool operator!=(const SESubstanceOralDose& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceOralDoseData& data) const;
 
 private:
   SEOralAdministrationType m_AdminRoute;

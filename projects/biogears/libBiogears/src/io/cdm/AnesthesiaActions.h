@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
   }
 
 namespace biogears {
+class SEAction;
 class SEAnesthesiaMachineActionCollection;
 class SEAnesthesiaMachineAction;
 class SEAnesthesiaMachineConfiguration;
@@ -46,6 +47,7 @@ class SEVentilatorPressureLoss;
 class SEYPieceDisconnect;
 class SEOxygenWallPortPressureLoss;
 class SEOxygenTankPressureLoss;
+class SESubstanceManager;
 
 namespace io {
   class BIOGEARS_PRIVATE_API AnesthesiaActions {
@@ -101,6 +103,7 @@ namespace io {
     static void Marshall(const SEOxygenTankPressureLoss& in, CDM::OxygenTankPressureLossData& out);
     //Factories
     static std::unique_ptr<CDM::AnesthesiaMachineActionData> factory(const SEAnesthesiaMachineAction*);
+    static std::unique_ptr<SEAction> factory(CDM::AnesthesiaMachineActionData const* patientActionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>

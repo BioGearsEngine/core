@@ -43,9 +43,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::InfectionData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::InfectionData* Unload() const override;
-
   virtual const char* GetLocation_cStr() const;
   virtual std::string GetLocation() const;
   virtual bool HasLocation() const;
@@ -65,9 +62,6 @@ public:
 
   bool operator==(const SEInfection& rhs) const;
   bool operator!=(const SEInfection& rhs) const;
-
-protected:
-  virtual void Unload(CDM::InfectionData& data) const;
 
 protected:
   std::string m_Location;

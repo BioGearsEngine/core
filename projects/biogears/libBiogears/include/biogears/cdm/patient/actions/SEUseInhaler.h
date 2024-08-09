@@ -34,16 +34,10 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::UseInhalerData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::UseInhalerData* Unload() const;
-
   virtual void ToString(std::ostream& str) const;
 
   bool operator==( const SEUseInhaler& rhs) const;
   bool operator!=( const SEUseInhaler& rhs) const;
-
-protected:
-  virtual void Unload(CDM::UseInhalerData& data) const;
 
 protected:
 };

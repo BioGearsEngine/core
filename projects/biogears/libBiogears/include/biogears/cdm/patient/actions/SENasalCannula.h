@@ -37,9 +37,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::NasalCannulaData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::NasalCannulaData* Unload() const override;
-
   virtual bool HasFlowRate() const;
   virtual SEScalarVolumePerTime& GetFlowRate();
 
@@ -47,9 +44,6 @@ public:
 
   bool operator==(const SENasalCannula& rhs) const;
   bool operator!=(const SENasalCannula& rhs) const;
-
-protected:
-  virtual void Unload(CDM::NasalCannulaData& data) const;
 
 protected:
   SEScalarVolumePerTime* m_FlowRate;

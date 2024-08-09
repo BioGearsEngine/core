@@ -10,10 +10,11 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/scenario/SEActionManager.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
+#include <biogears/cdm/scenario/SEActionManager.h>
 
 #include "io/cdm/Scenario.h"
+#include "io/cdm/Actions.h"
 
 namespace biogears {
 SEActionManager::SEActionManager(SESubstanceManager& substances)
@@ -70,9 +71,9 @@ bool SEActionManager::ProcessAction(const SEAction& action, const PhysiologyEngi
 {
   // Store the action data. This is intended to be able to
   // Serialize out all the actions that the engine was asked to perform
-  CDM::ActionData* aData = action.Unload();
-  m_ProcessedActions.push_back(action.Unload());
-
+  auto* aData = io::Actions::factory(&action).release();
+  m_ProcessedActions.push_back(io::Actions::factory(&action));
+ 
   if (dynamic_cast<const SEPatientAction*>(&action) != nullptr)
     return m_PatientActions.ProcessAction(dynamic_cast<const CDM::PatientActionData&>(*aData), engine);
 

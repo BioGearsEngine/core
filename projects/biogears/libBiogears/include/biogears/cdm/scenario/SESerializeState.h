@@ -37,14 +37,8 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::SerializeStateData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::SerializeStateData* Unload() const override;
-
   bool operator==(SESerializeState const&) const;
   bool operator!=(SESerializeState const&) const;
-
-protected:
-  virtual void Unload(CDM::SerializeStateData& data) const;
 
 public:
   virtual void ToString(std::ostream& str) const override;

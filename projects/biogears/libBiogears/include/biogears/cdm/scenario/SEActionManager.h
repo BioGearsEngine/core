@@ -45,7 +45,7 @@ protected:
   SEAnesthesiaMachineActionCollection m_AnesthesiaMachineActions;
   SEInhalerActionCollection m_InhalerActions;
 
-  std::vector<CDM::ActionData*> m_ProcessedActions;
+  std::vector<std::unique_ptr<CDM::ActionData>> m_ProcessedActions;
 
   std::stringstream m_ss;
 };

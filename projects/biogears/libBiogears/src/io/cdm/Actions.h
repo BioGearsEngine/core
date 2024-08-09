@@ -49,17 +49,22 @@ specific language governing permissions and limitations under the License.
   io::Actions::Marshall(in.m_##func, out.func());
 
 namespace biogears {
-
+class SESubstanceManager;
 class SEAction;
 class SEActionList;
 class SEAdvanceTime;
-//enum class SESerializationType;
+// enum class SESerializationType;
 class SESerializeState;
-//class SERandomSeed;
+// class SERandomSeed;
 
 namespace io {
   class BIOGEARS_PRIVATE_API Actions {
   public:
+    // class Factories;
+    static std::vector<std::unique_ptr<SEAction>> action_factory(const CDM::ActionListData& in, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<SEAction> factory(CDM::ActionData const* actionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<CDM::ActionData> factory(const SEAction* data);
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -72,9 +77,9 @@ namespace io {
     static void UnMarshall(const CDM::ActionData& in, SEAction& out);
     static void Marshall(const SEAction& in, CDM::ActionData& out);
     //// class SEActionList;
-    //static void UnMarshall(const CDM::ActionListData& in, SEActionList& out, std::default_random_engine* rd = nullptr);
-    //static void Marshall(const SEActionList& in, CDM::ActionListData& out);
-    // class SEAdvanceTime;
+    // static void UnMarshall(const CDM::ActionListData& in, SEActionList& out, std::default_random_engine* rd = nullptr);
+    // static void Marshall(const SEActionList& in, CDM::ActionListData& out);
+    //  class SEAdvanceTime;
     static void UnMarshall(const CDM::AdvanceTimeData& in, SEAdvanceTime& out, std::default_random_engine* re = nullptr);
     static void Marshall(const SEAdvanceTime& in, CDM::AdvanceTimeData& out);
     // class SESerializationType;
@@ -84,8 +89,8 @@ namespace io {
     static void UnMarshall(const CDM::SerializeStateData& in, SESerializeState& out);
     static void Marshall(const SESerializeState& in, CDM::SerializeStateData& out);
     // class SERandomSeed
-    //static void UnMarshall(const CDM::RandomSeed& in, SERandomSeed& out, std::default_random_engine* rd = nullptr);
-    //static void Marshall(const SERandomSeed& in, CDM::RandomSeed& out);
+    // static void UnMarshall(const CDM::RandomSeed& in, SERandomSeed& out, std::default_random_engine* rd = nullptr);
+    // static void Marshall(const SERandomSeed& in, CDM::RandomSeed& out);
   };
 
   //----------------------------------------------------------------------------------

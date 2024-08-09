@@ -41,25 +41,6 @@ bool SESerializeState::IsValid() const
   return HasFilename() && HasType();
 }
 //-----------------------------------------------------------------------------
-bool SESerializeState::Load(const CDM::SerializeStateData& in, std::default_random_engine* rd)
-{
-
-  io::Actions::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SerializeStateData* SESerializeState::Unload() const
-{
-  CDM::SerializeStateData* data = new CDM::SerializeStateData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESerializeState::Unload(CDM::SerializeStateData& data) const
-{
-  io::Actions::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 void SESerializeState::ToString(std::ostream& str) const
 {
   if (HasComment())

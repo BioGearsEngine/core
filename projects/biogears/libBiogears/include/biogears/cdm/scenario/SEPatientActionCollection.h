@@ -461,6 +461,7 @@ protected:
   std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*> m_SubstanceCompoundInfusions;
   mutable std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>::const_iterator m_SubstanceCompoundInfusionsItr;
 
+  bool AdministerSubstance(const SESubstanceAdministration& subAdmin);
   bool AdministerSubstance(const CDM::SubstanceAdministrationData& subAdmin);
 
   SESubstanceManager& m_Substances;

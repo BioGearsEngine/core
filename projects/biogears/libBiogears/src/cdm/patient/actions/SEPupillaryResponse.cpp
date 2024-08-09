@@ -49,24 +49,7 @@ const SEScalar* SEPupillaryResponse::GetScalar(const std::string& name)
     return &GetSizeModifier();
   return nullptr;
 }
-//-----------------------------------------------------------------------------
-bool SEPupillaryResponse::Load(const CDM::PupillaryResponseData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::PupillaryResponseData* SEPupillaryResponse::Unload() const
-{
-  CDM::PupillaryResponseData* data = new CDM::PupillaryResponseData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEPupillaryResponse::Unload(CDM::PupillaryResponseData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 bool SEPupillaryResponse::HasReactivityModifier() const
 {
