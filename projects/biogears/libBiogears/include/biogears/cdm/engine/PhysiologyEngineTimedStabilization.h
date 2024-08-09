@@ -66,14 +66,8 @@ public:
 
   BIOGEARS_API virtual void Clear() override;
 
-  BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineTimedStabilizationData& in);
-  BIOGEARS_API virtual CDM::PhysiologyEngineTimedStabilizationData* Unload() const override;
-
   BIOGEARS_API bool operator==(PhysiologyEngineTimedStabilization const&) const;
   BIOGEARS_API bool operator!=(PhysiologyEngineTimedStabilization const&) const;
-
-protected:
-  BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const;
 
 public:
   BIOGEARS_API virtual bool Load(const char* file) override;

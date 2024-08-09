@@ -71,24 +71,6 @@ void SECompleteBloodCount::Reset()
   INVALIDATE_PROPERTY(m_WhiteBloodCellCount);
 }
 //-------------------------------------------------------------------------------
-bool SECompleteBloodCount::Load(const CDM::CompleteBloodCountData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::CompleteBloodCountData* SECompleteBloodCount::Unload()
-{
-  CDM::CompleteBloodCountData* data = new CDM::CompleteBloodCountData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SECompleteBloodCount::Unload(CDM::CompleteBloodCountData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SECompleteBloodCount::HasHematocrit() const
 {
   return m_Hematocrit == nullptr ? false : m_Hematocrit->IsValid();

@@ -39,42 +39,7 @@ template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::~SEFluidCompartmentLink()
 {
 }
-////-------------------------------------------------------------------------------
-//template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-//bool SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits)
-//{
-//  if (!SECompartmentLink::Load(in, circuits))
-//    return false;
-//  if (in.Path().present()) {
-//    if (circuits == nullptr) {
-//      Error("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but no circuit manager was provided, cannot load");
-//      return false;
-//    }
-//    SEFluidCircuitPath* path = circuits->GetFluidPath(in.Path().get());
-//    if (path == nullptr) {
-//      Error("Link is mapped to circuit path, " + std::string { in.Path().get() } + ", but provided circuit manager did not have that path");
-//      return false;
-//    }
-//    MapPath(*path);
-//  } else {
-//    if (in.Flow().present())
-//      const_cast<SEScalarVolumePerTime&>(GetFlow()).Load(in.Flow().get());
-//  }
-//  return true;
-//}
-////-------------------------------------------------------------------------------
-//template <FLUID_COMPARTMENT_LINK_TEMPLATE>
-//void SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Unload(CDM::FluidCompartmentLinkData& data)
-//{
-//  SECompartmentLink::Unload(data);
-//  data.SourceCompartment(m_SourceCmpt.GetName());
-//  data.TargetCompartment(m_TargetCmpt.GetName());
-//  if (m_Path != nullptr)
-//    data.Path(m_Path->GetName());
-//  // Even if you have a path, I am unloading everything, this makes the xml actually usefull...
-//  if (HasFlow())
-//    data.Flow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(GetFlow().Unload()));
-//}
+
 //-------------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 void SEFluidCompartmentLink<FLUID_COMPARTMENT_LINK_TYPES>::Clear()

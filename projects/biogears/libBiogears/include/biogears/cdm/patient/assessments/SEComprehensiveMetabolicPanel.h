@@ -35,12 +35,6 @@ public:
   virtual void Reset() override; // reset values
   virtual void Clear() override; // clear memory
 
-  virtual bool Load(const CDM::ComprehensiveMetabolicPanelData& in);
-  virtual CDM::ComprehensiveMetabolicPanelData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::ComprehensiveMetabolicPanelData& data);
-
 public:
   bool HasAlbumin() const;
   SEScalarMassPerVolume& GetAlbumin();

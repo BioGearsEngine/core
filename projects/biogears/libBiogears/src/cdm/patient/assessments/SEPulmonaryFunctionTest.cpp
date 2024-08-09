@@ -84,24 +84,7 @@ void SEPulmonaryFunctionTest::Reset()
 
   INVALIDATE_PROPERTY(m_LungVolumePlot);
 }
-//-------------------------------------------------------------------------------
-bool SEPulmonaryFunctionTest::Load(const CDM::PulmonaryFunctionTestData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PulmonaryFunctionTestData* SEPulmonaryFunctionTest::Unload()
-{
-  CDM::PulmonaryFunctionTestData* data = new CDM::PulmonaryFunctionTestData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEPulmonaryFunctionTest::Unload(CDM::PulmonaryFunctionTestData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasExpiratoryReserveVolume()
 {

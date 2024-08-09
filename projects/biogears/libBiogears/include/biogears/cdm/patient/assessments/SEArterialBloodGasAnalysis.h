@@ -37,12 +37,6 @@ public:
   virtual void Reset() override;
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::ArterialBloodGasAnalysisData& in);
-  virtual CDM::ArterialBloodGasAnalysisData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::ArterialBloodGasAnalysisData& data);
-
 public:
   virtual bool HaspH();
   virtual SEScalar& GetpH();

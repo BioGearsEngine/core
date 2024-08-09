@@ -59,14 +59,6 @@ void SECircuit<CIRCUIT_TYPES>::Clear()
   m_ValvePaths.clear();
   m_PolarizedElementPaths.clear();
 }
-//-----------------------------------------------------------------------------
-//template <CIRCUIT_TEMPLATE>
-//CircuitBindType* SECircuit<CIRCUIT_TYPES>::Unload() const
-//{
-//  CircuitBindType* data = new CircuitBindType();
-//  Unload(*data);
-//  return data;
-//}
 
 //-----------------------------------------------------------------------------
 template <CIRCUIT_TEMPLATE>

@@ -39,24 +39,6 @@ void SEProthrombinTime::Reset()
   INVALIDATE_PROPERTY(m_InternationalNormalizedRatio);
 }
 //-------------------------------------------------------------------------------
-bool SEProthrombinTime::Load(const CDM::ProthrombinTimeData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ProthrombinTimeData* SEProthrombinTime::Unload()
-{
-  CDM::ProthrombinTimeData* data = new CDM::ProthrombinTimeData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEProthrombinTime::Unload(CDM::ProthrombinTimeData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEProthrombinTime::HasInternationalNormalizedRatio()
 {
   return m_InternationalNormalizedRatio == nullptr ? false : m_InternationalNormalizedRatio->IsValid();

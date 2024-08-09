@@ -18,20 +18,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/string/manipulation.h>
 
 #include "io/biogears/BioGears.h"
-#include "io/cdm/Patient.h"
-#include "io/cdm/Compartment.h"
 #include "io/cdm/Circuit.h"
+#include "io/cdm/Compartment.h"
+#include "io/cdm/Patient.h"
+#include "io/cdm/PatientAssessments.h"
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 #include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
 #include <biogears/cdm/patient/assessments/SEComprehensiveMetabolicPanel.h>
-#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 #include <biogears/cdm/patient/assessments/SEProthrombinTime.h>
 #include <biogears/cdm/patient/assessments/SEPsychomotorVigilanceTask.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
@@ -527,8 +528,6 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
   ((CDM::BioGearsStateData*)state.get())->Intubation((std::make_unique<CDM::enumOnOff>()));
   io::Property::Marshall(m_Intubation, ((CDM::BioGearsStateData*)state.get())->Intubation());
 
-
-
   // Patient
   state->Patient(std::make_unique<CDM::PatientData>());
   io::Patient::Marshall(*m_Patient, ((CDM::BioGearsStateData*)state.get())->Patient());
@@ -569,15 +568,15 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
   state->System().push_back(std::unique_ptr<CDM::BioGearsElectroCardioGramData>(m_ECG->Unload()));
   state->System().push_back(std::unique_ptr<CDM::BioGearsInhalerData>(m_Inhaler->Unload()));
   // Compartments
-  //state->CompartmentManager(std::unique_ptr<CDM::CompartmentManagerData>(m_Compartments->Unload()));
+  // state->CompartmentManager(std::unique_ptr<CDM::CompartmentManagerData>(m_Compartments->Unload()));
   auto compartments = std::make_unique<CDM::CompartmentManagerData>();
-  io::Compartment::Marshall(*static_cast<SECompartmentManager*>(m_Compartments.get()),*compartments);
+  io::Compartment::Marshall(*static_cast<SECompartmentManager*>(m_Compartments.get()), *compartments);
   state->CompartmentManager(std::move(compartments));
   // Configuration
   state->Configuration(std::unique_ptr<CDM::PhysiologyEngineConfigurationData>(m_Config->Unload()));
   // Circuits
 
-  //state->CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(m_Circuits->Unload()));
+  // state->CircuitManager(std::unique_ptr<CDM::CircuitManagerData>(m_Circuits->Unload()));
   auto circuits = std::make_unique<CDM::CircuitManagerData>();
   io::Circuit::Marshall(*static_cast<SECircuitManager*>(m_Circuits.get()), *circuits);
   state->CircuitManager(std::move(circuits));
@@ -825,9 +824,12 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
-      std::unique_ptr<CDM::ArterialBloodGasAnalysisData> unloaded(abga.Unload());
-      unloaded->contentVersion(branded_version_string());
-      ArterialBloodGasAnalysis(stream, *unloaded, map);
+
+      auto abgaData = std::unique_ptr<CDM::ArterialBloodGasAnalysisData>();
+      io::PatientAssessments::Marshall(abga, *abgaData);
+
+      abgaData->contentVersion(branded_version_string());
+      ArterialBloodGasAnalysis(stream, *abgaData, map);
       stream.close();
       break;
     }
@@ -843,9 +845,11 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
       map[""].schema = "BioGears.xsd";
-      std::unique_ptr<CDM::PulmonaryFunctionTestData> unloaded(pft.Unload());
-      unloaded->contentVersion(branded_version_string());
-      PulmonaryFunctionTest(stream, *unloaded, map);
+
+      auto pftData = std::unique_ptr<CDM::PulmonaryFunctionTestData>();
+      io::PatientAssessments::Marshall(pft, *pftData);
+      pftData->contentVersion(branded_version_string());
+      PulmonaryFunctionTest(stream, *pftData, map);
       stream.close();
       break;
     }
@@ -861,9 +865,11 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
       map[""].schema = "BioGears.xsd";
-      std::unique_ptr<CDM::ProthrombinTimeData> unloaded(ptt.Unload());
-      unloaded->contentVersion(branded_version_string());
-      ProthrombinTime(stream, *unloaded, map);
+
+      auto pttData = std::unique_ptr<CDM::ProthrombinTimeData>();
+      io::PatientAssessments::Marshall(ptt, *pttData);
+      pttData->contentVersion(branded_version_string());
+      ProthrombinTime(stream, *pttData, map);
       stream.close();
       break;
     }
@@ -879,9 +885,11 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
       map[""].schema = "BioGears.xsd";
-      std::unique_ptr<CDM::PsychomotorVigilanceTaskData> unloaded(pvt.Unload());
-      unloaded->contentVersion(branded_version_string());
-      PsychomotorVigilanceTask(stream, *unloaded, map);
+      auto pvtData = std::unique_ptr<CDM::PsychomotorVigilanceTaskData>();
+      io::PatientAssessments::Marshall(pvt, *pvtData);
+      
+      pvtData->contentVersion(branded_version_string());
+      PsychomotorVigilanceTask(stream, *pvtData, map);
       stream.close();
       break;
     }
@@ -896,9 +904,10 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
-      std::unique_ptr<CDM::UrinalysisData> unloaded(upan.Unload());
-      unloaded->contentVersion(branded_version_string());
-      Urinalysis(stream, *unloaded, map);
+      auto upanData = std::unique_ptr<CDM::UrinalysisData>();
+      io::PatientAssessments::Marshall(upan, *upanData);
+      upanData->contentVersion(branded_version_string());
+      Urinalysis(stream, *upanData, map);
       stream.close();
       break;
     }
@@ -913,16 +922,17 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
-      std::unique_ptr<CDM::CompleteBloodCountData> unloaded(cbc.Unload());
-      unloaded->contentVersion(branded_version_string());
-      CompleteBloodCount(stream, *unloaded, map);
+      auto cbcData = std::unique_ptr<CDM::CompleteBloodCountData>();
+      io::PatientAssessments::Marshall(cbc, *cbcData);
+      cbcData->contentVersion(branded_version_string());
+      CompleteBloodCount(stream, *cbcData, map);
       stream.close();
       break;
     }
 
     case SEPatientAssessmentType::ComprehensiveMetabolicPanel: {
-      SEComprehensiveMetabolicPanel mp;
-      GetPatientAssessment(mp);
+      SEComprehensiveMetabolicPanel cmp;
+      GetPatientAssessment(cmp);
       if (results_filepath.empty()) {
         results_filepath = "ComprehensiveMetabolicPanel";
       }
@@ -930,9 +940,12 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
-      std::unique_ptr<CDM::ComprehensiveMetabolicPanelData> unloaded(mp.Unload());
-      unloaded->contentVersion(branded_version_string());
-      ComprehensiveMetabolicPanel(stream, *mp.Unload(), map);
+
+      auto cmpData = std::unique_ptr<CDM::ComprehensiveMetabolicPanelData>();
+      io::PatientAssessments::Marshall(cmp, *cmpData);
+      
+      cmpData->contentVersion(branded_version_string());
+      ComprehensiveMetabolicPanel(stream, *cmpData, map);
       stream.close();
       break;
     }
@@ -946,9 +959,12 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       // Write out the xml file
       xml_schema::namespace_infomap map;
       map[""].name = "uri:/mil/tatrc/phsyiology/datamodel";
-      std::unique_ptr<CDM::SequentialOrganFailureAssessmentData> unloaded(sofa.Unload());
-      unloaded->contentVersion(branded_version_string());
-      SequentialOrganFailureAssessment(stream, *sofa.Unload(), map);
+
+      auto sofaData = std::unique_ptr<CDM::SequentialOrganFailureAssessmentData>();
+      io::PatientAssessments::Marshall(sofa, *sofaData);
+
+      sofaData->contentVersion(branded_version_string());
+      SequentialOrganFailureAssessment(stream, *sofaData, map);
       stream.close();
       break;
     }

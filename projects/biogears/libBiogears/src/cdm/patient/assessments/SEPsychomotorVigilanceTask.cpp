@@ -41,24 +41,7 @@ void SEPsychomotorVigilanceTask::Reset()
   INVALIDATE_PROPERTY(m_AttentionLapses);
   INVALIDATE_PROPERTY(m_ReactionTime);
 }
-//-------------------------------------------------------------------------------
-bool SEPsychomotorVigilanceTask::Load(const CDM::PsychomotorVigilanceTaskData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PsychomotorVigilanceTaskData* SEPsychomotorVigilanceTask::Unload()
-{
-  CDM::PsychomotorVigilanceTaskData* data = new CDM::PsychomotorVigilanceTaskData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEPsychomotorVigilanceTask::Unload(CDM::PsychomotorVigilanceTaskData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEPsychomotorVigilanceTask::HasAttentionLapses()
 {

@@ -56,24 +56,7 @@ void SESequentialOrganFailureAssessment::Reset()
   INVALIDATE_PROPERTY(m_CentralNervousSOFA);
   INVALIDATE_PROPERTY(m_RenalSOFA);
 }
-//-------------------------------------------------------------------------------
-bool SESequentialOrganFailureAssessment::Load(const CDM::SequentialOrganFailureAssessmentData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SequentialOrganFailureAssessmentData* SESequentialOrganFailureAssessment::Unload()
-{
-  CDM::SequentialOrganFailureAssessmentData* data = new CDM::SequentialOrganFailureAssessmentData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESequentialOrganFailureAssessment::Unload(CDM::SequentialOrganFailureAssessmentData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SESequentialOrganFailureAssessment::HasRespirationSOFA()
 {

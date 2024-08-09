@@ -36,12 +36,6 @@ public:
   virtual void Reset() override ; // reset values
   virtual void Clear() override ; // clear memory
 
-  virtual bool Load(const CDM::ProthrombinTimeData& in);
-  virtual CDM::ProthrombinTimeData* Unload() override ;
-
-protected:
-  virtual void Unload(CDM::ProthrombinTimeData& data);
-
 public:
   virtual bool HasInternationalNormalizedRatio();
   virtual SEScalar& GetInternationalNormalizedRatio();

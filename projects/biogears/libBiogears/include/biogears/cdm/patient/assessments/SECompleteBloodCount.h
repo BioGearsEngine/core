@@ -38,12 +38,6 @@ public:
   virtual void Reset() override; // reset values
   virtual void Clear() override; // clear memory
 
-  virtual bool Load(const CDM::CompleteBloodCountData& in);
-  virtual CDM::CompleteBloodCountData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::CompleteBloodCountData& data);
-
 public:
   virtual bool HasHematocrit() const;
   virtual SEScalarFraction& GetHematocrit();

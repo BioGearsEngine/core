@@ -139,24 +139,6 @@ void PhysiologyEngineTimedStabilization::Clear()
   DELETE_VECTOR(m_ConditionCriteria);
 }
 //-------------------------------------------------------------------------------
-bool PhysiologyEngineTimedStabilization::Load(const CDM::PhysiologyEngineTimedStabilizationData& in)
-{
-  io::EngineConfiguration::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PhysiologyEngineTimedStabilizationData* PhysiologyEngineTimedStabilization::Unload() const
-{
-  CDM::PhysiologyEngineTimedStabilizationData* data(new CDM::PhysiologyEngineTimedStabilizationData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void PhysiologyEngineTimedStabilization::Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const
-{
-  io::EngineConfiguration::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const char* file)
 {
   return Load(std::string { file });
@@ -186,7 +168,8 @@ bool PhysiologyEngineTimedStabilization::Load(const std::string& file)
     Info(ss);
     return false;
   }
-  return Load(*pData);
+  io::EngineConfiguration::UnMarshall(*pData, *this);
+  return true;
 }
 //-------------------------------------------------------------------------------
 SEScalarTime& PhysiologyEngineTimedStabilization::GetRestingStabilizationTime()

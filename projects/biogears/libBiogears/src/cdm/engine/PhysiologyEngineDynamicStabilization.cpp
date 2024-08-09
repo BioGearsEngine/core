@@ -366,29 +366,10 @@ void PhysiologyEngineDynamicStabilization::Clear()
   DELETE_VECTOR(m_ConditionCriteria);
 }
 //-----------------------------------------------------------------------------
-bool PhysiologyEngineDynamicStabilization::Load(const CDM::PhysiologyEngineDynamicStabilizationData& in)
-{
-  io::EngineConfiguration::UnMarshall(in, *this);
-  return true;
+bool PhysiologyEngineDynamicStabilization::Load(char const* file) {
+  return Load(std::string(file));
 }
-//-----------------------------------------------------------------------------
-CDM::PhysiologyEngineDynamicStabilizationData* PhysiologyEngineDynamicStabilization::Unload() const
-{
-  CDM::PhysiologyEngineDynamicStabilizationData* data(new CDM::PhysiologyEngineDynamicStabilizationData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void PhysiologyEngineDynamicStabilization::Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const
-{
-  io::EngineConfiguration::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
-bool PhysiologyEngineDynamicStabilization::Load(const char* file)
-{
-  return Load(std::string { file });
-}
-//-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
 bool PhysiologyEngineDynamicStabilization::Load(const std::string& file)
 {
   CDM::PhysiologyEngineDynamicStabilizationData* pData;
@@ -413,7 +394,8 @@ bool PhysiologyEngineDynamicStabilization::Load(const std::string& file)
     Info(ss);
     return false;
   }
-  return Load(*pData);
+  io::EngineConfiguration::UnMarshall(*pData, *this);
+  return true;
 }
 //-----------------------------------------------------------------------------
 PhysiologyEngineDynamicStabilizationCriteria& PhysiologyEngineDynamicStabilization::GetRestingCriteria()
@@ -512,24 +494,6 @@ void PhysiologyEngineDynamicStabilizationCriteria::Clear()
   SAFE_DELETE(m_MinimumReactionTime);
   SAFE_DELETE(m_MaximumAllowedStabilizationTime);
   DELETE_VECTOR(m_PropertyConvergence);
-}
-//-----------------------------------------------------------------------------
-bool PhysiologyEngineDynamicStabilizationCriteria::Load(const CDM::PhysiologyEngineDynamicStabilizationCriteriaData& in)
-{
-  io::EngineConfiguration::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::PhysiologyEngineDynamicStabilizationCriteriaData* PhysiologyEngineDynamicStabilizationCriteria::Unload() const
-{
-  CDM::PhysiologyEngineDynamicStabilizationCriteriaData* data(new CDM::PhysiologyEngineDynamicStabilizationCriteriaData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void PhysiologyEngineDynamicStabilizationCriteria::Unload(CDM::PhysiologyEngineDynamicStabilizationCriteriaData& data) const
-{
- io::EngineConfiguration::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 std::string PhysiologyEngineDynamicStabilizationCriteria::GetName() const

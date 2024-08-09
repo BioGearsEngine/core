@@ -37,12 +37,6 @@ public:
   virtual void Reset() override;
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::PulmonaryFunctionTestData& in);
-  virtual CDM::PulmonaryFunctionTestData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::PulmonaryFunctionTestData& data);
-
 public:
   virtual int GetNumberOfPlotPoints() { return m_NumberOfPlotPoints; }
   virtual void SetNumberOfPlotPoints(int n) { m_NumberOfPlotPoints = n; }

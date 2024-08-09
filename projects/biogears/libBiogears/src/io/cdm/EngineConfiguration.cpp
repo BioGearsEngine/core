@@ -66,11 +66,15 @@ namespace io {
       dData = dynamic_cast<const CDM::PhysiologyEngineDynamicStabilizationData*>(&in.StabilizationCriteria().get());
     }
     if (tData != nullptr) {
-      if (!out.GetTimedStabilizationCriteria().Load(*tData)) {
+      try {
+        UnMarshall(*tData, out.GetTimedStabilizationCriteria());
+      } catch (CommonDataModelException ex) {
         throw CommonDataModelException("Unable to load Stabilization Criteria");
       }
     } else if (dData != nullptr) {
-      if (!out.GetDynamicStabilizationCriteria().Load(*dData)) {
+      try {
+        UnMarshall(*dData, out.GetDynamicStabilizationCriteria());
+      } catch (CommonDataModelException ex) {
         throw CommonDataModelException("Unable to load Stabilization Criteria");
       }
     }
@@ -78,10 +82,10 @@ namespace io {
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineConfiguration& in, CDM::PhysiologyEngineConfigurationData& out)
   {
-    if (in.HasECGInterpolator())
+    if (in.HasECGInterpolator()) {
       out.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(in.m_ECGInterpolator->Unload()));
-    if (in.HasStabilizationCriteria())
-      out.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(in.m_StabilizationCriteria->Unload()));
+    }
+    CDM_OPTIONAL_BIOGEARS_CONFIGURATION_MARSHALL_HELPER(in, out, StabilizationCriteria)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TimeStep)
     io::Property::Marshall(in.m_WritePatientBaselineFile, out.WritePatientBaselineFile());
   }

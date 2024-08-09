@@ -34,12 +34,6 @@ public:
   virtual void Reset();
   virtual void Clear();
 
-  virtual bool Load(const CDM::PatientAssessmentData& in);
-  virtual CDM::PatientAssessmentData* Unload();
-
-protected:
-  virtual void Unload(CDM::PatientAssessmentData& data);
-
 public:
 };
 }

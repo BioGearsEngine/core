@@ -35,12 +35,6 @@ public:
   virtual void Reset() override; // reset values
   virtual void Clear() override; // clear memory
 
-  virtual bool Load(const CDM::SequentialOrganFailureAssessmentData& in);
-  virtual CDM::SequentialOrganFailureAssessmentData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::SequentialOrganFailureAssessmentData& data);
-
 public:
   virtual bool HasRespirationSOFA();
   virtual SEScalar& GetRespirationSOFA();

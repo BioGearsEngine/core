@@ -32,21 +32,4 @@ void SEPatientAssessment::Reset()
 {
 }
 
-bool SEPatientAssessment::Load(const CDM::PatientAssessmentData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-
-CDM::PatientAssessmentData* SEPatientAssessment::Unload()
-{
-  CDM::PatientAssessmentData* data = new CDM::PatientAssessmentData();
-  Unload(*data);
-  return data;
-}
-
-void SEPatientAssessment::Unload(CDM::PatientAssessmentData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
 }

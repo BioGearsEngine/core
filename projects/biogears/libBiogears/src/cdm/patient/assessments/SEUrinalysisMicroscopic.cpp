@@ -61,24 +61,7 @@ void SEUrinalysisMicroscopic::Reset()
   m_Trichomonads = SEMicroscopicObservationAmount::Invalid;
   m_Yeast = SEMicroscopicObservationAmount::Invalid;
 }
-//-------------------------------------------------------------------------------
-bool SEUrinalysisMicroscopic::Load(const CDM::UrinalysisMicroscopicData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::UrinalysisMicroscopicData* SEUrinalysisMicroscopic::Unload()
-{
-  CDM::UrinalysisMicroscopicData* data = new CDM::UrinalysisMicroscopicData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEUrinalysisMicroscopic::Unload(CDM::UrinalysisMicroscopicData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEUrinalysisMicroscopic::HasRedBloodCellsResult() const
 {

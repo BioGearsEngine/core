@@ -33,12 +33,6 @@ public:
   virtual void Reset() override;
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::UrinalysisMicroscopicData& in);
-  virtual CDM::UrinalysisMicroscopicData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::UrinalysisMicroscopicData& data);
-
 public:
   virtual bool HasObservationType() const;
   virtual SEMicroscopicObservationType GetObservationType() const;

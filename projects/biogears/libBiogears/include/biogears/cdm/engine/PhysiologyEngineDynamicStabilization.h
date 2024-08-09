@@ -70,11 +70,6 @@ public:
   virtual ~PhysiologyEngineDynamicStabilizationCriteria();
 
   virtual void Clear();
-  virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationCriteriaData& in);
-  virtual CDM::PhysiologyEngineDynamicStabilizationCriteriaData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationCriteriaData& data) const;
 
 public:
   virtual std::string GetName() const;
@@ -158,12 +153,6 @@ public:
   BIOGEARS_API virtual ~PhysiologyEngineDynamicStabilization();
 
   BIOGEARS_API virtual void Clear() override;
-
-  BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationData& in);
-  BIOGEARS_API virtual CDM::PhysiologyEngineDynamicStabilizationData* Unload() const override;
-
-protected:
-  BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const;
 
 public:
   BIOGEARS_API virtual bool Load(const char* file) override;

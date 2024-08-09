@@ -38,12 +38,6 @@ public:
   virtual void Reset() override;
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::UrinalysisData& in);
-  virtual CDM::UrinalysisData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::UrinalysisData& data);
-
 public:
   virtual bool HasColorResult() const;
   virtual SEUrineColor GetColorResult() const;

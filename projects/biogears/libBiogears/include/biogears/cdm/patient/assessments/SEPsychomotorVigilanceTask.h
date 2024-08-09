@@ -37,12 +37,6 @@ public:
   virtual void Reset() override ; // reset values
   virtual void Clear() override ; // clear memory
 
-  virtual bool Load(const CDM::PsychomotorVigilanceTaskData& in);
-  virtual CDM::PsychomotorVigilanceTaskData* Unload() override ;
-
-protected:
-  virtual void Unload(CDM::PsychomotorVigilanceTaskData& data);
-
 public:
   bool HasAttentionLapses();
   SEScalar& GetAttentionLapses();
