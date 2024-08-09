@@ -155,7 +155,6 @@ namespace io {
     if (in.HasEngineStateFile()) {
       out.EngineStateFile(in.m_EngineStateFile);
     } else if (in.HasInitialParameters()) {
-      out.InitialParameters(std::make_unique<CDM::ScenarioInitialParametersData>());
       Marshall(*in.m_InitialParameters, out.InitialParameters());
     }
 

@@ -1,5 +1,6 @@
 #include "EngineConfiguration.h"
 
+#include "ElectroCardioGram.h"
 #include "Property.h"
 
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
@@ -82,12 +83,25 @@ namespace io {
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineConfiguration& in, CDM::PhysiologyEngineConfigurationData& out)
   {
-    if (in.HasECGInterpolator()) {
-      out.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(in.m_ECGInterpolator->Unload()));
-    }
-    CDM_OPTIONAL_BIOGEARS_CONFIGURATION_MARSHALL_HELPER(in, out, StabilizationCriteria)
+   
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TimeStep)
+
     io::Property::Marshall(in.m_WritePatientBaselineFile, out.WritePatientBaselineFile());
+
+    if (in.m_ECGInterpolator) {
+      io::ElectroCardioGram::Marshall(*in.m_ECGInterpolator, out.ElectroCardioGramInterpolator());
+    }
+
+    if (in.HasDynamicStabilizationCriteria()) {
+      auto dsc = std::make_unique<CDM::PhysiologyEngineDynamicStabilizationData>();
+      io::EngineConfiguration::Marshall(*in.GetDynamicStabilizationCriteria(), *dsc);
+      out.StabilizationCriteria(std::move(dsc));
+    }
+    if (in.HasTimedStabilizationCriteria()) {
+      auto tsc = std::make_unique<CDM::PhysiologyEngineTimedStabilizationData>();
+      io::EngineConfiguration::Marshall(*in.GetTimedStabilizationCriteria(), *tsc);
+      out.StabilizationCriteria(std::move(tsc));
+    }
   }
   //----------------------------------------------------------------------------------
   // class PhysiologyEngineStabilization
