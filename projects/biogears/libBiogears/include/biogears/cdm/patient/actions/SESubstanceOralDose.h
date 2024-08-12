@@ -66,9 +66,6 @@ public:
   ~SETransmucosalState();
   virtual void Clear();
 
-  virtual bool Load(const CDM::TransmucosalStateData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::TransmucosalStateData* Unload() const;
-
   bool Initialize(SEScalarMass& dose);
 
   SEScalarMass& GetMouthSolidMass();
@@ -82,9 +79,6 @@ public:
 
   bool operator==(const SETransmucosalState& rhs) const;
   bool operator!=(const SETransmucosalState& rhs) const;
-
-protected:
-  virtual void Unload(CDM::TransmucosalStateData& data) const;
 
 private:
   // Transumucosal specific values

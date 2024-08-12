@@ -680,7 +680,7 @@ namespace io {
     out.Clear();
     PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
     if (in.Nutrition().present()) {
-      out.GetNutrition().Load(in.Nutrition().get());
+      io::PatientNutrition::UnMarshall(in.Nutrition(), out.GetNutrition());
     } else if (in.NutritionFile().present()) {
       out.SetNutritionFile(in.NutritionFile().get());
     }

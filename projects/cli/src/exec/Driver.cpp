@@ -838,18 +838,13 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       return;
     }
     using biogears::filesystem::path;
-    using mil::tatrc::physiology::datamodel::ScenarioData;
-    std::unique_ptr<ScenarioData> scenario;
+    auto scenario = std::make_unique<SEScenario>(eng->GetSubstanceManager());
     try {
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      auto obj = Serializer::ReadFile(resolved_filepath,
-                                      eng->GetLogger());
-      scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+     scenario->Load(resolved_filepath);
+    
       if (scenario == nullptr) {
         throw std::runtime_error(ex.Scenario() + " is not a valid Scenario file.");
-      }
-      if (scenario->Actions().RandomSeed().present()) {
-        std::cout << "Using seed=" << scenario->Actions().RandomSeed() << std::endl;
       }
     } catch (std::runtime_error e) {
       std::cout << "Error while processing " << ex.Scenario() << "\n";
@@ -867,10 +862,9 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       return;
     }
 
-    biogears::SEPatient patient { sce.GetLogger() };
-    ex.Patient(scenario->InitialParameters()->Patient().get().Name());
-    patient.Load(scenario->InitialParameters()->Patient().get());
-    sce.GetInitialParameters().SetPatient(patient);
+    
+    ex.Patient(scenario->GetInitialParameters().GetPatient().GetName());
+    sce.GetInitialParameters().SetPatient(scenario->GetInitialParameters().GetPatient());
   }
 
   console_logger.Info("Starting " + ex.Name());

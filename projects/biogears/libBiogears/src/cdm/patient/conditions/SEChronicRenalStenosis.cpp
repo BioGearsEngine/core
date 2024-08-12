@@ -39,24 +39,6 @@ bool SEChronicRenalStenosis::IsValid() const
   return SEPatientCondition::IsValid() && (HasLeftKidneySeverity() || HasRightKidneySeverity());
 }
 //-------------------------------------------------------------------------------
-bool SEChronicRenalStenosis::Load(const CDM::ChronicRenalStenosisData& in)
-{
-  io::PatientConditions::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ChronicRenalStenosisData* SEChronicRenalStenosis::Unload() const
-{
-  CDM::ChronicRenalStenosisData* data(new CDM::ChronicRenalStenosisData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEChronicRenalStenosis::Unload(CDM::ChronicRenalStenosisData& data) const
-{
-  io::PatientConditions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEChronicRenalStenosis::HasLeftKidneySeverity() const
 {
   return m_LeftKidneySeverity == nullptr ? false : m_LeftKidneySeverity->IsValid();

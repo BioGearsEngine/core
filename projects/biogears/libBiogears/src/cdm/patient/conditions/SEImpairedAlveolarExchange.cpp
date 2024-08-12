@@ -38,24 +38,7 @@ bool SEImpairedAlveolarExchange::IsValid() const
 {
   return HasImpairedFraction() || HasImpairedSurfaceArea();
 }
-//-----------------------------------------------------------------------------
-bool SEImpairedAlveolarExchange::Load(const CDM::ImpairedAlveolarExchangeData& in)
-{
-  io::PatientConditions::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ImpairedAlveolarExchangeData* SEImpairedAlveolarExchange::Unload() const
-//-----------------------------------------------------------------------------
-{
-  CDM::ImpairedAlveolarExchangeData* data = new CDM::ImpairedAlveolarExchangeData();
-  Unload(*data);
-  return data;
-}
-void SEImpairedAlveolarExchange::Unload(CDM::ImpairedAlveolarExchangeData& data) const
-{
-  io::PatientConditions::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 bool SEImpairedAlveolarExchange::HasImpairedSurfaceArea() const
 {

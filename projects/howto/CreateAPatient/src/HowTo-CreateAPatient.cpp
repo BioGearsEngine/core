@@ -52,18 +52,6 @@ int HowToCreateAPatient()
   patient.GetRespirationRateBaseline().SetValue(16, FrequencyUnit::Per_min);
   patient.GetSystolicArterialPressureBaseline().SetValue(114, PressureUnit::mmHg);
 
-  // You can save off the patient if you want to use it later
-  CDM::PatientData* pData = patient.Unload();
-  // Write out the stable patient state
-  std::ofstream stream("./patients/HowToCreateAPatient.xml");
-  // Write out the xml file
-  xml_schema::namespace_infomap map;
-  map[""].name = "uri:/mil/tatrc/physiology/datamodel";
-  //TODO: What constructor are these from
-  // Patient(stream, *pData, map);
-  stream.close();
-  SAFE_DELETE(pData);
-
   if (!bg->InitializeEngine(patient)) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return 1;

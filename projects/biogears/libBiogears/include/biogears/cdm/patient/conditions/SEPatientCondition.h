@@ -24,15 +24,9 @@ public:
 
   virtual bool IsValid() const override = 0;
 
-  virtual bool Load(const CDM::PatientConditionData& in);
-
   virtual bool operator==(SECondition const&) const override = 0;
   virtual bool operator!=(SECondition const&) const override = 0;
 
-protected:
-  virtual void Unload(CDM::PatientConditionData& data) const;
-
-public:
   virtual void ToString(std::ostream& str) const override = 0;
 };
 }

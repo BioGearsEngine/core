@@ -150,7 +150,8 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     }
     SETransmucosalState* otState = new SETransmucosalState(*sub);
     m_TransmucosalStates[sub] = otState;
-    otState->Load(otData);
+    io::PatientActions::UnMarshall(otData, *otState);
+    
   }
 
   for (const CDM::NasalStateData& nData : in.NasalStates()) {
@@ -188,8 +189,11 @@ void Drugs::Unload(CDM::BioGearsDrugSystemData& data) const
   }
 
   for (auto itr : m_TransmucosalStates) {
-    if (itr.second != nullptr)
-      data.TransmucosalStates().push_back(std::unique_ptr<CDM::TransmucosalStateData>(itr.second->Unload()));
+    if (itr.second != nullptr) {
+      auto ts = std::make_unique<CDM::TransmucosalStateData>();
+      io::PatientActions::Marshall(*itr.second, *ts);
+      data.TransmucosalStates().push_back(std::move(ts));
+    }
   }
 
   for (auto itr : m_NasalStates) {

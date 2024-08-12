@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 
 #include "io/cdm/Scenario.h"
+#include "io/cdm/EngineConfiguration.h"
+#include "io/cdm/Patient.h"
 
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -91,7 +93,7 @@ const PhysiologyEngineConfiguration* SEScenarioInitialParameters::GetConfigurati
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::SetConfiguration(const PhysiologyEngineConfiguration& config)
 {
-  CDM_COPY((&config), (&GetConfiguration()));
+  CDM_BIOGEARS_CONFIGURATION_COPY(PhysiologyEngineConfiguration, config, GetConfiguration());
 }
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::InvalidateConfiguration()
@@ -141,7 +143,7 @@ const SEPatient* SEScenarioInitialParameters::GetPatient() const
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::SetPatient(const SEPatient& patient)
 {
-  CDM_COPY((&patient), (&GetPatient()));
+  CDM_PATIENT_COPY(Patient, patient, GetPatient());
 }
 //-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::HasPatient() const

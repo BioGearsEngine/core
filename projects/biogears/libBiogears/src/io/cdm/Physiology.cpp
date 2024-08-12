@@ -404,7 +404,7 @@ namespace io {
       io::Property::UnMarshall(in.ChymeAbsorptionRate(), out.GetChymeAbsorptionRate());
     }
     if (in.StomachContents().present()) {
-      out.GetStomachContents().Load(in.StomachContents().get());
+      io::PatientNutrition::UnMarshall(in.StomachContents(), out.GetStomachContents());
     }
   }
   void Physiology::Marshall(const SEGastrointestinalSystem& in, CDM::GastrointestinalSystemData& out)

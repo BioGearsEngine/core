@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+#include "io/cdm/Patient.h"
 namespace biogears {
 enum Driver { Sinusoid = 0,
   Heart };
@@ -125,7 +126,8 @@ void BioGearsEngineTest::TuneCardiovascularCircuitTest(SETestSuite& testSuite, c
   timer.Start("TestCase");
   BioGears bg(testSuite.GetLogger() );
   testSuite.GetLogger()->Info("Running " + sTestName);
-  CDM_COPY((&patient), (&bg.GetPatient()));
+  
+  CDM_PATIENT_COPY(Patient, patient, bg.GetPatient())
   bg.m_Config->EnableRenal(SEOnOff::On);
   bg.m_Config->EnableTissue(SEOnOff::On);
   bg.SetupPatient();

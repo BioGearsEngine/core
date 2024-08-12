@@ -223,8 +223,10 @@ namespace io {
         throw biogears::CommonDataModelException("Unable to load Standard Stomach Contents file");
       }
     } else if (in.DefaultStomachContents().present() || !out.m_Merge) {
-      if (!out.GetDefaultStomachContents().Load(in.DefaultStomachContents().get())) {
-        throw biogears::CommonDataModelException("Unable to load Standard Stomach Contents");
+      try {
+        io::PatientNutrition::UnMarshall(in.DefaultStomachContents().get(), out.GetDefaultStomachContents());
+      } catch (CommonDataModelException ex) {
+        throw biogears::CommonDataModelException(std::string("Unable to load Standard Stomach Contents") + ex.what());
       }
     }
     if (in.FatAbsorptionFraction().present() || !out.m_Merge)

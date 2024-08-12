@@ -38,24 +38,7 @@ bool SEChronicObstructivePulmonaryDisease::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasBronchitisSeverity() && HasEmphysemaSeverity();
 }
-//-----------------------------------------------------------------------------
-bool SEChronicObstructivePulmonaryDisease::Load(const CDM::ChronicObstructivePulmonaryDiseaseData& in)
-{
-  io::PatientConditions::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ChronicObstructivePulmonaryDiseaseData* SEChronicObstructivePulmonaryDisease::Unload() const
-{
-  CDM::ChronicObstructivePulmonaryDiseaseData* data(new CDM::ChronicObstructivePulmonaryDiseaseData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEChronicObstructivePulmonaryDisease::Unload(CDM::ChronicObstructivePulmonaryDiseaseData& data) const
-{
-  io::PatientConditions::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 bool SEChronicObstructivePulmonaryDisease::HasBronchitisSeverity() const
 {

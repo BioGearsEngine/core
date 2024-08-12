@@ -219,7 +219,8 @@ namespace io {
       }
       SETransmucosalState* otState = new SETransmucosalState(*sub);
       out.m_TransmucosalStates[sub] = otState;
-      otState->Load(otData);
+      io::PatientActions::UnMarshall(otData, *otState);
+      
     }
 
     for (const CDM::NasalStateData& nData : in.NasalStates()) {

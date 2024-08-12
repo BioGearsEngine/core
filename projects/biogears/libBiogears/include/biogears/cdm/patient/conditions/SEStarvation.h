@@ -29,17 +29,10 @@ public:
 
   virtual bool IsValid() const override ;
 
-  virtual bool Load(const CDM::StarvationData& in);
-  virtual CDM::StarvationData* Unload() const override ;
-
   bool operator==(SEStarvation const&) const;
   bool operator!=(SEStarvation const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
-
-
-protected:
-  virtual void Unload(CDM::StarvationData& data) const;
 
 public:
   virtual std::string GetName() const  override { return "Starvation"; }

@@ -243,8 +243,12 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
   /// Patient //
   if (!bgState->Patient().present()) {
     m_ss << "BioGearsState must have a patient" << std::endl;
-  } else if (!m_Patient->Load(bgState->Patient().get())) {
-    m_ss << "Error loading patient data" << std::endl;
+  } else {
+    try {
+        io::Patient::UnMarshall(bgState->Patient().get(), *m_Patient);
+    } catch (CommonDataModelException ex) {
+      m_ss << "Error loading patient data: " << ex.what() << std::endl;
+    }
   }
   // Conditions //
   m_Conditions->Clear();
@@ -640,7 +644,7 @@ bool BioGearsEngine::InitializeEngine(const std::string& patientFile, const std:
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const SEPatient& patient, const std::vector<const SECondition*>* conditions, const PhysiologyEngineConfiguration* config)
 {
-  CDM_COPY((&patient), m_Patient);
+  CDM_PATIENT_COPY(Patient, patient, *m_Patient);
   // We need logic here that makes sure we have what we need
   // and notify we are ignoring anything provided we won't use
   return InitializeEngine(conditions, config);

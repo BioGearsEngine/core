@@ -122,7 +122,8 @@ bool SEPatient::Load(const std::string& patientFile)
     Error(ss);
     return false;
   }
-  return Load(*pData);
+  io::Patient::UnMarshall(*pData, *this);
+  return true;
 }
 //-----------------------------------------------------------------------------
 void SEPatient::Clear()
@@ -256,24 +257,6 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEPatient::Load(const CDM::PatientData& in)
-{
-  io::Patient::UnMarshall(in, *this);
-
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::PatientData* SEPatient::Unload() const
-{
-  CDM::PatientData* data = new CDM::PatientData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEPatient::Unload(CDM::PatientData& data) const
-{
-  io::Patient::Marshall(*this, data);
-};
 void SEPatient::SetEventCallback(SEPatientEventType type, void (*callback)(bool))
 {
   m_EventCallbacks[type] = callback;

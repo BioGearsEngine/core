@@ -40,24 +40,7 @@ bool SELobarPneumonia::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasSeverity() && HasLeftLungAffected() && HasRightLungAffected();
 }
-//-----------------------------------------------------------------------------
-bool SELobarPneumonia::Load(const CDM::LobarPneumoniaData& in)
-{
-  io::PatientConditions::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::LobarPneumoniaData* SELobarPneumonia::Unload() const
-{
-  CDM::LobarPneumoniaData* data(new CDM::LobarPneumoniaData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SELobarPneumonia::Unload(CDM::LobarPneumoniaData& data) const
-{
-  io::PatientConditions::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 bool SELobarPneumonia::HasSeverity() const
 {

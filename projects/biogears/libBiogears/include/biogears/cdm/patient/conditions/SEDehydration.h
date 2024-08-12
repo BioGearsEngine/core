@@ -33,18 +33,11 @@ public:
 
   virtual bool IsValid() const override ;
 
-  virtual bool Load(const CDM::DehydrationData& in);
-  virtual CDM::DehydrationData* Unload() const override ;
-
   bool operator==(SEDehydration const&) const;
   bool operator!=(SEDehydration const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::DehydrationData& data) const;
-
-public:
   virtual std::string GetName() const  override { return "Dehydration"; }
   virtual const char* GetName_cStr() const  override { return "Dehydration"; }
 

@@ -31,14 +31,22 @@ specific language governing permissions and limitations under the License.
     io::Physiology::Marshall(*in.m_##func, out.func());        \
   }
 
-#define SE_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, func)                              \
+#define SE_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, func)                            \
   if (in.Has##func()) {                                                              \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Physiology::Marshall(in.m_##func, out.func());                                 \
+    io::Physiology::Marshall(in.m_##func, out.func());                               \
   }
 
 #define SE_OPTIONAL_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, func) \
   io::Physiology::Marshall(in.m_##func, out.func());
+
+#define CDM_PHYSIOLOGY_COPY(type, in, out) \
+  {                                        \
+    CDM::##type##Data middle;              \
+    io::Patient::Marshall(in, middle);     \
+    io::Patient::UnMarshall(middle, out);  \
+  }
+
 namespace biogears {
 class SEPupillaryResponse;
 class SEInflammatoryResponse;

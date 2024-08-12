@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Gastrointestinal.h>
 
+#include "io/cdm/PatientNutrition.h"
+
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
@@ -85,7 +87,7 @@ void Gastrointestinal::Initialize()
   if (m_data.GetConfiguration().HasDefaultStomachContents()) {
     // We are going to initialize the body with 2 meals so we process the default meal twice
     // 1 meal about 5hrs ago, and one meal at the start of the scenario
-    CDM_COPY((m_data.GetConfiguration().GetDefaultStomachContents()), (&GetStomachContents()));
+    CDM_PATIENT_NUTRITION_COPY(Nutrition, *m_data.GetConfiguration().GetDefaultStomachContents(), GetStomachContents());
     m_data.GetPatient().GetWeight().IncrementValue(m_StomachContents->GetWeight(MassUnit::g), MassUnit::g);
   }
   // Cache off the initial Gut masses so we can reset back to them after stabilization

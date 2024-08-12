@@ -39,6 +39,13 @@ specific language governing permissions and limitations under the License.
 #define SE_OPTIONAL_PATIENT_ENUM_MARSHALL_HELPER(in, out, func) \
   io::Patient::Marshall(in.m_##func, out.func());
 
+#define CDM_PATIENT_COPY(type, in, out)   \
+  {                                       \
+    CDM::##type##Data middle;             \
+    io::Patient::Marshall(in, middle);    \
+    io::Patient::UnMarshall(middle, out); \
+  }
+
 namespace biogears {
 class SEPatient;
 
@@ -153,6 +160,5 @@ inline bool operator!=(SEPatientEventType const& lhs, CDM::enumPatientEvent cons
 {
   return !(rhs == lhs);
 }
-
 
 } // Namespace Biogears

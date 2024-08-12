@@ -31,14 +31,8 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::PhysiologyEngineTimedConditionStabilizationData& in);
-  virtual CDM::PhysiologyEngineTimedConditionStabilizationData* Unload() const;
-
-   bool operator==(PhysiologyEngineTimedStabilizationCriteria const&) const;
+  bool operator==(PhysiologyEngineTimedStabilizationCriteria const&) const;
   bool operator!=(PhysiologyEngineTimedStabilizationCriteria const&) const;
-
-protected:
-  virtual void Unload(CDM::PhysiologyEngineTimedConditionStabilizationData& data) const;
 
 public:
   virtual std::string GetName() const;

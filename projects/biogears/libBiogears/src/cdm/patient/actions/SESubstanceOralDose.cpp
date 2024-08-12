@@ -139,24 +139,7 @@ bool SETransmucosalState::Initialize(SEScalarMass& dose)
   bool subSet = SetSublingualConcentrations(initSublingual, MassPerVolumeUnit::ug_Per_mL);
   return (bucSet && subSet);
 }
-//-------------------------------------------------------------------------------
-bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in, std::default_random_engine* rd)
-{
-  io::PatientActions::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::TransmucosalStateData* SETransmucosalState::Unload() const
-{
-  CDM::TransmucosalStateData* data = new CDM::TransmucosalStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETransmucosalState::Unload(CDM::TransmucosalStateData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 SEScalarMass& SETransmucosalState::GetMouthSolidMass()
 {

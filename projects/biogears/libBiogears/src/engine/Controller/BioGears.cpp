@@ -11,8 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGears.h>
 
-#include <biogears/cdm/enums/SECircuitEnums.h>
+#include "io/cdm/Patient.h"
+
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
+#include <biogears/cdm/enums/SECircuitEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SEArterialBloodGasAnalysis.h>
 #include <biogears/cdm/patient/assessments/SECompleteBloodCount.h>
@@ -172,8 +174,12 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
     auto io = GetLogger()->GetIoManager().lock();
     std::string stableDir = io->GetBioGearsWorkingDirectory() += "/stable/";
     filesystem::create_directories(stableDir);
-    CDM::PatientData* pData = m_Patient->Unload();
+    auto pData = std::make_unique<CDM::PatientData>();
+
+    io::Patient::Marshall(*m_Patient, *pData);
+
     pData->contentVersion(branded_version_string());
+
     // Write out the stable patient state
     std::ofstream stream(stableDir + m_Patient->GetName() + ".xml");
     // Write out the xml file
@@ -181,7 +187,6 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
     map[""].name = "uri:/mil/tatrc/physiology/datamodel";
     Patient(stream, *pData, map);
     stream.close();
-    SAFE_DELETE(pData);
   }
 
   m_SaturationCalculator->Initialize(*m_Substances);
@@ -247,10 +252,10 @@ void BioGears::SetAirwayMode(SEBioGearsAirwayMode mode)
   m_AirwayMode = mode;
   Info(asprintf("Airway Mode : %s",
                 (SEBioGearsAirwayMode::Free == m_AirwayMode) ? "Free" : (SEBioGearsAirwayMode::AnesthesiaMachine == m_AirwayMode) ? "AnesthesiaMachine"
-                  : (SEBioGearsAirwayMode::Inhaler == m_AirwayMode)                                                                      ? "Inhaler"
-                  : (SEBioGearsAirwayMode::NasalCannula == m_AirwayMode)                                                                 ? "NasalCannula"
-                  : (SEBioGearsAirwayMode::MechanicalVentilator == m_AirwayMode)                                                         ? "MechanicalVentilator"
-                                                                                                                                                : "Unknown"));
+                  : (SEBioGearsAirwayMode::Inhaler == m_AirwayMode)                                                               ? "Inhaler"
+                  : (SEBioGearsAirwayMode::NasalCannula == m_AirwayMode)                                                          ? "NasalCannula"
+                  : (SEBioGearsAirwayMode::MechanicalVentilator == m_AirwayMode)                                                  ? "MechanicalVentilator"
+                                                                                                                                  : "Unknown"));
 }
 
 void BioGears::SetIntubation(SEOnOff s)
@@ -267,14 +272,14 @@ void BioGears::SetIntubation(SEOnOff s)
 bool BioGears::SetupPatient()
 {
   bool err = false;
-  //Gender is the only thing we absolutely need to be defined
-  //Everything else is either derived or assumed to be a "standard" value
+  // Gender is the only thing we absolutely need to be defined
+  // Everything else is either derived or assumed to be a "standard" value
   if (!m_Patient->HasSex()) {
     Error("Patient must provide a gender.");
     err = true;
   }
 
-  //AGE ---------------------------------------------------------------
+  // AGE ---------------------------------------------------------------
   double age_yr;
   double ageMin_yr = 18.0;
   double ageMax_yr = 65.0;
@@ -329,23 +334,23 @@ bool BioGears::SetupPatient()
   double heightMinFemale_cm = 151.0;
   double heightMaxFemale_cm = 175.5;
   double heightStandardFemale_cm = 163.0;
-  //Male
+  // Male
   double heightMin_cm = heightMinMale_cm;
   double heightMax_cm = heightMaxMale_cm;
   double heightStandard_cm = heightStandardMale_cm;
   if (m_Patient->GetSex() == SESex::Female) {
-    //Female
+    // Female
     heightMin_cm = heightMinFemale_cm;
     heightMax_cm = heightMaxFemale_cm;
     heightStandard_cm = heightStandardFemale_cm;
   }
   if (!m_Patient->HasHeight()) {
     m_Patient->GetHeight().SetValue(heightStandard_cm, LengthUnit::cm);
-    Info( asprintf("No patient height set. Using the standard value of %f cm.", heightStandard_cm));
+    Info(asprintf("No patient height set. Using the standard value of %f cm.", heightStandard_cm));
   }
   double height_cm = m_Patient->GetHeight().GetValue(LengthUnit::cm);
   double height_ft = Convert(height_cm, LengthUnit::cm, LengthUnit::ft);
-  //Check for outrageous values
+  // Check for outrageous values
   if (height_ft < 4.5 || height_ft > 7.0) {
     Error("Patient height setting is outrageous. It must be between 4.5 and 7.0 ft");
     err = true;
@@ -393,22 +398,22 @@ bool BioGears::SetupPatient()
     Warning(asprintf("Patient Body Mass Index (BMI) of %f kg/m^2 is underweight. No guarantees of model validity.", BMI_kg_per_m2));
   }
 
-  //BODY FAT FRACTION ---------------------------------------------------------------
-  //From American Council on Exercise
+  // BODY FAT FRACTION ---------------------------------------------------------------
+  // From American Council on Exercise
   /// \cite muth2009what
   double fatFraction = 0.0;
   double fatFractionStandardMale = 0.21;
   double fatFractionStandardFemale = 0.28;
-  double fatFractionMaxMale = 0.25; //Obese
-  double fatFractionMaxFemale = 0.32; //Obese
-  double fatFractionMinMale = 0.02; //Essential fat
-  double fatFractionMinFemale = 0.10; //Essential fat
-  //Male
+  double fatFractionMaxMale = 0.25; // Obese
+  double fatFractionMaxFemale = 0.32; // Obese
+  double fatFractionMinMale = 0.02; // Essential fat
+  double fatFractionMinFemale = 0.10; // Essential fat
+  // Male
   double fatFractionMin = fatFractionMinMale;
   double fatFractionMax = fatFractionMaxMale;
   double fatFractionStandard = fatFractionStandardMale;
   if (m_Patient->GetSex() == SESex::Female) {
-    //Female
+    // Female
     fatFractionMin = fatFractionMinFemale;
     fatFractionMax = fatFractionMaxFemale;
     fatFractionStandard = fatFractionStandardFemale;
@@ -422,25 +427,25 @@ bool BioGears::SetupPatient()
   fatFraction = m_Patient->GetBodyFatFraction().GetValue();
   if (fatFraction > fatFractionMax) {
     Warning(asprintf("Patient body fat fraction of %f is too high. Obese patients must be modeled by adding/using a condition. Maximum body fat fraction allowed is %f.", fatFraction, fatFractionMax));
-    //err = true;
+    // err = true;
   } else if (fatFraction < fatFractionMin) {
     Warning(asprintf("Patient body fat fraction  %f is too low. Patients must have essential fat. Minimum body fat fraction allowed is %f.", fatFraction, fatFractionMin));
-    //err = true;
+    // err = true;
   }
 
-  //Lean Body Mass ---------------------------------------------------------------
+  // Lean Body Mass ---------------------------------------------------------------
   if (m_Patient->HasLeanBodyMass()) {
-    Error(asprintf( "Patient lean body mass cannot be set. It is determined by weight and body fat fraction."));
+    Error(asprintf("Patient lean body mass cannot be set. It is determined by weight and body fat fraction."));
     err = true;
   }
   double leanBodyMass_kg = weight_kg * (1.0 - fatFraction);
   m_Patient->GetLeanBodyMass().SetValue(leanBodyMass_kg, MassUnit::kg);
-  Info(asprintf( "Patient lean body mass computed and set to %f kg.",leanBodyMass_kg));
+  Info(asprintf("Patient lean body mass computed and set to %f kg.", leanBodyMass_kg));
 
-  //Muscle Mass ---------------------------------------------------------------
-  // \cite janssen2000skeletal
+  // Muscle Mass ---------------------------------------------------------------
+  //  \cite janssen2000skeletal
   if (m_Patient->HasMuscleMass()) {
-    Error( "Patient muscle mass cannot be set directly. It is determined by a percentage of weight.");
+    Error("Patient muscle mass cannot be set directly. It is determined by a percentage of weight.");
     err = true;
   }
 
@@ -450,23 +455,23 @@ bool BioGears::SetupPatient()
     m_Patient->GetMuscleMass().SetValue(weight_kg * .384, MassUnit::kg);
   }
 
-  Info(asprintf( "Patient muscle mass computed and set to %f kg.", m_Patient->GetMuscleMass().GetValue(MassUnit::kg)));
+  Info(asprintf("Patient muscle mass computed and set to %f kg.", m_Patient->GetMuscleMass().GetValue(MassUnit::kg)));
 
-  //Body Density ---------------------------------------------------------------
+  // Body Density ---------------------------------------------------------------
   if (m_Patient->HasBodyDensity()) {
-    Error( "Patient body density cannot be set. It is determined using body fat fraction.");
+    Error("Patient body density cannot be set. It is determined using body fat fraction.");
     err = true;
   }
-  //Using the average of Siri and Brozek formulas
+  // Using the average of Siri and Brozek formulas
   /// \cite siri1961body
   /// \cite brovzek1963densitometric
   double SiriBodyDensity_g_Per_cm3 = 4.95 / (fatFraction + 4.50);
   double BrozekBodyDensity_g_Per_cm3 = 4.57 / (fatFraction + 4.142);
   double bodyDensity_g_Per_cm3 = (SiriBodyDensity_g_Per_cm3 + BrozekBodyDensity_g_Per_cm3) / 2.0;
   m_Patient->GetBodyDensity().SetValue(bodyDensity_g_Per_cm3, MassPerVolumeUnit::g_Per_cm3);
-  Info(asprintf( "Patient body density computed and set to %f g/cm^3.", bodyDensity_g_Per_cm3));
+  Info(asprintf("Patient body density computed and set to %f g/cm^3.", bodyDensity_g_Per_cm3));
 
-  //Heart Rate ---------------------------------------------------------------
+  // Heart Rate ---------------------------------------------------------------
   double heartRate_bpm;
   double heartStandard_bpm = 72.0;
   double heartRateMax_bpm = 109.0;
@@ -516,58 +521,58 @@ bool BioGears::SetupPatient()
     err = true;
   }
 
-  //Arterial Pressures ---------------------------------------------------------------
+  // Arterial Pressures ---------------------------------------------------------------
   double systolic_mmHg;
   double diastolic_mmHg;
   double systolicStandard_mmHg = 114.0;
   double diastolicStandard_mmHg = 73.5;
-  double systolicMax_mmHg = 120.0; //Hypertension
-  double diastolicMax_mmHg = 80.0; //Hypertension
-  double systolicMin_mmHg = 90.0; //Hypotension
-  double diastolicMin_mmHg = 60.0; //Hypotension
-  double narrowestPulseFactor = 0.75; //From Wikipedia: Pulse Pressure
+  double systolicMax_mmHg = 120.0; // Hypertension
+  double diastolicMax_mmHg = 80.0; // Hypertension
+  double systolicMin_mmHg = 90.0; // Hypotension
+  double diastolicMin_mmHg = 60.0; // Hypotension
+  double narrowestPulseFactor = 0.75; // From Wikipedia: Pulse Pressure
   if (!m_Patient->HasSystolicArterialPressureBaseline()) {
     systolic_mmHg = systolicStandard_mmHg;
     m_Patient->GetSystolicArterialPressureBaseline().SetValue(systolic_mmHg, PressureUnit::mmHg);
-    Info(asprintf( "No patient systolic pressure baseline set. Using the standard value of %f mmHg.", systolic_mmHg));
+    Info(asprintf("No patient systolic pressure baseline set. Using the standard value of %f mmHg.", systolic_mmHg));
   }
   systolic_mmHg = m_Patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
   if (systolic_mmHg < systolicMin_mmHg) {
     Warning(asprintf("Patient systolic pressure baseline of %f mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum systolic pressure baseline allowed is %f mmHg.", systolic_mmHg, systolicMin_mmHg));
-    //err = true;
+    // err = true;
   } else if (systolic_mmHg > systolicMax_mmHg) {
     Warning(asprintf("Patient systolic pressure baseline of %f mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum systolic pressure baseline allowed is %f mmHg.", systolic_mmHg, systolicMax_mmHg));
-    //err = true;
+    // err = true;
   }
 
   if (!m_Patient->HasDiastolicArterialPressureBaseline()) {
     diastolic_mmHg = diastolicStandard_mmHg;
     m_Patient->GetDiastolicArterialPressureBaseline().SetValue(diastolic_mmHg, PressureUnit::mmHg);
-    Info(asprintf( "No patient diastolic pressure baseline set. Using the standard value of %f mmHg.", diastolic_mmHg));
+    Info(asprintf("No patient diastolic pressure baseline set. Using the standard value of %f mmHg.", diastolic_mmHg));
   }
   diastolic_mmHg = m_Patient->GetDiastolicArterialPressureBaseline(PressureUnit::mmHg);
   if (diastolic_mmHg < diastolicMin_mmHg) {
     Warning(asprintf("Patient diastolic pressure baseline of %f mmHg is too low. Hypotension must be modeled by adding/using a condition. Minimum diastolic pressure baseline allowed is %f mmHg.", diastolic_mmHg, diastolicMin_mmHg));
-    //err = true;
+    // err = true;
   } else if (diastolic_mmHg > diastolicMax_mmHg) {
     Warning(asprintf("Patient diastolic pressure baseline of %f mmHg is too high. Hypertension must be modeled by adding/using a condition. Maximum diastolic pressure baseline allowed is %f mmHg.", diastolic_mmHg, diastolicMax_mmHg));
-    //err = true;
+    // err = true;
   }
 
   if (diastolic_mmHg > 0.75 * systolic_mmHg) {
     Warning(asprintf("Patient baseline pulse pressure (systolic vs. diastolic pressure fraction) of %f is abnormally narrow. Minimum fraction allowed is %f .", diastolic_mmHg / systolic_mmHg, narrowestPulseFactor));
-    //err = true;
+    // err = true;
   }
 
   if (m_Patient->HasMeanArterialPressureBaseline()) {
-    Error( "Patient mean arterial pressure baseline cannot be set. It is determined through homeostatic simulation.");
+    Error("Patient mean arterial pressure baseline cannot be set. It is determined through homeostatic simulation.");
     err = true;
   }
   double MAP_mmHg = 1.0 / 3.0 * systolic_mmHg + 2.0 / 3.0 * diastolic_mmHg;
   m_Patient->GetMeanArterialPressureBaseline().SetValue(MAP_mmHg, PressureUnit::mmHg);
 
-  //Blood Type -----------------------------------------------------------------
-  //default blood type based on universal acceptor
+  // Blood Type -----------------------------------------------------------------
+  // default blood type based on universal acceptor
   SEBloodType defaultBloodType_ABO = SEBloodType::AB;
   bool defaultBloodRh = true;
   if (!m_Patient->HasBloodRh()) {
@@ -776,16 +781,16 @@ bool BioGears::SetupPatient()
   }
   skinSurfaceArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
   if (skinSurfaceArea_m2 != computSkinSurfaceArea_m2) {
-    Warning(asprintf( "Specified skin surface area of %f cm differs from computed value of %f cm. No guarantees of model validity.", skinSurfaceArea_m2, computSkinSurfaceArea_m2));
+    Warning(asprintf("Specified skin surface area of %f cm differs from computed value of %f cm. No guarantees of model validity.", skinSurfaceArea_m2, computSkinSurfaceArea_m2));
   }
 
-  //Basal Metabolic Rate ---------------------------------------------------------------
-  //The basal metabolic rate is determined from the Harris-Benedict formula, with differences dependent on sex, age, height and mass
+  // Basal Metabolic Rate ---------------------------------------------------------------
+  // The basal metabolic rate is determined from the Harris-Benedict formula, with differences dependent on sex, age, height and mass
   /// \cite roza1984metabolic
   double BMR_kcal_Per_day;
-  double computBMR_kcal_Per_day = 88.632 + 13.397 * weight_kg + 4.799 * height_cm - 5.677 * age_yr; //Male
+  double computBMR_kcal_Per_day = 88.632 + 13.397 * weight_kg + 4.799 * height_cm - 5.677 * age_yr; // Male
   if (m_Patient->GetSex() == SESex::Female) {
-    computBMR_kcal_Per_day = 447.593 + 9.247 * weight_kg + 3.098 * height_cm - 4.330 * age_yr; //Female
+    computBMR_kcal_Per_day = 447.593 + 9.247 * weight_kg + 3.098 * height_cm - 4.330 * age_yr; // Female
   }
   if (!m_Patient->HasBasalMetabolicRate()) {
     BMR_kcal_Per_day = computBMR_kcal_Per_day;
@@ -797,8 +802,8 @@ bool BioGears::SetupPatient()
     Warning(asprintf("Specified basal metabolic rate of %f kcal/day differs from computed value of %f kcal/day. No guarantees of model validity.", BMR_kcal_Per_day, computBMR_kcal_Per_day));
   }
 
-  //Maximum Work Rate ---------------------------------------------------------------
-  //The max work rate is determined from linear regressions of research by Plowman et al., with differences dependent on sex and age
+  // Maximum Work Rate ---------------------------------------------------------------
+  // The max work rate is determined from linear regressions of research by Plowman et al., with differences dependent on sex and age
   /// \cite plowman2013exercise
   double maxWorkRate_W;
   double computedMaxWorkRate_W;
@@ -1185,7 +1190,7 @@ void BioGears::SetupCardiovascular()
 
   double systolicPressureTarget_mmHg = m_Patient->GetSystolicArterialPressureBaseline(PressureUnit::mmHg);
   double heartRate_bpm = m_Patient->GetHeartRateBaseline(FrequencyUnit::Per_min);
-  double strokeVolumeTarget_mL = 81.0; //Note:  Had set this to 87 in previous commit when vascular->interstitium resistances were different
+  double strokeVolumeTarget_mL = 81.0; // Note:  Had set this to 87 in previous commit when vascular->interstitium resistances were different
   double cardiacOutputTarget_mL_Per_s = heartRate_bpm / 60.0 * strokeVolumeTarget_mL;
   double diastolicPressureTarget_mmHg = 80.0;
   double centralVenousPressureTarget_mmHg = 4.0;
@@ -1453,7 +1458,7 @@ void BioGears::SetupCardiovascular()
   RightVentricle1ToMainPulmonaryArteries.SetNextValve(SEOpenClosed::Closed);
 
   SEFluidCircuitPath& MainPulmonaryArteriesToRightIntermediatePulmonaryArteries = cCardiovascular.CreatePath(MainPulmonaryArteries, RightIntermediatePulmonaryArteries, BGE::CardiovascularPath::MainPulmonaryArteriesToRightIntermediatePulmonaryArteries);
-  //MainPulmonaryArteriesToRightIntermediatePulmonaryArteries.SetNextValve(SEOpenClosed::Closed);
+  // MainPulmonaryArteriesToRightIntermediatePulmonaryArteries.SetNextValve(SEOpenClosed::Closed);
   SEFluidCircuitPath& RightIntermediatePulmonaryArteriesToRightPulmonaryArteries = cCardiovascular.CreatePath(RightIntermediatePulmonaryArteries, RightPulmonaryArteries, BGE::CardiovascularPath::RightIntermediatePulmonaryArteriesToRightPulmonaryArteries);
   RightIntermediatePulmonaryArteriesToRightPulmonaryArteries.GetResistanceBaseline().SetValue(ResistancePulmArtLeft, FlowResistanceUnit::mmHg_s_Per_mL);
 
@@ -1473,10 +1478,10 @@ void BioGears::SetupCardiovascular()
   SEFluidCircuitPath& RightPulmonaryVeinsToGround = cCardiovascular.CreatePath(RightPulmonaryVeins, Ground, BGE::CardiovascularPath::RightPulmonaryVeinsToGround);
   RightPulmonaryVeinsToGround.GetComplianceBaseline().SetValue(0.0, FlowComplianceUnit::mL_Per_mmHg);
   SEFluidCircuitPath& RightIntermediatePulmonaryVeinsToLeftAtrium1 = cCardiovascular.CreatePath(RightIntermediatePulmonaryVeins, LeftAtrium1, BGE::CardiovascularPath::RightIntermediatePulmonaryVeinsToLeftAtrium1);
-  //RightIntermediatePulmonaryVeinsToLeftAtrium2.SetNextValve(SEOpenClosed::Closed);
+  // RightIntermediatePulmonaryVeinsToLeftAtrium2.SetNextValve(SEOpenClosed::Closed);
 
   SEFluidCircuitPath& MainPulmonaryArteriesToLeftIntermediatePulmonaryArteries = cCardiovascular.CreatePath(MainPulmonaryArteries, LeftIntermediatePulmonaryArteries, BGE::CardiovascularPath::MainPulmonaryArteriesToLeftIntermediatePulmonaryArteries);
-  //MainPulmonaryArteriesToLeftIntermediatePulmonaryArteries.SetNextValve(SEOpenClosed::Closed);
+  // MainPulmonaryArteriesToLeftIntermediatePulmonaryArteries.SetNextValve(SEOpenClosed::Closed);
   SEFluidCircuitPath& LeftIntermediatePulmonaryArteriesToLeftPulmonaryArteries = cCardiovascular.CreatePath(LeftIntermediatePulmonaryArteries, LeftPulmonaryArteries, BGE::CardiovascularPath::LeftIntermediatePulmonaryArteriesToLeftPulmonaryArteries);
   LeftIntermediatePulmonaryArteriesToLeftPulmonaryArteries.GetResistanceBaseline().SetValue(ResistancePulmArtLeft, FlowResistanceUnit::mmHg_s_Per_mL);
 
@@ -1496,7 +1501,7 @@ void BioGears::SetupCardiovascular()
   SEFluidCircuitPath& LeftPulmonaryVeinsToGround = cCardiovascular.CreatePath(LeftPulmonaryVeins, Ground, BGE::CardiovascularPath::LeftPulmonaryVeinsToGround);
   LeftPulmonaryVeinsToGround.GetComplianceBaseline().SetValue(0.0, FlowComplianceUnit::mL_Per_mmHg);
   SEFluidCircuitPath& LeftIntermediatePulmonaryVeinsToLeftAtrium1 = cCardiovascular.CreatePath(LeftIntermediatePulmonaryVeins, LeftAtrium1, BGE::CardiovascularPath::LeftIntermediatePulmonaryVeinsToLeftAtrium1);
-  //LeftIntermediatePulmonaryVeinsToLeftAtrium2.SetNextValve(SEOpenClosed::Closed);
+  // LeftIntermediatePulmonaryVeinsToLeftAtrium2.SetNextValve(SEOpenClosed::Closed);
 
   SEFluidCircuitPath& LeftAtrium1ToGround = cCardiovascular.CreatePath(LeftAtrium1, Ground, BGE::CardiovascularPath::LeftAtrium1ToGround);
   LeftAtrium1ToGround.GetComplianceBaseline().SetValue(1.0 / 0.075, FlowComplianceUnit::mL_Per_mmHg);
@@ -2361,7 +2366,7 @@ void BioGears::SetupCerebral()
   nSpinalFluid.GetPressure().SetValue(intracranialPressure_mmHg, PressureUnit::mmHg);
   nSpinalFluid.GetVolumeBaseline().SetValue(intracranialVolume_mL, VolumeUnit::mL);
 
-  //Paths
+  // Paths
   SEFluidCircuitPath& pNeckArteriesToCerebralArteries1 = CerebralCircuit.CreatePath(nNeckArteries, nCerebralArteries1, BGE::CerebralPath::NeckArteriesToCerebralArteries1);
   pNeckArteriesToCerebralArteries1.GetResistanceBaseline().SetValue(neckToCerebralArteries1Resistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
   pNeckArteriesToCerebralArteries1.SetCardiovascularRegion(SEResistancePathType::Cerebral);
@@ -2439,7 +2444,7 @@ void BioGears::SetupCerebral()
   CombinedCardioCircuit.StateChange();
 
   //---------------------Set up Cerebral Graph (c = compartment, l = liquid link)-------------------
-  //Compartments
+  // Compartments
 
   SELiquidCompartment& cNeckArteries = m_Compartments->CreateLiquidCompartment(BGE::VascularCompartment::NeckArteries);
   cNeckArteries.MapNode(nNeckArteries);
@@ -2933,8 +2938,8 @@ void BioGears::SetupRenal()
   // BladderCompliance //
   SEFluidCircuitPath& BladderToGroundPressure = cRenal.CreatePath(Bladder, Ground, BGE::RenalPath::BladderToGroundPressure);
   /// \todo Use a compliance here - make sure you remove the current handling of bladder volume in the renal system as a pressure source
-  //BladderCompliance.GetComplianceBaseline().SetValue(bladderCompliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
-  BladderToGroundPressure.GetPressureSourceBaseline().SetValue(-4.0, PressureUnit::mmHg); //Negative because source-target is for compliance
+  // BladderCompliance.GetComplianceBaseline().SetValue(bladderCompliance_mL_Per_mmHg, FlowComplianceUnit::mL_Per_mmHg);
+  BladderToGroundPressure.GetPressureSourceBaseline().SetValue(-4.0, PressureUnit::mmHg); // Negative because source-target is for compliance
   //////////////
   // BladderGround //
   SEFluidCircuitPath& BladderToGroundUrinate = cRenal.CreatePath(Bladder, Ground, BGE::RenalPath::BladderToGroundUrinate);
@@ -3388,8 +3393,8 @@ void BioGears::SetupTissue()
   double SkinTissueMass = 3.3;
   double SpleenTissueMass = 0.15;
 
-  //Typical ICRP Female - From ICRP
-  //Total Mass (kg)
+  // Typical ICRP Female - From ICRP
+  // Total Mass (kg)
   if (m_Patient->GetSex() == SESex::Female) {
     AdiposeTissueMass = 19.0;
     BoneTissueMass = 7.8;
@@ -3406,17 +3411,17 @@ void BioGears::SetupTissue()
     SpleenTissueMass = 0.13;
   }
 
-  //Scale things based on patient parameters -------------------------------
+  // Scale things based on patient parameters -------------------------------
 
-  //Modify adipose (i.e. fat) directly using the body fat fraction
+  // Modify adipose (i.e. fat) directly using the body fat fraction
   AdiposeTissueMass = m_Patient->GetBodyFatFraction().GetValue() * m_Patient->GetWeight().GetValue(MassUnit::kg);
 
-  //Modify skin based on total surface area
-  //Male
+  // Modify skin based on total surface area
+  // Male
   double standardPatientWeight_lb = 170.0;
   double standardPatientHeight_in = 71.0;
   if (m_Patient->GetSex() == SESex::Female) {
-    //Female
+    // Female
     standardPatientWeight_lb = 130.0;
     standardPatientHeight_in = 64.0;
   }
@@ -3424,18 +3429,18 @@ void BioGears::SetupTissue()
   double patientSkinArea_m2 = m_Patient->GetSkinSurfaceArea(AreaUnit::m2);
   SkinTissueMass = SkinTissueMass * patientSkinArea_m2 / typicalSkinSurfaceArea_m2;
 
-  //Modify most based on lean body mass
-  //Hume, R (Jul 1966). "Prediction of lean body mass from height and weight." Journal of clinical pathology. 19 (4): 389–91. doi:10.1136/jcp.19.4.389. PMC 473290. PMID 5929341.
-  //double typicalLeanBodyMass_kg = 0.32810 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.33929 * Convert(standardPatientHeight_in, LengthUnit::inch, LengthUnit::cm) - 29.5336; //Male
-  //if (m_Patient->GetSex() == SESex::Female)
+  // Modify most based on lean body mass
+  // Hume, R (Jul 1966). "Prediction of lean body mass from height and weight." Journal of clinical pathology. 19 (4): 389–91. doi:10.1136/jcp.19.4.389. PMC 473290. PMID 5929341.
+  // double typicalLeanBodyMass_kg = 0.32810 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.33929 * Convert(standardPatientHeight_in, LengthUnit::inch, LengthUnit::cm) - 29.5336; //Male
+  // if (m_Patient->GetSex() == SESex::Female)
   //{
-  // typicalLeanBodyMass_kg = 0.29569 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.41813 * Convert(standardPatientHeight_in, LengthUnit::inch, LengthUnit::cm) - 43.2933; //Female
-  //}
+  //  typicalLeanBodyMass_kg = 0.29569 * Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) + 0.41813 * Convert(standardPatientHeight_in, LengthUnit::inch, LengthUnit::cm) - 43.2933; //Female
+  // }
 
-  //Male
+  // Male
   double standardFatFraction = 0.21;
   if (m_Patient->GetSex() == SESex::Female) {
-    //Female
+    // Female
     standardFatFraction = 0.28;
   }
   double standardLeanBodyMass_kg = Convert(standardPatientWeight_lb, MassUnit::lb, MassUnit::kg) * (1.0 - standardFatFraction);
@@ -4714,7 +4719,7 @@ void BioGears::SetupRespiratory()
   SEFluidCircuitPath& MouthToTrachea = cRespiratory.CreatePath(Mouth, Trachea, BGE::RespiratoryPath::MouthToTrachea);
   MouthToTrachea.GetResistanceBaseline().SetValue(mouthToTracheaResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
   SEFluidCircuitPath& TracheaToRightBronchi = cRespiratory.CreatePath(Trachea, RightBronchi, BGE::RespiratoryPath::TracheaToRightBronchi);
-  TracheaToRightBronchi.GetResistanceBaseline().SetValue(tracheaToBronchiResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L); //Circuit math assumes equal resistances left/right
+  TracheaToRightBronchi.GetResistanceBaseline().SetValue(tracheaToBronchiResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L); // Circuit math assumes equal resistances left/right
   SEFluidCircuitPath& TracheaToLeftBronchi = cRespiratory.CreatePath(Trachea, LeftBronchi, BGE::RespiratoryPath::TracheaToLeftBronchi);
   TracheaToLeftBronchi.GetResistanceBaseline().SetValue(tracheaToBronchiResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L);
   SEFluidCircuitPath& RightBronchiToRightPleuralConnection = cRespiratory.CreatePath(RightBronchi, RightPleuralConnection, BGE::RespiratoryPath::RightBronchiToRightPleuralConnection);
@@ -4724,7 +4729,7 @@ void BioGears::SetupRespiratory()
   LeftBronchiToLeftPleuralConnection.GetComplianceBaseline().SetValue(bronchiCompliance_L_Per_cmH2O * LeftLungRatio, FlowComplianceUnit::L_Per_cmH2O);
   LeftBronchiToLeftPleuralConnection.SetNextPolarizedState(SEOpenClosed::Closed);
   SEFluidCircuitPath& RightBronchiToRightAlveoli = cRespiratory.CreatePath(RightBronchi, RightAlveoli, BGE::RespiratoryPath::RightBronchiToRightAlveoli);
-  RightBronchiToRightAlveoli.GetResistanceBaseline().SetValue(bronchiToAlveoliResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L); //Circuit math assumes equal resistances left/right
+  RightBronchiToRightAlveoli.GetResistanceBaseline().SetValue(bronchiToAlveoliResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L); // Circuit math assumes equal resistances left/right
   SEFluidCircuitPath& LeftBronchiToLeftAlveoli = cRespiratory.CreatePath(LeftBronchi, LeftAlveoli, BGE::RespiratoryPath::LeftBronchiToLeftAlveoli);
   LeftBronchiToLeftAlveoli.GetResistanceBaseline().SetValue(bronchiToAlveoliResistance_cmH2O_s_Per_L / 2.0, FlowResistanceUnit::cmH2O_s_Per_L);
   SEFluidCircuitPath& RightAlveoliToRightPleuralConnection = cRespiratory.CreatePath(RightAlveoli, RightPleuralConnection, BGE::RespiratoryPath::RightAlveoliToRightPleuralConnection);
@@ -4733,7 +4738,7 @@ void BioGears::SetupRespiratory()
   SEFluidCircuitPath& LeftAlveoliToLeftPleuralConnection = cRespiratory.CreatePath(LeftAlveoli, LeftPleuralConnection, BGE::RespiratoryPath::LeftAlveoliToLeftPleuralConnection);
   LeftAlveoliToLeftPleuralConnection.GetComplianceBaseline().SetValue(alveoliCompliance_L_Per_cmH2O * LeftLungRatio, FlowComplianceUnit::L_Per_cmH2O);
   LeftAlveoliToLeftPleuralConnection.SetNextPolarizedState(SEOpenClosed::Closed);
-  //Need a no element path to be able to include a node with no volume, so it doesn't get modified by compliances
+  // Need a no element path to be able to include a node with no volume, so it doesn't get modified by compliances
   SEFluidCircuitPath& RightPleuralConnectionToRightPleuralCavity = cRespiratory.CreatePath(RightPleuralConnection, RightPleuralCavity, BGE::RespiratoryPath::RightPleuralConnectionToRightPleuralCavity);
   SEFluidCircuitPath& LeftPleuralConnectionToLeftPleuralCavity = cRespiratory.CreatePath(LeftPleuralConnection, LeftPleuralCavity, BGE::RespiratoryPath::LeftPleuralConnectionToLeftPleuralCavity);
   //----------------------------------------------------------------------------------------------------------------------------------------------
@@ -4750,7 +4755,7 @@ void BioGears::SetupRespiratory()
   // Path for needle decompression - right side
   SEFluidCircuitPath& RightPleuralCavityToEnvironment = cRespiratory.CreatePath(RightPleuralCavity, *Ambient, BGE::RespiratoryPath::RightPleuralCavityToEnvironment);
   RightPleuralCavityToEnvironment.GetResistanceBaseline().SetValue(OpenResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
-  //Path for needle decompression - left side
+  // Path for needle decompression - left side
   SEFluidCircuitPath& LeftPleuralCavityToEnvironment = cRespiratory.CreatePath(LeftPleuralCavity, *Ambient, BGE::RespiratoryPath::LeftPleuralCavityToEnvironment);
   LeftPleuralCavityToEnvironment.GetResistanceBaseline().SetValue(OpenResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
   // Path for open (chest wound) pneumothorax circuit  - right side

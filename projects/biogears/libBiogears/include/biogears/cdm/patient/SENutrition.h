@@ -42,9 +42,6 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::NutritionData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::NutritionData* Unload() const;
-
 public:
   const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
@@ -93,9 +90,6 @@ public:
   virtual void ToString(std::ostream& str) const;
 
   virtual bool IsValid() const;
-
-protected:
-  virtual void Unload(CDM::NutritionData& data) const;
 
 protected:
   std::string m_Name;

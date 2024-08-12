@@ -33,16 +33,11 @@ public:
 
   virtual bool IsValid() const override ;
 
-  virtual bool Load(const CDM::ChronicObstructivePulmonaryDiseaseData& in);
-  virtual CDM::ChronicObstructivePulmonaryDiseaseData* Unload() const override;
-
   bool operator==(SEChronicObstructivePulmonaryDisease const&) const;
   bool operator!=(SEChronicObstructivePulmonaryDisease const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::ChronicObstructivePulmonaryDiseaseData& data) const;
 
 public:
   virtual std::string GetName() const override { return "ChronicObstructivePulmonaryDisease"; }

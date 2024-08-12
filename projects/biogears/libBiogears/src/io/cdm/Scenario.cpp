@@ -193,12 +193,12 @@ namespace io {
     out.Clear();
 
     if (in.Configuration().present()) {
-      out.GetConfiguration().Load(in.Configuration().get());
+      io::EngineConfiguration::UnMarshall(in.Configuration(), out.GetConfiguration());
     }
     if (in.PatientFile().present()) {
       out.m_PatientFile = in.PatientFile().get();
-    } else if (in.Patient().present()) {
-      out.GetPatient().Load(in.Patient().get());
+    } else if (in.Patient().present()) {      
+      io::Patient::UnMarshall(in.Patient().get(), out.GetPatient());
     } else {
       throw CommonDataModelException("No patient provided");
     }

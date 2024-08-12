@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include "io/cdm/Patient.h"
 #include "io/cdm/PatientNutrition.h"
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
@@ -78,24 +79,6 @@ void SENutrition::Increment(const SENutrition& from)
     GetWater().Increment(*from.m_Water);
 }
 //-----------------------------------------------------------------------------
-bool SENutrition::Load(const CDM::NutritionData& in, std::default_random_engine* rd)
-{
-  io::PatientNutrition::UnMarshall(in, *this, rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::NutritionData* SENutrition::Unload() const
-{
-  CDM::NutritionData* data = new CDM::NutritionData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SENutrition::Unload(CDM::NutritionData& data) const
-{
-  io::PatientNutrition::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 const SEScalar* SENutrition::GetScalar(const char* name)
 {
   return GetScalar(std::string { name });
@@ -147,7 +130,8 @@ bool SENutrition::Load(const std::string& given)
     Error(ss);
     return false;
   }
-  return Load(*pData);
+  io::PatientNutrition::UnMarshall(*pData, *this);
+  return true;
 }
 //-----------------------------------------------------------------------------
 std::string SENutrition::GetName() const

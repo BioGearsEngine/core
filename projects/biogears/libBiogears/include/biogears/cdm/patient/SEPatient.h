@@ -66,12 +66,8 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::PatientData& in);
-
   bool Load(const char* patientFile);
   bool Load(const std::string& patientFile);
-
-  virtual CDM::PatientData* Unload() const;
 
   /** @name GetScalar
    *   @brief - A reflextion type call that will return the Scalar associated
@@ -264,8 +260,6 @@ public:
   bool operator!=(SEPatient const& rhs) const;
 
 protected:
-  virtual void Unload(CDM::PatientData& data) const;
-
   virtual void CalculateWeightByBMI(const CDM::ScalarData& bmi);
   virtual void CalculateHeightByBMI(const CDM::ScalarData& bmi);
 

@@ -33,18 +33,11 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::DiabetesType1Data& in);
-  virtual CDM::DiabetesType1Data* Unload() const override ;
-
   bool operator==(SEDiabetesType1 const&) const;
   bool operator!=(SEDiabetesType1 const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::DiabetesType1Data& data) const;
-
-public:
   virtual std::string GetName() const  override { return "DiabetesType1"; }
   virtual const char* GetName_cStr() const  override { return "DiabetesType1"; }
 

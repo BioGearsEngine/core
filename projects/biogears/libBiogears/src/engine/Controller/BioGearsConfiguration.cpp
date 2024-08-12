@@ -401,7 +401,8 @@ bool BioGearsConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& f
   if (bgConfig != nullptr)
     return Load(*bgConfig);
   else
-    return PhysiologyEngineConfiguration::Load(from);
+    io::BiogearsEngineConfiguration::UnMarshall(*bgConfig, *this);
+  return true;
 }
 
 bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
