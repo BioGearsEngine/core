@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEConditionManager.h>
 
 #include "io/cdm/Scenario.h"
+#include "io/cdm/PatientConditions.h"
+#include "io/cdm/EnvironmentConditions.h"
 
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -70,50 +72,43 @@ void SEConditionManager::Clear()
   DELETE_VECTOR(m_Conditions);
 }
 
-void SEConditionManager::Unload(std::vector<CDM::ConditionData*>& to)
-{
-  for (SECondition* c : m_Conditions)
-    to.push_back(c->Unload());
-}
-
 bool SEConditionManager::ProcessCondition(const SECondition& condition, const PhysiologyEngine& engine)
 {
-  //if (!IsValid(action))
-  //  return false;
-  CDM::ConditionData* bind = condition.Unload();
+
+ auto bind = io::Conditions::factory(&condition);
   bool b = ProcessCondition(*bind, engine);
-  delete bind;
   return b;
 }
 
 bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, const PhysiologyEngine& engine)
 {
-  const CDM::ChronicAnemiaData* anemiaData = dynamic_cast<const CDM::ChronicAnemiaData*>(&condition);
-  if (anemiaData != nullptr) {
+  
+  if (const CDM::ChronicAnemiaData* anemiaData = dynamic_cast<const CDM::ChronicAnemiaData*>(&condition)) {
     if (HasChronicAnemia()) {
       Error("Cannot have multiple Anemia conditions");
       return false;
     }
     m_Anemia = new SEChronicAnemia();
-    m_Anemia->Load(*anemiaData);
+    io::PatientConditions::UnMarshall(*anemiaData, *m_Anemia);
+    
     m_Conditions.push_back(m_Anemia);
     return true;
   }
 
-  const CDM::ChronicObstructivePulmonaryDiseaseData* copdData = dynamic_cast<const CDM::ChronicObstructivePulmonaryDiseaseData*>(&condition);
-  if (copdData != nullptr) {
+  
+  if (const CDM::ChronicObstructivePulmonaryDiseaseData* copdData = dynamic_cast<const CDM::ChronicObstructivePulmonaryDiseaseData*>(&condition)) {
     if (HasChronicObstructivePulmonaryDisease()) {
       Error("Cannot have multiple COPD conditions");
       return false;
     }
     m_COPD = new SEChronicObstructivePulmonaryDisease();
-    m_COPD->Load(*copdData);
+    io::PatientConditions::UnMarshall(*copdData, *m_COPD);
     m_Conditions.push_back(m_COPD);
     return true;
   }
 
-  const CDM::ChronicHeartFailureData* heartFailureData = dynamic_cast<const CDM::ChronicHeartFailureData*>(&condition);
-  if (heartFailureData != nullptr) {
+  
+  if (const CDM::ChronicHeartFailureData* heartFailureData = dynamic_cast<const CDM::ChronicHeartFailureData*>(&condition)) {
     if (HasChronicHeartFailure()) {
       Error("Cannot have multiple Heart Failure conditions");
       return false;
@@ -121,7 +116,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
     const CDM::ChronicVentricularSystolicDysfunctionData* vsdData = dynamic_cast<const CDM::ChronicVentricularSystolicDysfunctionData*>(&condition);
     if (vsdData != nullptr) {
       m_HeartFailure = new SEChronicVentricularSystolicDysfunction();
-      m_HeartFailure->Load(*vsdData);
+      io::PatientConditions::UnMarshall(*heartFailureData, *m_HeartFailure);
       m_Conditions.push_back(m_HeartFailure);
       return true;
     }
@@ -129,110 +124,110 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
     return false;
   }
 
-  const CDM::ChronicPericardialEffusionData* peData = dynamic_cast<const CDM::ChronicPericardialEffusionData*>(&condition);
-  if (peData != nullptr) {
+  
+  if (const CDM::ChronicPericardialEffusionData* peData = dynamic_cast<const CDM::ChronicPericardialEffusionData*>(&condition)) {
     if (HasChronicPericardialEffusion()) {
       Error("Cannot have multiple Pericardial Effusion conditions");
       return false;
     }
     m_PericardialEffusion = new SEChronicPericardialEffusion();
-    m_PericardialEffusion->Load(*peData);
+    io::PatientConditions::UnMarshall(*peData, *m_PericardialEffusion);
     m_Conditions.push_back(m_PericardialEffusion);
     return true;
   }
 
-  const CDM::ChronicRenalStenosisData* renalStenosisData = dynamic_cast<const CDM::ChronicRenalStenosisData*>(&condition);
-  if (renalStenosisData != nullptr) {
+  
+  if (const CDM::ChronicRenalStenosisData* renalStenosisData = dynamic_cast<const CDM::ChronicRenalStenosisData*>(&condition)) {
     if (HasChronicRenalStenosis()) {
       Error("Cannot have multiple Renal Stenosis conditions");
       return false;
     }
     m_RenalStenosis = new SEChronicRenalStenosis();
-    m_RenalStenosis->Load(*renalStenosisData);
+    io::PatientConditions::UnMarshall(*renalStenosisData, *m_RenalStenosis);
     m_Conditions.push_back(m_RenalStenosis);
     return true;
   }
 
   const CDM::DehydrationData* dehydrationData = dynamic_cast<const CDM::DehydrationData*>(&condition);
-  if (dehydrationData != nullptr) {
+  if (const CDM::ChronicRenalStenosisData* renalStenosisData = dynamic_cast<const CDM::ChronicRenalStenosisData*>(&condition)) {
     if (HasDehydration()) {
       Error("Cannot have multiple Dehydration conditions");
       return false;
     }
     m_Dehydration = new SEDehydration();
-    m_Dehydration->Load(*dehydrationData);
+    io::PatientConditions::UnMarshall(*dehydrationData, *m_Dehydration);
     m_Conditions.push_back(m_Dehydration);
     return true;
   }
 
-  const CDM::DiabetesType1Data* diabetes1Data = dynamic_cast<const CDM::DiabetesType1Data*>(&condition);
-  if (diabetes1Data != nullptr) {
+  
+  if (const CDM::DiabetesType1Data* diabetes1Data = dynamic_cast<const CDM::DiabetesType1Data*>(&condition)) {
     if (HasDiabetesType1()) {
       Error("Cannot have multiple DiabetesType1 conditions");
       return false;
     }
     m_DiabetesType1 = new SEDiabetesType1();
-    m_DiabetesType1->Load(*diabetes1Data);
+    io::PatientConditions::UnMarshall(*diabetes1Data, *m_DiabetesType1);
     m_Conditions.push_back(m_DiabetesType1);
     return true;
   }
 
-  const CDM::DiabetesType2Data* diabetes2Data = dynamic_cast<const CDM::DiabetesType2Data*>(&condition);
-  if (diabetes2Data != nullptr) {
+  
+  if (const CDM::DiabetesType2Data* diabetes2Data = dynamic_cast<const CDM::DiabetesType2Data*>(&condition)) {
     if (HasDiabetesType2()) {
       Error("Cannot have multiple DiabetesType2 conditions");
       return false;
     }
     m_DiabetesType2 = new SEDiabetesType2();
-    m_DiabetesType2->Load(*diabetes2Data);
+    io::PatientConditions::UnMarshall(*diabetes2Data, *m_DiabetesType2);
     m_Conditions.push_back(m_DiabetesType2);
     return true;
   }
 
-  const CDM::StarvationData* starvationData = dynamic_cast<const CDM::StarvationData*>(&condition);
-  if (starvationData != nullptr) {
+  
+  if (const CDM::StarvationData* starvationData = dynamic_cast<const CDM::StarvationData*>(&condition)) {
     if (HasStarvation()) {
       Error("Cannot have multiple Starvation conditions");
       return false;
     }
     m_Starvation = new SEStarvation();
-    m_Starvation->Load(*starvationData);
+    io::PatientConditions::UnMarshall(*starvationData, *m_Starvation);
     m_Conditions.push_back(m_Starvation);
     return true;
   }
 
-  const CDM::ImpairedAlveolarExchangeData* impairedAlvioliData = dynamic_cast<const CDM::ImpairedAlveolarExchangeData*>(&condition);
-  if (impairedAlvioliData != nullptr) {
+  
+  if (const CDM::ImpairedAlveolarExchangeData* impairedAlvioliData = dynamic_cast<const CDM::ImpairedAlveolarExchangeData*>(&condition)) {
     if (HasImpairedAlveolarExchange()) {
       Error("Cannot have multiple Impaired Alveolar Exchange conditions");
       return false;
     }
     m_ImpairedAlveolarExchange = new SEImpairedAlveolarExchange();
-    m_ImpairedAlveolarExchange->Load(*impairedAlvioliData);
+    io::PatientConditions::UnMarshall(*impairedAlvioliData, *m_ImpairedAlveolarExchange);
     m_Conditions.push_back(m_ImpairedAlveolarExchange);
     return true;
   }
 
-  const CDM::LobarPneumoniaData* pneumoniaData = dynamic_cast<const CDM::LobarPneumoniaData*>(&condition);
-  if (pneumoniaData != nullptr) {
+  
+  if (const CDM::LobarPneumoniaData* pneumoniaData = dynamic_cast<const CDM::LobarPneumoniaData*>(&condition)) {
     if (HasLobarPneumonia()) {
       Error("Cannot have multiple Lobar Pneumonia conditions");
       return false;
     }
     m_LobarPneumonia = new SELobarPneumonia();
-    m_LobarPneumonia->Load(*pneumoniaData);
+    io::PatientConditions::UnMarshall(*pneumoniaData, *m_LobarPneumonia);
     m_Conditions.push_back(m_LobarPneumonia);
     return true;
   }
 
-  const CDM::InitialEnvironmentData* environmentData = dynamic_cast<const CDM::InitialEnvironmentData*>(&condition);
-  if (environmentData != nullptr) {
+  
+  if (const CDM::InitialEnvironmentData* environmentData = dynamic_cast<const CDM::InitialEnvironmentData*>(&condition)) {
     if (HasInitialEnvironment()) {
       Error("Cannot have multiple Initial Environment conditions");
       return false;
     }
     m_InitialEnvironment = new SEInitialEnvironment(m_Substances);
-    m_InitialEnvironment->Load(*environmentData);
+    io::EnvironmentConditions::UnMarshall(*environmentData, *m_InitialEnvironment);
     m_Conditions.push_back(m_InitialEnvironment);
     return true;
   }

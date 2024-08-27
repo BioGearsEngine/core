@@ -29,16 +29,10 @@ public:
 
   virtual bool IsValid() const override ;
 
-  virtual bool Load(const CDM::InitialEnvironmentData& in);
-  virtual CDM::InitialEnvironmentData* Unload() const override ;
-
   bool operator==(SEInitialEnvironment const& rhs) const;
   bool operator!=(SEInitialEnvironment const& rhs) const;
   bool operator==(SECondition const&) const override;
   bool operator!=(SECondition const&) const override;
-
-protected:
-  virtual void Unload(CDM::InitialEnvironmentData& data) const;
 
 public:
   virtual std::string GetName() const  override { return "InitialEnvironment"; }

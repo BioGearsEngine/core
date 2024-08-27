@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include "io/biogears/BioGears.h"
 #include "io/cdm/Circuit.h"
 #include "io/cdm/Compartment.h"
+#include "io/cdm/Conditions.h"
 #include "io/cdm/Patient.h"
 #include "io/cdm/PatientAssessments.h"
 
@@ -245,7 +246,7 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
     m_ss << "BioGearsState must have a patient" << std::endl;
   } else {
     try {
-        io::Patient::UnMarshall(bgState->Patient().get(), *m_Patient);
+      io::Patient::UnMarshall(bgState->Patient().get(), *m_Patient);
     } catch (CommonDataModelException ex) {
       m_ss << "Error loading patient data: " << ex.what() << std::endl;
     }
@@ -536,11 +537,10 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
   state->Patient(std::make_unique<CDM::PatientData>());
   io::Patient::Marshall(*m_Patient, ((CDM::BioGearsStateData*)state.get())->Patient());
   // Conditions
-  std::vector<CDM::ConditionData*> conditions;
-  m_Conditions->Unload(conditions);
+  auto conditions = io::Conditions::condition_data_factory(*m_Conditions);
 
-  for (CDM::ConditionData* cData : conditions) {
-    state->Condition().push_back(std::unique_ptr<CDM::ConditionData>(cData));
+  for (auto& cData : conditions) {
+    state->Condition().push_back(std::move(cData));
   }
   // Actions
   std::vector<CDM::ActionData*> activeActions;
@@ -891,7 +891,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
       map[""].schema = "BioGears.xsd";
       auto pvtData = std::unique_ptr<CDM::PsychomotorVigilanceTaskData>();
       io::PatientAssessments::Marshall(pvt, *pvtData);
-      
+
       pvtData->contentVersion(branded_version_string());
       PsychomotorVigilanceTask(stream, *pvtData, map);
       stream.close();
@@ -947,7 +947,7 @@ bool BioGearsEngine::ProcessAction(const SEAction& action)
 
       auto cmpData = std::unique_ptr<CDM::ComprehensiveMetabolicPanelData>();
       io::PatientAssessments::Marshall(cmp, *cmpData);
-      
+
       cmpData->contentVersion(branded_version_string());
       ComprehensiveMetabolicPanel(stream, *cmpData, map);
       stream.close();

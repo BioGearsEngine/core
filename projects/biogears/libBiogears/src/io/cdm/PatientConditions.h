@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <memory>
+#include <random>
 
 #include "biogears/cdm/CommonDataModel.h"
 #include <biogears/exports.h>
@@ -57,10 +58,10 @@ class SEStarvation;
 namespace io {
   class BIOGEARS_PRIVATE_API PatientConditions {
   public:
-    // class SEConditionList;
-    static std::vector<std::unique_ptr<SECondition>> condition_factory(const CDM::ConditionListData& in, SESubstanceManager& substances);
-    static std::unique_ptr<SECondition> factory(const CDM::ConditionData* data, SESubstanceManager& substances);
-    static std::unique_ptr<CDM::ConditionData> factory(const SECondition* data);
+    // class Factories;
+    static std::unique_ptr<SECondition> factory(CDM::PatientConditionData const* patientConditionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<CDM::PatientConditionData> factory(const SEPatientCondition* data);
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);

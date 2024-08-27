@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <random>
+#include <vector>
+#include <memory>
 #include <type_traits>
 
 #include "Conditions.h"
@@ -52,10 +54,18 @@ namespace biogears {
 
 class SECondition;
 class SEConditionList;
+class SESubstanceManager;
+class SEConditionManager;
 
 namespace io {
   class BIOGEARS_PRIVATE_API Conditions {
   public:
+    // class Factories;
+    static std::vector<std::unique_ptr<SECondition>> condition_factory(const CDM::ConditionListData& in, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::vector < std::unique_ptr<CDM::ConditionData>> condition_data_factory(SEConditionManager const& conditionManager);
+    static std::unique_ptr<SECondition> factory(CDM::ConditionData const* conditionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<CDM::ConditionData> factory(const SECondition* data);
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -68,9 +78,8 @@ namespace io {
     static void UnMarshall(const CDM::ConditionData& in, SECondition& out);
     static void Marshall(const SECondition& in, CDM::ConditionData& out);
     // class ConditionList
-    //static void UnMarshall(const CDM::ConditionListData& in, SEConditionList& out, std::default_random_engine* re = nullptr);
-    //static void Marshall(const SEConditionList& in, CDM::ConditionListData& out);
-
+    // static void UnMarshall(const CDM::ConditionListData& in, SEConditionList& out, std::default_random_engine* re = nullptr);
+    // static void Marshall(const SEConditionList& in, CDM::ConditionListData& out);
   };
 
   //----------------------------------------------------------------------------------

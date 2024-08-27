@@ -7,6 +7,7 @@
 
 #include "io/biogears/BioGears.h"
 #include "io/cdm/Actions.h"
+#include "io/cdm/Conditions.h"
 #include "io/cdm/Circuit.h"
 #include "io/cdm/Compartment.h"
 #include "io/cdm/Property.h"
@@ -157,10 +158,9 @@ void BioGears::Marshall(const BioGearsEngine& in, CDM::BioGearsStateData& out)
   // Patient
   CDM_OPTIONAL_PATIENT_MARSHALL_HELPER(in, out, Patient);
   // Conditions
-  std::vector<CDM::ConditionData*> conditions;
-  in.m_Conditions->Unload(conditions);
-  for (CDM::ConditionData* cData : conditions) {
-    out.Condition().push_back(std::unique_ptr<CDM::ConditionData>(cData));
+  auto conditions = Conditions::condition_data_factory(*in.m_Conditions);
+  for (auto& cData : conditions) {
+    out.Condition().push_back(std::move(cData));
   }
   // Actions
   std::vector<CDM::ActionData*> activeActions;

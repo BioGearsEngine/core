@@ -53,100 +53,82 @@ SECondition* SECondition::newFromBind(const CDM::ConditionData& data, SESubstanc
 {
   // Could speed up case by testing Patient Conditions vs another type
   // But we only have 1 type at this time, and a few conditions to support
-  const CDM::ChronicAnemiaData* ccAnemiaData = dynamic_cast<const CDM::ChronicAnemiaData*>(&data);
-  if (ccAnemiaData != nullptr) {
+  
+  if (const CDM::ChronicAnemiaData* ccAnemiaData = dynamic_cast<const CDM::ChronicAnemiaData*>(&data)) {
     SEChronicAnemia* cc = new SEChronicAnemia();
-    cc->Load(*ccAnemiaData);
+    io::Conditions::UnMarshall(*ccAnemiaData, *cc);
     return cc;
   }
-  const CDM::ChronicObstructivePulmonaryDiseaseData* ccopdData = dynamic_cast<const CDM::ChronicObstructivePulmonaryDiseaseData*>(&data);
-  if (ccopdData != nullptr) {
+  
+  if (const CDM::ChronicObstructivePulmonaryDiseaseData* ccopdData = dynamic_cast<const CDM::ChronicObstructivePulmonaryDiseaseData*>(&data)) {
     SEChronicObstructivePulmonaryDisease* cc = new SEChronicObstructivePulmonaryDisease();
-    cc->Load(*ccopdData);
+    io::Conditions::UnMarshall(*ccopdData, *cc);
     return cc;
   }
-  const CDM::ChronicVentricularSystolicDysfunctionData* ccVentSysDysfuncData = dynamic_cast<const CDM::ChronicVentricularSystolicDysfunctionData*>(&data);
-  if (ccVentSysDysfuncData != nullptr) {
+  
+  if (const CDM::ChronicVentricularSystolicDysfunctionData* ccVentSysDysfuncData = dynamic_cast<const CDM::ChronicVentricularSystolicDysfunctionData*>(&data)) {
     SEChronicVentricularSystolicDysfunction* cc = new SEChronicVentricularSystolicDysfunction();
-    cc->Load(*ccVentSysDysfuncData);
+    io::Conditions::UnMarshall(*ccVentSysDysfuncData, *cc);
     return cc;
   }
-  const CDM::ChronicPericardialEffusionData* ccPericardialEffusionData = dynamic_cast<const CDM::ChronicPericardialEffusionData*>(&data);
-  if (ccPericardialEffusionData != nullptr) {
+  
+  if (const CDM::ChronicPericardialEffusionData* ccPericardialEffusionData = dynamic_cast<const CDM::ChronicPericardialEffusionData*>(&data)) {
     SEChronicPericardialEffusion* cc = new SEChronicPericardialEffusion();
-    cc->Load(*ccPericardialEffusionData);
+    io::Conditions::UnMarshall(*ccPericardialEffusionData, *cc);
     return cc;
   }
-  const CDM::ChronicRenalStenosisData* ccRenalStenosisData = dynamic_cast<const CDM::ChronicRenalStenosisData*>(&data);
-  if (ccRenalStenosisData != nullptr) {
+  
+  if (const CDM::ChronicRenalStenosisData* ccRenalStenosisData = dynamic_cast<const CDM::ChronicRenalStenosisData*>(&data)) {
     SEChronicRenalStenosis* cc = new SEChronicRenalStenosis();
-    cc->Load(*ccRenalStenosisData);
+    io::Conditions::UnMarshall(*ccRenalStenosisData, *cc);
     return cc;
   }
-  const CDM::DehydrationData* ccDehydrationData = dynamic_cast<const CDM::DehydrationData*>(&data);
-  if (ccDehydrationData != nullptr) {
+  
+  if (const CDM::DehydrationData* ccDehydrationData = dynamic_cast<const CDM::DehydrationData*>(&data)) {
     SEDehydration* cc = new SEDehydration();
-    cc->Load(*ccDehydrationData);
+    io::Conditions::UnMarshall(*ccDehydrationData, *cc);
     return cc;
   }
-  const CDM::DiabetesType1Data* ccDiabetesType1Data = dynamic_cast<const CDM::DiabetesType1Data*>(&data);
-  if (ccDiabetesType1Data != nullptr) {
+  
+  if (const CDM::DiabetesType1Data* ccDiabetesType1Data = dynamic_cast<const CDM::DiabetesType1Data*>(&data)) {
     SEDiabetesType1* cc = new SEDiabetesType1();
-    cc->Load(*ccDiabetesType1Data);
+    io::Conditions::UnMarshall(*ccDiabetesType1Data, *cc);
     return cc;
   }
-  const CDM::DiabetesType2Data* ccDiabetesType2Data = dynamic_cast<const CDM::DiabetesType2Data*>(&data);
-  if (ccDiabetesType2Data != nullptr) {
+  
+  if (const CDM::DiabetesType2Data* ccDiabetesType2Data = dynamic_cast<const CDM::DiabetesType2Data*>(&data)) {
     SEDiabetesType2* cc = new SEDiabetesType2();
-    cc->Load(*ccDiabetesType2Data);
+    io::Conditions::UnMarshall(*ccDiabetesType2Data, *cc);
     return cc;
   }
-  const CDM::StarvationData* ccStarvationData = dynamic_cast<const CDM::StarvationData*>(&data);
-  if (ccStarvationData != nullptr) {
+  
+  if (const CDM::StarvationData* ccStarvationData = dynamic_cast<const CDM::StarvationData*>(&data)) {
     SEStarvation* cc = new SEStarvation();
-    cc->Load(*ccStarvationData);
+    io::Conditions::UnMarshall(*ccStarvationData, *cc);
     return cc;
   }
-  const CDM::ImpairedAlveolarExchangeData* ccImpairedAlveolarExchangeData = dynamic_cast<const CDM::ImpairedAlveolarExchangeData*>(&data);
-  if (ccImpairedAlveolarExchangeData != nullptr) {
+  
+  if (const CDM::ImpairedAlveolarExchangeData* ccImpairedAlveolarExchangeData = dynamic_cast<const CDM::ImpairedAlveolarExchangeData*>(&data)) {
     SEImpairedAlveolarExchange* cc = new SEImpairedAlveolarExchange();
-    cc->Load(*ccImpairedAlveolarExchangeData);
+    io::Conditions::UnMarshall(*ccImpairedAlveolarExchangeData, *cc);
     return cc;
   }
-  const CDM::LobarPneumoniaData* ccLobarPneumoniaData = dynamic_cast<const CDM::LobarPneumoniaData*>(&data);
-  if (ccLobarPneumoniaData != nullptr) {
+  
+  if (const CDM::LobarPneumoniaData* ccLobarPneumoniaData = dynamic_cast<const CDM::LobarPneumoniaData*>(&data)) {
     SELobarPneumonia* cc = new SELobarPneumonia();
-    cc->Load(*ccLobarPneumoniaData);
+    io::Conditions::UnMarshall(*ccLobarPneumoniaData, *cc);
     return cc;
   }
-  const CDM::InitialEnvironmentData* ccInitialEnvironmentData = dynamic_cast<const CDM::InitialEnvironmentData*>(&data);
-  if (ccInitialEnvironmentData != nullptr) {
+  
+  if (const CDM::InitialEnvironmentData* ccInitialEnvironmentData = dynamic_cast<const CDM::InitialEnvironmentData*>(&data)) {
     SEInitialEnvironment* cc = new SEInitialEnvironment(substances);
-    cc->Load(*ccInitialEnvironmentData);
+    io::Conditions::UnMarshall(*ccInitialEnvironmentData, *cc);
     return cc;
   }
 
   if (substances.GetLogger() != nullptr)
     substances.GetLogger()->Error("Unsupported Condition Received", "SECondition::newFromBind");
   return nullptr;
-}
-//-------------------------------------------------------------------------------
-bool SECondition::Load(const CDM::ConditionData& in)
-{
-  io::Conditions::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ConditionData* SECondition::Unload() const
-{
-  CDM::ConditionData* data = new CDM::ConditionData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SECondition::Unload(CDM::ConditionData& data) const
-{
-  io::Conditions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 const char* SECondition::GetComment_cStr() const

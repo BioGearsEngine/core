@@ -51,24 +51,7 @@ bool SEInitialEnvironment::IsValid() const
 {
   return SEEnvironmentCondition::IsValid() && (HasConditions() || HasConditionsFile());
 }
-//-----------------------------------------------------------------------------
-bool SEInitialEnvironment::Load(const CDM::InitialEnvironmentData& in)
-{
-  io::EnvironmentConditions::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::InitialEnvironmentData* SEInitialEnvironment::Unload() const
-{
-  CDM::InitialEnvironmentData* data = new CDM::InitialEnvironmentData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEInitialEnvironment::Unload(CDM::InitialEnvironmentData& data) const
-{
-  io::EnvironmentConditions::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 bool SEInitialEnvironment::HasConditions() const
 {

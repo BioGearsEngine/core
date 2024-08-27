@@ -158,9 +158,11 @@ void SEScenarioInitialParameters::InvalidatePatient()
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::AddCondition(const SECondition& c)
 {
-  CDM::ConditionData* bind = c.Unload();
-  m_Conditions.push_back(SECondition::newFromBind(*bind, m_SubMgr));
-  delete bind;
+
+  auto conditionData = io::Conditions::factory(&c);
+  auto conditionCopy = io::Conditions::factory(conditionData.get(), m_SubMgr).release();
+  m_Conditions.push_back(conditionCopy);
+
 }
 //-----------------------------------------------------------------------------
 const std::vector<SECondition*>& SEScenarioInitialParameters::GetConditions() const

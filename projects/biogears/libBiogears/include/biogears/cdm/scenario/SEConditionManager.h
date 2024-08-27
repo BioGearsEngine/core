@@ -32,16 +32,19 @@ specific language governing permissions and limitations under the License.
 CDM_BIND_DECL(ConditionData);
 
 namespace biogears {
+namespace io {
+  Conditions;
+}
 class PhysiologyEngine;
 
 class BIOGEARS_API SEConditionManager : public Loggable {
+  friend class io::Conditions;
+
 public:
   SEConditionManager(SESubstanceManager&);
   ~SEConditionManager();
 
   void Clear();
-
-  void Unload(std::vector<CDM::ConditionData*>& to);
 
   bool ProcessCondition(const SECondition& condition, const PhysiologyEngine& engine);
   bool ProcessCondition(const CDM::ConditionData& condition, const PhysiologyEngine& engine);

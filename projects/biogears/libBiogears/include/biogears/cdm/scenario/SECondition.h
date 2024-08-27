@@ -35,14 +35,8 @@ public:
 
   static SECondition* newFromBind(const CDM::ConditionData& condition, SESubstanceManager& substances);
 
-  virtual bool Load(const CDM::ConditionData& in);
-  virtual CDM::ConditionData* Unload() const;
-
   virtual bool operator==(SECondition const&) const = 0;
   virtual bool operator!=(SECondition const&) const = 0;
-
-protected:
-  void Unload(CDM::ConditionData& data) const;
 
 public:
   /** Test if the action has all data it needs */

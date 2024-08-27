@@ -204,7 +204,7 @@ namespace io {
     }
 
     for (auto const& conditionData : in.Condition()) {
-      out.m_Conditions.push_back(PatientConditions::factory(&conditionData, out.m_SubMgr).release());
+      out.m_Conditions.push_back(Conditions::factory(&conditionData, out.m_SubMgr).release());
     }
 
     if (!out.IsValid()) {
@@ -219,7 +219,7 @@ namespace io {
       Patient::Marshall(*in.m_Patient, out.Patient());
     }
     for (SECondition* condition : in.m_Conditions) {
-      auto conditionData = PatientConditions::factory(condition);
+      auto conditionData = Conditions::factory(condition);
       out.Condition().push_back(std::move(conditionData));
     }
     if (in.HasConfiguration()) {
