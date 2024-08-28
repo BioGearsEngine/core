@@ -79,34 +79,22 @@ namespace io {
   {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    if (in.m_ExpiratoryReserveVolume != nullptr)
-      io::Property::Marshall(*in.m_ExpiratoryReserveVolume, out.ExpiratoryReserveVolume());
-    if (in.m_ForcedVitalCapacity != nullptr)
-      io::Property::Marshall(*in.m_ForcedVitalCapacity, out.ForcedVitalCapacity());
-    if (in.m_ForcedExpiratoryVolume != nullptr)
-      io::Property::Marshall(*in.m_ForcedExpiratoryVolume, out.ForcedExpiratoryVolume());
-    if (in.m_ForcedExpiratoryFlow != nullptr)
-      io::Property::Marshall(*in.m_ForcedExpiratoryFlow, out.ForcedExpiratoryFlow());
-    if (in.m_FunctionalResidualCapacity != nullptr)
-      io::Property::Marshall(*in.m_FunctionalResidualCapacity, out.FunctionalResidualCapacity());
-    if (in.m_InspiratoryCapacity != nullptr)
-      io::Property::Marshall(*in.m_InspiratoryCapacity, out.InspiratoryCapacity());
-    if (in.m_InspiratoryReserveVolume != nullptr)
-      io::Property::Marshall(*in.m_InspiratoryReserveVolume, out.InspiratoryReserveVolume());
-    if (in.m_MaximumVoluntaryVentilation != nullptr)
-      io::Property::Marshall(*in.m_MaximumVoluntaryVentilation, out.MaximumVoluntaryVentilation());
-    if (in.m_PeakExpiratoryFlow != nullptr)
-      io::Property::Marshall(*in.m_PeakExpiratoryFlow, out.PeakExpiratoryFlow());
-    if (in.m_ResidualVolume != nullptr)
-      io::Property::Marshall(*in.m_ResidualVolume, out.ResidualVolume());
-    if (in.m_SlowVitalCapacity != nullptr)
-      io::Property::Marshall(*in.m_SlowVitalCapacity, out.SlowVitalCapacity());
-    if (in.m_TotalLungCapacity != nullptr)
-      io::Property::Marshall(*in.m_TotalLungCapacity, out.TotalLungCapacity());
-    if (in.m_VitalCapacity != nullptr)
-      io::Property::Marshall(*in.m_VitalCapacity, out.VitalCapacity());
-    if (in.m_LungVolumePlot != nullptr)
-      io::Property::Marshall(*in.m_LungVolumePlot, out.LungVolumePlot());
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExpiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ForcedVitalCapacity)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ForcedExpiratoryVolume)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ForcedExpiratoryFlow)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FunctionalResidualCapacity)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryCapacity)
+
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MaximumVoluntaryVentilation)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PeakExpiratoryFlow)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ResidualVolume)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SlowVitalCapacity)
+
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalLungCapacity)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VitalCapacity)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LungVolumePlot)
   }
   //----------------------------------------------------------------------------------
   // class SECompleteBloodCount
@@ -163,48 +151,23 @@ namespace io {
   void PatientAssessments::Marshall(const SEComprehensiveMetabolicPanel& in, CDM::ComprehensiveMetabolicPanelData& out)
   {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
-    if (in.HasAlbumin()) {
-      io::Property::Marshall(*in.m_Albumin, out.Albumin());
-    }
-    if (in.HasALP()) {
-      io::Property::Marshall(*in.m_ALP, out.ALP());
-    }
-    if (in.HasALT()) {
-      io::Property::Marshall(*in.m_ALT, out.ALT());
-    }
-    if (in.HasAST()) {
-      io::Property::Marshall(*in.m_AST, out.AST());
-    }
-    if (in.HasBUN()) {
-      io::Property::Marshall(*in.m_BUN, out.BUN());
-    }
-    if (in.HasCalcium()) {
-      io::Property::Marshall(*in.m_Calcium, out.Calcium());
-    }
-    if (in.HasChloride()) {
-      io::Property::Marshall(*in.m_Chloride, out.Chloride());
-    }
-    if (in.HasCO2()) {
-      io::Property::Marshall(*in.m_CO2, out.CO2());
-    }
-    if (in.HasCreatinine()) {
-      io::Property::Marshall(*in.m_Creatinine, out.Creatinine());
-    }
-    if (in.HasGlucose()) {
-      io::Property::Marshall(*in.m_Glucose, out.Glucose());
-    }
-    if (in.HasPotassium()) {
-      io::Property::Marshall(*in.m_Potassium, out.Potassium());
-    }
-    if (in.HasSodium()) {
-      io::Property::Marshall(*in.m_Sodium, out.Sodium());
-    }
-    if (in.HasTotalBilirubin()) {
-      io::Property::Marshall(*in.m_TotalBilirubin, out.TotalBilirubin());
-    }
-    if (in.HasTotalProtein()) {
-      io::Property::Marshall(*in.m_TotalProtein, out.TotalProtein());
-    }
+
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Albumin)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ALP)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ALT)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AST)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BUN)
+
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Calcium)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Chloride)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CO2)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Creatinine)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Glucose)
+
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Potassium)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Sodium)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalBilirubin)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalProtein)
   }
   //----------------------------------------------------------------------------------
   // class SEUrinalysis
@@ -233,34 +196,21 @@ namespace io {
   {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    if (in.HasColorResult())
-      Marshall(in.GetColorResult(), out.Color());
-    if (in.HasAppearanceResult())
-      Marshall(in.GetAppearanceResult(), out.Appearance());
-    if (in.HasGlucoseResult())
-      Marshall(in.GetGlucoseResult(), out.Glucose());
-    if (in.HasKetoneResult())
-      Marshall(in.GetKetoneResult(), out.Ketone());
-    if (in.HasBilirubinResult()) {
-      io::Property::Marshall(*in.m_Bilirubin, out.Bilirubin());
-    }
-    if (in.HasSpecificGravityResult()) {
-      io::Property::Marshall(*in.m_SpecificGravity, out.SpecificGravity());
-    }
-    if (in.HasBloodResult())
-      Marshall(in.GetBloodResult(), out.Blood());
-    if (in.HasPHResult()) {
-      io::Property::Marshall(*in.m_pH, out.pH());
-    }
-    if (in.HasProteinResult())
-      Marshall(in.GetProteinResult(), out.Protein());
-    if (in.HasUrobilinogenResult()) {
-      io::Property::Marshall(*in.m_Urobilinogen, out.Urobilinogen());
-    }
-    if (in.HasNitriteResult())
-      Marshall(in.GetNitriteResult(), out.Nitrite());
-    if (in.HasLeukocyteEsteraseResult())
-      Marshall(in.GetLeukocyteEsteraseResult(), out.LeukocyteEsterase());
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Color)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Appearance)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Glucose)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Ketone)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Bilirubin)
+
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SpecificGravity)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Blood)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, pH)
+
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Protein)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Urobilinogen)
+
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Nitrite)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, LeukocyteEsterase)
 
     if (in.HasMicroscopicResult())
       Marshall(*in.m_Microscopic, out.Microscopic());
@@ -291,26 +241,16 @@ namespace io {
 
     SE_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, ObservationType)
 
-    if (in.HasRedBloodCellsResult()) {
-      io::Property::Marshall(*in.m_RedBloodCells, out.RedBloodCells());
-    }
-    if (in.HasWhiteBloodCellsResult()) {
-      io::Property::Marshall(*in.m_WhiteBloodCells, out.WhiteBloodCells());
-    }
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RedBloodCells)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WhiteBloodCells)
 
-    if (in.HasEpithelialCellsResult())
-      Marshall(in.m_EpithelialCells, out.EpithelialCells());
-    if (in.HasCastsResult()) {
-      io::Property::Marshall(*in.m_Casts, out.Casts());
-    }
-    if (in.HasCrystalsResult())
-      Marshall(in.m_Crystals, out.Crystals());
-    if (in.HasBacteriaResult())
-      Marshall(in.m_Bacteria, out.Bacteria());
-    if (in.HasTrichomonadsResult())
-      Marshall(in.m_Trichomonads, out.Trichomonads());
-    if (in.HasYeastResult())
-      Marshall(in.m_Yeast, out.Yeast());
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, EpithelialCells)
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Casts)
+
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Crystals)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Bacteria)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Trichomonads)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Yeast)
   }
   //----------------------------------------------------------------------------------
   // class SEProthrombinTime.h
