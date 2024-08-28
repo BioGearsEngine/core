@@ -445,9 +445,7 @@ namespace io {
       out.BloodRHFactor(in.GetRhFactor());
     }
 
-    if (in.HasClassification()) {
-      io::Substance::Marshall(in.m_Classification, out.Classification());
-    }
+    SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, Classification)
 
     std::vector<SESubstanceConcentration> m_Components;
 

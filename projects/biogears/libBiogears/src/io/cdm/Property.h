@@ -17,8 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <type_traits>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/cdm/enums/SEPropertyEnums.h>
+#include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
 // Question: To Serialize Invalid units or not to Serialize?
@@ -50,7 +50,9 @@ specific language governing permissions and limitations under the License.
   }
 
 #define SE_OPTIONAL_PROPERTY_ENUM_MARSHALL_HELPER(in, out, func) \
-  io::Property::Marshall(in.m_##func, out.func());
+  if (in.m_##func != decltype(in.m_##func)::Invalid) {           \
+    io::Property::Marshall(in.m_##func, out.func());             \
+  }
 
 namespace biogears {
 class RunningAverage;
@@ -193,7 +195,6 @@ namespace io {
     //  SEErrorType
     static void UnMarshall(const CDM::enumErrorType& in, SEErrorType& out);
     static void Marshall(const SEErrorType& in, CDM::enumErrorType& out);
-
   };
 
   //-------------------------------------------------------------------------------
@@ -220,9 +221,9 @@ namespace io {
     out.unit(in.m_unit->GetString());
     out.readOnly(in.m_readOnly);
 
-//    out.value(std::make_unique<std::remove_reference<decltype(out.value())>::type>(in.m_value));
-//    out.unit(std::make_unique<std::remove_reference<decltype(out.unit())>::type>(in.m_unit->GetString()));
-//    out.readOnly(std::make_unique<std::remove_reference<decltype(out.readOnly())>::type>(in.m_readOnly));
+    //    out.value(std::make_unique<std::remove_reference<decltype(out.value())>::type>(in.m_value));
+    //    out.unit(std::make_unique<std::remove_reference<decltype(out.unit())>::type>(in.m_unit->GetString()));
+    //    out.readOnly(std::make_unique<std::remove_reference<decltype(out.readOnly())>::type>(in.m_readOnly));
   }
   //----------------------------------------------------------------------------------
 

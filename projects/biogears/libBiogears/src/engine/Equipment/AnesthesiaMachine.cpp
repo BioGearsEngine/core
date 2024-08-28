@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/Equipment/AnesthesiaMachine.h>
 
+#include "io/biogears/BioGearsEquipment.h"
 #include "io/cdm/Anesthesia.h"
 #include "io/cdm/Property.h"
 
@@ -48,6 +49,11 @@ auto AnesthesiaMachine::make_unique(BioGears& bg) -> std::unique_ptr<AnesthesiaM
 
 AnesthesiaMachine::AnesthesiaMachine(BioGears& bg)
   : SEAnesthesiaMachine(bg.GetSubstances())
+  , m_Inhaling(true)
+  , m_InspirationTime(0.0, TimeUnit::s)
+  , m_OxygenInletVolumeFraction(0.0)
+  , m_TotalBreathingCycleTime(0.0, TimeUnit::s)
+  , m_CurrentBreathingCycleTime(0.0, TimeUnit::s)
   , m_data(bg)
 {
   Clear();
@@ -112,11 +118,11 @@ void AnesthesiaMachine::Initialize()
   GetOxygenBottleTwo().GetVolume().SetValue(660.0, VolumeUnit::L);
   GetReliefValvePressure().SetValue(100.0, PressureUnit::cmH2O);
 
-  m_inhaling = true;
-  m_inspirationTime.SetValue(0.0, TimeUnit::s);
-  m_O2InletVolumeFraction.SetValue(0.0);
-  m_totalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
-  m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
+  m_Inhaling = true;
+  m_InspirationTime.SetValue(0.0, TimeUnit::s);
+  m_OxygenInletVolumeFraction.SetValue(0.0);
+  m_TotalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
+  m_CurrentBreathingCycleTime.SetValue(0.0, TimeUnit::s);
 
   StateChange();
 
@@ -132,15 +138,15 @@ void AnesthesiaMachine::Initialize()
     AmCalculator.PostProcess(RespiratoryAnesthesiaCombined);
   }
   // Restore cycle tracking parameters to their initial values
-  m_inhaling = true;
-  m_inspirationTime.SetValue(0.0, TimeUnit::s);
-  m_totalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
-  m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
+  m_Inhaling = true;
+  m_InspirationTime.SetValue(0.0, TimeUnit::s);
+  m_TotalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
+  m_CurrentBreathingCycleTime.SetValue(0.0, TimeUnit::s);
 }
 
 bool AnesthesiaMachine::Load(const CDM::BioGearsAnesthesiaMachineData& in)
 {
-  io::Anesthesia::UnMarshall(in, *this);
+  io::BiogearsEquipment::UnMarshall(in, *this);
   return true;
 }
 CDM::BioGearsAnesthesiaMachineData* AnesthesiaMachine::Unload() const
@@ -151,7 +157,7 @@ CDM::BioGearsAnesthesiaMachineData* AnesthesiaMachine::Unload() const
 }
 void AnesthesiaMachine::Unload(CDM::BioGearsAnesthesiaMachineData& data) const
 {
-  io::Anesthesia::Marshall(*this, data);
+  io::BiogearsEquipment::Marshall(*this, data);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -321,8 +327,8 @@ void AnesthesiaMachine::PreProcess()
   }
   // Do nothing if the machine is off and not initialized
   if (GetConnection() == SEAnesthesiaMachineConnection::Off) {
-    m_inhaling = true;
-    m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
+    m_Inhaling = true;
+    m_CurrentBreathingCycleTime.SetValue(0.0, TimeUnit::s);
     return;
   }
 
@@ -475,7 +481,7 @@ void AnesthesiaMachine::CalculateGasSource()
       // Info("Oxygen bottle 2 empty");
     }
   }
-  m_O2InletVolumeFraction.SetValue(AM_O2Fraction);
+  m_OxygenInletVolumeFraction.SetValue(AM_O2Fraction);
 
   // If there is any fraction left over, then it will be filled in with nitrogen or ambient air
   double RemainingVolumeFraction = 1.0 - (AM_O2Fraction + LeftInhaledAgentVolumeFraction + RightInhaledAgentVolumeFraction);
@@ -525,7 +531,7 @@ void AnesthesiaMachine::CalculateSourceStatus()
   if (GetOxygenSource() == SEAnesthesiaMachineOxygenSource::BottleOne) {
     double dBottle1Volume_L = GetOxygenBottleOne().GetVolume().GetValue(VolumeUnit::L);
     if (dBottle1Volume_L > 0.0) {
-      dBottle1Volume_L -= m_dt_s * dFlow_LPerS * m_O2InletVolumeFraction.GetValue();
+      dBottle1Volume_L -= m_dt_s * dFlow_LPerS * m_OxygenInletVolumeFraction.GetValue();
     } else if (dBottle1Volume_L <= 0.0) // Empty
     {
       /// \event %AnesthesiaMachine: Oxygen bottle 1 is exhausted. There is no longer any oxygen to provide via the anesthesia machine.
@@ -536,7 +542,7 @@ void AnesthesiaMachine::CalculateSourceStatus()
   } else if (GetOxygenSource() == SEAnesthesiaMachineOxygenSource::BottleTwo) {
     double dBottle2Volume_L = GetOxygenBottleTwo().GetVolume().GetValue(VolumeUnit::L);
     if (dBottle2Volume_L > 0.0) {
-      dBottle2Volume_L -= m_dt_s * dFlow_LPerS * m_O2InletVolumeFraction.GetValue();
+      dBottle2Volume_L -= m_dt_s * dFlow_LPerS * m_OxygenInletVolumeFraction.GetValue();
     } else if (dBottle2Volume_L <= 0.0) {
       /// \event %AnesthesiaMachine: Oxygen bottle 2 is exhausted. There is no longer any oxygen to provide via the anesthesia machine.
       SetEvent(SEAnesthesiaMachineEvent::OxygenBottle2Exhausted, true, m_data.GetSimulationTime());
@@ -649,7 +655,7 @@ void AnesthesiaMachine::CalculateValveResistances()
   }
 
   // Set the value based on where we are in the cycle
-  if (m_inhaling) {
+  if (m_Inhaling) {
     m_pInspiratoryLimbToYPiece->GetNextResistance().SetValue(dInspValveClosedResistance, FlowResistanceUnit::cmH2O_s_Per_L);
     m_pYPieceToExpiratoryLimb->GetNextResistance().SetValue(dExpValveOpenResistance, FlowResistanceUnit::cmH2O_s_Per_L);
   } else {
@@ -673,7 +679,7 @@ void AnesthesiaMachine::CalculateVentilator()
 {
   // Calculate the driver pressure
   double dDriverPressure = 1033.23;
-  if (m_inhaling) {
+  if (m_Inhaling) {
     dDriverPressure = GetVentilatorPressure(PressureUnit::cmH2O);
   } else {
     dDriverPressure = GetPositiveEndExpiredPressure(PressureUnit::cmH2O);
@@ -697,27 +703,27 @@ void AnesthesiaMachine::CalculateVentilator()
 void AnesthesiaMachine::CalculateCyclePhase()
 {
   // Determine where we are in the cycle
-  m_currentbreathingCycleTime.IncrementValue(m_dt_s, TimeUnit::s);
-  if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) > m_totalBreathingCycleTime.GetValue(TimeUnit::s)) // End of the cycle
+  m_CurrentBreathingCycleTime.IncrementValue(m_dt_s, TimeUnit::s);
+  if (m_CurrentBreathingCycleTime.GetValue(TimeUnit::s) > m_TotalBreathingCycleTime.GetValue(TimeUnit::s)) // End of the cycle
   {
-    m_totalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
-    m_currentbreathingCycleTime.SetValue(0.0, TimeUnit::s);
+    m_TotalBreathingCycleTime.SetValue(0.0, TimeUnit::s);
+    m_CurrentBreathingCycleTime.SetValue(0.0, TimeUnit::s);
 
     double dVentilationFrequency_PerMin = GetRespiratoryRate(FrequencyUnit::Per_min);
     if (dVentilationFrequency_PerMin > 0) {
-      m_totalBreathingCycleTime.SetValue(60.0 / dVentilationFrequency_PerMin, TimeUnit::s); // Total time of one breathing cycle
+      m_TotalBreathingCycleTime.SetValue(60.0 / dVentilationFrequency_PerMin, TimeUnit::s); // Total time of one breathing cycle
     }
 
     double IERatio = GetInspiratoryExpiratoryRatio().GetValue();
-    m_inspirationTime.SetValue(IERatio * m_totalBreathingCycleTime.GetValue(TimeUnit::s) / (1.0 + IERatio), TimeUnit::s);
+    m_InspirationTime.SetValue(IERatio * m_TotalBreathingCycleTime.GetValue(TimeUnit::s) / (1.0 + IERatio), TimeUnit::s);
   }
 
-  if (m_currentbreathingCycleTime.GetValue(TimeUnit::s) < m_inspirationTime.GetValue(TimeUnit::s)) // Inspiration
+  if (m_CurrentBreathingCycleTime.GetValue(TimeUnit::s) < m_InspirationTime.GetValue(TimeUnit::s)) // Inspiration
   {
-    m_inhaling = true;
+    m_Inhaling = true;
   } else // Expiration
   {
-    m_inhaling = false;
+    m_Inhaling = false;
   }
 }
 

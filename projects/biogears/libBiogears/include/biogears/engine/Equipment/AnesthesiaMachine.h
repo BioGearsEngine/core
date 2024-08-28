@@ -93,11 +93,11 @@ private:
   void CheckReliefValve();
 
   // Serializable member variables (Set in Initialize and in schema)
-  bool m_inhaling;
-  SEScalarTime m_inspirationTime;
-  SEScalar m_O2InletVolumeFraction;
-  SEScalarTime m_currentbreathingCycleTime;
-  SEScalarTime m_totalBreathingCycleTime;
+  bool m_Inhaling;
+  SEScalarTime m_InspirationTime;
+  SEScalar m_OxygenInletVolumeFraction;
+  SEScalarTime m_CurrentBreathingCycleTime;
+  SEScalarTime m_TotalBreathingCycleTime;
 
   // Stateless member variable (Set in SetUp())
   double m_dt_s;

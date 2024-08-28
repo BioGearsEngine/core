@@ -147,6 +147,7 @@ bool BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
 //!
 //!  Override of LoadState
 //! \\see   BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
+#pragma optimize("", off)
 bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simTime)
 {
 
@@ -171,6 +172,7 @@ bool BioGearsEngine::LoadState(const std::string& file, const SEScalarTime* simT
   m_Logger->Error("File does not contain a valid PhysiologyEngineState");
   return false;
 }
+#pragma optimize("", on)
 //-------------------------------------------------------------------------------
 //!
 //!  \param char const* buffer -- String literal ASCII encoding of a biogears EngineState file
@@ -193,6 +195,7 @@ bool BioGearsEngine::LoadState(char const* buffer, size_t size)
 //!
 //!  Override of LoadState
 //! \\see   BioGearsEngine::LoadState(const char* file, const SEScalarTime* simTime)
+#pragma optimize("", off)
 bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime)
 {
   auto requests = GetEngineTrack()->GetDataRequestManager().GetDataRequests();
@@ -512,6 +515,8 @@ bool BioGearsEngine::LoadState(const CDM::PhysiologyEngineStateData& state, cons
 
   return true; // return CheckDataRequirements/IsValid() or something
 }
+#pragma optimize("", on)
+#pragma optimize("", off)
 //-------------------------------------------------------------------------------
 std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
 {
@@ -587,6 +592,7 @@ std::unique_ptr<CDM::PhysiologyEngineStateData> BioGearsEngine::GetStateData()
 
   return state;
 }
+#pragma optimize("", on)
 //-------------------------------------------------------------------------------
 void BioGearsEngine::SaveStateToFile(const char* file)
 {
@@ -594,6 +600,7 @@ void BioGearsEngine::SaveStateToFile(const char* file)
 }
 
 //-------------------------------------------------------------------------------
+#pragma optimize("", off)
 void BioGearsEngine::SaveStateToFile(const std::string& file)
 {
   auto state = GetStateData();
@@ -614,6 +621,7 @@ void BioGearsEngine::SaveStateToFile(const std::string& file)
     stream.close();
   }
 }
+#pragma optimize("", on)
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const char* patientFile)
 {

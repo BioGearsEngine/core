@@ -134,8 +134,9 @@ namespace io {
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::DrugsConfigurationData& out)
   {
     // Drugs
-    if (in.HasUsePDModel())
+    if (in.m_PDEnabled != decltype(in.m_PDEnabled)::Invalid) {
       io::Property::Marshall(in.m_PDEnabled, out.PDModel());
+    }
   }
   // class EnergyConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::EnergyConfigurationData& in, BioGearsConfiguration& out)
@@ -184,15 +185,20 @@ namespace io {
     if (in.MolarMassOfWaterVapor().present() || !out.m_Merge)
       io::Property::UnMarshall(in.MolarMassOfWaterVapor(), out.GetMolarMassOfWaterVapor());
 
-    if (in.InitialEnvironmentalConditionsFile().present() || !out.m_Merge) {
+    if (out.m_Merge == false) {
+      out.GetInitialEnvironmentalConditions().Clear();
+    }
+
+    if (in.InitialEnvironmentalConditionsFile().present()) {
       if (!out.GetInitialEnvironmentalConditions().Load(in.InitialEnvironmentalConditionsFile().get())) {
         throw biogears::CommonDataModelException("Unable to load InitialEnvironmentalConditions file");
       }
-    } else if (in.InitialEnvironmentalConditions().present() || !out.m_Merge) {
+    } else if (in.InitialEnvironmentalConditions().present()) {
       if (!out.GetInitialEnvironmentalConditions().Load(in.InitialEnvironmentalConditions().get())) {
         throw biogears::CommonDataModelException("Unable to load InitialEnvironmentalConditions");
       }
     }
+
     io::Property::UnMarshall(in.WaterDensity(), out.GetWaterDensity());
   }
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::EnvironmentConfigurationData& out)
@@ -218,17 +224,22 @@ namespace io {
     if (in.CarbohydrateAbsorptionFraction().present() || !out.m_Merge)
       io::Property::UnMarshall(in.CarbohydrateAbsorptionFraction(), out.GetCarbohydrateAbsorptionFraction());
 
-    if (in.DefaultStomachContentsFile().present() || !out.m_Merge) {
+    if (out.m_Merge == false) {
+      out.GetDefaultStomachContents().Clear();
+    }
+
+    if (in.DefaultStomachContentsFile().present()) {
       if (!out.GetDefaultStomachContents().Load(in.DefaultStomachContentsFile().get())) {
         throw biogears::CommonDataModelException("Unable to load Standard Stomach Contents file");
       }
-    } else if (in.DefaultStomachContents().present() || !out.m_Merge) {
+    } else if (in.DefaultStomachContents().present()) {
       try {
         io::PatientNutrition::UnMarshall(in.DefaultStomachContents().get(), out.GetDefaultStomachContents());
       } catch (CommonDataModelException ex) {
         throw biogears::CommonDataModelException(std::string("Unable to load Standard Stomach Contents") + ex.what());
       }
     }
+
     if (in.FatAbsorptionFraction().present() || !out.m_Merge)
       io::Property::UnMarshall(in.FatAbsorptionFraction(), out.GetFatAbsorptionFraction());
     if (in.ProteinToUreaFraction().present() || !out.m_Merge)
@@ -261,8 +272,9 @@ namespace io {
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::NervousConfigurationData& out)
   {
     // Nervous
-    if (in.HasEnableCerebral())
+    if (in.m_CerebralEnabled != decltype(in.m_CerebralEnabled)::Invalid) {
       io::Property::Marshall(in.m_CerebralEnabled, out.EnableCerebral());
+    }
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PupilDiameterBaseline)
   }
   // class RenalConfiguration

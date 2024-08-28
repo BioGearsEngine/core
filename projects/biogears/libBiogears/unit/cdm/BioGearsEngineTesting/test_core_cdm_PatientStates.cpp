@@ -20,6 +20,7 @@
 
 #include <gtest/gtest.h>
 
+#include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
@@ -76,11 +77,27 @@ TEST_F(TEST_FIXTURE_NAME, StateGeneration)
   SEPatient patient { bg->GetLogger() };
 
   patient.SetName("StateGeneration");
+
+  patient.SetName("StandardMale");
+  patient.SetSex(biogears::SESex::Male);
+  patient.GetAge().SetValue(44, biogears::TimeUnit::yr);
+  patient.GetWeight().SetValue(170, biogears::MassUnit::lb);
+  patient.GetHeight().SetValue(71, biogears::LengthUnit::inch);
+  patient.GetBodyFatFraction().SetValue(0.21);
+  patient.SetBloodType(SEBloodType::AB);
+  patient.SetBloodRh(true);
+  patient.GetHeartRateBaseline().SetValue(72, biogears::FrequencyUnit::Per_min);
+  patient.GetRespirationRateBaseline().SetValue(16, biogears::FrequencyUnit::Per_min);
+  patient.GetDiastolicArterialPressureBaseline().SetValue(73.5, biogears::PressureUnit::mmHg);
+  patient.GetSystolicArterialPressureBaseline().SetValue(114, biogears::PressureUnit::mmHg);
+  
   bg->InitializeEngine(patient);
-  bg->SaveStateToFile(asprintf("%s%s@%.0fs.xml", "UnitTest", patient.GetName().c_str(), bg->GetSimulationTime(TimeUnit::s)));
+  
+  std::string stateFile = asprintf("%s%s@%.0fs.xml", "UnitTest", patient.GetName().c_str());
+  bg->SaveStateToFile(stateFile);
 
   bg->GetLogger()->Info("Bradycard Patient Unit Test");
-  EXPECT_TRUE(bg->LoadState("./states/StandardFemale@0s.xml"));
+  ASSERT_TRUE(bg->LoadState(stateFile));
 
   EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
   EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
@@ -92,8 +109,30 @@ TEST_F(TEST_FIXTURE_NAME, StandardFemale)
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
   bg->GetLogger()->Info("Bradycard Patient Unit Test");
-  EXPECT_TRUE(bg->LoadState("./states/StandardFemale@0s.xml")); 
+  ASSERT_TRUE(bg->LoadState("./states/StandardFemale@0s.xml")); 
   
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+TEST_F(TEST_FIXTURE_NAME, DefaultTemplateFemale)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/DefaultTemplateFemale@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+TEST_F(TEST_FIXTURE_NAME, DefaultTemplateMale)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/DefaultTemplateMale@0s.xml"));
+
   EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
   EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
 }
@@ -103,7 +142,182 @@ TEST_F(TEST_FIXTURE_NAME, StandardMale)
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
   bg->GetLogger()->Info("Bradycard Patient Unit Test");
-  EXPECT_TRUE(bg->LoadState("./states/StandardMale@0s.xml"));
+  ASSERT_TRUE(bg->LoadState("./states/StandardMale@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+
+//Female@0s.xml
+TEST_F(TEST_FIXTURE_NAME, Female)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Female@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+//Female_18_Normal@0s.xml
+//Female_30_Normal@0s.xml
+TEST_F(TEST_FIXTURE_NAME, Female_18_Normal)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Female_18_Normal@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+TEST_F(TEST_FIXTURE_NAME, Female_30_Normal)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Female_30_Normal@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+//Female_40_Overweight@0s.xml
+//Male@0s.xml
+TEST_F(TEST_FIXTURE_NAME, Female_40_Overweight)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Female_40_Overweight@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+TEST_F(TEST_FIXTURE_NAME, Male)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+//Male_22_Fit_Soldier@0s.xml
+//Male_24_Normal_hidrosis2@0s.xml
+TEST_F(TEST_FIXTURE_NAME, Male_22_Fit_Soldier)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_22_Fit_Soldier@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+TEST_F(TEST_FIXTURE_NAME, Male_24_Normal_hidrosis2)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_24_Normal_hidrosis2@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+//Male_25_Normal@0s.xml
+//Male_28_Normal_hr109_rr18@0s.xml
+TEST_F(TEST_FIXTURE_NAME, Male_25_Normal)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_25_Normal@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+TEST_F(TEST_FIXTURE_NAME, Male_28_Normal_hr109_rr18)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_28_Normal_hr109_rr18@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+//Male_32_Normal_hr93_rr14@0s.xml
+//Male_44_Bradycardic@0s.xml
+TEST_F(TEST_FIXTURE_NAME, Male_32_Normal_hr93_rr14)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_32_Normal_hr93_rr14@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+TEST_F(TEST_FIXTURE_NAME, Male_44_Bradycardic)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_44_Bradycardic@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+//Male_44_Normal_hr109_rr15@0s.xml
+//Male_44_Normal_rr12@0s.xml
+TEST_F(TEST_FIXTURE_NAME, Male_44_Normal_hr109_rr15)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_44_Normal_hr109_rr15@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+TEST_F(TEST_FIXTURE_NAME, Male_44_Normal_rr12)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_44_Normal_rr12@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+//Male_44_SleepDeprived@0s.xml
+//Male_44_Tachycardic@0s.xml
+TEST_F(TEST_FIXTURE_NAME, Male_44_SleepDeprived)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_44_SleepDeprived@0s.xml"));
+
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+  EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
+}
+
+TEST_F(TEST_FIXTURE_NAME, Male_44_Tachycardic)
+{
+  // Create the engine and load the patient
+  std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("BradycardicPatientUnitTest.log");
+  bg->GetLogger()->Info("Bradycard Patient Unit Test");
+  ASSERT_TRUE(bg->LoadState("./states/Male_44_Tachycardic@0s.xml"));
 
   EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));
   EXPECT_NO_THROW(bg->AdvanceModelTime(1.0, TimeUnit::s));

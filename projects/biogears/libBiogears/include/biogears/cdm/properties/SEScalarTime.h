@@ -44,6 +44,8 @@ public:
   SEScalarTime();
   virtual ~SEScalarTime();
 
+  using  SEScalarQuantity::SEScalarQuantity;
+
   using SEScalarQuantity<TimeUnit>::SetValue;
   using SEScalarQuantity<TimeUnit>::GetValue;
 };

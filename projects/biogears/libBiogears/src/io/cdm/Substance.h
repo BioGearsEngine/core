@@ -37,7 +37,9 @@ specific language governing permissions and limitations under the License.
   }
 
 #define SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, func) \
-  io::Substance::Marshall(in.m_##func, out.func());
+  if (in.m_##func != decltype(in.m_##func)::Invalid) {            \
+    io::Substance::Marshall(in.m_##func, out.func());             \
+  }
 
 #define CDM_SUBSTANCE_COPY(type, in, out)   \
   {                                         \

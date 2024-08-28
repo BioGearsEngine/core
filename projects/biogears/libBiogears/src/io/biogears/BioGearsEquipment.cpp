@@ -20,24 +20,41 @@ namespace io {
 
     out.BioGearsSystem::LoadState();
 
-    out.m_inhaling = in.Inhaling();
-    io::Property::UnMarshall(in.CurrentBreathingCycleTime(), out.m_currentbreathingCycleTime);
-    io::Property::UnMarshall(in.InspirationTime(), out.m_inspirationTime);
-    io::Property::UnMarshall(in.OxygenInletVolumeFraction(), out.m_O2InletVolumeFraction);
-    io::Property::UnMarshall(in.TotalBreathingCycleTime(), out.m_totalBreathingCycleTime);
+    out.m_Inhaling = in.Inhaling();
+    io::Property::UnMarshall(in.CurrentBreathingCycleTime(), out.m_CurrentBreathingCycleTime);
+    io::Property::UnMarshall(in.InspirationTime(), out.m_InspirationTime);
+    io::Property::UnMarshall(in.OxygenInletVolumeFraction(), out.m_OxygenInletVolumeFraction);
+    io::Property::UnMarshall(in.TotalBreathingCycleTime(), out.m_TotalBreathingCycleTime);
   }
+#pragma optimize("", off)
   //-----------------------------------------------------------------------------
   void BiogearsEquipment::Marshall(const AnesthesiaMachine& in, CDM::BioGearsAnesthesiaMachineData& out)
   {
     io::Anesthesia::Marshall(in, out);
 
-    out.Inhaling(in.m_inhaling);
+    out.Inhaling(in.m_Inhaling);
 
-    io::Property::Marshall(in.m_currentbreathingCycleTime, out.CurrentBreathingCycleTime());
-    io::Property::Marshall(in.m_inspirationTime, out.InspirationTime());
-    io::Property::Marshall(in.m_O2InletVolumeFraction, out.OxygenInletVolumeFraction());
-    io::Property::Marshall(in.m_totalBreathingCycleTime, out.TotalBreathingCycleTime());
-  }
+    if (in.m_CurrentBreathingCycleTime.IsValid()) {
+      out.CurrentBreathingCycleTime(std::make_unique<std::remove_reference<decltype(out.CurrentBreathingCycleTime())>::type>());
+      io::Property::Marshall(in.m_CurrentBreathingCycleTime, out.CurrentBreathingCycleTime());
+    }
+
+    if (in.m_InspirationTime.IsValid()) {
+      out.InspirationTime(std::make_unique<std::remove_reference<decltype(out.InspirationTime())>::type>());
+      io::Property::Marshall(in.m_InspirationTime, out.InspirationTime());
+    }
+
+    if (in.m_OxygenInletVolumeFraction.IsValid()) {
+      out.OxygenInletVolumeFraction(std::make_unique<std::remove_reference<decltype(out.OxygenInletVolumeFraction())>::type>());
+      io::Property::Marshall(in.m_OxygenInletVolumeFraction, out.OxygenInletVolumeFraction());
+    }
+
+    if (in.m_TotalBreathingCycleTime.IsValid()) {
+      out.TotalBreathingCycleTime(std::make_unique<std::remove_reference<decltype(out.TotalBreathingCycleTime())>::type>());
+      io::Property::Marshall(in.m_TotalBreathingCycleTime, out.TotalBreathingCycleTime());
+    }
+  };
+#pragma optimize("", o)
   //-----------------------------------------------------------------------------
   // class SEAnesthesiaMachineChamber
   void BiogearsEquipment::UnMarshall(const CDM::BioGearsElectroCardioGramData& in, ECG& out)
@@ -65,7 +82,7 @@ namespace io {
   // class SEAnesthesiaMachineOxygenBottle
   void BiogearsEquipment::UnMarshall(const CDM::BioGearsInhalerData& in, biogears::Inhaler& out)
   {
-    io::Inhaler::UnMarshall(in,out);
+    io::Inhaler::UnMarshall(in, out);
     out.BioGearsSystem::LoadState();
   }
   //-----------------------------------------------------------------------------

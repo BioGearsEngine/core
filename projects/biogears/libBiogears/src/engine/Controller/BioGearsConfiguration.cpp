@@ -87,7 +87,7 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_StefanBoltzmann(nullptr)
   , m_UniversalGasConstant(nullptr)
   // Drugs
-  , m_PDEnabled(SEOnOff(-1))
+  , m_PDEnabled(SEOnOff::Invalid)
   // Energy
   , m_BodySpecificHeat(nullptr)
   , m_CarbondDioxideProductionFromOxygenConsumptionConstant(nullptr)
@@ -114,10 +114,10 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_ProteinToUreaFraction(nullptr)
   , m_WaterDigestionRate(nullptr)
   // Nervous
-  , m_CerebralEnabled(SEOnOff(-1))
+  , m_CerebralEnabled(SEOnOff::Invalid)
   , m_PupilDiameterBaseline(nullptr)
   // Renal
-  , m_RenalEnabled(SEOnOff(-1))
+  , m_RenalEnabled(SEOnOff::Invalid)
   , m_PlasmaSodiumConcentrationSetPoint(nullptr)
   , m_PeritubularPotassiumConcentrationSetPoint(nullptr)
   , m_LeftGlomerularFluidPermeabilityBaseline(nullptr)
@@ -136,7 +136,7 @@ BioGearsConfiguration::BioGearsConfiguration(SESubstanceManager& substances)
   , m_PulmonaryVentilationRateMaximum(nullptr)
   , m_VentilatoryOcclusionPressure(nullptr)
   // Tissue
-  , m_TissueEnabled(SEOnOff(-1))
+  , m_TissueEnabled(SEOnOff::Invalid)
 {
 }
 
@@ -182,7 +182,7 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_UniversalGasConstant);
 
   // Drugs
-  m_PDEnabled = SEOnOff(-1);
+  m_PDEnabled = SEOnOff::Invalid;
 
   // Energy
   SAFE_DELETE(m_BodySpecificHeat);
@@ -213,11 +213,11 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_WaterDigestionRate);
 
   // Nervous
-  m_CerebralEnabled = SEOnOff(-1);
+  m_CerebralEnabled = SEOnOff::Invalid;
   SAFE_DELETE(m_PupilDiameterBaseline);
 
   // Renal
-  m_RenalEnabled = SEOnOff(-1);
+  m_RenalEnabled = SEOnOff::Invalid;
   SAFE_DELETE(m_PlasmaSodiumConcentrationSetPoint);
   SAFE_DELETE(m_PeritubularPotassiumConcentrationSetPoint);
   SAFE_DELETE(m_LeftGlomerularFluidPermeabilityBaseline);
@@ -238,7 +238,7 @@ void BioGearsConfiguration::Clear()
   SAFE_DELETE(m_VentilatoryOcclusionPressure);
 
   //Tissue
-  m_TissueEnabled = SEOnOff(-1);
+  m_TissueEnabled = SEOnOff::Invalid;
 }
 
 void BioGearsConfiguration::Initialize()
@@ -365,13 +365,13 @@ void BioGearsConfiguration::Merge(const BioGearsConfiguration& from)
   };
   m_Merge = false;
 }
-
+#pragma optimize("", off)
 bool BioGearsConfiguration::Load(const std::string& file)
 {
   // if file does not exist, we stick with defaults
 
-  CDM::BioGearsConfigurationData* pData;
-  std::unique_ptr<CDM::ObjectData> data;
+  CDM::BioGearsConfigurationData* pData = nullptr;
+  std::unique_ptr<CDM::ObjectData> data = nullptr;
 
   auto io = m_Logger->GetIoManager().lock();
   auto possible_path = io->FindConfigFile(file.c_str());
@@ -394,7 +394,7 @@ bool BioGearsConfiguration::Load(const std::string& file)
   }
   return Load(*pData);
 }
-
+#pragma optimize("", on)
 bool BioGearsConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& from)
 {
   const CDM::BioGearsConfigurationData* bgConfig = dynamic_cast<const CDM::BioGearsConfigurationData*>(&from);

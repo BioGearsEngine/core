@@ -83,10 +83,9 @@ namespace io {
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineConfiguration& in, CDM::PhysiologyEngineConfigurationData& out)
   {
-   
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TimeStep)
 
-    io::Property::Marshall(in.m_WritePatientBaselineFile, out.WritePatientBaselineFile());
+    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TimeStep)
+    SE_OPTIONAL_PROPERTY_ENUM_MARSHALL_HELPER(in, out, WritePatientBaselineFile)
 
     if (in.m_ECGInterpolator) {
       io::ElectroCardioGram::Marshall(*in.m_ECGInterpolator, out.ElectroCardioGramInterpolator());
@@ -215,8 +214,11 @@ namespace io {
     io::Property::UnMarshall(in.ConvergenceTime(), out.GetConvergenceTime());
     io::Property::UnMarshall(in.MinimumReactionTime(), out.GetMinimumReactionTime());
     io::Property::UnMarshall(in.MaximumAllowedStabilizationTime(), out.GetMaximumAllowedStabilizationTime());
-    for (auto pcData : in.PropertyConvergence())
-      out.CreateSystemPropertyConvergence(pcData.PercentDifference(), pcData.Name());
+    for (auto pcData : in.PropertyConvergence()) {
+      //if (pcData.PercentDifference() != pcData.PercentDifference()) {
+        out.CreateSystemPropertyConvergence(pcData.PercentDifference(), pcData.Name());
+      //}
+    }
   }
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineDynamicStabilizationCriteria& in, CDM::PhysiologyEngineDynamicStabilizationCriteriaData& out)
@@ -225,10 +227,12 @@ namespace io {
     CDM_PROPERTY_MARSHALL_HELPER(in, out, MinimumReactionTime)
     CDM_PROPERTY_MARSHALL_HELPER(in, out, MaximumAllowedStabilizationTime)
     for (auto pc : in.m_PropertyConvergence) {
-      std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData> pcData(new CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData());
+      auto pcData = std::make_unique<CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData>();
+      // if (pcData->PercentDifference() != pcData->PercentDifference()) {
       pcData->Name(pc->GetDataRequest().GetName());
       pcData->PercentDifference(pc->m_Target);
       out.PropertyConvergence().push_back(*pcData.get());
+      //}
     }
   }
   //----------------------------------------------------------------------------------
