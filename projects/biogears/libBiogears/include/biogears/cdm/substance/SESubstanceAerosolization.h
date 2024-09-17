@@ -37,9 +37,6 @@ public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  virtual bool Load(const CDM::SubstanceAerosolizationData& in);
-  virtual CDM::SubstanceAerosolizationData* Unload() const;
-
   bool operator==( const SESubstanceAerosolization& rhs) const;
   bool operator!=( const SESubstanceAerosolization& rhs) const;
 
@@ -55,10 +52,6 @@ public:
   virtual bool HasParticulateSizeDistribution() const;
   virtual SEHistogramFractionVsLength& GetParticulateSizeDistribution();
   virtual const SEHistogramFractionVsLength* GetParticulateSizeDistribution() const;
-
-protected:
-  virtual void Unload(CDM::SubstanceAerosolizationData& data) const;
-
 
 protected:
   SEScalarNeg1To1* m_BronchioleModifier;

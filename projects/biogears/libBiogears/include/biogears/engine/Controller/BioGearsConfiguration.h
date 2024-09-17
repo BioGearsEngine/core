@@ -81,13 +81,6 @@ public:
 
   bool Load(const std::string& file);
 
-  virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
-  virtual bool Load(const CDM::BioGearsConfigurationData& in);
-  virtual CDM::BioGearsConfigurationData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::BioGearsConfigurationData& data) const;
-
   SESubstanceManager& m_Substances;
 
   //////////////////////

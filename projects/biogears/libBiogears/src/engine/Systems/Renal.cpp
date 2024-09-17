@@ -43,7 +43,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 namespace biogears {
 auto Renal::make_unique(BioGears& bg) -> std::unique_ptr<Renal>

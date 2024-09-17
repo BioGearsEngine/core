@@ -48,7 +48,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4305 4244) // Disable some warning messages

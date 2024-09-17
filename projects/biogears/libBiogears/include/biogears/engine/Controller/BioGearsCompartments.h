@@ -18,11 +18,15 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class BioGears;
 class SEGasCompartmentGraph;
+namespace io {
+  class BioGears;
+}
 /**
 * @brief Manages all compartments and graphs associated with all %BioGears systems/equipement
 */
 class BIOGEARS_API BioGearsCompartments : public SECompartmentManager {
   friend class BioGearsSubstances;
+  friend class io::BioGears;
 
 public:
   static auto make_unique(BioGears& bg) -> std::unique_ptr<BioGearsCompartments>;
@@ -30,8 +34,6 @@ public:
   virtual ~BioGearsCompartments();
 
   void Clear();
-
-  virtual bool Load(const CDM::CompartmentManagerData& in, SECircuitManager* circuits = nullptr);
 
   void StateChange();
   void UpdateAirwayGraph()

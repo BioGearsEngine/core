@@ -62,9 +62,6 @@ public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  virtual bool Load(const CDM::SubstanceData& in);
-  virtual CDM::SubstanceData* Unload() const;
-
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
   virtual void SetName(const char* name);
@@ -187,9 +184,6 @@ public:
 
   bool operator==(const SESubstance& rhs) const;
   bool operator!=(const SESubstance& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceData& data) const;
 
 protected:
   std::string m_Name;

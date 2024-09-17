@@ -31,14 +31,8 @@ public:
   virtual void Clear();
   virtual bool IsValid() const;
 
-  virtual bool Load(const CDM::ScenarioAutoSerializationData& in);
-  virtual CDM::ScenarioAutoSerializationData* Unload() const;
-
   bool operator==(SEScenarioAutoSerialization const&) const;
   bool operator!=(SEScenarioAutoSerialization const&) const;
-
-protected:
-  virtual void Unload(CDM::ScenarioAutoSerializationData& data) const;
 
 public:
   virtual bool HasPeriod() const;

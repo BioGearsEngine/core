@@ -17,7 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/io/io-manager.h>
 
-namespace BGE = mil::tatrc::physiology::biogears;
+#include "io/cdm/Scenario.h"
+
 
 namespace biogears {
 BioGearsScenarioExec::BioGearsScenarioExec(PhysiologyEngine& engine)
@@ -75,7 +76,12 @@ bool BioGearsScenarioExec::Execute(const std::string& scenarioFile, const std::s
       return false;
     }
     BioGearsScenario scenario(m_Engine.GetSubstanceManager());
-    scenario.Load(*sceData);
+    io::Scenario::UnMarshall(*sceData, scenario);
+    try {
+      io::Scenario::UnMarshall(*sceData, scenario);
+    } catch (CommonDataModelException /* ex*/) {
+      return false;
+    }
     std::string rFile = resultsFile;
 
     bool success = SEScenarioExec::Execute(scenario, rFile, cExec);

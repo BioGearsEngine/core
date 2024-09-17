@@ -58,13 +58,6 @@ inline size_t _Hash_value(_InIt _Begin, _InIt _End)
   if (from.Has##name())   \
     Get##name().Merge(*from.m_##name);
 
-#define CDM_COPY(from, to)       \
-  {                              \
-    auto* bind = from->Unload(); \
-    to->Load(*bind);             \
-    delete bind;                 \
-  }
-
 template <class T>
 inline void Copy(const std::vector<T*>& from, std::vector<T*>& to)
 {

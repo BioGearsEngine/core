@@ -64,26 +64,7 @@ const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name)
     return &GetInflammationCoefficient();
   return nullptr;
 }
-//-----------------------------------------------------------------------------
-bool SESubstanceAerosolization::Load(const CDM::SubstanceAerosolizationData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceAerosolizationData* SESubstanceAerosolization::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::SubstanceAerosolizationData* data = new CDM::SubstanceAerosolizationData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstanceAerosolization::Unload(CDM::SubstanceAerosolizationData& data) const
-{
-  io::Substance::Marshall(*this, data);
-};
+
 //-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::HasBronchioleModifier() const
 {

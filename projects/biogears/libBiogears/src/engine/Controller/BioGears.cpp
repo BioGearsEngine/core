@@ -47,8 +47,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/string/manipulation.h>
 
-namespace BGE = mil::tatrc::physiology::biogears;
-
 namespace biogears {
 BioGears::BioGears(const std::string& logFileName)
   : BioGears(new Logger(logFileName))
@@ -105,8 +103,8 @@ void BioGears::SetUp()
 
   m_Patient = std::make_unique<SEPatient>(GetLogger());
 
-  m_Config = std::make_unique<BioGearsConfiguration>(*m_Substances);
-  m_Config->Initialize();
+  m_Configuration = std::make_unique<BioGearsConfiguration>(*m_Substances);
+  m_Configuration->Initialize();
 
   m_SaturationCalculator = SaturationCalculator::make_unique(*this);
 
@@ -157,19 +155,19 @@ bool BioGears::Initialize(const PhysiologyEngineConfiguration* config)
   // to any substance child objects, those will need to be fixed up, if they exist
 
   Info("Initializing Configuration");
-  m_Config->Initialize(); // Load up Defaults
+  m_Configuration->Initialize(); // Load up Defaults
   if (config != nullptr) {
     Info("Merging Provided Configuration");
-    m_Config->Merge(*config);
+    m_Configuration->Merge(*config);
   }
   // Now, Let's see if there is anything to merge into our base configuration
   Info("Merging OnDisk Configuration");
   BioGearsConfiguration cFile(*m_Substances);
   cFile.Load("BioGearsConfiguration.xml");
-  m_Config->Merge(cFile);
+  m_Configuration->Merge(cFile);
 
   // Now we can check the config
-  if (m_Config->WritePatientBaselineFile()) {
+  if (m_Configuration->WritePatientBaselineFile()) {
 
     auto io = GetLogger()->GetIoManager().lock();
     std::string stableDir = io->GetBioGearsWorkingDirectory() += "/stable/";
@@ -842,7 +840,7 @@ BioGears::~BioGears()
 {
 
   m_Logger->FormatMessages(false);
-  m_Config = nullptr;
+  m_Configuration = nullptr;
   m_SaturationCalculator = nullptr;
   m_DiffusionCalculator = nullptr;
 
@@ -921,10 +919,10 @@ SEActionManager& BioGears::GetActions() { return *m_Actions; }
 SEConditionManager& BioGears::GetConditions() { return *m_Conditions; }
 BioGearsCircuits& BioGears::GetCircuits() { return *m_Circuits; }
 BioGearsCompartments& BioGears::GetCompartments() { return *m_Compartments; }
-const BioGearsConfiguration& BioGears::GetConfiguration() { return *m_Config; }
+const BioGearsConfiguration& BioGears::GetConfiguration() { return *m_Configuration; }
 const SEScalarTime& BioGears::GetEngineTime() { return *m_CurrentTime; }
 const SEScalarTime& BioGears::GetSimulationTime() { return *m_SimulationTime; }
-const SEScalarTime& BioGears::GetTimeStep() { return m_Config->GetTimeStep(); }
+const SEScalarTime& BioGears::GetTimeStep() { return m_Configuration->GetTimeStep(); }
 SEBioGearsAirwayMode BioGears::GetAirwayMode() { return m_AirwayMode; }
 SEOnOff BioGears::GetIntubation() { return m_Intubation; }
 
@@ -935,10 +933,10 @@ const SEActionManager& BioGears::GetActions() const { return *m_Actions; }
 const SEConditionManager& BioGears::GetConditions() const { return *m_Conditions; }
 const BioGearsCircuits& BioGears::GetCircuits() const { return *m_Circuits; }
 const BioGearsCompartments& BioGears::GetCompartments() const { return *m_Compartments; }
-const BioGearsConfiguration& BioGears::GetConfiguration() const { return *m_Config; }
+const BioGearsConfiguration& BioGears::GetConfiguration() const { return *m_Configuration; }
 const SEScalarTime& BioGears::GetEngineTime() const { return *m_CurrentTime; }
 const SEScalarTime& BioGears::GetSimulationTime() const { return *m_SimulationTime; }
-const SEScalarTime& BioGears::GetTimeStep() const { return m_Config->GetTimeStep(); }
+const SEScalarTime& BioGears::GetTimeStep() const { return m_Configuration->GetTimeStep(); }
 const SEBioGearsAirwayMode BioGears::GetAirwayMode() const { return m_AirwayMode; }
 const SEOnOff BioGears::GetIntubation() const { return m_Intubation; }
 
@@ -1076,13 +1074,13 @@ bool BioGears::CreateCircuitsAndCompartments()
   m_Compartments->Clear();
 
   SetupCardiovascular();
-  if (m_Config->IsCerebralEnabled()) {
+  if (m_Configuration->IsCerebralEnabled()) {
     SetupCerebral();
   }
-  if (m_Config->IsRenalEnabled()) {
+  if (m_Configuration->IsRenalEnabled()) {
     SetupRenal();
   }
-  if (m_Config->IsTissueEnabled()) {
+  if (m_Configuration->IsTissueEnabled()) {
     SetupTissue();
   }
   SetupGastrointestinal();
@@ -1165,7 +1163,12 @@ bool BioGears::CreateCircuitsAndCompartments()
   lEnvironment.MapNode(Ambient);
 
   m_Environment->Initialize();
-  CDM_COPY((&m_Config->GetInitialEnvironmentalConditions()), (&m_Environment->GetConditions()));
+
+  auto* bind = (&m_Configuration->GetInitialEnvironmentalConditions())->Unload();
+  (&m_Environment->GetConditions())->Load(*bind);
+  delete bind;
+
+
   m_Environment->StateChange();
   // Update the environment pressures on all the 'air' circuits to match what the environment was set to
   gEnvironment.GetPressure().Set(m_Environment->GetConditions().GetAtmosphericPressure());
@@ -1697,40 +1700,40 @@ void BioGears::SetupCardiovascular()
   SEFluidCircuitPath& VenaCavaToGround = cCardiovascular.CreatePath(VenaCava, Ground, BGE::CardiovascularPath::VenaCavaToGround);
   VenaCavaToGround.GetComplianceBaseline().SetValue(0.0, FlowComplianceUnit::mL_Per_mmHg);
   SEFluidCircuitPath& VenaCavaBleed = cCardiovascular.CreatePath(VenaCava, Ground, BGE::CardiovascularPath::VenaCavaBleed);
-  VenaCavaBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  VenaCavaBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& IVToVenaCava = cCardiovascular.CreatePath(Ground, VenaCava, BGE::CardiovascularPath::IVToVenaCava);
   IVToVenaCava.GetFlowSourceBaseline().SetValue(0.0, VolumePerTimeUnit::mL_Per_s);
 
   // Hemorrhage--Include major organs, if there is a right/left side just adjust the resistance of the right side
   SEFluidCircuitPath& AortaBleed = cCardiovascular.CreatePath(Aorta1, Ground, BGE::CardiovascularPath::AortaBleed);
-  AortaBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  AortaBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& HeartBleed = cCardiovascular.CreatePath(Myocardium1, Ground, BGE::CardiovascularPath::MyocardiumBleed);
-  HeartBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  HeartBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& LeftLungBleed = cCardiovascular.CreatePath(LeftPulmonaryArteries, Ground, BGE::CardiovascularPath::LeftLungBleed);
-  LeftLungBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  LeftLungBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& RightLungBleed = cCardiovascular.CreatePath(RightPulmonaryArteries, Ground, BGE::CardiovascularPath::RightLungBleed);
-  RightLungBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  RightLungBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& LeftArmBleed = cCardiovascular.CreatePath(LeftArm1, Ground, BGE::CardiovascularPath::LeftArmBleed);
-  LeftArmBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  LeftArmBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& RightArmBleed = cCardiovascular.CreatePath(RightArm1, Ground, BGE::CardiovascularPath::RightArmBleed);
-  RightArmBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  RightArmBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& SpleenBleed = cCardiovascular.CreatePath(Spleen, Ground, BGE::CardiovascularPath::SpleenBleed);
-  SpleenBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  SpleenBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& SmallIntestineBleed = cCardiovascular.CreatePath(SmallIntestine, Ground, BGE::CardiovascularPath::SmallIntestineBleed);
-  SmallIntestineBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  SmallIntestineBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& LargeIntestineBleed = cCardiovascular.CreatePath(LargeIntestine, Ground, BGE::CardiovascularPath::LargeIntestineBleed);
-  LargeIntestineBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  LargeIntestineBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& SplanchnicBleed = cCardiovascular.CreatePath(Splanchnic, Ground, BGE::CardiovascularPath::SplanchnicBleed);
-  SplanchnicBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  SplanchnicBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& LiverBleed = cCardiovascular.CreatePath(Liver1, Ground, BGE::CardiovascularPath::LiverBleed);
-  LiverBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  LiverBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& PortalBleed = cCardiovascular.CreatePath(PortalVein, Ground, BGE::CardiovascularPath::PortalBleed);
-  PortalBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_min_Per_L);
+  PortalBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_min_Per_L);
   // Note: kidney hemorrhage path is set below in renal circuit
   SEFluidCircuitPath& LeftLegBleed = cCardiovascular.CreatePath(LeftLeg1, Ground, BGE::CardiovascularPath::LeftLegBleed);
-  LeftLegBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  LeftLegBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   SEFluidCircuitPath& RightLegBleed = cCardiovascular.CreatePath(RightLeg1, Ground, BGE::CardiovascularPath::RightLegBleed);
-  RightLegBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  RightLegBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
 
   // Compute compliances from target pressures and baseline volumes
   for (SEFluidCircuitPath* p : cCardiovascular.GetPaths()) {
@@ -2425,7 +2428,7 @@ void BioGears::SetupCerebral()
 
   // Hemorrhage--Specific to brain with new cerebral circuit
   SEFluidCircuitPath& BrainBleed = CerebralCircuit.CreatePath(nCerebralCapillaries, nGround, BGE::CardiovascularPath::BrainBleed);
-  BrainBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  BrainBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
 
   CombinedCardioCircuit.AddCircuit(CerebralCircuit);
   // Grab the nodes that we will be connecting between the 2 circuits
@@ -2548,7 +2551,7 @@ void BioGears::SetupRenal()
 
   //////////////////////////
   ///// Circuit Parameters//////
-  double openSwitch_mmHg_s_Per_mL = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+  double openSwitch_mmHg_s_Per_mL = m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL);
   // Resistances with some tuning multipliers
   double urineTuningMultiplier = 0.9;
   double arteryTuningMultiplier = 0.8;
@@ -2817,12 +2820,12 @@ void BioGears::SetupRenal()
   /////////////////
   // Hemorrhage from right kidney//
   SEFluidCircuitPath& RightKidneyBleed = cRenal.CreatePath(RightRenalVein, Ground, BGE::CardiovascularPath::RightKidneyBleed);
-  RightKidneyBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  RightKidneyBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   ///////////////////////////////////
   /////////////////
   // Hemorrhage from left kidney//
   SEFluidCircuitPath& LeftKidneyBleed = cRenal.CreatePath(LeftRenalVein, Ground, BGE::CardiovascularPath::LeftKidneyBleed);
-  LeftKidneyBleed.GetResistanceBaseline().SetValue(m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
+  LeftKidneyBleed.GetResistanceBaseline().SetValue(m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL), FlowResistanceUnit::mmHg_s_Per_mL);
   ///////////////////////////////////
   // Right Urine //
   /////////////////
@@ -3859,7 +3862,7 @@ void BioGears::SetupTissue()
   /////////////////
   // Left Kidney //
   SEFluidCircuitNode* LeftKidneyV;
-  if (!m_Config->IsRenalEnabled()) {
+  if (!m_Configuration->IsRenalEnabled()) {
     LeftKidneyV = cCombinedCardiovascular.GetNode(BGE::CardiovascularNode::LeftKidney1);
   } else {
     LeftKidneyV = cCombinedCardiovascular.GetNode(BGE::RenalNode::LeftGlomerularCapillaries);
@@ -4263,7 +4266,7 @@ void BioGears::SetupTissue()
   //////////////////
   // Right Kidney //
   SEFluidCircuitNode* RightKidneyV;
-  if (!m_Config->IsRenalEnabled()) {
+  if (!m_Configuration->IsRenalEnabled()) {
     RightKidneyV = cCombinedCardiovascular.GetNode(BGE::CardiovascularNode::RightKidney1);
   } else {
     RightKidneyV = cCombinedCardiovascular.GetNode(BGE::RenalNode::RightGlomerularCapillaries);
@@ -4634,7 +4637,7 @@ void BioGears::SetupRespiratory()
   double AmbientPressure_cmH2O = 1033.23; // 1 atm
   double FunctionalResidualCapacity_L = 2.313;
   double LungResidualVolume_L = m_Patient->GetResidualVolume(VolumeUnit::L);
-  double OpenResistance_cmH2O_s_Per_L = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
+  double OpenResistance_cmH2O_s_Per_L = m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
 
   // Compliances
   double tracheaCompliance_L_Per_cmH2O = 0.00238;
@@ -4962,7 +4965,7 @@ void BioGears::SetupGastrointestinal()
   SmallIntestineC1ToSmallIntestine1.GetFlowSourceBaseline().SetValue(0, VolumePerTimeUnit::mL_Per_min);
   SEFluidCircuitPath& GroundToSmallIntestineC1 = cCombinedCardiovascular.CreatePath(*Ground, SmallIntestineC1, BGE::ChymePath::GroundToSmallIntestineC1);
 
-  if (m_Config->IsTissueEnabled()) {
+  if (m_Configuration->IsTissueEnabled()) {
     SEFluidCircuitNode* GutE3 = cCombinedCardiovascular.GetNode(BGE::TissueNode::GutE3);
     SEFluidCircuitPath& GutE3ToGroundGI = cCombinedCardiovascular.CreatePath(*GutE3, *Ground, BGE::ChymePath::GutE3ToGroundGI);
     GutE3ToGroundGI.GetFlowSourceBaseline().SetValue(0.0, VolumePerTimeUnit::mL_Per_s);
@@ -4997,10 +5000,10 @@ void BioGears::SetupAnesthesiaMachine()
 
   double ventilatorVolume_L = 1.0;
   double ventilatorCompliance_L_Per_cmH2O = 0.5;
-  double dValveOpenResistance = m_Config->GetMachineOpenResistance(FlowResistanceUnit::cmH2O_s_Per_L);
-  double dValveClosedResistance = m_Config->GetMachineClosedResistance(FlowResistanceUnit::cmH2O_s_Per_L);
-  double dSwitchOpenResistance = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
-  double dSwitchClosedResistance = m_Config->GetDefaultClosedFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
+  double dValveOpenResistance = m_Configuration->GetMachineOpenResistance(FlowResistanceUnit::cmH2O_s_Per_L);
+  double dValveClosedResistance = m_Configuration->GetMachineClosedResistance(FlowResistanceUnit::cmH2O_s_Per_L);
+  double dSwitchOpenResistance = m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
+  double dSwitchClosedResistance = m_Configuration->GetDefaultClosedFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   double dLowResistance = 0.01;
 
   SEFluidCircuit& cAnesthesia = m_Circuits->GetAnesthesiaMachineCircuit();
@@ -5316,7 +5319,7 @@ void BioGears::SetupNasalCannula()
 {
   Info("Setting Up Nasal Cannula");
   /////////////////////// Circuit Interdependencies
-  double OpenResistance_cmH2O_s_Per_L = m_Config->GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
+  double OpenResistance_cmH2O_s_Per_L = m_Configuration->GetDefaultOpenFlowResistance(FlowResistanceUnit::cmH2O_s_Per_L);
   SEFluidCircuit& cRespiratory = m_Circuits->GetRespiratoryCircuit();
   SEGasCompartmentGraph& gRespiratory = m_Compartments->GetRespiratoryGraph();
   ///////////////////////
@@ -5436,8 +5439,8 @@ void BioGears::SetupExternalTemperature()
   Info("Setting Up External Temperature");
   SEThermalCircuit& exthermal = m_Circuits->GetExternalTemperatureCircuit();
 
-  double dNoResistance = m_Config->GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W);
-  double dMaxResistance = m_Config->GetDefaultOpenHeatResistance(HeatResistanceUnit::K_Per_W);
+  double dNoResistance = m_Configuration->GetDefaultClosedHeatResistance(HeatResistanceUnit::K_Per_W);
+  double dMaxResistance = m_Configuration->GetDefaultOpenHeatResistance(HeatResistanceUnit::K_Per_W);
   // Define Nodes
   // Initialize temperatures to a reasonable value (ambient temperature hasn't been read in yet)
   double dAmbientTemperature_K = 295.4; //~72F

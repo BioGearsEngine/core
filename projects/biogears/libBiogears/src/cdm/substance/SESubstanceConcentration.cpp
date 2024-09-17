@@ -48,24 +48,7 @@ void SESubstanceConcentration::Clear()
 {
   m_Concentration.Clear();
 }
-//-------------------------------------------------------------------------------
-bool SESubstanceConcentration::Load(const CDM::SubstanceConcentrationData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceConcentrationData* SESubstanceConcentration::Unload() const
-{
-  CDM::SubstanceConcentrationData* data = new CDM::SubstanceConcentrationData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceConcentration::Unload(CDM::SubstanceConcentrationData& data) const
-{
-  io::Substance::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SESubstanceConcentration::HasConcentration() const
 {

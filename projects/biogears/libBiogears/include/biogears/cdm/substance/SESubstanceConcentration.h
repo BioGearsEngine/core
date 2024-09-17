@@ -39,12 +39,6 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::SubstanceConcentrationData& in);
-  virtual CDM::SubstanceConcentrationData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::SubstanceConcentrationData& data) const;
-
 public:
   virtual bool HasConcentration() const;
   virtual SEScalarMassPerVolume& GetConcentration();

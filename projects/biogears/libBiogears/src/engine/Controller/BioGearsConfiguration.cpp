@@ -358,14 +358,10 @@ void BioGearsConfiguration::Merge(const PhysiologyEngineConfiguration& from)
 void BioGearsConfiguration::Merge(const BioGearsConfiguration& from)
 {
   m_Merge = true;
-  {
-    auto* bind = (&from)->Unload();
-    this->Load(*bind);
-    delete bind;
-  };
+  CDM_BIOGEARS_ENGINE_CONFIGURATION_COPY(BioGearsConfiguration, from, *this)
   m_Merge = false;
 }
-#pragma optimize("", off)
+
 bool BioGearsConfiguration::Load(const std::string& file)
 {
   // if file does not exist, we stick with defaults
@@ -392,35 +388,8 @@ bool BioGearsConfiguration::Load(const std::string& file)
     Info(ss);
     return true;
   }
-  return Load(*pData);
-}
-#pragma optimize("", on)
-bool BioGearsConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& from)
-{
-  const CDM::BioGearsConfigurationData* bgConfig = dynamic_cast<const CDM::BioGearsConfigurationData*>(&from);
-  if (bgConfig != nullptr)
-    return Load(*bgConfig);
-  else
-    io::BiogearsEngineConfiguration::UnMarshall(*bgConfig, *this);
+  io::BiogearsEngineConfiguration::UnMarshall(*pData, *this);
   return true;
-}
-
-bool BioGearsConfiguration::Load(const CDM::BioGearsConfigurationData& in)
-{
-  io::BiogearsEngineConfiguration::UnMarshall(in, *this);
-  return true;
-}
-
-CDM::BioGearsConfigurationData* BioGearsConfiguration::Unload() const
-{
-  CDM::BioGearsConfigurationData* data(new CDM::BioGearsConfigurationData());
-  Unload(*data);
-  return data;
-}
-
-void BioGearsConfiguration::Unload(CDM::BioGearsConfigurationData& data) const
-{
-  io::BiogearsEngineConfiguration::Marshall(*this, data);
 }
 
 //////////////////////

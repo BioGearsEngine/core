@@ -41,7 +41,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Respiratory.h>
 #include <biogears/engine/Systems/Saturation.h>
 #include <biogears/engine/Systems/Tissue.h>
-#include <biogears/schema/biogears/BioGears.hxx>
 
 #include <memory>
 
@@ -217,7 +216,7 @@ protected:
   SEBioGearsAirwayMode m_AirwayMode;
   SEOnOff m_Intubation;
 
-  std::unique_ptr<BioGearsConfiguration> m_Config;
+  std::unique_ptr<BioGearsConfiguration> m_Configuration;
   std::unique_ptr<SaturationCalculator> m_SaturationCalculator;
   std::unique_ptr<DiffusionCalculator> m_DiffusionCalculator;
 

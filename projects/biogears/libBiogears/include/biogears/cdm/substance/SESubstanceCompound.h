@@ -39,9 +39,6 @@ public:
   static std::unique_ptr<SESubstanceCompound> make_unique(const std::string& name, Logger* logger);
   virtual void Clear();
 
-  virtual bool Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr);
-  virtual CDM::SubstanceCompoundData* Unload() const;
-
 public:
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
@@ -68,9 +65,6 @@ public:
    
   bool operator==( const SESubstanceCompound& rhs) const;
   bool operator!=( const SESubstanceCompound& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceCompoundData& data) const;
 
 protected:
   std::string m_Name;

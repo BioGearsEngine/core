@@ -49,24 +49,6 @@ void SEScenarioInitialParameters::Clear()
   DELETE_VECTOR(m_Conditions);
 }
 //-----------------------------------------------------------------------------
-bool SEScenarioInitialParameters::Load(const CDM::ScenarioInitialParametersData& in)
-{
-  io::Scenario::UnMarshall(in, *this);
-  return IsValid();
-}
-//-----------------------------------------------------------------------------
-CDM::ScenarioInitialParametersData* SEScenarioInitialParameters::Unload() const
-{
-  CDM::ScenarioInitialParametersData* data = new CDM::ScenarioInitialParametersData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEScenarioInitialParameters::Unload(CDM::ScenarioInitialParametersData& data) const
-{
-  io::Scenario::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::IsValid() const
 {
   if (HasPatientFile() || HasPatient())

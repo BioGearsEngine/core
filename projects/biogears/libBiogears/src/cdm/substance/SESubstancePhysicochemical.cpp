@@ -89,26 +89,6 @@ const SEScalar* SESubstancePhysicochemical::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePhysicochemical::Load(const CDM::SubstancePhysicochemicalData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstancePhysicochemicalData* SESubstancePhysicochemical::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::SubstancePhysicochemicalData* data = new CDM::SubstancePhysicochemicalData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstancePhysicochemical::Unload(CDM::SubstancePhysicochemicalData& data) const
-{
-  io::Substance::Marshall(*this, data);
-};
-//-----------------------------------------------------------------------------
 bool SESubstancePhysicochemical::HasPrimaryPKA() const
 {
   return (!m_AcidDissociationConstants.empty());

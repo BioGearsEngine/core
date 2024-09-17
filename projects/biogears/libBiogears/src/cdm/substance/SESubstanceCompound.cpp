@@ -48,24 +48,7 @@ void SESubstanceCompound::Clear()
   m_Name = "";
   m_Classification = (SESubstanceClass)-1;
 }
-//-----------------------------------------------------------------------------
-bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr)
-{
-  io::Substance::UnMarshall(in, subMgr, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceCompoundData* SESubstanceCompound::Unload() const
-{
-  CDM::SubstanceCompoundData* data = new CDM::SubstanceCompoundData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstanceCompound::Unload(CDM::SubstanceCompoundData& data) const
-{
-  io::Substance::Marshall(*this, data);
-};
+
 //-----------------------------------------------------------------------------
 std::string SESubstanceCompound::GetName() const
 {

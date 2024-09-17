@@ -18,7 +18,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/engine/Controller/BioGearsEnums.h>
+
 #include <biogears/schema/biogears/BioGears.hxx>
+#include <biogears/schema/cdm/Circuit.hxx>
+#include <biogears/schema/cdm/Compartment.hxx>
 
 #define CDM_BIOGEARS_MARSHALL_HELPER(in, out, func)                                  \
   if (in.m_##func) {                                                                 \
@@ -28,13 +31,21 @@ specific language governing permissions and limitations under the License.
 
 #define CDM_OPTIONAL_BIOGEARS_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                         \
-    io::BioGears::Marshall(*in.m_##func, out.func());        \
   }
 
+#define CDM_BIOGEARS_COPY(type, in, out)   \
+  {                                        \
+    CDM::##type##Data middle;              \
+    io::BioGears::Marshall(in, middle);    \
+    io::BioGears::UnMarshall(middle, out); \
+  }
 namespace biogears {
 class BiogearsPhysiologyEngine;
 
 class BioGearsEngine;
+class BioGearsCircuits;
+class BioGearsCompartments;
+class SECircuitManager;
 
 namespace io {
   class BIOGEARS_PRIVATE_API BioGears {
@@ -50,6 +61,14 @@ namespace io {
     // class BioGears
     static void UnMarshall(const CDM::BioGearsStateData& in, BioGearsEngine& out, const SEScalarTime* simTime = nullptr);
     static void Marshall(const BioGearsEngine& in, CDM::BioGearsStateData& out);
+
+    // class BioGearsCompartments
+    static void UnMarshall(const CDM::CompartmentManagerData& in, BioGearsCompartments& out, SECircuitManager* circuits);
+    static void Marshall(const BioGearsCompartments& in, CDM::CompartmentManagerData& out);
+
+    // class BioGearsCircuits
+    static void UnMarshall(const CDM::CircuitManagerData& in, BioGearsCircuits& ou);
+    static void Marshall(const BioGearsCircuits& in, CDM::CircuitManagerData& out);
 
     //  SEErrorType
     static void UnMarshall(const CDM::enumBioGearsAirwayMode& in, SEBioGearsAirwayMode& out);

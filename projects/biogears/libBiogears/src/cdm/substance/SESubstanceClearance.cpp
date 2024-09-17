@@ -154,26 +154,6 @@ const SEScalar* SESubstanceClearance::GetScalar(const std::string& name)
 
   return nullptr;
 }
-//-----------------------------------------------------------------------------
-bool SESubstanceClearance::Load(const CDM::SubstanceClearanceData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceClearanceData* SESubstanceClearance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::SubstanceClearanceData* data = new CDM::SubstanceClearanceData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstanceClearance::Unload(CDM::SubstanceClearanceData& data) const
-{
-  io::Substance::Marshall(*this, data);
-};
 
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasCellBirthRate() const

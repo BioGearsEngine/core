@@ -165,26 +165,6 @@ const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstancePharmacodynamicsData* SESubstancePharmacodynamics::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::SubstancePharmacodynamicsData* data = new CDM::SubstancePharmacodynamicsData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& data) const
-{
-  io::Substance::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasAntibacterialEffect() const
 {
   return (m_AntibacterialEffect == nullptr) ? false : m_AntibacterialEffect->IsValid();
@@ -584,27 +564,6 @@ const SEScalar* SEPharmacodynamicModifier::GetScalar(const std::string& name)
   }
   return nullptr;
 }
-//-----------------------------------------------------------------------------
-bool SEPharmacodynamicModifier::Load(const CDM::PharmacodynamicModifierData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::PharmacodynamicModifierData* SEPharmacodynamicModifier::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::PharmacodynamicModifierData* data = new CDM::PharmacodynamicModifierData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEPharmacodynamicModifier::Unload(CDM::PharmacodynamicModifierData& data) const
-{
-  io::Substance::Marshall(*this, data);
-}
-
 //-----------------------------------------------------------------------------
 bool SEPharmacodynamicModifier::HasEMax() const
 {

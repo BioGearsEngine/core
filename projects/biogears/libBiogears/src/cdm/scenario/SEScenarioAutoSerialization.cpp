@@ -63,24 +63,6 @@ bool SEScenarioAutoSerialization::IsValid() const
   return true;
 }
 //-----------------------------------------------------------------------------
-bool SEScenarioAutoSerialization::Load(const CDM::ScenarioAutoSerializationData& in)
-{
-  io::Scenario::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ScenarioAutoSerializationData* SEScenarioAutoSerialization::Unload() const
-{
-  CDM::ScenarioAutoSerializationData* data(new CDM::ScenarioAutoSerializationData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEScenarioAutoSerialization::Unload(CDM::ScenarioAutoSerializationData& data) const
-{
-  io::Scenario::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SEScenarioAutoSerialization::HasPeriod() const
 {
   return m_Period == nullptr ? false : m_Period->IsValid();

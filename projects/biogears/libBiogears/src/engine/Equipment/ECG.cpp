@@ -22,7 +22,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
 /*
@@ -74,17 +73,20 @@ void ECG::Initialize()
 
   m_HeartRhythmTime.SetValue(0, TimeUnit::s);
   m_HeartRhythmPeriod.SetValue(0, TimeUnit::s);
-  CDM_COPY(m_data.GetConfiguration().GetECGInterpolator(), (&m_Waveforms));
-  // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
-  /* Code to write out the ECG data in a format easy to view in plotting tools
-  std::vector<double> original_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
-  std::vector<double> original_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
-  DataTrack Original;
-  for (size_t i = 0; i < original_s.size(); i++)
-    Original.Track("Original_ECG",original_s[i], original_mV[i]);
-  Original.WriteTrackToFile("OriginalECG.csv");
-*/
-  m_Waveforms.Interpolate(m_data.GetTimeStep());
+
+  auto* bind = (m_data.GetConfiguration().GetECGInterpolator())->Unload();
+  (&m_Waveforms)->Load(*bind);
+  delete bind;
+    // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
+    /* Code to write out the ECG data in a format easy to view in plotting tools
+    std::vector<double> original_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
+    std::vector<double> original_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
+    DataTrack Original;
+    for (size_t i = 0; i < original_s.size(); i++)
+      Original.Track("Original_ECG",original_s[i], original_mV[i]);
+    Original.WriteTrackToFile("OriginalECG.csv");
+  */
+    m_Waveforms.Interpolate(m_data.GetTimeStep());
   /* Code to write out the Interpolated ECG data in a format easy to view in plotting tools
   std::vector<double> interpolated_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
   std::vector<double> interpolated_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();

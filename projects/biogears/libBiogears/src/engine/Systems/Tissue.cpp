@@ -57,7 +57,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Drugs.h>
 #include <biogears/engine/Systems/Energy.h>
 #include <biogears/engine/Systems/Respiratory.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)

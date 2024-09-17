@@ -37,7 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPower.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)

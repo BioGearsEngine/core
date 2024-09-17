@@ -41,14 +41,7 @@ public:
   bool operator==(SEScenarioInitialParameters const&) const;
   bool operator!=(SEScenarioInitialParameters const&) const;
 
-public:
   virtual void Clear(); // clear memory
-
-  bool Load(const CDM::ScenarioInitialParametersData& in);
-  CDM::ScenarioInitialParametersData* Unload() const;
-
-protected:
-  void Unload(CDM::ScenarioInitialParametersData& data) const;
 
 public:
   virtual bool IsValid() const;

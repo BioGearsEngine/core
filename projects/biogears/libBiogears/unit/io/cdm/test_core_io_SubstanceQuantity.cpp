@@ -81,7 +81,7 @@ void TEST_FIXTURE_NAME::TearDown()
 //   static void Marshall(const SEGasSubstanceQuantity& in, CDM::GasSubstanceQuantityData& out);
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/substances/SEGasSubstanceQuantity.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 TEST_F(TEST_FIXTURE_NAME, GasSubstanceQuantity)
 {

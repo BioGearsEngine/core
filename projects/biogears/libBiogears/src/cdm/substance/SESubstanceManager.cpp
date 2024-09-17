@@ -63,10 +63,12 @@ void SESubstanceManager::Reset()
   m_ActiveSubstances.clear();
   m_ActiveGases.clear();
   m_ActiveLiquids.clear();
-  for (auto itr : m_OriginalSubstanceData)
-    itr.first->Load(*itr.second);
-  for (auto itr : m_OriginalCompoundData)
-    itr.first->Load(*itr.second, *this);
+  for (auto itr : m_OriginalSubstanceData) {
+    io::Substance::UnMarshall(*itr.second, *itr.first);
+  }
+  for (auto itr : m_OriginalCompoundData) {
+    io::Substance::UnMarshall(*itr.second, *this, *itr.first);
+  }
 }
 //-----------------------------------------------------------------------------
 /**
@@ -300,7 +302,7 @@ SESubstance* SESubstanceManager::ReadSubstanceFile(const std::string& xmlFile)
   subData = dynamic_cast<CDM::SubstanceData*>(obj);
   if (subData != nullptr) {
     sub = new SESubstance(GetLogger());
-    sub->Load(*subData);
+    io::Substance::UnMarshall(*subData, *sub);
     return sub;
   }
   ss.str("");
@@ -324,7 +326,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
   for (auto& filepath : io->FindAllSubstanceFiles()) {
     path_string = filepath;
 #ifdef _DEBUG
-    //Debugs(asprintf("Reading substance file : %s", path_string.c_str()));
+    // Debugs(asprintf("Reading substance file : %s", path_string.c_str()));
 #endif
     definitions[filepath.basename()] = Serializer::ReadFile(path_string, GetLogger());
   }
@@ -351,7 +353,7 @@ bool SESubstanceManager::LoadSubstanceDirectory()
     auto subData = dynamic_cast<CDM::SubstanceData*>(pair.second.get());
     if (subData != nullptr) {
       auto sub = new SESubstance(GetLogger());
-      sub->Load(*subData);
+      io::Substance::UnMarshall(*subData, *sub);
       AddSubstance(*sub);
       m_OriginalSubstanceData[sub] = subData;
       pair.second.release();
@@ -370,8 +372,9 @@ bool SESubstanceManager::LoadSubstanceDirectory()
     Error("Unknown Type");
     succeeded = false;
   }
-  for (auto itr : m_OriginalCompoundData)
-    itr.first->Load((const CDM::SubstanceCompoundData&)*itr.second, *this);
+  for (auto itr : m_OriginalCompoundData) {
+    io::Substance::UnMarshall(*itr.second, *this, *itr.first);
+  }
 
   if (!succeeded) {
     ss << "Unable to read some substances definitions" << std::ends;
@@ -386,25 +389,24 @@ bool SESubstanceManager::operator==(SESubstanceManager const& rhs) const
   if (this == &rhs)
     return true;
 
-  //NOTE: This equality operator needs improvment
-  //      We need to seperate SubstanceData from the SubstanceMGR
-  //      We can then hash substance data and compare the hash
-  //      Additionally we can likely only support SubstanceMgr comparrision by memory address and Data Definitions
+  // NOTE: This equality operator needs improvment
+  //       We need to seperate SubstanceData from the SubstanceMGR
+  //       We can then hash substance data and compare the hash
+  //       Additionally we can likely only support SubstanceMgr comparrision by memory address and Data Definitions
 
-
-  //TODO: Iterate over substances and call operator== on the data element. This just checks
-  //      If the pointers are equal which is hardly true
+  // TODO: Iterate over substances and call operator== on the data element. This just checks
+  //       If the pointers are equal which is hardly true
   return (
-      
-          m_Substances == rhs.m_Substances
-          && m_ActiveSubstances == rhs.m_ActiveSubstances
-          && m_ActiveGases == rhs.m_ActiveGases
-          && m_ActiveLiquids == rhs.m_ActiveLiquids
-          && m_ActiveDrugs == rhs.m_ActiveDrugs
-          && m_Compounds == rhs.m_Compounds
-          && m_ActiveCompounds == rhs.m_ActiveCompounds
-          && m_OriginalSubstanceData == rhs.m_OriginalSubstanceData
-          && m_OriginalCompoundData == rhs.m_OriginalCompoundData);
+
+    m_Substances == rhs.m_Substances
+    && m_ActiveSubstances == rhs.m_ActiveSubstances
+    && m_ActiveGases == rhs.m_ActiveGases
+    && m_ActiveLiquids == rhs.m_ActiveLiquids
+    && m_ActiveDrugs == rhs.m_ActiveDrugs
+    && m_Compounds == rhs.m_Compounds
+    && m_ActiveCompounds == rhs.m_ActiveCompounds
+    && m_OriginalSubstanceData == rhs.m_OriginalSubstanceData
+    && m_OriginalCompoundData == rhs.m_OriginalCompoundData);
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceManager::operator!=(SESubstanceManager const& rhs) const

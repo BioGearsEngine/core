@@ -44,9 +44,6 @@ public:
   virtual const SEScalar* GetScalar(const std::string& name);
   virtual const SEScalar* GetScalar(const char* name);
 
-  virtual bool Load(const CDM::SubstancePharmacokineticsData& in);
-  virtual CDM::SubstancePharmacokineticsData* Unload() const;
-
   virtual bool HasPhysicochemicals() const;
   virtual SESubstancePhysicochemical& GetPhysicochemicals();
   virtual const SESubstancePhysicochemical* GetPhysicochemicals() const;
@@ -63,9 +60,6 @@ public:
 
   bool operator==(const SESubstancePharmacokinetics& rhs) const;
   bool operator!=(const SESubstancePharmacokinetics& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;
 
 protected:
   SESubstancePhysicochemical* m_Physicochemicals;

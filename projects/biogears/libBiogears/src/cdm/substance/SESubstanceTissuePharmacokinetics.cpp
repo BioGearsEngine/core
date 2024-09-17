@@ -37,24 +37,6 @@ void SESubstanceTissuePharmacokinetics::Clear()
   SAFE_DELETE(m_PartitionCoefficient)
 }
 //-----------------------------------------------------------------------------
-bool SESubstanceTissuePharmacokinetics::Load(const CDM::SubstanceTissuePharmacokineticsData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceTissuePharmacokineticsData* SESubstanceTissuePharmacokinetics::Unload() const
-{
-  CDM::SubstanceTissuePharmacokineticsData* data = new CDM::SubstanceTissuePharmacokineticsData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstanceTissuePharmacokinetics::Unload(CDM::SubstanceTissuePharmacokineticsData& data) const
-{
-  io::Substance::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 const SEScalar* SESubstanceTissuePharmacokinetics::GetScalar(const char* name)
 {
   return GetScalar(std::string{ name });

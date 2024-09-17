@@ -128,8 +128,8 @@ void BioGearsEngineTest::TuneCardiovascularCircuitTest(SETestSuite& testSuite, c
   testSuite.GetLogger()->Info("Running " + sTestName);
   
   CDM_PATIENT_COPY(Patient, patient, bg.GetPatient())
-  bg.m_Config->EnableRenal(SEOnOff::On);
-  bg.m_Config->EnableTissue(SEOnOff::On);
+  bg.m_Configuration->EnableRenal(SEOnOff::On);
+  bg.m_Configuration->EnableTissue(SEOnOff::On);
   bg.SetupPatient();
   bg.CreateCircuitsAndCompartments();
 
@@ -191,8 +191,8 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
     bg.GetPatient().GetHeartRateBaseline().SetValue(heartRate_bpm, FrequencyUnit::Per_min);
   }
 
-  bg.m_Config->EnableRenal(connectRenal ? SEOnOff::On : SEOnOff::Off);
-  bg.m_Config->EnableTissue(connectTissue ? SEOnOff::On : SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(connectRenal ? SEOnOff::On : SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(connectTissue ? SEOnOff::On : SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   std::vector<SESubstance*> subs2Track;

@@ -52,9 +52,6 @@ public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  virtual bool Load(const CDM::SubstancePharmacodynamicsData& in);
-  virtual CDM::SubstancePharmacodynamicsData* Unload() const;
-
 public:
   virtual bool HasAntibacterialEffect() const;
   virtual SEScalarFrequency& GetAntibacterialEffect();
@@ -133,9 +130,6 @@ public:
   bool operator==(const SESubstancePharmacodynamics& rhs) const;
   bool operator!=(const SESubstancePharmacodynamics& rhs) const;
 
-protected:
-  virtual void Unload(CDM::SubstancePharmacodynamicsData& data) const;
-
 private:
   std::map<std::string, SEPharmacodynamicModifier*> m_Modifiers;
   SEScalarFrequency* m_AntibacterialEffect;
@@ -171,9 +165,6 @@ public:
   const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
 
-  bool Load(const CDM::PharmacodynamicModifierData& in);
-  CDM::PharmacodynamicModifierData* Unload() const;
-
   bool HasEMax() const;
   SEScalarFraction& GetEMax();
   double GetEMax() const;
@@ -186,9 +177,6 @@ public:
 
   bool operator==(const SEPharmacodynamicModifier& rhs) const;
   bool operator!=(const SEPharmacodynamicModifier& rhs) const;
-
-protected:
-  virtual void Unload(CDM::PharmacodynamicModifierData& data) const;
 
 private:
   SEScalarFraction* m_EMax;

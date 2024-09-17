@@ -175,24 +175,6 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SESubstance::Load(const CDM::SubstanceData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceData* SESubstance::Unload() const
-{
-  CDM::SubstanceData* data = new CDM::SubstanceData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstance::Unload(CDM::SubstanceData& data) const
-{
-  io::Substance::Marshall(*this, data);
-};
-//-----------------------------------------------------------------------------
 std::string SESubstance::GetName() const
 {
   return m_Name;

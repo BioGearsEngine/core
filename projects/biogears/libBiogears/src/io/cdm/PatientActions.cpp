@@ -896,7 +896,7 @@ namespace io {
         throw CommonDataModelException("Substance not gas : " + sfData.Name());
       }
       auto subFrac = std::make_unique<SESubstanceFraction>(*sub);
-      subFrac->Load(sfData);
+      io::Substance::UnMarshall(sfData, *subFrac);
       out.m_GasFractions.push_back(subFrac.get());
       out.m_cGasFractions.push_back(subFrac.release());
     }
@@ -914,7 +914,9 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Pressure)
 
     for (SESubstanceFraction* sf : in.m_GasFractions) {
-      out.GasFraction().push_back(std::unique_ptr<CDM::SubstanceFractionData>(sf->Unload()));
+      auto sfData = std::make_unique<CDM::SubstanceFractionData>();
+      io::Substance::Marshall(*sf, *sfData);
+      out.GasFraction().push_back(std::move(sfData));
     }
   }
   //----------------------------------------------------------------------------------

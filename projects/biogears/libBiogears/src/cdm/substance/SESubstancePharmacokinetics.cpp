@@ -61,26 +61,6 @@ const SEScalar* SESubstancePharmacokinetics::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePharmacokinetics::Load(const CDM::SubstancePharmacokineticsData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstancePharmacokineticsData* SESubstancePharmacokinetics::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::SubstancePharmacokineticsData* data = new CDM::SubstancePharmacokineticsData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstancePharmacokinetics::Unload(CDM::SubstancePharmacokineticsData& data) const
-{
-  io::Substance::Marshall(*this, data);
-};
-//-----------------------------------------------------------------------------
 bool SESubstancePharmacokinetics::HasPhysicochemicals() const
 {
   return m_Physicochemicals == nullptr ? false : m_Physicochemicals->IsValid();

@@ -31,8 +31,6 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::SubstanceTissuePharmacokineticsData& in);
-  virtual CDM::SubstanceTissuePharmacokineticsData* Unload() const;
 public:
   const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
@@ -46,9 +44,6 @@ public:
 
   bool operator==( const SESubstanceTissuePharmacokinetics& rhs) const;
   bool operator!=( const SESubstanceTissuePharmacokinetics& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceTissuePharmacokineticsData& data) const;
 
 protected:
   std::string m_Name;

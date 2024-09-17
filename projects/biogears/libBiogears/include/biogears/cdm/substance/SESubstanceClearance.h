@@ -51,9 +51,6 @@ public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  virtual bool Load(const CDM::SubstanceClearanceData& in);
-  virtual CDM::SubstanceClearanceData* Unload() const;
-
 public:
   virtual bool HasSystemic() const { return m_hasSystemic; }
   virtual void SetSystemic(bool b) { m_hasSystemic = b; }
@@ -133,9 +130,6 @@ public:
 
   bool operator==(const SESubstanceClearance& rhs) const;
   bool operator!=(const SESubstanceClearance& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceClearanceData& data) const;
 
 protected:
   bool m_hasSystemic;

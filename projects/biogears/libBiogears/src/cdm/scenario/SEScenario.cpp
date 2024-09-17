@@ -11,9 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 
-#include "io/cdm/Scenario.h"
-#include "io/cdm/PatientActions.h"
 #include "io/cdm/Actions.h"
+#include "io/cdm/PatientActions.h"
+#include "io/cdm/Scenario.h"
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
@@ -53,47 +53,9 @@ void SEScenario::Clear()
   m_DataRequestMgr.Clear();
 }
 //-----------------------------------------------------------------------------
-bool SEScenario::Load(const CDM::ScenarioData& in)
+bool SEScenario::Load(char const* scenarioFile)
 {
-  io::Scenario::UnMarshall(in, *this);
-
-  return IsValid();
-}
-//-----------------------------------------------------------------------------
-bool SEScenario::Load(const CDM::ActionListData& in)
-{
-  m_Actions.clear();
-  bool loadSuccess = true;
-  for (unsigned int i = 0; i < in.Action().size(); i++) {
-    SEAction* a = SEAction::newFromBind(in.Action()[i], m_SubMgr);
-    if (a != nullptr) {
-      m_Actions.push_back(a);
-      loadSuccess &= a->IsValid();
-    }
-  }
-  return IsValid();
-}
-//-----------------------------------------------------------------------------
-CDM::ScenarioData* SEScenario::Unload() const
-{
-  CDM::ScenarioData* data = new CDM::ScenarioData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEScenario::Unload(CDM::ScenarioData& data) const
-{
-  io::Scenario::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
-void SEScenario::Unload(CDM::ActionListData& data) const
-{
-  io::Scenario::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
-bool SEScenario::Load(const char* scenarioFile)
-{
-  return Load(std::string { scenarioFile });
+  Load(std::string(scenarioFile));
 }
 //-----------------------------------------------------------------------------
 bool SEScenario::Load(const std::string& scenarioFile)
@@ -120,7 +82,8 @@ bool SEScenario::Load(const std::string& scenarioFile)
     Error(ss);
     return false;
   }
-  return Load(*pData);
+  io::Scenario::UnMarshall(*pData, *this);
+  return true;
 }
 //-----------------------------------------------------------------------------
 bool SEScenario::IsValid() const
@@ -315,10 +278,9 @@ void SEScenario::RemoveAutoSerialization()
 //-----------------------------------------------------------------------------
 void SEScenario::AddAction(const SEAction& a)
 {
-   
+
   auto bind = io::Actions::factory(&a);
   m_Actions.push_back(SEAction::newFromBind(*bind, m_SubMgr));
-
 }
 //-----------------------------------------------------------------------------
 bool SEScenario::AddActionAfter(const SEAction& ref, const SEAction& after)

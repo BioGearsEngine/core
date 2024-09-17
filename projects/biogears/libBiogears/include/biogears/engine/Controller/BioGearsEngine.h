@@ -55,10 +55,8 @@ public:
 
   virtual bool LoadState(const char* file, const SEScalarTime* simTime = nullptr) override;
   virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) override;
-  virtual bool LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr) override;
   virtual bool LoadState(char const* buffer, size_t size) override;
 
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> GetStateData() override;
   virtual void SaveStateToFile(const char* file) override;
   virtual void SaveStateToFile(const std::string& file = "") override;
 

@@ -83,7 +83,7 @@ void TEST_FIXTURE_NAME::TearDown()
   using SEType = biogears ::SE##name; \
   using CDMType = CDM ::name##Data;
 
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 // class  SEGasTestReport
 //    TYPE GasTestReport
