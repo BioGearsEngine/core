@@ -63,7 +63,7 @@ public:
 
   // Load a state
   virtual bool Load(const CDM::BioGearsGastrointestinalSystemData& in);
-  virtual CDM::BioGearsGastrointestinalSystemData* Unload() const override;
+  virtual CDM::BioGearsGastrointestinalSystemData* Unload() const;
 
 protected:
   virtual void Unload(CDM::BioGearsGastrointestinalSystemData& data) const;

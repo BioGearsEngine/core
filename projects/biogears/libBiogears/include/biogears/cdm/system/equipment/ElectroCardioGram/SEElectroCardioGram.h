@@ -39,7 +39,7 @@ public:
   BIOGEARS_API const SEScalar* GetScalar(const std::string& name) override;
 
   BIOGEARS_API bool Load(const CDM::ElectroCardioGramData& in);
-  BIOGEARS_API CDM::ElectroCardioGramData* Unload() const override;
+  BIOGEARS_API CDM::ElectroCardioGramData* Unload() const;
   BIOGEARS_API Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   BIOGEARS_API bool operator==(SEElectroCardioGram const&) const;

@@ -72,7 +72,7 @@ public:
   SEDrugTransitState* NewDrugTransitState(const SESubstance* sub);
 
   bool Load(const CDM::GastrointestinalSystemData& in);
-  CDM::GastrointestinalSystemData* Unload() const override;
+  CDM::GastrointestinalSystemData* Unload() const;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 

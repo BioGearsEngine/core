@@ -72,7 +72,7 @@ public:
 
   // Load a state
   virtual bool Load(const CDM::BioGearsCardiovascularSystemData& in);
-  virtual CDM::BioGearsCardiovascularSystemData* Unload() const override;
+  virtual CDM::BioGearsCardiovascularSystemData* Unload() const;
 
   //Assessments
   SEScalar& CalculateCardiovascularSOFA();

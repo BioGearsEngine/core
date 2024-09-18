@@ -64,7 +64,7 @@ public:
 
   // Load a state
   virtual bool Load(const CDM::BioGearsRenalSystemData& in);
-  virtual CDM::BioGearsRenalSystemData* Unload() const override;
+  virtual CDM::BioGearsRenalSystemData* Unload() const;
 
 protected:
   virtual void Unload(CDM::BioGearsRenalSystemData& data) const;

@@ -47,7 +47,6 @@ BG_EXT template class BIOGEARS_API map<biogears::SEAnesthesiaMachineEvent, doubl
 
 namespace biogears {
 class BIOGEARS_API SEAnesthesiaMachine : public SESystem {
-protected:
   friend SEAnesthesiaMachineConfiguration;
   friend io::Anesthesia;
 
@@ -62,13 +61,8 @@ public:
 
   void Clear() override;
 
-  bool Load(const CDM::AnesthesiaMachineData& in);
-  CDM::AnesthesiaMachineData* Unload() const override;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
-protected:
-  void Unload(CDM::AnesthesiaMachineData& data) const;
 
   /** @name StateChange
    *   @brief - This method is called when ever there is a state change
@@ -79,7 +73,7 @@ protected:
   void Merge(const SEAnesthesiaMachine& from);
   void ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config);
 
-public:
+
   bool Load(const std::string& file);
 
   const SEScalar* GetScalar(const char* name) override;

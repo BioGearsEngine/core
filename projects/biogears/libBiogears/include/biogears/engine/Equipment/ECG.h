@@ -54,7 +54,7 @@ public:
 
   // Load a state
   virtual bool Load(const CDM::BioGearsElectroCardioGramData& in);
-  virtual CDM::BioGearsElectroCardioGramData* Unload() const override;
+  virtual CDM::BioGearsElectroCardioGramData* Unload() const;
 
 protected:
   virtual void Unload(CDM::BioGearsElectroCardioGramData& data) const;

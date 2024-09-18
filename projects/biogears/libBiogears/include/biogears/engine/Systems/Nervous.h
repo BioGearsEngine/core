@@ -57,7 +57,7 @@ public:
 
   // Load a state
   virtual bool Load(const CDM::BioGearsNervousSystemData& in);
-  virtual CDM::BioGearsNervousSystemData* Unload() const override;
+  virtual CDM::BioGearsNervousSystemData* Unload() const;
 
   //Assessments
   SEScalar& CalculateCentralNervousSOFA();

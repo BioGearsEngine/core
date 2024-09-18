@@ -54,7 +54,7 @@ public:
   bool operator==(SEEnvironment const&) const;
   bool operator!=(SEEnvironment const&) const;
 
-  CDM::EnvironmentData* Unload() const override;
+  CDM::EnvironmentData* Unload() const;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
   /** @name ProcessChange
    * @brief - Will change this class as directed by the Action

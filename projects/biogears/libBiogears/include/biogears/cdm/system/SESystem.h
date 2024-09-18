@@ -54,13 +54,9 @@ public:
   static const SEScalar* GetScalar(const char* name, std::vector<SESystem*>* systems);
   static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem*>* systems);
 
-  bool Load(const CDM::SystemData& in);
-  virtual CDM::SystemData* Unload() const = 0;
-
   virtual Tree<const char*> GetPhysiologyRequestGraph() const = 0;
 
 protected:
-  void Unload(CDM::SystemData& data) const;
 
   std::stringstream m_ss;
 };

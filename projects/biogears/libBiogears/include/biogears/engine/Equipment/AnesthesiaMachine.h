@@ -60,7 +60,7 @@ public:
 
   // Load a state
   virtual bool Load(const CDM::BioGearsAnesthesiaMachineData& in);
-  virtual CDM::BioGearsAnesthesiaMachineData* Unload() const override;
+  virtual CDM::BioGearsAnesthesiaMachineData* Unload() const;
 
 protected:
   virtual void Unload(CDM::BioGearsAnesthesiaMachineData& data) const;

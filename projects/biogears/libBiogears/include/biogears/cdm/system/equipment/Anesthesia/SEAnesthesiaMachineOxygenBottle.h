@@ -38,14 +38,6 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::AnesthesiaMachineOxygenBottleData& in);
-  virtual CDM::AnesthesiaMachineOxygenBottleData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::AnesthesiaMachineOxygenBottleData& data) const;
-
-  virtual void Merge(const SEAnesthesiaMachineOxygenBottle& from);
-
 public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
@@ -58,6 +50,9 @@ public:
 
   bool operator==(SEAnesthesiaMachineOxygenBottle const& rhs) const;
   bool operator!=(SEAnesthesiaMachineOxygenBottle const& rhs) const;
+
+protected:
+  virtual void Merge(const SEAnesthesiaMachineOxygenBottle& from);
 
 protected:
   SEScalarVolume* m_Volume;

@@ -41,7 +41,7 @@ public:
   const SEScalar* GetScalar(const std::string& name) override;
 
   bool Load(const CDM::HepaticSystemData& in);
-  CDM::HepaticSystemData* Unload() const override;
+  CDM::HepaticSystemData* Unload() const;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 

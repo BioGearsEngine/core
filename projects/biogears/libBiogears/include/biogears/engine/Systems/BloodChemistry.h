@@ -69,7 +69,7 @@ public:
 
   // Load a state
   bool Load(const CDM::BioGearsBloodChemistrySystemData& in);
-  CDM::BioGearsBloodChemistrySystemData* Unload() const override;
+  CDM::BioGearsBloodChemistrySystemData* Unload() const;
 
 protected:
   void Unload(CDM::BioGearsBloodChemistrySystemData& data) const;

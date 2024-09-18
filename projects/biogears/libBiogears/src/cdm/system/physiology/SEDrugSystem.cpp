@@ -92,10 +92,7 @@ void SEDrugSystem::Clear()
 
 bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
 {
-  SESystem::Load(in);
-
-  io::Physiology::UnMarshall( in, *this);
-
+  io::Physiology::UnMarshall(in, *this);
   return true;
 }
 //-------------------------------------------------------------------------------
@@ -149,9 +146,7 @@ CDM::DrugSystemData* SEDrugSystem::Unload() const
 
 void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
 {
-  SESystem::Unload(data);
-
-    io::Physiology::Marshall(*this, data);
+  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 

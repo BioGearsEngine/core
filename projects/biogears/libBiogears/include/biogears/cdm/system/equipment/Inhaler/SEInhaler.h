@@ -58,7 +58,7 @@ public:
   const SEScalar* GetScalar(const std::string& name) override;
 
   bool Load(const CDM::InhalerData& in);
-  CDM::InhalerData* Unload() const override;
+  CDM::InhalerData* Unload() const;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
 protected:

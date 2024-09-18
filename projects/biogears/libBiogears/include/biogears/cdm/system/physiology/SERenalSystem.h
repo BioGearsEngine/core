@@ -59,7 +59,7 @@ public:
   const SEScalar* GetScalar(const std::string& name) override;
 
   bool Load(const CDM::RenalSystemData& in);
-  CDM::RenalSystemData* Unload() const override;
+  CDM::RenalSystemData* Unload() const;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 

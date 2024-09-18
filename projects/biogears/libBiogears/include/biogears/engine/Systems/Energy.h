@@ -62,7 +62,7 @@ public:
 
   // Load a state
   virtual bool Load(const CDM::BioGearsEnergySystemData& in);
-  virtual CDM::BioGearsEnergySystemData* Unload() const override;
+  virtual CDM::BioGearsEnergySystemData* Unload() const;
 
 protected:
   virtual void Unload(CDM::BioGearsEnergySystemData& data) const;

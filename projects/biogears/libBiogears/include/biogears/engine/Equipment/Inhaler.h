@@ -58,7 +58,7 @@ public:
 
   // Load a state
   bool Load(const CDM::BioGearsInhalerData& in);
-  CDM::BioGearsInhalerData* Unload() const override;
+  CDM::BioGearsInhalerData* Unload() const;
 
 protected:
   void Unload(CDM::BioGearsInhalerData& data) const;

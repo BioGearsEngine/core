@@ -51,7 +51,7 @@ public:
   const SEScalar* GetScalar(const std::string& name) override;
 
   bool Load(const CDM::RespiratorySystemData& in);
-  CDM::RespiratorySystemData* Unload() const override;
+  CDM::RespiratorySystemData* Unload() const;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 

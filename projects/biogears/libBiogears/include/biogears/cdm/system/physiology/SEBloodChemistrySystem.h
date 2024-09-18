@@ -63,7 +63,7 @@ public:
 
   /**  @name Serialization */ //@{
   bool Load(const CDM::BloodChemistrySystemData& in); /**< @copydoc DOXY_CDM_LOAD */
-  CDM::BloodChemistrySystemData* Unload() const override; /**< @copydoc DOXY_CDM_UNLOAD */
+  CDM::BloodChemistrySystemData* Unload() const; /**< @copydoc DOXY_CDM_UNLOAD */
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
