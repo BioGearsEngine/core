@@ -32,16 +32,9 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ExpiratoryValveLeakData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ExpiratoryValveLeakData* Unload() const override;
-
   bool operator==(SEExpiratoryValveLeak const& rhs) const;
   bool operator!=(SEExpiratoryValveLeak const& rhs) const;
 
-protected:
-  virtual void Unload(CDM::ExpiratoryValveLeakData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 

@@ -44,24 +44,7 @@ bool SEVentilatorPressureLoss::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-//-------------------------------------------------------------------------------
-bool SEVentilatorPressureLoss::Load(const CDM::VentilatorPressureLossData& in, std::default_random_engine *rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::VentilatorPressureLossData* SEVentilatorPressureLoss::Unload() const
-{
-  CDM::VentilatorPressureLossData* data = new CDM::VentilatorPressureLossData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEVentilatorPressureLoss::Unload(CDM::VentilatorPressureLossData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEVentilatorPressureLoss::HasSeverity() const
 {

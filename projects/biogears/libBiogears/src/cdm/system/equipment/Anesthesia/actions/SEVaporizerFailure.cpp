@@ -44,24 +44,7 @@ bool SEVaporizerFailure::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-//-------------------------------------------------------------------------------
-bool SEVaporizerFailure::Load(const CDM::VaporizerFailureData& in, std::default_random_engine *rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::VaporizerFailureData* SEVaporizerFailure::Unload() const
-{
-  CDM::VaporizerFailureData* data = new CDM::VaporizerFailureData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEVaporizerFailure::Unload(CDM::VaporizerFailureData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEVaporizerFailure::HasSeverity() const
 {

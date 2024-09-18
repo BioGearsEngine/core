@@ -32,13 +32,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::VaporizerFailureData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::VaporizerFailureData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::VaporizerFailureData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 

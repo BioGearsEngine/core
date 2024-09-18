@@ -29,13 +29,6 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::AnesthesiaMachineConfigurationData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::AnesthesiaMachineConfigurationData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::AnesthesiaMachineConfigurationData& data) const;
-
-public:
   bool HasConfiguration() const;
   SEAnesthesiaMachine& GetConfiguration();
   const SEAnesthesiaMachine* GetConfiguration() const;

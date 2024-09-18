@@ -50,24 +50,6 @@ void SEOxygenTankPressureLoss::SetActive(bool b)
   m_State = b ? SEOnOff::On : SEOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SEOxygenTankPressureLoss::Load(const CDM::OxygenTankPressureLossData& in, std::default_random_engine *rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::OxygenTankPressureLossData* SEOxygenTankPressureLoss::Unload() const
-{
-  CDM::OxygenTankPressureLossData* data = new CDM::OxygenTankPressureLossData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEOxygenTankPressureLoss::Unload(CDM::OxygenTankPressureLossData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 void SEOxygenTankPressureLoss::ToString(std::ostream& str) const
 {
   str << "Anesthesia Machine Action : Oxygen Tank Pressure Loss";

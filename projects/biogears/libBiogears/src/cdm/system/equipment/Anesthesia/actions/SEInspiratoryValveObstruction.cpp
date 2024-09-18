@@ -45,24 +45,6 @@ bool SEInspiratoryValveObstruction::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEInspiratoryValveObstruction::Load(const CDM::InspiratoryValveObstructionData& in, std::default_random_engine *rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::InspiratoryValveObstructionData* SEInspiratoryValveObstruction::Unload() const
-{
-  CDM::InspiratoryValveObstructionData* data = new CDM::InspiratoryValveObstructionData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEInspiratoryValveObstruction::Unload(CDM::InspiratoryValveObstructionData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEInspiratoryValveObstruction::HasSeverity() const
 {
   return m_Severity != nullptr;

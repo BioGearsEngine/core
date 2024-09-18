@@ -50,31 +50,7 @@ bool SEAnesthesiaMachineConfiguration::IsValid() const
 {
   return SEAnesthesiaMachineAction::IsValid() && (HasConfiguration() || HasConfigurationFile());
 }
-//-----------------------------------------------------------------------------
-bool SEAnesthesiaMachineConfiguration::Load(const CDM::AnesthesiaMachineConfigurationData& in, std::default_random_engine* rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::AnesthesiaMachineConfigurationData* SEAnesthesiaMachineConfiguration::Unload() const
-{
-  CDM::AnesthesiaMachineConfigurationData* data = new CDM::AnesthesiaMachineConfigurationData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEAnesthesiaMachineConfiguration::Unload(CDM::AnesthesiaMachineConfigurationData& data) const
-{
-  SEAnesthesiaMachineAction::Unload(data);
-  if (HasConfiguration()) {
-    auto amData = std::make_unique<CDM::AnesthesiaMachineData>();
-    io::Anesthesia::Marshall(*m_Configuration, *amData);
-    data.Configuration(std::move(amData));
-  } else if (HasConfigurationFile()) {
-    data.ConfigurationFile(m_ConfigurationFile);
-  }
-}
+
 //-----------------------------------------------------------------------------
 bool SEAnesthesiaMachineConfiguration::HasConfiguration() const
 {

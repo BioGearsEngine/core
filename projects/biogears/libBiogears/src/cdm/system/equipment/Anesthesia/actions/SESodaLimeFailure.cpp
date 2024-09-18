@@ -44,24 +44,7 @@ bool SESodaLimeFailure::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-//-------------------------------------------------------------------------------
-bool SESodaLimeFailure::Load(const CDM::SodaLimeFailureData& in, std::default_random_engine *rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SodaLimeFailureData* SESodaLimeFailure::Unload() const
-{
-  CDM::SodaLimeFailureData* data = new CDM::SodaLimeFailureData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESodaLimeFailure::Unload(CDM::SodaLimeFailureData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SESodaLimeFailure::HasSeverity() const
 {

@@ -45,24 +45,6 @@ bool SEMaskLeak::IsActive() const
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEMaskLeak::Load(const CDM::MaskLeakData& in, std::default_random_engine *rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::MaskLeakData* SEMaskLeak::Unload() const
-{
-  CDM::MaskLeakData* data = new CDM::MaskLeakData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEMaskLeak::Unload(CDM::MaskLeakData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEMaskLeak::HasSeverity() const
 {
   return m_Severity != nullptr;

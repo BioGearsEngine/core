@@ -44,24 +44,7 @@ bool SEYPieceDisconnect::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-//-------------------------------------------------------------------------------
-bool SEYPieceDisconnect::Load(const CDM::YPieceDisconnectData& in, std::default_random_engine *rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::YPieceDisconnectData* SEYPieceDisconnect::Unload() const
-{
-  CDM::YPieceDisconnectData* data = new CDM::YPieceDisconnectData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEYPieceDisconnect::Unload(CDM::YPieceDisconnectData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEYPieceDisconnect::HasSeverity() const
 {

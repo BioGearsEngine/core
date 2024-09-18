@@ -32,13 +32,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::SodaLimeFailureData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::SodaLimeFailureData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::SodaLimeFailureData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 

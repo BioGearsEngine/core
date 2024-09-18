@@ -12,8 +12,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEAction.h>
 
 #include "io/cdm/Actions.h"
+#include "io/cdm/AnesthesiaActions.h"
 #include "io/cdm/EnvironmentActions.h"
 #include "io/cdm/EnvironmentConditions.h"
+#include "io/cdm/InhalerActions.h"
 #include "io/cdm/PatientActions.h"
 #include "io/cdm/PatientAssessments.h"
 
@@ -109,12 +111,11 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
   if (advData != nullptr) {
     SEAdvanceTime* a = new SEAdvanceTime();
     io::Actions::UnMarshall(*advData, *a, rd);
-    
+
     return a;
   }
 
-  CDM::SerializeStateData* stData = dynamic_cast<CDM::SerializeStateData*>(action);
-  if (stData != nullptr) {
+  if (CDM::SerializeStateData* stData = dynamic_cast<CDM::SerializeStateData*>(action)) {
     SESerializeState* a = new SESerializeState();
     io::Actions::UnMarshall(*stData, *a);
     return a;
@@ -141,218 +142,190 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return a;
     }
 
-    CDM::AcuteRespiratoryDistressData* ardsData = dynamic_cast<CDM::AcuteRespiratoryDistressData*>(action);
-    if (ardsData != nullptr) {
+    if (CDM::AcuteRespiratoryDistressData* ardsData = dynamic_cast<CDM::AcuteRespiratoryDistressData*>(action)) {
       SEAcuteRespiratoryDistress* ards = new SEAcuteRespiratoryDistress();
       io::PatientActions::UnMarshall(*ardsData, *ards, rd);
       return ards;
     }
 
-    CDM::AcuteStressData* aStressData = dynamic_cast<CDM::AcuteStressData*>(action);
-    if (aStressData != nullptr) {
+    if (CDM::AcuteStressData* aStressData = dynamic_cast<CDM::AcuteStressData*>(action)) {
       SEAcuteStress* a = new SEAcuteStress();
       io::PatientActions::UnMarshall(*aStressData, *a, rd);
       return a;
     }
 
-    CDM::ExampleActionData* expAction = dynamic_cast<CDM::ExampleActionData*>(action);
-    if (expAction != nullptr) {
+    if (CDM::ExampleActionData* expAction = dynamic_cast<CDM::ExampleActionData*>(action)) {
       SEExampleAction* a = new SEExampleAction();
       io::PatientActions::UnMarshall(*expAction, *a, rd);
       return a;
     }
 
-    CDM::AirwayObstructionData* airObData = dynamic_cast<CDM::AirwayObstructionData*>(action);
-    if (airObData != nullptr) {
+    if (CDM::AirwayObstructionData* airObData = dynamic_cast<CDM::AirwayObstructionData*>(action)) {
       SEAirwayObstruction* a = new SEAirwayObstruction();
       io::PatientActions::UnMarshall(*airObData, *a, rd);
       return a;
     }
 
-    CDM::ApneaData* apneaData = dynamic_cast<CDM::ApneaData*>(action);
-    if (apneaData != nullptr) {
+    if (CDM::ApneaData* apneaData = dynamic_cast<CDM::ApneaData*>(action)) {
       SEApnea* a = new SEApnea();
       io::PatientActions::UnMarshall(*apneaData, *a, rd);
       return a;
     }
 
-    CDM::BrainInjuryData* brainInjData = dynamic_cast<CDM::BrainInjuryData*>(action);
-    if (brainInjData != nullptr) {
+    if (CDM::BrainInjuryData* brainInjData = dynamic_cast<CDM::BrainInjuryData*>(action)) {
       SEBrainInjury* a = new SEBrainInjury();
       io::PatientActions::UnMarshall(*brainInjData, *a, rd);
       return a;
     }
 
-    CDM::BurnWoundData* burnData = dynamic_cast<CDM::BurnWoundData*>(action);
-    if (burnData != nullptr) {
+    if (CDM::BurnWoundData* burnData = dynamic_cast<CDM::BurnWoundData*>(action)) {
       SEBurnWound* burn = new SEBurnWound();
       io::PatientActions::UnMarshall(*burnData, *burn, rd);
       return burn;
     }
 
-    CDM::BronchoconstrictionData* bconData = dynamic_cast<CDM::BronchoconstrictionData*>(action);
-    if (bconData != nullptr) {
+    if (CDM::BronchoconstrictionData* bconData = dynamic_cast<CDM::BronchoconstrictionData*>(action)) {
       SEBronchoconstriction* a = new SEBronchoconstriction();
       io::PatientActions::UnMarshall(*bconData, *a, rd);
       return a;
     }
 
-    CDM::CardiacArrestData* carrestData = dynamic_cast<CDM::CardiacArrestData*>(action);
-    if (carrestData != nullptr) {
+    if (CDM::CardiacArrestData* carrestData = dynamic_cast<CDM::CardiacArrestData*>(action)) {
       SECardiacArrest* a = new SECardiacArrest();
       io::PatientActions::UnMarshall(*carrestData, *a, rd);
       return a;
     }
 
-    CDM::AsthmaAttackData* asthmaData = dynamic_cast<CDM::AsthmaAttackData*>(action);
-    if (asthmaData != nullptr) {
+    if (CDM::AsthmaAttackData* asthmaData = dynamic_cast<CDM::AsthmaAttackData*>(action)) {
       SEAsthmaAttack* a = new SEAsthmaAttack();
       io::PatientActions::UnMarshall(*asthmaData, *a, rd);
       return a;
     }
 
-    CDM::ChestCompressionData* cprData = dynamic_cast<CDM::ChestCompressionData*>(action);
-    if (cprData != nullptr) {
-      CDM::ChestCompressionForceData* cprForce = dynamic_cast<CDM::ChestCompressionForceData*>(cprData);
-      if (cprForce != nullptr) {
+    if (CDM::ChestCompressionData* cprData = dynamic_cast<CDM::ChestCompressionData*>(action)) {
+
+      if (CDM::ChestCompressionForceData* cprForce = dynamic_cast<CDM::ChestCompressionForceData*>(cprData)) {
         SEChestCompressionForce* a = new SEChestCompressionForce();
         io::PatientActions::UnMarshall(*cprForce, *a, rd);
         return a;
       }
-      CDM::ChestCompressionForceScaleData* cprScale = dynamic_cast<CDM::ChestCompressionForceScaleData*>(cprData);
-      if (cprScale != nullptr) {
+
+      if (CDM::ChestCompressionForceScaleData* cprScale = dynamic_cast<CDM::ChestCompressionForceScaleData*>(cprData)) {
         SEChestCompressionForceScale* a = new SEChestCompressionForceScale();
         io::PatientActions::UnMarshall(*cprScale, *a, rd);
         return a;
       }
     }
 
-    CDM::ChestOcclusiveDressingData* codData = dynamic_cast<CDM::ChestOcclusiveDressingData*>(action);
-    if (codData != nullptr) {
+    if (CDM::ChestOcclusiveDressingData* codData = dynamic_cast<CDM::ChestOcclusiveDressingData*>(action)) {
       SEChestOcclusiveDressing* a = new SEChestOcclusiveDressing();
       io::PatientActions::UnMarshall(*codData, *a, rd);
       return a;
     }
 
-    CDM::ConsciousRespirationData* conRespData = dynamic_cast<CDM::ConsciousRespirationData*>(action);
-    if (conRespData != nullptr) {
+    if (CDM::ConsciousRespirationData* conRespData = dynamic_cast<CDM::ConsciousRespirationData*>(action)) {
       SEConsciousRespiration* a = new SEConsciousRespiration();
       io::PatientActions::UnMarshall(*conRespData, *a, rd);
       return a;
     }
 
-    CDM::ConsumeNutrientsData* consumeData = dynamic_cast<CDM::ConsumeNutrientsData*>(action);
-    if (consumeData != nullptr) {
+    if (CDM::ConsumeNutrientsData* consumeData = dynamic_cast<CDM::ConsumeNutrientsData*>(action)) {
       SEConsumeNutrients* a = new SEConsumeNutrients();
       io::PatientActions::UnMarshall(*consumeData, *a, rd);
       return a;
     }
-    CDM::EbolaData* ebolaData = dynamic_cast<CDM::EbolaData*>(action);
-    if (ebolaData != nullptr) {
+
+    if (CDM::EbolaData* ebolaData = dynamic_cast<CDM::EbolaData*>(action)) {
       SEEbola* ebola = new SEEbola();
       io::PatientActions::UnMarshall(*ebolaData, *ebola, rd);
       return ebola;
     }
-    CDM::EscharotomyData* escharotomyData = dynamic_cast<CDM::EscharotomyData*>(action);
-    if (escharotomyData != nullptr) {
+
+    if (CDM::EscharotomyData* escharotomyData = dynamic_cast<CDM::EscharotomyData*>(action)) {
       SEEscharotomy* escharotomy = new SEEscharotomy();
       io::PatientActions::UnMarshall(*escharotomyData, *escharotomy, rd);
       return escharotomy;
     }
 
-    CDM::ExerciseData* exerciseData = dynamic_cast<CDM::ExerciseData*>(action);
-    if (exerciseData != nullptr) {
+    if (CDM::ExerciseData* exerciseData = dynamic_cast<CDM::ExerciseData*>(action)) {
       SEExercise* a = new SEExercise();
       io::PatientActions::UnMarshall(*exerciseData, *a, rd);
       return a;
     }
 
-    CDM::IntubationData* intub8Data = dynamic_cast<CDM::IntubationData*>(action);
-    if (intub8Data != nullptr) {
+    if (CDM::IntubationData* intub8Data = dynamic_cast<CDM::IntubationData*>(action)) {
       SEIntubation* a = new SEIntubation();
       io::PatientActions::UnMarshall(*intub8Data, *a, rd);
       return a;
     }
 
-    CDM::MechanicalVentilationData* mechVentData = dynamic_cast<CDM::MechanicalVentilationData*>(action);
-    if (mechVentData != nullptr) {
+    if (CDM::MechanicalVentilationData* mechVentData = dynamic_cast<CDM::MechanicalVentilationData*>(action)) {
       SEMechanicalVentilation* a = new SEMechanicalVentilation();
       io::PatientActions::UnMarshall(*mechVentData, substances, *a, rd);
       return a;
     }
 
-    CDM::NeedleDecompressionData* needlData = dynamic_cast<CDM::NeedleDecompressionData*>(action);
-    if (needlData != nullptr) {
+    if (CDM::NeedleDecompressionData* needlData = dynamic_cast<CDM::NeedleDecompressionData*>(action)) {
       SENeedleDecompression* a = new SENeedleDecompression();
       io::PatientActions::UnMarshall(*needlData, *a, rd);
       return a;
     }
 
-    CDM::OverrideData* overrideData = dynamic_cast<CDM::OverrideData*>(action);
-    if (overrideData != nullptr) {
+    if (CDM::OverrideData* overrideData = dynamic_cast<CDM::OverrideData*>(action)) {
       SEOverride* a = new SEOverride();
       io::PatientActions::UnMarshall(*overrideData, *a, rd);
       return a;
     }
 
-    CDM::HemorrhageData* hemData = dynamic_cast<CDM::HemorrhageData*>(action);
-    if (hemData != nullptr) {
+    if (CDM::HemorrhageData* hemData = dynamic_cast<CDM::HemorrhageData*>(action)) {
       SEHemorrhage* a = new SEHemorrhage();
       io::PatientActions::UnMarshall(*hemData, *a, rd);
       return a;
     }
 
-    CDM::InfectionData* infData = dynamic_cast<CDM::InfectionData*>(action);
-    if (infData != nullptr) {
+    if (CDM::InfectionData* infData = dynamic_cast<CDM::InfectionData*>(action)) {
       SEInfection* infect = new SEInfection();
       io::PatientActions::UnMarshall(*infData, *infect, rd);
       return infect;
     }
 
-    CDM::NasalCannulaData* nasalCannulaData = dynamic_cast<CDM::NasalCannulaData*>(action);
-    if (nasalCannulaData != nullptr) {
+    if (CDM::NasalCannulaData* nasalCannulaData = dynamic_cast<CDM::NasalCannulaData*>(action)) {
       SENasalCannula* a = new SENasalCannula();
       io::PatientActions::UnMarshall(*nasalCannulaData, *a, rd);
       return a;
     }
 
-    CDM::PainStimulusData* painData = dynamic_cast<CDM::PainStimulusData*>(action);
-    if (painData != nullptr) {
+    if (CDM::PainStimulusData* painData = dynamic_cast<CDM::PainStimulusData*>(action)) {
       SEPainStimulus* a = new SEPainStimulus();
       io::PatientActions::UnMarshall(*painData, *a, rd);
       return a;
     }
 
-    CDM::PericardialEffusionData* pericData = dynamic_cast<CDM::PericardialEffusionData*>(action);
-    if (pericData != nullptr) {
+    if (CDM::PericardialEffusionData* pericData = dynamic_cast<CDM::PericardialEffusionData*>(action)) {
       SEPericardialEffusion* a = new SEPericardialEffusion();
       io::PatientActions::UnMarshall(*pericData, *a, rd);
       return a;
     }
 
-    CDM::PulmonaryShuntData* pulmData = dynamic_cast<CDM::PulmonaryShuntData*>(action);
-    if (pulmData != nullptr) {
+    if (CDM::PulmonaryShuntData* pulmData = dynamic_cast<CDM::PulmonaryShuntData*>(action)) {
       SEPulmonaryShunt* a = new SEPulmonaryShunt();
       io::PatientActions::UnMarshall(*pulmData, *a, rd);
       return a;
     }
 
-    CDM::TensionPneumothoraxData* pneumoData = dynamic_cast<CDM::TensionPneumothoraxData*>(action);
-    if (pneumoData != nullptr) {
+    if (CDM::TensionPneumothoraxData* pneumoData = dynamic_cast<CDM::TensionPneumothoraxData*>(action)) {
       SETensionPneumothorax* a = new SETensionPneumothorax();
       io::PatientActions::UnMarshall(*pneumoData, *a, rd);
       return a;
     }
 
-    CDM::RadiationAbsorbedDoseData* radabs = dynamic_cast<CDM::RadiationAbsorbedDoseData*>(action);
-    if (radabs != nullptr) {
+    if (CDM::RadiationAbsorbedDoseData* radabs = dynamic_cast<CDM::RadiationAbsorbedDoseData*>(action)) {
       SERadiationAbsorbedDose* a = new SERadiationAbsorbedDose();
       io::PatientActions::UnMarshall(*radabs, *a, rd);
       return a;
     }
 
-    CDM::SubstanceBolusData* bolusData = dynamic_cast<CDM::SubstanceBolusData*>(action);
-    if (bolusData != nullptr) {
+    if (CDM::SubstanceBolusData* bolusData = dynamic_cast<CDM::SubstanceBolusData*>(action)) {
       substance = substances.GetSubstance(bolusData->Substance());
       if (substance == nullptr) {
         ss << "Unknown substance : " << bolusData->Substance();
@@ -363,8 +336,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return a;
     }
 
-    CDM::SubstanceNasalDoseData* nasalData = dynamic_cast<CDM::SubstanceNasalDoseData*>(action);
-    if (nasalData != nullptr) {
+    if (CDM::SubstanceNasalDoseData* nasalData = dynamic_cast<CDM::SubstanceNasalDoseData*>(action)) {
       substance = substances.GetSubstance(nasalData->Substance());
       if (substance == nullptr) {
         ss << "Unknown substance : " << nasalData->Substance();
@@ -375,8 +347,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return nd;
     }
 
-    CDM::SubstanceOralDoseData* oralData = dynamic_cast<CDM::SubstanceOralDoseData*>(action);
-    if (oralData != nullptr) {
+    if (CDM::SubstanceOralDoseData* oralData = dynamic_cast<CDM::SubstanceOralDoseData*>(action)) {
       substance = substances.GetSubstance(oralData->Substance());
       if (substance == nullptr) {
         ss << "Unknown substance : " << oralData->Substance();
@@ -387,15 +358,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return od;
     }
 
-    CDM::SleepData* sleep = dynamic_cast<CDM::SleepData*>(action);
-    if (sleep != nullptr) {
+    if (CDM::SleepData* sleep = dynamic_cast<CDM::SleepData*>(action)) {
       SESleep* a = new SESleep();
       io::PatientActions::UnMarshall(*sleep, *a, rd);
       return a;
     }
 
-    CDM::SubstanceInfusionData* subInfuzData = dynamic_cast<CDM::SubstanceInfusionData*>(action);
-    if (subInfuzData != nullptr) {
+    if (CDM::SubstanceInfusionData* subInfuzData = dynamic_cast<CDM::SubstanceInfusionData*>(action)) {
       substance = substances.GetSubstance(subInfuzData->Substance());
       if (substance == nullptr) {
         ss << "Unknown substance : " << subInfuzData->Substance();
@@ -406,8 +375,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return a;
     }
 
-    CDM::SubstanceCompoundInfusionData* subCInfuzData = dynamic_cast<CDM::SubstanceCompoundInfusionData*>(action);
-    if (subCInfuzData != nullptr) {
+    if (CDM::SubstanceCompoundInfusionData* subCInfuzData = dynamic_cast<CDM::SubstanceCompoundInfusionData*>(action)) {
       compound = substances.GetCompound(subCInfuzData->SubstanceCompound());
       if (compound == nullptr) {
         ss << "Unknown substance : " << subCInfuzData->SubstanceCompound();
@@ -418,15 +386,13 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
       return a;
     }
 
-    CDM::TourniquetData* tourniquetData = dynamic_cast<CDM::TourniquetData*>(action);
-    if (tourniquetData != nullptr) {
+    if (CDM::TourniquetData* tourniquetData = dynamic_cast<CDM::TourniquetData*>(action)) {
       SETourniquet* tourniquet = new SETourniquet();
       io::PatientActions::UnMarshall(*tourniquetData, *tourniquet, rd);
       return tourniquet;
     }
 
-    CDM::UrinateData* urinateData = dynamic_cast<CDM::UrinateData*>(action);
-    if (urinateData != nullptr) {
+    if (CDM::UrinateData* urinateData = dynamic_cast<CDM::UrinateData*>(action)) {
       SEUrinate* a = new SEUrinate();
       io::PatientActions::UnMarshall(*urinateData, *a, rd);
       return a;
@@ -434,94 +400,81 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
     substances.GetLogger()->Error("Unsupported Patient Action Received", "SEScenario::Load");
   } else if (dynamic_cast<CDM::AnesthesiaMachineActionData*>(action) != nullptr) {
 
-    auto anConfig = dynamic_cast<CDM::AnesthesiaMachineConfigurationData*>(action);
-    if (anConfig != nullptr) {
+    if (auto anConfig = dynamic_cast<CDM::AnesthesiaMachineConfigurationData*>(action)) {
       SEAnesthesiaMachineConfiguration* a = new SEAnesthesiaMachineConfiguration(substances);
-      a->Load(*anConfig, rd);
+      io::AnesthesiaActions::UnMarshall(*anConfig, *a, rd);
       return a;
     }
 
-    auto anO2WallLoss = dynamic_cast<CDM::OxygenWallPortPressureLossData*>(action);
-    if (anO2WallLoss != nullptr) {
+    if (auto anO2WallLoss = dynamic_cast<CDM::OxygenWallPortPressureLossData*>(action)) {
       SEOxygenWallPortPressureLoss* a = new SEOxygenWallPortPressureLoss();
-      a->Load(*anO2WallLoss, rd);
+      io::AnesthesiaActions::UnMarshall(*anO2WallLoss, *a, rd);
       return a;
     }
 
-    auto anO2TankLoss = dynamic_cast<CDM::OxygenTankPressureLossData*>(action);
-    if (anO2TankLoss != nullptr) {
+    if (auto anO2TankLoss = dynamic_cast<CDM::OxygenTankPressureLossData*>(action)) {
       SEOxygenTankPressureLoss* a = new SEOxygenTankPressureLoss();
-      a->Load(*anO2TankLoss, rd);
+      io::AnesthesiaActions::UnMarshall(*anO2TankLoss, *a, rd);
       return a;
     }
 
-    auto anExLeak = dynamic_cast<CDM::ExpiratoryValveLeakData*>(action);
-    if (anExLeak != nullptr) {
+    if (auto anExLeak = dynamic_cast<CDM::ExpiratoryValveLeakData*>(action)) {
       SEExpiratoryValveLeak* a = new SEExpiratoryValveLeak();
-      a->Load(*anExLeak, rd);
+      io::AnesthesiaActions::UnMarshall(*anExLeak, *a, rd);
       return a;
     }
 
-    auto anExObs = dynamic_cast<CDM::ExpiratoryValveObstructionData*>(action);
-    if (anExObs != nullptr) {
+    if (auto anExObs = dynamic_cast<CDM::ExpiratoryValveObstructionData*>(action)) {
       SEExpiratoryValveObstruction* a = new SEExpiratoryValveObstruction();
-      a->Load(*anExObs, rd);
+      io::AnesthesiaActions::UnMarshall(*anExObs, *a, rd);
       return a;
     }
 
-    auto anInLeak = dynamic_cast<CDM::InspiratoryValveLeakData*>(action);
-    if (anInLeak != nullptr) {
+    if (auto anInLeak = dynamic_cast<CDM::InspiratoryValveLeakData*>(action)) {
       SEInspiratoryValveLeak* a = new SEInspiratoryValveLeak();
-      a->Load(*anInLeak, rd);
+      io::AnesthesiaActions::UnMarshall(*anInLeak, *a, rd);
       return a;
     }
 
-    auto anInObs = dynamic_cast<CDM::InspiratoryValveObstructionData*>(action);
-    if (anInObs != nullptr) {
+    if (auto anInObs = dynamic_cast<CDM::InspiratoryValveObstructionData*>(action)) {
       SEInspiratoryValveObstruction* a = new SEInspiratoryValveObstruction();
-      a->Load(*anInObs, rd);
+      io::AnesthesiaActions::UnMarshall(*anInObs, *a, rd);
       return a;
     }
 
-    auto anMskLeak = dynamic_cast<CDM::MaskLeakData*>(action);
-    if (anMskLeak != nullptr) {
+    if (auto anMskLeak = dynamic_cast<CDM::MaskLeakData*>(action)) {
       SEMaskLeak* a = new SEMaskLeak();
-      a->Load(*anMskLeak, rd);
+      io::AnesthesiaActions::UnMarshall(*anMskLeak, *a, rd);
       return a;
     }
 
-    auto anSodaFail = dynamic_cast<CDM::SodaLimeFailureData*>(action);
-    if (anSodaFail != nullptr) {
+    if (auto anSodaFail = dynamic_cast<CDM::SodaLimeFailureData*>(action)) {
       SESodaLimeFailure* a = new SESodaLimeFailure();
-      a->Load(*anSodaFail, rd);
+      io::AnesthesiaActions::UnMarshall(*anSodaFail, *a, rd);
       return a;
     }
 
-    auto anTubLeak = dynamic_cast<CDM::TubeCuffLeakData*>(action);
-    if (anTubLeak != nullptr) {
+    if (auto anTubLeak = dynamic_cast<CDM::TubeCuffLeakData*>(action)) {
       SETubeCuffLeak* a = new SETubeCuffLeak();
-      a->Load(*anTubLeak, rd);
+      io::AnesthesiaActions::UnMarshall(*anTubLeak, *a, rd);
       return a;
     }
 
-    auto anVapFail = dynamic_cast<CDM::VaporizerFailureData*>(action);
-    if (anVapFail != nullptr) {
+    if (auto anVapFail = dynamic_cast<CDM::VaporizerFailureData*>(action)) {
       SEVaporizerFailure* a = new SEVaporizerFailure();
-      a->Load(*anVapFail, rd);
+      io::AnesthesiaActions::UnMarshall(*anVapFail, *a, rd);
       return a;
     }
 
-    auto anVentLoss = dynamic_cast<CDM::VentilatorPressureLossData*>(action);
-    if (anVentLoss != nullptr) {
+    if (auto anVentLoss = dynamic_cast<CDM::VentilatorPressureLossData*>(action)) {
       SEVentilatorPressureLoss* a = new SEVentilatorPressureLoss();
-      a->Load(*anVentLoss, rd);
+      io::AnesthesiaActions::UnMarshall(*anVentLoss, *a, rd);
       return a;
     }
 
-    auto anYDisc = dynamic_cast<CDM::YPieceDisconnectData*>(action);
-    if (anYDisc != nullptr) {
+    if (auto anYDisc = dynamic_cast<CDM::YPieceDisconnectData*>(action)) {
       SEYPieceDisconnect* a = new SEYPieceDisconnect();
-      a->Load(*anYDisc, rd);
+      io::AnesthesiaActions::UnMarshall(*anYDisc, *a, rd);
       return a;
     }
     substances.GetLogger()->Error("Unsupported Anesthesia Machine Action Received", "SEScenario::Load");
@@ -529,7 +482,7 @@ SEAction* SEAction::newFromBind(const CDM::ActionData& data, SESubstanceManager&
     CDM::InhalerConfigurationData* inhaleConfig = dynamic_cast<CDM::InhalerConfigurationData*>(action);
     if (inhaleConfig != nullptr) {
       SEInhalerConfiguration* a = new SEInhalerConfiguration(substances);
-      a->Load(*inhaleConfig, rd);
+      io::InhalerActions::UnMarshall(*inhaleConfig, *a);
       return a;
     }
   }

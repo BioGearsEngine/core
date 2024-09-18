@@ -34,16 +34,9 @@ public:
   virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
-  virtual bool Load(const CDM::OxygenTankPressureLossData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::OxygenTankPressureLossData* Unload() const override;
-
   bool operator==(SEOxygenTankPressureLoss const& rhs) const;
   bool operator!=(SEOxygenTankPressureLoss const& rhs) const;
 
-protected:
-  virtual void Unload(CDM::OxygenTankPressureLossData& data) const;
-
-public:
   virtual void ToString(std::ostream& str) const override;
 
 protected:

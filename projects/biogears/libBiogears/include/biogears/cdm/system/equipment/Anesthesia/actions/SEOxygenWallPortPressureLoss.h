@@ -30,16 +30,9 @@ public:
   virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
-  virtual bool Load(const CDM::OxygenWallPortPressureLossData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::OxygenWallPortPressureLossData* Unload() const override;
-
   bool operator==(SEOxygenWallPortPressureLoss const& rhs) const;
   bool operator!=(SEOxygenWallPortPressureLoss const& rhs) const;
 
-protected:
-  virtual void Unload(CDM::OxygenWallPortPressureLossData& data) const;
-
-public:
   virtual void ToString(std::ostream& str) const override;
 
 protected:
