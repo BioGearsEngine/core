@@ -20,7 +20,7 @@ namespace biogears {
 namespace io {
   //-----------------------------------------------------------------------------
   // class SEDataRequestManager
-  void DataRequests::UnMarshall(const CDM::DataRequestManagerData& in, const SESubstanceManager& subMgr, SEDataRequestManager& out, std::default_random_engine* re)
+  void DataRequests::UnMarshall(const CDM::DataRequestManagerData& in, SESubstanceManager const& subMgr, SEDataRequestManager& out, std::default_random_engine* re)
   {
     out.Clear();
     if (in.Filename().present())
@@ -35,7 +35,7 @@ namespace io {
       io::Property::UnMarshall(in.OverrideDecimalFormatting(), out.GetOverrideDecimalFormatting());
 
     for (auto& request : in.DataRequest()) {
-      auto dr = factory(request, subMgr, out.m_DefaultDecimalFormatting);
+      auto dr = factory(&request, subMgr, out.m_DefaultDecimalFormatting);
       if (dr != nullptr) {
         if (out.HasOverrideDecimalFormatting())
           static_cast<SEDecimalFormat*>(dr.get())->Set(*out.m_OverrideDecimalFormatting);
@@ -212,12 +212,21 @@ namespace io {
       out.Substance(in.m_Substance->GetName());
     }
   }
+  //-----------------------------------------------------------------------------
+  std::vector<std::unique_ptr<SEDataRequest>> DataRequests ::data_request_factory(const CDM::DataRequestManagerData& in, SESubstanceManager const& substances, const SEDecimalFormat* df)
+  {
+    std::vector<std::unique_ptr<SEDataRequest>> r_vec;
+    for (auto request_data : in.DataRequest()) {
+      r_vec.emplace_back(factory(&request_data, substances, df));
+    }
+    return r_vec;
+  }
 
   //-----------------------------------------------------------------------------
-  std::unique_ptr<SEDataRequest> DataRequests::factory(const CDM::DataRequestData& in, SESubstanceManager const& substances, const SEDecimalFormat* df)
+  std::unique_ptr<SEDataRequest> DataRequests::factory(CDM::DataRequestData const* requestData, SESubstanceManager const& substances, const SEDecimalFormat* df)
   {
-    const CDM::DataRequestData* drData = &in;
-    const CDM::PhysiologyDataRequestData* physSysData = dynamic_cast<const CDM::PhysiologyDataRequestData*>(drData);
+    CDM::DataRequestData const* drData = requestData;
+    CDM::PhysiologyDataRequestData const* physSysData = dynamic_cast<const CDM::PhysiologyDataRequestData*>(drData);
     if (physSysData != nullptr) {
       auto sys = std::make_unique<SEPhysiologyDataRequest>(df);
       DataRequests::UnMarshall(*physSysData, *sys);

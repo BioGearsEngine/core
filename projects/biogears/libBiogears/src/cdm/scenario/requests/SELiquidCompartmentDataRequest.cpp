@@ -28,24 +28,6 @@ SELiquidCompartmentDataRequest::~SELiquidCompartmentDataRequest()
   Clear();
 }
 //-------------------------------------------------------------------------------
-bool SELiquidCompartmentDataRequest::Load(const CDM::LiquidCompartmentDataRequestData& in, const SESubstanceManager& substances)
-{
-  io::DataRequests::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::LiquidCompartmentDataRequestData* SELiquidCompartmentDataRequest::Unload() const
-{
-  CDM::LiquidCompartmentDataRequestData* data = new CDM::LiquidCompartmentDataRequestData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SELiquidCompartmentDataRequest::Unload(CDM::LiquidCompartmentDataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SELiquidCompartmentDataRequest ::operator==(SELiquidCompartmentDataRequest const& rhs) const
 {
   if (this == &rhs)

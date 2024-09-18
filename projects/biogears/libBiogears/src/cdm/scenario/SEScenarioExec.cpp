@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 
 #include "io/biogears/BioGears.h"
+#include "io/cdm/DataRequests.h"
 #include "io/cdm/Scenario.h"
 
 #include <biogears/filesystem/path.h>
@@ -90,14 +91,15 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
       }
       // WE ARE OVERWRITING ANY DATA REQUESTS IN THE STATE WITH WHATS IN THE SCENARIO!!!
       // Make a copy of the data requests, not this clears out data requests from the engine
-      CDM::DataRequestManagerData* drData = memory_safe_scenario->GetDataRequestManager().Unload();
-      m_Engine.GetEngineTrack()->GetDataRequestManager().Load(*drData, m_Engine.GetSubstanceManager());
-      delete drData;
+      auto drData = std::make_unique<CDM::DataRequestManagerData>();
+      io::DataRequests::Marshall(memory_safe_scenario->GetDataRequestManager(), *drData);
+      io::DataRequests::UnMarshall(*drData, m_Engine.GetSubstanceManager(), m_Engine.GetEngineTrack()->GetDataRequestManager());
+
       // if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
     } else if (scenarioData->InitialParameters().present()) {
 
-      m_Engine.GetEngineTrack()->GetDataRequestManager().Load(scenarioData->DataRequests().get(), m_Engine.GetSubstanceManager());
+      io::DataRequests::UnMarshall(scenarioData->DataRequests().get(), m_Engine.GetSubstanceManager(), m_Engine.GetEngineTrack()->GetDataRequestManager());
 
       // if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);

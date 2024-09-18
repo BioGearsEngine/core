@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <random>
+#include <memory>
 #include <type_traits>
 
 #include "DataRequests.h"
@@ -70,6 +71,11 @@ class SESubstanceManager;
 namespace io {
   class BIOGEARS_PRIVATE_API DataRequests {
   public:
+    // class Factories;
+    static std::vector<std::unique_ptr<SEDataRequest>> data_request_factory(const CDM::DataRequestManagerData& in, SESubstanceManager const& substances, const SEDecimalFormat* df = nullptr);
+    static std::unique_ptr<SEDataRequest> factory(CDM::DataRequestData const* actionData, SESubstanceManager const& substances, const SEDecimalFormat* df = nullptr);
+    static std::unique_ptr<CDM::DataRequestData> factory(SEDataRequest const* data);    
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -120,8 +126,6 @@ namespace io {
     static void UnMarshall(const CDM::SubstanceDataRequestData& in, SESubstanceManager const& substances, SESubstanceDataRequest& out, std::default_random_engine* re = nullptr);
     static void Marshall(const SESubstanceDataRequest& in, CDM::SubstanceDataRequestData& out);
 
-    static std::unique_ptr<SEDataRequest> factory(const CDM::DataRequestData& in, SESubstanceManager const& substances, const SEDecimalFormat* df = nullptr);
-    static std::unique_ptr<CDM::DataRequestData> factory(const SEDataRequest* in);
   };
 
   //----------------------------------------------------------------------------------

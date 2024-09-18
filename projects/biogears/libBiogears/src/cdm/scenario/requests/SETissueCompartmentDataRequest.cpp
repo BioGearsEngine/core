@@ -38,24 +38,6 @@ size_t SETissueCompartmentDataRequest::HashCode()
   return h;
 }
 //-------------------------------------------------------------------------------
-bool SETissueCompartmentDataRequest::Load(const CDM::TissueCompartmentDataRequestData& in)
-{
-  io::DataRequests::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::TissueCompartmentDataRequestData* SETissueCompartmentDataRequest::Unload() const
-{
-  CDM::TissueCompartmentDataRequestData* data = new CDM::TissueCompartmentDataRequestData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETissueCompartmentDataRequest::Unload(CDM::TissueCompartmentDataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SETissueCompartmentDataRequest ::operator==(SETissueCompartmentDataRequest const& rhs) const
 {
   if (this == &rhs)

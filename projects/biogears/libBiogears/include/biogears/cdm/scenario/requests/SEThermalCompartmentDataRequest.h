@@ -29,13 +29,9 @@ class BIOGEARS_API SEThermalCompartmentDataRequest : public SECompartmentDataReq
 public:
   SEThermalCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEThermalCompartmentDataRequest();
-  virtual bool Load(const CDM::ThermalCompartmentDataRequestData& in);
-  virtual CDM::ThermalCompartmentDataRequestData* Unload() const;
 
   bool operator==(SEThermalCompartmentDataRequest const&) const;
   bool operator!=(SEThermalCompartmentDataRequest const&) const;
 
-protected:
-  virtual void Unload(CDM::ThermalCompartmentDataRequestData& data) const;
 };
 }

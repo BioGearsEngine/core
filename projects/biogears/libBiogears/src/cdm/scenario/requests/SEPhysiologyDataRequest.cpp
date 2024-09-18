@@ -30,23 +30,6 @@ void SEPhysiologyDataRequest::Clear()
   SEDataRequest::Clear();
 }
 
-bool SEPhysiologyDataRequest::Load(const CDM::PhysiologyDataRequestData& in)
-{
-  io::DataRequests::UnMarshall(in, *this);
-  return true;
-}
-
-CDM::PhysiologyDataRequestData* SEPhysiologyDataRequest::Unload() const
-{
-  CDM::PhysiologyDataRequestData* data = new CDM::PhysiologyDataRequestData();
-  Unload(*data);
-  return data;
-}
-
-void SEPhysiologyDataRequest::Unload(CDM::PhysiologyDataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
 
 size_t SEPhysiologyDataRequest::HashCode() const
 {

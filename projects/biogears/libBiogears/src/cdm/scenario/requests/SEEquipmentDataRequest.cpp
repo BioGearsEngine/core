@@ -32,24 +32,7 @@ void SEEquipmentDataRequest::Clear()
   SEDataRequest::Clear();
   m_Type = "";
 }
-//-----------------------------------------------------------------------------
-bool SEEquipmentDataRequest::Load(const CDM::EquipmentDataRequestData& in)
-{
-  io::DataRequests::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::EquipmentDataRequestData* SEEquipmentDataRequest::Unload() const
-{
-  CDM::EquipmentDataRequestData* data = new CDM::EquipmentDataRequestData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEEquipmentDataRequest::Unload(CDM::EquipmentDataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 bool SEEquipmentDataRequest::HasType() const
 {

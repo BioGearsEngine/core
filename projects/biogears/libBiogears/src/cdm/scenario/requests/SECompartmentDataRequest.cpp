@@ -41,16 +41,7 @@ size_t SECompartmentDataRequest::HashCode() const
   return m_Hash;
 }
 //-------------------------------------------------------------------------------
-bool SECompartmentDataRequest::Load(const CDM::CompartmentDataRequestData& in)
-{
-  io::DataRequests::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-void SECompartmentDataRequest::Unload(CDM::CompartmentDataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 const char* SECompartmentDataRequest::GetCompartment() const
 {

@@ -37,25 +37,7 @@ void SEDataRequest::Clear()
   m_RequestedUnit = "";
   m_Unit = nullptr;
 }
-//-------------------------------------------------------------------------------
-bool SEDataRequest::Load(const CDM::DataRequestData& in)
-{
 
-   io::DataRequests::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::DataRequestData* SEDataRequest::Unload() const
-{
-  CDM::DataRequestData* data = new CDM::DataRequestData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEDataRequest::Unload(CDM::DataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
 //-------------------------------------------------------------------------------
 std::string SEDataRequest::GetName() const
 {

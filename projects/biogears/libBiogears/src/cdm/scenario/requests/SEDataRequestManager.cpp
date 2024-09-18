@@ -85,24 +85,6 @@ void SEDataRequestManager::Clear()
   SAFE_DELETE(m_OverrideDecimalFormatting);
 }
 //-----------------------------------------------------------------------------
-bool SEDataRequestManager::Load(const CDM::DataRequestManagerData& in, SESubstanceManager& subMgr)
-{
-  io::DataRequests::UnMarshall(in, subMgr, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::DataRequestManagerData* SEDataRequestManager::Unload() const
-{
-  CDM::DataRequestManagerData* data = new CDM::DataRequestManagerData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEDataRequestManager::Unload(CDM::DataRequestManagerData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SEDataRequestManager::HasDefaultDecimalFormatting() const
 {
   return m_DefaultDecimalFormatting != nullptr;
@@ -135,6 +117,11 @@ SEDecimalFormat& SEDataRequestManager::GetOverrideDecimalFormatting()
 void SEDataRequestManager::RemoveOverrideDecimalFormatting()
 {
   SAFE_DELETE(m_OverrideDecimalFormatting);
+}
+//-----------------------------------------------------------------------------
+void SEDataRequestManager::CreateDataRequest(std::unique_ptr<SEDataRequest> request)
+{
+  m_Requests.push_back(request.release());
 }
 //-----------------------------------------------------------------------------
 SEEnvironmentDataRequest& SEDataRequestManager::CreateEnvironmentDataRequest(const SEDecimalFormat* dfault)
@@ -211,80 +198,7 @@ bool SEDataRequestManager::DuplicateRequest(SEDataRequest* request)
   }
   return duplicate;
 }
-//-----------------------------------------------------------------------------
-void SEDataRequestManager::CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager& subMgr)
-{
-  SEDataRequest* dr = newFromBind(input, subMgr, m_DefaultDecimalFormatting);
-  if (dr != nullptr && !DuplicateRequest(dr)) {
-    if (HasOverrideDecimalFormatting()) {
-      ((SEDecimalFormat*)dr)->Set(*m_OverrideDecimalFormatting);
-    }
-    m_Requests.push_back(dr);
-  }
-}
-//-----------------------------------------------------------------------------
-SEDataRequest* SEDataRequestManager::newFromBind(const CDM::DataRequestData& data, SESubstanceManager& substances, const SEDecimalFormat* dfault)
-{
-  const CDM::DataRequestData* drData = &data;
-  const CDM::PhysiologyDataRequestData* physSysData = dynamic_cast<const CDM::PhysiologyDataRequestData*>(drData);
-  if (physSysData != nullptr) {
-    SEPhysiologyDataRequest* sys = new SEPhysiologyDataRequest(dfault);
-    sys->Load(*physSysData);
-    return sys;
-  }
-  const CDM::GasCompartmentDataRequestData* gasData = dynamic_cast<const CDM::GasCompartmentDataRequestData*>(drData);
-  if (gasData != nullptr) {
-    SEGasCompartmentDataRequest* Comp = new SEGasCompartmentDataRequest(dfault);
-    Comp->Load(*gasData, substances);
-    return Comp;
-  }
-  const CDM::LiquidCompartmentDataRequestData* liquidData = dynamic_cast<const CDM::LiquidCompartmentDataRequestData*>(drData);
-  if (liquidData != nullptr) {
-    SELiquidCompartmentDataRequest* Comp = new SELiquidCompartmentDataRequest(dfault);
-    Comp->Load(*liquidData, substances);
-    return Comp;
-  }
-  const CDM::ThermalCompartmentDataRequestData* thermData = dynamic_cast<const CDM::ThermalCompartmentDataRequestData*>(drData);
-  if (thermData != nullptr) {
-    SEThermalCompartmentDataRequest* Comp = new SEThermalCompartmentDataRequest(dfault);
-    Comp->Load(*thermData);
-    return Comp;
-  }
-  const CDM::TissueCompartmentDataRequestData* tissueData = dynamic_cast<const CDM::TissueCompartmentDataRequestData*>(drData);
-  if (tissueData != nullptr) {
-    SETissueCompartmentDataRequest* Comp = new SETissueCompartmentDataRequest(dfault);
-    Comp->Load(*tissueData);
-    return Comp;
-  }
-  const CDM::PatientDataRequestData* patData = dynamic_cast<const CDM::PatientDataRequestData*>(drData);
-  if (patData != nullptr) {
-    SEPatientDataRequest* sys = new SEPatientDataRequest(dfault);
-    sys->Load(*patData);
-    return sys;
-  }
-  const CDM::SubstanceDataRequestData* subData = dynamic_cast<const CDM::SubstanceDataRequestData*>(drData);
-  if (subData != nullptr) {
-    SESubstanceDataRequest* sub = new SESubstanceDataRequest(dfault);
-    sub->Load(*subData, substances);
-    return sub;
-  }
-  const CDM::EnvironmentDataRequestData* envData = dynamic_cast<const CDM::EnvironmentDataRequestData*>(drData);
-  if (envData != nullptr) {
-    SEEnvironmentDataRequest* env = new SEEnvironmentDataRequest(dfault);
-    env->Load(*envData);
-    return env;
-  }
-  const CDM::EquipmentDataRequestData* equipSysData = dynamic_cast<const CDM::EquipmentDataRequestData*>(drData);
-  if (equipSysData != nullptr) {
-    SEEquipmentDataRequest* sys = new SEEquipmentDataRequest(dfault);
-    sys->Load(*equipSysData);
-    return sys;
-  }
 
-  if (substances.GetLogger() != nullptr)
-    substances.GetLogger()->Error("Unsupported DataRequest Received", "SEDataRequest::newFromBind");
-  return nullptr;
-}
 //-----------------------------------------------------------------------------
 bool SEDataRequestManager::HasResultsFilename() const
 {

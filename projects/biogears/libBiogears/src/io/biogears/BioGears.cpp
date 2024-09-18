@@ -12,6 +12,7 @@
 #include "io/cdm/Circuit.h"
 #include "io/cdm/Compartment.h"
 #include "io/cdm/Conditions.h"
+#include "io/cdm/DataRequests.h"
 #include "io/cdm/Patient.h"
 #include "io/cdm/Property.h"
 #include "io/cdm/Substance.h"
@@ -26,13 +27,15 @@ namespace io {
     auto resultsFile = out.GetEngineTrack()->GetDataRequestManager().GetResultsFilename();
     std::vector<std::unique_ptr<CDM::DataRequestData>> dataVector;
     for (auto& dr : requests) {
-      dataVector.emplace_back(dr->Unload());
+      auto drData = std::make_unique<CDM::DataRequestData>();
+      io::DataRequests::Marshall(*dr, *drData);
+      dataVector.emplace_back(std::move(drData));
     }
     out.BioGears::SetUp();
     out.m_EngineTrack = PhysiologyEngineTrack(out);
     out.m_DataTrack = &out.m_EngineTrack.GetDataTrack();
     for (auto& data : dataVector) {
-      out.m_EngineTrack.GetDataRequestManager().CreateFromBind(*data, *out.m_Substances);
+      out.m_EngineTrack.GetDataRequestManager().CreateDataRequest(io::DataRequests::factory(data.get(), *out.m_Substances));
     }
     out.m_EngineTrack.GetDataRequestManager().SetResultsFilename(resultsFile);
     out.m_ss.str("");
@@ -370,7 +373,9 @@ namespace io {
     io::Property::Marshall(*in.m_SimulationTime, out.SimulationTime());
 
     if (in.m_EngineTrack.GetDataRequestManager().HasDataRequests()) {
-      out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_EngineTrack.GetDataRequestManager().Unload()));
+      auto dataRequestsData = std::make_unique<CDM::DataRequestManagerData>();
+      io::DataRequests::Marshall( in.m_EngineTrack.GetDataRequestManager(), *dataRequestsData );
+      out.DataRequests(std::move(dataRequestsData));
     }
 
     io::BioGears::Marshall(in.m_AirwayMode, out.AirwayMode());

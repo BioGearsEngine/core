@@ -31,24 +31,6 @@ void SEEnvironmentDataRequest::Clear()
   SEDataRequest::Clear();
 }
 
-bool SEEnvironmentDataRequest::Load(const CDM::EnvironmentDataRequestData& in)
-{
-  io::DataRequests::UnMarshall(in, *this);
-  return true;
-}
-
-CDM::EnvironmentDataRequestData* SEEnvironmentDataRequest::Unload() const
-{
-  CDM::EnvironmentDataRequestData* data = new CDM::EnvironmentDataRequestData();
-  Unload(*data);
-  return data;
-}
-
-void SEEnvironmentDataRequest::Unload(CDM::EnvironmentDataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
-
 size_t SEEnvironmentDataRequest::HashCode() const
 {
   if (m_Hash == 0) {

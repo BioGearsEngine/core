@@ -32,9 +32,6 @@ public:
 
   virtual void Clear() override; // clear memory
 
-  virtual bool Load(const CDM::CompartmentDataRequestData& in);
-  virtual CDM::CompartmentDataRequestData* Unload() const override = 0;
-
   size_t HashCode() const override;
 
   bool operator==(SECompartmentDataRequest const&) const;
@@ -52,8 +49,7 @@ public:
   virtual void Set(const std::string& cmpt, const std::string& name, const CCompoundUnit& unit);
 
 protected:
-  virtual void Unload(CDM::CompartmentDataRequestData& data) const;
-
+  
   std::string m_Compartment;
 };
 }

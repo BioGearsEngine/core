@@ -10,6 +10,7 @@
 #include "PatientActions.h"
 #include "PatientConditions.h"
 #include "Property.h"
+#include "DataRequests.h"
 
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
@@ -163,7 +164,7 @@ namespace io {
       Marshall(*in.m_AutoSerialization, out.AutoSerialization());
     }
 
-    out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_DataRequestMgr.Unload()));
+    io::DataRequests::Marshall(in.m_DataRequestMgr, out.DataRequests());
 
     out.Actions(std::make_unique<CDM::ActionListData>());
     if (in.HasActionFile()) {

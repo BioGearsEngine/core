@@ -29,12 +29,7 @@ public:
 
   virtual void Clear() override; //clear memory
   size_t HashCode() const override;
-  virtual bool Load(const CDM::PhysiologyDataRequestData& in);
-  virtual CDM::PhysiologyDataRequestData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::PhysiologyDataRequestData& data) const;
-
+  
 public:
 protected:
 };

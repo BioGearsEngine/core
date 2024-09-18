@@ -33,12 +33,6 @@ public:
 
   virtual void Clear() override; //clear memory
 
-  virtual bool Load(const CDM::SubstanceDataRequestData& in, const SESubstanceManager& substances);
-  virtual CDM::SubstanceDataRequestData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::SubstanceDataRequestData& data) const;
-
 public:
   size_t HashCode() const override;
   virtual const char* GetCompartment() const;
