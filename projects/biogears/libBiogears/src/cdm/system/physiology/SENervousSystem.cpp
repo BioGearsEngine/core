@@ -146,28 +146,6 @@ const SEScalar* SENervousSystem::GetScalar(const std::string& name)
   return nullptr;
 }
 //-------------------------------------------------------------------------------
-
-bool SENervousSystem::Load(const CDM::NervousSystemData& in)
-{
-  io::Physiology::UnMarshall(in,  *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::NervousSystemData* SENervousSystem::Unload() const
-{
-  CDM::NervousSystemData* data = new CDM::NervousSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SENervousSystem::Unload(CDM::NervousSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-
-//-------------------------------------------------------------------------------
 bool SENervousSystem::HasAttentionLapses() const
 {
   return m_AttentionLapses == nullptr ? false : m_AttentionLapses->IsValid();

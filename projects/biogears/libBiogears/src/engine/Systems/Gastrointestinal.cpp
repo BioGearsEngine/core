@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Gastrointestinal.h>
 
 #include "io/cdm/PatientNutrition.h"
+#include "io/cdm/Physiology.h"
+#include "io/cdm/Physiology.h"
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/patient/SENutrition.h>
@@ -100,8 +102,7 @@ void Gastrointestinal::Initialize()
 
 bool Gastrointestinal::Load(const CDM::BioGearsGastrointestinalSystemData& in)
 {
-  if (!SEGastrointestinalSystem::Load(in))
-    return false;
+  io::Physiology::UnMarshall(in, *this);
   BioGearsSystem::LoadState();
 
   // Loading drug absorption/transit model states here (rather than SE side) because we want to map them to an SESubstance already defined in Sub Manager
@@ -113,7 +114,7 @@ bool Gastrointestinal::Load(const CDM::BioGearsGastrointestinalSystemData& in)
       return false;
     }
     NewDrugTransitState(sub);
-    GetDrugTransitState(sub)->Load(transitData);
+    io::Physiology::UnMarshall(transitData, *GetDrugTransitState(sub));
   }
 
   m_DecrementNutrients = true;
@@ -128,7 +129,7 @@ CDM::BioGearsGastrointestinalSystemData* Gastrointestinal::Unload() const
 }
 void Gastrointestinal::Unload(CDM::BioGearsGastrointestinalSystemData& data) const
 {
-  SEGastrointestinalSystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
 }
 
 void Gastrointestinal::SetUp()

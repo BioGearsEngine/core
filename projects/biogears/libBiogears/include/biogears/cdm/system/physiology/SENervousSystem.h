@@ -42,16 +42,10 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::NervousSystemData& in);
-  CDM::NervousSystemData* Unload() const;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SENervousSystem const&) const;
   bool operator!=(SENervousSystem const&) const;
-
-protected:
-  void Unload(CDM::NervousSystemData& data) const;
 
 public:
   bool HasComplianceScale() const;

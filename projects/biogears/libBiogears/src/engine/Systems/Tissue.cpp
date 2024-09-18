@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Tissue.h>
 
+#include "io/cdm/Physiology.h"
+
 //Standad Includes
 #include <cmath>
 //Project Includes
@@ -186,8 +188,7 @@ void Tissue::Initialize()
 
 bool Tissue::Load(const CDM::BioGearsTissueSystemData& in)
 {
-  if (!SETissueSystem::Load(in))
-    return false;
+  io::Physiology::UnMarshall(in, *this);
 
   m_O2ConsumedRunningAverage_mL_Per_s.Load(in.O2ConsumedRunningAverage_mL_Per_s());
   m_CO2ProducedRunningAverage_mL_Per_s.Load(in.CO2ProducedRunningAverage_mL_Per_s());
@@ -207,7 +208,7 @@ CDM::BioGearsTissueSystemData* Tissue::Unload() const
 }
 void Tissue::Unload(CDM::BioGearsTissueSystemData& data) const
 {
-  SETissueSystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
 
   data.O2ConsumedRunningAverage_mL_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_O2ConsumedRunningAverage_mL_Per_s.Unload()));
   data.CO2ProducedRunningAverage_mL_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_CO2ProducedRunningAverage_mL_Per_s.Unload()));

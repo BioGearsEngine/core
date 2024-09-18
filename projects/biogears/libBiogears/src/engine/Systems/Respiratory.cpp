@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/Systems/Respiratory.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
@@ -241,8 +243,7 @@ void Respiratory::Initialize()
 
 bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)
 {
-  if (!SERespiratorySystem::Load(in))
-    return false;
+  io::Physiology::UnMarshall(in, *this);
 
   m_InitialExpiratoryReserveVolume_L = in.InitialExpiratoryReserveVolume_L();
   m_InitialFunctionalResidualCapacity_L = in.InitialFunctionalResidualCapacity_L();
@@ -298,7 +299,7 @@ CDM::BioGearsRespiratorySystemData* Respiratory::Unload() const
 }
 void Respiratory::Unload(CDM::BioGearsRespiratorySystemData& data) const
 {
-  SERespiratorySystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
 
   data.InitialExpiratoryReserveVolume_L(m_InitialExpiratoryReserveVolume_L);
   data.InitialFunctionalResidualCapacity_L(m_InitialFunctionalResidualCapacity_L);

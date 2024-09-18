@@ -2,9 +2,10 @@
 
 #include <sstream>
 
-#include "../cdm/PatientActions.h"
-#include "../cdm/Property.h"
-#include "../cdm/System.h"
+#include "io/cdm/PatientActions.h"
+#include "io/cdm/Property.h"
+#include "io/cdm/System.h"
+#include "io/cdm/Physiology.h"
 
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 #include <biogears/schema/cdm/Substance.hxx>
@@ -317,7 +318,8 @@ namespace io {
         throw CommonDataModelException(ss.str());
       }
       out.NewDrugTransitState(sub);
-      out.GetDrugTransitState(sub)->Load(transitData);
+      io::Physiology::UnMarshall(transitData, *out.GetDrugTransitState(sub));
+
     }
 
     out.m_DecrementNutrients = true;

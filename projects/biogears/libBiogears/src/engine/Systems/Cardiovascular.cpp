@@ -52,6 +52,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 
+#include "io/cdm/Physiology.h"
 
 namespace biogears {
 auto Cardiovascular::make_unique(BioGears& bg) -> std::unique_ptr<Cardiovascular>
@@ -247,8 +248,7 @@ void Cardiovascular::Initialize()
 
 bool Cardiovascular::Load(const CDM::BioGearsCardiovascularSystemData& in)
 {
-  if (!SECardiovascularSystem::Load(in))
-    return false;
+  io::Physiology::UnMarshall(in, *this);
 
   m_StartSystole = in.StartSystole();
   m_HeartFlowDetected = in.HeartFlowDetected();
@@ -303,7 +303,7 @@ CDM::BioGearsCardiovascularSystemData* Cardiovascular::Unload() const
 }
 void Cardiovascular::Unload(CDM::BioGearsCardiovascularSystemData& data) const
 {
-  SECardiovascularSystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
 
   data.StartSystole(m_StartSystole);
   data.HeartFlowDetected(m_HeartFlowDetected);

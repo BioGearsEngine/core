@@ -58,25 +58,6 @@ const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
 }
 //-------------------------------------------------------------------------------
 
-bool SEHepaticSystem::Load(const CDM::HepaticSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::HepaticSystemData* SEHepaticSystem::Unload() const
-{
-  CDM::HepaticSystemData* data = new CDM::HepaticSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEHepaticSystem::Unload(CDM::HepaticSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
-
 bool SEHepaticSystem::HasKetoneProductionRate() const
 {
   return m_KetoneProductionRate == nullptr ? false : m_KetoneProductionRate->IsValid();

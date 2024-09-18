@@ -306,28 +306,7 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
 
   return nullptr;
 }
-//-------------------------------------------------------------------------------
 
-bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::BloodChemistrySystemData* SEBloodChemistrySystem::Unload() const
-{
-  CDM::BloodChemistrySystemData* data = new CDM::BloodChemistrySystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
 //-------------------------------------------------------------------------------
 
 bool SEBloodChemistrySystem::HasBloodDensity() const
@@ -1308,24 +1287,6 @@ void SEInflammatoryResponse::Clear()
   SAFE_DELETE(m_Trauma);
   SAFE_DELETE(m_TumorNecrosisFactor);
   m_InflammationSources.clear();
-}
-//-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::Load(const CDM::InflammatoryResponseData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::InflammatoryResponseData* SEInflammatoryResponse::Unload() const
-{
-  CDM::InflammatoryResponseData* data = new CDM::InflammatoryResponseData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEInflammatoryResponse::Unload(CDM::InflammatoryResponseData& data) const
-{
-  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 void SEInflammatoryResponse::Initialize()

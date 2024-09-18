@@ -74,24 +74,6 @@ const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
   return nullptr;
 }
 //-------------------------------------------------------------------------------
-bool SEGastrointestinalSystem::Load(const CDM::GastrointestinalSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::GastrointestinalSystemData* SEGastrointestinalSystem::Unload() const
-{
-  CDM::GastrointestinalSystemData* data = new CDM::GastrointestinalSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEGastrointestinalSystem::Unload(CDM::GastrointestinalSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEGastrointestinalSystem::HasChymeAbsorptionRate() const
 {
   return m_ChymeAbsorptionRate == nullptr ? false : m_ChymeAbsorptionRate->IsValid();
@@ -199,23 +181,6 @@ void SEDrugTransitState::Clear()
   m_EnterocyteMasses.clear();
   SAFE_DELETE(m_TotalMassExcreted);
   SAFE_DELETE(m_TotalMassMetabolized);
-}
-//-------------------------------------------------------------------------------
-bool SEDrugTransitState::Load(const CDM::DrugTransitStateData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  return true;
-}
-CDM::DrugTransitStateData* SEDrugTransitState::Unload() const
-{
-  CDM::DrugTransitStateData* data = new CDM::DrugTransitStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEDrugTransitState::Unload(CDM::DrugTransitStateData& data) const
-{
-  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEDrugTransitState::Initialize(SEScalarMass& dose, SEOralAdministrationType route)

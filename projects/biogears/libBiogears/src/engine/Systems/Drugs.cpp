@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include "io/cdm/Actions.h"
 #include "io/cdm/PatientActions.h"
+#include "io/cdm/Physiology.h"
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
@@ -50,7 +51,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-
 
 namespace std {
 template class std::map<const biogears::SESubstance*, biogears::SESubstanceBolusState*>;
@@ -120,8 +120,7 @@ void Drugs::Initialize()
 
 bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
 {
-  if (!SEDrugSystem::Load(in))
-    return false;
+  io::Physiology::UnMarshall(in, *this);
 
   m_SarinRbcAcetylcholinesteraseComplex_nM = in.SarinRbcAcetylcholinesteraseComplex_nM();
   m_AgedRbcAcetylcholinesterase_nM = in.AgedRbcAcetylcholinesterase_nM();
@@ -151,7 +150,6 @@ bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
     SETransmucosalState* otState = new SETransmucosalState(*sub);
     m_TransmucosalStates[sub] = otState;
     io::PatientActions::UnMarshall(otData, *otState);
-    
   }
 
   for (const CDM::NasalStateData& nData : in.NasalStates()) {
@@ -176,7 +174,7 @@ CDM::BioGearsDrugSystemData* Drugs::Unload() const
 }
 void Drugs::Unload(CDM::BioGearsDrugSystemData& data) const
 {
-  SEDrugSystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
   data.SarinRbcAcetylcholinesteraseComplex_nM(m_SarinRbcAcetylcholinesteraseComplex_nM);
   data.AgedRbcAcetylcholinesterase_nM(m_AgedRbcAcetylcholinesterase_nM);
 

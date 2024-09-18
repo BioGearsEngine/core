@@ -38,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 
+#include "io/cdm/Physiology.h"
 
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)
@@ -171,25 +172,15 @@ void BloodChemistry::Initialize()
   //absorbed set to zero
   m_radAbsorbed_Gy = 0.0;
 
-  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_ct ", m_progenitorLymphocytes_ct);
-  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_wd_ct ", m_progenitorLymphocytes_wd_ct);
-  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_d_ct ", m_progenitorLymphocytes_d_ct);
-  //m_data.GetDataTrack().Probe("m_progenitorLymphocytes_hd_ct ", m_progenitorLymphocytes_hd_ct);
-  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_ct ", m_maturingLymphocytes_ct);
-  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_d_ct ", m_maturingLymphocytes_d_ct);
-  //m_data.GetDataTrack().Probe("m_maturingLymphocytes_hd_ct ", m_maturingLymphocytes_hd_ct);
-  //m_data.GetDataTrack().Probe("m_Lymphocytes_ct ", m_Lymphocytes_ct);
-  //m_data.GetDataTrack().Probe("m_Lymphocytes_d_ct ", m_Lymphocytes_d_ct);
-  //m_data.GetDataTrack().Probe("m_Lymphocytes_hd_ct ", m_Lymphocytes_hd_ct);
-  //m_data.GetDataTrack().Probe("m_radAbsorbed_Gy ", m_radAbsorbed_Gy);
-
   Process(); // Calculate the initial system values
 }
 
 bool BloodChemistry::Load(const CDM::BioGearsBloodChemistrySystemData& in)
 {
-  if (!SEBloodChemistrySystem::Load(in))
-    return false;
+  
+  io::Physiology::UnMarshall((CDM::BloodChemistrySystemData&)in, *this);
+
+
   m_ArterialOxygen_mmHg.Load(in.ArterialOxygenAverage_mmHg());
   m_ArterialCarbonDioxide_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
   m_RhFactorMismatch_ct = in.RhFactorMismatch_ct();
@@ -227,7 +218,8 @@ CDM::BioGearsBloodChemistrySystemData* BloodChemistry::Unload() const
 }
 void BloodChemistry::Unload(CDM::BioGearsBloodChemistrySystemData& data) const
 {
-  SEBloodChemistrySystem::Unload(data);
+  io::Physiology::Marshall(*this, (CDM::BloodChemistrySystemData&) data);
+
   data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialOxygen_mmHg.Unload()));
   data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCarbonDioxide_mmHg.Unload()));
   data.RhFactorMismatch_ct(m_RhFactorMismatch_ct);

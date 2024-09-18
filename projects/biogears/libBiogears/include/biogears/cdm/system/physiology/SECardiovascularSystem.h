@@ -55,16 +55,10 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::CardiovascularSystemData& in);
-  CDM::CardiovascularSystemData* Unload() const;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SECardiovascularSystem const&) const;
   bool operator!=(SECardiovascularSystem const&) const;
-
-protected:
-  void Unload(CDM::CardiovascularSystemData& data) const;
 
 public:
   bool HasArterialPressure() const;

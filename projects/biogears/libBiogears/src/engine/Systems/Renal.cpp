@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Renal.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
@@ -265,8 +267,7 @@ void Renal::Initialize()
 
 bool Renal::Load(const CDM::BioGearsRenalSystemData& in)
 {
-  if (!SERenalSystem::Load(in))
-    return false;
+  io::Physiology::UnMarshall(in, *this);
 
   m_Urinating = in.Urinating();
   m_leftAfferentResistance_mmHg_s_Per_mL = in.LeftAfferentResistance_mmHg_s_Per_mL();
@@ -294,7 +295,7 @@ CDM::BioGearsRenalSystemData* Renal::Unload() const
 }
 void Renal::Unload(CDM::BioGearsRenalSystemData& data) const
 {
-  SERenalSystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
 
   data.Urinating(m_Urinating);
   data.LeftAfferentResistance_mmHg_s_Per_mL(m_leftAfferentResistance_mmHg_s_Per_mL);

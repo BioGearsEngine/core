@@ -89,13 +89,6 @@ void SEDrugSystem::Clear()
   SAFE_DELETE(m_CentralNervousResponse);
 }
 //-------------------------------------------------------------------------------
-
-bool SEDrugSystem::Load(const CDM::DrugSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
 const SEScalar* SEDrugSystem::GetScalar(const char* name)
 {
   return GetScalar(std::string { name });
@@ -133,20 +126,6 @@ const SEScalar* SEDrugSystem::GetScalar(const std::string& name)
     return &GetCentralNervousResponse();
 
   return nullptr;
-}
-//-------------------------------------------------------------------------------
-
-CDM::DrugSystemData* SEDrugSystem::Unload() const
-{
-  CDM::DrugSystemData* data = new CDM::DrugSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEDrugSystem::Unload(CDM::DrugSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 

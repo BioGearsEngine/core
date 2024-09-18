@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Endocrine.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
@@ -69,8 +71,7 @@ void Endocrine::Initialize()
 
 bool Endocrine::Load(const CDM::BioGearsEndocrineSystemData& in)
 {
-  if (!SEEndocrineSystem::Load(in))
-    return false;
+  io::Physiology::UnMarshall(in, *this);
   BioGearsSystem::LoadState();
   return true;
 }
@@ -82,7 +83,7 @@ CDM::BioGearsEndocrineSystemData* Endocrine::Unload() const
 }
 void Endocrine::Unload(CDM::BioGearsEndocrineSystemData& data) const
 {
-  SEEndocrineSystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
 }
 
 void Endocrine::SetUp()

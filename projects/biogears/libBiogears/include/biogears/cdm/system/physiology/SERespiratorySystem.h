@@ -50,16 +50,10 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::RespiratorySystemData& in);
-  CDM::RespiratorySystemData* Unload() const;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SERespiratorySystem const&) const;
   bool operator!=(SERespiratorySystem const&) const;
-
-protected:
-  void Unload(CDM::RespiratorySystemData& data) const;
 
 public:
   bool HasAlveolarArterialGradient() const;

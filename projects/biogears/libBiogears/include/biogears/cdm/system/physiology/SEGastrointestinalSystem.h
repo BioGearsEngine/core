@@ -71,13 +71,7 @@ public:
   SEDrugTransitState* GetDrugTransitState(const SESubstance* sub);
   SEDrugTransitState* NewDrugTransitState(const SESubstance* sub);
 
-  bool Load(const CDM::GastrointestinalSystemData& in);
-  CDM::GastrointestinalSystemData* Unload() const;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
-
-protected:
-  void Unload(CDM::GastrointestinalSystemData& data) const;
 
 protected:
   SEScalarVolumePerTime* m_ChymeAbsorptionRate;
@@ -92,9 +86,6 @@ public:
   ~SEDrugTransitState();
 
   virtual void Clear();
-
-  virtual bool Load(const CDM::DrugTransitStateData& in);
-  virtual CDM::DrugTransitStateData* Unload() const;
 
   bool Initialize(SEScalarMass& dose, SEOralAdministrationType route);
 
@@ -120,7 +111,7 @@ public:
   bool operator!=(SEDrugTransitState const&) const;
 
 protected:
-  virtual void Unload(CDM::DrugTransitStateData& data) const;
+
   const SESubstance* m_Substance;
   std::vector<SEScalarMass> m_LumenSolidMasses;
   std::vector<SEScalarMass> m_LumenDissolvedMasses;

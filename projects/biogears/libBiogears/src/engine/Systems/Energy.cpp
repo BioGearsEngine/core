@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Energy.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
@@ -138,10 +140,7 @@ void Energy::Initialize()
 
 bool Energy::Load(const CDM::BioGearsEnergySystemData& in)
 {
-  if (!SEEnergySystem::Load(in)) {
-    return false;
-  }
-
+  io::Physiology::UnMarshall(in, *this);
   m_BloodpH.Load(in.BloodpH());
   m_BicarbonateMolarity_mmol_Per_L.Load(in.BicarbonateMolarity_mmol_Per_L());
   m_packOn = in.PackOn();
@@ -157,7 +156,7 @@ CDM::BioGearsEnergySystemData* Energy::Unload() const
 }
 void Energy::Unload(CDM::BioGearsEnergySystemData& data) const
 {
-  SEEnergySystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
 
   data.BloodpH(std::unique_ptr<CDM::RunningAverageData>(m_BloodpH.Unload()));
   data.BicarbonateMolarity_mmol_Per_L(std::unique_ptr<CDM::RunningAverageData>(m_BicarbonateMolarity_mmol_Per_L.Unload()));

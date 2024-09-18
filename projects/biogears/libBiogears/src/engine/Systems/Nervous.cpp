@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Nervous.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/patient/actions/SESleep.h>
@@ -155,8 +157,7 @@ void Nervous::Initialize()
 
 bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
 {
-  if (!SENervousSystem::Load(in))
-    return false;
+  io::Physiology::UnMarshall(in, *this);
   BioGearsSystem::LoadState();
   // We assume state have to be after all stabilization
   m_FeedbackActive = true;
@@ -219,7 +220,7 @@ CDM::BioGearsNervousSystemData* Nervous::Unload() const
 }
 void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
 {
-  SENervousSystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
   data.AfferentChemoreceptor_Hz(m_AfferentChemoreceptor_Hz);
   data.AfferentPulmonaryStrechReceptor_Hz(m_AfferentPulmonaryStretchReceptor_Hz);
   data.AorticBaroreceptorStrain(m_AorticBaroreceptorStrain);

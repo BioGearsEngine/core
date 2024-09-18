@@ -49,16 +49,10 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::DrugSystemData& in);
-  CDM::DrugSystemData* Unload() const;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SEDrugSystem const&) const;
   bool operator!=(SEDrugSystem const&) const;
-
-protected:
-  void Unload(CDM::DrugSystemData& data) const;
 
 public:
   bool HasAntibioticActivity() const;

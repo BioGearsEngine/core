@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/Systems/Hepatic.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
@@ -90,9 +92,7 @@ void Hepatic::Initialize()
 
 bool Hepatic::Load(const CDM::BioGearsHepaticSystemData& in)
 {
-  if (!SEHepaticSystem::Load(in))
-    return false;
-
+  io::Physiology::UnMarshall(in, *this);
   BioGearsSystem::LoadState();
 
   return true;
@@ -105,7 +105,7 @@ CDM::BioGearsHepaticSystemData* Hepatic::Unload() const
 }
 void Hepatic::Unload(CDM::BioGearsHepaticSystemData& data) const
 {
-  SEHepaticSystem::Unload(data);
+  io::Physiology::Marshall(*this, data);
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -165,28 +165,6 @@ const SEScalar* SEEnergySystem::GetScalar(const std::string& name)
 }
 //-------------------------------------------------------------------------------
 
-bool SEEnergySystem::Load(const CDM::EnergySystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::EnergySystemData* SEEnergySystem::Unload() const
-{
-  CDM::EnergySystemData* data(new CDM::EnergySystemData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEEnergySystem::Unload(CDM::EnergySystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
-
 bool SEEnergySystem::HasAchievedExerciseLevel() const
 {
   return m_AchievedExerciseLevel == nullptr ? false : m_AchievedExerciseLevel->IsValid();

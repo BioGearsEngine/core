@@ -61,17 +61,12 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override; /**< @copydoc DOXY_CDM_GET_SCALAR */
 
-  /**  @name Serialization */ //@{
-  bool Load(const CDM::BloodChemistrySystemData& in); /**< @copydoc DOXY_CDM_LOAD */
-  CDM::BloodChemistrySystemData* Unload() const; /**< @copydoc DOXY_CDM_UNLOAD */
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SEBloodChemistrySystem const&) const;
   bool operator!=(SEBloodChemistrySystem const&) const;
 
-protected:
-  void Unload(CDM::BloodChemistrySystemData& data) const; /**< @copydoc DOXY_CDM_UNLOAD_TO */ //@}
 public:
   /**  @name BloodDensity */ //@{ @copybrief Physiology_BloodChemistrySystemData_BloodDensity
   bool HasBloodDensity() const; /**< @copydoc DOXY_CDM_HAS */
@@ -487,9 +482,6 @@ public:
   size_t hash_code() const { return TypeHash(); }
 
   void Clear();
-
-  bool Load(const CDM::InflammatoryResponseData& in);
-  CDM::InflammatoryResponseData* Unload() const;
   bool IsValid();
 
   void Initialize();
@@ -498,9 +490,6 @@ public:
 
   bool operator==(SEInflammatoryResponse const&) const;
   bool operator!=(SEInflammatoryResponse const&) const;
-
-protected:
-  void Unload(CDM::InflammatoryResponseData& data) const;
 
 public:
   bool HasLocalPathogen() const;
