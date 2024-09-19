@@ -114,7 +114,7 @@
 
 namespace biogears {
 namespace io {
-#pragma optimize("", off)
+
   std::unique_ptr<SEAction> PatientActions::factory(CDM::PatientActionData const* patientActionData, SESubstanceManager& substances, std::default_random_engine* rd)
   {
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AcuteStress, PatientActions, rd)
@@ -396,7 +396,7 @@ namespace io {
       out.push_back(PatientActions::factory(action));
     }
   }
-#pragma optimize("", on)
+
   //----------------------------------------------------------------------------------
   // class SEPatientAction
   void PatientActions::UnMarshall(const CDM::PatientActionData& in, SEPatientAction& out)

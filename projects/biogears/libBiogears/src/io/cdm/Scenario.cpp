@@ -48,7 +48,7 @@ namespace io {
 
   //-----------------------------------------------------------------------------
   // class SEScenario
-#pragma optimize("", off)
+
   void Scenario::UnMarshall(const CDM::ScenarioData& in, SEScenario& out)
   {
 
@@ -186,7 +186,7 @@ namespace io {
       out.Action().push_back(std::move(actionData));
     }
   }
-#pragma optimize("", on)
+
   //-----------------------------------------------------------------------------
   // class SEScenarioInitialParameters
   void Scenario::UnMarshall(const CDM::ScenarioInitialParametersData& in, SEScenarioInitialParameters& out)

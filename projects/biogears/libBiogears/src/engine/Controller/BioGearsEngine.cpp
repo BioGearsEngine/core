@@ -191,14 +191,14 @@ bool BioGearsEngine::LoadState(char const* buffer, size_t size)
   return false;
 }
 
-#pragma optimize("", on)//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void BioGearsEngine::SaveStateToFile(const char* file)
 {
   SaveStateToFile(std::string { file });
 }
 
 //-------------------------------------------------------------------------------
-#pragma optimize("", off)
+
 void BioGearsEngine::SaveStateToFile(const std::string& file)
 {
   auto state = std::make_unique<CDM::BioGearsStateData>();
@@ -220,7 +220,7 @@ void BioGearsEngine::SaveStateToFile(const std::string& file)
     stream.close();
   }
 }
-#pragma optimize("", on)
+
 //-------------------------------------------------------------------------------
 bool BioGearsEngine::InitializeEngine(const char* patientFile)
 {

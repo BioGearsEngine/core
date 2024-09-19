@@ -35,7 +35,10 @@ namespace io {
         throw CommonDataModelException("Unable to load ElectroCardioGram Waveforms file");
       }
     } else if (in.ElectroCardioGramInterpolator().present()) {
-      if (!out.GetECGInterpolator().Load(in.ElectroCardioGramInterpolator().get())) {
+      try {
+        io::ElectroCardioGram::UnMarshall(in.ElectroCardioGramInterpolator(), out.GetECGInterpolator());
+
+      } catch (CommonDataModelException ex) {
         throw CommonDataModelException("Unable to load ElectroCardioGram Waveforms");
       }
     }
@@ -215,8 +218,8 @@ namespace io {
     io::Property::UnMarshall(in.MinimumReactionTime(), out.GetMinimumReactionTime());
     io::Property::UnMarshall(in.MaximumAllowedStabilizationTime(), out.GetMaximumAllowedStabilizationTime());
     for (auto pcData : in.PropertyConvergence()) {
-      //if (pcData.PercentDifference() != pcData.PercentDifference()) {
-        out.CreateSystemPropertyConvergence(pcData.PercentDifference(), pcData.Name());
+      // if (pcData.PercentDifference() != pcData.PercentDifference()) {
+      out.CreateSystemPropertyConvergence(pcData.PercentDifference(), pcData.Name());
       //}
     }
   }

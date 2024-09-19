@@ -43,24 +43,7 @@ void SEElectroCardioGramInterpolationWaveform::Clear()
   SAFE_DELETE(m_Data);
   m_ActiveIndicies.clear();
 }
-//-----------------------------------------------------------------------------
-bool SEElectroCardioGramInterpolationWaveform::Load(const CDM::ElectroCardioGramInterpolationWaveformData& in)
-{
-  io::ElectroCardioGram::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ElectroCardioGramInterpolationWaveformData* SEElectroCardioGramInterpolationWaveform::Unload() const
-{
-  CDM::ElectroCardioGramInterpolationWaveformData* data(new CDM::ElectroCardioGramInterpolationWaveformData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEElectroCardioGramInterpolationWaveform::Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const
-{
-  io::ElectroCardioGram::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 CDM::ElectroCardioGramWaveformLeadNumberData SEElectroCardioGramInterpolationWaveform::GetLeadNumber() const
 {

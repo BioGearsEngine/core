@@ -18,17 +18,23 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
-#define CDM_ELECTRO_CARDIOGRAM_MARSHALL_HELPER(in, out, func)                       \
+#define CDM_ELECTRO_CARDIOGRAM_MARSHALL_HELPER(in, out, func)                        \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::ElectroCardioGram::Marshall(*in.m_##func, out.func());                     \
+    io::ElectroCardioGram::Marshall(*in.m_##func, out.func());                       \
   }
 
 #define CDM_OPTIONAL_ELECTRO_CARDIOGRAM_MARSHALL_HELPER(in, out, func) \
-  if (in.m_##func) {                                                    \
-    io::ElectroCardioGram::Marshall(*in.m_##func, out.func());        \
+  if (in.m_##func) {                                                   \
+    io::ElectroCardioGram::Marshall(*in.m_##func, out.func());         \
   }
 
+#define CDM_ELECTRO_CARDIOGRAM_COPY(type, in, out) \
+  {                                                           \
+    CDM::##type##Data middle;                                 \
+    io::ElectroCardioGram::Marshall(in, middle);    \
+    io::ElectroCardioGram::UnMarshall(middle, out); \
+  }
 
 namespace biogears {
 class SEElectroCardioGram;
@@ -62,7 +68,7 @@ namespace io {
   void ElectroCardioGram::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
-      out.Invalidate();
+      out.Clear();
     } else {
       UnMarshall(option_in.get(), out);
     }

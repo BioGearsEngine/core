@@ -11,7 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGears.h>
 
+#include "io/cdm/ElectroCardioGram.h"
 #include "io/cdm/Property.h"
+#include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
@@ -74,19 +76,18 @@ void ECG::Initialize()
   m_HeartRhythmTime.SetValue(0, TimeUnit::s);
   m_HeartRhythmPeriod.SetValue(0, TimeUnit::s);
 
-  auto* bind = (m_data.GetConfiguration().GetECGInterpolator())->Unload();
-  (&m_Waveforms)->Load(*bind);
-  delete bind;
-    // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
-    /* Code to write out the ECG data in a format easy to view in plotting tools
-    std::vector<double> original_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
-    std::vector<double> original_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
-    DataTrack Original;
-    for (size_t i = 0; i < original_s.size(); i++)
-      Original.Track("Original_ECG",original_s[i], original_mV[i]);
-    Original.WriteTrackToFile("OriginalECG.csv");
-  */
-    m_Waveforms.Interpolate(m_data.GetTimeStep());
+  CDM_ELECTRO_CARDIOGRAM_COPY(ElectroCardioGramInterpolator, *m_data.GetConfiguration().GetECGInterpolator(), m_Waveforms)
+
+  // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
+  /* Code to write out the ECG data in a format easy to view in plotting tools
+  std::vector<double> original_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
+  std::vector<double> original_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
+  DataTrack Original;
+  for (size_t i = 0; i < original_s.size(); i++)
+    Original.Track("Original_ECG",original_s[i], original_mV[i]);
+  Original.WriteTrackToFile("OriginalECG.csv");
+*/
+  m_Waveforms.Interpolate(m_data.GetTimeStep());
   /* Code to write out the Interpolated ECG data in a format easy to view in plotting tools
   std::vector<double> interpolated_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
   std::vector<double> interpolated_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
@@ -100,12 +101,12 @@ void ECG::Initialize()
 
 bool ECG::Load(const CDM::BioGearsElectroCardioGramData& in)
 {
-  if (!SEElectroCardioGram::Load(in))
-    return false;
+
+  io::ElectroCardioGram::UnMarshall(in, *this);
   BioGearsSystem::LoadState();
   io::Property::UnMarshall(in.HeartRythmTime(), m_HeartRhythmTime);
   io::Property::UnMarshall(in.HeartRythmPeriod(), m_HeartRhythmPeriod);
-  m_Waveforms.Load(in.Waveforms());
+  io::ElectroCardioGram::UnMarshall(in.Waveforms(), m_Waveforms);
   m_Waveforms.SetLeadElectricPotential(3, GetLead3ElectricPotential());
   return true;
 }
@@ -117,8 +118,8 @@ CDM::BioGearsElectroCardioGramData* ECG::Unload() const
 }
 void ECG::Unload(CDM::BioGearsElectroCardioGramData& data) const
 {
-  SEElectroCardioGram::Unload(data);
 
+  io::ElectroCardioGram::Marshall(*this, data);
   if (this->m_HeartRhythmTime.IsValid()) {
     data.HeartRythmTime(std::make_unique<std::remove_reference<decltype(data.HeartRythmTime())>::type>());
     io::Property::Marshall(this->m_HeartRhythmTime, data.HeartRythmTime());
@@ -128,7 +129,8 @@ void ECG::Unload(CDM::BioGearsElectroCardioGramData& data) const
     io::Property::Marshall(this->m_HeartRhythmPeriod, data.HeartRythmPeriod());
   }
 
-  data.Waveforms(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(m_Waveforms.Unload()));
+  data.Waveforms(std::make_unique<std::remove_reference<decltype(data.Waveforms())>::type>());
+  io::ElectroCardioGram::Marshall(m_Waveforms, data.Waveforms());
 }
 
 void ECG::SetUp()

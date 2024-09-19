@@ -35,16 +35,9 @@ public:
 
   virtual void Clear(); // Deletes all members
 
-  virtual bool Load(const CDM::ElectroCardioGramInterpolationWaveformData& in);
-  virtual CDM::ElectroCardioGramInterpolationWaveformData* Unload() const;
-
   bool operator==(SEElectroCardioGramInterpolationWaveform const&) const;
   bool operator!=(SEElectroCardioGramInterpolationWaveform const&) const;
 
-protected:
-  virtual void Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const;
-
-public:
   virtual bool HasLeadNumber() const;
   virtual CDM::ElectroCardioGramWaveformLeadNumberData GetLeadNumber() const;
   virtual void SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumberData n);

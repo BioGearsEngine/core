@@ -26,7 +26,7 @@ namespace io {
     io::Property::UnMarshall(in.OxygenInletVolumeFraction(), out.m_OxygenInletVolumeFraction);
     io::Property::UnMarshall(in.TotalBreathingCycleTime(), out.m_TotalBreathingCycleTime);
   }
-#pragma optimize("", off)
+
   //-----------------------------------------------------------------------------
   void BiogearsEquipment::Marshall(const AnesthesiaMachine& in, CDM::BioGearsAnesthesiaMachineData& out)
   {
@@ -54,7 +54,7 @@ namespace io {
       io::Property::Marshall(in.m_TotalBreathingCycleTime, out.TotalBreathingCycleTime());
     }
   };
-#pragma optimize("", o)
+
   //-----------------------------------------------------------------------------
   // class SEAnesthesiaMachineChamber
   void BiogearsEquipment::UnMarshall(const CDM::BioGearsElectroCardioGramData& in, ECG& out)

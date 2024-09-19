@@ -20,25 +20,7 @@ SEElectroCardioGramWaveformLeadNumber::SEElectroCardioGramWaveformLeadNumber(Log
 SEElectroCardioGramWaveformLeadNumber::~SEElectroCardioGramWaveformLeadNumber()
 {
 }
-//-------------------------------------------------------------------------------
-bool SEElectroCardioGramWaveformLeadNumber::Load(const CDM::ElectroCardioGramWaveformLeadNumberData& in)
-{
 
-  io::ElectroCardioGram::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ElectroCardioGramWaveformLeadNumberData* SEElectroCardioGramWaveformLeadNumber::Unload() const
-{
-  auto data = new CDM::ElectroCardioGramWaveformLeadNumberData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEElectroCardioGramWaveformLeadNumber::Unload(CDM::ElectroCardioGramWaveformLeadNumberData& data) const
-{
-  io::ElectroCardioGram::Marshall(*this, data);
-}
 //-------------------------------------------------------------------------------
 int SEElectroCardioGramWaveformLeadNumber::GetValue() const
 {

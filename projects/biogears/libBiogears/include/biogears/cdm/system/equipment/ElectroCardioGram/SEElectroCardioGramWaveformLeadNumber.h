@@ -36,18 +36,12 @@ public:
   SEElectroCardioGramWaveformLeadNumber(Logger* logger, int value);
   ~SEElectroCardioGramWaveformLeadNumber() override;
 
-  bool Load(const CDM::ElectroCardioGramWaveformLeadNumberData& in);
-  CDM::ElectroCardioGramWaveformLeadNumberData* Unload() const;
-
   operator int&();
   operator int() const;
  
   SEElectroCardioGramWaveformLeadNumber& operator=(SEElectroCardioGramWaveformLeadNumber const&);
   bool operator==(SEElectroCardioGramWaveformLeadNumber const&) const;
   bool operator!=(SEElectroCardioGramWaveformLeadNumber const&) const;
-
-protected:
-  void Unload(CDM::ElectroCardioGramWaveformLeadNumberData& data) const;
 
 public:
   int GetValue() const;

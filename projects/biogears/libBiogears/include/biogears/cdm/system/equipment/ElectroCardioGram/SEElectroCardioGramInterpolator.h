@@ -45,15 +45,9 @@ public:
 
   BIOGEARS_API virtual bool LoadWaveforms(const char* file, const SEScalarTime* timeStep = nullptr);
   BIOGEARS_API virtual bool LoadWaveforms(const std::string& file, const SEScalarTime* timeStep = nullptr);
-  BIOGEARS_API virtual bool Load(const CDM::ElectroCardioGramInterpolatorData& in);
-
-  BIOGEARS_API virtual CDM::ElectroCardioGramInterpolatorData* Unload() const;
-
+  
   BIOGEARS_API bool operator==(SEElectroCardioGramInterpolator const&) const;
   BIOGEARS_API bool operator!=(SEElectroCardioGramInterpolator const&) const;
-
-protected:
-  BIOGEARS_API virtual void Unload(CDM::ElectroCardioGramInterpolatorData& data) const;
 
 public:
   BIOGEARS_API virtual void Interpolate(const SEScalarTime& timeStep);

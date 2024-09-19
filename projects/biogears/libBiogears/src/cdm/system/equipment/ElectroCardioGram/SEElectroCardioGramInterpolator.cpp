@@ -81,39 +81,25 @@ bool SEElectroCardioGramInterpolator::LoadWaveforms(const std::string& given_pat
     data = Serializer::ReadFile(possible_path, m_Logger);
   }
 
-  CDM::ElectroCardioGramInterpolatorData* pData = dynamic_cast<CDM::ElectroCardioGramInterpolatorData*>(data.get());
-  if (pData == nullptr) {
+  if (CDM::ElectroCardioGramInterpolatorData* pData = dynamic_cast<CDM::ElectroCardioGramInterpolatorData*>(data.get())) {
+    try {
+      io::ElectroCardioGram::UnMarshall(*pData, *this);
+    } catch (CommonDataModelException ex) {
+      ss << "Unable to load waveform file: " << given_path << std::endl;
+      Error(ss);
+      return false;
+    }
+  } else {
     ss << "Waveform data file could not be read : " << given_path << std::endl;
     Error(ss);
     return false;
   }
-  if (!Load(*pData)) {
-    ss << "Unable to load waveform file: " << given_path << std::endl;
-    Error(ss);
-    return false;
-  }
+
   if (timeStep != nullptr)
     Interpolate(*timeStep);
   return true;
 }
-//-------------------------------------------------------------------------------
-bool SEElectroCardioGramInterpolator::Load(const CDM::ElectroCardioGramInterpolatorData& in)
-{
-  io::ElectroCardioGram::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ElectroCardioGramInterpolatorData* SEElectroCardioGramInterpolator::Unload() const
-{
-  CDM::ElectroCardioGramInterpolatorData* data(new CDM::ElectroCardioGramInterpolatorData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEElectroCardioGramInterpolator::Unload(CDM::ElectroCardioGramInterpolatorData& data) const
-{
-  io::ElectroCardioGram::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 void SEElectroCardioGramInterpolator::Interpolate(const SEScalarTime& timeStep)
 {
