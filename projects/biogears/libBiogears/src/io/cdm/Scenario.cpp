@@ -300,5 +300,6 @@ namespace io {
 
     throw biogears::CommonDataModelException("Scenario::factory does not support the derived SEAction. If you are not a developer contact upstream for support.");
   }
+
 }
 }

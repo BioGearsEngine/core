@@ -18,8 +18,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class PhysiologyEngine;
-
+namespace io {
+  class InhalerActions;
+}
 class BIOGEARS_API SEInhalerActionCollection : public Loggable {
+  friend class io::InhalerActions;
+
 public:
   SEInhalerActionCollection(SESubstanceManager&);
   ~SEInhalerActionCollection();

@@ -8,6 +8,7 @@
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
+#include <biogears/cdm/scenario/SEInhalerActionCollection.h>
 
 #define POLYMORPHIC_MARSHALL(paramName, typeName)                               \
   if (auto typeName = dynamic_cast<SE##typeName const*>(paramName); typeName) { \
@@ -80,5 +81,13 @@ namespace io {
     }
     throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Inhaler Action Received.");
   }
+
+  void InhalerActions::Marshall(const SEInhalerActionCollection& in, std::vector<std::unique_ptr<CDM::ActionData>>& out) {
+    if (nullptr != in.m_Configuration) {
+      out.push_back(InhalerActions::factory(in.m_Configuration));
+    }
+  }
+
+
 } // namespace io
 } // namespace biogears

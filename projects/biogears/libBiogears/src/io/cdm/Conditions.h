@@ -62,10 +62,11 @@ namespace io {
   public:
     // class Factories;
     static std::vector<std::unique_ptr<SECondition>> condition_factory(const CDM::ConditionListData& in, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
-    static std::vector < std::unique_ptr<CDM::ConditionData>> condition_data_factory(SEConditionManager const& conditionManager);
+
     static std::unique_ptr<SECondition> factory(CDM::ConditionData const* conditionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
     static std::unique_ptr<CDM::ConditionData> factory(const SECondition* data);
 
+    static void Marshall(SEConditionManager const& in, std::vector<std::unique_ptr<CDM::ConditionData>>& out);
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);

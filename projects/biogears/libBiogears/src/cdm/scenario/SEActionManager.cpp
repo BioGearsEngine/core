@@ -15,6 +15,10 @@ specific language governing permissions and limitations under the License.
 
 #include "io/cdm/Scenario.h"
 #include "io/cdm/Actions.h"
+#include "io/cdm/PatientActions.h"
+#include "io/cdm/EnvironmentActions.h"
+#include "io/cdm/AnesthesiaActions.h"
+#include "io/cdm/InhalerActions.h"
 
 namespace biogears {
 SEActionManager::SEActionManager(SESubstanceManager& substances)
@@ -58,14 +62,7 @@ bool SEActionManager::ProcessAction(const CDM::ActionData& in, const PhysiologyE
   Error("Unknown Action Type");
   return false;
 }
-//-------------------------------------------------------------------------------
-void SEActionManager::Unload(std::vector<CDM::ActionData*>& to)
-{
-  m_PatientActions.Unload(to);
-  m_AnesthesiaMachineActions.Unload(to);
-  m_EnvironmentActions.Unload(to);
-  m_InhalerActions.Unload(to);
-}
+
 //-------------------------------------------------------------------------------
 bool SEActionManager::ProcessAction(const SEAction& action, const PhysiologyEngine& engine)
 {

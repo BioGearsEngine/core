@@ -28,13 +28,6 @@ public:
 
   virtual bool IsValid() const;
 
-  virtual bool Load(const CDM::EnvironmentActionData& in);
-  virtual CDM::EnvironmentActionData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::EnvironmentActionData& data) const;
-
-public:
   virtual void ToString(std::ostream& str) const = 0;
 };
 }

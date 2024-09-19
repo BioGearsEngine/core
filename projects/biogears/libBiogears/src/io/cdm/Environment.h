@@ -41,6 +41,13 @@ specific language governing permissions and limitations under the License.
 #define SE_OPTIONAL_ENVIRONMENT_ENUM_MARSHALL_HELPER(in, out, func) \
   io::Environment::Marshall(in.m_##func, out.func());
 
+#define CDM_ENVIRONMENT_COPY(type, in, out)    \
+  {                                            \
+    CDM::##type##Data middle;                  \
+    io::Environment::Marshall(in, middle);     \
+    io::Environment::UnMarshall(middle, out);  \
+  }
+
 namespace biogears {
 class SEEnvironment;
 class SEEnvironmentalConditions;

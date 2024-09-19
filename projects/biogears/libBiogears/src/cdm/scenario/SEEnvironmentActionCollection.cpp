@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEEnvironmentActionCollection.h>
 
+#include "io/cdm/Environment.h"
+#include "io/cdm/EnvironmentActions.h"
 #include "io/cdm/Scenario.h"
 
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
@@ -37,39 +39,33 @@ void SEEnvironmentActionCollection::Clear()
   RemoveThermalApplication();
 }
 
-void SEEnvironmentActionCollection::Unload(std::vector<CDM::ActionData*>& to)
-{
-  if (HasChange())
-    to.push_back(GetChange()->Unload());
-  if (HasThermalApplication())
-    to.push_back(GetThermalApplication()->Unload());
-}
 
 bool SEEnvironmentActionCollection::ProcessAction(const SEEnvironmentAction& action, const PhysiologyEngine& engine)
 {
-  if (!IsValid(action))
+  if (!IsValid(action)) {
     return false;
-  CDM::EnvironmentActionData* bind = action.Unload();
-  bool b = ProcessAction(*bind, engine);
-  delete bind;
+  }
+  auto bind = io::Actions::factory(&action);
+  bool b = ProcessAction((SEEnvironmentAction const&)*bind, engine);
   return b;
 }
 
 bool SEEnvironmentActionCollection::ProcessAction(const CDM::EnvironmentActionData& action, const PhysiologyEngine& engine)
 {
-  const CDM::EnvironmentChangeData* change = dynamic_cast<const CDM::EnvironmentChangeData*>(&action);
-  if (change != nullptr) {
-    if (m_Change == nullptr)
+
+  if (const CDM::EnvironmentChangeData* change = dynamic_cast<const CDM::EnvironmentChangeData*>(&action)) {
+    if (m_Change == nullptr) {
       m_Change = new SEEnvironmentChange(m_Substances);
-    m_Change->Load(*change);
+    }
+    io::EnvironmentActions::UnMarshall(*change, *m_Change);
     return IsValid(*m_Change);
   }
 
-  const CDM::ThermalApplicationData* thermal = dynamic_cast<const CDM::ThermalApplicationData*>(&action);
-  if (thermal != nullptr) {
-    if (m_ThermalApplication == nullptr)
+  if (const CDM::ThermalApplicationData* thermal = dynamic_cast<const CDM::ThermalApplicationData*>(&action)) {
+    if (m_ThermalApplication == nullptr) {
       m_ThermalApplication = new SEThermalApplication();
-    m_ThermalApplication->Load(*thermal);
+    }
+    io::EnvironmentActions::UnMarshall(*thermal, *m_ThermalApplication);
     if (!m_ThermalApplication->IsActive()) {
       RemoveThermalApplication();
       return true;

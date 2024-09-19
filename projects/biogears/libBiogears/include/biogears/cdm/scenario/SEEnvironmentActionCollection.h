@@ -18,15 +18,17 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class PhysiologyEngine;
-
+namespace io {
+  class EnvironmentActions;
+}
 class BIOGEARS_API SEEnvironmentActionCollection : public Loggable {
+  friend class io::EnvironmentActions;
+
 public:
   SEEnvironmentActionCollection(SESubstanceManager&);
   ~SEEnvironmentActionCollection();
 
   void Clear();
-
-  void Unload(std::vector<CDM::ActionData*>& to);
 
   bool ProcessAction(const SEEnvironmentAction& action, const PhysiologyEngine& engine);
   bool ProcessAction(const CDM::EnvironmentActionData& action, const PhysiologyEngine& engine);

@@ -49,6 +49,8 @@ class SEScenarioAutoSerialization;
 namespace io {
   class BIOGEARS_PRIVATE_API Scenario {
   public:
+    // class factories
+    static std::unique_ptr<CDM::ActionData> factory(const SEAction* in);
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -66,7 +68,6 @@ namespace io {
     static void UnMarshall(const CDM::ScenarioAutoSerializationData& in, SEScenarioAutoSerialization& out);
     static void Marshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out);
 
-    static std::unique_ptr<CDM::ActionData> factory(const SEAction* in);
   };
 
   //----------------------------------------------------------------------------------

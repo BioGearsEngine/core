@@ -39,16 +39,9 @@ public:
   virtual void Clear();
   virtual void Reset();
 
-  virtual bool Load(const CDM::ActiveHeatingData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ActiveHeatingData* Unload() const;
-
   bool operator==(SEActiveHeating const&) const;
   bool operator!=(SEActiveHeating const&) const;
 
-protected:
-  virtual void Unload(CDM::ActiveHeatingData& data) const;
-
-public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 

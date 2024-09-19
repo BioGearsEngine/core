@@ -61,24 +61,6 @@ const SEScalar* SEActiveHeating::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEActiveHeating::Load(const CDM::ActiveHeatingData& in, std::default_random_engine *rd)
-{
-  io::Environment::UnMarshall(in, *this, rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ActiveHeatingData* SEActiveHeating::Unload() const
-{
-  CDM::ActiveHeatingData* data = new CDM::ActiveHeatingData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEActiveHeating::Unload(CDM::ActiveHeatingData& data) const
-{
-  io::Environment::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SEActiveHeating::HasPower() const
 {
   return m_Power == nullptr ? false : m_Power->IsValid();

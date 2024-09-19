@@ -47,14 +47,13 @@ public:
 
   void Clear() override;
 
-  bool Load(const CDM::EnvironmentData& in);
+
   bool Load(const char* environmentFile);
   bool Load(const std::string& environmentFile);
 
   bool operator==(SEEnvironment const&) const;
   bool operator!=(SEEnvironment const&) const;
 
-  CDM::EnvironmentData* Unload() const;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
   /** @name ProcessChange
    * @brief - Will change this class as directed by the Action
@@ -119,9 +118,6 @@ public:
   bool HasSkinHeatLoss() const;
   SEScalarPower& GetSkinHeatLoss();
   double GetSkinHeatLoss(const PowerUnit& unit) const;
-
-protected:
-  void Unload(CDM::EnvironmentData& data) const;
 
 protected:
   std::string m_Name;

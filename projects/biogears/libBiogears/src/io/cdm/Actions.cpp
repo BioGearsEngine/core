@@ -9,6 +9,7 @@
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/properties/SEScalarTypes.h>
 #include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/scenario/SEActionManager.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
@@ -90,6 +91,15 @@ namespace io {
 
     throw biogears::CommonDataModelException("Actions::factory does not support the derived Action. If you are not a developer contact upstream for support.");
   }
+
+  void Actions::Marshall(SEActionManager const& in, std::vector<std::unique_ptr<CDM::ActionData>>& out)
+  {
+    io::PatientActions::Marshall(in.m_PatientActions, out);
+    io::EnvironmentActions::Marshall(in.m_EnvironmentActions, out);
+    io::AnesthesiaActions::Marshall(in.m_AnesthesiaMachineActions, out);
+    io::InhalerActions::Marshall(in.m_InhalerActions, out);
+  }
+
   //-----------------------------------------------------------------------------
   // class SEAction
   void Actions::UnMarshall(const CDM::ActionData& in, SEAction& out)

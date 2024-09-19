@@ -18,8 +18,6 @@
 #include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
-#include <biogears/cdm/properties/SEProperties.h>
-
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
@@ -68,7 +66,9 @@
 #include <biogears/cdm/patient/actions/SETourniquet.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
+#include <biogears/cdm/scenario/SEPatientActionCollection.h>
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
@@ -264,6 +264,137 @@ namespace io {
 
     POLYMORPHIC_MARSHALL(patientAction, Urinate)
     throw biogears::CommonDataModelException("InhalerActions::factory does not support the derived SEInhalerAction. If you are not a developer contact upstream for support.");
+  }
+
+  void PatientActions::Marshall(const SEPatientActionCollection& in, std::vector<std::unique_ptr<CDM::ActionData>>& out)
+  {
+    if (in.m_AcuteRespiratoryDistress) {
+      out.push_back(PatientActions::factory(in.m_AcuteRespiratoryDistress));
+    }
+    if (in.m_AcuteStress) {
+      out.push_back(PatientActions::factory(in.m_AcuteStress));
+    }
+    if (in.m_ExampleAction) {
+      out.push_back(PatientActions::factory(in.m_ExampleAction));
+    }
+    if (in.m_AirwayObstruction) {
+      out.push_back(PatientActions::factory(in.m_AirwayObstruction));
+    }
+    if (in.m_Apnea) {
+      out.push_back(PatientActions::factory(in.m_Apnea));
+    }
+    if (in.m_AsthmaAttack) {
+      out.push_back(PatientActions::factory(in.m_AsthmaAttack));
+    }
+    if (in.m_BrainInjury) {
+      out.push_back(PatientActions::factory(in.m_BrainInjury));
+    }
+    if (in.m_Bronchoconstriction) {
+      out.push_back(PatientActions::factory(in.m_Bronchoconstriction));
+    }
+    if (in.m_BurnWound) {
+      out.push_back(PatientActions::factory(in.m_BurnWound));
+    }
+    if (in.m_CardiacArrest) {
+      out.push_back(PatientActions::factory(in.m_CardiacArrest));
+    }
+    if (in.m_ChestCompression) {
+      out.push_back(PatientActions::factory(in.m_ChestCompression));
+    }
+    if (in.m_LeftChestOcclusiveDressing) {
+      out.push_back(PatientActions::factory(in.m_LeftChestOcclusiveDressing));
+    }
+    if (in.m_RightChestOcclusiveDressing) {
+      out.push_back(PatientActions::factory(in.m_RightChestOcclusiveDressing));
+    }
+    if (in.m_ConsciousRespiration) {
+      out.push_back(PatientActions::factory(in.m_ConsciousRespiration));
+    }
+    if (in.m_ConsumeNutrients) {
+      out.push_back(PatientActions::factory(in.m_ConsumeNutrients));
+    }
+    if (in.m_Ebola) {
+      out.push_back(PatientActions::factory(in.m_Ebola));
+    }
+    if (in.m_Exercise) {
+      out.push_back(PatientActions::factory(in.m_Exercise));
+    }
+    if (in.m_Infection) {
+      out.push_back(PatientActions::factory(in.m_Infection));
+    }
+    if (in.m_Intubation) {
+      out.push_back(PatientActions::factory(in.m_Intubation));
+    }
+    if (in.m_MechanicalVentilation) {
+      out.push_back(PatientActions::factory(in.m_MechanicalVentilation));
+    }
+    if (in.m_NasalCannula) {
+      out.push_back(PatientActions::factory(in.m_NasalCannula));
+    }
+    if (in.m_LeftNeedleDecompression) {
+      out.push_back(PatientActions::factory(in.m_LeftNeedleDecompression));
+    }
+    if (in.m_RightNeedleDecompression) {
+      out.push_back(PatientActions::factory(in.m_RightNeedleDecompression));
+    }
+    if (in.m_PericardialEffusion) {
+      out.push_back(PatientActions::factory(in.m_PericardialEffusion));
+    }
+    if (in.m_PulmonaryShunt) {
+      out.push_back(PatientActions::factory(in.m_PulmonaryShunt));
+    }
+    if (in.m_RadiationAbsorbedDose) {
+      out.push_back(PatientActions::factory(in.m_RadiationAbsorbedDose));
+    }
+    if (in.m_Sleep) {
+      out.push_back(PatientActions::factory(in.m_Sleep));
+    }
+    if (in.m_LeftClosedTensionPneumothorax) {
+      out.push_back(PatientActions::factory(in.m_LeftClosedTensionPneumothorax));
+    }
+    if (in.m_LeftOpenTensionPneumothorax) {
+      out.push_back(PatientActions::factory(in.m_LeftOpenTensionPneumothorax));
+    }
+    if (in.m_RightClosedTensionPneumothorax) {
+      out.push_back(PatientActions::factory(in.m_RightClosedTensionPneumothorax));
+    }
+    if (in.m_RightOpenTensionPneumothorax) {
+      out.push_back(PatientActions::factory(in.m_RightOpenTensionPneumothorax));
+    }
+    if (in.m_Urinate) {
+      out.push_back(PatientActions::factory(in.m_Urinate));
+    }
+    if (in.m_OverrideAction) {
+      out.push_back(PatientActions::factory(in.m_OverrideAction));
+    }
+
+    for ( auto&[ key, action ] : in.m_Hemorrhages) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto&[ key, action ] : in.m_Tourniquets) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto&[ key, action ] : in.m_Escharotomies) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto&[ key, action ] : in.m_PainStimuli) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto&[ key, action ] : in.m_SubstanceBolus) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto&[ key, action ] : in.m_SubstanceInfusions) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto&[ key, action ] : in.m_SubstanceOralDoses) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto&[ key, action ] : in.m_SubstanceNasalDoses) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto&[ key, action ] : in.m_SubstanceCompoundInfusions) {
+      out.push_back(PatientActions::factory(action));
+    }
   }
 #pragma optimize("", on)
   //----------------------------------------------------------------------------------

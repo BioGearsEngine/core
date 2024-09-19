@@ -51,6 +51,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SESubstanceManager;
 class SEAction;
+class SEActionManager;
 class SEActionList;
 class SEAdvanceTime;
 // enum class SESerializationType;
@@ -64,6 +65,8 @@ namespace io {
     static std::vector<std::unique_ptr<SEAction>> action_factory(const CDM::ActionListData& in, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
     static std::unique_ptr<SEAction> factory(CDM::ActionData const* actionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
     static std::unique_ptr<CDM::ActionData> factory(const SEAction* data);
+
+    static void Marshall(SEActionManager const& in, std::vector<std::unique_ptr<CDM::ActionData>>& out);
 
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>

@@ -9,6 +9,7 @@
 #include <biogears/cdm/scenario/SEAnesthesiaMachineActionCollection.h>
 
 #include <biogears/cdm/scenario/SEAction.h>
+#include <biogears/cdm/scenario/SEAnesthesiaMachineActionCollection.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
@@ -34,14 +35,14 @@
 
 #define POLYMORPHIC_UNMARSHALL(paramName, typeName, schema)                                        \
   if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
-    auto typeName = std::make_unique<SE##typeName>();                                    \
+    auto typeName = std::make_unique<SE##typeName>();                                              \
     schema::UnMarshall(*typeName##Data, *typeName);                                                \
     return std::move(typeName);                                                                    \
   }
 
 #define STOCASTIC_POLYMORPHIC_UNMARSHALL(paramName, typeName, schema, engine)                      \
   if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
-    auto typeName = std::make_unique<SE##typeName>();                                    \
+    auto typeName = std::make_unique<SE##typeName>();                                              \
     schema::UnMarshall(*typeName##Data, *typeName, engine);                                        \
     return std::move(typeName);                                                                    \
   }
@@ -346,6 +347,51 @@ namespace io {
     STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, VentilatorPressureLoss, AnesthesiaActions, rd)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(anesthesiaMachineActionData, YPieceDisconnect, AnesthesiaActions, rd)
     throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Anesthesia Machine Action Received.");
+  }
+
+  void AnesthesiaActions::Marshall(const SEAnesthesiaMachineActionCollection& in, std::vector<std::unique_ptr<CDM::ActionData>>& out)
+  {
+    if (in.m_Configuration) {
+      out.push_back(AnesthesiaActions::factory(in.m_Configuration));
+    }
+    // Anesthesia Machine Incidents
+    if (in.m_OxygenTankPressureLoss) {
+      out.push_back(AnesthesiaActions::factory(in.m_OxygenTankPressureLoss));
+    }
+    if (in.m_OxygenWallPortPressureLoss) {
+      out.push_back(AnesthesiaActions::factory(in.m_OxygenWallPortPressureLoss));
+    }
+    // Anesthesia Machine Failures
+    if (in.m_ExpiratoryValveLeak) {
+      out.push_back(AnesthesiaActions::factory(in.m_ExpiratoryValveLeak));
+    }
+    if (in.m_ExpiratoryValveObstruction) {
+      out.push_back(AnesthesiaActions::factory(in.m_ExpiratoryValveObstruction));
+    }
+    if (in.m_InspiratoryValveLeak) {
+      out.push_back(AnesthesiaActions::factory(in.m_InspiratoryValveLeak));
+    }
+    if (in.m_InspiratoryValveObstruction) {
+      out.push_back(AnesthesiaActions::factory(in.m_InspiratoryValveObstruction));
+    }
+    if (in.m_MaskLeak) {
+      out.push_back(AnesthesiaActions::factory(in.m_MaskLeak));
+    }
+    if (in.m_SodaLimeFailure) {
+      out.push_back(AnesthesiaActions::factory(in.m_SodaLimeFailure));
+    }
+    if (in.m_TubeCuffLeak) {
+      out.push_back(AnesthesiaActions::factory(in.m_TubeCuffLeak));
+    }
+    if (in.m_VaporizerFailure) {
+      out.push_back(AnesthesiaActions::factory(in.m_VaporizerFailure));
+    }
+    if (in.m_VentilatorPressureLoss) {
+      out.push_back(AnesthesiaActions::factory(in.m_VentilatorPressureLoss));
+    }
+    if (in.m_YPieceDisconnect) {
+      out.push_back(AnesthesiaActions::factory(in.m_YPieceDisconnect));
+    }
   }
 }
 }

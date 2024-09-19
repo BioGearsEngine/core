@@ -194,7 +194,9 @@ namespace io {
         throw biogears::CommonDataModelException("Unable to load InitialEnvironmentalConditions file");
       }
     } else if (in.InitialEnvironmentalConditions().present()) {
-      if (!out.GetInitialEnvironmentalConditions().Load(in.InitialEnvironmentalConditions().get())) {
+      try {
+        io::Environment::UnMarshall(in.InitialEnvironmentalConditions(), out.GetInitialEnvironmentalConditions());
+      } catch (biogears::CommonDataModelException ex) {
         throw biogears::CommonDataModelException("Unable to load InitialEnvironmentalConditions");
       }
     }

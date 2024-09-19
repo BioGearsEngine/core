@@ -65,10 +65,8 @@ public:
   bool operator==(SEEnvironmentalConditions const& rhs) const;
   bool operator!=(SEEnvironmentalConditions const& rhs) const;
 
-  bool Load(const CDM::EnvironmentalConditionsData& in);
   bool Load(const char* environmentFile);
   bool Load(const std::string& environmentFile);
-  CDM::EnvironmentalConditionsData* Unload() const;
 
   const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
@@ -142,7 +140,6 @@ public:
   void RemoveAmbientAerosols();
 
 protected:
-  void Unload(CDM::EnvironmentalConditionsData& data) const;
   void Merge(const SEEnvironmentalConditions& from);
 
 protected:

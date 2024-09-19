@@ -42,6 +42,7 @@ namespace io {
     // class Factories;
     static std::unique_ptr<SECondition> factory(CDM::EnvironmentConditionData const* environmentConditionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
     static std::unique_ptr<CDM::EnvironmentConditionData> factory(const SEEnvironmentCondition* data);
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);

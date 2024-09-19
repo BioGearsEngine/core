@@ -1,5 +1,8 @@
 #include "BioGears.h"
 
+#include <vector>
+#include <memory>
+
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
@@ -383,16 +386,19 @@ namespace io {
     // Patient
     CDM_OPTIONAL_PATIENT_MARSHALL_HELPER(in, out, Patient);
     // Conditions
-    auto conditions = Conditions::condition_data_factory(*in.m_Conditions);
-    for (auto& cData : conditions) {
+    auto conditions = std::vector<std::unique_ptr<CDM::ConditionData>>();
+    Conditions::Marshall(*in.m_Conditions, conditions);
+    for (auto& cData : conditions)
+    {
       out.Condition().push_back(std::move(cData));
     }
     // Actions
-    std::vector<CDM::ActionData*> activeActions;
-    in.m_Actions->Unload(activeActions);
-    for (CDM::ActionData* aData : activeActions) {
-      out.ActiveAction().push_back(std::unique_ptr<CDM::ActionData>(aData));
+    std::vector<std::unique_ptr<CDM::ActionData>> activeActions;
+    io::Actions::Marshall(*in.m_Actions, activeActions);
+    for (auto& aData : activeActions) {
+      out.ActiveAction().push_back(std::move(aData));
     }
+    //
     // Active Substances/Compounds
     for (SESubstance* s : in.m_Substances->GetActiveSubstances()) {
       auto subData = std::make_unique<CDM::SubstanceData>();

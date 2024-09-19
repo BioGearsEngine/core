@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SEEnvironmentAction;
+class SEEnvironmentActionCollection;
 class SEEnvironmentChange;
 class SEThermalApplication;
 class SEAction;
@@ -41,6 +42,11 @@ class SESubstanceManager;
 namespace io {
   class BIOGEARS_PRIVATE_API EnvironmentActions {
   public:
+    // Factories
+    static std::unique_ptr<CDM::EnvironmentActionData> factory(const SEEnvironmentAction*);
+    static std::unique_ptr<SEAction> factory(CDM::EnvironmentActionData const* actionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+
+    static void Marshall(const SEEnvironmentActionCollection& in, std::vector<std::unique_ptr<CDM::ActionData>>& out);
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -55,9 +61,6 @@ namespace io {
     // class SEThermalApplication
     static void UnMarshall(const CDM::ThermalApplicationData& in, SEThermalApplication& out);
     static void Marshall(const SEThermalApplication& in, CDM::ThermalApplicationData& out);
-    // Factories
-    static std::unique_ptr<CDM::EnvironmentActionData> factory(const SEEnvironmentAction*);
-    static std::unique_ptr<SEAction> factory(CDM::EnvironmentActionData const* actionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
 
     //-----------------------------------------------------------------------------
     static void Copy(const SEEnvironmentAction& in, SEEnvironmentAction& out);

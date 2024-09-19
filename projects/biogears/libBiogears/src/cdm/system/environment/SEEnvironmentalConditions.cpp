@@ -116,24 +116,6 @@ const SEScalar* SEEnvironmentalConditions::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentalConditions::Load(const CDM::EnvironmentalConditionsData& in)
-{
-  io::Environment::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::EnvironmentalConditionsData* SEEnvironmentalConditions::Unload() const
-{
-  CDM::EnvironmentalConditionsData* data = new CDM::EnvironmentalConditionsData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::Unload(CDM::EnvironmentalConditionsData& data) const
-{
-  io::Environment::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::Merge(const SEEnvironmentalConditions& from)
 {
   if (from.HasSurroundingType())
@@ -215,9 +197,8 @@ bool SEEnvironmentalConditions::Load(const std::string& given)
     Error(ss);
     return false;
   }
-  if (!Load(*eData))
-    return false;
 
+  io::Environment::UnMarshall(*eData, *this);
   return true;
 }
 //-----------------------------------------------------------------------------

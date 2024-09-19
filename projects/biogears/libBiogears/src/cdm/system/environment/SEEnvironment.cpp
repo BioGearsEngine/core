@@ -115,12 +115,6 @@ const SEScalar* SEEnvironment::GetScalar(const std::string& name)
   return nullptr;
 }
 //-------------------------------------------------------------------------------
-bool SEEnvironment::Load(const CDM::EnvironmentData& in)
-{
-  io::Environment::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
 bool SEEnvironment::Load(const char* patientFile)
 {
   return Load(std::string(patientFile));
@@ -150,20 +144,9 @@ bool SEEnvironment::Load(const std::string& given)
     Error(ss);
     return false;
   }
-  return Load(*pData);
+   io::Environment::UnMarshall(*pData, *this);
+   return true;
 }
-//-------------------------------------------------------------------------------
-CDM::EnvironmentData* SEEnvironment::Unload() const
-{
-  CDM::EnvironmentData* data = new CDM::EnvironmentData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEEnvironment::Unload(CDM::EnvironmentData& data) const
-{
-  io::Environment::Marshall(*this, data);
-};
 //-------------------------------------------------------------------------------
 bool SEEnvironment::ProcessChange(const SEInitialEnvironment& change)
 {

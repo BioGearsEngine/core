@@ -60,24 +60,7 @@ bool SEThermalApplication::IsActive() const
     return true;
   return false;
 }
-//-------------------------------------------------------------------------------
-bool SEThermalApplication::Load(const CDM::ThermalApplicationData& in, std::default_random_engine *rd)
-{
-  io::EnvironmentActions::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ThermalApplicationData* SEThermalApplication::Unload() const
-{
-  CDM::ThermalApplicationData* data = new CDM::ThermalApplicationData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEThermalApplication::Unload(CDM::ThermalApplicationData& data) const
-{
-  io::EnvironmentActions::Marshall( *this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEThermalApplication::HasActiveHeating() const
 {

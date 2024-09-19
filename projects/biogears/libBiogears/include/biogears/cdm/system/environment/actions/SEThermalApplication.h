@@ -35,13 +35,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ThermalApplicationData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ThermalApplicationData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::ThermalApplicationData& data) const;
-
-public:
   virtual bool HasActiveHeating() const;
   virtual SEActiveHeating& GetActiveHeating();
   virtual void RemoveActiveHeating();

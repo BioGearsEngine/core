@@ -42,6 +42,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 
+#include "io/cdm/Environment.h"
+#include "io/biogears/BioGearsEnvironment.h"
 
 namespace biogears {
 auto Environment::make_unique(BioGears& bg) -> std::unique_ptr<Environment>
@@ -112,8 +114,8 @@ void Environment::Initialize()
 
 bool Environment::Load(const CDM::BioGearsEnvironmentData& in)
 {
-  if (!SEEnvironment::Load(in))
-    return false;
+  io::Environment::UnMarshall(in, *this);
+
   BioGearsSystem::LoadState();
   m_PatientEquivalentDiameter_m = in.PatientEquivalentDiameter_m();
   StateChange();
@@ -127,7 +129,7 @@ CDM::BioGearsEnvironmentData* Environment::Unload() const
 }
 void Environment::Unload(CDM::BioGearsEnvironmentData& data) const
 {
-  SEEnvironment::Unload(data);
+  io::Environment::Marshall(*this, data);
   data.PatientEquivalentDiameter_m(m_PatientEquivalentDiameter_m);
 }
 

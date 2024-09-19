@@ -59,24 +59,6 @@ const SEScalar* SEAppliedTemperature::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEAppliedTemperature::Load(const CDM::AppliedTemperatureData& in, std::default_random_engine* rd)
-{
-  io::Environment::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::AppliedTemperatureData* SEAppliedTemperature::Unload() const
-{
-  CDM::AppliedTemperatureData* data = new CDM::AppliedTemperatureData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEAppliedTemperature::Unload(CDM::AppliedTemperatureData& data) const
-{
-  io::Environment::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SEAppliedTemperature::HasTemperature() const
 {
   return m_Temperature == nullptr ? false : m_Temperature->IsValid();

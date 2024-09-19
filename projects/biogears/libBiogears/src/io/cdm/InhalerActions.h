@@ -33,12 +33,18 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 class SEAction;
 class SEInhalerAction;
+class SEInhalerActionCollection;
 class SEInhalerConfiguration;
 class SESubstanceManager;
 
 namespace io {
   class BIOGEARS_PRIVATE_API InhalerActions {
   public:
+    // Factories
+    static std::unique_ptr<CDM::InhalerActionData> factory(const SEInhalerAction*);
+    static std::unique_ptr<SEAction> factory(CDM::InhalerActionData const* inhalerActionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+
+    static void Marshall(const SEInhalerActionCollection& in, std::vector<std::unique_ptr<CDM::ActionData>>& out);
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -50,9 +56,6 @@ namespace io {
     // class SEInhalerConfiguration
     static void UnMarshall(const CDM::InhalerConfigurationData& in, SEInhalerConfiguration& out);
     static void Marshall(const SEInhalerConfiguration& in, CDM::InhalerConfigurationData& out);
-    // Factories
-    static std::unique_ptr<CDM::InhalerActionData> factory(const SEInhalerAction*);
-    static std::unique_ptr<SEAction> factory(CDM::InhalerActionData const* inhalerActionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 
 #include "io/cdm/Patient.h"
+#include "io/cdm/Environment.h"
 
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/enums/SECircuitEnums.h>
@@ -1164,10 +1165,7 @@ bool BioGears::CreateCircuitsAndCompartments()
 
   m_Environment->Initialize();
 
-  auto* bind = (&m_Configuration->GetInitialEnvironmentalConditions())->Unload();
-  (&m_Environment->GetConditions())->Load(*bind);
-  delete bind;
-
+  CDM_ENVIRONMENT_COPY(EnvironmentalConditions, m_Configuration->GetInitialEnvironmentalConditions(), m_Environment->GetConditions())
 
   m_Environment->StateChange();
   // Update the environment pressures on all the 'air' circuits to match what the environment was set to

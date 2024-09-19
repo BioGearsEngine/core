@@ -38,16 +38,9 @@ public:
   virtual void Clear();
   virtual void Reset();
 
-  virtual bool Load(const CDM::ActiveCoolingData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ActiveCoolingData* Unload() const;
-
   bool operator==(SEActiveCooling const&) const;
   bool operator!=(SEActiveCooling const&) const;
 
-protected:
-  virtual void Unload(CDM::ActiveCoolingData& data) const;
-
-public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 

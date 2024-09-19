@@ -52,6 +52,10 @@ class SESubstanceManager;
 namespace io {
   class BIOGEARS_PRIVATE_API AnesthesiaActions {
   public:
+    //Factories
+    static std::unique_ptr<CDM::AnesthesiaMachineActionData> factory(const SEAnesthesiaMachineAction*);
+    static std::unique_ptr<SEAction> factory(CDM::AnesthesiaMachineActionData const* patientActionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEAnesthesiaMachineActionCollection& in, std::vector<std::unique_ptr<CDM::ActionData>>& out);
     //
     static void Marshall(const SEAnesthesiaMachineActionCollection&, std::vector<CDM::ActionData*>& out);
     //template <typename SE, typename XSD>  option
@@ -101,9 +105,6 @@ namespace io {
     //class SEOxygenTankPressureLoss
     static void UnMarshall(const CDM::OxygenTankPressureLossData& in, SEOxygenTankPressureLoss& out, std::default_random_engine* rd = nullptr);
     static void Marshall(const SEOxygenTankPressureLoss& in, CDM::OxygenTankPressureLossData& out);
-    //Factories
-    static std::unique_ptr<CDM::AnesthesiaMachineActionData> factory(const SEAnesthesiaMachineAction*);
-    static std::unique_ptr<SEAction> factory(CDM::AnesthesiaMachineActionData const* patientActionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>

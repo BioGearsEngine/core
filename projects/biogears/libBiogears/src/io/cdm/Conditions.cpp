@@ -22,13 +22,11 @@ namespace io {
     return std::move(r_vec);
   }
 
-  std::vector<std::unique_ptr<CDM::ConditionData>> Conditions::condition_data_factory(SEConditionManager const& conditionManager)
+  void Conditions::Marshall(SEConditionManager const& in, std::vector<std::unique_ptr<CDM::ConditionData>>& out)
   {
-    auto conditions = std::vector<std::unique_ptr<CDM::ConditionData>>();
-    for (auto condition : conditionManager.m_Conditions) {
-      conditions.push_back(factory(condition));
+    for (auto condition : in.m_Conditions) {
+      out.push_back(factory(condition));
     }
-    return conditions;
   }
   std::unique_ptr<SECondition> Conditions::factory(CDM::ConditionData const* conditionData, SESubstanceManager& substances, std::default_random_engine* rd)
   {

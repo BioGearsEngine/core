@@ -70,7 +70,9 @@ BG_EXT template class BIOGEARS_API map<const biogears::SESubstanceCompound*, bio
 
 namespace biogears {
 class PhysiologyEngine;
-
+namespace io {
+  class PatientActions;
+}
 //!
 //! This is an emergency fix for working with UE4
 //! If this stays around until 7.6 this code will
@@ -199,6 +201,8 @@ BG_EXT template class BIOGEARS_API MapWrapper<const SESubstanceCompound*, SESubs
 
 namespace biogears {
 class BIOGEARS_API SEPatientActionCollection : public Loggable {
+  friend class io::PatientActions;
+
 public:
   SEPatientActionCollection(SESubstanceManager&);
   ~SEPatientActionCollection();
@@ -438,28 +442,13 @@ protected:
   mutable std::map<std::string, SEHemorrhage*>::const_iterator m_HemorrhageItr;
 
   std::map<std::string, SETourniquet*> m_Tourniquets;
-  mutable std::map<std::string, SETourniquet*>::const_iterator m_TourniquetsItr;
-
   std::map<std::string, SEEscharotomy*> m_Escharotomies;
-  mutable std::map<std::string, SEEscharotomy*>::const_iterator m_EscharotomiesItr;
-
   std::map<std::string, SEPainStimulus*> m_PainStimuli;
-  mutable std::map<std::string, SEPainStimulus*>::const_iterator m_PainStimuliItr;
-
   std::map<const SESubstance*, SESubstanceBolus*> m_SubstanceBolus;
-  mutable std::map<const SESubstance*, SESubstanceBolus*>::const_iterator m_SubstanceBolusItr;
-
   std::map<const SESubstance*, SESubstanceInfusion*> m_SubstanceInfusions;
-  mutable std::map<const SESubstance*, SESubstanceInfusion*>::const_iterator m_SubstanceInfusionsItr;
-
   std::map<const SESubstance*, SESubstanceOralDose*> m_SubstanceOralDoses;
-  mutable std::map<const SESubstance*, SESubstanceOralDose*>::const_iterator m_SubstanceOralDosesItr;
-
   std::map<const SESubstance*, SESubstanceNasalDose*> m_SubstanceNasalDoses;
-  mutable std::map<const SESubstance*, SESubstanceNasalDose*>::const_iterator m_SubstanceNasalDosesItr;
-
   std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*> m_SubstanceCompoundInfusions;
-  mutable std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*>::const_iterator m_SubstanceCompoundInfusionsItr;
 
   bool AdministerSubstance(const SESubstanceAdministration& subAdmin);
   bool AdministerSubstance(const CDM::SubstanceAdministrationData& subAdmin);
