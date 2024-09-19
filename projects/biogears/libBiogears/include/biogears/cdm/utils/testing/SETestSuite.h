@@ -31,14 +31,8 @@ public:
   virtual void Reset(); //reset values
   virtual void Clear(); //clear memory
 
-  bool Load(const CDM::TestSuiteData& in);
-  std::unique_ptr<CDM::TestSuiteData> Unload() const;
-
   bool operator==(SETestSuite const&) const;
   bool operator!=(SETestSuite const&) const;
-
-protected:
-  void Unload(CDM::TestSuiteData& data) const;
 
 public:
   void SetName(const std::string& Name);

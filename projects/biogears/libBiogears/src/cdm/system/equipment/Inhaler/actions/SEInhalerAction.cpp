@@ -34,22 +34,4 @@ bool SEInhalerAction::IsValid() const
 {
   return SEAction::IsValid();
 }
-
-bool SEInhalerAction::Load(const CDM::InhalerActionData& in)
-{
-  io::InhalerActions::UnMarshall(in, *this);
-  return true;
-}
-
-CDM::InhalerActionData* SEInhalerAction::Unload() const
-{
-  CDM::InhalerActionData* data = new CDM::InhalerActionData();
-  Unload(*data);
-  return data;
-}
-
-void SEInhalerAction::Unload(CDM::InhalerActionData& data) const
-{
-  io::InhalerActions::Marshall(*this, data);
-}
 }

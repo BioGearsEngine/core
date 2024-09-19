@@ -22,9 +22,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/engine/Controller/BioGears.h>
 
+#include "io/cdm/Inhaler.h"
 
 namespace biogears {
 /*
@@ -71,8 +72,7 @@ void Inhaler::Initialize()
 
 bool Inhaler::Load(const CDM::BioGearsInhalerData& in)
 {
-  if (!SEInhaler::Load(in))
-    return false;
+  io::Inhaler::UnMarshall(in, *this);
   BioGearsSystem::LoadState();
   return true;
 }
@@ -84,7 +84,7 @@ CDM::BioGearsInhalerData* Inhaler::Unload() const
 }
 void Inhaler::Unload(CDM::BioGearsInhalerData& data) const
 {
-  SEInhaler::Unload(data);
+  io::Inhaler::Marshall(*this, data);
 }
 
 void Inhaler::SetUp()

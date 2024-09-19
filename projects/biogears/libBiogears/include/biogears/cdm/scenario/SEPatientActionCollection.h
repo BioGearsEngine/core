@@ -212,7 +212,6 @@ public:
   void Unload(std::vector<CDM::ActionData*>& to);
 
   bool ProcessAction(const SEPatientAction& action, const PhysiologyEngine& engine);
-  bool ProcessAction(const CDM::PatientActionData& action, const PhysiologyEngine& engine);
 
   bool HasAcuteRespiratoryDistress() const;
   SEAcuteRespiratoryDistress* GetAcuteRespiratoryDistress() const;

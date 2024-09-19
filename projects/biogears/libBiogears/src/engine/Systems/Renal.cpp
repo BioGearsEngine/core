@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Renal.h>
 
 #include "io/cdm/Physiology.h"
+#include "io/cdm/Property.h"
 
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
@@ -45,7 +46,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-
 
 namespace biogears {
 auto Renal::make_unique(BioGears& bg) -> std::unique_ptr<Renal>
@@ -275,14 +275,14 @@ bool Renal::Load(const CDM::BioGearsRenalSystemData& in)
   m_leftSodiumFlowSetPoint_mg_Per_s = in.LeftSodiumFlowSetPoint_mg_Per_s();
   m_rightSodiumFlowSetPoint_mg_Per_s = in.RightSodiumFlowSetPoint_mg_Per_s();
 
-  m_urineProductionRate_mL_Per_min_runningAvg.Load(in.UrineProductionRate_mL_Per_min());
-  m_urineOsmolarity_mOsm_Per_L_runningAvg.Load(in.UrineOsmolarity_mOsm_Per_L());
-  m_sodiumConcentration_mg_Per_mL_runningAvg.Load(in.SodiumConcentration_mg_Per_mL());
-  m_sodiumExcretionRate_mg_Per_min_runningAvg.Load(in.SodiumExcretionRate_mg_Per_min());
-  m_leftSodiumFlow_mg_Per_s_runningAvg.Load(in.LeftSodiumFlow_mg_Per_s());
-  m_rightSodiumFlow_mg_Per_s_runningAvg.Load(in.RightSodiumFlow_mg_Per_s());
-  m_leftRenalArterialPressure_mmHg_runningAvg.Load(in.LeftRenalArterialPressure_mmHg());
-  m_rightRenalArterialPressure_mmHg_runningAvg.Load(in.RightRenalArterialPressure_mmHg());
+  io::Property::UnMarshall(in.UrineProductionRate_mL_Per_min(), m_urineProductionRate_mL_Per_min_runningAvg);
+  io::Property::UnMarshall(in.UrineOsmolarity_mOsm_Per_L(), m_urineOsmolarity_mOsm_Per_L_runningAvg);
+  io::Property::UnMarshall(in.SodiumConcentration_mg_Per_mL(), m_sodiumConcentration_mg_Per_mL_runningAvg);
+  io::Property::UnMarshall(in.SodiumExcretionRate_mg_Per_min(), m_sodiumExcretionRate_mg_Per_min_runningAvg);
+  io::Property::UnMarshall(in.LeftSodiumFlow_mg_Per_s(), m_leftSodiumFlow_mg_Per_s_runningAvg);
+  io::Property::UnMarshall(in.RightSodiumFlow_mg_Per_s(), m_rightSodiumFlow_mg_Per_s_runningAvg);
+  io::Property::UnMarshall(in.LeftRenalArterialPressure_mmHg(), m_leftRenalArterialPressure_mmHg_runningAvg);
+  io::Property::UnMarshall(in.RightRenalArterialPressure_mmHg(), m_rightRenalArterialPressure_mmHg_runningAvg);
 
   BioGearsSystem::LoadState();
   return true;
@@ -303,14 +303,22 @@ void Renal::Unload(CDM::BioGearsRenalSystemData& data) const
   data.LeftSodiumFlowSetPoint_mg_Per_s(m_leftSodiumFlowSetPoint_mg_Per_s);
   data.RightSodiumFlowSetPoint_mg_Per_s(m_rightSodiumFlowSetPoint_mg_Per_s);
 
-  data.UrineProductionRate_mL_Per_min(std::unique_ptr<CDM::RunningAverageData>(m_urineProductionRate_mL_Per_min_runningAvg.Unload()));
-  data.UrineOsmolarity_mOsm_Per_L(std::unique_ptr<CDM::RunningAverageData>(m_urineOsmolarity_mOsm_Per_L_runningAvg.Unload()));
-  data.SodiumConcentration_mg_Per_mL(std::unique_ptr<CDM::RunningAverageData>(m_sodiumConcentration_mg_Per_mL_runningAvg.Unload()));
-  data.SodiumExcretionRate_mg_Per_min(std::unique_ptr<CDM::RunningAverageData>(m_sodiumExcretionRate_mg_Per_min_runningAvg.Unload()));
-  data.LeftSodiumFlow_mg_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_leftSodiumFlow_mg_Per_s_runningAvg.Unload()));
-  data.RightSodiumFlow_mg_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_rightSodiumFlow_mg_Per_s_runningAvg.Unload()));
-  data.LeftRenalArterialPressure_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_leftRenalArterialPressure_mmHg_runningAvg.Unload()));
-  data.RightRenalArterialPressure_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_rightRenalArterialPressure_mmHg_runningAvg.Unload()));
+  data.UrineProductionRate_mL_Per_min(std::make_unique<CDM::RunningAverageData>());
+  io::Property::Marshall(m_urineProductionRate_mL_Per_min_runningAvg, data.UrineProductionRate_mL_Per_min());
+  data.UrineOsmolarity_mOsm_Per_L(std::make_unique<CDM::RunningAverageData>());
+  io::Property::Marshall(m_urineOsmolarity_mOsm_Per_L_runningAvg, data.UrineOsmolarity_mOsm_Per_L());
+  data.SodiumConcentration_mg_Per_mL(std::make_unique<CDM::RunningAverageData>());
+  io::Property::Marshall(m_sodiumConcentration_mg_Per_mL_runningAvg, data.SodiumConcentration_mg_Per_mL());
+  data.SodiumExcretionRate_mg_Per_min(std::make_unique<CDM::RunningAverageData>());
+  io::Property::Marshall(m_sodiumExcretionRate_mg_Per_min_runningAvg, data.SodiumExcretionRate_mg_Per_min());
+  data.LeftSodiumFlow_mg_Per_s(std::make_unique<CDM::RunningAverageData>());
+  io::Property::Marshall(m_leftSodiumFlow_mg_Per_s_runningAvg, data.LeftSodiumFlow_mg_Per_s());
+  data.RightSodiumFlow_mg_Per_s(std::make_unique<CDM::RunningAverageData>());
+  io::Property::Marshall(m_rightSodiumFlow_mg_Per_s_runningAvg, data.RightSodiumFlow_mg_Per_s());
+  data.LeftRenalArterialPressure_mmHg(std::make_unique<CDM::RunningAverageData>());
+  io::Property::Marshall(m_leftRenalArterialPressure_mmHg_runningAvg, data.LeftRenalArterialPressure_mmHg());
+  data.RightRenalArterialPressure_mmHg(std::make_unique<CDM::RunningAverageData>());
+  io::Property::Marshall(m_rightRenalArterialPressure_mmHg_runningAvg, data.RightRenalArterialPressure_mmHg());
 }
 
 void Renal::SetUp()

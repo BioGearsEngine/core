@@ -57,13 +57,9 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::InhalerData& in);
-  CDM::InhalerData* Unload() const;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
 protected:
-  void Unload(CDM::InhalerData& data) const;
-
   /** @name StateChange
    *   @brief - This method is called when ever there is a state change
    *            Specically a new file has been loaded, configuration action, or the system reset

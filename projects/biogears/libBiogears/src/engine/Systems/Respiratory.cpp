@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Respiratory.h>
 
 #include "io/cdm/Physiology.h"
+#include "io/cdm/Property.h"
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
@@ -257,7 +258,7 @@ bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)
   m_TopBreathPleuralPressure_cmH2O = in.TopBreathPleuralPressure_cmH2O();
   m_LastCardiacCycleBloodPH = in.LastCardiacCycleBloodPH();
   m_PreviousTotalLungVolume_L = in.PreviousTotalLungVolume_L();
-  m_BloodPHRunningAverage.Load(in.BloodPHRunningAverage());
+  io::Property::UnMarshall(in.BloodPHRunningAverage(), m_BloodPHRunningAverage);
 
   m_BreathingCycle = in.BreathingCycle();
   m_ArterialO2PartialPressure_mmHg = in.ArterialOxygenPressure_mmHg();
@@ -274,8 +275,8 @@ bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)
   m_PeakRespiratoryDrivePressure_cmH2O = in.PeakRespiratoryDrivePressure_cmH2O();
 
   m_VentilationFrequency_Per_min = in.VentilationFrequency_Per_min();
-  m_ArterialO2Average_mmHg.Load(in.ArterialOxygenAverage_mmHg());
-  m_ArterialCO2Average_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
+  io::Property::UnMarshall(in.ArterialOxygenAverage_mmHg(), m_ArterialO2Average_mmHg);
+  io::Property::UnMarshall(in.ArterialCarbonDioxideAverage_mmHg(), m_ArterialCO2Average_mmHg);
 
   m_ConsciousBreathing = in.ConsciousBreathing();
   m_ConsciousRespirationPeriod_s = in.ConsciousRespirationPeriod_s();
@@ -313,7 +314,7 @@ void Respiratory::Unload(CDM::BioGearsRespiratorySystemData& data) const
   data.TopBreathPleuralPressure_cmH2O(m_TopBreathPleuralPressure_cmH2O);
   data.LastCardiacCycleBloodPH(m_LastCardiacCycleBloodPH);
   data.PreviousTotalLungVolume_L(m_PreviousTotalLungVolume_L);
-  data.BloodPHRunningAverage(std::unique_ptr<CDM::RunningAverageData>(m_BloodPHRunningAverage.Unload()));
+  data.BloodPHRunningAverage(std::make_unique<CDM::RunningAverageData>()); io::Property::Marshall(m_BloodPHRunningAverage, data.BloodPHRunningAverage());
 
   data.BreathingCycle(m_BreathingCycle);
   data.ArterialOxygenPressure_mmHg(m_ArterialO2PartialPressure_mmHg);
@@ -330,8 +331,8 @@ void Respiratory::Unload(CDM::BioGearsRespiratorySystemData& data) const
   data.PeakRespiratoryDrivePressure_cmH2O(m_PeakRespiratoryDrivePressure_cmH2O);
 
   data.VentilationFrequency_Per_min(m_VentilationFrequency_Per_min);
-  data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2Average_mmHg.Unload()));
-  data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCO2Average_mmHg.Unload()));
+  data.ArterialOxygenAverage_mmHg(std::make_unique<CDM::RunningAverageData>()); io::Property::Marshall(m_ArterialO2Average_mmHg, data.ArterialOxygenAverage_mmHg());
+  data.ArterialCarbonDioxideAverage_mmHg(std::make_unique<CDM::RunningAverageData>()); io::Property::Marshall(m_ArterialCO2Average_mmHg, data.ArterialCarbonDioxideAverage_mmHg());
 
   data.ConsciousBreathing(m_ConsciousBreathing);
   data.ConsciousRespirationPeriod_s(m_ConsciousRespirationPeriod_s);

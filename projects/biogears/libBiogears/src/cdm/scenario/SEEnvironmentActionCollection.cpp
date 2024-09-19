@@ -39,33 +39,24 @@ void SEEnvironmentActionCollection::Clear()
   RemoveThermalApplication();
 }
 
-
 bool SEEnvironmentActionCollection::ProcessAction(const SEEnvironmentAction& action, const PhysiologyEngine& engine)
 {
-  if (!IsValid(action)) {
-    return false;
-  }
-  auto bind = io::Actions::factory(&action);
-  bool b = ProcessAction((SEEnvironmentAction const&)*bind, engine);
-  return b;
-}
-
-bool SEEnvironmentActionCollection::ProcessAction(const CDM::EnvironmentActionData& action, const PhysiologyEngine& engine)
-{
-
-  if (const CDM::EnvironmentChangeData* change = dynamic_cast<const CDM::EnvironmentChangeData*>(&action)) {
+  auto actionData = io::EnvironmentActions::factory(&action);
+  if (auto change = dynamic_cast<const SEEnvironmentChange*>(&action)) {
     if (m_Change == nullptr) {
       m_Change = new SEEnvironmentChange(m_Substances);
     }
-    io::EnvironmentActions::UnMarshall(*change, *m_Change);
+    auto changeData = dynamic_cast<CDM::EnvironmentChangeData*>(actionData.get());
+    io::EnvironmentActions::UnMarshall(*changeData, *m_Change);
     return IsValid(*m_Change);
   }
 
-  if (const CDM::ThermalApplicationData* thermal = dynamic_cast<const CDM::ThermalApplicationData*>(&action)) {
+  if (auto thermal = dynamic_cast<const SEThermalApplication*>(&action)) {
     if (m_ThermalApplication == nullptr) {
       m_ThermalApplication = new SEThermalApplication();
     }
-    io::EnvironmentActions::UnMarshall(*thermal, *m_ThermalApplication);
+    auto changeData = dynamic_cast<CDM::ThermalApplicationData*>(actionData.get());
+    io::EnvironmentActions::UnMarshall(*changeData, *m_Change);
     if (!m_ThermalApplication->IsActive()) {
       RemoveThermalApplication();
       return true;

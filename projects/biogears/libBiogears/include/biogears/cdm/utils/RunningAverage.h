@@ -25,13 +25,6 @@ public:
   RunningAverage();
   virtual ~RunningAverage();
 
-  bool Load(const CDM::RunningAverageData& in);
-  CDM::RunningAverageData* Unload() const;
-
-protected:
-  void Unload(CDM::RunningAverageData& data) const;
-
-public:
   /** Reset Counter info */
   void Reset();
   /** Add value to Sample list and return the new average */

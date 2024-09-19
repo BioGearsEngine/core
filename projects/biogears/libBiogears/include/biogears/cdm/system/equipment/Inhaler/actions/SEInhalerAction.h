@@ -23,13 +23,6 @@ public:
 
   virtual bool IsValid() const;
 
-  virtual bool Load(const CDM::InhalerActionData& in);
-  virtual CDM::InhalerActionData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::InhalerActionData& data) const;
-
-public:
   virtual void ToString(std::ostream& str) const = 0;
 };
 }

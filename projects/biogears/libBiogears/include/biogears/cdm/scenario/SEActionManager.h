@@ -33,7 +33,6 @@ public:
   void Clear();
 
   bool ProcessAction(const SEAction& action, const PhysiologyEngine& engine);
-  bool ProcessAction(const CDM::ActionData& in, const PhysiologyEngine& engine);
 
   SEEnvironmentActionCollection& GetEnvironmentActions() { return m_EnvironmentActions; }
   SEPatientActionCollection& GetPatientActions() { return m_PatientActions; }
@@ -46,8 +45,6 @@ protected:
   SEPatientActionCollection m_PatientActions;
   SEAnesthesiaMachineActionCollection m_AnesthesiaMachineActions;
   SEInhalerActionCollection m_InhalerActions;
-
-  std::vector<std::unique_ptr<CDM::ActionData>> m_ProcessedActions;
 
   std::stringstream m_ss;
 };

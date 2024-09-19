@@ -55,27 +55,6 @@ void SEInhaler::Clear()
   m_Substance = nullptr;
 }
 //-------------------------------------------------------------------------------
-
-bool SEInhaler::Load(const CDM::InhalerData& in)
-{
-  io::Inhaler::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::InhalerData* SEInhaler::Unload() const
-{
-  CDM::InhalerData* data = new CDM::InhalerData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEInhaler::Unload(CDM::InhalerData& data) const
-{
-  io::Inhaler::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 const SEScalar* SEInhaler::GetScalar(const char* name)
 {
   return GetScalar(std::string { name });
@@ -148,7 +127,9 @@ bool SEInhaler::Load(const std::string& file)
     Error(ss);
     return false;
   }
-  return Load(*pData);
+
+  io::Inhaler::UnMarshall(*pData, *this);
+  return true;
 }
 //-------------------------------------------------------------------------------
 

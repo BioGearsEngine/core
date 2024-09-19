@@ -88,7 +88,8 @@ namespace io {
     // Actions //
     out.m_Actions->Clear();
     for (const CDM::ActionData& cData : in.ActiveAction()) {
-      if (!out.m_Actions->ProcessAction(cData, out)) {
+      auto action = io::Actions::factory(&cData, out.GetSubstanceManager());
+      if (!out.m_Actions->ProcessAction( *action, out)) {
         throw biogears::CommonDataModelException("Unable to load action");
       }
     }

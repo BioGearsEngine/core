@@ -34,13 +34,6 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::InhalerConfigurationData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::InhalerConfigurationData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::InhalerConfigurationData& data) const;
-
-public:
   bool HasConfiguration() const;
   SEInhaler& GetConfiguration();
   const SEInhaler* GetConfiguration() const;

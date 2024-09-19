@@ -40,14 +40,8 @@ public:
   virtual void Reset(); // reset values
   virtual void Clear(); // clear memory
 
-  bool Load(const CDM::TestErrorStatisticsData& in);
-  std::unique_ptr<CDM::TestErrorStatisticsData> Unload() const;
-
   bool operator==(const SETestErrorStatistics&) const;
   bool operator!=(const SETestErrorStatistics&) const;
-
-protected:
-  void Unload(CDM::TestErrorStatisticsData& data) const;
 
 public:
   bool IsValid();
