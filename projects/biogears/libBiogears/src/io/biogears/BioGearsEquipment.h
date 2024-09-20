@@ -39,10 +39,18 @@ namespace biogears {
 class AnesthesiaMachine;
 class ECG;
 class Inhaler;
+class SESystem;
+class BioGears;
+class SESubstanceManager;
 
 namespace io {
   class BIOGEARS_PRIVATE_API BiogearsEquipment {
   public:
+    // class Factories;
+    static std::unique_ptr<SESystem> factory(CDM::SystemData const* systemData, biogears::BioGears& bgData);
+
+    static std::unique_ptr<CDM::SystemData> factory(const SESystem* data);
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);

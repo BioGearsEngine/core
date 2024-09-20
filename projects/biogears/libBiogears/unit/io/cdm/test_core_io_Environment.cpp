@@ -90,7 +90,6 @@ public:
   using SEEnvironment::Clear;
   using SEEnvironment::Load;
   using SEEnvironment::ProcessChange;
-  using SEEnvironment::Unload;
 
   using SEEnvironment::GetConditions;
   using SEEnvironment::GetConvectiveHeatLoss;

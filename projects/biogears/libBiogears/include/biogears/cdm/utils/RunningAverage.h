@@ -31,7 +31,7 @@ public:
   /** Return the average value */
   double Value();
 
-  unsigned int NumSamples() { return m_NumSamples; }
+  unsigned int NumSamples() const { return m_NumSamples; }
 
 protected:
   double m_Sum;

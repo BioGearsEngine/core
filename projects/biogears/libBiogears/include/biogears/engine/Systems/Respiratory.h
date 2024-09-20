@@ -161,8 +161,8 @@ private:
   bool m_BreathingCycle;
   double m_ArterialO2PartialPressure_mmHg;
   double m_ArterialCO2PartialPressure_mmHg;
-  RunningAverage m_ArterialO2Average_mmHg;
-  RunningAverage m_ArterialCO2Average_mmHg;
+  RunningAverage m_ArterialOxygenAverage_mmHg;
+  RunningAverage m_ArterialCarbonDioxideAverage_mmHg;
   double m_BreathingCycleTime_s;
   double m_BreathTimeExhale_min;
   double m_DefaultDrivePressure_cmH2O;

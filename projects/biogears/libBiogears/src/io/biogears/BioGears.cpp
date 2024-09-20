@@ -1,5 +1,9 @@
 #include "BioGears.h"
 
+#include "BioGearsEnvironment.h"
+#include "BioGearsEquipment.h"
+#include "BioGearsPhysiology.h"
+
 #include <memory>
 #include <vector>
 
@@ -11,9 +15,9 @@
 
 #include "io/biogears/BioGears.h"
 #include "io/biogears/BioGearsConfiguration.h"
-#include "io/biogears/BioGearsPhysiology.h"
 #include "io/biogears/BioGearsEnvironment.h"
 #include "io/biogears/BioGearsEquipment.h"
+#include "io/biogears/BioGearsPhysiology.h"
 #include "io/cdm/Actions.h"
 #include "io/cdm/Circuit.h"
 #include "io/cdm/Compartment.h"
@@ -23,10 +27,41 @@
 #include "io/cdm/Property.h"
 #include "io/cdm/Substance.h"
 
-
 namespace biogears {
 namespace io {
+  std::unique_ptr<SESystem> BioGears::factory(CDM::SystemData const* systemData, biogears::BioGears& bgData)
+  {
+    try {
+      return BiogearsEnvironment::factory(systemData, bgData);
+    } catch (CommonDataModelException ex) {
+      try {
+        return BiogearsEquipment::factory(systemData, bgData);
+      } catch (CommonDataModelException ex) {
+        try {
+          return BiogearsPhysiology::factory(systemData, bgData);
+        } catch (CommonDataModelException ex) {
+          throw CommonDataModelException("BioGears::factory unsupported SystemData provided");
+        }
+      }
+    }
+  }
 
+  std::unique_ptr<CDM::SystemData> BioGears::factory(const SESystem* data)
+  {
+    try {
+      return BiogearsEnvironment::factory(data);
+    } catch (CommonDataModelException ex) {
+      try {
+        return BiogearsEquipment::factory(data);
+      } catch (CommonDataModelException ex) {
+        try {
+          return BiogearsPhysiology::factory(data);
+        } catch (CommonDataModelException ex) {
+          throw CommonDataModelException("BioGears::factory unsupported SESystem provided");
+        }
+      }
+    }
+  }
   // BioGears
   void BioGears::UnMarshall(const CDM::BioGearsStateData& in, BioGearsEngine& out, const SEScalarTime* simTime)
   {
@@ -306,7 +341,7 @@ namespace io {
       }
       if (auto ecgData = dynamic_cast<const CDM::BioGearsElectroCardioGramData*>(&sysData)) {
         try {
-          io::BiogearsEquipment::UnMarshall(*ecgData,  *out.m_ECG);
+          io::BiogearsEquipment::UnMarshall(*ecgData, *out.m_ECG);
           PresentSystems |= BioGearsSystem::ELECTRO_CARDIO_GRAM_EQUIPMENT;
           continue;
         } catch (CommonDataModelException ex) {
@@ -315,7 +350,7 @@ namespace io {
       }
       if (auto nhlData = dynamic_cast<const CDM::BioGearsInhalerData*>(&sysData)) {
         try {
-          io::BiogearsEquipment::UnMarshall(*nhlData,  *out.m_Inhaler);
+          io::BiogearsEquipment::UnMarshall(*nhlData, *out.m_Inhaler);
           PresentSystems |= BioGearsSystem::INHALER_EQUIPMENT;
           continue;
         } catch (CommonDataModelException ex) {
@@ -381,9 +416,6 @@ namespace io {
     out.m_Compartments->GetActiveRespiratoryGraph();
     out.m_Compartments->GetActiveAerosolGraph();
 
-    // It helps to unload what you just loaded and to a compare if you have issues
-    // SaveStateToFile("WhatIJustLoaded.xml");
-
     // Good to go, save it off and carry on!
     out.m_State = EngineState::Active;
     if (in.Patient().present()) {
@@ -405,8 +437,12 @@ namespace io {
       out.DataRequests(std::move(dataRequestsData));
     }
 
+    out.AirwayMode(std::make_unique<std::remove_reference<decltype(out.AirwayMode())>::type>());
     io::BioGears::Marshall(in.m_AirwayMode, out.AirwayMode());
+
+    out.Intubation(std::make_unique<std::remove_reference<decltype(out.Intubation())>::type>());
     io::Property::Marshall(in.m_Intubation, out.Intubation());
+
     // Patient
     CDM_OPTIONAL_PATIENT_MARSHALL_HELPER(in, out, Patient);
     // Conditions
@@ -447,10 +483,10 @@ namespace io {
     out.System().push_back(io::BiogearsPhysiology::factory(in.m_RenalSystem.get()));
     out.System().push_back(io::BiogearsPhysiology::factory(in.m_RespiratorySystem.get()));
     out.System().push_back(io::BiogearsPhysiology::factory(in.m_TissueSystem.get()));
-    out.System().push_back(io::BiogearsPhysiology::factory(in.m_Environment.get()));
-    out.System().push_back(io::BiogearsPhysiology::factory(in.m_AnesthesiaMachine.get()));
-    out.System().push_back(io::BiogearsPhysiology::factory(in.m_ECG.get()));
-    out.System().push_back(io::BiogearsPhysiology::factory(in.m_Inhaler.get()));
+    out.System().push_back(io::BiogearsEnvironment::factory(in.m_Environment.get()));
+    out.System().push_back(io::BiogearsEquipment::factory(in.m_AnesthesiaMachine.get()));
+    out.System().push_back(io::BiogearsEquipment::factory(in.m_ECG.get()));
+    out.System().push_back(io::BiogearsEquipment::factory(in.m_Inhaler.get()));
     // Compartments
     // out.CompartmentManager(std::unique_ptr<CDM::CompartmentManagerData>(in.m_Compartments->Unload()));
     auto compartments = std::make_unique<CDM::CompartmentManagerData>();

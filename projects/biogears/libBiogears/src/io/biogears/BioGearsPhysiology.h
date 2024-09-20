@@ -50,7 +50,7 @@ namespace io {
   class BIOGEARS_PRIVATE_API BiogearsPhysiology {
   public:
     // class Factories;
-    static std::unique_ptr<SESystem> factory(CDM::SystemData const* systemData, biogears::BioGears& bgData, SESubstanceManager& substances);
+    static std::unique_ptr<SESystem> factory(CDM::SystemData const* systemData, biogears::BioGears& bgData);
 
     static std::unique_ptr<CDM::SystemData> factory(const SESystem* data);
 

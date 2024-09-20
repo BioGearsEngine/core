@@ -146,8 +146,8 @@ void Respiratory::Clear()
   m_GroundToConnection = nullptr;
 
   m_BloodPHRunningAverage.Reset();
-  m_ArterialO2Average_mmHg.Reset();
-  m_ArterialCO2Average_mmHg.Reset();
+  m_ArterialOxygenAverage_mmHg.Reset();
+  m_ArterialCarbonDioxideAverage_mmHg.Reset();
 
   m_OverrideRRBaseline_Per_min = 0.0;
 }
@@ -816,14 +816,14 @@ void Respiratory::RespiratoryDriver()
   ///\ToDo:  Running averages were mostly used for chemoreceptors that have been moved to Nervous.
   /// ToDo:  However, they are still used in some calculations in CalculateVitals.  Should we move/consolidate these?
   //Keep a running average of the Arterial Partial Pressures
-  m_ArterialO2Average_mmHg.Sample(m_AortaO2->GetPartialPressure(PressureUnit::mmHg));
-  m_ArterialCO2Average_mmHg.Sample(m_AortaCO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialOxygenAverage_mmHg.Sample(m_AortaO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialCarbonDioxideAverage_mmHg.Sample(m_AortaCO2->GetPartialPressure(PressureUnit::mmHg));
   //Reset at start of cardiac cycle
   if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
-    m_ArterialO2PartialPressure_mmHg = m_ArterialO2Average_mmHg.Value();
-    m_ArterialCO2PartialPressure_mmHg = m_ArterialCO2Average_mmHg.Value();
-    m_ArterialO2Average_mmHg.Reset();
-    m_ArterialCO2Average_mmHg.Reset();
+    m_ArterialO2PartialPressure_mmHg = m_ArterialOxygenAverage_mmHg.Value();
+    m_ArterialCO2PartialPressure_mmHg = m_ArterialCarbonDioxideAverage_mmHg.Value();
+    m_ArterialOxygenAverage_mmHg.Reset();
+    m_ArterialCarbonDioxideAverage_mmHg.Reset();
   }
 
 #ifdef TUNING
