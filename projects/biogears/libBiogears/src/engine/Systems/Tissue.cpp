@@ -186,42 +186,6 @@ void Tissue::Initialize()
   GetDehydrationFraction().SetValue(0);
 }
 
-bool Tissue::Load(const CDM::BioGearsTissueSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-
-  io::Property::UnMarshall(in.O2ConsumedRunningAverage_mL_Per_s(), m_O2ConsumedRunningAverage_mL_Per_s);
-  io::Property::UnMarshall(in.CO2ProducedRunningAverage_mL_Per_s(), m_CO2ProducedRunningAverage_mL_Per_s);
-  io::Property::UnMarshall(in.RespiratoryQuotientRunningAverage(), m_RespiratoryQuotientRunningAverage);
-  m_RestingPatientMass_kg = in.RestingPatientMass_kg();
-  m_RestingFluidMass_kg = in.RestingFluidMass_kg();
-  io::Property::UnMarshall(in.FatigueRunningAverage(), m_FatigueRunningAverage);
-
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsTissueSystemData* Tissue::Unload() const
-{
-  CDM::BioGearsTissueSystemData* data = new CDM::BioGearsTissueSystemData();
-  Unload(*data);
-  return data;
-}
-void Tissue::Unload(CDM::BioGearsTissueSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-
-  data.O2ConsumedRunningAverage_mL_Per_s(std::make_unique<CDM::RunningAverageData>());
-  io::Property::Marshall(m_O2ConsumedRunningAverage_mL_Per_s, data.O2ConsumedRunningAverage_mL_Per_s());
-  data.CO2ProducedRunningAverage_mL_Per_s(std::make_unique<CDM::RunningAverageData>());
-  io::Property::Marshall(m_CO2ProducedRunningAverage_mL_Per_s, data.CO2ProducedRunningAverage_mL_Per_s());
-  data.RespiratoryQuotientRunningAverage(std::make_unique<CDM::RunningAverageData>());
-  io::Property::Marshall(m_RespiratoryQuotientRunningAverage, data.RespiratoryQuotientRunningAverage());
-  data.RestingPatientMass_kg(m_RestingPatientMass_kg);
-  data.RestingFluidMass_kg(m_RestingFluidMass_kg);
-  data.FatigueRunningAverage(std::make_unique<CDM::RunningAverageData>());
-  io::Property::Marshall(m_FatigueRunningAverage, data.FatigueRunningAverage());
-}
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Initializes the tissue specific quantities

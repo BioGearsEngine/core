@@ -1,21 +1,19 @@
-/**************************************************************************************
-Copyright 2015 Applied Research Associates, Inc.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the License
-at:
-http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software distributed under
-the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
-**************************************************************************************/
+///**************************************************************************************
+//Copyright 2015 Applied Research Associates, Inc.
+//Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+//this file except in compliance with the License. You may obtain a copy of the License
+//at:
+//http://www.apache.org/licenses/LICENSE-2.0
+//Unless required by applicable law or agreed to in writing, software distributed under
+//the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+//CONDITIONS OF ANY KIND, either express or implied. See the License for the
+//specific language governing permissions and limitations under the License.
+//**************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
-
-#include "io/cdm/PatientActions.h"
-
+//
 #include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/schema/cdm/Properties.hxx>
-
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+//
 namespace biogears {
 SESubstanceOralDose::SESubstanceOralDose(const SESubstance& substance)
   : SESubstanceAdministration()
@@ -232,7 +230,7 @@ bool SETransmucosalState::SetSublingualConcentrations(std::vector<double>& slMas
   return true;
 }
 //-------------------------------------------------------------------------------
-
+#pragma warning(disable : 4661)
 bool SETransmucosalState::operator==(const SETransmucosalState& rhs) const
 {
 

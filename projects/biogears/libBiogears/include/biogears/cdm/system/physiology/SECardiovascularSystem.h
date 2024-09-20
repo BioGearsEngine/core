@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
-#include <biogears/schema/cdm/Physiology.hxx>
 
 namespace biogears {
 class SEScalarPressure;

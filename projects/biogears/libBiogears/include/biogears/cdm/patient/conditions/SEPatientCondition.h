@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class BIOGEARS_API SEPatientCondition : public SECondition {

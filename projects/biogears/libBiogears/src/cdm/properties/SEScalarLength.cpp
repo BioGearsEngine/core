@@ -23,7 +23,7 @@ const LengthUnit LengthUnit::um("um");
 const LengthUnit LengthUnit::inch("in");
 const LengthUnit LengthUnit::ft("ft");
 
-template class SEScalarQuantity<LengthUnit>;
+template class BIOGEARS_API SEScalarQuantity<LengthUnit>;
 
 LengthUnit::LengthUnit(const char* u)
   : LengthUnit(std::string { u })

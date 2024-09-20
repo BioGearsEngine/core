@@ -1,17 +1,18 @@
 #include "BioGearsPhysiology.h"
 
+#include <memory>
 #include <sstream>
 
 #include "io/cdm/PatientActions.h"
+#include "io/cdm/Physiology.h"
 #include "io/cdm/Property.h"
 #include "io/cdm/System.h"
-#include "io/cdm/Physiology.h"
 
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 #include <biogears/schema/cdm/Substance.hxx>
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
-
+#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Systems/BloodChemistry.h>
 #include <biogears/engine/Systems/Cardiovascular.h>
 #include <biogears/engine/Systems/Diffusion.h>
@@ -29,6 +30,158 @@
 
 namespace biogears {
 namespace io {
+
+  std::unique_ptr<SESystem> BiogearsPhysiology::factory(CDM::SystemData const* systemData, biogears::BioGears& bgData, SESubstanceManager& substances)
+  {
+    if (auto bloodChemestryData = dynamic_cast<CDM::BioGearsBloodChemistrySystemData const*>(systemData)) {
+      auto bloodChemestry = BloodChemistry::make_unique(bgData);
+      UnMarshall(*bloodChemestryData, substances, *bloodChemestry);
+      return bloodChemestry;
+    }
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsCardiovascularSystemData const*>(systemData)) {
+      auto system = Cardiovascular::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsDrugSystemData const*>(systemData)) {
+      auto system = Drugs::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsEndocrineSystemData const*>(systemData)) {
+      auto system = Endocrine::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsEnergySystemData const*>(systemData)) {
+      auto system = Energy::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsGastrointestinalSystemData const*>(systemData)) {
+      auto system = Gastrointestinal::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsHepaticSystemData const*>(systemData)) {
+      auto system = Hepatic::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsNervousSystemData const*>(systemData)) {
+      auto system = Nervous::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsRenalSystemData const*>(systemData)) {
+      auto system = Renal::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsRespiratorySystemData const*>(systemData)) {
+      auto system = Respiratory::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    if (auto biogearsSystemData
+        = dynamic_cast<CDM::BioGearsTissueSystemData const*>(systemData)) {
+      auto system = Tissue::make_unique(bgData);
+      UnMarshall(*biogearsSystemData, substances, *system);
+      return system;
+    }
+
+    throw biogears::CommonDataModelException("BioGearsPhysiology:Factory - Unsupported BioGearsSystem Received.");
+  }
+
+  std::unique_ptr<CDM::SystemData> BiogearsPhysiology::factory(const SESystem* system)
+  {
+    if (auto biogearsSystem = dynamic_cast<BloodChemistry const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsBloodChemistrySystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Cardiovascular const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsCardiovascularSystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Drugs const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsDrugSystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Endocrine const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsEndocrineSystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Energy const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsEnergySystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Gastrointestinal const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsGastrointestinalSystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Hepatic const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsHepaticSystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Nervous const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsNervousSystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Renal const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsRenalSystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Respiratory const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsRespiratorySystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    if (auto biogearsSystem = dynamic_cast<Tissue const*>(system)) {
+      auto systemData = std::make_unique<CDM::BioGearsTissueSystemData>();
+      Marshall(*biogearsSystem, *systemData);
+      return systemData;
+    }
+
+    throw biogears::CommonDataModelException("BioGearsPhysiology:Factory - Unsupported BioGearsSystemData Received.");
+  }
+
   // class BloodChemistry
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsBloodChemistrySystemData& in, const SESubstanceManager& substances, BloodChemistry& out)
   {
@@ -221,7 +374,6 @@ namespace io {
       SETransmucosalState* otState = new SETransmucosalState(*sub);
       out.m_TransmucosalStates[sub] = otState;
       io::PatientActions::UnMarshall(otData, *otState);
-      
     }
 
     for (const CDM::NasalStateData& nData : in.NasalStates()) {
@@ -234,7 +386,6 @@ namespace io {
       SENasalState* nState = new SENasalState(*sub);
       out.m_NasalStates[sub] = nState;
       io::PatientActions::UnMarshall(nData, *nState);
-
     }
 
     out.BioGearsSystem::LoadState();
@@ -319,7 +470,6 @@ namespace io {
       }
       out.NewDrugTransitState(sub);
       io::Physiology::UnMarshall(transitData, *out.GetDrugTransitState(sub));
-
     }
 
     out.m_DecrementNutrients = true;
@@ -614,12 +764,12 @@ namespace io {
   {
     io::System::Marshall(in, out);
 
-    io::Property::Marshall(in.m_O2ConsumedRunningAverage_mL_Per_s,out.O2ConsumedRunningAverage_mL_Per_s());
-    io::Property::Marshall(in.m_CO2ProducedRunningAverage_mL_Per_s,out.CO2ProducedRunningAverage_mL_Per_s());
-    io::Property::Marshall(in.m_RespiratoryQuotientRunningAverage,out.RespiratoryQuotientRunningAverage());
+    io::Property::Marshall(in.m_O2ConsumedRunningAverage_mL_Per_s, out.O2ConsumedRunningAverage_mL_Per_s());
+    io::Property::Marshall(in.m_CO2ProducedRunningAverage_mL_Per_s, out.CO2ProducedRunningAverage_mL_Per_s());
+    io::Property::Marshall(in.m_RespiratoryQuotientRunningAverage, out.RespiratoryQuotientRunningAverage());
     out.RestingPatientMass_kg(in.m_RestingPatientMass_kg);
     out.RestingFluidMass_kg(in.m_RestingFluidMass_kg);
-    io::Property::Marshall(in.m_FatigueRunningAverage,out.FatigueRunningAverage());
+    io::Property::Marshall(in.m_FatigueRunningAverage, out.FatigueRunningAverage());
   }
 }
 }

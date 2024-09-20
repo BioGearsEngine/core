@@ -19,7 +19,7 @@ namespace biogears {
 const OsmolalityUnit OsmolalityUnit::Osm_Per_kg("Osm/kg");
 const OsmolalityUnit OsmolalityUnit::mOsm_Per_kg("mOsm/kg");
 
-template class SEScalarQuantity<OsmolalityUnit>;
+template class BIOGEARS_API SEScalarQuantity<OsmolalityUnit>;
 
 OsmolalityUnit::OsmolalityUnit(const char* u)
   : OsmolalityUnit(std::string { u })

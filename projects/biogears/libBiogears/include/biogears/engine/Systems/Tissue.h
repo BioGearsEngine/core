@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 namespace biogears {
 class SESubstance;
@@ -39,13 +39,15 @@ namespace io {
   class BiogearsPhysiology;
 }
 }
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears::SELiquidCompartment*>;
-BG_EXT template class BIOGEARS_API map<biogears::SELiquidCompartment*, biogears::SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API map<biogears::SETissueCompartment*, biogears::SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*>;
+extern template class map<biogears::SETissueCompartment*, biogears::SELiquidCompartment*>;
+extern template class map<biogears::SELiquidCompartment*, biogears::SEFluidCircuitPath*>;
+extern template class map<biogears::SETissueCompartment*, biogears::SEFluidCircuitPath*>;
+extern template class vector<biogears::SETissueCompartment*>;
 }
+#pragma warning(default : 4661)
 
 namespace biogears {
 /**
@@ -78,12 +80,7 @@ public:
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsTissueSystemData& in);
-  virtual CDM::BioGearsTissueSystemData* Unload() const;
-
 protected:
-  virtual void Unload(CDM::BioGearsTissueSystemData& data) const;
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
   void SetUp() override;
 

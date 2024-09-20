@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const MassPerAreaTimeUnit MassPerAreaTimeUnit::g_Per_cm2_s("g/cm^2 s");
 
-template class SEScalarQuantity<MassPerAreaTimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassPerAreaTimeUnit>;
 
 MassPerAreaTimeUnit::MassPerAreaTimeUnit(const char* u)
   : MassPerAreaTimeUnit(std::string { u })

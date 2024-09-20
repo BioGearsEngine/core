@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/Logger.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+
 namespace std {
 template class vector<biogears::SEGasTransportVertex*>;
 template class vector<biogears::SEGasTransportEdge*>;

@@ -23,7 +23,7 @@ AmountPerTimeUnit AmountPerTimeUnit::mmol_Per_min("mmol/min");
 AmountPerTimeUnit AmountPerTimeUnit::pmol_Per_min("pmol/min");
 AmountPerTimeUnit AmountPerTimeUnit::umol_Per_min("umol/min");
 
-template class SEScalarQuantity<AmountPerTimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<AmountPerTimeUnit>;
 ;
 
 AmountPerTimeUnit::AmountPerTimeUnit(const char* u)

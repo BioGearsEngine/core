@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/cdm/Compartment.hxx>
+
 
 #include <map>
 #include <string>
@@ -33,8 +33,9 @@ namespace io {
   class Compartment;
 }
 
-BG_EXT template class BIOGEARS_API SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity>;
 
+#pragma warning(disable : 4661)
+extern template class SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity>;
 class BIOGEARS_API SELiquidCompartment : public SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> {
   friend class SETissueCompartment;
   friend class SECompartmentManager;
@@ -84,9 +85,12 @@ protected:
   std::vector<SELiquidCompartment*> m_Children;
   std::vector<SELiquidCompartment*> m_Leaves;
 };
+#pragma warning(default : 4661)
 } // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartment*>;
+extern template class vector<biogears::SELiquidCompartment*>;
+extern template class map<string, biogears::SELiquidCompartment*>;
 }
+#pragma warning(default : 4661)

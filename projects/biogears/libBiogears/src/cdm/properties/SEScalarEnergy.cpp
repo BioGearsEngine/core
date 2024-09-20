@@ -21,7 +21,7 @@ const EnergyUnit EnergyUnit::mJ("mJ");
 const EnergyUnit EnergyUnit::kJ("kJ");
 const EnergyUnit EnergyUnit::kcal("kcal");
 
-template class SEScalarQuantity<EnergyUnit>;
+template class BIOGEARS_API SEScalarQuantity<EnergyUnit>;
 
 EnergyUnit::EnergyUnit(const char* u)
   : EnergyUnit(std::string { u })

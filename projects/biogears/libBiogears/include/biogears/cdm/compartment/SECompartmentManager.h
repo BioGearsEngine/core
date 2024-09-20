@@ -25,34 +25,36 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
-#include <biogears/schema/cdm/Compartment.hxx>
 
-CDM_BIND_DECL(CompartmentManagerData)
+
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartment*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentLink*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentLink*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentGraph*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentGraph*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SESubstance*>;
+extern template class vector<biogears::SEGasCompartment*>;
+extern template class map<string, biogears::SEGasCompartment*>;
+extern template class vector<biogears::SEGasCompartmentLink*>;
+extern template class map<string, biogears::SEGasCompartmentLink*>;
+extern template class vector<biogears::SEGasCompartmentGraph*>;
+extern template class map<string, biogears::SEGasCompartmentGraph*>;
+extern template class vector<biogears::SESubstance*>;
 
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartment*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentLink*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentLink*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentGraph*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentGraph*>;
+extern template class vector<biogears::SELiquidCompartment*>;
+extern template class map<string, biogears::SELiquidCompartment*>;
+extern template class vector<biogears::SELiquidCompartmentLink*>;
+extern template class map<string, biogears::SELiquidCompartmentLink*>;
+extern template class vector<biogears::SELiquidCompartmentGraph*>;
+extern template class map<string, biogears::SELiquidCompartmentGraph*>;
 
-BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartment*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartmentLink*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartmentLink*>;
+extern template class vector<biogears::SEThermalCompartment*>;
+extern template class map<string, biogears::SEThermalCompartment*>;
+extern template class vector<biogears::SEThermalCompartmentLink*>;
+extern template class map<string, biogears::SEThermalCompartmentLink*>;
 
-BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SETissueCompartment*>;
+extern template class vector<biogears::SETissueCompartment*>;
+extern template class map<string, biogears::SETissueCompartment*>;
 }
+#pragma warning(default : 4661)
+
 namespace biogears {
 namespace io {
   class Compartment;

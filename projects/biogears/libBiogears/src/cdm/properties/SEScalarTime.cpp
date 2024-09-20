@@ -25,7 +25,7 @@ const TimeUnit TimeUnit::day("day");
 const TimeUnit TimeUnit::yr("yr");
 #pragma pop_macro("Time")
 
-template class SEScalarQuantity<TimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<TimeUnit>;
 
 TimeUnit::TimeUnit(const char* u)
   : TimeUnit(std::string { u })

@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/utils/Logger.h>
-#include <biogears/schema/cdm/Physiology.hxx>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <random>
 

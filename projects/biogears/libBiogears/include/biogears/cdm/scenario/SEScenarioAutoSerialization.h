@@ -14,9 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/enums/SEPropertyEnums.h>
-#include <biogears/schema/cdm/DataRequests.hxx>
 
-CDM_BIND_DECL(ScenarioAutoSerializationData)
 namespace biogears {
 namespace io {
   class Scenario;

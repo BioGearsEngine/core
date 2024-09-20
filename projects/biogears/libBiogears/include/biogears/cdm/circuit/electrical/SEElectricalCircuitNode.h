@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/properties/SEScalarElectricCharge.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class SECircuitManager;

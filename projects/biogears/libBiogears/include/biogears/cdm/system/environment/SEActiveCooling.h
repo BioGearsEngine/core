@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
-#include <biogears/schema/cdm/Environment.hxx>
 
 #include <random>
 

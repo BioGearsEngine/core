@@ -13,13 +13,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
-#include <biogears/schema/cdm/Compartment.hxx>
+
 
 #include <map>
 #include <string>
 #include <vector>
 
-CDM_BIND_DECL(ThermalCompartmentData)
 
 namespace biogears {
 class SEThermalCompartmentLink;
@@ -106,8 +105,10 @@ protected:
   SECompartmentNodes<THERMAL_COMPARTMENT_NODE> m_Nodes;
 };
 } // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartment*>;
+extern template class vector<biogears::SEThermalCompartment*>;
+extern template class map<string, biogears::SEThermalCompartment*>;
 }
+#pragma warning(default : 4661)

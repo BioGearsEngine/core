@@ -21,8 +21,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
-CDM_BIND_DECL(CircuitNodeData);
-
 namespace biogears {
 
 #define CIRCUIT_NODE_TEMPLATE typename PotentialScalar, typename QuantityScalar
@@ -35,6 +33,7 @@ namespace io {
   class Circuit;
 }
 
+#pragma warning(disable : 4661)
 template <typename PotentialScalar, typename QuantityScalar>
 class SECircuitNode : public Loggable {
   template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
@@ -83,7 +82,6 @@ protected:
   QuantityScalar* m_NextQuantity;
   QuantityScalar* m_QuantityBaseline;
 };
-
 }
 #include <biogears/cdm/circuit/SECircuitNode.inl>
 
@@ -92,3 +90,4 @@ BG_EXT template class SECircuitNode<SEScalarElectricPotential, SEScalarElectricC
 BG_EXT template class SECircuitNode<SEScalarPressure, SEScalarVolume>;
 BG_EXT template class SECircuitNode<SEScalarTemperature, SEScalarEnergy>;
 }
+#pragma warning(disable : 4661)

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERenalSystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 namespace biogears {
 class SEUrinalysis;
@@ -62,14 +62,8 @@ public:
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsRenalSystemData& in);
-  virtual CDM::BioGearsRenalSystemData* Unload() const;
-
 protected:
-  virtual void Unload(CDM::BioGearsRenalSystemData& data) const;
-
-  // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
+   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
   void SetUp() override;
 
 public:

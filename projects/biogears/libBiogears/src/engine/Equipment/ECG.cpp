@@ -99,39 +99,6 @@ void ECG::Initialize()
   m_Waveforms.SetLeadElectricPotential(3, GetLead3ElectricPotential());
 }
 
-bool ECG::Load(const CDM::BioGearsElectroCardioGramData& in)
-{
-
-  io::ElectroCardioGram::UnMarshall(in, *this);
-  BioGearsSystem::LoadState();
-  io::Property::UnMarshall(in.HeartRythmTime(), m_HeartRhythmTime);
-  io::Property::UnMarshall(in.HeartRythmPeriod(), m_HeartRhythmPeriod);
-  io::ElectroCardioGram::UnMarshall(in.Waveforms(), m_Waveforms);
-  m_Waveforms.SetLeadElectricPotential(3, GetLead3ElectricPotential());
-  return true;
-}
-CDM::BioGearsElectroCardioGramData* ECG::Unload() const
-{
-  CDM::BioGearsElectroCardioGramData* data = new CDM::BioGearsElectroCardioGramData();
-  Unload(*data);
-  return data;
-}
-void ECG::Unload(CDM::BioGearsElectroCardioGramData& data) const
-{
-
-  io::ElectroCardioGram::Marshall(*this, data);
-  if (this->m_HeartRhythmTime.IsValid()) {
-    data.HeartRythmTime(std::make_unique<std::remove_reference<decltype(data.HeartRythmTime())>::type>());
-    io::Property::Marshall(this->m_HeartRhythmTime, data.HeartRythmTime());
-  }
-  if (this->m_HeartRhythmPeriod.IsValid()) {
-    data.HeartRythmPeriod(std::make_unique<std::remove_reference<decltype(data.HeartRythmPeriod())>::type>());
-    io::Property::Marshall(this->m_HeartRhythmPeriod, data.HeartRythmPeriod());
-  }
-
-  data.Waveforms(std::make_unique<std::remove_reference<decltype(data.Waveforms())>::type>());
-  io::ElectroCardioGram::Marshall(m_Waveforms, data.Waveforms());
-}
 
 void ECG::SetUp()
 {

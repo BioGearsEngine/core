@@ -19,10 +19,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Scenario.hxx>
-#include <biogears/schema/cdm/DataRequests.hxx>
-#include <biogears/schema/cdm/Actions.hxx>
-
 namespace biogears {
 
 class SEDecimalFormat;

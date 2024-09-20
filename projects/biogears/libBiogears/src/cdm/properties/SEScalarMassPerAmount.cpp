@@ -28,7 +28,7 @@ const MassPerAmountUnit MassPerAmountUnit::ug_Per_mol("ug/mol");
 const MassPerAmountUnit MassPerAmountUnit::ug_Per_ct("ug/ct");
 const MassPerAmountUnit MassPerAmountUnit::pg_Per_ct("pg/ct");
 
-template class SEScalarQuantity<MassPerAmountUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassPerAmountUnit>;
 
 MassPerAmountUnit::MassPerAmountUnit(const char* u)
   : MassPerAmountUnit(std::string { u })

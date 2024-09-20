@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/utils/testing/SETestErrorStatistics.h>
-CDM_BIND_DECL(TestCaseData)
 
 namespace biogears {
 class SETestSuite;

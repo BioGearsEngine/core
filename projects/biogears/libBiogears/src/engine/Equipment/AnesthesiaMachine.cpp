@@ -144,22 +144,6 @@ void AnesthesiaMachine::Initialize()
   m_CurrentBreathingCycleTime.SetValue(0.0, TimeUnit::s);
 }
 
-bool AnesthesiaMachine::Load(const CDM::BioGearsAnesthesiaMachineData& in)
-{
-  io::BiogearsEquipment::UnMarshall(in, *this);
-  return true;
-}
-CDM::BioGearsAnesthesiaMachineData* AnesthesiaMachine::Unload() const
-{
-  CDM::BioGearsAnesthesiaMachineData* data = new CDM::BioGearsAnesthesiaMachineData();
-  Unload(*data);
-  return data;
-}
-void AnesthesiaMachine::Unload(CDM::BioGearsAnesthesiaMachineData& data) const
-{
-  io::BiogearsEquipment::Marshall(*this, data);
-}
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Initializes parameters for the anesthesia machine class

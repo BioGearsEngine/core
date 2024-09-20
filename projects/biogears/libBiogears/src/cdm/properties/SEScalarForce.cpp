@@ -20,7 +20,7 @@ const ForceUnit ForceUnit::N("N");
 const ForceUnit ForceUnit::lbf("lbf");
 const ForceUnit ForceUnit::dyn("dyn");
 
-template class SEScalarQuantity<ForceUnit>;
+template class BIOGEARS_API SEScalarQuantity<ForceUnit>;
 
 ForceUnit::ForceUnit(const char* u)
   : ForceUnit(std::string { u })

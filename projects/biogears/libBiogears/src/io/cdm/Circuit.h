@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/schema/cdm/Circuit.hxx>
+#include <biogears/cdm/circuit/SECircuit.inl>
 
 #define CDM_CIRCUIT_MARSHALL_HELPER(in, out, func)                                   \
   if (in.m_##func) {                                                                 \

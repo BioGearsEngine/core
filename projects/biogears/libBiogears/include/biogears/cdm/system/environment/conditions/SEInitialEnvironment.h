@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
-#include <biogears/schema/cdm/EnvironmentConditions.hxx>
 
 namespace biogears {
 namespace io {

@@ -21,7 +21,7 @@ const TemperatureUnit TemperatureUnit::C("degC");
 const TemperatureUnit TemperatureUnit::K("K");
 const TemperatureUnit TemperatureUnit::R("degR");
 
-template class SEScalarQuantity<TemperatureUnit>;
+template class BIOGEARS_API SEScalarQuantity<TemperatureUnit>;
 
 TemperatureUnit::TemperatureUnit(const char* u)
   : TemperatureUnit(std::string{ u })

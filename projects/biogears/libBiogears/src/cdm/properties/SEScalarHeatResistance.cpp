@@ -21,7 +21,7 @@ const HeatResistanceUnit HeatResistanceUnit::C_Per_W("degC/W");
 const HeatResistanceUnit HeatResistanceUnit::K_s_Per_kcal("K s/kcal");
 const HeatResistanceUnit HeatResistanceUnit::C_s_Per_kcal("degC s/kcal");
 
-template class SEScalarQuantity<HeatResistanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatResistanceUnit>;
 
 HeatResistanceUnit::HeatResistanceUnit(const char* u)
   : HeatResistanceUnit(std::string { u })

@@ -18,8 +18,6 @@ specific language governing permissions and limitations under the License.
 
 #include <random>
 
-CDM_BIND_DECL(ActiveHeatingData)
-
 namespace biogears {
 class SEScalar;
 class SEScalarFraction;

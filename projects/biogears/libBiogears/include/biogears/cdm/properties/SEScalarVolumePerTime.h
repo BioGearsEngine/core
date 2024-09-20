@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API VolumePerTimeUnit : public CCompoundUnit {
@@ -40,7 +39,8 @@ public:
   static const VolumePerTimeUnit mL_Per_hr;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<VolumePerTimeUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<VolumePerTimeUnit>;
 
 class BIOGEARS_API SEScalarVolumePerTime : public SEScalarQuantity<VolumePerTimeUnit> {
 public:
@@ -50,4 +50,6 @@ public:
   using SEScalarQuantity<VolumePerTimeUnit>::SetValue;
   using SEScalarQuantity<VolumePerTimeUnit>::GetValue;
 };
+#pragma warning(default : 4661)
+
 }

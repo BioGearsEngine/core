@@ -90,24 +90,6 @@ void Hepatic::Initialize()
   GetHepaticGluconeogenesisRate().SetValue(180, MassPerTimeUnit::g_Per_day);
 }
 
-bool Hepatic::Load(const CDM::BioGearsHepaticSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  BioGearsSystem::LoadState();
-
-  return true;
-}
-CDM::BioGearsHepaticSystemData* Hepatic::Unload() const
-{
-  CDM::BioGearsHepaticSystemData* data = new CDM::BioGearsHepaticSystemData();
-  Unload(*data);
-  return data;
-}
-void Hepatic::Unload(CDM::BioGearsHepaticSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Initializes parameters for the Hepatic Class

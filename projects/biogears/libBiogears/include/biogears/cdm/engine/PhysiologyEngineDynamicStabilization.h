@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-#include <biogears/schema/biogears/BioGears.hxx>
+
 
 namespace biogears {
 class TimeUnit;
@@ -59,7 +59,6 @@ protected:
 };
 
 class PhysiologyEngineDynamicStabilization;
-CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationCriteriaData)
 class BIOGEARS_API PhysiologyEngineDynamicStabilizationCriteria : public Loggable {
   friend PhysiologyEngineDynamicStabilization;
   friend io::EngineConfiguration;
@@ -145,7 +144,6 @@ protected:
   const std::vector<PropertyConvergence*>& m_properties;
 };
 
-CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationData)
 class PhysiologyEngineDynamicStabilization : public PhysiologyEngineStabilization {
 public:
   friend io::EngineConfiguration;

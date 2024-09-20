@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
 namespace biogears {
 class SEScalarElectricPotential;

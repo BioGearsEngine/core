@@ -20,7 +20,7 @@ const HeatResistanceAreaUnit HeatResistanceAreaUnit::clo("clo");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::rValue("rValue");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::tog("tog");
 
-template class SEScalarQuantity<HeatResistanceAreaUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatResistanceAreaUnit>;
 
 HeatResistanceAreaUnit::HeatResistanceAreaUnit(const char* u)
   : HeatResistanceAreaUnit(std::string { u })

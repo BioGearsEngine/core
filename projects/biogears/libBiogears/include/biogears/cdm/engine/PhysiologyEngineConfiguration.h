@@ -12,9 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
-CDM_BIND_DECL(PhysiologyEngineConfigurationData)
 
 namespace biogears {
 class SEElectroCardioGramInterpolator;

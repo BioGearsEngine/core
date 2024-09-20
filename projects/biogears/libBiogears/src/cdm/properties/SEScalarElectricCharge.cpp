@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricChargeUnit ElectricChargeUnit::C("C");
 
-template class SEScalarQuantity<ElectricChargeUnit>;
+template class BIOGEARS_API SEScalarQuantity<ElectricChargeUnit>;
 
 ElectricChargeUnit::ElectricChargeUnit(const char* u)
   : ElectricChargeUnit(std::string(u))

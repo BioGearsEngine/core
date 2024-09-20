@@ -15,10 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-#include <biogears/schema/cdm/ElectroCardioGram.hxx>
-
-CDM_BIND_DECL(ElectroCardioGramInterpolationWaveformData)
 
 namespace biogears {
 

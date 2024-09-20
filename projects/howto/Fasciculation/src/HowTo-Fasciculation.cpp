@@ -12,8 +12,6 @@ specific language governing permissions and limitations under the License.
 
 
 
-#include <biogears/schema/cdm/Properties.hxx>
-
 // Include the various types you will be using in your code
 #include <biogears/BiogearsEnums.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>

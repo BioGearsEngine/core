@@ -25,7 +25,7 @@ const MassPerTimeUnit MassPerTimeUnit::ug_Per_s("ug/s");
 const MassPerTimeUnit MassPerTimeUnit::kg_Per_s("kg/s");
 const MassPerTimeUnit MassPerTimeUnit::ug_Per_min("ug/min");
 
-template class SEScalarQuantity<MassPerTimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassPerTimeUnit>;
 
 MassPerTimeUnit::MassPerTimeUnit(const char* u)
   : MassPerTimeUnit(std::string { u })

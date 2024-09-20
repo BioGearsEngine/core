@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API OsmolarityUnit : public CCompoundUnit {
@@ -34,7 +33,8 @@ public:
   static const OsmolarityUnit mOsm_Per_L;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<OsmolarityUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<OsmolarityUnit>;
 
 class BIOGEARS_API SEScalarOsmolarity : public SEScalarQuantity<OsmolarityUnit> {
 public:

@@ -15,8 +15,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/enums/SEPropertyEnums.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class SESubstance;

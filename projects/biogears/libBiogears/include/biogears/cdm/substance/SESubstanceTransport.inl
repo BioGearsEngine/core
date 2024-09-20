@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 
 namespace biogears {
 template <typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit>

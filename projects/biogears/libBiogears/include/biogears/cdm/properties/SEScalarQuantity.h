@@ -17,8 +17,6 @@ specific language governing permissions and limitations under the License.
 
 #include <random>
 
-CDM_BIND_DECL(ScalarData)
-
 namespace biogears {
 namespace io {
   class Property;
@@ -98,6 +96,7 @@ protected:
   const Unit* m_unit;
 };
 
+#pragma warning(disable : 4661)
 //-------------------------------------------------------------------------------
 template <class Unit>
 inline void Override(const SEScalarQuantity<Unit>& from, SEScalarQuantity<Unit>& to)
@@ -126,4 +125,5 @@ inline void IncrementOverride(SEScalarQuantity<Unit>& s, double value, const Uni
   s.SetReadOnly(b);
 }
 //-------------------------------------------------------------------------------
+#pragma warning(default : 4661)
 }

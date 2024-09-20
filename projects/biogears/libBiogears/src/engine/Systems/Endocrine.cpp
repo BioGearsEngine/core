@@ -69,23 +69,6 @@ void Endocrine::Initialize()
   BioGearsSystem::Initialize();
 }
 
-bool Endocrine::Load(const CDM::BioGearsEndocrineSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsEndocrineSystemData* Endocrine::Unload() const
-{
-  CDM::BioGearsEndocrineSystemData* data = new CDM::BioGearsEndocrineSystemData();
-  Unload(*data);
-  return data;
-}
-void Endocrine::Unload(CDM::BioGearsEndocrineSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-
 void Endocrine::SetUp()
 {
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);

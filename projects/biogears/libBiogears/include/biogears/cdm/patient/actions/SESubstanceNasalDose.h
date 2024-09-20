@@ -17,7 +17,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 
@@ -66,6 +65,7 @@ public:
   SEScalarMass& GetTotalNasalDose();
   // SEScalarMassPerVolume& GetVenaCavaConcentration();
 
+ 
   std::vector<SEScalarMass>& GetUnreleasedNasalMasses();
   std::vector<SEScalarMass>& GetReleasedNasalMasses();
 
@@ -83,8 +83,10 @@ private:
   const SESubstance* m_Substance;
   SEScalarMass* m_TotalNasalDose;
   // SEScalarMassPerVolume* m_VenaCavaConcentration;
+
   std::vector<SEScalarMass> m_UnreleasedDrugMasses;
   std::vector<SEScalarMass> m_ReleasedDrugMasses;
+
   size_t m_NumUnreleasedMasses;
   size_t m_NumReleasedMasses;
 };

@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEAnesthesiaEnums.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
 
@@ -39,11 +38,13 @@ namespace io {
   class Anesthesia;
 }
 } // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SEAnesthesiaMachineEvent, bool>;
-BG_EXT template class BIOGEARS_API map<biogears::SEAnesthesiaMachineEvent, double>;
+extern template class map<biogears::SEAnesthesiaMachineEvent, bool>;
+extern template class map<biogears::SEAnesthesiaMachineEvent, double>;
 }
+#pragma warning(default : 4661)
 
 namespace biogears {
 class BIOGEARS_API SEAnesthesiaMachine : public SESystem {

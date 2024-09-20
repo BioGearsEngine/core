@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGears.hxx>
 
 namespace biogears {
 class SEPulmonaryFunctionTest;
@@ -76,12 +75,6 @@ public:
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsRespiratorySystemData& in);
-  virtual CDM::BioGearsRespiratorySystemData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::BioGearsRespiratorySystemData& data) const;
 
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
   void SetUp() override;

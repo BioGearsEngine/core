@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/schema/cdm/Properties.hxx>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 
 // Question: To Serialize Invalid units or not to Serialize?
 //           TO Throw an exception when a member is invalid?

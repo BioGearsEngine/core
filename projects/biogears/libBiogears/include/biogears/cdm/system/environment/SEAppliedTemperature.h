@@ -14,8 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
 
-CDM_BIND_DECL(AppliedTemperatureData)
-
 namespace biogears {
 class SEScalar;
 class SEScalarTemperature;

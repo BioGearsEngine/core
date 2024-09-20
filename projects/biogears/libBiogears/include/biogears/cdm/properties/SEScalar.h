@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 
 #include <random>
 
-CDM_BIND_DECL(ScalarData)
 
 namespace biogears {
 class SEGenericScalar;

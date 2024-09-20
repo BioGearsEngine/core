@@ -21,7 +21,7 @@ const InversePressureUnit InversePressureUnit::Inverse_mmHg("1/mmHg");
 const InversePressureUnit InversePressureUnit::Inverse_cmH2O("1/cmH2O");
 const InversePressureUnit InversePressureUnit::Inverse_atm("1/atm");
 
-template class SEScalarQuantity<InversePressureUnit>;
+template class BIOGEARS_API SEScalarQuantity<InversePressureUnit>;
 
 InversePressureUnit::InversePressureUnit(const char* u)
   : InversePressureUnit(std::string { u })

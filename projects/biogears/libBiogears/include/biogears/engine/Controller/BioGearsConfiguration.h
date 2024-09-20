@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/exports.h>
-#include <biogears/schema/biogears/BioGearsEngineConfiguration.hxx>
 #include "biogears/cdm/properties/SEScalarFlowElastance.h"
 
 namespace biogears {

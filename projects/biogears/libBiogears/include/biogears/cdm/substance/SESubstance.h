@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Substance.hxx>
+
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
 #include <biogears/cdm/substance/SESubstanceClearance.h>
@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 
 #include <vector>
 
-CDM_BIND_DECL(SubstanceData)
 
 namespace biogears {
 class SEScalarAmountPerVolume;
@@ -219,7 +218,10 @@ protected:
   SESubstancePharmacodynamics* m_Pharmacodynamics;
 };
 } //namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SESubstance*>;
+extern template class vector<biogears::SESubstance*>;
 }
+
+#pragma warning(default : 4661)

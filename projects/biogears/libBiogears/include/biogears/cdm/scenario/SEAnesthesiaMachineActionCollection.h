@@ -43,8 +43,6 @@ public:
 
   void Clear();
 
-  void Unload(std::vector<CDM::ActionData*>& to);
-
   bool ProcessAction(const SEAnesthesiaMachineAction& action, const PhysiologyEngine& engine);
 
   // STATE ACTION

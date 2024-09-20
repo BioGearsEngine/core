@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API MassPerAreaTimeUnit : public CCompoundUnit {
@@ -33,7 +32,8 @@ public:
   static const MassPerAreaTimeUnit g_Per_cm2_s;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<MassPerAreaTimeUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<MassPerAreaTimeUnit>;
 
 class BIOGEARS_API SEScalarMassPerAreaTime : public SEScalarQuantity<MassPerAreaTimeUnit> {
 public:

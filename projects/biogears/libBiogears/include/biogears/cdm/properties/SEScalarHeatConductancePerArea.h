@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API HeatConductancePerAreaUnit : public CCompoundUnit {
@@ -35,7 +34,8 @@ public:
   static const HeatConductancePerAreaUnit BTU_Per_hr_ft2_C;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<HeatConductancePerAreaUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<HeatConductancePerAreaUnit>;
 
 class BIOGEARS_API SEScalarHeatConductancePerArea : public SEScalarQuantity<HeatConductancePerAreaUnit> {
 public:

@@ -13,8 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEPropertyEnums.h>
-#include <biogears/schema/biogears/BioGearsEquipment.hxx>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
 class Serializer;

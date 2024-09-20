@@ -16,12 +16,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
 
-namespace std {
+#include <biogears/schema/cdm/Circuit.hxx>
 
-BG_EXT template class BIOGEARS_API vector<biogears::SEElectricalCircuitPath*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, size_t>;
+#pragma warning(disable:4661)
+namespace std {
+extern template class vector<biogears::SEElectricalCircuitPath*>;
+extern template class map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
+extern template class map<const biogears::SEElectricalCircuitNode*, size_t>;
 }
+#pragma warning(default:4661)
 
 
 #define ELECTRICAL_CIRCUIT_TYPES CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData
@@ -30,7 +33,8 @@ BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*,
 namespace biogears {
 class SECircuitManager;
 
-BG_EXT template class BIOGEARS_API SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
+#pragma warning(disable: 4661)
+extern template class SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
 
 class BIOGEARS_API SEElectricalCircuit : public SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData> {
   friend class SECircuitManager;
@@ -52,6 +56,6 @@ protected:
   SECircuitManager& m_Mgr;
 };
 
-BG_EXT template class BIOGEARS_API SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
-
+extern template class SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
+#pragma warning(default : 4661)
 }

@@ -22,7 +22,7 @@ const MassUnit MassUnit::mg("mg");
 const MassUnit MassUnit::kg("kg");
 const MassUnit MassUnit::lb("lb");
 
-template class SEScalarQuantity<MassUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassUnit>;
 
 MassUnit::MassUnit(const char* u)
   : MassUnit(std::string { u })

@@ -17,7 +17,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
-CDM_BIND_DECL(SubstanceConcentrationData)
 
 namespace biogears {
 class SESubstance;

@@ -1,5 +1,7 @@
-#include <biogears/cdm/circuit/SECircuitNode.h>
+#include <biogears/cdm/properties/SEScalarTypes.h>
 
+#include <biogears/cdm/circuit/SECircuitNode.h>
+#include <biogears/cdm/circuit/SECircuitNode.inl>
 namespace biogears {
 
 template class SECircuitNode<ELECTRICAL_CIRCUIT_NODE>;

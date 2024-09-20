@@ -20,19 +20,26 @@ specific language governing permissions and limitations under the License.
 
 #include <map>
 
-CDM_BIND_DECL(SubstanceData);
-CDM_BIND_DECL(SubstanceCompoundData);
+#include <biogears/schema/cdm/Substance.hxx>
+
+namespace mil::tatrc::physiology::datamodel {
+      class SubstanceData;
+      class SubstanceCompoundData;
+}
 
 namespace biogears {
 namespace io {
   class Scenario;
 }
 } // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SESubstance*, const CDM::SubstanceData*>;
-BG_EXT template class BIOGEARS_API map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
+extern template class map<biogears::SESubstance*, const CDM::SubstanceData*>;
+extern template class map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
 }
+
+#pragma warning(default : 4661)
 
 namespace biogears {
 class BIOGEARS_API SESubstanceManager : public Loggable {

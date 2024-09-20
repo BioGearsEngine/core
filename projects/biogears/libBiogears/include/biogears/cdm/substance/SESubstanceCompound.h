@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
-#include <biogears/schema/cdm/Substance.hxx>
+
 
 namespace biogears {
 class SESubstance;

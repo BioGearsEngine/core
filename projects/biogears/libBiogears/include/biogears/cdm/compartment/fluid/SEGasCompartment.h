@@ -29,6 +29,8 @@ enum class BalanceGasBy { Volume,
                           VolumeFraction };
 
 class SECompartmentManager;
+#pragma warning(disable : 4661)
+
 class BIOGEARS_API SEGasCompartment : public SEFluidCompartment<SEGasCompartmentLink, SEGasTransportVertex, SEGasTransportSubstance, SEGasSubstanceQuantity> {
   friend class SECompartmentManager;
   friend io::Compartment;
@@ -61,9 +63,14 @@ protected:
   std::vector<SEGasCompartment*> m_Children;
   std::vector<SEGasCompartment*> m_Leaves;
 };
+#pragma warning(default : 4661)
+
 } //namespace biogears
 
+#pragma warning(disable : 4661)
+
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartment*>;
-//BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartment*>;
+extern template class vector<biogears::SEGasCompartment*>;
+//extern template class map<string, biogears::SEGasCompartment*>;
 }
+#pragma warning(default : 4661)

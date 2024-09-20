@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class BIOGEARS_API SEChronicHeartFailure : public SEPatientCondition {

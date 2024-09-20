@@ -33,7 +33,8 @@ public:
   static const MassPerMassUnit mg_Per_g;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<MassPerMassUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<MassPerMassUnit>;
 
 class BIOGEARS_API SEScalarMassPerMass : public SEScalarQuantity<MassPerMassUnit> {
 public:

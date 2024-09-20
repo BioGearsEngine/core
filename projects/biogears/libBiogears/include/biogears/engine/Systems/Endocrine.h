@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/system/physiology/SEEndocrineSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 namespace biogears {
 class SELiquidSubstanceQuantity;
@@ -55,13 +55,7 @@ public:
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsEndocrineSystemData& in);
-  virtual CDM::BioGearsEndocrineSystemData* Unload() const;
-
 protected:
-  virtual void Unload(CDM::BioGearsEndocrineSystemData& data) const;
-
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
   void SetUp() override;
 

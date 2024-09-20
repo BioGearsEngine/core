@@ -17,9 +17,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstancePhysicochemical.h>
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
-#include <biogears/schema/cdm/Substance.hxx>
-
-CDM_BIND_DECL(SubstancePharmacokineticsData)
 
 namespace biogears {
 namespace io {
@@ -27,9 +24,13 @@ namespace io {
 }
 } // namespace biogears
 
+#pragma warning(disable : 4661)
+
 namespace std {
-BG_EXT template class BIOGEARS_API map<string, biogears::SESubstanceTissuePharmacokinetics*>;
+extern template class map<string, biogears::SESubstanceTissuePharmacokinetics*>;
 }
+#pragma warning(default : 4661)
+
 namespace biogears {
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
   friend io::Substance;

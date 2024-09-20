@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/cdm/Compartment.hxx>
+
 
 #include <vector>
 #include <map>
@@ -24,7 +24,9 @@ namespace biogears {
 class SELiquidCompartment;
 class SECompartmentManager;
 
-BG_EXT template class BIOGEARS_API SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment>;
+#pragma warning(disable : 4661)
+
+extern template class SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment>;
 
 class BIOGEARS_API SELiquidCompartmentLink : public SEFluidCompartmentLink<SELiquidTransportEdge, SELiquidTransportVertex, SELiquidCompartment> {
   friend class SECompartmentManager;
@@ -37,9 +39,13 @@ public:
   ~SELiquidCompartmentLink() override;
 
 };
+#pragma warning(default : 4661)
+
 }    // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std{
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentLink*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentLink*>;
+extern template class vector<biogears::SELiquidCompartmentLink*>;
+extern template class map<string, biogears::SELiquidCompartmentLink*>;
 }
+#pragma warning(default : 4661)

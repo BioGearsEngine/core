@@ -18,8 +18,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.h>
 #include <biogears/exports.h>
 
-CDM_BIND_DECL(SystemData)
-
 namespace biogears {
 class SESubstanceManager;
 class SEScalar;

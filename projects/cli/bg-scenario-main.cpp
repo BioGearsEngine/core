@@ -19,7 +19,6 @@
 #include "exec/Driver.h"
 #include "utils/Executor.h"
 
-#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>

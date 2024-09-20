@@ -1,9 +1,9 @@
+
 #include "Patient.h"
 
 #include "Property.h"
 
 #include <biogears/cdm/properties/SEProperties.h>
-
 #include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
 
@@ -28,9 +28,9 @@ namespace io {
 
     if (in.BodyMassIndex().present()) {
     if (!in.Weight().present() && in.Height().present()) {
-        out.CalculateWeightByBMI(in.BodyMassIndex().get());
+        out.CalculateWeightByBMI(in.BodyMassIndex().get().value());
     } else if (in.Weight().present() && !in.Height().present()) {
-        out.CalculateHeightByBMI(in.BodyMassIndex().get());
+        out.CalculateHeightByBMI(in.BodyMassIndex().get().value());
     } else {
         std::stringstream ss;
         ss << "BodyMassIndex as an input must be provided with height OR weight (and not neither/both). BMI input value is not being used and default inputs will be used." << std::endl;

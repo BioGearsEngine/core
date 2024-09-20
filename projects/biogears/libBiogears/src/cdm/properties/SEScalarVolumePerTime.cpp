@@ -25,7 +25,7 @@ const VolumePerTimeUnit VolumePerTimeUnit::m3_Per_s("m^3/s");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_min("mL/min");
 const VolumePerTimeUnit VolumePerTimeUnit::mL_Per_hr("mL/hr");
 
-template class SEScalarQuantity<VolumePerTimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<VolumePerTimeUnit>;
 
 VolumePerTimeUnit::VolumePerTimeUnit(const char* u)
   : VolumePerTimeUnit(std::string { u })

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const HeatCapacitancePerAmountUnit HeatCapacitancePerAmountUnit::J_Per_K_mol("J/K mol");
 
-template class SEScalarQuantity<HeatCapacitancePerAmountUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatCapacitancePerAmountUnit>;
 
 HeatCapacitancePerAmountUnit::HeatCapacitancePerAmountUnit(const char* u)
   : HeatCapacitancePerAmountUnit(std::string { u })

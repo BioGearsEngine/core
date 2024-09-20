@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API ElectricPotentialUnit : public CCompoundUnit {
@@ -34,7 +33,8 @@ public:
   static const ElectricPotentialUnit mV;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<ElectricPotentialUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<ElectricPotentialUnit>;
 
 class BIOGEARS_API SEScalarElectricPotential : public SEScalarQuantity<ElectricPotentialUnit> {
 public:
@@ -44,4 +44,5 @@ public:
   using SEScalarQuantity<ElectricPotentialUnit>::SetValue;
   using SEScalarQuantity<ElectricPotentialUnit>::GetValue;
 };
+#pragma warning(default : 4661)
 }

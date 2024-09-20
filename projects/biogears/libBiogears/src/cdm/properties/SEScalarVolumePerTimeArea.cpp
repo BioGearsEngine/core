@@ -20,7 +20,7 @@ const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::mL_Per_min_m2("mL/min m^2");
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::mL_Per_s_m2("mL/s m^2");
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::L_Per_min_m2("L/min m^2");
 
-template class SEScalarQuantity<VolumePerTimeAreaUnit>;
+template class BIOGEARS_API SEScalarQuantity<VolumePerTimeAreaUnit>;
 
 VolumePerTimeAreaUnit::VolumePerTimeAreaUnit(const char* u)
   : VolumePerTimeAreaUnit(std::string { u })

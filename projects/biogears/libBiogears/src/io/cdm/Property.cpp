@@ -20,12 +20,15 @@
 #include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
 #include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarNeg1To1.h>
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
 #include <biogears/cdm/properties/SEScalarHeatConductance.h>
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 #include <biogears/cdm/properties/SEScalarHeatInductance.h>
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
 #include <biogears/cdm/properties/SEScalarInverseVolume.h>
+#include <biogears/cdm/properties/SEScalarLength.h>
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
 #include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>

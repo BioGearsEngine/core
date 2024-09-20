@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
 
-CDM_BIND_DECL(DataRequestManagerData)
 
 namespace biogears {
 namespace io {

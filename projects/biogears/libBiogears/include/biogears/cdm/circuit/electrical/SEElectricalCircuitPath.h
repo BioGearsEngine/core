@@ -25,8 +25,8 @@ class SECircuitManager;
 namespace io {
   class Circuit;
 }
-
-BG_EXT template class BIOGEARS_API SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>;
+#pragma warning(disable : 4661)
+extern template class SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>;
 
 class BIOGEARS_API SEElectricalCircuitPath : public SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge> {
   friend class SECircuitManager;
@@ -108,4 +108,5 @@ protected:
   SEElectricalCircuitNode& m_ElectricalSourceNode;
   SEElectricalCircuitNode& m_ElectricalTargetNode;
 };
+#pragma warning(default : 4661)
 }

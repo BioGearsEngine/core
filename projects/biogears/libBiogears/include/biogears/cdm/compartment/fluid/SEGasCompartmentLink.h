@@ -34,7 +34,9 @@ public:
 };
 } //namespace bigoears
 
+#pragma warning(disable:4661)
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasCompartmentLink*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEGasCompartmentLink*>;
+extern template class vector<biogears::SEGasCompartmentLink*>;
+extern template class map<string, biogears::SEGasCompartmentLink*>;
 }
+#pragma warning(default:4661)

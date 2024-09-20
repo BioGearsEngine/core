@@ -14,10 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/schema/cdm/Substance.hxx>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
-
-CDM_BIND_DECL(SubstancePhysicochemicalData)
 
 namespace biogears {
   class SEScalar;

@@ -18,6 +18,7 @@
 #include <iostream>
 #include <mutex>
 #include <system_error>
+#include <strstream>
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
 #define WIN32_LEAN_AND_MEAN
@@ -30,7 +31,6 @@
 
 #include "../utils/Executor.h"
 
-#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/utils/DataTrack.h>
@@ -302,14 +302,26 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
         return;
       }
-      obj = Serializer::ReadBuffer((XMLByte*)content, content_size, &logger);
+      std::istringstream is = std::istringstream(std::string(content, content_size));
+      scenario = CDM::Scenario(is);
+      
 #endif
     } else {
       std::cout << "Reading " << exec.Scenario() << std::endl;
-      obj = Serializer::ReadFile(resolved_filepath,
-                                 &logger);
+      size_t content_size = 0;
+      char content_buffer[5 * 1024 * 1024];
+      memset(content_buffer, '\0', 5 * 1024 * 1024);
+
+      content_size = io.read_resource_file(exec.Scenario().c_str(), content_buffer, 5 * 1024 * 1024);
+      if (content_size == 0) {
+        std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
+        return;
+      }
+      
+      std::istringstream is = std::istringstream(std::string(content_buffer, content_size));
+      scenario = CDM::Scenario(is);
     }
-    scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+   
     if (scenario == nullptr) {
       throw std::runtime_error(exec.Scenario() + " is not a valid Scenario file.");
     }

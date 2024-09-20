@@ -71,35 +71,7 @@ void SEAnesthesiaMachineActionCollection::Clear()
   RemoveYPieceDisconnect();
 }
 //-------------------------------------------------------------------------------
-void SEAnesthesiaMachineActionCollection::Unload(std::vector<CDM::ActionData*>& to)
-{
-  if (HasConfiguration())
-    to.push_back(io::AnesthesiaActions::factory(GetConfiguration()).release());
-  if (HasOxygenTankPressureLoss())
-    to.push_back(io::AnesthesiaActions::factory(GetOxygenTankPressureLoss()).release());
-  if (HasOxygenWallPortPressureLoss())
-    to.push_back(io::AnesthesiaActions::factory(GetOxygenWallPortPressureLoss()).release());
-  if (HasExpiratoryValveLeak())
-    to.push_back(io::AnesthesiaActions::factory(GetExpiratoryValveLeak()).release());
-  if (HasExpiratoryValveObstruction())
-    to.push_back(io::AnesthesiaActions::factory(GetExpiratoryValveObstruction()).release());
-  if (HasInspiratoryValveLeak())
-    to.push_back(io::AnesthesiaActions::factory(GetInspiratoryValveLeak()).release());
-  if (HasInspiratoryValveObstruction())
-    to.push_back(io::AnesthesiaActions::factory(GetInspiratoryValveObstruction()).release());
-  if (HasMaskLeak())
-    to.push_back(io::AnesthesiaActions::factory(GetMaskLeak()).release());
-  if (HasSodaLimeFailure())
-    to.push_back(io::AnesthesiaActions::factory(GetSodaLimeFailure()).release());
-  if (HasTubeCuffLeak())
-    to.push_back(io::AnesthesiaActions::factory(GetTubeCuffLeak()).release());
-  if (HasVaporizerFailure())
-    to.push_back(io::AnesthesiaActions::factory(GetVaporizerFailure()).release());
-  if (HasVentilatorPressureLoss())
-    to.push_back(io::AnesthesiaActions::factory(GetVentilatorPressureLoss()).release());
-  if (HasYPieceDisconnect())
-    to.push_back(io::AnesthesiaActions::factory(GetYPieceDisconnect()).release());
-}
+
 //-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineActionCollection::ProcessAction(const SEAnesthesiaMachineAction& action, const PhysiologyEngine& engine)
 {

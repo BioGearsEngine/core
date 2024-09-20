@@ -13,8 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/cdm/Actions.hxx>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 

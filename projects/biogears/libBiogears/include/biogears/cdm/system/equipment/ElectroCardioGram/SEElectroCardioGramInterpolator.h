@@ -15,9 +15,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
-#include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
-CDM_BIND_DECL(ElectroCardioGramInterpolatorData)
+#include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
 namespace biogears {
 class SEScalarElectricPotential;
@@ -26,12 +25,14 @@ namespace io {
   class ElectroCardioGram;
 }
 } // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SEHeartRhythm, biogears::SEElectroCardioGramInterpolationWaveform*>;
-BG_EXT template class BIOGEARS_API map<CDM::ElectroCardioGramWaveformLeadNumberData, biogears::SEScalarElectricPotential*>;
-BG_EXT template class BIOGEARS_API map<CDM::ElectroCardioGramWaveformLeadNumberData, map<biogears::SEHeartRhythm, biogears::SEElectroCardioGramInterpolationWaveform*>>;
+extern template class map<biogears::SEHeartRhythm, biogears::SEElectroCardioGramInterpolationWaveform*>;
+extern template class map<CDM::ElectroCardioGramWaveformLeadNumberData, biogears::SEScalarElectricPotential*>;
+extern template class map<CDM::ElectroCardioGramWaveformLeadNumberData, map<biogears::SEHeartRhythm, biogears::SEElectroCardioGramInterpolationWaveform*>>;
 }
+#pragma warning(default : 4661)
 
 namespace biogears {
 class SEElectroCardioGramInterpolator : public Loggable {

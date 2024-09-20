@@ -21,7 +21,7 @@ const EnergyPerMassUnit EnergyPerMassUnit::kJ_Per_kg("kJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::mJ_Per_kg("mJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::kcal_Per_kg("kcal/kg");
 
-template class SEScalarQuantity<EnergyPerMassUnit>;
+template class BIOGEARS_API SEScalarQuantity<EnergyPerMassUnit>;
 
 EnergyPerMassUnit::EnergyPerMassUnit(const char* u)
   : EnergyPerMassUnit(std::string { u })

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const HeatInductanceUnit HeatInductanceUnit::K_s_Per_W("K s/W");
 
-template class SEScalarQuantity<HeatInductanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatInductanceUnit>;
 
 HeatInductanceUnit::HeatInductanceUnit(const char* u)
   : HeatInductanceUnit(std::string { u })

@@ -55,7 +55,8 @@ void SEScenario::Clear()
 //-----------------------------------------------------------------------------
 bool SEScenario::Load(char const* scenarioFile)
 {
-  Load(std::string(scenarioFile));
+  return Load(std::string(scenarioFile));
+  
 }
 //-----------------------------------------------------------------------------
 bool SEScenario::Load(const std::string& scenarioFile)
@@ -280,7 +281,7 @@ void SEScenario::AddAction(const SEAction& a)
 {
 
   auto bind = io::Actions::factory(&a);
-  m_Actions.push_back(SEAction::newFromBind(*bind, m_SubMgr));
+  m_Actions.push_back(io::Actions::factory(bind.get(), m_SubMgr).release());
 }
 //-----------------------------------------------------------------------------
 bool SEScenario::AddActionAfter(const SEAction& ref, const SEAction& after)
@@ -289,7 +290,7 @@ bool SEScenario::AddActionAfter(const SEAction& ref, const SEAction& after)
   auto refItr = std::find(m_Actions.begin(), m_Actions.end(), &ref);
   if (refItr != m_Actions.end()) {
     auto bind = io::Actions::factory(&after);
-    m_Actions.insert(refItr, SEAction::newFromBind(*bind, m_SubMgr));
+    m_Actions.insert(refItr, io::Actions::factory(bind.get(), m_SubMgr).release());
     success = true;
   }
   return success;

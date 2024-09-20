@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
-CDM_BIND_DECL(TestReportData)
 namespace biogears {
 namespace io {
   class TestReport;

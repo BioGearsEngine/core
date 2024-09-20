@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+
 
 #include <random>
 

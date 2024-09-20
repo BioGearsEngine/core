@@ -13,8 +13,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/SECircuit.h>
 
-#include <biogears/schema/cdm/Circuit.hxx>
-
 #include "io/cdm/Circuit.h"
 
 #define OPEN_RESISTANCE 1e100

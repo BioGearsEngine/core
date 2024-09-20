@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 namespace biogears {
 class SELiquidCompartmentGraph;
@@ -70,16 +70,10 @@ public:
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsCardiovascularSystemData& in);
-  virtual CDM::BioGearsCardiovascularSystemData* Unload() const;
-
   //Assessments
   SEScalar& CalculateCardiovascularSOFA();
 
 protected:
-  virtual void Unload(CDM::BioGearsCardiovascularSystemData& data) const;
-
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
   void SetUp() override;
 

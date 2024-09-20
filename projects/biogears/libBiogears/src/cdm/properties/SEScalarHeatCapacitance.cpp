@@ -21,7 +21,7 @@ const HeatCapacitanceUnit HeatCapacitanceUnit::kJ_Per_K("kJ/K");
 const HeatCapacitanceUnit HeatCapacitanceUnit::kcal_Per_K("kcal/K");
 const HeatCapacitanceUnit HeatCapacitanceUnit::kcal_Per_C("kcal/degC");
 
-template class SEScalarQuantity<HeatCapacitanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatCapacitanceUnit>;
 
 HeatCapacitanceUnit::HeatCapacitanceUnit(const char* u)
   : HeatCapacitanceUnit(std::string { u })

@@ -17,7 +17,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysisMicroscopic.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
 

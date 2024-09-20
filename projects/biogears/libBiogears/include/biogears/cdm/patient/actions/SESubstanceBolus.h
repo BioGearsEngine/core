@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 

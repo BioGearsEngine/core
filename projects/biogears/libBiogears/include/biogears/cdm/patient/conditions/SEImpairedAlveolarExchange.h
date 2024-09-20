@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class SEScalarArea;

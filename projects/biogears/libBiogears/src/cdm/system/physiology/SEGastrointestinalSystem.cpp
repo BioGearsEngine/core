@@ -11,15 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
-#include "io/cdm/Physiology.h"
-
 #include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace std {
 template class map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;

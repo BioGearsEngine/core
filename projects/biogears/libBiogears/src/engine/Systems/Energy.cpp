@@ -138,34 +138,6 @@ void Energy::Initialize()
   m_packOn = false;
 }
 
-bool Energy::Load(const CDM::BioGearsEnergySystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  io::Property::UnMarshall(in.BloodpH(), m_BloodpH);
-  io::Property::UnMarshall(in.BicarbonateMolarity_mmol_Per_L(), m_BicarbonateMolarity_mmol_Per_L);
-  m_packOn = in.PackOn();
-  m_previousWeightPack_kg = in.PreviousWeightPack_kg();
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsEnergySystemData* Energy::Unload() const
-{
-  CDM::BioGearsEnergySystemData* data = new CDM::BioGearsEnergySystemData();
-  Unload(*data);
-  return data;
-}
-void Energy::Unload(CDM::BioGearsEnergySystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-
-  data.BloodpH(std::make_unique<CDM::RunningAverageData>());
-  io::Property::Marshall(m_BloodpH, data.BloodpH());
-  data.BicarbonateMolarity_mmol_Per_L(std::make_unique<CDM::RunningAverageData>());
-  io::Property::Marshall(m_BicarbonateMolarity_mmol_Per_L, data.BicarbonateMolarity_mmol_Per_L());
-  data.PackOn(m_packOn);
-  data.PreviousWeightPack_kg(m_previousWeightPack_kg);
-}
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Initializes the energy specific quantities

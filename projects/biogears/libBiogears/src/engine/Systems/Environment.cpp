@@ -112,27 +112,6 @@ void Environment::Initialize()
   m_PatientEquivalentDiameter_m = std::pow(Convert(patientMass_g / patientDensity_g_Per_mL, VolumeUnit::mL, VolumeUnit::m3) / (pi * patientHeight_m), 0.5);
 }
 
-bool Environment::Load(const CDM::BioGearsEnvironmentData& in)
-{
-  io::Environment::UnMarshall(in, *this);
-
-  BioGearsSystem::LoadState();
-  m_PatientEquivalentDiameter_m = in.PatientEquivalentDiameter_m();
-  StateChange();
-  return true;
-}
-CDM::BioGearsEnvironmentData* Environment::Unload() const
-{
-  CDM::BioGearsEnvironmentData* data = new CDM::BioGearsEnvironmentData();
-  Unload(*data);
-  return data;
-}
-void Environment::Unload(CDM::BioGearsEnvironmentData& data) const
-{
-  io::Environment::Marshall(*this, data);
-  data.PatientEquivalentDiameter_m(m_PatientEquivalentDiameter_m);
-}
-
 void Environment::SetUp()
 {
   // Patient and Actions

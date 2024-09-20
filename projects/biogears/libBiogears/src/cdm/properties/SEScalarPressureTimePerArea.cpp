@@ -19,7 +19,7 @@ namespace biogears {
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::mmHg_Per_mL_m2("mmHg/mL m^2");
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::cmH2O_Per_mL_m2("cmH2O/mL m^2");
 
-template class SEScalarQuantity<PressureTimePerAreaUnit>;
+template class BIOGEARS_API SEScalarQuantity<PressureTimePerAreaUnit>;
 
 PressureTimePerAreaUnit::~PressureTimePerAreaUnit(){
 

@@ -13,13 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
-#include <biogears/schema/cdm/Substance.hxx>
+
 
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
-
-CDM_BIND_DECL(SubstancePharmacodynamicsData)
-CDM_BIND_DECL(PharmacodynamicModifierData)
 
 namespace biogears {
 class SEScalarFrequency;
@@ -33,12 +30,14 @@ namespace io {
   class Substance;
 }
 } //namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-  BG_EXT template class BIOGEARS_API map<string, biogears::SEPharmacodynamicModifier*>;
+  extern template class map<string, biogears::SEPharmacodynamicModifier*>;
 }
+#pragma warning(default : 4661)
 
-namespace biogears {
+  namespace biogears {
 class BIOGEARS_API SESubstancePharmacodynamics : public Loggable {
   friend io::Substance;
 

@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
-#include <biogears/schema/cdm/Properties.hxx>
 #include <biogears/cdm/enums/SEPropertyEnums.h>
 
 #include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
@@ -41,14 +40,12 @@ specific language governing permissions and limitations under the License.
 #define FLUID_CIRCUIT_PATH SEScalarVolumePerTime, SEScalarFlowResistance, SEScalarFlowCompliance, SEScalarFlowInertance, SEScalarPressure, SEScalarVolume
 #define THERMAL_CIRCUIT_PATH SEScalarPower, SEScalarHeatResistance, SEScalarHeatCapacitance, SEScalarHeatInductance, SEScalarTemperature, SEScalarEnergy
 
-CDM_BIND_DECL(CircuitPathData)
-
 namespace biogears {
 
 namespace io {
   class Circuit;
 }
-
+#pragma warning(disable : 4661)
 template <CIRCUIT_PATH_TEMPLATE>
 class SECircuitPath : public Loggable {
   template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
@@ -195,8 +192,10 @@ protected:
   PotentialScalar* m_ValveBreakdownPotential;
 };
 
-BG_EXT template class BIOGEARS_API SECircuitPath<ELECTRICAL_CIRCUIT_PATH>;
-BG_EXT template class BIOGEARS_API SECircuitPath<FLUID_CIRCUIT_PATH>;
-BG_EXT template class BIOGEARS_API SECircuitPath<THERMAL_CIRCUIT_PATH>;
+extern template class SECircuitPath<ELECTRICAL_CIRCUIT_PATH>;
+extern template class SECircuitPath<FLUID_CIRCUIT_PATH>;
+extern template class SECircuitPath<THERMAL_CIRCUIT_PATH>;
+
+#pragma warning(default : 4661)
 
 }

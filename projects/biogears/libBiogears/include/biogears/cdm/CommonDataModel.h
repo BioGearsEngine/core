@@ -26,17 +26,7 @@ namespace tatrc {
   }
 }
 }
-//using namespace mil::tatrc::phsyiology::datamodel;
-#define CDM_BIND_DECL(type)   \
-  namespace mil {             \
-    namespace tatrc {         \
-      namespace physiology {  \
-        namespace datamodel { \
-          class type;         \
-        }                     \
-      }                       \
-    }                         \
-  }
+
 namespace CDM = mil::tatrc::physiology::datamodel;
 
 #include <stdexcept>
@@ -47,8 +37,8 @@ namespace CDM = mil::tatrc::physiology::datamodel;
 #include <biogears/exports.h>
 namespace biogears {
 
-#pragma warning(disable: 4251)
 #pragma warning(push,0)
+#pragma warning(disable: 4251)
 #pragma warning(disable: 4275)
 struct BIOGEARS_API CommonDataModelException : public std::runtime_error {
   CommonDataModelException();

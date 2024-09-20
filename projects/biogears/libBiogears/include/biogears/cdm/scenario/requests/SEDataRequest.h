@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
-#include <biogears/schema/cdm/DataRequests.hxx>
 
 namespace biogears {
 class SESubstanceManager;

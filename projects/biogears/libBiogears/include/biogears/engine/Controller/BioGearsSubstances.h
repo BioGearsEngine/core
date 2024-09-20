@@ -47,10 +47,12 @@ protected:
 };
 
 } //namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
+extern template class map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
 }
+#pragma warning(default : 4661)
 
 namespace biogears {
 

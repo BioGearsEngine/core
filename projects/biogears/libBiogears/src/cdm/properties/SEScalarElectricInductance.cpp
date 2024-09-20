@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricInductanceUnit ElectricInductanceUnit::H("H");
 
-template class SEScalarQuantity<ElectricInductanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<ElectricInductanceUnit>;
 ElectricInductanceUnit::ElectricInductanceUnit(const char* u)
   : ElectricInductanceUnit(std::string { u })
 {

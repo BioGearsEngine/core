@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 // Project Includes
 #include <biogears/cdm/circuit/SECircuitNode.h>
-#include <biogears/schema/cdm/Circuit.hxx>
 
 namespace biogears {
 template <CIRCUIT_NODE_TEMPLATE>

@@ -37,7 +37,8 @@ public:
   static AmountPerVolumeUnit ct_Per_uL;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<AmountPerVolumeUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<AmountPerVolumeUnit>;
 
 class BIOGEARS_API SEScalarAmountPerVolume : public SEScalarQuantity<AmountPerVolumeUnit> {
 
@@ -48,4 +49,5 @@ public:
   using SEScalarQuantity<AmountPerVolumeUnit>::SetValue;
   using SEScalarQuantity<AmountPerVolumeUnit>::GetValue;
 };
+#pragma warning(default : 4661)
 }

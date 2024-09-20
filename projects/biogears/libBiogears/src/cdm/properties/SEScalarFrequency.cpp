@@ -21,7 +21,7 @@ const FrequencyUnit FrequencyUnit::Per_s("1/s");
 const FrequencyUnit FrequencyUnit::Hz("Hz");
 const FrequencyUnit FrequencyUnit::Per_hr("1/hr");
 
-template class SEScalarQuantity<FrequencyUnit>;
+template class BIOGEARS_API SEScalarQuantity<FrequencyUnit>;
 
 FrequencyUnit::FrequencyUnit(const char* u)
   : FrequencyUnit(std::string { u })

@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API HeatCapacitanceUnit : public CCompoundUnit {
@@ -36,7 +35,8 @@ public:
   static const HeatCapacitanceUnit kcal_Per_C;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<HeatCapacitanceUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<HeatCapacitanceUnit>;
 
 class BIOGEARS_API SEScalarHeatCapacitance : public SEScalarQuantity<HeatCapacitanceUnit> {
 public:
@@ -47,4 +47,5 @@ public:
   using SEScalarQuantity<HeatCapacitanceUnit>::GetValue;
 
 };
+#pragma warning(default : 4661)
 }

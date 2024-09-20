@@ -14,13 +14,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Environment.hxx>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
 
 
 #include <random>
-
-CDM_BIND_DECL(EnvironmentalConditionsData)
 
 namespace biogears {
 class SESubstance;

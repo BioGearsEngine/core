@@ -14,8 +14,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/SECircuitManager.h>
 
-#include <biogears/schema/cdm/Properties.hxx>
-
 namespace biogears {
 class BioGears;
 namespace io {

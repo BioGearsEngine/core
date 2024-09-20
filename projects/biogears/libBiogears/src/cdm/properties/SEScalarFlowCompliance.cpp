@@ -21,7 +21,7 @@ const FlowComplianceUnit FlowComplianceUnit::mL_Per_mmHg("mL/mmHg");
 const FlowComplianceUnit FlowComplianceUnit::mL_Per_cmH2O("mL/cmH2O");
 const FlowComplianceUnit FlowComplianceUnit::m3_Per_Pa("m^3/Pa");
 
-template class SEScalarQuantity<FlowComplianceUnit>;
+template class BIOGEARS_API SEScalarQuantity<FlowComplianceUnit>;
 
 FlowComplianceUnit::FlowComplianceUnit(const char* u)
   : FlowComplianceUnit(std::string { u })

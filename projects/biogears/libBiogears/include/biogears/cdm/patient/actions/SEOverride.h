@@ -30,7 +30,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 

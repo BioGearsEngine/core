@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
-#include <biogears/schema/cdm/Circuit.hxx>
 
 #include "io/cdm/Circuit.h"
 namespace biogears {

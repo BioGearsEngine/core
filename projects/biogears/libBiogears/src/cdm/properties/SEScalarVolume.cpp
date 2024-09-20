@@ -22,7 +22,7 @@ const VolumeUnit VolumeUnit::mL("mL");
 const VolumeUnit VolumeUnit::uL("uL");
 const VolumeUnit VolumeUnit::m3("m^3");
 
-template class SEScalarQuantity<VolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<VolumeUnit>;
 
 VolumeUnit::VolumeUnit(const char* u)
   : VolumeUnit(std::string { u })

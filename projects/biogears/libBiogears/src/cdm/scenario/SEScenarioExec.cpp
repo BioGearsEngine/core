@@ -37,6 +37,8 @@ specific language governing permissions and limitations under the License.
 #include <algorithm>
 #include <random>
 #include <vector>
+
+#pragma warning(disable : 4661)
 namespace biogears {
 SEScenarioExec::SEScenarioExec(PhysiologyEngine& engine)
   : Loggable(engine.GetLogger())

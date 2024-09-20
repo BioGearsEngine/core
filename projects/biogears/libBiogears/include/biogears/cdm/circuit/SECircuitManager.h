@@ -15,10 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
-CDM_BIND_DECL(CircuitManagerData);
 
+#pragma warning(disable : 4661)
 namespace biogears {
 namespace io {
   class Circuit;
@@ -454,3 +453,4 @@ const CircuitType* SECircuitManager::GetCircuit(const std::string& name, const S
 //-------------------------------------------------------------------------------
 
 }
+#pragma warning(default : 4661)

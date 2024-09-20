@@ -18,7 +18,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/Serializer.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 

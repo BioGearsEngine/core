@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 namespace biogears {
 class SELiquidCompartment;
@@ -29,10 +29,12 @@ namespace io {
   class BiogearsPhysiology;
 }
 }
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SELiquidSubstanceQuantity*, double>;
+extern template class map<biogears::SELiquidSubstanceQuantity*, double>;
 }
+#pragma warning(default : 4661)
 
 namespace biogears {
 /**
@@ -61,14 +63,8 @@ public:
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsGastrointestinalSystemData& in);
-  virtual CDM::BioGearsGastrointestinalSystemData* Unload() const;
-
 protected:
-  virtual void Unload(CDM::BioGearsGastrointestinalSystemData& data) const;
-
-  // Set pointers and other member variables common to both homeostatic initialization and loading a state
+ // Set pointers and other member variables common to both homeostatic initialization and loading a state
   void SetUp() override;
 
 public:

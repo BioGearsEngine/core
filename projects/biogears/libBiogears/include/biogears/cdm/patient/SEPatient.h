@@ -16,9 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Patient.hxx>
-
-CDM_BIND_DECL(PatientData)
 
 namespace biogears {
 
@@ -51,11 +48,16 @@ namespace io {
   class Patient;
 }
 } // namespace biogears
+
+#pragma warning(disable : 4661)
+
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SEPatientEventType, bool>;
-BG_EXT template class BIOGEARS_API map<biogears::SEPatientEventType, void (*)(bool)>;
-BG_EXT template class BIOGEARS_API map<biogears::SEPatientEventType, double>;
+extern template class map<biogears::SEPatientEventType, bool>;
+extern template class map<biogears::SEPatientEventType, void (*)(bool)>;
+extern template class map<biogears::SEPatientEventType, double>;
 }
+#pragma warning(default : 4661)
+
 namespace biogears {
 class BIOGEARS_API SEPatient : public Loggable {
   friend io::Patient;
@@ -260,8 +262,8 @@ public:
   bool operator!=(SEPatient const& rhs) const;
 
 protected:
-  virtual void CalculateWeightByBMI(const CDM::ScalarData& bmi);
-  virtual void CalculateHeightByBMI(const CDM::ScalarData& bmi);
+  virtual void CalculateWeightByBMI(const double& bmi);
+  virtual void CalculateHeightByBMI(const double & bmi);
 
 protected:
   std::stringstream m_ss;

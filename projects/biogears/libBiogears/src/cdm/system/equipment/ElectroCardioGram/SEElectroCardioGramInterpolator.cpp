@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
 #include <biogears/io/io-manager.h>
+
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/ecg.h>
 #endif

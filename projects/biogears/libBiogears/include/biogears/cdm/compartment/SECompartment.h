@@ -17,9 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include<biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/utils/Logger.h>
-#include <biogears/schema/cdm/Compartment.hxx>
 
-CDM_BIND_DECL(CompartmentData)
 
 namespace biogears {
 

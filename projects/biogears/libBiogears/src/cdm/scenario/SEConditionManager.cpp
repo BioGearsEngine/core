@@ -72,18 +72,11 @@ void SEConditionManager::Clear()
   DELETE_VECTOR(m_Conditions);
 }
 
-bool SEConditionManager::ProcessCondition(const SECondition& condition, const PhysiologyEngine& engine)
-{
-
- auto bind = io::Conditions::factory(&condition);
-  bool b = ProcessCondition(*bind, engine);
-  return b;
-}
-
-bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, const PhysiologyEngine& engine)
-{
+bool SEConditionManager::ProcessCondition(const SECondition& conditionSE, const PhysiologyEngine& engine)
+{  
+  auto condition = io::Conditions::factory(&conditionSE);
   
-  if (const CDM::ChronicAnemiaData* anemiaData = dynamic_cast<const CDM::ChronicAnemiaData*>(&condition)) {
+  if (const CDM::ChronicAnemiaData* anemiaData = dynamic_cast<const CDM::ChronicAnemiaData*>(condition.get())) {
     if (HasChronicAnemia()) {
       Error("Cannot have multiple Anemia conditions");
       return false;
@@ -96,7 +89,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::ChronicObstructivePulmonaryDiseaseData* copdData = dynamic_cast<const CDM::ChronicObstructivePulmonaryDiseaseData*>(&condition)) {
+  if (const CDM::ChronicObstructivePulmonaryDiseaseData* copdData = dynamic_cast<const CDM::ChronicObstructivePulmonaryDiseaseData*>(condition.get())) {
     if (HasChronicObstructivePulmonaryDisease()) {
       Error("Cannot have multiple COPD conditions");
       return false;
@@ -108,12 +101,12 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::ChronicHeartFailureData* heartFailureData = dynamic_cast<const CDM::ChronicHeartFailureData*>(&condition)) {
+  if (const CDM::ChronicHeartFailureData* heartFailureData = dynamic_cast<const CDM::ChronicHeartFailureData*>(condition.get())) {
     if (HasChronicHeartFailure()) {
       Error("Cannot have multiple Heart Failure conditions");
       return false;
     }
-    const CDM::ChronicVentricularSystolicDysfunctionData* vsdData = dynamic_cast<const CDM::ChronicVentricularSystolicDysfunctionData*>(&condition);
+    const CDM::ChronicVentricularSystolicDysfunctionData* vsdData = dynamic_cast<const CDM::ChronicVentricularSystolicDysfunctionData*>(condition.get());
     if (vsdData != nullptr) {
       m_HeartFailure = new SEChronicVentricularSystolicDysfunction();
       io::PatientConditions::UnMarshall(*heartFailureData, *m_HeartFailure);
@@ -125,7 +118,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::ChronicPericardialEffusionData* peData = dynamic_cast<const CDM::ChronicPericardialEffusionData*>(&condition)) {
+  if (const CDM::ChronicPericardialEffusionData* peData = dynamic_cast<const CDM::ChronicPericardialEffusionData*>(condition.get())) {
     if (HasChronicPericardialEffusion()) {
       Error("Cannot have multiple Pericardial Effusion conditions");
       return false;
@@ -137,7 +130,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::ChronicRenalStenosisData* renalStenosisData = dynamic_cast<const CDM::ChronicRenalStenosisData*>(&condition)) {
+  if (const CDM::ChronicRenalStenosisData* renalStenosisData = dynamic_cast<const CDM::ChronicRenalStenosisData*>(condition.get())) {
     if (HasChronicRenalStenosis()) {
       Error("Cannot have multiple Renal Stenosis conditions");
       return false;
@@ -148,8 +141,8 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
     return true;
   }
 
-  const CDM::DehydrationData* dehydrationData = dynamic_cast<const CDM::DehydrationData*>(&condition);
-  if (const CDM::ChronicRenalStenosisData* renalStenosisData = dynamic_cast<const CDM::ChronicRenalStenosisData*>(&condition)) {
+  const CDM::DehydrationData* dehydrationData = dynamic_cast<const CDM::DehydrationData*>(condition.get());
+  if (const CDM::ChronicRenalStenosisData* renalStenosisData = dynamic_cast<const CDM::ChronicRenalStenosisData*>(condition.get())) {
     if (HasDehydration()) {
       Error("Cannot have multiple Dehydration conditions");
       return false;
@@ -161,7 +154,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::DiabetesType1Data* diabetes1Data = dynamic_cast<const CDM::DiabetesType1Data*>(&condition)) {
+  if (const CDM::DiabetesType1Data* diabetes1Data = dynamic_cast<const CDM::DiabetesType1Data*>(condition.get())) {
     if (HasDiabetesType1()) {
       Error("Cannot have multiple DiabetesType1 conditions");
       return false;
@@ -173,7 +166,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::DiabetesType2Data* diabetes2Data = dynamic_cast<const CDM::DiabetesType2Data*>(&condition)) {
+  if (const CDM::DiabetesType2Data* diabetes2Data = dynamic_cast<const CDM::DiabetesType2Data*>(condition.get())) {
     if (HasDiabetesType2()) {
       Error("Cannot have multiple DiabetesType2 conditions");
       return false;
@@ -185,7 +178,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::StarvationData* starvationData = dynamic_cast<const CDM::StarvationData*>(&condition)) {
+  if (const CDM::StarvationData* starvationData = dynamic_cast<const CDM::StarvationData*>(condition.get())) {
     if (HasStarvation()) {
       Error("Cannot have multiple Starvation conditions");
       return false;
@@ -197,7 +190,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::ImpairedAlveolarExchangeData* impairedAlvioliData = dynamic_cast<const CDM::ImpairedAlveolarExchangeData*>(&condition)) {
+  if (const CDM::ImpairedAlveolarExchangeData* impairedAlvioliData = dynamic_cast<const CDM::ImpairedAlveolarExchangeData*>(condition.get())) {
     if (HasImpairedAlveolarExchange()) {
       Error("Cannot have multiple Impaired Alveolar Exchange conditions");
       return false;
@@ -209,7 +202,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::LobarPneumoniaData* pneumoniaData = dynamic_cast<const CDM::LobarPneumoniaData*>(&condition)) {
+  if (const CDM::LobarPneumoniaData* pneumoniaData = dynamic_cast<const CDM::LobarPneumoniaData*>(condition.get())) {
     if (HasLobarPneumonia()) {
       Error("Cannot have multiple Lobar Pneumonia conditions");
       return false;
@@ -221,7 +214,7 @@ bool SEConditionManager::ProcessCondition(const CDM::ConditionData& condition, c
   }
 
   
-  if (const CDM::InitialEnvironmentData* environmentData = dynamic_cast<const CDM::InitialEnvironmentData*>(&condition)) {
+  if (const CDM::InitialEnvironmentData* environmentData = dynamic_cast<const CDM::InitialEnvironmentData*>(condition.get())) {
     if (HasInitialEnvironment()) {
       Error("Cannot have multiple Initial Environment conditions");
       return false;

@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 #include <map>
 
@@ -32,10 +32,12 @@ namespace io {
   class Physiology;
 }
 } // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
+extern template class map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
 }
+#pragma warning(default : 4661)
 
 namespace biogears {
 class BIOGEARS_API SEGastrointestinalSystem : public SESystem {

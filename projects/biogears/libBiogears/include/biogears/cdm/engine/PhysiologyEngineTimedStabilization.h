@@ -14,9 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/cdm/EngineConfiguration.hxx>
 
-CDM_BIND_DECL(PhysiologyEngineTimedConditionStabilizationData)
 
 namespace biogears {
 namespace io {
@@ -51,7 +49,6 @@ protected:
   SEScalarTime m_Time;
 };
 
-CDM_BIND_DECL(PhysiologyEngineTimedStabilizationData)
 class PhysiologyEngineTimedStabilization : public PhysiologyEngineStabilization {
 public:
   friend io::EngineConfiguration;

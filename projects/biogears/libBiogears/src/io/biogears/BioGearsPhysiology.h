@@ -18,20 +18,22 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
-#define CDM_BIOGEARS_PHYSIOLOGY_MARSHALL_HELPER(in, out, func)                      \
+#define CDM_BIOGEARS_PHYSIOLOGY_MARSHALL_HELPER(in, out, func)                       \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::BiogearsPhysiology::Marshall(*in.m_##func, out.func());                    \
+    io::BiogearsPhysiology::Marshall(*in.m_##func, out.func());                      \
   }
 
 #define CDM_OPTIONAL_BIOGEARS_PHYSIOLOGY_MARSHALL_HELPER(in, out, func) \
-  if (in.m_##func) {                                                     \
-    io::BiogearsPhysiology::Marshall(*in.m_##func, out.func());        \
+  if (in.m_##func) {                                                    \
+    io::BiogearsPhysiology::Marshall(*in.m_##func, out.func());         \
   }
 
 namespace biogears {
 class SESubstanceManager;
-
+class SESystem;
+class BioGears;
+class BioGearsSystem;
 class BloodChemistry;
 class Cardiovascular;
 class Drugs;
@@ -47,6 +49,11 @@ class Tissue;
 namespace io {
   class BIOGEARS_PRIVATE_API BiogearsPhysiology {
   public:
+    // class Factories;
+    static std::unique_ptr<SESystem> factory(CDM::SystemData const* systemData, biogears::BioGears& bgData, SESubstanceManager& substances);
+
+    static std::unique_ptr<CDM::SystemData> factory(const SESystem* data);
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);

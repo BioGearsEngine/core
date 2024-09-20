@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include "biogears/cdm/properties/SEScalar0To1.h"
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
 class SEScalar0To1;

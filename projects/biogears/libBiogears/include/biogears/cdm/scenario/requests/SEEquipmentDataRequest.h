@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
-#include <biogears/schema/cdm/Environment.hxx>
 
 namespace biogears {
 class SEDataRequestManager;

@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API TimeUnit : public CCompoundUnit {
@@ -37,7 +36,8 @@ public:
   static const TimeUnit yr;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<TimeUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<TimeUnit>;
 
 class BIOGEARS_API SEScalarTime : public SEScalarQuantity<TimeUnit> {
 public:
@@ -49,4 +49,5 @@ public:
   using SEScalarQuantity<TimeUnit>::SetValue;
   using SEScalarQuantity<TimeUnit>::GetValue;
 };
+#pragma warning(default : 4661)
 }

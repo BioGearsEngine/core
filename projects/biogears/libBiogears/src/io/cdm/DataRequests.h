@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/enums/SEActionEnums.h>
 #include <biogears/schema/cdm/DataRequests.hxx>
-
+#include <biogears/schema/cdm/Compartment.hxx>
 // Question: To Serialize Invalid units or not to Serialize?
 //           TO Throw an exception when a member is invalid?
 #define CDM_DATA_REQUESTS_MARSHALL_HELPER(in, out, func)                                     \

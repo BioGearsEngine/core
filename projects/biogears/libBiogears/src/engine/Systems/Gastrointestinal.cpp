@@ -100,38 +100,6 @@ void Gastrointestinal::Initialize()
   m_InitialSubstanceMasses_ug[m_SmallIntestineChymeUrea] = m_SmallIntestineChymeUrea->GetMass(MassUnit::ug);
 }
 
-bool Gastrointestinal::Load(const CDM::BioGearsGastrointestinalSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  BioGearsSystem::LoadState();
-
-  // Loading drug absorption/transit model states here (rather than SE side) because we want to map them to an SESubstance already defined in Sub Manager
-  for (auto transitData : in.DrugTransitStates()) {
-    SESubstance* sub = m_data.GetSubstances().GetSubstance(transitData.Substance());
-    if (sub == nullptr) {
-      m_ss << "Unable to find substance" << transitData.Substance();
-      Error(m_ss.str(), "Gastrointestinal: Load Transit Model");
-      return false;
-    }
-    NewDrugTransitState(sub);
-    io::Physiology::UnMarshall(transitData, *GetDrugTransitState(sub));
-  }
-
-  m_DecrementNutrients = true;
-  return true;
-}
-
-CDM::BioGearsGastrointestinalSystemData* Gastrointestinal::Unload() const
-{
-  CDM::BioGearsGastrointestinalSystemData* data = new CDM::BioGearsGastrointestinalSystemData();
-  Unload(*data);
-  return data;
-}
-void Gastrointestinal::Unload(CDM::BioGearsGastrointestinalSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-
 void Gastrointestinal::SetUp()
 {
   m_ConsumeRate = false;

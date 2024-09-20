@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
-#include <biogears/schema/cdm/EnvironmentActions.hxx>
 
 namespace biogears {
 class SEActiveHeating;

@@ -1,7 +1,7 @@
 #include "BioGears.h"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
@@ -11,6 +11,9 @@
 
 #include "io/biogears/BioGears.h"
 #include "io/biogears/BioGearsConfiguration.h"
+#include "io/biogears/BioGearsPhysiology.h"
+#include "io/biogears/BioGearsEnvironment.h"
+#include "io/biogears/BioGearsEquipment.h"
 #include "io/cdm/Actions.h"
 #include "io/cdm/Circuit.h"
 #include "io/cdm/Compartment.h"
@@ -19,6 +22,7 @@
 #include "io/cdm/Patient.h"
 #include "io/cdm/Property.h"
 #include "io/cdm/Substance.h"
+
 
 namespace biogears {
 namespace io {
@@ -81,15 +85,16 @@ namespace io {
     // Conditions //
     out.m_Conditions->Clear();
     for (const CDM::ConditionData& cData : in.Condition()) {
-      if (!out.m_Conditions->ProcessCondition(cData, out)) {
+      auto conditon = io::Conditions::factory(&cData, out.GetSubstanceManager());
+      if (!out.m_Conditions->ProcessCondition(*conditon, out)) {
         throw biogears::CommonDataModelException("Unable to load condition");
       }
     }
     // Actions //
     out.m_Actions->Clear();
-    for (const CDM::ActionData& cData : in.ActiveAction()) {
-      auto action = io::Actions::factory(&cData, out.GetSubstanceManager());
-      if (!out.m_Actions->ProcessAction( *action, out)) {
+    for (const CDM::ActionData& aData : in.ActiveAction()) {
+      auto action = io::Actions::factory(&aData, out.GetSubstanceManager());
+      if (!out.m_Actions->ProcessAction(*action, out)) {
         throw biogears::CommonDataModelException("Unable to load action");
       }
     }
@@ -183,121 +188,139 @@ namespace io {
     const CDM::BioGearsInhalerData* nhlData = nullptr;
     for (const CDM::SystemData& sysData : in.System()) {
       if (auto bcData = dynamic_cast<const CDM::BioGearsBloodChemistrySystemData*>(&sysData)) {
-        if (out.m_BloodChemistrySystem->Load(*bcData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*bcData, out.GetSubstances(), *out.m_BloodChemistrySystem);
           PresentSystems |= BioGearsSystem::BLOOD_CHEMISTRY_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Blood Chemistry data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Blood Chemistry data" << std::endl;
       }
       if (auto cvData = dynamic_cast<const CDM::BioGearsCardiovascularSystemData*>(&sysData)) {
-        if (out.m_CardiovascularSystem->Load(*cvData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*cvData, out.GetSubstances(), *out.m_CardiovascularSystem);
           PresentSystems |= BioGearsSystem::CARDIOVASCULAR_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Cardiovascular data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Cardiovascular data" << std::endl;
       }
       if (auto dData = dynamic_cast<const CDM::BioGearsDrugSystemData*>(&sysData)) {
-
-        if (out.m_DrugSystem->Load(*dData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*dData, out.GetSubstances(), *out.m_DrugSystem);
           PresentSystems |= BioGearsSystem::DRUG_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Drugs data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Drug data" << std::endl;
       }
       if (auto ndoData = dynamic_cast<const CDM::BioGearsEndocrineSystemData*>(&sysData)) {
-
-        if (out.m_EndocrineSystem->Load(*ndoData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*ndoData, out.GetSubstances(), *out.m_EndocrineSystem);
           PresentSystems |= BioGearsSystem::ENDOCRINE_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Endocrine data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Endocrine data" << std::endl;
       }
       if (auto nrgData = dynamic_cast<const CDM::BioGearsEnergySystemData*>(&sysData)) {
-
-        if (out.m_EnergySystem->Load(*nrgData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*nrgData, out.GetSubstances(), *out.m_EnergySystem);
           PresentSystems |= BioGearsSystem::ENERGY_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Energy data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Energy data" << std::endl;
       }
       if (auto gasData = dynamic_cast<const CDM::BioGearsGastrointestinalSystemData*>(&sysData)) {
-
-        if (out.m_GastrointestinalSystem->Load(*gasData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*gasData, out.GetSubstances(), *out.m_GastrointestinalSystem);
           PresentSystems |= BioGearsSystem::GASTROINTESTINAL_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Gastrointestinal data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Gastrointestinal data" << std::endl;
       }
       if (auto hepData = dynamic_cast<const CDM::BioGearsHepaticSystemData*>(&sysData)) {
-
-        if (out.m_HepaticSystem->Load(*hepData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*hepData, out.GetSubstances(), *out.m_HepaticSystem);
           PresentSystems |= BioGearsSystem::HEPTIC_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Hepatic data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Hepatic data" << std::endl;
       }
       if (auto nrvData = dynamic_cast<const CDM::BioGearsNervousSystemData*>(&sysData)) {
-
-        if (out.m_NervousSystem->Load(*nrvData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*nrvData, out.GetSubstances(), *out.m_NervousSystem);
           PresentSystems |= BioGearsSystem::NERVOUS_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Nervous data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Nervous data" << std::endl;
       }
       if (auto rnlData = dynamic_cast<const CDM::BioGearsRenalSystemData*>(&sysData)) {
-        if (out.m_RenalSystem->Load(*rnlData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*rnlData, out.GetSubstances(), *out.m_RenalSystem);
           PresentSystems |= BioGearsSystem::RENAL_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Renal data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Renal data" << std::endl;
       }
       if (auto rspData = dynamic_cast<const CDM::BioGearsRespiratorySystemData*>(&sysData)) {
-
-        if (out.m_RespiratorySystem->Load(*rspData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*rspData, out.GetSubstances(), *out.m_RespiratorySystem);
           PresentSystems |= BioGearsSystem::RESPIRATORY_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Respiratory data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Respiratory data" << std::endl;
       }
       if (auto tsuData = dynamic_cast<const CDM::BioGearsTissueSystemData*>(&sysData)) {
-
-        if (out.m_TissueSystem->Load(*tsuData)) {
+        try {
+          io::BiogearsPhysiology::UnMarshall(*tsuData, out.GetSubstances(), *out.m_TissueSystem);
           PresentSystems |= BioGearsSystem::TISSUE_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Tissue data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Tissue data" << std::endl;
       }
       if (auto envData = dynamic_cast<const CDM::BioGearsEnvironmentData*>(&sysData)) {
-
-        if (out.m_Environment->Load(*envData)) {
+        try {
+          io::BiogearsEnvironment::UnMarshall(*envData, *out.m_Environment);
           PresentSystems |= BioGearsSystem::ENVIRONMENT_SYSTEM;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Environment data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Environment data" << std::endl;
       }
       if (auto amData = dynamic_cast<const CDM::BioGearsAnesthesiaMachineData*>(&sysData)) {
-
-        if (out.m_AnesthesiaMachine->Load(*amData)) {
+        try {
+          io::BiogearsEquipment::UnMarshall(*amData, *out.m_AnesthesiaMachine);
           PresentSystems |= BioGearsSystem::ANESTHESIA_NACHINE_EQUIPMENT;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Anesthesia Machine data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Anesthesia Machine data" << std::endl;
       }
       if (auto ecgData = dynamic_cast<const CDM::BioGearsElectroCardioGramData*>(&sysData)) {
-
-        if (out.m_ECG->Load(*ecgData)) {
+        try {
+          io::BiogearsEquipment::UnMarshall(*ecgData,  *out.m_ECG);
           PresentSystems |= BioGearsSystem::ELECTRO_CARDIO_GRAM_EQUIPMENT;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Electrocardiogram data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading ECG data" << std::endl;
       }
       if (auto nhlData = dynamic_cast<const CDM::BioGearsInhalerData*>(&sysData)) {
-
-        if (out.m_Inhaler->Load(*nhlData)) {
+        try {
+          io::BiogearsEquipment::UnMarshall(*nhlData,  *out.m_Inhaler);
           PresentSystems |= BioGearsSystem::INHALER_EQUIPMENT;
           continue;
+        } catch (CommonDataModelException ex) {
+          out.m_ss << "Error loading Energy data." << ex.what() << std::endl;
         }
-        out.m_ss << "Error loading Inhaler data" << std::endl;
       }
     }
     // Make sure we had all systems in the state
@@ -378,7 +401,7 @@ namespace io {
 
     if (in.m_EngineTrack.GetDataRequestManager().HasDataRequests()) {
       auto dataRequestsData = std::make_unique<CDM::DataRequestManagerData>();
-      io::DataRequests::Marshall( in.m_EngineTrack.GetDataRequestManager(), *dataRequestsData );
+      io::DataRequests::Marshall(in.m_EngineTrack.GetDataRequestManager(), *dataRequestsData);
       out.DataRequests(std::move(dataRequestsData));
     }
 
@@ -389,8 +412,7 @@ namespace io {
     // Conditions
     auto conditions = std::vector<std::unique_ptr<CDM::ConditionData>>();
     Conditions::Marshall(*in.m_Conditions, conditions);
-    for (auto& cData : conditions)
-    {
+    for (auto& cData : conditions) {
       out.Condition().push_back(std::move(cData));
     }
     // Actions
@@ -414,21 +436,21 @@ namespace io {
     }
 
     // Systems
-    out.System().push_back(std::unique_ptr<CDM::BioGearsBloodChemistrySystemData>(in.m_BloodChemistrySystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsCardiovascularSystemData>(in.m_CardiovascularSystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsDrugSystemData>(in.m_DrugSystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsEndocrineSystemData>(in.m_EndocrineSystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsEnergySystemData>(in.m_EnergySystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsGastrointestinalSystemData>(in.m_GastrointestinalSystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsHepaticSystemData>(in.m_HepaticSystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsNervousSystemData>(in.m_NervousSystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsRenalSystemData>(in.m_RenalSystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsRespiratorySystemData>(in.m_RespiratorySystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsTissueSystemData>(in.m_TissueSystem->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsEnvironmentData>(in.m_Environment->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsAnesthesiaMachineData>(in.m_AnesthesiaMachine->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsElectroCardioGramData>(in.m_ECG->Unload()));
-    out.System().push_back(std::unique_ptr<CDM::BioGearsInhalerData>(in.m_Inhaler->Unload()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_BloodChemistrySystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_CardiovascularSystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_DrugSystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_EndocrineSystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_EnergySystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_GastrointestinalSystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_HepaticSystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_NervousSystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_RenalSystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_RespiratorySystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_TissueSystem.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_Environment.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_AnesthesiaMachine.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_ECG.get()));
+    out.System().push_back(io::BiogearsPhysiology::factory(in.m_Inhaler.get()));
     // Compartments
     // out.CompartmentManager(std::unique_ptr<CDM::CompartmentManagerData>(in.m_Compartments->Unload()));
     auto compartments = std::make_unique<CDM::CompartmentManagerData>();

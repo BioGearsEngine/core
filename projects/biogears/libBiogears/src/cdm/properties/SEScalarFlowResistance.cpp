@@ -22,7 +22,7 @@ const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_mL("mmHg min/mL");
 const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_L("mmHg min/L");
 const FlowResistanceUnit FlowResistanceUnit::Pa_s_Per_m3("Pa s/m^3");
 
-template class SEScalarQuantity<FlowResistanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<FlowResistanceUnit>;
 
 FlowResistanceUnit::FlowResistanceUnit(const char* u)
   : FlowResistanceUnit(std::string { u })
