@@ -68,6 +68,8 @@ private:
   std::atomic<int> _process_count;
   size_t _total_work;
   size_t _jobs;
+
+  std::vector<char> _content_buffer;
 };
 } //namespace biogears
 

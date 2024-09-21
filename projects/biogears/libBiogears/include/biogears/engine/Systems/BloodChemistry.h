@@ -97,8 +97,8 @@ protected:
   void OverrideControlLoop();
 
   // Serializable member variables (Set in Initialize and in schema)
-  RunningAverage m_ArterialOxygen_mmHg;
-  RunningAverage m_ArterialCarbonDioxide_mmHg;
+  RunningAverage m_ArterialOxygenAverage_mmHg;
+  RunningAverage m_ArterialCarbonDioxideAverage_mmHg;
 
   // Patient
   SEPatient* m_Patient;

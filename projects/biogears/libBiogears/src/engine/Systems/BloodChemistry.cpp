@@ -94,8 +94,8 @@ void BloodChemistry::Clear()
   m_venaCavaSodium = nullptr;
   m_venaCavaTriacylglycerol = nullptr;
   m_venaCavaUrea = nullptr;
-  m_ArterialOxygen_mmHg.Reset();
-  m_ArterialCarbonDioxide_mmHg.Reset();
+  m_ArterialOxygenAverage_mmHg.Reset();
+  m_ArterialCarbonDioxideAverage_mmHg.Reset();
 
   m_donorRBC_ct = 0.0;
   m_patientRBC_ct = 0.0;
@@ -139,8 +139,8 @@ void BloodChemistry::Initialize()
   GetNeutrophilCellCount().SetValue(3.0e9, AmountPerVolumeUnit::ct_Per_L); // Reference range is 1.5-3.8e9 per liter
   // Note that RedBloodCellAcetylcholinesterase is initialized in Drugs file because Drugs is processed before Blood Chemistry
   GetInflammatoryResponse().Initialize();
-  m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
-  m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialOxygenAverage_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialCarbonDioxideAverage_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
   GetCarbonMonoxideSaturation().SetValue(0);
   GetViralLoad().SetValue(0.0, AmountPerVolumeUnit::ct_Per_uL);
 
@@ -662,12 +662,12 @@ void BloodChemistry::CheckBloodSubstanceLevels()
   double lacticAcidosisLevel_mg_Per_dL = 44;
   double ketoacidosisLevel_mg_Per_dL = 122;
 
-  m_ArterialOxygen_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
-  m_ArterialCarbonDioxide_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialOxygenAverage_mmHg.Sample(m_aortaO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialCarbonDioxideAverage_mmHg.Sample(m_aortaCO2->GetPartialPressure(PressureUnit::mmHg));
   // Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
   if (patient.IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
-    double arterialOxygen_mmHg = m_ArterialOxygen_mmHg.Value();
-    double arterialCarbonDioxide_mmHg = m_ArterialCarbonDioxide_mmHg.Value();
+    double arterialOxygen_mmHg = m_ArterialOxygenAverage_mmHg.Value();
+    double arterialCarbonDioxide_mmHg = m_ArterialCarbonDioxideAverage_mmHg.Value();
 
     if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing
       // hypercapnia check
@@ -812,8 +812,8 @@ void BloodChemistry::CheckBloodSubstanceLevels()
       }
     }
 
-    m_ArterialOxygen_mmHg.Reset();
-    m_ArterialCarbonDioxide_mmHg.Reset();
+    m_ArterialOxygenAverage_mmHg.Reset();
+    m_ArterialCarbonDioxideAverage_mmHg.Reset();
   }
 
   if (m_data.GetState() > EngineState::InitialStabilization) { // Don't throw events if we are initializing

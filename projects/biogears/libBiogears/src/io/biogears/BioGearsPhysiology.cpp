@@ -186,10 +186,10 @@ namespace io {
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsBloodChemistrySystemData& in, const SESubstanceManager& substances, BloodChemistry& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
 
-    io::Property::UnMarshall(in.ArterialOxygenPressure(), out.GetArterialOxygenPressure());
-    io::Property::UnMarshall(in.ArterialCarbonDioxidePressure(), out.GetArterialCarbonDioxidePressure());
+    io::Property::UnMarshall(in.ArterialOxygenAverage_mmHg(), out.m_ArterialOxygenAverage_mmHg);
+    io::Property::UnMarshall(in.ArterialCarbonDioxideAverage_mmHg(), out.m_ArterialCarbonDioxideAverage_mmHg);
 
     out.m_RhFactorMismatch_ct = in.RhFactorMismatch_ct();
     out.m_RhTransfusionReactionVolume_mL = in.RhTransfusionReactionVolume_mL();
@@ -218,10 +218,10 @@ namespace io {
   }
   void BiogearsPhysiology::Marshall(const BloodChemistry& in, CDM::BioGearsBloodChemistrySystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in,out, ArterialOxygenPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ArterialCarbonDioxidePressure)
+    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, ArterialOxygenAverage_mmHg)
+    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, ArterialCarbonDioxideAverage_mmHg)
 
     out.RhFactorMismatch_ct(in.m_RhFactorMismatch_ct);
     out.RhTransfusionReactionVolume_mL(in.m_RhTransfusionReactionVolume_mL);
@@ -250,7 +250,7 @@ namespace io {
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsCardiovascularSystemData& in, const SESubstanceManager& substances, Cardiovascular& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
 
     out.m_StartSystole = in.StartSystole();
     out.m_HeartFlowDetected = in.HeartFlowDetected();
@@ -298,7 +298,7 @@ namespace io {
   }
   void BiogearsPhysiology::Marshall(const Cardiovascular& in, CDM::BioGearsCardiovascularSystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
 
     out.StartSystole(in.m_StartSystole);
     out.HeartFlowDetected(in.m_HeartFlowDetected);
@@ -326,7 +326,7 @@ namespace io {
     out.LastCardiacCycleMeanArterialCO2PartialPressure_mmHg(in.m_LastCardiacCycleMeanArterialCO2PartialPressure_mmHg);
     out.CardiacCycleStrokeVolume_mL(in.m_CardiacCycleStrokeVolume_mL);
 
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in,out,CardiacCycleArterialPressure_mmHg)
+    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCycleArterialPressure_mmHg)
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCycleArterialCO2PartialPressure_mmHg)
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryCapillariesWedgePressure_mmHg)
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryCapillariesFlow_mL_Per_s)
@@ -334,14 +334,13 @@ namespace io {
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryArteryPressure_mmHg)
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCycleCentralVenousPressure_mmHg)
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCycleSkinFlow_mL_Per_s)
-
   }
 
   // class DrugSystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsDrugSystemData& in, const SESubstanceManager& substances, Drugs& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
 
     out.m_SarinRbcAcetylcholinesteraseComplex_nM = in.SarinRbcAcetylcholinesteraseComplex_nM();
     out.m_AgedRbcAcetylcholinesterase_nM = in.AgedRbcAcetylcholinesterase_nM();
@@ -389,7 +388,7 @@ namespace io {
   }
   void BiogearsPhysiology::Marshall(const Drugs& in, CDM::BioGearsDrugSystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
 
     out.SarinRbcAcetylcholinesteraseComplex_nM(in.m_SarinRbcAcetylcholinesteraseComplex_nM);
     out.AgedRbcAcetylcholinesterase_nM(in.m_AgedRbcAcetylcholinesterase_nM);
@@ -422,18 +421,18 @@ namespace io {
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsEndocrineSystemData& in, const SESubstanceManager& substances, Endocrine& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
     out.BioGearsSystem::LoadState();
   }
   void BiogearsPhysiology::Marshall(const Endocrine& in, CDM::BioGearsEndocrineSystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
   }
   // class EnergySystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsEnergySystemData& in, const SESubstanceManager& substances, Energy& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
     io::Property::UnMarshall(in.BloodpH(), out.m_BloodpH);
     io::Property::UnMarshall(in.BicarbonateMolarity_mmol_Per_L(), out.m_BicarbonateMolarity_mmol_Per_L);
     out.m_packOn = in.PackOn();
@@ -442,7 +441,7 @@ namespace io {
   }
   void BiogearsPhysiology::Marshall(const Energy& in, CDM::BioGearsEnergySystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
 
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, BloodpH);
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, BicarbonateMolarity_mmol_Per_L);
@@ -454,7 +453,7 @@ namespace io {
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsGastrointestinalSystemData& in, const SESubstanceManager& substances, Gastrointestinal& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
 
     out.BioGearsSystem::LoadState();
 
@@ -475,24 +474,24 @@ namespace io {
   }
   void BiogearsPhysiology::Marshall(const Gastrointestinal& in, CDM::BioGearsGastrointestinalSystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
   }
   // class HepaticSystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsHepaticSystemData& in, const SESubstanceManager& substances, Hepatic& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
     out.BioGearsSystem::LoadState();
   }
   void BiogearsPhysiology::Marshall(const Hepatic& in, CDM::BioGearsHepaticSystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
   }
   // class Cardiovascular
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsNervousSystemData& in, const SESubstanceManager& substances, Nervous& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
 
     // We assume state have to be after all stabilization
     out.m_FeedbackActive = true;
@@ -549,7 +548,7 @@ namespace io {
   }
   void BiogearsPhysiology::Marshall(const Nervous& in, CDM::BioGearsNervousSystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
     out.AfferentChemoreceptor_Hz(in.m_AfferentChemoreceptor_Hz);
     out.AfferentPulmonaryStrechReceptor_Hz(in.m_AfferentPulmonaryStretchReceptor_Hz);
     out.AorticBaroreceptorStrain(in.m_AorticBaroreceptorStrain);
@@ -604,7 +603,7 @@ namespace io {
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsRenalSystemData& in, const SESubstanceManager& substances, Renal& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
 
     out.m_Urinating = in.Urinating();
     out.m_LeftAfferentResistance_mmHg_s_Per_mL = in.LeftAfferentResistance_mmHg_s_Per_mL();
@@ -625,7 +624,7 @@ namespace io {
   }
   void BiogearsPhysiology::Marshall(const Renal& in, CDM::BioGearsRenalSystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
 
     out.Urinating(in.m_Urinating);
     out.LeftAfferentResistance_mmHg_s_Per_mL(in.m_LeftAfferentResistance_mmHg_s_Per_mL);
@@ -646,7 +645,7 @@ namespace io {
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsRespiratorySystemData& in, const SESubstanceManager& substances, Respiratory& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
 
     out.m_InitialExpiratoryReserveVolume_L = in.InitialExpiratoryReserveVolume_L();
     out.m_InitialFunctionalResidualCapacity_L = in.InitialFunctionalResidualCapacity_L();
@@ -697,7 +696,7 @@ namespace io {
   }
   void BiogearsPhysiology::Marshall(const Respiratory& in, CDM::BioGearsRespiratorySystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
 
     out.InitialExpiratoryReserveVolume_L(in.m_InitialExpiratoryReserveVolume_L);
     out.InitialFunctionalResidualCapacity_L(in.m_InitialFunctionalResidualCapacity_L);
@@ -748,7 +747,7 @@ namespace io {
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsTissueSystemData& in, const SESubstanceManager& substances, Tissue& out)
   {
     out.Clear();
-    io::System::UnMarshall(in, out);
+    io::Physiology::UnMarshall(in, out);
 
     io::Property::UnMarshall(in.O2ConsumedRunningAverage_mL_Per_s(), out.m_O2ConsumedRunningAverage_mL_Per_s);
     io::Property::UnMarshall(in.CO2ProducedRunningAverage_mL_Per_s(), out.m_CO2ProducedRunningAverage_mL_Per_s);
@@ -761,7 +760,7 @@ namespace io {
   }
   void BiogearsPhysiology::Marshall(const Tissue& in, CDM::BioGearsTissueSystemData& out)
   {
-    io::System::Marshall(in, out);
+    io::Physiology::Marshall(in, out);
 
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, O2ConsumedRunningAverage_mL_Per_s)
     CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CO2ProducedRunningAverage_mL_Per_s)

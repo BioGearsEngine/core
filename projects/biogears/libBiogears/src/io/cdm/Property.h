@@ -39,11 +39,10 @@ specific language governing permissions and limitations under the License.
     throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
   }*/
 
-#define CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, func)                           \
-  if (in.m_##func.NumSamples() > 0) {                                                \
-    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Property::Marshall(in.m_##func, out.func());                                 \
-  }
+#define CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, func)                         \
+                                                                                   \
+  out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+  io::Property::Marshall(in.m_##func, out.func());
 
 #define SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, func)                              \
   if (in.Has##func()) {                                                              \

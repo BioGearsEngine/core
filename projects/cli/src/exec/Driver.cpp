@@ -59,6 +59,8 @@
 #include <biogears/string/manipulation.h>
 #include <xsd/cxx/tree/exceptions.hxx>
 
+#pragma optimize("", off)
+
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
 inline std::string fmt_localtime()
 {
@@ -99,6 +101,7 @@ Driver::Driver(char* exe_name, size_t thread_count)
   , _thread_count(0)
   , _process_count(0)
   , _total_work(0)
+  , _content_buffer(5 * 1024 * 1024,'\0')
 {
   biogears::filesystem::path p { exe_name };
   _relative_path = p.parent_path();
@@ -309,16 +312,15 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
     } else {
       std::cout << "Reading " << exec.Scenario() << std::endl;
       size_t content_size = 0;
-      char content_buffer[5 * 1024 * 1024];
-      memset(content_buffer, '\0', 5 * 1024 * 1024);
+      memset(&_content_buffer.front(), '\0', 5 * 1024 * 1024);
 
-      content_size = io.read_resource_file(exec.Scenario().c_str(), content_buffer, 5 * 1024 * 1024);
+      content_size = io.read_resource_file(resolved_filepath.ToString().c_str(), &_content_buffer.front(), 5 * 1024 * 1024);
       if (content_size == 0) {
         std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
         return;
       }
       
-      std::istringstream is = std::istringstream(std::string(content_buffer, content_size));
+      std::istringstream is = std::istringstream(std::string(&_content_buffer.front(), content_size));
       scenario = CDM::Scenario(is);
     }
    
