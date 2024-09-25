@@ -144,8 +144,8 @@ bool SEEnvironment::Load(const std::string& given)
     Error(ss);
     return false;
   }
-   io::Environment::UnMarshall(*pData, *this);
-   return true;
+  io::Environment::UnMarshall(*pData, *this);
+  return true;
 }
 //-------------------------------------------------------------------------------
 bool SEEnvironment::ProcessChange(const SEInitialEnvironment& change)
@@ -408,6 +408,20 @@ double SEEnvironment::GetSkinHeatLoss(const PowerUnit& unit) const
 Tree<const char*> SEEnvironment::GetPhysiologyRequestGraph() const
 {
   return { "" };
+}
+//-----------------------------------------------------------------------------
+bool SEEnvironment::IsValid() const
+{
+  return !m_Name.empty()
+    && (m_ConvectiveHeatLoss
+        || m_ConvectiveHeatTranferCoefficient
+        || m_EvaporativeHeatLoss
+        || m_EvaporativeHeatTranferCoefficient
+        || m_RadiativeHeatLoss
+        || m_RadiativeHeatTranferCoefficient
+        || m_RespirationHeatLoss
+        || m_SkinHeatLoss
+        || m_Conditions);
 }
 //-----------------------------------------------------------------------------
 bool SEEnvironment::operator==(SEEnvironment const& rhs) const

@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
+#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 
 #include <random>
 
@@ -56,6 +56,8 @@ public:
   virtual double GetSurfaceAreaFraction() const;
 
   virtual void ToString(std::ostream& str) const;
+
+  virtual bool IsValid() const;
 
 protected:
   SEScalarPower* m_Power;

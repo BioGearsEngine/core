@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
+#include <biogears/cdm/system/SESystem.h>
 
 namespace biogears {
 class SESubstance;
@@ -45,7 +45,6 @@ public:
   size_t hash_code() const override { return TypeHash(); }
 
   void Clear() override;
-
 
   bool Load(const char* environmentFile);
   bool Load(const std::string& environmentFile);
@@ -117,6 +116,8 @@ public:
   bool HasSkinHeatLoss() const;
   SEScalarPower& GetSkinHeatLoss();
   double GetSkinHeatLoss(const PowerUnit& unit) const;
+
+  bool IsValid() const;
 
 protected:
   std::string m_Name;

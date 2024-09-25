@@ -10,9 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
-
 #include "io/cdm/Environment.h"
-
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
@@ -72,7 +70,7 @@ void SEEnvironmentalConditions::Clear()
   m_cAmbientAerosols.clear();
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentalConditions::IsValid()
+bool SEEnvironmentalConditions::IsValid() const
 {
   return (m_SurroundingType != SESurroundingType::Invalid)
     && (m_AmbientTemperature != nullptr

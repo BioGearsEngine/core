@@ -57,6 +57,8 @@ public:
 
   virtual void ToString(std::ostream& str) const;
 
+  virtual bool IsValid() const;
+
 protected:
   SEScalarPower* m_Power;
   SEScalarArea* m_SurfaceArea;

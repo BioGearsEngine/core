@@ -323,6 +323,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
       std::istringstream is = std::istringstream(std::string(&_content_buffer.front(), content_size));
       ::xml_schema::properties properties;
       properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
+      properties.no_namespace_schema_location();
       scenario = CDM::Scenario(is, 0, properties);
     }
    

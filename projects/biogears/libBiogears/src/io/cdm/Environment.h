@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License.
   }
 
 #define CDM_OPTIONAL_ENVIRONMENT_MARSHALL_HELPER(in, out, func) \
-  if (in.m_##func) {                                            \
+  if (in.m_##func && in.m_##func->IsValid()) {                  \
     io::Environment::Marshall(*in.m_##func, out.func());        \
   }
 
@@ -41,11 +41,11 @@ specific language governing permissions and limitations under the License.
 #define SE_OPTIONAL_ENVIRONMENT_ENUM_MARSHALL_HELPER(in, out, func) \
   io::Environment::Marshall(in.m_##func, out.func());
 
-#define CDM_ENVIRONMENT_COPY(type, in, out)    \
-  {                                            \
-    CDM::##type##Data middle;                  \
-    io::Environment::Marshall(in, middle);     \
-    io::Environment::UnMarshall(middle, out);  \
+#define CDM_ENVIRONMENT_COPY(type, in, out)   \
+  {                                           \
+    CDM::##type##Data middle;                 \
+    io::Environment::Marshall(in, middle);    \
+    io::Environment::UnMarshall(middle, out); \
   }
 
 namespace biogears {
@@ -110,9 +110,9 @@ namespace io {
   template <typename SE, typename XSD>
   void Environment::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
-    auto item = std::make_unique<XSD>();
-    io::Environment::Marshall(in, *item);
-    option_out.set(std::move(item));
+      auto item = std::make_unique<XSD>();
+      io::Environment::Marshall(in, *item);
+      option_out.set(std::move(item));
   }
 } // Namespace IO
 

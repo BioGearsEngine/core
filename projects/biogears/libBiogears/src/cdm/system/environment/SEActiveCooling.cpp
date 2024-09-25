@@ -11,8 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/SEActiveCooling.h>
 
-#include "io/cdm/Environment.h"
-
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
@@ -128,6 +126,13 @@ void SEActiveCooling::ToString(std::ostream& str) const
   str << "\n\tSurfaceAreaFraction :";
   HasSurfaceAreaFraction() ? str << *m_SurfaceAreaFraction : str << "NaN";
   str << std::flush;
+}
+//-----------------------------------------------------------------------------
+bool SEActiveCooling::IsValid() const
+{
+  return m_Power
+    || m_SurfaceArea
+    || m_SurfaceAreaFraction;
 }
 //-----------------------------------------------------------------------------
 bool SEActiveCooling::operator==(SEActiveCooling const& rhs) const

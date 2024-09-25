@@ -91,8 +91,8 @@ void print_help(int rc)
   std::cout << "\n         patient                    : Equivilant to bg-cli CONFIG config/ValidationPatient.config";
   std::cout << "\n         drug                       : Equivilant to bg-cli CONFIG config/ValidationDrug.config";
   std::cout << "\n         system                     : Equivilant to bg-cli CONFIG config/ValidationSystem.config";
+  std::cout << "\n         scenario                  : Equivilant to bg-cli CONFIG config/VerificationScenarios.config";
   std::cout << "\n         all                        : Equivilant to bg-cli VALIDATE patient drug system VERIFY";
-  std::cout << "\nVerify                              : Equivilant to bg-cli CONFIG config/VerificatioNScenarios.config";
   std::cout << "\nTest                                : Runs a series of predetermined unit test and generates ar report";
   std::cout << "\n         cdm                        : Equivilant to bg-cli CONFIG config/CDMUnitTest.config";
   std::cout << "\n         bge                        : Equivilant to bg-cli CONFIG config/BGEUnitTest.config";
@@ -121,9 +121,7 @@ bool genRuntime(std::string pathName)
 //  This function parses the multword value list of a GENERATE
 //  keyword and proeprly queues the correct operations needed to process
 //  the command
-void parse_generate_arguments
-
-  (biogears::Arguments::MultiwordValue&& args)
+void parse_generate_arguments  (biogears::Arguments::MultiwordValue&& args)
 {
 
   auto is_keyword = [](const std::string& v) { return v == "data" || v == "population" || v == "scenarios"
@@ -401,7 +399,7 @@ int main(int argc, char** argv)
         g_run_drug_validation = true;
       } else if (test == "system") {
         g_run_system_validation = true;
-      } else if (test == "verify") {
+      } else if (test == "ver") {
         g_run_verification_routine = true;
       } else if (test == "all") {
         g_run_patient_validation = g_run_drug_validation = g_run_system_validation = g_run_verification_routine = true;

@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include "biogears/cdm/properties/SEScalarFraction.h"
-#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
+#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 
 namespace biogears {
 class SEScalar;
@@ -54,6 +54,8 @@ public:
   virtual void SetState(SEOnOff onOff);
 
   virtual void ToString(std::ostream& str) const;
+
+  virtual bool IsValid() const;
 
 protected:
   SEScalarTemperature* m_Temperature;

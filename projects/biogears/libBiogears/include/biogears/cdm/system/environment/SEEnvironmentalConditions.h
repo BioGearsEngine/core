@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
 
-
 #include <random>
 
 namespace biogears {
@@ -57,7 +56,7 @@ public:
   virtual ~SEEnvironmentalConditions();
 
   void Clear();
-  bool IsValid();
+  bool IsValid() const;
 
   bool operator==(SEEnvironmentalConditions const& rhs) const;
   bool operator!=(SEEnvironmentalConditions const& rhs) const;
