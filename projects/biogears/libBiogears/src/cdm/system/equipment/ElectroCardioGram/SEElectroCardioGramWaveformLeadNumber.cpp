@@ -10,7 +10,7 @@ SEElectroCardioGramWaveformLeadNumber::SEElectroCardioGramWaveformLeadNumber(Log
   , m_value(1)
 {
 }
-SEElectroCardioGramWaveformLeadNumber::SEElectroCardioGramWaveformLeadNumber(Logger*, int lead)
+SEElectroCardioGramWaveformLeadNumber::SEElectroCardioGramWaveformLeadNumber(int lead, Logger*)
   : m_value(1)
 {
   SetValue(lead);

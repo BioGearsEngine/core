@@ -27,16 +27,16 @@ extern template class map<const biogears::SEElectricalCircuitNode*, size_t>;
 #pragma warning(default:4661)
 
 
-#define ELECTRICAL_CIRCUIT_TYPES CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData
+#define ELECTRICAL_CIRCUIT_TYPES SEElectricalCircuitNode, SEElectricalCircuitPath
 #define ELECTRICAL_LEDGER_TYPES SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit
 
 namespace biogears {
 class SECircuitManager;
 
 #pragma warning(disable: 4661)
-extern template class SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
+extern template class SECircuit<SEElectricalCircuitNode, SEElectricalCircuitPath>;
 
-class BIOGEARS_API SEElectricalCircuit : public SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData> {
+class BIOGEARS_API SEElectricalCircuit : public SECircuit<SEElectricalCircuitNode, SEElectricalCircuitPath> {
   friend class SECircuitManager;
 
 protected:

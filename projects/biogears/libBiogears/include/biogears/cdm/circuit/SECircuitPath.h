@@ -48,7 +48,7 @@ namespace io {
 #pragma warning(disable : 4661)
 template <CIRCUIT_PATH_TEMPLATE>
 class SECircuitPath : public Loggable {
-  template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
+  template <typename NodeType, typename PathType>
   friend class SECircuit;
   friend io::Circuit;
 

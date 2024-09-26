@@ -29,7 +29,7 @@ extern template class map<const biogears::SEFluidCircuitNode*, vector<biogears::
 extern template class map<const biogears::SEFluidCircuitNode*, size_t>;
 }
 #pragma warning(default : 4661)
-#define FLUID_CIRCUIT_TYPES CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData
+#define FLUID_CIRCUIT_TYPES SEFluidCircuitNode, SEFluidCircuitPath
 
 #define FLUID_LEDGER_TYPES SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit
 
@@ -39,9 +39,9 @@ namespace io {
   class Circuit;
 }
 #pragma warning(disable : 4661)
-extern template class SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
+extern template class SECircuit<SEFluidCircuitNode, SEFluidCircuitPath>;
 
-class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData> {
+class BIOGEARS_API SEFluidCircuit : public SECircuit<SEFluidCircuitNode, SEFluidCircuitPath> {
   friend class SECircuitManager;
   friend io::Circuit;
 

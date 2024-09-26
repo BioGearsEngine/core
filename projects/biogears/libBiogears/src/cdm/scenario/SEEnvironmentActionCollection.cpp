@@ -56,7 +56,7 @@ bool SEEnvironmentActionCollection::ProcessAction(const SEEnvironmentAction& act
       m_ThermalApplication = new SEThermalApplication();
     }
     auto changeData = dynamic_cast<CDM::ThermalApplicationData*>(actionData.get());
-    io::EnvironmentActions::UnMarshall(*changeData, *m_Change);
+    io::EnvironmentActions::UnMarshall(*changeData, *m_ThermalApplication);
     if (!m_ThermalApplication->IsActive()) {
       RemoveThermalApplication();
       return true;

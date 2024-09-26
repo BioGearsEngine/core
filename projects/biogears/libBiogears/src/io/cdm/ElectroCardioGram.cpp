@@ -58,7 +58,7 @@ namespace io {
     out.Clear();
     io::Physiology::UnMarshall(in.Rhythm(), out.m_Rhythm);
 
-    out.m_LeadNumber = in.Lead();
+    out.m_LeadNumber = SEElectroCardioGramWaveformLeadNumber(in.Lead());
     io::Property::UnMarshall(in.Data(), out.GetData());
     if (in.TimeStep().present())
       io::Property::UnMarshall(in.TimeStep(), out.GetTimeStep());
@@ -74,7 +74,7 @@ namespace io {
 
     out.Lead(std::make_unique<CDM::ElectroCardioGramWaveformLeadNumberData>());
     if (in.HasLeadNumber())
-      out.Lead(in.m_LeadNumber);
+      out.Lead(in.m_LeadNumber.m_value);
 
     out.Data(std::make_unique<CDM::FunctionElectricPotentialVsTimeData>());
     if (in.HasData()) {
@@ -100,7 +100,7 @@ namespace io {
     for (auto lead : in.Leads()) {
       auto potential = std::make_unique<SEScalarElectricPotential>();
       io::Property::UnMarshall(lead.ExlectricalPotential(), *potential);
-      out.m_Leads[lead.Lead()] = potential.release();
+      out.m_Leads[static_cast<int>(lead.Lead())] = potential.release();
     }
   }
   void ElectroCardioGram::Marshall(const SEElectroCardioGramInterpolator& in, CDM::ElectroCardioGramInterpolatorData& out)
@@ -115,7 +115,7 @@ namespace io {
 
     for (auto lead : in.m_Leads) {
       auto potential = CDM::ElectroCardioGramLeadPotentialData();
-      potential.Lead(lead.first);
+      potential.Lead(lead.first.m_value);
       auto ecp = CDM::ScalarElectricPotentialData();
       io::Property::Marshall(*lead.second, ecp);
       potential.ExlectricalPotential(ecp);

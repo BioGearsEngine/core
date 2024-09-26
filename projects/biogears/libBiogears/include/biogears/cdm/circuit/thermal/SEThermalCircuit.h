@@ -32,16 +32,16 @@ extern template class map<const biogears::SEThermalCircuitNode*, size_t>;
 #pragma warning(default : 4661)
 
 
-#define THERMAL_CIRCUIT_TYPES CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData
+#define THERMAL_CIRCUIT_TYPES  SEThermalCircuitNode, SEThermalCircuitPath
 #define THERMAL_LEDGER_TYPES SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit
 
 namespace biogears {
 class SECircuitManager;
 #pragma warning(disable : 4661)
 
-extern template class SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>;
+extern template class SECircuit<SEThermalCircuitNode, SEThermalCircuitPath>;
 
-class BIOGEARS_API SEThermalCircuit : public SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData> {
+class BIOGEARS_API SEThermalCircuit : public SECircuit<SEThermalCircuitNode, SEThermalCircuitPath> {
   friend class SECircuitManager;
 
 protected:

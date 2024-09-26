@@ -29,7 +29,7 @@ class BIOGEARS_API SEElectroCardioGramWaveformLeadNumber : public Loggable {
 
 public:
   SEElectroCardioGramWaveformLeadNumber(Logger* logger);
-  SEElectroCardioGramWaveformLeadNumber(Logger* logger, int value);
+  SEElectroCardioGramWaveformLeadNumber(int value, Logger* logger = nullptr);
   ~SEElectroCardioGramWaveformLeadNumber() override;
 
   operator int&();

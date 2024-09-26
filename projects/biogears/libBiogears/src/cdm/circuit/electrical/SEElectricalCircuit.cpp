@@ -24,16 +24,16 @@ template class map<const biogears::SEElectricalCircuitNode*, size_t>;
 }
 namespace biogears {
 
-template class SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
+template class SECircuit<SEElectricalCircuitNode, SEElectricalCircuitPath>;
 
 SEElectricalCircuit::SEElectricalCircuit(const std::string& name, SECircuitManager& mgr)
-  : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger())
+  : SECircuit<SEElectricalCircuitNode,  SEElectricalCircuitPath>(name, mgr.GetLogger())
   , m_Mgr(mgr)
 {
 }
 //-------------------------------------------------------------------------------
 SEElectricalCircuit::SEElectricalCircuit(const char* name, SECircuitManager& mgr)
-  : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger())
+  : SECircuit<SEElectricalCircuitNode,  SEElectricalCircuitPath>(name, mgr.GetLogger())
   , m_Mgr(mgr)
 {
 }

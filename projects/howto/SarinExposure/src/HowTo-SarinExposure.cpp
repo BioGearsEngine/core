@@ -66,12 +66,12 @@ int HowToSarinExposure()
   double FractionRbcAcheInhibited = 0.0; //The fraction of red blood cell acetylcholinesterase that has been inhibited by Sarin binding.  This value will be used to trigger events.
 
   //System states
-  CDM::enumOnOff::value SarinActive; //Track whether the patient is currently being exposed to Sarin
+  SEOnOff SarinActive; //Track whether the patient is currently being exposed to Sarin
   std::vector<std::string> eventList = { "Rhinorrhea", "Nausea", "Gastrointestinal Sounds" }; //The list of patient states you want to monitor--note that BioGears track many events already; this is a way to track other states you might want to add
-  std::map<std::string, std::pair<double, CDM::enumOnOff::value>> eventMap; //Each state has a threshold level at which it is triggered and an associated on/off switch
-  eventMap["Rhinorrhea"] = std::make_pair(0.1, CDM::enumOnOff::Off); //Put the states in the map with the threshold inhibition at which they start and make them all inactive initially
-  eventMap["Nausea"] = std::make_pair(0.25, CDM::enumOnOff::Off);
-  eventMap["Gastrointestinal Sounds"] = std::make_pair(0.5, CDM::enumOnOff::Off);
+  std::map<std::string, std::pair<double, SEOnOff>> eventMap; //Each state has a threshold level at which it is triggered and an associated on/off switch
+  eventMap["Rhinorrhea"] = std::make_pair(0.1, SEOnOff::Off); //Put the states in the map with the threshold inhibition at which they start and make them all inactive initially
+  eventMap["Nausea"] = std::make_pair(0.25, SEOnOff::Off);
+  eventMap["Gastrointestinal Sounds"] = std::make_pair(0.5, SEOnOff::Off);
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
   
@@ -104,7 +104,7 @@ int HowToSarinExposure()
   SEEnvironmentChange env(bg->GetSubstanceManager());
   SEEnvironmentalConditions& conditions = env.GetConditions();
   conditions.GetAmbientAerosol(*Sarin).GetConcentration().SetValue(SarinAerosol_mg_Per_m3, MassPerVolumeUnit::mg_Per_m3);
-  SarinActive = CDM::enumOnOff::On; //Sarin exposure is active
+  SarinActive = SEOnOff::On; //Sarin exposure is active
   bg->ProcessAction(env);
 
   // We maintain this loop so that we can periodically check events while advancing data tracker
@@ -114,11 +114,11 @@ int HowToSarinExposure()
       break;
 
     //Check if we have reached the end of the exposure time to Sarin.  If so, remove it from the environment and deactivate it
-    if ((bg->GetSimulationTime(TimeUnit::min) > exposureTime + 1) && (SarinActive == CDM::enumOnOff::On)) {
+    if ((bg->GetSimulationTime(TimeUnit::min) > exposureTime + 1) && (SarinActive == SEOnOff::On)) {
       conditions.RemoveAmbientAerosol(*Sarin);
       bg->ProcessAction(env);
       bg->GetLogger()->Info(std::string{ Sarin->GetName() } +" removed from environment");
-      SarinActive = CDM::enumOnOff::Off;
+      SarinActive = SEOnOff::Off;
     }
 
     //Get the fraction of inactive red blood cell acetylcholinesterase by converting active M concentration to nM, dividing by baseline, and subtracting from 1
@@ -130,15 +130,15 @@ int HowToSarinExposure()
     //Check each event in the event list specified above.  An event is active if the fraction of red blood cell acetylcholinesterase inhibited
     //is greater than the threshold provided for the event in the event map
     for (auto e : eventList) {
-      if ((FractionRbcAcheInhibited > eventMap[e].first) && (eventMap[e].second == CDM::enumOnOff::Off)) //Only display state when it is triggered, not every time point when the event is active
+      if ((FractionRbcAcheInhibited > eventMap[e].first) && (eventMap[e].second == SEOnOff::Off)) //Only display state when it is triggered, not every time point when the event is active
       {
         bg->GetLogger()->Info("Patient is exhibiting " + e);
-        eventMap[e].second = CDM::enumOnOff::On;
+        eventMap[e].second = SEOnOff::On;
       }
-      if ((FractionRbcAcheInhibited < eventMap[e].first) && (eventMap[e].second == CDM::enumOnOff::On)) //Remove state if levels drop below threshold.  Probably won't happen for Sarin because the red blood cell acetylcholinesterase is inhibited for a very long time (days to weeks)
+      if ((FractionRbcAcheInhibited < eventMap[e].first) && (eventMap[e].second == SEOnOff::On)) //Remove state if levels drop below threshold.  Probably won't happen for Sarin because the red blood cell acetylcholinesterase is inhibited for a very long time (days to weeks)
       {
         bg->GetLogger()->Info( "Patient no longer exhibiting " + e);
-        eventMap[e].second = CDM::enumOnOff::Off;
+        eventMap[e].second = SEOnOff::Off;
       }
     }
 

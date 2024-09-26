@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramWaveformLeadNumber.h>
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
@@ -37,8 +38,8 @@ public:
   bool operator!=(SEElectroCardioGramInterpolationWaveform const&) const;
 
   virtual bool HasLeadNumber() const;
-  virtual CDM::ElectroCardioGramWaveformLeadNumberData GetLeadNumber() const;
-  virtual void SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumberData n);
+  virtual SEElectroCardioGramWaveformLeadNumber GetLeadNumber() const;
+  virtual void SetLeadNumber(SEElectroCardioGramWaveformLeadNumber n);
   virtual void InvalidateLeadNumber();
 
   virtual SEHeartRhythm GetRhythm() const;
@@ -57,7 +58,7 @@ public:
   virtual std::vector<unsigned int>& GetActiveIndicies() { return m_ActiveIndicies; }
 
 protected:
-  CDM::ElectroCardioGramWaveformLeadNumberData m_LeadNumber;
+  SEElectroCardioGramWaveformLeadNumber m_LeadNumber;
   SEHeartRhythm m_Rhythm;
   SEScalarTime* m_TimeStep;
   SEFunctionElectricPotentialVsTime* m_Data;

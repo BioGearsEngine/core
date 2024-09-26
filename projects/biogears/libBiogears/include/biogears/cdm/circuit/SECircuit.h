@@ -15,8 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
 
-#define CIRCUIT_TEMPLATE typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType
-#define CIRCUIT_TYPES CircuitBindType, NodeType, CircuitNodeBindType, PathType, CircuitPathBindType
+#define CIRCUIT_TEMPLATE  typename NodeType,  typename PathType
+#define CIRCUIT_TYPES  NodeType,  PathType
 
 
 namespace biogears {

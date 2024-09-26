@@ -65,9 +65,9 @@ namespace io {
     template <typename SE, typename XSD>
     static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
     // class SECircuit
-    template <CIRCUIT_TEMPLATE>
+    template <typename CircuitBindType, typename NodeType, typename PathType>
     static void UnMarshall(const CircuitBindType& in, SECircuit<CIRCUIT_TYPES>& out, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths);
-    template <CIRCUIT_TEMPLATE>
+    template <typename CircuitBindType, typename NodeType, typename PathType>
     static void Marshall(const SECircuit<CIRCUIT_TYPES>& in, CircuitBindType& out);
     // class SECircuitNode
     template <CIRCUIT_NODE_TEMPLATE>
@@ -130,7 +130,7 @@ namespace io {
     option_out.set(*item);
   }
   // class SECircuit
-  template <CIRCUIT_TEMPLATE>
+  template <typename CircuitBindType, typename NodeType, typename PathType>
   void Circuit::UnMarshall(const CircuitBindType& in, SECircuit<CIRCUIT_TYPES>& out, const std::map<std::string, NodeType*>& nodes, const std::map<std::string, PathType*>& paths)
   {
     out.Clear();
@@ -159,7 +159,7 @@ namespace io {
     out.StateChange();
   }
   //----------------------------------------------------------------------------------
-  template <CIRCUIT_TEMPLATE>
+  template <typename CircuitBindType, typename NodeType, typename PathType >
   void Circuit::Marshall(const SECircuit<CIRCUIT_TYPES>& in, CircuitBindType& out)
   {
     out.Name(in.m_Name);

@@ -36,7 +36,7 @@ namespace io {
 #pragma warning(disable : 4661)
 template <typename PotentialScalar, typename QuantityScalar>
 class SECircuitNode : public Loggable {
-  template <typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType>
+  template <typename NodeType, typename PathType>
   friend class SECircuit;
   friend class io::Circuit;
 
