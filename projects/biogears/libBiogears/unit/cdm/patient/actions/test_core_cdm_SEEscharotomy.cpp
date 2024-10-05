@@ -22,7 +22,7 @@
 
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/patient/actions/SEEscharotomy.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #ifdef DISABLE_BIOGEARS_SEEscharotomy_TEST
 #define TEST_FIXTURE_NAME DISABLED_SEEscharotomy_Fixture

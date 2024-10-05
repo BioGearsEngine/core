@@ -49,12 +49,12 @@ namespace io {
   {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, pH)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, PartialPressureOxygen)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, PartialPressureCarbonDioxide)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, BaseExcess)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, StandardBicarbonate)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, OxygenSaturation)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, pH)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, PartialPressureOxygen)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, PartialPressureCarbonDioxide)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, BaseExcess)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, StandardBicarbonate)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, OxygenSaturation)
   }
   //----------------------------------------------------------------------------------
   // class SEPulmonaryFunctionTest
@@ -80,22 +80,22 @@ namespace io {
   {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExpiratoryReserveVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ForcedVitalCapacity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ForcedExpiratoryVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ForcedExpiratoryFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FunctionalResidualCapacity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExpiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ForcedVitalCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ForcedExpiratoryVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ForcedExpiratoryFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, FunctionalResidualCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InspiratoryCapacity)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryReserveVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MaximumVoluntaryVentilation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PeakExpiratoryFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ResidualVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SlowVitalCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InspiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MaximumVoluntaryVentilation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PeakExpiratoryFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ResidualVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SlowVitalCapacity)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalLungCapacity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VitalCapacity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LungVolumePlot)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalLungCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VitalCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LungVolumePlot)
   }
   //----------------------------------------------------------------------------------
   // class SECompleteBloodCount
@@ -118,16 +118,16 @@ namespace io {
   {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Hematocrit)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Hemoglobin)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LymphocyteCellCount)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PlateletCount)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanCorpuscularHemoglobin)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanCorpuscularHemoglobinConcentration)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanCorpuscularVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, NeutrophilCellCount)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RedBloodCellCount)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WhiteBloodCellCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Hematocrit)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Hemoglobin)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LymphocyteCellCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PlateletCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanCorpuscularHemoglobin)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanCorpuscularHemoglobinConcentration)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanCorpuscularVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, NeutrophilCellCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RedBloodCellCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, WhiteBloodCellCount)
   }
   //----------------------------------------------------------------------------------
   // class SEComprehensiveMetabolicPanel
@@ -153,22 +153,22 @@ namespace io {
   {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Albumin)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ALP)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ALT)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AST)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BUN)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Albumin)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ALP)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ALT)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AST)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BUN)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Calcium)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Chloride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CO2)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Creatinine)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Glucose)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Calcium)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Chloride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CO2)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Creatinine)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Glucose)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Potassium)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Sodium)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalBilirubin)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalProtein)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Potassium)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Sodium)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalBilirubin)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalProtein)
   }
   //----------------------------------------------------------------------------------
   // class SEUrinalysis
@@ -197,21 +197,21 @@ namespace io {
   {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Color)
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Appearance)
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Glucose)
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Ketone)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Bilirubin)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Color)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Appearance)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Glucose)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Ketone)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Bilirubin)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SpecificGravity)
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Blood)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, pH)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SpecificGravity)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Blood)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, pH)
 
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Protein)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Urobilinogen)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Protein)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Urobilinogen)
 
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Nitrite)
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, LeukocyteEsterase)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Nitrite)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, LeukocyteEsterase)
 
     if (in.HasMicroscopicResult())
       Marshall(*in.m_Microscopic, out.Microscopic());
@@ -240,18 +240,18 @@ namespace io {
   {
     Marshall(static_cast<const SEPatientAssessment&>(in), static_cast<CDM::PatientAssessmentData&>(out));
 
-    SE_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, ObservationType)
+    SE_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, ObservationType)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RedBloodCells)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WhiteBloodCells)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RedBloodCells)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, WhiteBloodCells)
 
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, EpithelialCells)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Casts)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, EpithelialCells)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Casts)
 
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Crystals)
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Bacteria)
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Trichomonads)
-    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_MARSHALL_HELPER(in, out, Yeast)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Crystals)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Bacteria)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Trichomonads)
+    SE_OPTIONAL_PATIENT_ASSESSMENT_ENUM_PTR_MARSHALL_HELPER(in, out, Yeast)
   }
   //----------------------------------------------------------------------------------
   // class SEProthrombinTime.h
@@ -264,7 +264,7 @@ namespace io {
   void PatientAssessments::Marshall(const SEProthrombinTime& in, CDM::ProthrombinTimeData& out)
   {
     io::PatientAssessments::Marshall((SEPatientAssessment const&)in, out);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InternationalNormalizedRatio)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InternationalNormalizedRatio)
   }
   //----------------------------------------------------------------------------------
   // class SEPsychomotorVigilanceTask.h
@@ -277,8 +277,8 @@ namespace io {
   void PatientAssessments::Marshall(const SEPsychomotorVigilanceTask& in, CDM::PsychomotorVigilanceTaskData& out)
   {
     io::PatientAssessments::Marshall((SEPatientAssessment const&)in, out);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AttentionLapses)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ReactionTime)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AttentionLapses)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ReactionTime)
   }
   //----------------------------------------------------------------------------------
   // class SESequentialOrganFailureAssessment.h
@@ -295,12 +295,12 @@ namespace io {
   void PatientAssessments::Marshall(const SESequentialOrganFailureAssessment& in, CDM::SequentialOrganFailureAssessmentData& out)
   {
     io::PatientAssessments::Marshall((SEPatientAssessment const&)in, out);
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, RespirationSOFA)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, CoagulationSOFA)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, LiverSOFA)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, CardiovascularSOFA)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, CentralNervousSOFA)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, RenalSOFA)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationSOFA)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, CoagulationSOFA)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, LiverSOFA)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, CardiovascularSOFA)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, CentralNervousSOFA)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, RenalSOFA)
   }
 
   //-----------------------------------------------------------------------------------

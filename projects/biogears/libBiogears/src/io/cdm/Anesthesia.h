@@ -20,22 +20,22 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Anesthesia.hxx>
 
-#define CDM_ANESTHESIA_MARSHALL_HELPER(in, out, func)                                \
+#define CDM_ANESTHESIA_PTR_MARSHALL_HELPER(in, out, func)                                \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Anesthesia::Marshall(*in.m_##func, out.func());                              \
   }
 
-#define CDM_OPTIONAL_ANESTHESIA_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_ANESTHESIA_PTR_MARSHALL_HELPER(in, out, func) \
   io::Anesthesia::Marshall(*in.m_##func, out.func());
 
-#define SE_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, func)                            \
+#define SE_ANESTHESIA_ENUM_PTR_MARSHALL_HELPER(in, out, func)                            \
   if (in.Has##func()) {                                                              \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Anesthesia::Marshall(in.m_##func, out.func());                               \
   }
 
-#define SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, func) \
+#define SE_OPTIONAL_ANESTHESIA_ENUM_PTR_MARSHALL_HELPER(in, out, func) \
   io::Anesthesia::Marshall(in.m_##func, out.func());
 
 namespace biogears {

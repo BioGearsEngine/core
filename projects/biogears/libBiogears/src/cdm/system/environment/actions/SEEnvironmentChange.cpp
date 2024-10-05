@@ -161,7 +161,7 @@ void SEEnvironmentChange::ToString(std::ostream& str) const
     }
     if (m_Conditions->HasAmbientAerosol()) {
       for (SESubstanceConcentration* sc : m_Conditions->GetAmbientAerosols()) {
-        str << "\n\tSubstance : " << sc->GetSubstance().GetName() << " Concentration " << sc->GetConcentration();
+        str << "\n\tSubstance : " << sc->GetSubstance().Name << " Concentration " << sc->GetConcentration();
       }
     }
   }

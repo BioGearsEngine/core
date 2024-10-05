@@ -7,7 +7,7 @@
 #include "Property.h"
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/cdm/scenario/SEActionManager.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
@@ -134,7 +134,7 @@ namespace io {
   void Actions::Marshall(const SEAdvanceTime& in, CDM::AdvanceTimeData& out)
   {
     Marshall(static_cast<const SEAction&>(in), static_cast<CDM::ActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Time)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Time)
   }
   //-----------------------------------------------------------------------------
   // class SESerializationType;
@@ -187,7 +187,7 @@ namespace io {
     } else {
       out.Filename("");
     }
-    SE_ACTIONS_ENUM_MARSHALL_HELPER(in, out, Type)
+    SE_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, Type)
   }
   //------------------------------------------------------------------------------
   // class SERandomSeed

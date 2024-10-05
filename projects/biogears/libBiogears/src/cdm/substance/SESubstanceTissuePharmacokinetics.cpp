@@ -10,7 +10,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
 
 #include "io/cdm/Substance.h"
@@ -19,27 +18,35 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
+SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(SESubstanceTissuePharmacokinetics const& obj)
+  : Loggable(obj.GetLogger())
+  , m_Name(obj.GetName())
+  , m_PartitionCoefficient(std::make_unique<SEScalar>(*obj.m_PartitionCoefficient).release())
+{
+}
 SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger)
   : Loggable(logger)
   , m_Name(name)
+  , m_PartitionCoefficient(std::make_unique<SEScalar>().release())
 {
-  m_PartitionCoefficient = nullptr;
 }
 //-----------------------------------------------------------------------------
+#pragma optimize("", off)
 SESubstanceTissuePharmacokinetics::~SESubstanceTissuePharmacokinetics()
 {
   Clear();
+  SAFE_DELETE(m_PartitionCoefficient)
 }
 //-----------------------------------------------------------------------------
 void SESubstanceTissuePharmacokinetics::Clear()
 {
-  ;
-  SAFE_DELETE(m_PartitionCoefficient)
+  m_PartitionCoefficient->Clear();
 }
+#pragma optimize("", on)
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceTissuePharmacokinetics::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceTissuePharmacokinetics::GetScalar(const std::string& name)
@@ -80,14 +87,14 @@ double SESubstanceTissuePharmacokinetics::GetPartitionCoefficient() const
 }
 //-----------------------------------------------------------------------------
 //-------------------------------------------------------------------------------
-bool SESubstanceTissuePharmacokinetics::operator==( const SESubstanceTissuePharmacokinetics& rhs) const
+bool SESubstanceTissuePharmacokinetics::operator==(const SESubstanceTissuePharmacokinetics& rhs) const
 {
   bool equivilant = m_Name == rhs.m_Name;
   equivilant &= (m_PartitionCoefficient && rhs.m_PartitionCoefficient) ? m_PartitionCoefficient->operator==(*rhs.m_PartitionCoefficient) : m_PartitionCoefficient == rhs.m_PartitionCoefficient;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceTissuePharmacokinetics::operator!=( const SESubstanceTissuePharmacokinetics& rhs) const
+bool SESubstanceTissuePharmacokinetics::operator!=(const SESubstanceTissuePharmacokinetics& rhs) const
 {
   return !(*this == rhs);
 }

@@ -308,7 +308,7 @@ bool PhysiologyEngineDynamicStabilization::Merge()
     m_MergedConditions.m_PropertyConvergence.push_back(pConv);
   }
 
-  DELETE_MAP_SECOND(cMap); // Clean up our Map
+  DELETE_MAP_OF_POINTERS(cMap); // Clean up our Map
   m_MergedConditions.GetConvergenceTime().SetValue(maxConv_s, TimeUnit::s);
   m_ss << "Merged Convergence Time : " << m_MergedConditions.GetConvergenceTime();
   Info(m_ss);

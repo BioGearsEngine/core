@@ -28,8 +28,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 
-
-
 namespace std {
 template class map<biogears::SESubstance*, biogears::SizeIndependentDepositionEfficencyCoefficient*>;
 }
@@ -897,23 +895,23 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   // Tissue
   molarity1.SetValue(4.8, AmountPerVolumeUnit::mmol_Per_L);
   SetSubstanceMolarity(*m_urea, tissue, molarity1);
-  //Lymph
+  // Lymph
   lymph->GetSubstanceQuantity(*m_urea)->GetMolarity().Set(molarity1);
   lymph->GetSubstanceQuantity(*m_urea)->Balance(BalanceLiquidBy::Molarity);
 
-  //BLOOD COMPONENTS//
-  //Initialize Blood Type
-  //RBC
+  // BLOOD COMPONENTS//
+  // Initialize Blood Type
+  // RBC
   double rbc_ct_per_uL = 5280000.0;
   double antigens_per_rbc = 2000000.0;
-  double rbc_concentration_g_Per_dL = 14.256; //Compounds spreadsheet
+  double rbc_concentration_g_Per_dL = 14.256; // Compounds spreadsheet
   concentration.SetValue(rbc_concentration_g_Per_dL, MassPerVolumeUnit::g_Per_dL);
   SetSubstanceConcentration(*m_RBC, vascular, concentration);
 
   SEScalarMassPerVolume A_concentration;
   SEScalarMassPerVolume B_concentration;
   if (m_data.GetPatient().GetBloodType() == SEBloodType::A) {
-    A_concentration.SetValue(23.0, MassPerVolumeUnit::mg_Per_L); //Compounds spreadsheet
+    A_concentration.SetValue(23.0, MassPerVolumeUnit::mg_Per_L); // Compounds spreadsheet
     B_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
   } else if (m_data.GetPatient().GetBloodType() == SEBloodType::B) {
     A_concentration.SetValue(0.0, MassPerVolumeUnit::mg_Per_L);
@@ -928,10 +926,10 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
 
   SetSubstanceConcentration(*m_AntigenA, vascular, A_concentration);
   SetSubstanceConcentration(*m_AntigenB, vascular, B_concentration);
-  //WBC
+  // WBC
   molarity1.SetValue(7000.0, AmountPerVolumeUnit::ct_Per_uL);
   SetSubstanceMolarity(*m_WBC, vascular, molarity1);
-  //Platelets
+  // Platelets
   molarity1.SetValue(300000.0, AmountPerVolumeUnit::ct_Per_uL);
   SetSubstanceMolarity(*m_platelets, vascular, molarity1);
 }
@@ -1234,9 +1232,36 @@ void BioGearsSubstances::AddActiveSubstance(SESubstance& substance)
   }
 }
 //-------------------------------------------------------------------------------
+SESubstance* BioGearsSubstances::AddActiveSubstance(SESubstanceDefinition const& definition)
+{
+  if (IsActive(definition))
+    return GetSubstance(definition.Name); // If its already active, don't do anything
+
+  auto substance = SESubstanceManager::AddActiveSubstance(definition);
+  switch (definition.State) {
+  case SESubstanceState::Gas:
+    m_data.GetCompartments().AddGasCompartmentSubstance(*substance);
+    break;
+  case SESubstanceState::Liquid:
+    m_data.GetCompartments().AddLiquidCompartmentSubstance(*substance);
+    break;
+  default:
+      //TODO: SOlid and Molecular Substances Hopefully no more swollowing legos
+    break;
+  }
+
+  if (definition == *m_CO) // We need to put HbCO in the system if CO is in the system
+  {
+    m_isCOActive = true;
+    AddActiveSubstance(*m_HbCO);
+    return m_CO;
+  }
+  return substance;
+}
+//-------------------------------------------------------------------------------
 bool BioGearsSubstances::IsActive(const SESubstance& sub) const
 {
-  if (&sub == m_CO)
+  if (sub == *m_CO)
     return m_isCOActive;
   return SESubstanceManager::IsActive(sub);
 }

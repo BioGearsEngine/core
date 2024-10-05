@@ -37,9 +37,9 @@ namespace io {
     Marshall(static_cast<const SESubstanceQuantity&>(in), static_cast<CDM::SubstanceQuantityData&>(out));
     // Even if you have children, I am unloading everything, this makes the xml actually usefull...
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PartialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Volume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VolumeFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PartialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Volume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VolumeFraction)
   }
   //-----------------------------------------------------------------------------
   // class SELiquidSubstanceQuantity
@@ -64,16 +64,16 @@ namespace io {
   {
     Marshall(static_cast<const SESubstanceQuantity&>(in), static_cast<CDM::SubstanceQuantityData&>(out));
     // Even if you have children, I am unloading everything, this makes the xml actually usefull...
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Concentration)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Mass)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MassCleared)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MassDeposited)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MassExcreted)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Molarity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Concentration)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Mass)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MassCleared)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MassDeposited)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MassExcreted)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Molarity)
     if (in.m_isO2 || in.m_isCO2 || in.m_isCO) {
-      CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Saturation)
+      CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Saturation)
     }
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PartialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PartialPressure)
   }
 }
 }

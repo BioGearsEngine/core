@@ -20,12 +20,21 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
+SESubstanceAerosolization::SESubstanceAerosolization(SESubstanceAerosolization const& obj)
+  : Loggable(obj.GetLogger())
+  , m_BronchioleModifier(obj.m_BronchioleModifier)
+  , m_InflammationCoefficient(obj.m_InflammationCoefficient)
+  , m_ParticulateSizeDistribution(obj.m_ParticulateSizeDistribution)
+
+{
+}
+
 SESubstanceAerosolization::SESubstanceAerosolization(Logger* logger)
   : Loggable(logger)
+  , m_BronchioleModifier()
+  , m_InflammationCoefficient()
+  , m_ParticulateSizeDistribution()
 {
-  m_BronchioleModifier = nullptr;
-  m_InflammationCoefficient = nullptr;
-  m_ParticulateSizeDistribution = nullptr;
 }
 //-----------------------------------------------------------------------------
 SESubstanceAerosolization::~SESubstanceAerosolization()
@@ -35,9 +44,9 @@ SESubstanceAerosolization::~SESubstanceAerosolization()
 //-----------------------------------------------------------------------------
 void SESubstanceAerosolization::Clear()
 {
-  SAFE_DELETE(m_BronchioleModifier);
-  SAFE_DELETE(m_InflammationCoefficient);
-  SAFE_DELETE(m_ParticulateSizeDistribution);
+  (m_BronchioleModifier.Clear());
+  (m_InflammationCoefficient.Clear());
+  (m_ParticulateSizeDistribution.Clear());
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::IsValid() const
@@ -68,68 +77,58 @@ const SEScalar* SESubstanceAerosolization::GetScalar(const std::string& name)
 //-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::HasBronchioleModifier() const
 {
-  return (m_BronchioleModifier == nullptr) ? false : m_BronchioleModifier->IsValid();
+  return m_BronchioleModifier.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarNeg1To1& SESubstanceAerosolization::GetBronchioleModifier()
 {
-  if (m_BronchioleModifier == nullptr)
-    m_BronchioleModifier = new SEScalarNeg1To1();
-  return *m_BronchioleModifier;
+  return m_BronchioleModifier;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceAerosolization::GetBronchioleModifier() const
 {
-  if (m_BronchioleModifier == nullptr)
-    return SEScalar::dNaN();
-  return m_BronchioleModifier->GetValue();
+  return m_BronchioleModifier.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::HasInflammationCoefficient() const
 {
-  return (m_InflammationCoefficient == nullptr) ? false : m_InflammationCoefficient->IsValid();
+  return m_InflammationCoefficient.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalar0To1& SESubstanceAerosolization::GetInflammationCoefficient()
 {
-  if (m_InflammationCoefficient == nullptr)
-    m_InflammationCoefficient = new SEScalar0To1();
-  return *m_InflammationCoefficient;
+  return m_InflammationCoefficient;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceAerosolization::GetInflammationCoefficient() const
 {
-  if (m_InflammationCoefficient == nullptr)
-    return SEScalar::dNaN();
-  return m_InflammationCoefficient->GetValue();
+  return m_InflammationCoefficient.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceAerosolization::HasParticulateSizeDistribution() const
 {
-  return (m_ParticulateSizeDistribution == nullptr) ? false : m_ParticulateSizeDistribution->IsValid();
+  return m_ParticulateSizeDistribution.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEHistogramFractionVsLength& SESubstanceAerosolization::GetParticulateSizeDistribution()
 {
-  if (m_ParticulateSizeDistribution == nullptr)
-    m_ParticulateSizeDistribution = new SEHistogramFractionVsLength();
-  return *m_ParticulateSizeDistribution;
+  return m_ParticulateSizeDistribution;
 }
 //-----------------------------------------------------------------------------
-const SEHistogramFractionVsLength* SESubstanceAerosolization::GetParticulateSizeDistribution() const
+const SEHistogramFractionVsLength SESubstanceAerosolization::GetParticulateSizeDistribution() const
 {
   return m_ParticulateSizeDistribution;
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceAerosolization::operator==( const SESubstanceAerosolization& rhs) const
+bool SESubstanceAerosolization::operator==(const SESubstanceAerosolization& rhs) const
 {
-  bool equivilant = (m_BronchioleModifier && rhs.m_BronchioleModifier) ? m_BronchioleModifier->operator==(*rhs.m_BronchioleModifier) : m_BronchioleModifier == rhs.m_BronchioleModifier;
-  equivilant &= (m_InflammationCoefficient && rhs.m_InflammationCoefficient) ? m_InflammationCoefficient->operator==(*rhs.m_InflammationCoefficient) : m_InflammationCoefficient == rhs.m_InflammationCoefficient;
-  equivilant &= (m_ParticulateSizeDistribution && rhs.m_ParticulateSizeDistribution) ? m_ParticulateSizeDistribution->operator==(*rhs.m_ParticulateSizeDistribution) : m_ParticulateSizeDistribution == rhs.m_ParticulateSizeDistribution;
+  bool equivilant = m_BronchioleModifier == rhs.m_BronchioleModifier;
+  equivilant &= m_InflammationCoefficient == rhs.m_InflammationCoefficient;
+  equivilant &= m_ParticulateSizeDistribution == rhs.m_ParticulateSizeDistribution;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceAerosolization::operator!=( const SESubstanceAerosolization& rhs) const
+bool SESubstanceAerosolization::operator!=(const SESubstanceAerosolization& rhs) const
 {
   return !(*this == rhs);
 }

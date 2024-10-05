@@ -14,27 +14,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/cdm/enums/SEPhysiologyEnums.h>
 
 namespace biogears {
-class SEScalar;
-class SEScalar0To1;
-class SEScalarMass;
-class MassUnit;
-class SEScalarTime;
-class TimeUnit;
-class SEScalarMassPerVolume;
-class MassPerVolumeUnit;
-class SEScalarHeatCapacitancePerMass;
-class HeatCapacitancePerMassUnit;
-class SEScalarFraction;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarAmountPerVolume;
-class AmountPerVolumeUnit;
-class SEScalarPressure;
-class PressureUnit;
 class SEInflammatoryResponse;
 
 namespace io {
@@ -59,7 +42,6 @@ public:
 
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override; /**< @copydoc DOXY_CDM_GET_SCALAR */
-
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 

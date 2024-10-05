@@ -18,6 +18,7 @@ class BIOGEARS_API SEScalarFraction : public SEScalar {
 
 public:
   SEScalarFraction(double value, bool readOnly = false);
+  SEScalarFraction(SEScalarFraction const& obj);
   SEScalarFraction();
 
   virtual ~SEScalarFraction(); 

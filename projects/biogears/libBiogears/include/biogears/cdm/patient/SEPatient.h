@@ -12,37 +12,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/CommonDataModel.h>
-#include <biogears/cdm/enums/SEPatientEnums.h>
+
 #include <biogears/exports.h>
 
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/enums/SEPatientEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 namespace biogears {
 
 class SEEventHandler;
 class SENutrition;
-class SEScalar;
-class TimeUnit;
-class SEScalarMass;
-class MassUnit;
-class SEScalarLength;
-class LengthUnit;
-class SEScalarArea;
-class AreaUnit;
-class SEScalarPower;
-class PowerUnit;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarMassPerVolume;
-class MassPerVolumeUnit;
-class SEScalarFraction;
-class SEScalarPressure;
-class PressureUnit;
-class SEScalarFrequency;
-class FrequencyUnit;
-class SEScalarNeg1To1;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
 
 namespace io {
   class Patient;
@@ -263,7 +243,7 @@ public:
 
 protected:
   virtual void CalculateWeightByBMI(const double& bmi);
-  virtual void CalculateHeightByBMI(const double & bmi);
+  virtual void CalculateHeightByBMI(const double& bmi);
 
 protected:
   std::stringstream m_ss;

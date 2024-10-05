@@ -346,14 +346,14 @@ void SEPatientActionCollection::Clear()
   RemoveUrinate();
   RemoveOverride();
 
-  DELETE_MAP_SECOND(m_Escharotomies);
-  DELETE_MAP_SECOND(m_Hemorrhages);
-  DELETE_MAP_SECOND(m_PainStimuli);
-  DELETE_MAP_SECOND(m_SubstanceBolus);
-  DELETE_MAP_SECOND(m_SubstanceInfusions);
-  DELETE_MAP_SECOND(m_SubstanceOralDoses);
-  DELETE_MAP_SECOND(m_SubstanceCompoundInfusions);
-  DELETE_MAP_SECOND(m_Tourniquets);
+  DELETE_MAP_OF_POINTERS(m_Escharotomies);
+  DELETE_MAP_OF_POINTERS(m_Hemorrhages);
+  DELETE_MAP_OF_POINTERS(m_PainStimuli);
+  DELETE_MAP_OF_POINTERS(m_SubstanceBolus);
+  DELETE_MAP_OF_POINTERS(m_SubstanceInfusions);
+  DELETE_MAP_OF_POINTERS(m_SubstanceOralDoses);
+  DELETE_MAP_OF_POINTERS(m_SubstanceCompoundInfusions);
+  DELETE_MAP_OF_POINTERS(m_Tourniquets);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action, const PhysiologyEngine& engine)

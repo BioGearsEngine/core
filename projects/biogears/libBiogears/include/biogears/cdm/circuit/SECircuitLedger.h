@@ -33,9 +33,9 @@ public:
   virtual ~SECircuitLedger() { Clear(); };
   void Clear()
   {
-    DELETE_MAP_SECOND(nodes);
-    DELETE_MAP_SECOND(paths);
-    DELETE_MAP_SECOND(circuits);
+    DELETE_MAP_OF_POINTERS(nodes);
+    DELETE_MAP_OF_POINTERS(paths);
+    DELETE_MAP_OF_POINTERS(circuits);
   }
   std::map<std::string, NodeType*> nodes;
   std::map<std::string, PathType*> paths;

@@ -304,7 +304,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceClearance)
   source.GetFractionMetabolizedInGut().SetValue(0.6);
   source.GetFractionUnboundInPlasma().SetValue(0.8);
 
-  source.SetRenalDynamic(biogears::RenalDynamic::Regulation);
+  source.SetRenalDynamic(biogears::RenalDynamicsType::Regulation);
 
   source.GetIntrinsicClearance().SetValue(1.0, biogears::VolumePerTimeMassUnit::mL_Per_s_g);
   source.GetRenalClearance().SetValue(1.0, biogears::VolumePerTimeMassUnit::mL_Per_s_g);
@@ -398,7 +398,7 @@ TEST_F(TEST_FIXTURE_NAME, Substance)
   source.GetClearance().GetFractionMetabolizedInGut().SetValue(0.6);
   source.GetClearance().GetFractionUnboundInPlasma().SetValue(0.8);
 
-  source.GetClearance().SetRenalDynamic(biogears::RenalDynamic::Regulation);
+  source.GetClearance().SetRenalDynamic(biogears::RenalDynamicsType::Regulation);
 
   source.GetClearance().GetIntrinsicClearance().SetValue(1.0, biogears::VolumePerTimeMassUnit::mL_Per_s_g);
   source.GetClearance().GetRenalClearance().SetValue(1.0, biogears::VolumePerTimeMassUnit::mL_Per_s_g);
@@ -446,7 +446,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceCompound)
   source.SetClassification(biogears::SESubstanceClass::Anesthetic);
   source.SetRhFactor(true);
 
-  biogears::SESubstanceConcentration sub { *sarin };
+  biogears::SESubstanceConcentration sub { sarin->GetDefinition() };
   sub.GetConcentration().SetValue(30, biogears::MassPerVolumeUnit::g_Per_dL);
 
   source.GetComponents().push_back(sub);
@@ -502,7 +502,7 @@ TEST_F(TEST_FIXTURE_NAME, SubstanceConcentration)
 
   auto sarin = mgr.GetSubstance("Sarin");
 
-  SEType source { *sarin }, sink { *sarin };
+  SEType source { sarin->GetDefinition() }, sink { sarin->GetDefinition() };
   CDMType data;
 
   source.GetConcentration().SetValue(1.0, biogears::MassPerVolumeUnit::g_Per_mL);

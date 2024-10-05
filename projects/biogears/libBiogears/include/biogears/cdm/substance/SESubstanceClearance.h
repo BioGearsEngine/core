@@ -11,35 +11,54 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <string>
+
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 
+#include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
+
 namespace biogears {
-class SEScalar;
-class SEScalarVolumePerTimeMass;
-class VolumePerTimeMassUnit;
-class MassPerTimeUnit;
-class SEScalarMassPerTime;
-class SESubstanceClearanceAnatomyEffect;
-class SEScalarVolumePerTimeMass;
-class SEScalarFraction;
 
 namespace io {
   class Substance;
 }
-enum class RenalDynamic {
-  Clearance,
-  Regulation
+
+struct BIOGEARS_API SESubstanceClearanceDefinition {
+  bool HasSystemic = false;
+  bool HasCellular = false;
+  SEScalarFrequency CellBirthRate;
+  SEScalarFrequency CellDeathRate;
+
+  SECharge ChargeInBlood;
+
+  SEScalarVolumePerTimeMass IntrinsicClearance;
+  RenalDynamicsType RenalDynamic;
+  SEScalarVolumePerTimeMass RenalClearance;
+  SEScalar RenalReabsorptionRatio;
+  SEScalarMassPerTime RenalTransportMaximum;
+  SEScalarMassPerTime RenalFiltrationRate;
+  SEScalarMassPerTime RenalReabsorptionRate;
+  SEScalarMassPerTime RenalExcretionRate;
+  SEScalar GlomerularFilterability;
+  SEScalarVolumePerTimeMass SystemicClearance;
+
+  bool operator==(SESubstanceClearanceDefinition const& rhs) const;
+  bool operator!=(SESubstanceClearanceDefinition const& rhs) const;
 };
 
 class BIOGEARS_API SESubstanceClearance : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstanceClearance(Logger* logger);
+  SESubstanceClearance(Logger* logger = nullptr);
+  SESubstanceClearance(SESubstanceClearanceDefinition definition, Logger* logger);
   virtual ~SESubstanceClearance();
 
   virtual void Clear();
@@ -48,12 +67,13 @@ public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-public:
-  virtual bool HasSystemic() const { return m_hasSystemic; }
-  virtual void SetSystemic(bool b) { m_hasSystemic = b; }
+  void Invalidate();
 
-  virtual bool HasCellular() const { return m_hasCellular; }
-  virtual void SetCellular(bool b) { m_hasCellular = b; }
+public:
+  virtual bool HasSystemic() const;
+  virtual void SetSystemic(bool b);
+  virtual bool HasCellular() const;
+  virtual void SetCellular(bool b);
 
   virtual bool HasCellBirthRate() const;
   virtual SEScalarFrequency& GetCellBirthRate();
@@ -92,8 +112,8 @@ public:
   virtual SEScalarVolumePerTimeMass& GetIntrinsicClearance();
   virtual double GetIntrinsicClearance(const VolumePerTimeMassUnit& unit) const;
 
-  virtual RenalDynamic GetRenalDynamic() const;
-  virtual void SetRenalDynamic(RenalDynamic d);
+  virtual RenalDynamicsType GetRenalDynamic() const;
+  virtual void SetRenalDynamic(RenalDynamicsType d);
   virtual bool HasRenalDynamic() const;
   virtual void InvalidateRenalDynamic();
 
@@ -129,25 +149,11 @@ public:
   bool operator!=(const SESubstanceClearance& rhs) const;
 
 protected:
-  bool m_hasSystemic;
-  bool m_hasCellular;
-  SEScalarFrequency* m_CellBirthRate;
-  SEScalarFrequency* m_CellDeathRate;
+  SESubstanceClearanceDefinition m_def;
 
-  SECharge m_ChargeInBlood;
-  SEScalarFraction* m_FractionExcretedInFeces;
-  SEScalarFraction* m_FractionExcretedInUrine;
-  SEScalarFraction* m_FractionMetabolizedInGut;
-  SEScalarFraction* m_FractionUnboundInPlasma;
-  SEScalarVolumePerTimeMass* m_IntrinsicClearance;
-  RenalDynamic m_RenalDynamic;
-  SEScalarVolumePerTimeMass* m_RenalClearance;
-  SEScalar* m_RenalReabsorptionRatio;
-  SEScalarMassPerTime* m_RenalTransportMaximum;
-  SEScalarMassPerTime* m_RenalFiltrationRate;
-  SEScalarMassPerTime* m_RenalReabsorptionRate;
-  SEScalarMassPerTime* m_RenalExcretionRate;
-  SEScalar* m_GlomerularFilterability;
-  SEScalarVolumePerTimeMass* m_SystemicClearance;
+  SEScalarFraction m_FractionExcretedInFeces;
+  SEScalarFraction m_FractionExcretedInUrine;
+  SEScalarFraction m_FractionMetabolizedInGut;
+  SEScalarFraction m_FractionUnboundInPlasma;
 };
 }

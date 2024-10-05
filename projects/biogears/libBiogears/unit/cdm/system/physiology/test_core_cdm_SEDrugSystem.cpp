@@ -22,7 +22,7 @@
 
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #ifdef DISABLE_BIOGEARS_SEDrugSystem_TEST
 #define TEST_FIXTURE_NAME DISABLED_SEDrugSystem_Fixture

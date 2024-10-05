@@ -251,12 +251,12 @@ namespace io {
   }
   void Scenario::Marshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out)
   {
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Period)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Period)
 
 
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, PeriodTimeStamps)
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, AfterActions)
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, ReloadState)
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, PeriodTimeStamps)
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, AfterActions)
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, ReloadState)
 
     if (in.HasDirectory()) {
       out.Directory(in.m_Directory);

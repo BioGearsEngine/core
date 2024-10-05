@@ -29,18 +29,18 @@ namespace io {
   }
   void ElectroCardioGram::Marshall(const SEElectroCardioGram& in, CDM::ElectroCardioGramData& out)
   {
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead1ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead2ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead3ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead4ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead5ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead6ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead7ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead8ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead9ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead10ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead11ElectricPotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Lead12ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead1ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead2ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead3ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead4ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead5ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead6ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead7ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead8ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead9ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead10ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead11ElectricPotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Lead12ElectricPotential)
   }
   // class SEElectroCardioGram
   void ElectroCardioGram::UnMarshall(const CDM::ElectroCardioGramWaveformLeadNumberData& in, SEElectroCardioGramWaveformLeadNumber& out)
@@ -70,7 +70,7 @@ namespace io {
   void ElectroCardioGram::Marshall(const SEElectroCardioGramInterpolationWaveform& in, CDM::ElectroCardioGramInterpolationWaveformData& out)
   {
     out.Rhythm("");
-    SE_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, Rhythm);
+    SE_PHYSIOLOGY_ENUM_PTR_MARSHALL_HELPER(in, out, Rhythm);
 
     out.Lead(std::make_unique<CDM::ElectroCardioGramWaveformLeadNumberData>());
     if (in.HasLeadNumber())
@@ -78,13 +78,13 @@ namespace io {
 
     out.Data(std::make_unique<CDM::FunctionElectricPotentialVsTimeData>());
     if (in.HasData()) {
-      CDM_PROPERTY_MARSHALL_HELPER(in, out, Data)
+      CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Data)
       out.ActiveIndicies(std::unique_ptr<CDM::IntegerArray>(new CDM::IntegerArray()));
       out.ActiveIndicies().get().IntegerList(std::unique_ptr<CDM::IntegerList>(new CDM::IntegerList()));
       for (int i : in.m_ActiveIndicies)
         out.ActiveIndicies().get().IntegerList().push_back(i);
     }
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TimeStep)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TimeStep)
   }
   //----------------------------------------------------------------------------------
   // class SEElectroCardioGramInterpolator

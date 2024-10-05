@@ -25,7 +25,8 @@ class BIOGEARS_API SESubstanceTissuePharmacokinetics : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger);
+  SESubstanceTissuePharmacokinetics(SESubstanceTissuePharmacokinetics const& obj);
+  SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger = nullptr);
   virtual ~SESubstanceTissuePharmacokinetics();
 
   virtual void Clear();

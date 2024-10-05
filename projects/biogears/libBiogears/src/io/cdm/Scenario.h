@@ -22,13 +22,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/DataRequests.hxx>
 #include <biogears/schema/cdm/Scenario.hxx>
 
-#define CDM_SCENARIO_MARSHALL_HELPER(in, out, func)                                  \
+#define CDM_SCENARIO_PTR_MARSHALL_HELPER(in, out, func)                                  \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Scenario::Marshall(*in.m_##func, out.func());                                \
   }
 
-#define CDM_OPTIONAL_SCENARIO_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_SCENARIO_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                         \
     io::Scenario::Marshall(*in.m_##func, out.func());        \
   }

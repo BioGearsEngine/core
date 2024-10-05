@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
@@ -403,7 +403,7 @@ bool addCompoundComponents(std::unique_ptr<biogears::BioGearsEngine>& engine, st
 {
 
   if (biogears::SESubstance* substance = engine->GetSubstanceManager().GetSubstance(substance_str)) {
-    auto substance_concentration = biogears::SESubstanceConcentration(*substance);
+    auto substance_concentration = biogears::SESubstanceConcentration(substance->GetDefinition());
     substance_concentration.GetConcentration().SetValue(10.0, biogears::MassPerVolumeUnit::mg_Per_mL);
     compound->GetComponents().push_back(substance_concentration);
 
@@ -571,8 +571,8 @@ void BioGearsPlugin::run()
             for (auto& component : customCompound->GetComponents()) {
               // Example of creating data request for tracking the components of the new substance.
               // Note: String based DataRequest will cause runtime instability if no Scalar matches the input string.
-              if (component.GetSubstance().HasPK()) {
-                _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component.GetSubstance().GetName()), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+              if (component.GetSubstance().Pharmacokinetics.IsValid()) {
+                _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component.GetSubstance().Name), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
               }
             }
             auto compound_name = substance_register_compound(_pimpl->engine, std::move(customCompound)); //<  _pimpl->engine takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)

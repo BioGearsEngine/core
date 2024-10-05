@@ -12,11 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
-#include "biogears/cdm/properties/SEScalarFraction.h"
-#include "biogears/cdm/properties/SEScalarMass.h"
-#include "biogears/cdm/properties/SEScalarMassPerVolume.h"
-#include "biogears/cdm/properties/SEScalarVolume.h"
-#include "biogears/cdm/properties/SEScalarVolumePerTime.h"
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 
@@ -39,7 +40,7 @@ template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar
 class SESubstanceTransportEdge;
 template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
 class SESubstanceTransportGraph;
-template <SUBSTANCE_TRANSPORTER_TEMPLATE>
+template <typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit>
 class SESubstanceTransporter;
 
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
@@ -78,7 +79,7 @@ class SESubstanceTransportVertex {
   template <SUBSTANCE_TRANSPORTER_TEMPLATE>
   friend class SESubstanceTransporter;
 
-  friend bool operator== <>(SESubstanceTransportVertex const& lhs, SESubstanceTransportVertex const& rhs);
+  friend bool operator==<>(SESubstanceTransportVertex const& lhs, SESubstanceTransportVertex const& rhs);
 
 public:
   virtual ~SESubstanceTransportVertex() { }

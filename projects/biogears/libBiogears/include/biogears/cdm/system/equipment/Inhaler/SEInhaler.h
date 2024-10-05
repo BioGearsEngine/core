@@ -11,19 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEPropertyEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 namespace biogears {
 class Serializer;
 class SESubstance;
 class SESubstanceManager;
 class SEInhalerConfiguration;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarMass;
-class MassUnit;
-class SEScalarFraction;
 
 namespace io {
   class Inhaler;

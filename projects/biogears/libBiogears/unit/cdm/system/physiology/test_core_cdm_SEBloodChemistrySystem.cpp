@@ -22,7 +22,7 @@
 
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #ifdef DISABLE_BIOGEARS_SEBloodChemistrySystem_TEST
 #define TEST_FIXTURE_NAME DISABLED_SEBloodChemistrySystem_Fixture

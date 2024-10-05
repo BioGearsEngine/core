@@ -1,6 +1,6 @@
 #include <biogears/cdm/circuit/SECircuitPath.h>
 #include <biogears/cdm/circuit/SECircuitPath.inl>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 namespace biogears {
 

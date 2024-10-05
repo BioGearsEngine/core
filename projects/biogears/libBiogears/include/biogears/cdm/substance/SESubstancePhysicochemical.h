@@ -17,8 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 
 namespace biogears {
-  class SEScalar;
-  class SEScalarFraction;
+class SEScalar;
+class SEScalarFraction;
 namespace io {
   class Substance;
 }
@@ -26,6 +26,7 @@ class BIOGEARS_API SESubstancePhysicochemical : public Loggable {
   friend io::Substance;
 
 public:
+  SESubstancePhysicochemical(SESubstancePhysicochemical const& obj);
   SESubstancePhysicochemical(Logger* logger);
   virtual ~SESubstancePhysicochemical();
 
@@ -71,10 +72,11 @@ public:
 
   virtual bool HasPolarSurfaceArea() const;
   virtual SEScalar& GetPolarSurfaceArea();
-  virtual double GetPolarSurfaceArea() const;       
-  
-  bool operator==( const SESubstancePhysicochemical& rhs) const;
-  bool operator!=( const SESubstancePhysicochemical& rhs) const;
+  virtual double GetPolarSurfaceArea() const;
+
+  SESubstancePhysicochemical& operator=(const SESubstancePhysicochemical& rhs);
+  bool operator==(const SESubstancePhysicochemical& rhs) const;
+  bool operator!=(const SESubstancePhysicochemical& rhs) const;
 
 protected:
   std::vector<SEScalar*> m_AcidDissociationConstants;

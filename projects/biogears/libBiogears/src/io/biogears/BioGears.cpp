@@ -444,7 +444,7 @@ namespace io {
     io::Property::Marshall(in.m_Intubation, out.Intubation());
 
     // Patient
-    CDM_OPTIONAL_PATIENT_MARSHALL_HELPER(in, out, Patient);
+    CDM_OPTIONAL_PATIENT_PTR_MARSHALL_HELPER(in, out, Patient);
     // Conditions
     auto conditions = std::vector<std::unique_ptr<CDM::ConditionData>>();
     Conditions::Marshall(*in.m_Conditions, conditions);

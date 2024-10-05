@@ -123,7 +123,7 @@ bool SESubstanceCompound::HasComponent() const
 bool SESubstanceCompound::HasComponent(const SESubstance& substance) const
 {
   for (auto const& q : m_Components) {
-    if (&substance == &q.GetSubstance()) {
+    if (substance == q.GetSubstance()) {
       return true;
     }
   }
@@ -144,21 +144,39 @@ const std::vector<SESubstanceConcentration> SESubstanceCompound::GetComponents()
   return cCompounds;
 }
 //-----------------------------------------------------------------------------
-SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance& substance)
+SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance const& substance)
 {
   for (auto& sq : m_Components) {
-    if (&substance == &sq.GetSubstance())
+    if (substance == sq.GetSubstance())
       return sq;
   }
-  // auto concentration = SESubstanceConcentration { substance, 0, MassPerVolumeUnit::ug_Per_mL };
+  m_Components.emplace_back(substance.GetDefinition(), 0, MassPerVolumeUnit::ug_Per_mL);
+  return m_Components.back();
+}
+//-----------------------------------------------------------------------------
+SESubstanceConcentration SESubstanceCompound::GetComponent(SESubstance const& substance) const
+{
+  for (auto& sq : m_Components) {
+    if (substance == sq.GetSubstance())
+      return sq;
+  }
+  throw CommonDataModelException();
+}
+//-----------------------------------------------------------------------------
+SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstanceDefinition const& substance)
+{
+  for (auto& sq : m_Components) {
+    if (substance == sq.GetSubstance())
+      return sq;
+  }
   m_Components.emplace_back(substance, 0, MassPerVolumeUnit::ug_Per_mL);
   return m_Components.back();
 }
 //-----------------------------------------------------------------------------
-const SESubstanceConcentration SESubstanceCompound::GetComponent(SESubstance& substance) const
+SESubstanceConcentration SESubstanceCompound::GetComponent(SESubstanceDefinition const& substance) const
 {
   for (auto& sq : m_Components) {
-    if (&substance == &sq.GetSubstance())
+    if (substance == sq.GetSubstance())
       return sq;
   }
   throw CommonDataModelException();
@@ -168,7 +186,7 @@ void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
 {
   unsigned int i = 0;
   for (auto& sq : m_Components) {
-    if (&substance == &sq.GetSubstance()) {
+    if (substance == sq.GetSubstance()) {
       m_Components.erase(m_Components.begin() + i);
     }
     i++;

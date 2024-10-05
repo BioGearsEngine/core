@@ -20,11 +20,19 @@ template class map<string, biogears::SESubstanceTissuePharmacokinetics*>;
 }
 
 namespace biogears {
-
+SESubstancePharmacokinetics::SESubstancePharmacokinetics(SESubstancePharmacokinetics const& obj)
+  : Loggable(obj.GetLogger())
+  , m_Physicochemicals(std::make_unique<SESubstancePhysicochemical>(*obj.m_Physicochemicals).release())
+{
+  for (auto& [key, value] : obj.m_TissueKinetics) {
+    m_TissueKinetics[key] = std::make_unique<SESubstanceTissuePharmacokinetics>(*value).release();
+  }
+}
 SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger* logger)
   : Loggable(logger)
+  , m_Physicochemicals(std::make_unique<SESubstancePhysicochemical>(logger).release())
+  , m_TissueKinetics()
 {
-  m_Physicochemicals = nullptr;
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacokinetics::~SESubstancePharmacokinetics()
@@ -32,12 +40,18 @@ SESubstancePharmacokinetics::~SESubstancePharmacokinetics()
   Clear();
 }
 //-----------------------------------------------------------------------------
+#pragma optimize("", off)
 void SESubstancePharmacokinetics::Clear()
 {
-  SAFE_DELETE(m_Physicochemicals);
-  DELETE_MAP_SECOND(m_TissueKinetics);
+  m_Physicochemicals->Clear();
+
+  for (auto& [key, value] : m_TissueKinetics) {
+    delete value;
+    value = nullptr;
+  }
   m_TissueKinetics.clear();
 }
+#pragma optimize("", on)
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacokinetics::IsValid() const
 {
@@ -134,13 +148,29 @@ void SESubstancePharmacokinetics::RemoveTissueKinetics(const std::string& name)
   m_TissueKinetics.erase(name);
 }
 //-----------------------------------------------------------------------------
+SESubstancePharmacokinetics& SESubstancePharmacokinetics::operator=(SESubstancePharmacokinetics const& rhs)
+{
+  if (this != &rhs) {
+    return *this;
+  }
+
+  GetPhysicochemicals() = *rhs.GetPhysicochemicals();
+  for (auto& [key, value] : rhs.m_TissueKinetics) {
+
+      auto tissueKinetic = std::make_unique<SESubstanceTissuePharmacokinetics>(*value);
+  m_TissueKinetics[key] = tissueKinetic.release();
+  }
+
+  return *this;
+}
+//-----------------------------------------------------------------------------
 bool SESubstancePharmacokinetics::operator==(const SESubstancePharmacokinetics& rhs) const
 {
   bool equivilant = (m_Physicochemicals && rhs.m_Physicochemicals) ? m_Physicochemicals->operator==(*rhs.m_Physicochemicals) : m_Physicochemicals == rhs.m_Physicochemicals;
   equivilant &= m_TissueKinetics.size() == rhs.m_TissueKinetics.size();
   if (equivilant) {
     for (auto& pair : m_TissueKinetics) {
-      //auto lh = m_TissueKinetics.find(pair.first);
+      // auto lh = m_TissueKinetics.find(pair.first);
       auto rh = rhs.m_TissueKinetics.find(pair.first);
       if (rh != rhs.m_TissueKinetics.end()) {
         equivilant &= (pair.second && rh->second) ? *pair.second == *rh->second : pair.second == rh->second;

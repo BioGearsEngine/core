@@ -21,6 +21,7 @@ namespace io {
 class BIOGEARS_API SEHistogramFractionVsLength : public SEHistogram {
 public:
   friend io::Property;
+  SEHistogramFractionVsLength(SEHistogramFractionVsLength const&);
   SEHistogramFractionVsLength();
   virtual ~SEHistogramFractionVsLength();
 
@@ -29,6 +30,8 @@ public:
   virtual bool IsVaild() const;
 
         
+  SEHistogramFractionVsLength& operator=(const SEHistogramFractionVsLength&);
+
   bool operator==(const SEHistogramFractionVsLength&) const;
   bool operator!=(const SEHistogramFractionVsLength&) const;
 

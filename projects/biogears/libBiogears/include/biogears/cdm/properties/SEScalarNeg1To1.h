@@ -18,6 +18,7 @@ class BIOGEARS_API SEScalarNeg1To1 : public SEScalar {
 
 public:
   SEScalarNeg1To1();
+  SEScalarNeg1To1(SEScalarNeg1To1 const& obj);
   virtual ~SEScalarNeg1To1();    
 
   bool operator==(const SEScalarNeg1To1&) const;

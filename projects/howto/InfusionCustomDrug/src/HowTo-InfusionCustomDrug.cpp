@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
@@ -42,7 +42,7 @@ bool mixSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, s
 {
   SESubstance* new_substance = engine->GetSubstanceManager().GetSubstance(substance);
   if (new_substance) {
-    auto substance_concentration = SESubstanceConcentration(*new_substance);
+    auto substance_concentration = SESubstanceConcentration(new_substance->GetDefinition());
     substance_concentration.GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_mL);
     compound->GetComponents().push_back(substance_concentration);
 

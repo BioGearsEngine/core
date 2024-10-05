@@ -16,23 +16,16 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/compartment/SECompartment.h>
-
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include <vector>
 #include <map>
 #include <string>
 
 namespace biogears {
-class SEScalar0To1;
 class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;
-class SEScalarMassPerMass;
-class MassPerMassUnit;
-class SEScalarElectricPotential;
-class ElectricPotentialUnit;
-class SEScalarMass;
-class MassUnit;
 class SECompartmentManager;
 
 namespace io {

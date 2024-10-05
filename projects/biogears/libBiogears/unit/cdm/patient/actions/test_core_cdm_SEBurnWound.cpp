@@ -24,7 +24,7 @@
 
 #include <biogears/cdm/patient/actions/SEBurnWound.h>
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #define TEST_FIXTURE_NAME SEBurnWound_Fixture
 

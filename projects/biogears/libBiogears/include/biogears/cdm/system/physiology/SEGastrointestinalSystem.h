@@ -16,17 +16,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
-
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include <map>
 
 namespace biogears {
-class SEScalarMass;
-class MassUnit;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
-class SESubstance;
 class SEDrugTransitState;
+class SESubstance;
 
 namespace io {
   class Physiology;

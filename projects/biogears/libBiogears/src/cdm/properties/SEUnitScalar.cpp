@@ -22,7 +22,7 @@ SEUnitScalar::SEUnitScalar(bool ro)
 
 //------------------------------------------------------------------------------
 SEUnitScalar::SEUnitScalar(const SEUnitScalar& obj)
-  : SEScalar(obj)
+  : SEScalar(obj.m_value, obj.m_readOnly)
 {
 }
 //------------------------------------------------------------------------------

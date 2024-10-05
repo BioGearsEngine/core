@@ -93,10 +93,10 @@ namespace io {
       out.Node().push_back(nodes->GetName());
     }
     // Even if you have children or nodes, I am unloading everything, this makes the xml actually usefull...
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in,out,InFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, OutFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Pressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Volume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in,out,InFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, OutFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Pressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Volume)
   }
   //----------------------------------------------------------------------------------
   // class SEFluidCompartmentLink
@@ -129,7 +129,7 @@ namespace io {
     if (in.m_Path != nullptr)
       out.Path(in.m_Path->GetName());
     // Even if you have a path, I am unloading everything, this makes the xml actually usefull...
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in,out,Flow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in,out,Flow)
 
   }
   //----------------------------------------------------------------------------------
@@ -229,8 +229,8 @@ namespace io {
       io::SubstanceQuantity::Marshall(*subQ, lqsData);
       out.SubstanceQuantity().push_back(lqsData);
     }
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in,out,pH)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WaterVolumeFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in,out,pH)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, WaterVolumeFraction)
  
   }
   //----------------------------------------------------------------------------------
@@ -296,16 +296,16 @@ namespace io {
 
     Marshall(static_cast<const SECompartment&>(in), static_cast<CDM::CompartmentData&>(out));
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AcidicPhospohlipidConcentration)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MatrixVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MembranePotential)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, NeutralLipidsVolumeFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, NeutralPhospholipidsVolumeFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ReflectionCoefficient)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TissueToPlasmaAlbuminRatio)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TissueToPlasmaAlphaAcidGlycoproteinRatio)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TissueToPlasmaLipoproteinRatio)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalMass)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AcidicPhospohlipidConcentration)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MatrixVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MembranePotential)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, NeutralLipidsVolumeFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, NeutralPhospholipidsVolumeFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ReflectionCoefficient)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TissueToPlasmaAlbuminRatio)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TissueToPlasmaAlphaAcidGlycoproteinRatio)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TissueToPlasmaLipoproteinRatio)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalMass)
   }
   //----------------------------------------------------------------------------------
   // class SEThermalCompartment
@@ -340,10 +340,10 @@ namespace io {
     for (SEThermalCircuitNode* nodes : in.m_Nodes.GetNodes())
       out.Node().push_back(nodes->GetName());
     // Even if you have children or nodes, I am unloading everything, this makes the xml actually usefull...
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeatTransferRateIn)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeatTransferRateOut)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Heat)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Temperature)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeatTransferRateIn)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeatTransferRateOut)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Heat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Temperature)
 
   }
   //----------------------------------------------------------------------------------
@@ -376,7 +376,7 @@ namespace io {
     if (in.m_Path != nullptr)
       out.Path(in.m_Path->GetName());
     // Even if you have a path, I am unloading everything, this makes the xml actually usefull...6
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in,out,HeatTransferRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in,out,HeatTransferRate)
   }
 
 #define LOAD_COMPARTMENT(type)                                                              \

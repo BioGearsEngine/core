@@ -17,18 +17,19 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/utils/Logger.h>
 
-namespace biogears {
+#include <biogears/cdm/properties/SEScalarOsmolality.h>
+#include <biogears/cdm/properties/SEScalarOsmolarity.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalar.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
 
-class SEScalarOsmolality;
-class SEScalarOsmolarity;
-class SEScalarTemperature;
-class SEScalar;
-class SEScalarAmountPerVolume;
-class SEScalarPressure;
-class SEScalarFraction;
-class SEScalarMassPerVolume;
-class SEScalarVolume;
-class SEScalarMass;
+
+namespace biogears {
 class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;

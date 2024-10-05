@@ -208,9 +208,9 @@ void Environment::StateChange()
 
   // Add aerosols to the environment
   for (auto s : GetConditions().GetAmbientAerosols()) {
-    SESubstance& sub = s->GetSubstance();
-    if (!sub.HasAerosolization()) {
-      Error("Ignoring environment aerosol as it does not have any aerosol data : "s + sub.GetName());
+    auto sub = s->GetSubstance();
+    if (!sub.Aerosolization.IsValid()) {
+      Error("Ignoring environment aerosol as it does not have any aerosol data : "s + sub.Name);
       continue;
     }
     m_data.GetSubstances().AddActiveSubstance(sub);

@@ -19,6 +19,11 @@ SEScalarFraction::SEScalarFraction(double value, bool readOnly)
   : SEScalar(value, readOnly)
 {
 }
+SEScalarFraction::SEScalarFraction(SEScalarFraction const& obj)
+  : SEScalar(obj.m_value, obj.m_readOnly)
+{
+
+}
 //-------------------------------------------------------------------------------
 SEScalarFraction::SEScalarFraction()
   : SEScalar()

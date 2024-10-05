@@ -253,10 +253,10 @@ void Renal::Initialize()
   for (SESubstance* sub : m_data.GetSubstances().GetSubstances()) {
     CalculateFilterability(*sub);
     if (!sub->GetClearance().HasRenalDynamic())
-      sub->GetClearance().SetRenalDynamic(RenalDynamic::Clearance);
+      sub->GetClearance().SetRenalDynamic(RenalDynamicsType::Clearance);
     if (!sub->GetClearance().HasRenalClearance())
       sub->GetClearance().GetRenalClearance().SetValue(0.0, VolumePerTimeMassUnit::mL_Per_min_kg);
-    if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Regulation) {
+    if (sub->GetClearance().GetRenalDynamic() == RenalDynamicsType::Regulation) {
       sub->GetClearance().GetRenalFiltrationRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
       sub->GetClearance().GetRenalReabsorptionRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
       sub->GetClearance().GetRenalExcretionRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
@@ -749,7 +749,7 @@ void Renal::CalculateActiveTransport()
       continue;
     if (!sub->GetClearance().HasRenalDynamic())
       continue;
-    if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Regulation) {
+    if (sub->GetClearance().GetRenalDynamic() == RenalDynamicsType::Regulation) {
       // This is the generic methodology
       CalculateGlomerularTransport(*sub);
       CalculateReabsorptionTransport(*sub);
@@ -758,7 +758,7 @@ void Renal::CalculateActiveTransport()
       }
 
       CalculateExcretion(*sub);
-    } else if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Clearance) {
+    } else if (sub->GetClearance().GetRenalDynamic() == RenalDynamicsType::Clearance) {
       // This bypasses the generic methodology and just automatically clears
       CalculateAutomaticClearance(*sub);
     } else {

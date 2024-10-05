@@ -10,10 +10,10 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
-//Standard Includes
-#include <numeric>
+// Standard Includes
 #include <iostream>
-//Project Includes
+#include <numeric>
+// Project Includes
 
 #include "io/cdm/Property.h"
 
@@ -21,6 +21,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarLength.h>
 
 namespace biogears {
+SEHistogramFractionVsLength::SEHistogramFractionVsLength(SEHistogramFractionVsLength const& obj)
+  : SEHistogram(obj)
+  , m_LengthUnit(obj.m_LengthUnit)
+{
+
+}
 SEHistogramFractionVsLength::SEHistogramFractionVsLength()
   : SEHistogram()
   , m_LengthUnit(nullptr)
@@ -50,7 +56,6 @@ bool SEHistogramFractionVsLength::IsVaild() const
   }
   return true;
 }
-
 
 double SEHistogramFractionVsLength::GetLengthValue(unsigned int index, const LengthUnit& unit) const
 {
@@ -90,6 +95,16 @@ std::vector<double>& SEHistogramFractionVsLength::GetFraction()
 const std::vector<double>& SEHistogramFractionVsLength::GetFraction() const
 {
   return m_Dependent;
+}
+//-------------------------------------------------------------------------------
+SEHistogramFractionVsLength& SEHistogramFractionVsLength::operator=(const SEHistogramFractionVsLength& rhs)
+{
+  if (this != &rhs) {
+    m_LengthUnit = rhs.m_LengthUnit;
+    SEHistogram::operator=(rhs);
+  }
+
+  return *this;
 }
 //-------------------------------------------------------------------------------
 bool SEHistogramFractionVsLength::operator==(const SEHistogramFractionVsLength& rhs) const

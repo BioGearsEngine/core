@@ -42,7 +42,8 @@ class BIOGEARS_API SESubstancePharmacodynamics : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstancePharmacodynamics(Logger* logger);
+  SESubstancePharmacodynamics(SESubstancePharmacodynamics const& obj);
+  SESubstancePharmacodynamics(Logger* logger = nullptr);
   virtual ~SESubstancePharmacodynamics();
 
   virtual void Clear();
@@ -155,6 +156,7 @@ class BIOGEARS_API SEPharmacodynamicModifier {
   friend io::Substance;
 
 public:
+  SEPharmacodynamicModifier(SEPharmacodynamicModifier const& obj);
   SEPharmacodynamicModifier(SEScalarMassPerVolume const&, SEScalarFraction const&);
   SEPharmacodynamicModifier();
   ~SEPharmacodynamicModifier();

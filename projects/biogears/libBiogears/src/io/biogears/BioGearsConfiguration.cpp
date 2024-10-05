@@ -6,7 +6,7 @@
 
 #include <biogears/engine/Systems/Environment.h>
 
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include "../cdm/EngineConfiguration.h"
 #include "../cdm/Environment.h"
@@ -32,10 +32,10 @@ namespace io {
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::BloodChemistryConfigurationData& out)
   {
     // Blood Chemistry
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanCorpuscularHemoglobin)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanCorpuscularVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StandardDiffusionDistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StandardOxygenDiffusionCoefficient)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanCorpuscularHemoglobin)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanCorpuscularVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StandardDiffusionDistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StandardOxygenDiffusionCoefficient)
   }
   // class CardiovascularConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::CardiovascularConfigurationData& in, BioGearsConfiguration& out)
@@ -57,12 +57,12 @@ namespace io {
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::CardiovascularConfigurationData& out)
   {
     // Cardiovascular
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftHeartElastanceMaximum)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftHeartElastanceMinimum)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MinimumBloodVolumeFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightHeartElastanceMaximum)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightHeartElastanceMinimum)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StandardPulmonaryCapillaryCoverage)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftHeartElastanceMaximum)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftHeartElastanceMinimum)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MinimumBloodVolumeFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightHeartElastanceMaximum)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightHeartElastanceMinimum)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StandardPulmonaryCapillaryCoverage)
   }
   // class CircuitConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::CircuitConfigurationData& in, BioGearsConfiguration& out)
@@ -94,17 +94,17 @@ namespace io {
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::CircuitConfigurationData& out)
   {
     // Circuits
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CardiovascularOpenResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DefaultClosedElectricResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DefaultClosedFlowResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DefaultClosedHeatResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DefaultOpenElectricResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DefaultOpenFlowResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DefaultOpenHeatResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MachineClosedResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MachineOpenResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespiratoryClosedResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespiratoryOpenResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CardiovascularOpenResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DefaultClosedElectricResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DefaultClosedFlowResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DefaultClosedHeatResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DefaultOpenElectricResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DefaultOpenFlowResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DefaultOpenHeatResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MachineClosedResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MachineOpenResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespiratoryClosedResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespiratoryOpenResistance)
   }
   // class ConstantCOnfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::ConstantsConfigurationData& in, BioGearsConfiguration& out)
@@ -120,9 +120,9 @@ namespace io {
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::ConstantsConfigurationData& out)
   {
     // Constants
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, OxygenMetabolicConstant)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StefanBoltzmann)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UniversalGasConstant)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, OxygenMetabolicConstant)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StefanBoltzmann)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UniversalGasConstant)
   }
   // class DrugsConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::DrugsConfigurationData& in, BioGearsConfiguration& out)
@@ -162,14 +162,14 @@ namespace io {
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::EnergyConfigurationData& out)
   {
     // Energy
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BodySpecificHeat)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CoreTemperatureLow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CoreTemperatureHigh)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DeltaCoreTemperatureLow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, EnergyPerATP)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SweatHeatTransfer)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VaporSpecificHeat)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VaporizationEnergy)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BodySpecificHeat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CoreTemperatureLow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CoreTemperatureHigh)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DeltaCoreTemperatureLow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, EnergyPerATP)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SweatHeatTransfer)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VaporSpecificHeat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VaporizationEnergy)
   }
   // class EnvironmentConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::EnvironmentConfigurationData& in, BioGearsConfiguration& out)
@@ -206,14 +206,14 @@ namespace io {
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::EnvironmentConfigurationData& out)
   {
     // Environment
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AirDensity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AirSpecificHeat)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MolarMassOfDryAir)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MolarMassOfWaterVapor)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AirDensity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AirSpecificHeat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MolarMassOfDryAir)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MolarMassOfWaterVapor)
 
-    CDM_OPTIONAL_ENVIRONMENT_MARSHALL_HELPER(in, out, InitialEnvironmentalConditions)
+    CDM_OPTIONAL_ENVIRONMENT_PTR_MARSHALL_HELPER(in, out, InitialEnvironmentalConditions)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WaterDensity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, WaterDensity)
   }
   // class GastrointestinalConfiguratio
   void BiogearsEngineConfiguration::UnMarshall(const CDM::GastrointestinalConfigurationData& in, BioGearsConfiguration& out)
@@ -253,13 +253,13 @@ namespace io {
   {
 
     // Gastrointestinal
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CalciumAbsorptionFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CalciumDigestionRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CarbohydrateAbsorptionFraction)
-    CDM_OPTIONAL_PATIENT_NUTRITION_MARSHALL_HELPER(in, out, DefaultStomachContents)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FatAbsorptionFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ProteinToUreaFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WaterDigestionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CalciumAbsorptionFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CalciumDigestionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CarbohydrateAbsorptionFraction)
+    CDM_OPTIONAL_PATIENT_NUTRITION_PTR_MARSHALL_HELPER(in, out, DefaultStomachContents)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, FatAbsorptionFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ProteinToUreaFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, WaterDigestionRate)
   }
   // class BioGearsConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::NervousConfigurationData& in, BioGearsConfiguration& out)
@@ -277,7 +277,7 @@ namespace io {
     if (in.m_CerebralEnabled != decltype(in.m_CerebralEnabled)::Invalid) {
       io::Property::Marshall(in.m_CerebralEnabled, out.EnableCerebral());
     }
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PupilDiameterBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PupilDiameterBaseline)
   }
   // class RenalConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::RenalConfigurationData& in, BioGearsConfiguration& out)
@@ -318,19 +318,19 @@ namespace io {
     // Renal
     if (in.HasEnableRenal())
       io::Property::Marshall(in.m_RenalEnabled, out.EnableRenal());
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PlasmaSodiumConcentrationSetPoint)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularFilteringSurfaceAreaBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularFluidPermeabilityBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftTubularReabsorptionFilteringSurfaceAreaBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftTubularReabsorptionFluidPermeabilityBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PlasmaSodiumConcentrationSetPoint)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftGlomerularFilteringSurfaceAreaBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftGlomerularFluidPermeabilityBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftTubularReabsorptionFilteringSurfaceAreaBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftTubularReabsorptionFluidPermeabilityBaseline)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MaximumAfferentResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MinimumAfferentResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MaximumAfferentResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MinimumAfferentResistance)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightGlomerularFilteringSurfaceAreaBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightGlomerularFluidPermeabilityBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightTubularReabsorptionFilteringSurfaceAreaBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightTubularReabsorptionFluidPermeabilityBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightGlomerularFilteringSurfaceAreaBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightGlomerularFluidPermeabilityBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightTubularReabsorptionFilteringSurfaceAreaBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightTubularReabsorptionFluidPermeabilityBaseline)
   }
   // class RespiratoryConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::RespiratoryConfigurationData& in, BioGearsConfiguration& out)
@@ -347,9 +347,9 @@ namespace io {
   void BiogearsEngineConfiguration::Marshall(const BioGearsConfiguration& in, CDM::RespiratoryConfigurationData& out)
   {
     // Respiratory
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PleuralComplianceSensitivity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryVentilationRateMaximum)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VentilatoryOcclusionPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PleuralComplianceSensitivity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryVentilationRateMaximum)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VentilatoryOcclusionPressure)
   }
   // class TissueConfiguration
   void BiogearsEngineConfiguration::UnMarshall(const CDM::TissueConfigurationData& in, BioGearsConfiguration& out)

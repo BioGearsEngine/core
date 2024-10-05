@@ -87,7 +87,7 @@ void Drugs::Clear()
   m_IVToVenaCava = nullptr;
   m_Sarin = nullptr;
   m_Pralidoxime = nullptr;
-  DELETE_MAP_SECOND(m_BolusAdministrations);
+  DELETE_MAP_OF_POINTERS(m_BolusAdministrations);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ void Drugs::SetUp()
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
   m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
-  DELETE_MAP_SECOND(m_BolusAdministrations);
+  DELETE_MAP_OF_POINTERS(m_BolusAdministrations);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -601,7 +601,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
 
       // Blood Transfusion//
-      if (component.GetSubstance().GetName() == "RedBloodCell") {
+      if (component.GetSubstance().Name == "RedBloodCell") {
         /*
          //Transfusiuon-Associated Circulatory Overload (TACO) CHECK
          if (totalRate_mL_Per_s >= 3) { // Rate should not exceed 2 mL/s plus a 50% deviation to be safe (little diagnostic research on the topic/underreported but common reaction)
@@ -888,9 +888,9 @@ void Drugs::CalculateDrugEffects()
     auto modifiers = pd.GetPharmacodynamicModifiers();
 
     // Loop over all pharmacodynamic modifiers for substance and add them overall effect for each property
-    for (auto mod : modifiers) {
-      eMax = mod.second->GetEMax().GetValue();
-      ec50_ug_Per_mL = mod.second->GetEC50(MassPerVolumeUnit::ug_Per_mL);
+    for (auto& [key,modifier ]  : modifiers) {
+      eMax = modifier->GetEMax().GetValue();
+      ec50_ug_Per_mL = modifier->GetEC50(MassPerVolumeUnit::ug_Per_mL);
       if (std::abs(eMax) < ZERO_APPROX) {
         continue; // If no effect (i.e. eMax = 0), move on to next effect.  Save some time and also don't run risk of dividing by 0 somewhere since non-defined EC50s are set to 0
       }
@@ -901,7 +901,7 @@ void Drugs::CalculateDrugEffects()
       } else {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) + std::pow(ec50_ug_Per_mL, shapeParameter));
       }
-      effects_unitless[mod.first] += effect;
+      effects_unitless[key] += effect;
     }
 
     // Antibiotic Effects -- Do not evaluate unless the patient has inflammation casued by infection

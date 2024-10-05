@@ -44,18 +44,17 @@ namespace io {
       UnMarshall(in.Physicochemicals(), out.GetPhysicochemicals());
     }
 
-    SESubstanceTissuePharmacokinetics* fx;
-    const CDM::SubstanceTissuePharmacokineticsData* fxData;
     for (unsigned int i = 0; i < in.TissueKinetics().size(); i++) {
-      fxData = &in.TissueKinetics().at(i);
-      fx = new SESubstanceTissuePharmacokinetics(fxData->Name(), out.GetLogger());
-      UnMarshall(*fxData, *fx);
-      out.m_TissueKinetics[fx->GetName()] = (fx);
+      auto& fxData = in.TissueKinetics().at(i);
+      auto fx = std::make_unique<SESubstanceTissuePharmacokinetics>(fxData.Name(), out.GetLogger());
+      UnMarshall(fxData, *fx);
+      out.m_TissueKinetics[fx->GetName()] = fx.get();
+      fx.release();
     }
   }
   void Substance::Marshall(const SESubstancePharmacokinetics& in, CDM::SubstancePharmacokineticsData& out)
   {
-    CDM_OPTIONAL_SUBSTANCE_MARSHALL_HELPER(in, out, Physicochemicals)
+    CDM_OPTIONAL_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, Physicochemicals)
 
     for (auto itr : in.m_TissueKinetics) {
       auto tk_data = CDM::SubstanceTissuePharmacokineticsData();
@@ -92,14 +91,14 @@ namespace io {
       io::Property::Marshall(*pKa, out.AcidDissociationConstant().back());
     }
 
-    SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, BindingProtein)
-    SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, IonicState)
+    SE_SUBSTANCE_ENUM_PTR_MARSHALL_HELPER(in, out, BindingProtein)
+    SE_SUBSTANCE_ENUM_PTR_MARSHALL_HELPER(in, out, IonicState)
 
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, BloodPlasmaRatio)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, FractionUnboundInPlasma)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, LogP)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HydrogenBondCount)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PolarSurfaceArea)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, BloodPlasmaRatio)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, FractionUnboundInPlasma)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, LogP)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HydrogenBondCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PolarSurfaceArea)
   }
   //-----------------------------------------------------------------------------
   // class SESubstanceTissuePharmacokinetics
@@ -113,7 +112,7 @@ namespace io {
   {
     out.Name(in.m_Name);
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PartitionCoefficient)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PartitionCoefficient)
   }
   //-----------------------------------------------------------------------------
   // class SESubstancePharmacodynamics
@@ -161,24 +160,24 @@ namespace io {
   }
   void Substance::Marshall(const SESubstancePharmacodynamics& in, CDM::SubstancePharmacodynamicsData& out)
   {
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, Bronchodilation)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, DiastolicPressureModifier)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, EMaxShapeParameter)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, FeverModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, HeartRateModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, HemorrhageModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, NeuromuscularBlock)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, PainModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, PupilReactivityModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, PupilSizeModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, RespirationRateModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, Sedation)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, SystolicPressureModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, TidalVolumeModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, TubularPermeabilityModifier)
-    CDM_SUBSTANCE_MARSHALL_HELPER(in, out, CentralNervousModifier)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, AntibacterialEffect)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, EffectSiteRateConstant)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, Bronchodilation)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, DiastolicPressureModifier)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, EMaxShapeParameter)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, FeverModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, HeartRateModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, HemorrhageModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, NeuromuscularBlock)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, PainModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, PupilReactivityModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, PupilSizeModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, RespirationRateModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, Sedation)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, SystolicPressureModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, TidalVolumeModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, TubularPermeabilityModifier)
+    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, CentralNervousModifier)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, AntibacterialEffect)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, EffectSiteRateConstant)
   }
   //-----------------------------------------------------------------------------
   // class SESubstanceClearance
@@ -210,15 +209,15 @@ namespace io {
 
     if (in.RenalDynamics().present()) {
       if (in.RenalDynamics()->Regulation().present()) {
-        out.m_RenalDynamic = RenalDynamic::Regulation;
+        out.m_def.RenalDynamic = RenalDynamicsType::Regulation;
 
-        UnMarshall(in.RenalDynamics()->Regulation().get().ChargeInBlood(), out.m_ChargeInBlood);
+        UnMarshall(in.RenalDynamics()->Regulation().get().ChargeInBlood(), out.m_def.ChargeInBlood);
 
         io::Property::UnMarshall(in.RenalDynamics()->Regulation().get().FractionUnboundInPlasma(), out.GetFractionUnboundInPlasma());
         io::Property::UnMarshall(in.RenalDynamics()->Regulation().get().ReabsorptionRatio(), out.GetRenalReabsorptionRatio());
         io::Property::UnMarshall(in.RenalDynamics()->Regulation().get().TransportMaximum(), out.GetRenalTransportMaximum());
       } else if (in.RenalDynamics()->Clearance().present()) {
-        out.m_RenalDynamic = RenalDynamic::Clearance;
+        out.m_def.RenalDynamic = RenalDynamicsType::Clearance;
         io::Property::UnMarshall(in.RenalDynamics()->Clearance(), out.GetRenalClearance());
       }
 
@@ -237,7 +236,7 @@ namespace io {
     }
 
     if (in.CellRegulation().present()) {
-      out.m_hasCellular = true;
+      out.m_def.HasCellular = true;
       io::Property::UnMarshall(in.CellRegulation()->CellBirthRate(), out.GetCellBirthRate());
       io::Property::UnMarshall(in.CellRegulation()->CellDeathRate(), out.GetCellDeathRate());
     }
@@ -252,70 +251,90 @@ namespace io {
       CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, sys, FractionExcretedInUrine)
       CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, sys, FractionMetabolizedInGut)
       CDM_PROPERTY_MARSHALL_HELPER(in, sys, FractionUnboundInPlasma)
-      CDM_PROPERTY_MARSHALL_HELPER(in, sys, RenalClearance)
-      CDM_PROPERTY_MARSHALL_HELPER(in, sys, IntrinsicClearance)
-      CDM_PROPERTY_MARSHALL_HELPER(in, sys, SystemicClearance)
+      if (in.m_def.RenalClearance.IsValid()) {
+        sys.RenalClearance(std::make_unique<std::remove_reference<decltype(sys.RenalClearance())>::type>());
+        io::Property::Marshall(in.m_def.RenalClearance, sys.RenalClearance());
+      }
+      if (in.m_def.IntrinsicClearance.IsValid()) {
+        sys.IntrinsicClearance(std::make_unique<std::remove_reference<decltype(sys.IntrinsicClearance())>::type>());
+        io::Property::Marshall(in.m_def.IntrinsicClearance, sys.IntrinsicClearance());
+      }
+      if (in.m_def.SystemicClearance.IsValid()) {
+        sys.SystemicClearance(std::make_unique<std::remove_reference<decltype(sys.SystemicClearance())>::type>());
+        io::Property::Marshall(in.m_def.SystemicClearance, sys.SystemicClearance());
+      }
     }
 
     if (in.HasRenalDynamic()) {
       out.RenalDynamics(std::make_unique<CDM::RenalDynamics>());
       auto& rd = out.RenalDynamics().get();
 
-      if (in.m_RenalDynamic == RenalDynamic::Clearance && in.HasRenalClearance()) {
-        io::Property::Marshall(*in.m_RenalClearance, rd.Clearance());
-      } else if (in.m_RenalDynamic == RenalDynamic::Regulation) {
+      if (in.m_def.RenalDynamic == RenalDynamicsType::Clearance && in.HasRenalClearance()) {
+        io::Property::Marshall(in.m_def.RenalClearance, rd.Clearance());
+      } else if (in.m_def.RenalDynamic == RenalDynamicsType::Regulation) {
         rd.Regulation(std::make_unique<CDM::Regulation>());
         auto& rd_regulation = rd.Regulation().get();
 
-        SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in, rd_regulation, ChargeInBlood)
+        if (in.HasChargeInBlood()) {
+          rd_regulation.ChargeInBlood(std::make_unique<std::remove_reference<decltype(rd_regulation.ChargeInBlood())>::type>());
+          io::Substance::Marshall(in.m_def.ChargeInBlood, rd_regulation.ChargeInBlood());
+        }
 
-        if (in.m_FractionUnboundInPlasma && in.m_FractionUnboundInPlasma->IsValid()) {
+        if (in.m_FractionUnboundInPlasma.IsValid()) {
           out.RenalDynamics()->Regulation()->FractionUnboundInPlasma(std::make_unique<std::remove_reference<decltype(out.RenalDynamics()->Regulation()->FractionUnboundInPlasma())>::type>());
-          io::Property::Marshall(*in.m_FractionUnboundInPlasma, out.RenalDynamics()->Regulation()->FractionUnboundInPlasma());
+          io::Property::Marshall(in.m_FractionUnboundInPlasma, out.RenalDynamics()->Regulation()->FractionUnboundInPlasma());
         }
 
-        if (in.m_RenalReabsorptionRatio && in.m_RenalReabsorptionRatio->IsValid()) {
+        if (in.m_def.RenalReabsorptionRatio.IsValid()) {
           rd_regulation.ReabsorptionRatio(std::make_unique<std::remove_reference<decltype(rd_regulation.ReabsorptionRatio())>::type>());
-          io::Property::Marshall(*in.m_RenalReabsorptionRatio, rd_regulation.ReabsorptionRatio());
+          io::Property::Marshall(in.m_def.RenalReabsorptionRatio, rd_regulation.ReabsorptionRatio());
         }
 
-        if (in.m_RenalTransportMaximum && in.m_RenalTransportMaximum->IsValid()) {
+        if (in.m_def.RenalTransportMaximum.IsValid()) {
           rd_regulation.TransportMaximum(std::make_unique<std::remove_reference<decltype(rd_regulation.TransportMaximum())>::type>());
-          io::Property::Marshall(*in.m_RenalTransportMaximum, rd_regulation.TransportMaximum());
+          io::Property::Marshall(in.m_def.RenalTransportMaximum, rd_regulation.TransportMaximum());
         }
       }
       if (in.HasGlomerularFilterability()) {
-        io::Property::Marshall(*in.m_GlomerularFilterability, rd.GlomerularFilterability());
+        io::Property::Marshall(in.m_def.GlomerularFilterability, rd.GlomerularFilterability());
       }
       if (in.HasRenalFiltrationRate()) {
-        io::Property::Marshall(*in.m_RenalFiltrationRate, rd.FiltrationRate());
+        io::Property::Marshall(in.m_def.RenalFiltrationRate, rd.FiltrationRate());
       }
       if (in.HasRenalReabsorptionRate()) {
-        io::Property::Marshall(*in.m_RenalReabsorptionRate, rd.ReabsorptionRate());
+        io::Property::Marshall(in.m_def.RenalReabsorptionRate, rd.ReabsorptionRate());
       }
       if (in.HasRenalExcretionRate()) {
-        io::Property::Marshall(*in.m_RenalExcretionRate, rd.ExcretionRate());
+        io::Property::Marshall(in.m_def.RenalExcretionRate, rd.ExcretionRate());
       }
-      CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, rd, GlomerularFilterability)
-
-      if (in.m_RenalFiltrationRate && in.m_RenalFiltrationRate->IsValid()) {
-        io::Property::Marshall(*in.m_RenalFiltrationRate, rd.FiltrationRate());
+      if (in.m_def.GlomerularFilterability.IsValid()) {
+        io::Property::Marshall(in.m_def.GlomerularFilterability, rd.GlomerularFilterability());
       }
 
-      if (in.m_RenalExcretionRate && in.m_RenalExcretionRate->IsValid()) {
-        io::Property::Marshall(*in.m_RenalExcretionRate, rd.ReabsorptionRate());
+      if (in.m_def.RenalFiltrationRate.IsValid()) {
+        io::Property::Marshall(in.m_def.RenalFiltrationRate, rd.FiltrationRate());
       }
 
-      if (in.m_RenalExcretionRate && in.m_RenalExcretionRate->IsValid()) {
-        io::Property::Marshall(*in.m_RenalExcretionRate, rd.ExcretionRate());
+      if (in.m_def.RenalExcretionRate.IsValid()) {
+        io::Property::Marshall(in.m_def.RenalExcretionRate, rd.ReabsorptionRate());
+      }
+
+      if (in.m_def.RenalExcretionRate.IsValid()) {
+        io::Property::Marshall(in.m_def.RenalExcretionRate, rd.ExcretionRate());
       }
     }
 
     if (in.HasCellular()) {
       out.CellRegulation(std::make_unique<CDM::CellRegulation>());
       auto& cell = out.CellRegulation().get();
-      CDM_PROPERTY_MARSHALL_HELPER(in, cell, CellDeathRate)
-      CDM_PROPERTY_MARSHALL_HELPER(in, cell, CellBirthRate)
+      if (in.m_def.CellDeathRate.IsValid()) {
+        cell.CellDeathRate(std::make_unique<std::remove_reference<decltype(cell.CellDeathRate())>::type>());
+        io::Property::Marshall(in.m_def.CellDeathRate, cell.CellDeathRate());
+      }
+      if (in.m_def.CellBirthRate.IsValid()) {
+        cell.CellBirthRate(std::make_unique<std::remove_reference<decltype(cell.CellBirthRate())>::type>());
+        io::Property::Marshall(in.m_def.CellBirthRate, cell.CellBirthRate());
+      }
     }
   }
   //-----------------------------------------------------------------------------
@@ -323,10 +342,10 @@ namespace io {
   void Substance::UnMarshall(const CDM::SubstanceData& in, SESubstance& out)
   {
     out.Clear();
-    out.m_Name = in.Name();
+    out.m_def.Name = in.Name();
 
-    io::Substance::UnMarshall(in.State(), out.m_State);
-    io::Substance::UnMarshall(in.Classification(), out.m_Classification);
+    io::Substance::UnMarshall(in.State(), out.m_def.State);
+    io::Substance::UnMarshall(in.Classification(), out.m_def.Classification);
 
     io::Property::UnMarshall(in.Density(), out.GetDensity());
     io::Property::UnMarshall(in.MolarMass(), out.GetMolarMass());
@@ -365,20 +384,34 @@ namespace io {
   void Substance::Marshall(const SESubstance& in, CDM::SubstanceData& out)
   {
     if (in.HasName()) {
-      out.Name(in.m_Name);
+      out.Name(in.m_def.Name);
     } else {
       out.Name("Unknown Substance");
     }
 
-    SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, State)
-    SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, Classification)
+    if (in.m_def.State != decltype(in.m_def.State)::Invalid) {
+      io::Substance::Marshall(in.m_def.State, out.State());
+    }
+    if (in.m_def.Classification != decltype(in.m_def.Classification)::Invalid) {
+      io::Substance::Marshall(in.m_def.Classification, out.Classification());
+    }
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Density)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MolarMass)
+    if (in.m_def.Density.IsValid()) {
+      io::Property::Marshall(in.m_def.Density, out.Density());
+    }
+    if (in.m_def.MolarMass.IsValid()) {
+      io::Property::Marshall(in.m_def.MolarMass, out.MolarMass());
+    }
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MaximumDiffusionFlux)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MichaelisCoefficient)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MembraneResistance)
+    if (in.m_def.MaximumDiffusionFlux.IsValid()) {
+      io::Property::Marshall(in.m_def.MaximumDiffusionFlux, out.MaximumDiffusionFlux());
+    }
+    if (in.m_def.MichaelisCoefficient.IsValid()) {
+      io::Property::Marshall(in.m_def.MichaelisCoefficient, out.MichaelisCoefficient());
+    }
+    if (in.m_def.MembraneResistance.IsValid()) {
+      io::Property::Marshall(in.m_def.MembraneResistance, out.MembraneResistance());
+    }
 
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodConcentration)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MassInBody)
@@ -388,19 +421,35 @@ namespace io {
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, EffectSiteConcentration)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SystemicMassCleared)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TissueConcentration)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AreaUnderCurve)
+    if (in.m_def.AreaUnderCurve.IsValid()) {
+      io::Property::Marshall(in.m_def.AreaUnderCurve, out.AreaUnderCurve());
+    }
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AlveolarTransfer)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DiffusingCapacity)
+    if (in.m_def.AlveolarTransfer.IsValid()) {
+      io::Property::Marshall(in.m_def.AlveolarTransfer, out.AlveolarTransfer());
+    }
+    if (in.m_def.DiffusingCapacity.IsValid()) {
+      io::Property::Marshall(in.m_def.DiffusingCapacity, out.DiffusingCapacity());
+    }
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, EndTidalFraction)
     CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, EndTidalPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SolubilityCoefficient)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RelativeDiffusionCoefficient)
+    if (in.m_def.SolubilityCoefficient.IsValid()) {
+      io::Property::Marshall(in.m_def.SolubilityCoefficient, out.SolubilityCoefficient());
+    }
+    if (in.m_def.RelativeDiffusionCoefficient.IsValid()) {
+      io::Property::Marshall(in.m_def.RelativeDiffusionCoefficient, out.RelativeDiffusionCoefficient());
+    }
 
-    CDM_OPTIONAL_SUBSTANCE_MARSHALL_HELPER(in, out, Aerosolization)
+    if (in.m_def.Aerosolization.IsValid()) {
+      io::Substance::Marshall(in.m_def.Aerosolization, out.Aerosolization());
+    }
     CDM_OPTIONAL_SUBSTANCE_MARSHALL_HELPER(in, out, Clearance)
-    CDM_OPTIONAL_SUBSTANCE_MARSHALL_HELPER(in, out, Pharmacokinetics)
-    CDM_OPTIONAL_SUBSTANCE_MARSHALL_HELPER(in, out, Pharmacodynamics)
+    if (in.m_def.Pharmacokinetics.IsValid()) {
+      io::Substance::Marshall(in.m_def.Pharmacokinetics, out.Pharmacokinetics());
+    }
+    if (in.m_def.Pharmacodynamics.IsValid()) {
+      io::Substance::Marshall(in.m_def.Pharmacodynamics, out.Pharmacodynamics());
+    }
   }
   //-----------------------------------------------------------------------------
   // class SESubstanceCompound
@@ -420,19 +469,16 @@ namespace io {
     std::string err;
     SESubstance* substance = nullptr;
     SESubstanceConcentration* cc;
-    CDM::SubstanceConcentrationData* ccData;
-    for (unsigned int i = 0; i < in.Component().size(); i++) {
-      ccData = (CDM::SubstanceConcentrationData*)&in.Component().at(i);
-      substance = subMgr.GetSubstance(ccData->Name());
+
+    for (auto ccData : in.Component()) {
+      substance = subMgr.GetSubstance(ccData.Name());
       if (substance == nullptr) {
         /// \error Could not load find substance compound component for specified substance
         err = "Could not load find substance compound component : ";
-        err += ccData->Name();
+        err += ccData.Name();
         throw CommonDataModelException(err);
       }
-      cc = new SESubstanceConcentration(*substance);
-      UnMarshall(*ccData, *cc);
-      out.m_Components.push_back(*cc);
+      out.m_Components.push_back(substance->GetDefinition());
     }
   }
   void Substance::Marshall(const SESubstanceCompound& in, CDM::SubstanceCompoundData& out)
@@ -445,7 +491,7 @@ namespace io {
       out.BloodRHFactor(in.GetRhFactor());
     }
 
-    SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, Classification)
+    SE_OPTIONAL_SUBSTANCE_ENUM_PTR_MARSHALL_HELPER(in, out, Classification)
 
     std::vector<SESubstanceConcentration> m_Components;
 
@@ -464,7 +510,7 @@ namespace io {
   void Substance::Marshall(const SESubstanceFraction& in, CDM::SubstanceFractionData& out)
   {
     out.Name(in.m_Substance.GetName());
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, FractionAmount)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, FractionAmount)
   }
   //-----------------------------------------------------------------------------
   // class SESubstanceConcentration
@@ -475,7 +521,7 @@ namespace io {
   }
   void Substance::Marshall(const SESubstanceConcentration& in, CDM::SubstanceConcentrationData& out)
   {
-    out.Name(in.m_Substance->GetName());
+    out.Name(in.m_Substance.Name);
 
     if (in.m_Concentration.IsValid()) {
       out.Concentration(std::make_unique<std::remove_reference<decltype(out.Concentration())>::type>());
@@ -490,8 +536,8 @@ namespace io {
   }
   void Substance::Marshall(const SEPharmacodynamicModifier& in, CDM::PharmacodynamicModifierData& out)
   {
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, EMax)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, EC50)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, EMax)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, EC50)
   }
   //-----------------------------------------------------------------------------
   template <typename SE, typename XSD>

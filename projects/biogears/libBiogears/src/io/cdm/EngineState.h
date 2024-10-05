@@ -18,13 +18,13 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/EngineState.hxx>
 
-#define CDM_ENGINE_STATE_MARSHALL_HELPER(in, out, func)                             \
+#define CDM_ENGINE_STATE_PTR_MARSHALL_HELPER(in, out, func)                             \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::EngineState::Marshall(*in.m_##func, out.func());                           \
   }
 
-#define CDM_OPTIONAL_ENGINE_STATE_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_ENGINE_STATE_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                              \
     io::EngineState::Marshall(*in.m_##func, out.func());        \
   }

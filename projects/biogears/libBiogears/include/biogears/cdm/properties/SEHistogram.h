@@ -22,6 +22,7 @@ namespace io {
 class BIOGEARS_API SEHistogram : public SEProperty {
 public:
   friend io::Property;
+  SEHistogram(SEHistogram const& obj);
   SEHistogram();
   virtual ~SEHistogram();
 
@@ -43,6 +44,8 @@ public:
   std::vector<double>& GetIndependent();
   const std::vector<double>& GetIndependent() const;
      
+  //-------------------------------------------------------------------------------
+  SEHistogram& operator=(const SEHistogram& rhs);
   bool operator==(const SEHistogram&) const;
   bool operator!=(const SEHistogram&) const;
 

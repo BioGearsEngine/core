@@ -81,9 +81,9 @@ namespace io {
   void EnvironmentActions::Marshall(const SEThermalApplication& in, CDM::ThermalApplicationData& out)
   {
     Marshall(static_cast<const SEEnvironmentAction&>(in), static_cast<CDM::EnvironmentActionData&>(out));
-    CDM_OPTIONAL_ENVIRONMENT_MARSHALL_HELPER(in, out, ActiveHeating)
-    CDM_OPTIONAL_ENVIRONMENT_MARSHALL_HELPER(in, out, ActiveCooling)
-    CDM_OPTIONAL_ENVIRONMENT_MARSHALL_HELPER(in, out, AppliedTemperature)
+    CDM_OPTIONAL_ENVIRONMENT_PTR_MARSHALL_HELPER(in, out, ActiveHeating)
+    CDM_OPTIONAL_ENVIRONMENT_PTR_MARSHALL_HELPER(in, out, ActiveCooling)
+    CDM_OPTIONAL_ENVIRONMENT_PTR_MARSHALL_HELPER(in, out, AppliedTemperature)
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>

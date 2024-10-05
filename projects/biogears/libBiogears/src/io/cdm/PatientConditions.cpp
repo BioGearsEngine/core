@@ -106,7 +106,7 @@ namespace io {
   void PatientConditions::Marshall(const SEChronicAnemia& in, CDM::ChronicAnemiaData& out)
   {
     PatientConditions::Marshall(static_cast<const SEPatientCondition&>(in), static_cast<CDM::PatientConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, ReductionFactor)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, ReductionFactor)
   }
   //----------------------------------------------------------------------------------
   // SEChronicHeartFailure
@@ -143,8 +143,8 @@ namespace io {
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
 
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, BronchitisSeverity)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, EmphysemaSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, BronchitisSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, EmphysemaSeverity)
   }
   //----------------------------------------------------------------------------------
   // SEChronicPericardialEffusion
@@ -157,7 +157,7 @@ namespace io {
   void PatientConditions::Marshall(const SEChronicPericardialEffusion& in, CDM::ChronicPericardialEffusionData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, AccumulatedVolume)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, AccumulatedVolume)
   }
   //----------------------------------------------------------------------------------
   // SEChronicRenalStenosis
@@ -171,8 +171,8 @@ namespace io {
   void PatientConditions::Marshall(const SEChronicRenalStenosis& in, CDM::ChronicRenalStenosisData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftKidneySeverity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightKidneySeverity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftKidneySeverity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightKidneySeverity)
   }
   //----------------------------------------------------------------------------------
   // SEDehydration
@@ -185,7 +185,7 @@ namespace io {
   void PatientConditions::Marshall(const SEDehydration& in, CDM::DehydrationData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, DehydrationFraction)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, DehydrationFraction)
   }
   //----------------------------------------------------------------------------------
   // SEDiabetesType1
@@ -198,7 +198,7 @@ namespace io {
   void PatientConditions::Marshall(const SEDiabetesType1& in, CDM::DiabetesType1Data& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InsulinProductionSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InsulinProductionSeverity)
   }
   //----------------------------------------------------------------------------------
   // SEDiabetesType2
@@ -212,8 +212,8 @@ namespace io {
   void PatientConditions::Marshall(const SEDiabetesType2& in, CDM::DiabetesType2Data& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InsulinProductionSeverity)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InsulinResistanceSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InsulinProductionSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InsulinResistanceSeverity)
   }
   //----------------------------------------------------------------------------------
   // SEImpairedAlveolarExchange
@@ -227,8 +227,8 @@ namespace io {
   void PatientConditions::Marshall(const SEImpairedAlveolarExchange& in, CDM::ImpairedAlveolarExchangeData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ImpairedSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ImpairedFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ImpairedSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ImpairedFraction)
   }
   //----------------------------------------------------------------------------------
   // SELobarPneumonia
@@ -243,9 +243,9 @@ namespace io {
   void PatientConditions::Marshall(const SELobarPneumonia& in, CDM::LobarPneumoniaData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, LeftLungAffected)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, RightLungAffected)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftLungAffected)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightLungAffected)
   }
   //----------------------------------------------------------------------------------
   // SEStarvation
@@ -258,7 +258,7 @@ namespace io {
   void PatientConditions::Marshall(const SEStarvation& in, CDM::StarvationData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, TimeSinceMeal)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, TimeSinceMeal)
   }
   //----------------------------------------------------------------------------------
 }

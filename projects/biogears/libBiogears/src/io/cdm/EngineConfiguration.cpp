@@ -87,8 +87,8 @@ namespace io {
   void EngineConfiguration::Marshall(const PhysiologyEngineConfiguration& in, CDM::PhysiologyEngineConfigurationData& out)
   {
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TimeStep)
-    SE_OPTIONAL_PROPERTY_ENUM_MARSHALL_HELPER(in, out, WritePatientBaselineFile)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TimeStep)
+    SE_OPTIONAL_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, WritePatientBaselineFile)
 
     if (in.m_ECGInterpolator) {
       io::ElectroCardioGram::Marshall(*in.m_ECGInterpolator, out.ElectroCardioGramInterpolator());
@@ -126,8 +126,8 @@ namespace io {
     out.Canceled(in.m_Canceled);
     out.LogProgress(in.m_LogProgress);
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CurrentTime)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StabilizationDuration)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CurrentTime)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StabilizationDuration)
   }
   //----------------------------------------------------------------------------------
   // class PhysiologyEngineTimedStabilization
@@ -226,9 +226,9 @@ namespace io {
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineDynamicStabilizationCriteria& in, CDM::PhysiologyEngineDynamicStabilizationCriteriaData& out)
   {
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, ConvergenceTime)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, MinimumReactionTime)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, MaximumAllowedStabilizationTime)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, ConvergenceTime)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, MinimumReactionTime)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, MaximumAllowedStabilizationTime)
     for (auto pc : in.m_PropertyConvergence) {
       auto pcData = std::make_unique<CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData>();
       // if (pcData->PercentDifference() != pcData->PercentDifference()) {

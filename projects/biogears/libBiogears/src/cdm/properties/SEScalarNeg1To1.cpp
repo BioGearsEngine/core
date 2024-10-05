@@ -20,6 +20,11 @@ SEScalarNeg1To1::SEScalarNeg1To1()
   : SEScalar()
 {
 }
+SEScalarNeg1To1::SEScalarNeg1To1(SEScalarNeg1To1 const& obj)
+  : SEScalar(obj.m_value, obj.m_readOnly)
+{
+
+}
 //-------------------------------------------------------------------------------
 SEScalarNeg1To1::~SEScalarNeg1To1()
 {

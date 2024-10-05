@@ -14,18 +14,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
-#include <biogears/cdm/enums/SESubstanceEnums.h>
 
 #include <map>
+#include<set>
 
 #include <biogears/schema/cdm/Substance.hxx>
-
-namespace mil::tatrc::physiology::datamodel {
-      class SubstanceData;
-      class SubstanceCompoundData;
-}
 
 namespace biogears {
 namespace io {
@@ -33,12 +29,10 @@ namespace io {
 }
 } // namespace biogears
 #pragma warning(disable : 4661)
-
 namespace std {
-extern template class map<biogears::SESubstance*, const CDM::SubstanceData*>;
-extern template class map<biogears::SESubstanceCompound*, const CDM::SubstanceCompoundData*>;
+extern template class map<biogears::SESubstance*, const biogears::SESubstanceDefinition>;
+extern template class map<biogears::SESubstanceCompound*, const biogears::SESubstanceCompound>;
 }
-
 #pragma warning(default : 4661)
 
 namespace biogears {
@@ -53,32 +47,35 @@ public:
   virtual void Reset();
   virtual bool LoadSubstanceDirectory();
 
-  virtual const std::vector<SESubstance*>& GetSubstances() const;
+  virtual const std::set<SESubstance*>& GetSubstances() const;
   virtual SESubstance* GetSubstance(const char* name) const;
   virtual SESubstance* GetSubstance(const std::string& name) const;
+  virtual SESubstance* GetSubstance(const SESubstanceDefinition& definition) const;
   virtual void AddSubstance(SESubstance& substance);
+  virtual SESubstance* AddSubstance(SESubstanceDefinition const& substance);
 
   virtual bool IsActive(const SESubstance& substance) const;
-  virtual const std::vector<SESubstance*>& GetActiveSubstances() const;
+  virtual const std::set<SESubstance*>& GetActiveSubstances() const;
   virtual void AddActiveSubstance(SESubstance& substance);
+  virtual SESubstance* AddActiveSubstance(SESubstanceDefinition const& substance);
   virtual void RemoveActiveSubstance(const SESubstance& substance);
-  virtual void RemoveActiveSubstances(const std::vector<SESubstance*>& substances);
+  virtual void RemoveActiveSubstances(const std::set<SESubstance*>& substances);
   virtual void RemoveActiveSubstances();
 
-  virtual const std::vector<SESubstance*>& GetActiveGases() const;
-  virtual const std::vector<SESubstance*>& GetActiveLiquids() const;
-  virtual const std::vector<SESubstance*>& GetActiveDrugs() const;
+  virtual const std::set<SESubstance*>& GetActiveGases() const;
+  virtual const std::set<SESubstance*>& GetActiveLiquids() const;
+  virtual const std::set<SESubstance*>& GetActiveDrugs() const;
 
-  virtual const std::vector<SESubstanceCompound*>& GetCompounds() const;
+  virtual const std::set<SESubstanceCompound*>& GetCompounds() const;
   virtual SESubstanceCompound* GetCompound(const char* name) const;
   virtual SESubstanceCompound* GetCompound(const std::string& name) const;
   virtual void AddCompound(SESubstanceCompound& compound);
 
   virtual bool IsActive(const SESubstanceCompound& compound) const;
-  virtual const std::vector<SESubstanceCompound*>& GetActiveCompounds() const;
+  virtual const std::set<SESubstanceCompound*>& GetActiveCompounds() const;
   virtual void AddActiveCompound(SESubstanceCompound& compound);
   virtual void RemoveActiveCompound(SESubstanceCompound& compound);
-  virtual void RemoveActiveCompounds(const std::vector<SESubstanceCompound*>& compounds);
+  virtual void RemoveActiveCompounds(const std::set<SESubstanceCompound*>& compounds);
 
   virtual SESubstance* ReadSubstanceFile(const char* xmlFile);
   virtual SESubstance* ReadSubstanceFile(const std::string& xmlFile);
@@ -87,17 +84,17 @@ public:
   bool operator!=(SESubstanceManager const& rhs) const;
 
 protected:
-  std::vector<SESubstance*> m_Substances;
-  std::vector<SESubstance*> m_ActiveSubstances;
-  std::vector<SESubstance*> m_ActiveGases;
-  std::vector<SESubstance*> m_ActiveLiquids;
-  std::vector<SESubstance*> m_ActiveDrugs;
+  std::set<SESubstance*> m_Substances;
+  std::set<SESubstance*> m_ActiveSubstances;
+  std::set<SESubstance*> m_ActiveGases;
+  std::set<SESubstance*> m_ActiveLiquids;
+  std::set<SESubstance*> m_ActiveDrugs;
 
-  std::vector<SESubstanceCompound*> m_Compounds;
-  std::vector<SESubstanceCompound*> m_ActiveCompounds;
+  std::set<SESubstanceCompound*> m_Compounds;
+  std::set<SESubstanceCompound*> m_ActiveCompounds;
 
 private:
-  std::map<SESubstance*, const CDM::SubstanceData*> m_OriginalSubstanceData;
-  std::map<SESubstanceCompound*, const CDM::SubstanceCompoundData*> m_OriginalCompoundData;
+  std::map<SESubstance*, SESubstanceDefinition> m_OriginalSubstanceData;
+  std::map<SESubstanceCompound*, SESubstanceCompound> m_OriginalCompoundData;
 };
 }

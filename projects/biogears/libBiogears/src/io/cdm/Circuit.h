@@ -29,13 +29,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/cdm/Circuit.hxx>
 #include <biogears/cdm/circuit/SECircuit.inl>
 
-#define CDM_CIRCUIT_MARSHALL_HELPER(in, out, func)                                   \
+#define CDM_CIRCUIT_PTR_MARSHALL_HELPER(in, out, func)                                   \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Circuit::Marshall(*in.m_##func, out.func());                                 \
   }
 
-#define CDM_OPTIONAL_CIRCUIT_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_CIRCUIT_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                        \
     io::Circuit::Marshall(*in.m_##func, out.func());        \
   }

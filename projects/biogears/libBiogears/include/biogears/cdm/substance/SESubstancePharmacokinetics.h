@@ -36,7 +36,8 @@ class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstancePharmacokinetics(Logger* logger);
+  SESubstancePharmacokinetics(SESubstancePharmacokinetics const& obj);
+  SESubstancePharmacokinetics(Logger* logger = nullptr);
   virtual ~SESubstancePharmacokinetics();
 
   virtual void Clear();
@@ -59,6 +60,7 @@ public:
   virtual void RemoveTissueKinetics(const char* name);
   virtual void RemoveTissueKinetics(const std::string& name);
 
+  SESubstancePharmacokinetics& operator=(SESubstancePharmacokinetics const& rhs);
   bool operator==(const SESubstancePharmacokinetics& rhs) const;
   bool operator!=(const SESubstancePharmacokinetics& rhs) const;
 

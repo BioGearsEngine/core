@@ -72,7 +72,7 @@ namespace io {
     out.PercentTolerance(in.m_PercentTolerance);
     out.PropertyName(in.m_PropertyName);
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PercentToleranceVsNumErrors);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PercentToleranceVsNumErrors);
   }
   //-----------------------------------------------------------------------------
   // class SETestReport

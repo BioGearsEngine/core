@@ -12,18 +12,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
 
 class SELiquidCompartment;
 class SETissueCompartment;
-class SEScalarMass;
-class SEScalarAmountPerVolume;
-class AmountPerVolumeUnit;
-class MassUnit;
-class SEScalarMassPerVolume;
-class MassPerVolumeUnit;
 
 class BioGears;
 
@@ -46,7 +43,7 @@ protected:
   double m_alveoli = 0;
 };
 
-} //namespace biogears
+} // namespace biogears
 #pragma warning(disable : 4661)
 
 namespace std {
@@ -57,8 +54,8 @@ extern template class map<biogears::SESubstance*, biogears::SizeIndependentDepos
 namespace biogears {
 
 /**
-* @brief Manages and initializes all systems with substances needed by %BioGears
-*/
+ * @brief Manages and initializes all systems with substances needed by %BioGears
+ */
 class BIOGEARS_API BioGearsSubstances : public SESubstanceManager {
   friend class BioGearsEngineTest;
 
@@ -66,12 +63,13 @@ public:
   BioGearsSubstances(BioGears& data);
   virtual ~BioGearsSubstances();
 
-  virtual void Clear();
+  void Clear() override;
 
-  virtual bool LoadSubstanceDirectory();
-  virtual void InitializeSubstances();
+  bool LoadSubstanceDirectory() override;
+  void InitializeSubstances();
 
-  virtual void AddActiveSubstance(SESubstance& substance);
+  void AddActiveSubstance(SESubstance& substance) override;
+  SESubstance* AddActiveSubstance(SESubstanceDefinition const& substance) override;
   virtual bool IsActive(const SESubstance& sub) const;
 
   inline SESubstance& GetO2() { return *m_O2; }
@@ -123,12 +121,12 @@ public:
   void ProbeBloodGases(SELiquidCompartment& cmpt, const std::string& prefix = "");
 
 protected:
-  virtual void InitializeGasCompartments();
-  virtual void InitializeLiquidCompartmentGases();
-  virtual void InitializeLiquidCompartmentNonGases();
+  void InitializeGasCompartments();
+  void InitializeLiquidCompartmentGases();
+  void InitializeLiquidCompartmentNonGases();
 
-  virtual void InitializeBloodGases(SETissueCompartment& tissue, SELiquidCompartment& vascular);
-  virtual void InitializeBloodGases(SELiquidCompartment& cmpt, double Hb_total_mM, double O2_sat, double O2_mmol_Per_L, double CO2_sat, double CO2_mmol_Per_L, double HCO3_mmol_Per_L, double pH, bool distribute = true);
+  void InitializeBloodGases(SETissueCompartment& tissue, SELiquidCompartment& vascular);
+  void InitializeBloodGases(SELiquidCompartment& cmpt, double Hb_total_mM, double O2_sat, double O2_mmol_Per_L, double CO2_sat, double CO2_mmol_Per_L, double HCO3_mmol_Per_L, double pH, bool distribute = true);
 
   void SetSubstanceMolarity(SESubstance&, const std::vector<SELiquidCompartment*>&, const SEScalarAmountPerVolume& molarity);
   void SetSubstanceMolarity(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarAmountPerVolume& molarity);
@@ -140,7 +138,7 @@ protected:
   void SetSubstanceConcentration(SESubstance&, const std::vector<SETissueCompartment*>&, const SEScalarMassPerVolume& extracellular, const SEScalarMassPerVolume& intracellular);
 
   // Common Substances
-  //Substances
+  // Substances
   SESubstance* m_O2;
   SESubstance* m_CO;
   SESubstance* m_CO2;

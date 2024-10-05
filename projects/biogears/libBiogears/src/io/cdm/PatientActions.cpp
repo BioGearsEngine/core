@@ -419,7 +419,7 @@ namespace io {
   void PatientActions::Marshall(const SEPatientAssessmentRequest& in, CDM::PatientAssessmentRequestData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, Type)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, Type)
   }
   // class SEAcuteRespiratoryDistressStress;
   void PatientActions::UnMarshall(const CDM::AcuteRespiratoryDistressData& in, SEAcuteRespiratoryDistress& out, std::default_random_engine* rd)
@@ -433,7 +433,7 @@ namespace io {
   void PatientActions::Marshall(const SEAcuteRespiratoryDistress& in, CDM::AcuteRespiratoryDistressData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEAcuteStress
@@ -448,7 +448,7 @@ namespace io {
   void PatientActions::Marshall(const SEAcuteStress& in, CDM::AcuteStressData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEExampleAction
@@ -465,7 +465,7 @@ namespace io {
   void PatientActions::Marshall(const SEExampleAction& in, CDM::ExampleActionData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEAirwayObstruction
@@ -480,7 +480,7 @@ namespace io {
   void PatientActions::Marshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEApnea
@@ -495,7 +495,7 @@ namespace io {
   void PatientActions::Marshall(const SEApnea& in, CDM::ApneaData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEAsthmaAttack
@@ -510,7 +510,7 @@ namespace io {
   void PatientActions::Marshall(const SEAsthmaAttack& in, CDM::AsthmaAttackData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEBrainInjury
@@ -526,8 +526,8 @@ namespace io {
   void PatientActions::Marshall(const SEBrainInjury& in, CDM::BrainInjuryData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
-    SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, Type)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, Type)
   }
   //----------------------------------------------------------------------------------
   // class SEBronchoconstriction
@@ -542,7 +542,7 @@ namespace io {
   void PatientActions::Marshall(const SEBronchoconstriction& in, CDM::BronchoconstrictionData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEBurnWound
@@ -613,7 +613,7 @@ namespace io {
   void PatientActions::Marshall(const SEChestCompressionForce& in, CDM::ChestCompressionForceData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Force)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Force)
   }
   //----------------------------------------------------------------------------------
   // class SEChestCompressionForceScale
@@ -631,8 +631,8 @@ namespace io {
   void PatientActions::Marshall(const SEChestCompressionForceScale& in, CDM::ChestCompressionForceScaleData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, ForceScale)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ForcePeriod)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, ForceScale)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ForcePeriod)
   }
   //----------------------------------------------------------------------------------
   // class SEChestOcclusiveDressing
@@ -653,7 +653,7 @@ namespace io {
     out.State(std::make_unique<std::remove_reference<decltype(out.State())>::type>());
     io::Property::Marshall(in.m_State, out.State());
 
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, Side)
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
   // class SEConsciousRespirationCommand
@@ -681,7 +681,7 @@ namespace io {
   void PatientActions::Marshall(const SEEbola& in, CDM::EbolaData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, Severity)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEEscharotomy
@@ -710,8 +710,8 @@ namespace io {
   void PatientActions::Marshall(const SEForcedInhale& in, CDM::ForcedInhaleData& out)
   {
     PatientActions::Marshall(static_cast<const SEConsciousRespirationCommand&>(in), static_cast<CDM::ConsciousRespirationCommandData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Period)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryCapacityFraction)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Period)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InspiratoryCapacityFraction)
   }
   //----------------------------------------------------------------------------------
   // class SEForcedExhale
@@ -726,8 +726,8 @@ namespace io {
   void PatientActions::Marshall(const SEForcedExhale& in, CDM::ForcedExhaleData& out)
   {
     PatientActions::Marshall(static_cast<const SEConsciousRespirationCommand&>(in), static_cast<CDM::ConsciousRespirationCommandData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Period)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, ExpiratoryReserveVolumeFraction)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Period)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExpiratoryReserveVolumeFraction)
   }
   //----------------------------------------------------------------------------------
   // class SEBreathHold
@@ -741,7 +741,7 @@ namespace io {
   void PatientActions::Marshall(const SEBreathHold& in, CDM::BreathHoldData& out)
   {
     PatientActions::Marshall(static_cast<const SEConsciousRespirationCommand&>(in), static_cast<CDM::ConsciousRespirationCommandData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Period)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Period)
   }
   //----------------------------------------------------------------------------------
   // class SEUseInhaler
@@ -819,7 +819,7 @@ namespace io {
   void PatientActions::Marshall(const SEConsumeNutrients& in, CDM::ConsumeNutrientsData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_OPTIONAL_PATIENT_NUTRITION_MARSHALL_HELPER(in, out, Nutrition)
+    CDM_OPTIONAL_PATIENT_NUTRITION_PTR_MARSHALL_HELPER(in, out, Nutrition)
     out.NutritionFile(in.m_NutritionFile);
   }
   //----------------------------------------------------------------------------------
@@ -958,8 +958,8 @@ namespace io {
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     out.Compartment(in.m_Compartment);
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InitialRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BleedResistance)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InitialRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BleedResistance)
   }
   //----------------------------------------------------------------------------------
   // class SEInfection
@@ -978,8 +978,8 @@ namespace io {
 
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     out.Location(in.GetLocation());
-    SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, Severity)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, MinimumInhibitoryConcentration)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, MinimumInhibitoryConcentration)
   }
   //----------------------------------------------------------------------------------
   // class SEIntubation
@@ -994,7 +994,7 @@ namespace io {
   void PatientActions::Marshall(const SEIntubation& in, CDM::IntubationData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, Type)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, Type)
   }
   //----------------------------------------------------------------------------------
   // class SEMechanicalVentilation
@@ -1041,8 +1041,8 @@ namespace io {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
     out.State(std::make_unique<std::remove_reference<decltype(out.State())>::type>());
     Property::Marshall(in.GetState(), out.State());
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Flow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Pressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Flow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Pressure)
 
     for (SESubstanceFraction* sf : in.m_GasFractions) {
       auto sfData = std::make_unique<CDM::SubstanceFractionData>();
@@ -1062,7 +1062,7 @@ namespace io {
   void PatientActions::Marshall(const SENasalCannula& in, CDM::NasalCannulaData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, FlowRate)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, FlowRate)
   }
   //----------------------------------------------------------------------------------
   // class SENasalStates
@@ -1084,8 +1084,8 @@ namespace io {
   }
   void PatientActions::Marshall(const SENasalState& in, CDM::NasalStateData& out)
   {
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, TotalNasalDose);
-    // CDM_PROPERTY_MARSHALL_HELPER(in, out, VenaCavaConcentration);
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalNasalDose);
+    // CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, VenaCavaConcentration);
 
     out.UnreleasedDrugMasses().clear();
     for (auto umData : in.m_UnreleasedDrugMasses) {
@@ -1118,7 +1118,7 @@ namespace io {
     out.State(std::make_unique<std::remove_reference<decltype(out.State())>::type>());
     Property::Marshall(in.m_State, out.State());
 
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, Side)
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
   // class SEOverride
@@ -1340,81 +1340,81 @@ namespace io {
       Property::Marshall(in.m_OverrideConformance, out.Conformant());
     }
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ArterialBloodPHOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VenousBloodPHOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CarbonDioxideSaturationOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CarbonMonoxideSaturationOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, OxygenSaturationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ArterialBloodPHOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VenousBloodPHOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CarbonDioxideSaturationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CarbonMonoxideSaturationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, OxygenSaturationOverride)
     // GetBloodVolumeOverride
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PhosphateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WhiteBloodCellCountOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalBilirubinOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CalciumConcentrationOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, GlucoseConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PhosphateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, WhiteBloodCellCountOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalBilirubinOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CalciumConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, GlucoseConcentrationOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LactateConcentrationOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PotassiumConcentrationOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SodiumConcentrationOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodVolumeOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CardiacOutputOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LactateConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PotassiumConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SodiumConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BloodVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CardiacOutputOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DiastolicArterialPressureOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanArterialPressureOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartStrokeVolumeOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SystolicArterialPressureOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DiastolicArterialPressureOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanArterialPressureOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartStrokeVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SystolicArterialPressureOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InsulinSynthesisRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, GlucagonSynthesisRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AchievedExerciseLevelOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CoreTemperatureOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CreatinineProductionRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InsulinSynthesisRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, GlucagonSynthesisRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AchievedExerciseLevelOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CoreTemperatureOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CreatinineProductionRateOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExerciseMeanArterialPressureDeltaOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FatigueLevelOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LactateProductionRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinTemperatureOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SweatRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExerciseMeanArterialPressureDeltaOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, FatigueLevelOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LactateProductionRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinTemperatureOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SweatRateOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalMetabolicRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalWorkRateLevelOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SodiumLostToSweatOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PotassiumLostToSweatOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ChlorideLostToSweatOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalMetabolicRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalWorkRateLevelOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SodiumLostToSweatOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PotassiumLostToSweatOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ChlorideLostToSweatOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftAfferentArterioleResistanceOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularFiltrationRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftReabsorptionRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RenalBloodFlowOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RenalPlasmaFlowOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftAfferentArterioleResistanceOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftGlomerularFiltrationRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftReabsorptionRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RenalBloodFlowOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RenalPlasmaFlowOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightAfferentArterioleResistanceOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightGlomerularFiltrationRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightReabsorptionRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineProductionRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineOsmolalityOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightAfferentArterioleResistanceOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightGlomerularFiltrationRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightReabsorptionRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineProductionRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineOsmolalityOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineVolumeOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineUreaNitrogenConcentrationOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExpiratoryFlowOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryFlowOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryComplianceOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineUreaNitrogenConcentrationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExpiratoryFlowOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InspiratoryFlowOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryComplianceOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryResistanceOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationRateOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TidalVolumeOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TargetPulmonaryVentilationOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalAlveolarVentilationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryResistanceOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationRateOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TidalVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TargetPulmonaryVentilationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalAlveolarVentilationOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalLungVolumeOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalPulmonaryVentilationOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExtravascularFluidVolumeOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, IntracellularFluidVolumeOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LiverGlycogenOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalLungVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalPulmonaryVentilationOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExtravascularFluidVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, IntracellularFluidVolumeOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LiverGlycogenOverride)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MuscleGlycogenOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StoredProteinOverride)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StoredFatOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MuscleGlycogenOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StoredProteinOverride)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StoredFatOverride)
   }
   //----------------------------------------------------------------------------------
   // class SEPainStimulus
@@ -1432,7 +1432,7 @@ namespace io {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
 
     out.Location(in.m_Location);
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEPericardialEffusion
@@ -1447,7 +1447,7 @@ namespace io {
   void PatientActions::Marshall(const SEPericardialEffusion& in, CDM::PericardialEffusionData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, EffusionRate)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, EffusionRate)
   }
   //----------------------------------------------------------------------------------
   // class SEPulmonaryShunt
@@ -1462,7 +1462,7 @@ namespace io {
   void PatientActions::Marshall(const SEPulmonaryShunt& in, CDM::PulmonaryShuntData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, FlowRateScaling)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, FlowRateScaling)
   }
   //----------------------------------------------------------------------------------
   // class SERadiationAbsorbedDose
@@ -1477,7 +1477,7 @@ namespace io {
   void PatientActions::Marshall(const SERadiationAbsorbedDose& in, CDM::RadiationAbsorbedDoseData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, RadiationDose)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, RadiationDose)
   }
   //----------------------------------------------------------------------------------
   // class SESleep
@@ -1520,10 +1520,10 @@ namespace io {
   void PatientActions::Marshall(const SESubstanceBolus& in, CDM::SubstanceBolusData& out)
   {
     PatientActions::Marshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
-    SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, AdminRoute)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Dose)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Concentration)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AdminTime)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, AdminRoute)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Dose)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Concentration)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AdminTime)
     out.Substance(in.m_Substance.GetName());
   }
   //----------------------------------------------------------------------------------
@@ -1558,8 +1558,8 @@ namespace io {
   void PatientActions::Marshall(const SESubstanceCompoundInfusion& in, CDM::SubstanceCompoundInfusionData& out)
   {
     PatientActions::Marshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Rate)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, BagVolume)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Rate)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, BagVolume)
     out.SubstanceCompound(in.m_Compound.GetName());
   }
   //----------------------------------------------------------------------------------
@@ -1574,8 +1574,8 @@ namespace io {
   void PatientActions::Marshall(const SESubstanceInfusion& in, CDM::SubstanceInfusionData& out)
   {
     PatientActions::Marshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Rate)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Concentration)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Rate)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Concentration)
     out.Substance(in.m_Substance.GetName());
   }
   //----------------------------------------------------------------------------------
@@ -1590,7 +1590,7 @@ namespace io {
   {
     io::PatientActions::Marshall(static_cast<SESubstanceAdministration const&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
     out.Substance(in.GetSubstance().GetName());
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Dose);
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Dose);
   }
   //----------------------------------------------------------------------------------
   // class SESubstanceOralDose
@@ -1604,9 +1604,9 @@ namespace io {
   void PatientActions::Marshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out)
   {
     PatientActions::Marshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Dose)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Dose)
 
-    SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, AdminRoute)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, AdminRoute)
     out.Substance(in.m_Substance.GetName());
   }
   //----------------------------------------------------------------------------------
@@ -1625,9 +1625,9 @@ namespace io {
   void PatientActions::Marshall(const SETensionPneumothorax& in, CDM::TensionPneumothoraxData& out)
   {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
-    SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, Type)
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, Side)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, Type)
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
   // class SETransmucosalStates
@@ -1653,8 +1653,8 @@ namespace io {
   }
   void PatientActions::Marshall(const SETransmucosalState& in, CDM::TransmucosalStateData& out)
   {
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, MouthSolidMass)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, SalivaConcentration)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, MouthSolidMass)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, SalivaConcentration)
 
     for (auto bcData : in.m_BuccalConcentrations) {
       out.BuccalConcentrations().push_back(std::make_unique<CDM::ScalarMassPerVolumeData>());
@@ -1681,7 +1681,7 @@ namespace io {
     PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
 
     out.Compartment(in.m_Compartment);
-    SE_PATIENT_ACTIONS_ENUM_MARSHALL_HELPER(in, out, TourniquetLevel)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, TourniquetLevel)
   }
   //----------------------------------------------------------------------------------
   // class SEUrinate

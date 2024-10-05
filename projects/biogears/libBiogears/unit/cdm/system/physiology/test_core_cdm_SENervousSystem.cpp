@@ -22,7 +22,7 @@
 
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #ifdef DISABLE_BIOGEARS_SENervousSystem_TEST
 #define TEST_FIXTURE_NAME DISABLED_Core_SENervousSystem_Fixture

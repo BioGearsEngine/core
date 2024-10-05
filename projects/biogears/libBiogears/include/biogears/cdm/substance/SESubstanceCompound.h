@@ -14,12 +14,11 @@ specific language governing permissions and limitations under the License.
 
 #include <memory>
 
-#include <biogears/exports.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/exports.h>
 
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
-
 
 namespace biogears {
 class SESubstance;
@@ -27,13 +26,14 @@ class SESubstanceManager;
 namespace io {
   class Substance;
 }
+
 class BIOGEARS_API SESubstanceCompound : public Loggable {
   friend io::Substance;
 
 public:
   explicit SESubstanceCompound(const std::string& name, Logger* logger);
   explicit SESubstanceCompound(const char* name, Logger* logger);
-  SESubstanceCompound(Logger* logger);
+  SESubstanceCompound(Logger* logger = nullptr);
   virtual ~SESubstanceCompound();
 
   static std::unique_ptr<SESubstanceCompound> make_unique(const std::string& name, Logger* logger);
@@ -59,12 +59,16 @@ public:
   bool HasComponent(const SESubstance& substance) const;
   std::vector<SESubstanceConcentration>& GetComponents();
   const std::vector<SESubstanceConcentration> GetComponents() const;
-  SESubstanceConcentration& GetComponent(SESubstance& substance);
-  const SESubstanceConcentration GetComponent(SESubstance& substance) const;
+  SESubstanceConcentration& GetComponent(SESubstance const& substance);
+  SESubstanceConcentration GetComponent(SESubstance const& substance) const;
+
+  SESubstanceConcentration& GetComponent(SESubstanceDefinition const& substance);
+  SESubstanceConcentration GetComponent(SESubstanceDefinition const& substance) const;
+
   void RemoveComponent(const SESubstance& substance);
-   
-  bool operator==( const SESubstanceCompound& rhs) const;
-  bool operator!=( const SESubstanceCompound& rhs) const;
+
+  bool operator==(const SESubstanceCompound& rhs) const;
+  bool operator!=(const SESubstanceCompound& rhs) const;
 
 protected:
   std::string m_Name;

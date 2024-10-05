@@ -24,37 +24,55 @@ template class map<string, biogears::SEPharmacodynamicModifier*>;
 }
 namespace biogears {
 
+SESubstancePharmacodynamics::SESubstancePharmacodynamics(SESubstancePharmacodynamics const& obj)
+  : Loggable(obj.GetLogger())
+  , m_AntibacterialEffect(new SEScalarFrequency(*obj.m_AntibacterialEffect))
+  , m_Bronchodilation(new SEPharmacodynamicModifier(*obj.m_Bronchodilation))
+  , m_DiastolicPressureModifier(new SEPharmacodynamicModifier(*obj.m_DiastolicPressureModifier))
+  , m_EMaxShapeParameter(new SEScalar(*obj.m_EMaxShapeParameter))
+  , m_FeverModifier(new SEPharmacodynamicModifier(*obj.m_FeverModifier))
+  , m_HeartRateModifier(new SEPharmacodynamicModifier(*obj.m_HeartRateModifier))
+  , m_HemorrhageModifier(new SEPharmacodynamicModifier(*obj.m_HemorrhageModifier))
+  , m_NeuromuscularBlock(new SEPharmacodynamicModifier(*obj.m_NeuromuscularBlock))
+  , m_PainModifier(new SEPharmacodynamicModifier(*obj.m_PainModifier))
+  , m_PupilReactivityModifier(new SEPharmacodynamicModifier(*obj.m_PupilReactivityModifier))
+  , m_PupilSizeModifier(new SEPharmacodynamicModifier(*obj.m_PupilSizeModifier))
+  , m_RespirationRateModifier(new SEPharmacodynamicModifier(*obj.m_RespirationRateModifier))
+  , m_Sedation(new SEPharmacodynamicModifier(*obj.m_Sedation))
+  , m_SystolicPressureModifier(new SEPharmacodynamicModifier(*obj.m_SystolicPressureModifier))
+  , m_TidalVolumeModifier(new SEPharmacodynamicModifier(*obj.m_TidalVolumeModifier))
+  , m_TubularPermeabilityModifier(new SEPharmacodynamicModifier(*obj.m_TubularPermeabilityModifier))
+  , m_CentralNervousModifier(new SEPharmacodynamicModifier(*obj.m_CentralNervousModifier))
+  , m_EffectSiteRateConstant(new SEScalarFrequency(*obj.m_EffectSiteRateConstant))
+{
+
+}
+
 SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   : Loggable(logger)
-{
-  m_AntibacterialEffect = nullptr;
-  m_Bronchodilation = nullptr;
-  m_DiastolicPressureModifier = nullptr;
-  m_EMaxShapeParameter = nullptr;
-  m_FeverModifier = nullptr;
-  m_HeartRateModifier = nullptr;
-  m_HemorrhageModifier = nullptr;
-  m_NeuromuscularBlock = nullptr;
-  m_PainModifier = nullptr;
-  m_PupilReactivityModifier = nullptr;
-  m_PupilSizeModifier = nullptr;
-  m_RespirationRateModifier = nullptr;
-  m_Sedation = nullptr;
-  m_SystolicPressureModifier = nullptr;
-  m_TidalVolumeModifier = nullptr;
-  m_TubularPermeabilityModifier = nullptr;
-  m_CentralNervousModifier = nullptr;
-  m_EffectSiteRateConstant = nullptr;
+  , m_AntibacterialEffect(new SEScalarFrequency())
+  , m_Bronchodilation(new SEPharmacodynamicModifier())
+  , m_DiastolicPressureModifier(new SEPharmacodynamicModifier())
+  , m_EMaxShapeParameter(new SEScalar())
+  , m_FeverModifier(new SEPharmacodynamicModifier())
+  , m_HeartRateModifier(new SEPharmacodynamicModifier())
+  , m_HemorrhageModifier(new SEPharmacodynamicModifier())
+  , m_NeuromuscularBlock(new SEPharmacodynamicModifier())
+  , m_PainModifier(new SEPharmacodynamicModifier())
+  , m_PupilReactivityModifier(new SEPharmacodynamicModifier())
+  , m_PupilSizeModifier(new SEPharmacodynamicModifier())
+  , m_RespirationRateModifier(new SEPharmacodynamicModifier())
+  , m_Sedation(new SEPharmacodynamicModifier())
+  , m_SystolicPressureModifier(new SEPharmacodynamicModifier())
+  , m_TidalVolumeModifier(new SEPharmacodynamicModifier())
+  , m_TubularPermeabilityModifier(new SEPharmacodynamicModifier())
+  , m_CentralNervousModifier(new SEPharmacodynamicModifier())
+  , m_EffectSiteRateConstant(new SEScalarFrequency()){
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacodynamics::~SESubstancePharmacodynamics()
 {
   Clear();
-}
-//-----------------------------------------------------------------------------
-void SESubstancePharmacodynamics::Clear()
-{
-  m_Modifiers.clear();
   SAFE_DELETE(m_AntibacterialEffect);
   SAFE_DELETE(m_Bronchodilation);
   SAFE_DELETE(m_DiastolicPressureModifier);
@@ -73,6 +91,28 @@ void SESubstancePharmacodynamics::Clear()
   SAFE_DELETE(m_TubularPermeabilityModifier);
   SAFE_DELETE(m_CentralNervousModifier);
   SAFE_DELETE(m_EffectSiteRateConstant);
+}
+//-----------------------------------------------------------------------------
+void SESubstancePharmacodynamics::Clear()
+{
+  m_AntibacterialEffect->Clear();
+  m_Bronchodilation->Clear();
+  m_DiastolicPressureModifier->Clear();
+  m_EMaxShapeParameter->Clear();
+  m_FeverModifier->Clear();
+  m_HeartRateModifier->Clear();
+  m_HemorrhageModifier->Clear();
+  m_NeuromuscularBlock->Clear();
+  m_PainModifier->Clear();
+  m_PupilReactivityModifier->Clear();
+  m_PupilSizeModifier->Clear();
+  m_RespirationRateModifier->Clear();
+  m_Sedation->Clear();
+  m_SystolicPressureModifier->Clear();
+  m_TidalVolumeModifier->Clear();
+  m_TubularPermeabilityModifier->Clear();
+  m_CentralNervousModifier->Clear();
+  m_EffectSiteRateConstant->Clear();
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::IsValid() const
@@ -519,29 +559,34 @@ std::map<std::string, SEPharmacodynamicModifier*> SESubstancePharmacodynamics::G
 {
   return m_Modifiers;
 }
-
-SEPharmacodynamicModifier::SEPharmacodynamicModifier(SEScalarMassPerVolume const& ec50, SEScalarFraction const& max)
-  : m_EC50(nullptr)
-  , m_EMax(nullptr)
+SEPharmacodynamicModifier::SEPharmacodynamicModifier(SEPharmacodynamicModifier const& obj)
+  : m_EC50(new SEScalarMassPerVolume(*obj.m_EC50))
+  , m_EMax(new SEScalarFraction(*obj.m_EMax))
 {
-  GetEMax() = max;
-  GetEC50() = ec50;
+
+}
+SEPharmacodynamicModifier::SEPharmacodynamicModifier(SEScalarMassPerVolume const& ec50, SEScalarFraction const& max)
+  : m_EC50(std::make_unique<SEScalarMassPerVolume>(ec50).release())
+  , m_EMax(std::make_unique<SEScalarFraction>(max).release())
+{
 }
 SEPharmacodynamicModifier::SEPharmacodynamicModifier()
-  : m_EC50(nullptr)
-  , m_EMax(nullptr)
+  : m_EC50(std::make_unique<SEScalarMassPerVolume>().release())
+  , m_EMax(std::make_unique<SEScalarFraction>().release())
 {
 }
 //-----------------------------------------------------------------------------
 SEPharmacodynamicModifier::~SEPharmacodynamicModifier()
 {
   Clear();
+  SAFE_DELETE(m_EMax);
+  SAFE_DELETE(m_EC50);
 }
 //-----------------------------------------------------------------------------
 void SEPharmacodynamicModifier::Clear()
 {
-  SAFE_DELETE(m_EMax);
-  SAFE_DELETE(m_EC50);
+  m_EMax->Clear();
+  m_EC50->Clear();
 }
 //-----------------------------------------------------------------------------
 bool SEPharmacodynamicModifier::IsValid() const

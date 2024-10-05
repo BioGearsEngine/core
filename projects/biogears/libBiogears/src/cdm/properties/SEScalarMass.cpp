@@ -38,21 +38,6 @@ MassUnit::~MassUnit()
 {
 }
 //-------------------------------------------------------------------------------
-SEScalarMass::SEScalarMass()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarMass::SEScalarMass(double value, MassUnit const& unit)
-  : SEScalarQuantity(value,unit)
-{
-
-}
-//-------------------------------------------------------------------------------
-SEScalarMass::~SEScalarMass()
-{
-}
-
-//-------------------------------------------------------------------------------
 bool MassUnit::IsValidUnit(const char* unit)
 {
   if (strcmp(g.GetString(), unit) == 0)

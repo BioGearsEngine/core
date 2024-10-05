@@ -28,13 +28,13 @@ class SEThermalApplication;
 class SEAction;
 class SESubstanceManager;
 
-#define CDM_ENVIRONMENT_ACTIONS_MARSHALL_HELPER(in, out, func)                       \
+#define CDM_ENVIRONMENT_ACTIONS_PTR_MARSHALL_HELPER(in, out, func)                       \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::EnvironmentActions::Marshall(*in.m_##func, out.func());                      \
   }
 
-#define CDM_OPTIONAL_ENVIRONMENT_ACTIONS_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_ENVIRONMENT_ACTIONS_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                                    \
     io::EnvironmentActions::Marshall(*in.m_##func, out.func());         \
   }

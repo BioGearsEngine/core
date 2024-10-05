@@ -62,7 +62,7 @@ void TEST_FIXTURE_NAME::TearDown()
   using SEType = biogears :: SE ## name; \
   using CDMType = CDM :: name ## Data;
 
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 //!

@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 
@@ -31,26 +32,27 @@ class BIOGEARS_API SESubstanceConcentration : public Loggable {
 protected:
   friend SEEnvironmentalConditions; // So it can add substances to the manager
 public:
-  SESubstanceConcentration(SESubstance const& substance);
-  SESubstanceConcentration(SESubstance const& substance, SEScalarMassPerVolume const& concentration);
-  SESubstanceConcentration(SESubstance const& substance, double concentration, const MassPerVolumeUnit& unit);
+  SESubstanceConcentration(SESubstanceDefinition substance);
+  SESubstanceConcentration(SESubstanceDefinition substance, SEScalarMassPerVolume const& concentration);
+  SESubstanceConcentration(SESubstanceDefinition substance, double concentration, const MassPerVolumeUnit& unit);
   virtual ~SESubstanceConcentration();
 
   virtual void Clear();
 
 public:
   virtual bool HasConcentration() const;
+  virtual SEScalarMassPerVolume  GetConcentration() const;
   virtual SEScalarMassPerVolume& GetConcentration();
   virtual double GetConcentration(const MassPerVolumeUnit& unit) const;
 
-  virtual SESubstance& GetSubstance() const;
+  virtual SESubstanceDefinition const& GetSubstance() const;
 
   bool operator==(const SESubstanceConcentration& rhs) const;
   bool operator!=(const SESubstanceConcentration& rhs) const;
   SESubstanceConcentration& operator=(SESubstanceConcentration const& rhs);
 
 protected:
-  SESubstance const* m_Substance;
+  SESubstanceDefinition m_Substance;
   SEScalarMassPerVolume m_Concentration;
 };
 }

@@ -220,8 +220,8 @@ namespace io {
   {
     io::Physiology::Marshall(in, out);
 
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, ArterialOxygenAverage_mmHg)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, ArterialCarbonDioxideAverage_mmHg)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, ArterialOxygenAverage_mmHg)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, ArterialCarbonDioxideAverage_mmHg)
 
     out.RhFactorMismatch_ct(in.m_RhFactorMismatch_ct);
     out.RhTransfusionReactionVolume_mL(in.m_RhTransfusionReactionVolume_mL);
@@ -326,14 +326,14 @@ namespace io {
     out.LastCardiacCycleMeanArterialCO2PartialPressure_mmHg(in.m_LastCardiacCycleMeanArterialCO2PartialPressure_mmHg);
     out.CardiacCycleStrokeVolume_mL(in.m_CardiacCycleStrokeVolume_mL);
 
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCycleArterialPressure_mmHg)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCycleArterialCO2PartialPressure_mmHg)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryCapillariesWedgePressure_mmHg)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryCapillariesFlow_mL_Per_s)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryShuntFlow_mL_Per_s)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryArteryPressure_mmHg)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCycleCentralVenousPressure_mmHg)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CardiacCycleSkinFlow_mL_Per_s)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, CardiacCycleArterialPressure_mmHg)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, CardiacCycleArterialCO2PartialPressure_mmHg)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryCapillariesWedgePressure_mmHg)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryCapillariesFlow_mL_Per_s)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryShuntFlow_mL_Per_s)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, CardiacCyclePulmonaryArteryPressure_mmHg)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, CardiacCycleCentralVenousPressure_mmHg)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, CardiacCycleSkinFlow_mL_Per_s)
   }
 
   // class DrugSystem
@@ -443,8 +443,8 @@ namespace io {
   {
     io::Physiology::Marshall(in, out);
 
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, BloodpH);
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, BicarbonateMolarity_mmol_Per_L);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, BloodpH);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, BicarbonateMolarity_mmol_Per_L);
 
     out.PackOn(in.m_packOn);
     out.PreviousWeightPack_kg(in.m_previousWeightPack_kg);
@@ -632,14 +632,14 @@ namespace io {
     out.LeftSodiumFlowSetPoint_mg_Per_s(in.m_LeftSodiumFlowSetPoint_mg_Per_s);
     out.RightSodiumFlowSetPoint_mg_Per_s(in.m_RightSodiumFlowSetPoint_mg_Per_s);
 
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, UrineProductionRate_mL_Per_min);
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, UrineOsmolarity_mOsm_Per_L);
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, SodiumConcentration_mg_Per_mL);
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, SodiumExcretionRate_mg_Per_min);
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, LeftSodiumFlow_mg_Per_s);
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, RightSodiumFlow_mg_Per_s);
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, LeftRenalArterialPressure_mmHg);
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, RightRenalArterialPressure_mmHg);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, UrineProductionRate_mL_Per_min);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, UrineOsmolarity_mOsm_Per_L);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, SodiumConcentration_mg_Per_mL);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, SodiumExcretionRate_mg_Per_min);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, LeftSodiumFlow_mg_Per_s);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, RightSodiumFlow_mg_Per_s);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, LeftRenalArterialPressure_mmHg);
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, RightRenalArterialPressure_mmHg);
   }
   // class RespiratorySystem
   void BiogearsPhysiology::UnMarshall(const CDM::BioGearsRespiratorySystemData& in, const SESubstanceManager& substances, Respiratory& out)
@@ -711,7 +711,7 @@ namespace io {
     out.LastCardiacCycleBloodPH(in.m_LastCardiacCycleBloodPH);
     out.PreviousTotalLungVolume_L(in.m_PreviousTotalLungVolume_L);
 
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, BloodPHRunningAverage)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, BloodPHRunningAverage)
 
     out.BreathingCycle(in.m_BreathingCycle);
     out.ArterialOxygenPressure_mmHg(in.m_ArterialO2PartialPressure_mmHg);
@@ -729,8 +729,8 @@ namespace io {
 
     out.VentilationFrequency_Per_min(in.m_VentilationFrequency_Per_min);
 
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, ArterialOxygenAverage_mmHg)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, ArterialCarbonDioxideAverage_mmHg)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, ArterialOxygenAverage_mmHg)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, ArterialCarbonDioxideAverage_mmHg)
 
     out.ConsciousBreathing(in.m_ConsciousBreathing);
     out.ConsciousRespirationPeriod_s(in.m_ConsciousRespirationPeriod_s);
@@ -762,14 +762,14 @@ namespace io {
   {
     io::Physiology::Marshall(in, out);
 
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, O2ConsumedRunningAverage_mL_Per_s)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, CO2ProducedRunningAverage_mL_Per_s)
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, RespiratoryQuotientRunningAverage)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, O2ConsumedRunningAverage_mL_Per_s)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, CO2ProducedRunningAverage_mL_Per_s)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, RespiratoryQuotientRunningAverage)
 
     out.RestingPatientMass_kg(in.m_RestingPatientMass_kg);
     out.RestingFluidMass_kg(in.m_RestingFluidMass_kg);
 
-    CDM_RUNNING_AVERAGE_MARSHALL_HELPER(in, out, FatigueRunningAverage)
+    CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, FatigueRunningAverage)
   }
 }
 }

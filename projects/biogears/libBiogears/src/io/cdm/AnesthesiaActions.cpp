@@ -156,7 +156,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEExpiratoryValveLeak& in, CDM::ExpiratoryValveLeakData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEExpiratoryValveObstruction
@@ -169,7 +169,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEExpiratoryValveObstruction& in, CDM::ExpiratoryValveObstructionData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEInspiratoryValveLeak
@@ -182,7 +182,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEInspiratoryValveLeak& in, CDM::InspiratoryValveLeakData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEInspiratoryValveObstruction
@@ -195,7 +195,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEInspiratoryValveObstruction& in, CDM::InspiratoryValveObstructionData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEMaskLeak
@@ -208,7 +208,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEMaskLeak& in, CDM::MaskLeakData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SESodaLimeFailure
@@ -221,7 +221,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SESodaLimeFailure& in, CDM::SodaLimeFailureData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SETubeCuffLeak
@@ -234,7 +234,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SETubeCuffLeak& in, CDM::TubeCuffLeakData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEVaporizerFailure
@@ -247,7 +247,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEVaporizerFailure& in, CDM::VaporizerFailureData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEVentilatorPressureLoss
@@ -260,7 +260,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEVentilatorPressureLoss& in, CDM::VentilatorPressureLossData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEYPieceDisconnect
@@ -273,7 +273,7 @@ namespace io {
   void AnesthesiaActions::Marshall(const SEYPieceDisconnect& in, CDM::YPieceDisconnectData& out)
   {
     Marshall(static_cast<const SEAnesthesiaMachineAction&>(in), static_cast<CDM::AnesthesiaMachineActionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
   }
   //----------------------------------------------------------------------------------
   // class SEOxygenWallPortPressureLoss

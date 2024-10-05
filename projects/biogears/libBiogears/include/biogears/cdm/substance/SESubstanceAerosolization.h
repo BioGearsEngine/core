@@ -14,8 +14,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
-
 
 namespace biogears {
 class SEScalar;
@@ -27,8 +28,10 @@ namespace io {
 }
 class BIOGEARS_API SESubstanceAerosolization : public Loggable {
   friend io::Substance;
+
 public:
-  SESubstanceAerosolization(Logger* logger);
+  SESubstanceAerosolization(SESubstanceAerosolization const& obj);
+  SESubstanceAerosolization(Logger* logger = nullptr);
   virtual ~SESubstanceAerosolization();
 
   virtual void Clear();
@@ -37,8 +40,8 @@ public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  bool operator==( const SESubstanceAerosolization& rhs) const;
-  bool operator!=( const SESubstanceAerosolization& rhs) const;
+  bool operator==(const SESubstanceAerosolization& rhs) const;
+  bool operator!=(const SESubstanceAerosolization& rhs) const;
 
 public:
   virtual bool HasBronchioleModifier() const;
@@ -51,11 +54,11 @@ public:
 
   virtual bool HasParticulateSizeDistribution() const;
   virtual SEHistogramFractionVsLength& GetParticulateSizeDistribution();
-  virtual const SEHistogramFractionVsLength* GetParticulateSizeDistribution() const;
+  virtual const SEHistogramFractionVsLength GetParticulateSizeDistribution() const;
 
 protected:
-  SEScalarNeg1To1* m_BronchioleModifier;
-  SEScalar0To1* m_InflammationCoefficient;
-  SEHistogramFractionVsLength* m_ParticulateSizeDistribution;
+  SEScalarNeg1To1 m_BronchioleModifier;
+  SEScalar0To1 m_InflammationCoefficient;
+  SEHistogramFractionVsLength m_ParticulateSizeDistribution;
 };
 }
