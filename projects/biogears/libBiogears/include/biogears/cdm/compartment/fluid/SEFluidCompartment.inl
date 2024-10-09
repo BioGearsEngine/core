@@ -74,7 +74,7 @@ const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const cha
 {
   return GetScalar(std::string{ name });
 }
-//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------s
 template <FLUID_COMPARTMENT_TEMPLATE>
 const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const std::string& name)
 {
@@ -339,7 +339,7 @@ template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasSubstanceQuantity(const SESubstance& substance) const
 {
   for (SubstanceQuantityType* sq : m_SubstanceQuantities) {
-    if (&sq->GetSubstance() == &substance)
+    if (sq->GetSubstance() == substance)
       return true;
   }
   return false;
@@ -349,7 +349,7 @@ template <FLUID_COMPARTMENT_TEMPLATE>
 SubstanceQuantityType* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetSubstanceQuantity(const SESubstance& substance) const
 {
   for (SubstanceQuantityType* sq : m_SubstanceQuantities) {
-    if (&sq->GetSubstance() == &substance)
+    if (sq->GetSubstance() == substance)
       return sq;
   }
   return nullptr;
@@ -365,7 +365,7 @@ template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::RemoveSubstanceQuantity(const SESubstance& substance)
 {
   for (size_t i = 0; i < m_SubstanceQuantities.size(); i++) {
-    if (&m_SubstanceQuantities[i]->GetSubstance() == &substance) {
+    if (m_SubstanceQuantities[i]->GetSubstance() == substance) {
       SAFE_DELETE(m_SubstanceQuantities[i]);
       SAFE_DELETE(m_TransportSubstances[i]); // Assumes these are in sync
       m_SubstanceQuantities.erase(m_SubstanceQuantities.begin() + i);

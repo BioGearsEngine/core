@@ -35,11 +35,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 
 SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition const& obj)
-  : ClearanceDefinition(obj.ClearanceDefinition)
-  , Aerosolization(obj.Aerosolization)
-  , Pharmacokinetics(obj.Pharmacokinetics)
-  , Pharmacodynamics(obj.Pharmacodynamics)
-  , Name(obj.Name)
+  : Name(obj.Name)
   , Classification(obj.Classification)
   , State(obj.State)
   , Density(obj.Density)
@@ -51,7 +47,12 @@ SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition const& obj)
   , AlveolarTransfer(obj.AlveolarTransfer)
   , DiffusingCapacity(obj.DiffusingCapacity)
   , RelativeDiffusionCoefficient(obj.RelativeDiffusionCoefficient)
-  , SolubilityCoefficient(obj.SolubilityCoefficient) {};
+  , SolubilityCoefficient(obj.SolubilityCoefficient)
+  , ClearanceDefinition(obj.ClearanceDefinition)
+  , Aerosolization(obj.Aerosolization)
+  , Pharmacokinetics(obj.Pharmacokinetics)
+  , Pharmacodynamics(obj.Pharmacodynamics)
+{};
 //-----------------------------------------------------------------------------
 SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition&& obj)
   : Name(std::move(obj.Name))
@@ -120,7 +121,6 @@ SESubstanceDefinition::SESubstanceDefinition(SESubstanceClearanceDefinition defi
 SESubstanceDefinition& SESubstanceDefinition::operator=(SESubstanceDefinition const& rhs)
 {
   if (this != &rhs) {
-
 
     Name = rhs.Name;
     Classification = rhs.Classification;
@@ -233,9 +233,6 @@ SESubstance::SESubstance(SESubstanceDefinition definition)
   , m_EndTidalFraction()
   , m_EndTidalPressure()
 {
-  m_def.Name = "";
-  m_def.State = SESubstanceState::Invalid;
-  m_def.Classification = SESubstanceClass::Invalid;
 }
 //-----------------------------------------------------------------------------
 SESubstance::~SESubstance()

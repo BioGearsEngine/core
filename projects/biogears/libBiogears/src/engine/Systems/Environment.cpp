@@ -170,7 +170,7 @@ void Environment::SetUp()
 /// \details
 /// This is called any time the environment change action/condition.  It sets the ambient node
 /// values needed for the fluid systems.
-//--------------------------------------------------------------------------------------------------
+#pragma optimize("", off)
 void Environment::StateChange()
 {
   using namespace std::string_literals;
@@ -215,10 +215,15 @@ void Environment::StateChange()
     }
     m_data.GetSubstances().AddActiveSubstance(sub);
     SELiquidSubstanceQuantity* subQ = m_AmbientAerosols->GetSubstanceQuantity(sub);
-    subQ->GetConcentration().Set(s->GetConcentration());
+    if (subQ) {
+        subQ->GetConcentration().Set(s->GetConcentration());
+    } else {
+      Error("aerosol "s + sub.Name + " is not present in AmbientAerosols"s);
+      continue;
+    }
   }
 }
-
+#pragma optimize("", on)
 void Environment::AtSteadyState()
 {
   if (m_data.GetState() == EngineState::AtInitialStableState) {

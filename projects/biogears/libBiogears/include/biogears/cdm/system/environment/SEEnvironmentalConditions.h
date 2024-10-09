@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class SESubstance;
+class SESubstanceDefinition;
 class SESubstanceFraction;
 class SESubstanceConcentration;
 class SEEnvironment;
@@ -116,23 +117,23 @@ public:
   double GetRespirationAmbientTemperature(const TemperatureUnit& unit) const;
 
   bool HasAmbientGas() const;
-  bool HasAmbientGas(const SESubstance& substance) const;
+  bool HasAmbientGas(SESubstanceDefinition const& substance) const;
   const std::vector<SESubstanceFraction*>& GetAmbientGases();
   const std::vector<const SESubstanceFraction*>& GetAmbientGases() const;
-  SESubstanceFraction& GetAmbientGas(SESubstance& substance);
-  const SESubstanceFraction* GetAmbientGas(const SESubstance& substance) const;
-  void AddAmbientGas(const SESubstance& substance, SEScalarFraction const& concentration);
-  void RemoveAmbientGas(const SESubstance& substance);
+  SESubstanceFraction& GetAmbientGas(SESubstanceDefinition const& substance);
+  const SESubstanceFraction* GetAmbientGas(SESubstanceDefinition const& substance) const;
+  void AddAmbientGas(SESubstanceDefinition const& substance, SEScalarFraction const& concentration);
+  void RemoveAmbientGas(SESubstanceDefinition const& substance);
   void RemoveAmbientGases();
 
   bool HasAmbientAerosol() const;
-  bool HasAmbientAerosol(const SESubstance& substance) const;
+  bool HasAmbientAerosol(SESubstanceDefinition const& substance) const;
   const std::vector<SESubstanceConcentration*>& GetAmbientAerosols();
   const std::vector<const SESubstanceConcentration*>& GetAmbientAerosols() const;
-  SESubstanceConcentration& GetAmbientAerosol(SESubstance& substance);
-  const SESubstanceConcentration* GetAmbientAerosol(const SESubstance& substance) const;
-  void AddAmbientAerosol(const SESubstance& substance, SEScalarMassPerVolume const& concentration);
-  void RemoveAmbientAerosol(const SESubstance& substance);
+  SESubstanceConcentration& GetAmbientAerosol(SESubstanceDefinition const& substance);
+  const SESubstanceConcentration* GetAmbientAerosol(SESubstanceDefinition const& substance) const;
+  void AddAmbientAerosol(SESubstanceDefinition const& substance, SEScalarMassPerVolume const& concentration);
+  void RemoveAmbientAerosol(SESubstanceDefinition const& substance);
   void RemoveAmbientAerosols();
 
 protected:

@@ -227,7 +227,7 @@ void Respiratory::Initialize()
   GetRespirationCyclePercentComplete().SetValue(0.0);
   GetRespirationDriverFrequency().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverPressure().SetValue(m_PeakRespiratoryDrivePressure_cmH2O, PressureUnit::cmH2O);
-  GetCarricoIndex().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
+  GetCarricoIndex().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2().GetDefinition()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
   GetMeanPleuralPressure().SetValue(AbsolutePleuralPressure_mmHg - EnvironmentPressure_mmHg, PressureUnit::mmHg);
   GetTotalAlveolarVentilation().SetValue(RespirationRate_Per_min * (TidalVolume_L - DeadSpace_L), VolumePerTimeUnit::L_Per_min);
@@ -1711,7 +1711,7 @@ void Respiratory::CalculateVitalSigns()
   double fractionInspiredO2 = 0.0;
   switch (m_data.GetAirwayMode()) {
   case SEBioGearsAirwayMode::Free:
-    fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2().GetDefinition()).GetFractionAmount().GetValue();
     break;
   case SEBioGearsAirwayMode::AnesthesiaMachine:
     fractionInspiredO2 = m_data.GetAnesthesiaMachine().GetOxygenFraction().GetValue();
@@ -1723,7 +1723,7 @@ void Respiratory::CalculateVitalSigns()
     //Unclear what O2 fraction in an inhaler is, let this case flow into default for now.
   default:
     //Use environment as default
-    fractionInspiredO2 = fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    fractionInspiredO2 = fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2().GetDefinition()).GetFractionAmount().GetValue();
   }
   GetCarricoIndex().SetValue(arterialPartialPressureO2_mmHg / fractionInspiredO2, PressureUnit::mmHg);
 

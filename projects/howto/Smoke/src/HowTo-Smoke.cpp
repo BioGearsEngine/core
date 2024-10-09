@@ -66,11 +66,11 @@ int HowToSmoke()
   }
 
   // Get some substances out we will use
-  SESubstance* N2 = bg->GetSubstanceManager().GetSubstance("Nitrogen");
-  SESubstance* O2 = bg->GetSubstanceManager().GetSubstance("Oxygen");
-  SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
-  SESubstance* CO = bg->GetSubstanceManager().GetSubstance("CarbonMonoxide");
-  SESubstance* Particulate = bg->GetSubstanceManager().GetSubstance("ForestFireParticulate");
+  SESubstanceDefinition N2 = bg->GetSubstanceManager().GetSubstance("Nitrogen")->GetDefinition();
+  SESubstanceDefinition O2 = bg->GetSubstanceManager().GetSubstance("Oxygen")->GetDefinition();
+  SESubstanceDefinition CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide")->GetDefinition();
+  SESubstanceDefinition CO = bg->GetSubstanceManager().GetSubstance("CarbonMonoxide")->GetDefinition();
+  SESubstanceDefinition Particulate = bg->GetSubstanceManager().GetSubstance("ForestFireParticulate")->GetDefinition();
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
   
@@ -117,12 +117,12 @@ int HowToSmoke()
   // Here we will put this healty patient into a smokey environment.
   SEEnvironmentChange envChange(bg->GetSubstanceManager());
   // NOTE YOUR FRACTIONS MUST ADD UP TO 1.0
-  envChange.GetConditions().GetAmbientGas(*N2).GetFractionAmount().SetValue(0.79008);
-  envChange.GetConditions().GetAmbientGas(*O2).GetFractionAmount().SetValue(0.2095);
-  envChange.GetConditions().GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
-  envChange.GetConditions().GetAmbientGas(*CO).GetFractionAmount().SetValue(2.0E-5);
+  envChange.GetConditions().GetAmbientGas(N2).GetFractionAmount().SetValue(0.79008);
+  envChange.GetConditions().GetAmbientGas(O2).GetFractionAmount().SetValue(0.2095);
+  envChange.GetConditions().GetAmbientGas(CO2).GetFractionAmount().SetValue(4.0E-4);
+  envChange.GetConditions().GetAmbientGas(CO).GetFractionAmount().SetValue(2.0E-5);
   // Concentrations are independent and do not need to add up to 1.0
-  envChange.GetConditions().GetAmbientAerosol(*Particulate).GetConcentration().SetValue(2.9, MassPerVolumeUnit::mg_Per_m3);
+  envChange.GetConditions().GetAmbientAerosol(Particulate).GetConcentration().SetValue(2.9, MassPerVolumeUnit::mg_Per_m3);
   bg->ProcessAction(envChange);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
@@ -131,7 +131,7 @@ int HowToSmoke()
   bg->GetLogger()->Info(asprintf("Carbon Monoxide Saturation : %f", bg->GetBloodChemistrySystem()->GetCarbonMonoxideSaturation()));
   bg->GetLogger()->Info(asprintf("Pulse Oximetry : %f", bg->GetBloodChemistrySystem()->GetPulseOximetry()));
   // There are liquid compartments for each of the gas pulmonary compartments, these track the trasportation of liquid and solid substances through the pulmonary tract, and their deposition
-  bg->GetLogger()->Info(asprintf("Particulate Deposition : %f %s", bg->GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(*Particulate)->GetMassDeposited(MassUnit::ug), "ug"));
+  bg->GetLogger()->Info(asprintf("Particulate Deposition : %f %s", bg->GetCompartments().GetLiquidCompartment(BGE::PulmonaryCompartment::RightAlveoli)->GetSubstanceQuantity(Particulate)->GetMassDeposited(MassUnit::ug), "ug"));
 
   bg->GetLogger()->Info(asprintf("Cardiac Output : %f %s", bg->GetCardiovascularSystem()->GetCardiacOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
   bg->GetLogger()->Info(asprintf("Mean Arterial Pressure : %f %s", bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg), "mmHg"));

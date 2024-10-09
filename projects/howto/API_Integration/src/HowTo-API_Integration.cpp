@@ -97,9 +97,9 @@ bool action_env_change(std::unique_ptr<biogears::BioGearsEngine>& engine, biogea
   // This example only uses three partial gasses. You could submit a vector of name/value pairs.
   // Then this section could be modified to Get every substance in the pair list.
   //
-  auto* N2 = engine->GetSubstanceManager().GetSubstance("Nitrogen");
-  auto* O2 = engine->GetSubstanceManager().GetSubstance("Oxygen");
-  auto* CO2 = engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
+  auto N2 = engine->GetSubstanceManager().GetSubstance("Nitrogen")->GetDefinition();
+  auto O2 = engine->GetSubstanceManager().GetSubstance("Oxygen")->GetDefinition();
+  auto CO2 = engine->GetSubstanceManager().GetSubstance("CarbonDioxide")->GetDefinition();
 
   auto conditions = environment.GetConditions();
   conditions.Clear(); // Reset he existing conditions
@@ -113,9 +113,9 @@ bool action_env_change(std::unique_ptr<biogears::BioGearsEngine>& engine, biogea
   conditions.GetRelativeHumidity().SetValue(new_conditions.GetRelativeHumidity().GetValue());
   conditions.GetRespirationAmbientTemperature().SetValue(new_conditions.GetRespirationAmbientTemperature().GetValue(biogears::TemperatureUnit::C), biogears::TemperatureUnit::C);
 
-  conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(*N2).GetFractionAmount().GetValue());
-  conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(*O2).GetFractionAmount().GetValue());
-  conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(*CO2).GetFractionAmount().GetValue());
+  conditions.GetAmbientGas(N2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(N2).GetFractionAmount().GetValue());
+  conditions.GetAmbientGas(O2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(O2).GetFractionAmount().GetValue());
+  conditions.GetAmbientGas(CO2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(CO2).GetFractionAmount().GetValue());
 
   if (environment.IsValid()) {
     engine->ProcessAction(environment);
@@ -530,9 +530,9 @@ void BioGearsPlugin::run()
           // This function as the patient changes locations.
 
           auto conditions = biogears::SEEnvironmentalConditions(_pimpl->engine->GetSubstanceManager());
-          auto* N2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Nitrogen");
-          auto* O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen");
-          auto* CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
+          auto N2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Nitrogen")->GetDefinition();
+          auto O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen")->GetDefinition();
+          auto CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide")->GetDefinition();
 
           conditions.SetSurroundingType(SESurroundingType::Water);
           conditions.GetAirVelocity().SetValue(0, LengthPerTimeUnit::m_Per_s);
@@ -543,9 +543,9 @@ void BioGearsPlugin::run()
           conditions.GetMeanRadiantTemperature().SetValue(22.0, TemperatureUnit::C);
           conditions.GetRelativeHumidity().SetValue(1.0);
           conditions.GetRespirationAmbientTemperature().SetValue(22.0, TemperatureUnit::C);
-          conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(0.7901);
-          conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.2095);
-          conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
+          conditions.GetAmbientGas(N2).GetFractionAmount().SetValue(0.7901);
+          conditions.GetAmbientGas(O2).GetFractionAmount().SetValue(0.2095);
+          conditions.GetAmbientGas(CO2).GetFractionAmount().SetValue(4.0E-4);
 
           action_env_change(_pimpl->engine, conditions);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);

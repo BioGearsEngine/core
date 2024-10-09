@@ -119,8 +119,8 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentalConditions)
   SEType source { subMgr }, sink { subMgr };
   CDMType data;
 
-  auto nitrogen = subMgr.GetSubstance("Nitrogen");
-  auto sarin = subMgr.GetSubstance("Sarin");
+  auto nitrogen = subMgr.GetSubstance("Nitrogen")->GetDefinition();
+  auto sarin = subMgr.GetSubstance("Sarin")->GetDefinition();
   ASSERT_NE(nullptr, nitrogen);
   ASSERT_NE(nullptr, sarin);
   source.SetSurroundingType(biogears::SESurroundingType::Water);
@@ -142,8 +142,8 @@ TEST_F(TEST_FIXTURE_NAME, EnvironmentalConditions)
   source.GetMeanRadiantTemperature().SetValue(1.0, biogears::TemperatureUnit::C);
   source.GetRespirationAmbientTemperature().SetValue(1.0, biogears::TemperatureUnit::C);
 
-  source.AddAmbientGas(*nitrogen, biogears::SEScalarFraction { 0.05 });
-  source.AddAmbientAerosol(*sarin, biogears::SEScalarMassPerVolume { 33, biogears::MassPerVolumeUnit::g_Per_L });
+  source.AddAmbientGas(nitrogen, biogears::SEScalarFraction { 0.05 });
+  source.AddAmbientAerosol(sarin, biogears::SEScalarMassPerVolume { 33, biogears::MassPerVolumeUnit::g_Per_L });
   EXPECT_NE(source, sink);
 
   Environment::Marshall(source, data);
@@ -259,8 +259,8 @@ TEST_F(TEST_FIXTURE_NAME, Environment)
   auto& conditions = source.GetConditions();
   source.SetName("Environment");
 
-  auto nitrogen = subMgr.GetSubstance("Nitrogen");
-  auto sarin = subMgr.GetSubstance("Sarin");
+  auto nitrogen = subMgr.GetSubstance("Nitrogen")->GetDefinition();
+  auto sarin = subMgr.GetSubstance("Sarin")->GetDefinition();
   ASSERT_NE(nullptr, nitrogen);
   ASSERT_NE(nullptr, sarin);
   conditions.SetSurroundingType(biogears::SESurroundingType::Water);
@@ -282,8 +282,8 @@ TEST_F(TEST_FIXTURE_NAME, Environment)
   conditions.GetMeanRadiantTemperature().SetValue(1.0, biogears::TemperatureUnit::C);
   conditions.GetRespirationAmbientTemperature().SetValue(1.0, biogears::TemperatureUnit::C);
 
-  conditions.AddAmbientGas(*nitrogen, biogears::SEScalarFraction { 0.05 });
-  conditions.AddAmbientAerosol(*sarin, biogears::SEScalarMassPerVolume { 33, biogears::MassPerVolumeUnit::g_Per_L });
+  conditions.AddAmbientGas(nitrogen, biogears::SEScalarFraction { 0.05 });
+  conditions.AddAmbientAerosol(sarin, biogears::SEScalarMassPerVolume { 33, biogears::MassPerVolumeUnit::g_Per_L });
 
   source.GetConvectiveHeatLoss().SetValue(5.5, biogears::PowerUnit::W);
   source.GetEvaporativeHeatLoss().SetValue(5.5, biogears::PowerUnit::W);

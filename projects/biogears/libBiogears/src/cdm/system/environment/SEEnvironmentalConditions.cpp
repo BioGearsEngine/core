@@ -161,8 +161,8 @@ void SEEnvironmentalConditions::Merge(const SEEnvironmentalConditions& from)
 
   if (from.HasAmbientAerosol()) {
     for (SESubstanceConcentration* sc : from.m_AmbientAerosols) {
-      auto mine = GetAmbientAerosol(sc->GetSubstance());
-      mine->GetConcentration().Set(sc->GetConcentration());
+      auto& mine = GetAmbientAerosol(sc->GetSubstance());
+      mine.GetConcentration().Set(sc->GetConcentration());
     }
   }
 }
@@ -427,10 +427,10 @@ bool SEEnvironmentalConditions::HasAmbientGas() const
   return m_AmbientGases.size() == 0 ? false : true;
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentalConditions::HasAmbientGas(const SESubstance& s) const
+bool SEEnvironmentalConditions::HasAmbientGas(SESubstanceDefinition const& s) const
 {
   for (const SESubstanceFraction* sf : m_AmbientGases) {
-    if (&s == &sf->GetSubstance())
+    if (s == sf->GetSubstance())
       return true;
   }
   return false;
@@ -446,10 +446,10 @@ const std::vector<const SESubstanceFraction*>& SEEnvironmentalConditions::GetAmb
   return m_cAmbientGases;
 }
 //-----------------------------------------------------------------------------
-SESubstanceFraction& SEEnvironmentalConditions::GetAmbientGas(SESubstance& s)
+SESubstanceFraction& SEEnvironmentalConditions::GetAmbientGas(SESubstanceDefinition const& s)
 {
   for (SESubstanceFraction* sf : m_AmbientGases) {
-    if (&s == &sf->GetSubstance())
+    if (s == sf->GetSubstance())
       return *sf;
   }
   SESubstanceFraction* sf = new SESubstanceFraction(s);
@@ -459,30 +459,30 @@ SESubstanceFraction& SEEnvironmentalConditions::GetAmbientGas(SESubstance& s)
   return *sf;
 }
 //-----------------------------------------------------------------------------
-const SESubstanceFraction* SEEnvironmentalConditions::GetAmbientGas(const SESubstance& s) const
+const SESubstanceFraction* SEEnvironmentalConditions::GetAmbientGas(SESubstanceDefinition const& s) const
 {
   const SESubstanceFraction* sf = nullptr;
   for (unsigned int i = 0; i < m_AmbientGases.size(); i++) {
     sf = m_AmbientGases[i];
-    if (&s == &sf->GetSubstance())
+    if (s == sf->GetSubstance())
       return sf;
   }
   return sf;
 }
 //-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::AddAmbientGas(SESubstance const& substance, SEScalarFraction const& fraction)
+void SEEnvironmentalConditions::AddAmbientGas(SESubstanceDefinition const& substance, SEScalarFraction const& fraction)
 {
   auto substanceFraction = new SESubstanceFraction(substance, fraction);
   m_AmbientGases.push_back(substanceFraction);
   m_cAmbientGases.push_back(substanceFraction);
 }
 //-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::RemoveAmbientGas(const SESubstance& s)
+void SEEnvironmentalConditions::RemoveAmbientGas(SESubstanceDefinition const& s)
 {
   const SESubstanceFraction* sf;
   for (unsigned int i = 0; i < m_AmbientGases.size(); i++) {
     sf = m_AmbientGases[i];
-    if (&s == &sf->GetSubstance()) {
+    if (s == sf->GetSubstance()) {
       m_AmbientGases.erase(m_AmbientGases.begin() + i);
       m_cAmbientGases.erase(m_cAmbientGases.begin() + i);
       delete sf;
@@ -501,7 +501,7 @@ bool SEEnvironmentalConditions::HasAmbientAerosol() const
   return m_AmbientAerosols.size() == 0 ? false : true;
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentalConditions::HasAmbientAerosol(const SESubstance& substance) const
+bool SEEnvironmentalConditions::HasAmbientAerosol(SESubstanceDefinition const& substance) const
 {
   for (const SESubstanceConcentration* sc : m_AmbientAerosols) {
     if (substance == sc->GetSubstance())
@@ -520,20 +520,20 @@ const std::vector<const SESubstanceConcentration*>& SEEnvironmentalConditions::G
   return m_cAmbientAerosols;
 }
 //-----------------------------------------------------------------------------
-SESubstanceConcentration& SEEnvironmentalConditions::GetAmbientAerosol(SESubstance& substance)
+SESubstanceConcentration& SEEnvironmentalConditions::GetAmbientAerosol(SESubstanceDefinition const & substance)
 {
   for (SESubstanceConcentration* sc : m_AmbientAerosols) {
     if (substance == sc->GetSubstance())
       return *sc;
   }
-  SESubstanceConcentration* sc = new SESubstanceConcentration(substance.GetDefinition());
+  SESubstanceConcentration* sc = new SESubstanceConcentration(substance);
   sc->GetConcentration().SetValue(0, MassPerVolumeUnit::ug_Per_L);
   m_AmbientAerosols.push_back(sc);
   m_cAmbientAerosols.push_back(sc);
   return *sc;
 }
 //-----------------------------------------------------------------------------
-const SESubstanceConcentration* SEEnvironmentalConditions::GetAmbientAerosol(const SESubstance& substance) const
+const SESubstanceConcentration* SEEnvironmentalConditions::GetAmbientAerosol(const SESubstanceDefinition& substance) const
 {
   const SESubstanceConcentration* sc = nullptr;
   for (unsigned int i = 0; i < m_AmbientAerosols.size(); i++) {
@@ -544,14 +544,14 @@ const SESubstanceConcentration* SEEnvironmentalConditions::GetAmbientAerosol(con
   return sc;
 }
 //-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::AddAmbientAerosol(const SESubstance& substance, SEScalarMassPerVolume const& concentration)
+void SEEnvironmentalConditions::AddAmbientAerosol(SESubstanceDefinition const& substance, SEScalarMassPerVolume const& concentration)
 {
-  auto substanceConcentration = new SESubstanceConcentration { substance.GetDefinition(), concentration };
+  auto substanceConcentration = new SESubstanceConcentration { substance, concentration };
   m_AmbientAerosols.push_back(substanceConcentration);
   m_cAmbientAerosols.push_back(substanceConcentration);
 }
 //-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::RemoveAmbientAerosol(const SESubstance& substance)
+void SEEnvironmentalConditions::RemoveAmbientAerosol(SESubstanceDefinition const& substance)
 {
   const SESubstanceConcentration* sc;
   for (unsigned int i = 0; i < m_AmbientAerosols.size(); i++) {
