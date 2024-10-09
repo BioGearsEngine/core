@@ -78,12 +78,21 @@ void SEFunctionVolumeVsTime::SetVolumeUnit(const VolumeUnit& unit)
   m_VolumeUnit = &unit;
 }
 //-------------------------------------------------------------------------------
+//!  
+//!  operator==(const SEFunctionVlumeVsTime&(
+//!  \param SEunctionVolumeVsTime -- RHS of equlaity operator
+//!  \returns bool -- True if both sides are Invalid else True only if booth sides are valid and all terms are equal. 
+
 bool SEFunctionVolumeVsTime::operator==(const SEFunctionVolumeVsTime& rhs) const
 {
-  bool equivilant = (m_TimeUnit && rhs.m_TimeUnit) ? m_TimeUnit->operator==(*rhs.m_TimeUnit) : m_TimeUnit == rhs.m_TimeUnit;
-  equivilant &= (m_VolumeUnit && rhs.m_VolumeUnit) ? m_VolumeUnit->operator==(*rhs.m_VolumeUnit) : m_VolumeUnit == rhs.m_VolumeUnit;
-  equivilant &= SEFunction::operator==(rhs);
-  return equivilant;
+  bool equivilant = rhs.IsValid() || IsValid();
+  if (equivilant) {
+    equivilant = (m_TimeUnit && rhs.m_TimeUnit) ? m_TimeUnit->operator==(*rhs.m_TimeUnit) : m_TimeUnit == rhs.m_TimeUnit;
+    equivilant &= (m_VolumeUnit && rhs.m_VolumeUnit) ? m_VolumeUnit->operator==(*rhs.m_VolumeUnit) : m_VolumeUnit == rhs.m_VolumeUnit;
+    equivilant &= SEFunction::operator==(rhs);
+    return equivilant;
+  }
+  return !equivilant;
 }
 //-------------------------------------------------------------------------------
 bool SEFunctionVolumeVsTime::operator!=(const SEFunctionVolumeVsTime& rhs) const

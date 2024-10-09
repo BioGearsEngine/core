@@ -45,12 +45,14 @@ class BIOGEARS_API SESubstanceDefinition {
 
 public:
   SESubstanceDefinition(SESubstanceDefinition const& obj);
-
+  SESubstanceDefinition(SESubstanceDefinition&& obj);
+ ~SESubstanceDefinition();
   SESubstanceDefinition(Logger* logger = nullptr);
 
   SESubstanceDefinition(SESubstanceClearanceDefinition definition, Logger* logger = nullptr);
 
   SESubstanceDefinition& operator=(SESubstanceDefinition const& rhs);
+  SESubstanceDefinition& operator=(SESubstanceDefinition&& rhs);
   bool operator==(SESubstanceDefinition const& rhs) const;
   bool operator!=(SESubstanceDefinition const& rhs) const;
 
@@ -235,7 +237,8 @@ private:
   SEScalarPressure m_EndTidalPressure;
 };
 
-inline bool operator==(const SESubstanceDefinition& lhs, const SESubstance& rhs) {
+inline bool operator==(const SESubstanceDefinition& lhs, const SESubstance& rhs)
+{
   return rhs == lhs;
 }
 

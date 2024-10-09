@@ -40,7 +40,6 @@ SESubstanceConcentration::SESubstanceConcentration(SESubstanceDefinition substan
 //-------------------------------------------------------------------------------
 SESubstanceConcentration::~SESubstanceConcentration()
 {
-  Clear();
 }
 //-------------------------------------------------------------------------------
 void SESubstanceConcentration::Clear()

@@ -160,8 +160,14 @@ namespace io {
   }
   void Substance::Marshall(const SESubstancePharmacodynamics& in, CDM::SubstancePharmacodynamicsData& out)
   {
-    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, Bronchodilation)
-    CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, DiastolicPressureModifier)
+    if (in.m_Bronchodilation && in.m_Bronchodilation->IsValid()) {
+      out.Bronchodilation(std::make_unique<std::remove_reference<decltype(out.Bronchodilation())>::type>());
+      io::Substance::Marshall(*in.m_Bronchodilation, out.Bronchodilation());
+    }
+    if (in.m_DiastolicPressureModifier && in.m_DiastolicPressureModifier->IsValid()) {
+      out.DiastolicPressureModifier(std::make_unique<std::remove_reference<decltype(out.DiastolicPressureModifier())>::type>());
+      io::Substance::Marshall(*in.m_DiastolicPressureModifier, out.DiastolicPressureModifier());
+    }
     CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, EMaxShapeParameter)
     CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, FeverModifier)
     CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, HeartRateModifier)
@@ -478,7 +484,9 @@ namespace io {
         err += ccData.Name();
         throw CommonDataModelException(err);
       }
-      out.m_Components.push_back(substance->GetDefinition());
+      SESubstanceConcentration concentration(substance->GetDefinition());
+      UnMarshall(ccData, concentration);
+      out.m_Components.push_back( concentration);
     }
   }
   void Substance::Marshall(const SESubstanceCompound& in, CDM::SubstanceCompoundData& out)

@@ -17,17 +17,9 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SEProperty::SEProperty()
 {
-  Clear();
 }
 
 SEProperty::~SEProperty()
 {
-  Clear();
 }
-
-void SEProperty::Clear()
-{
-}
-
-
 }

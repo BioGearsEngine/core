@@ -29,7 +29,8 @@ public:
 
   friend io::Property;
   SEScalarQuantity();
-  SEScalarQuantity(const SEScalarQuantity&);
+  SEScalarQuantity(SEScalarQuantity const&);
+  SEScalarQuantity(SEScalarQuantity&&);
   explicit SEScalarQuantity(double, const Unit&, bool ro = false);
 
   ~SEScalarQuantity() override;
@@ -64,7 +65,8 @@ public:
   SEScalarQuantity& DivideValue(double d);
   SEScalarQuantity& Divide(const SEScalar& s);
 
-  SEScalarQuantity& operator=(const SEScalarQuantity& rhs);
+  SEScalarQuantity& operator=(SEScalarQuantity const& rhs);
+  SEScalarQuantity& operator=(SEScalarQuantity&& rhs);
 
   bool operator<(const SEScalarQuantity& rhs) const;
   bool operator<=(const SEScalarQuantity& rhs) const;

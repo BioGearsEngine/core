@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
 namespace biogears {
+
 SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition const& obj)
   : ClearanceDefinition(obj.ClearanceDefinition)
   , Aerosolization(obj.Aerosolization)
@@ -51,7 +52,32 @@ SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition const& obj)
   , DiffusingCapacity(obj.DiffusingCapacity)
   , RelativeDiffusionCoefficient(obj.RelativeDiffusionCoefficient)
   , SolubilityCoefficient(obj.SolubilityCoefficient) {};
-
+//-----------------------------------------------------------------------------
+SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition&& obj)
+  : Name(std::move(obj.Name))
+  , Classification(std::move(obj.Classification))
+  , State(std::move(obj.State))
+  , Density(std::move(obj.Density))
+  , MolarMass(std::move(obj.MolarMass))
+  , MaximumDiffusionFlux(std::move(obj.MaximumDiffusionFlux))
+  , MichaelisCoefficient(std::move(obj.MichaelisCoefficient))
+  , MembraneResistance(std::move(obj.MembraneResistance))
+  , AreaUnderCurve(std::move(obj.AreaUnderCurve))
+  , AlveolarTransfer(std::move(obj.AlveolarTransfer))
+  , DiffusingCapacity(std::move(obj.DiffusingCapacity))
+  , RelativeDiffusionCoefficient(std::move(obj.RelativeDiffusionCoefficient))
+  , SolubilityCoefficient(std::move(obj.SolubilityCoefficient))
+  , ClearanceDefinition(std::move(obj.ClearanceDefinition))
+  , Aerosolization(std::move(obj.Aerosolization))
+  , Pharmacokinetics(std::move(obj.Pharmacokinetics))
+  , Pharmacodynamics(std::move(obj.Pharmacodynamics))
+{
+}
+//-----------------------------------------------------------------------------
+SESubstanceDefinition ::~SESubstanceDefinition()
+{
+}
+//-----------------------------------------------------------------------------
 SESubstanceDefinition::SESubstanceDefinition(Logger* logger)
   : ClearanceDefinition()
   , Aerosolization(logger)
@@ -70,7 +96,7 @@ SESubstanceDefinition::SESubstanceDefinition(Logger* logger)
   , DiffusingCapacity()
   , RelativeDiffusionCoefficient()
   , SolubilityCoefficient() {};
-
+//-----------------------------------------------------------------------------
 SESubstanceDefinition::SESubstanceDefinition(SESubstanceClearanceDefinition definition, Logger* logger)
   : ClearanceDefinition(definition)
   , Aerosolization(logger)
@@ -89,7 +115,92 @@ SESubstanceDefinition::SESubstanceDefinition(SESubstanceClearanceDefinition defi
   , DiffusingCapacity()
   , RelativeDiffusionCoefficient()
   , SolubilityCoefficient() {};
+//-------------------------------------------------------------------------------
+#pragma optimize("", off)
+SESubstanceDefinition& SESubstanceDefinition::operator=(SESubstanceDefinition const& rhs)
+{
+  if (this != &rhs) {
 
+
+    Name = rhs.Name;
+    Classification = rhs.Classification;
+    State = rhs.State;
+    Density = rhs.Density;
+    MolarMass = rhs.MolarMass;
+    MaximumDiffusionFlux = rhs.MaximumDiffusionFlux;
+    MichaelisCoefficient = rhs.MichaelisCoefficient;
+    MembraneResistance = rhs.MembraneResistance;
+    AreaUnderCurve = rhs.AreaUnderCurve;
+    AlveolarTransfer = rhs.AlveolarTransfer;
+    DiffusingCapacity = rhs.DiffusingCapacity;
+    RelativeDiffusionCoefficient = rhs.RelativeDiffusionCoefficient;
+    SolubilityCoefficient = rhs.SolubilityCoefficient;
+    ClearanceDefinition = rhs.ClearanceDefinition;
+    Aerosolization = rhs.Aerosolization;
+    Pharmacokinetics = rhs.Pharmacokinetics;
+    Pharmacodynamics = rhs.Pharmacodynamics;
+  }
+  return *this;
+}
+SESubstanceDefinition& SESubstanceDefinition::operator=(SESubstanceDefinition&& rhs)
+{
+  if (this != &rhs) {
+
+    SESubstanceDefinition temp(std::move(rhs));
+
+    std::swap(Name, temp.Name);
+    std::swap(Classification, temp.Classification);
+    std::swap(State, temp.State);
+    std::swap(Density, temp.Density);
+    std::swap(MolarMass, temp.MolarMass);
+    std::swap(MaximumDiffusionFlux, temp.MaximumDiffusionFlux);
+    std::swap(MichaelisCoefficient, temp.MichaelisCoefficient);
+    std::swap(MembraneResistance, temp.MembraneResistance);
+    std::swap(AreaUnderCurve, temp.AreaUnderCurve);
+    std::swap(AlveolarTransfer, temp.AlveolarTransfer);
+    std::swap(DiffusingCapacity, temp.DiffusingCapacity);
+    std::swap(RelativeDiffusionCoefficient, temp.RelativeDiffusionCoefficient);
+    std::swap(SolubilityCoefficient, temp.SolubilityCoefficient);
+    std::swap(ClearanceDefinition, temp.ClearanceDefinition);
+    std::swap(Aerosolization, temp.Aerosolization);
+    std::swap(Pharmacokinetics, temp.Pharmacokinetics);
+    std::swap(Pharmacodynamics, temp.Pharmacodynamics);
+  }
+  return *this;
+}
+//-------------------------------------------------------------------------------
+#pragma optimize("", on)
+bool SESubstanceDefinition::operator==(SESubstanceDefinition const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return Name == rhs.Name
+          && Classification == rhs.Classification
+          && State == rhs.State
+#if defined(BIOGEARS_RIGOROUS_EQUIVILANCE_CHECKS) && !defined(BIOGEARS_LINIENT_SESUBSTANCE_DEFINITION_CHECKS)
+          && Density == rhs.Density
+          && MolarMass == rhs.MolarMass
+          && MaximumDiffusionFlux == rhs.MaximumDiffusionFlux
+          && MichaelisCoefficient == rhs.MichaelisCoefficient
+          && MembraneResistance == rhs.MembraneResistance
+          && AreaUnderCurve == rhs.AreaUnderCurve
+          && AlveolarTransfer == rhs.AlveolarTransfer
+          && DiffusingCapacity == rhs.DiffusingCapacity
+          && RelativeDiffusionCoefficient == rhs.RelativeDiffusionCoefficient
+          && SolubilityCoefficient == rhs.SolubilityCoefficient
+          && ClearanceDefinition == rhs.ClearanceDefinition
+          && Aerosolization == rhs.Aerosolization
+          && Pharmacokinetics == rhs.Pharmacokinetics
+          && Pharmacodynamics == rhs.Pharmacodynamics)
+#endif
+    ;
+}
+bool SESubstanceDefinition::operator!=(SESubstanceDefinition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 SESubstance::SESubstance(Logger* logger)
   : Loggable(logger)
   , m_def(logger)
@@ -106,6 +217,7 @@ SESubstance::SESubstance(Logger* logger)
   , m_EndTidalPressure()
 {
 }
+//-----------------------------------------------------------------------------
 SESubstance::SESubstance(SESubstanceDefinition definition)
   : Loggable(definition.Aerosolization.GetLogger())
   , m_def(definition)
@@ -712,62 +824,6 @@ bool SESubstance::operator!=(const SESubstance& rhs) const
 {
   return !(*this == rhs);
 }
-//-------------------------------------------------------------------------------
-SESubstanceDefinition& SESubstanceDefinition::operator=(SESubstanceDefinition const& rhs)
-{
-  if (this != &rhs) {
-    Name = rhs.Name;
-    Classification = rhs.Classification;
-    State = rhs.State;
-    Density = rhs.Density;
-    MolarMass = rhs.MolarMass;
-    MaximumDiffusionFlux = rhs.MaximumDiffusionFlux;
-    MichaelisCoefficient = rhs.MichaelisCoefficient;
-    MembraneResistance = rhs.MembraneResistance;
-    AreaUnderCurve = rhs.AreaUnderCurve;
-    AlveolarTransfer = rhs.AlveolarTransfer;
-    DiffusingCapacity = rhs.DiffusingCapacity;
-    RelativeDiffusionCoefficient = rhs.RelativeDiffusionCoefficient;
-    SolubilityCoefficient = rhs.SolubilityCoefficient;
-    ClearanceDefinition = rhs.ClearanceDefinition;
-    Aerosolization = rhs.Aerosolization;
-    Pharmacokinetics = rhs.Pharmacokinetics;
-    Pharmacodynamics = rhs.Pharmacodynamics;
-  }
-  return *this;
-}
-//-------------------------------------------------------------------------------
-bool SESubstanceDefinition::operator==(SESubstanceDefinition const& rhs) const
-{
-  if (this == &rhs)
-    return true;
-
-  return Name == rhs.Name
-          && Classification == rhs.Classification
-          && State == rhs.State
-#if defined(BIOGEARS_RIGOROUS_EQUIVILANCE_CHECKS) && !defined(BIOGEARS_LINIENT_SESUBSTANCE_DEFINITION_CHECKS)
-          && Density == rhs.Density
-          && MolarMass == rhs.MolarMass
-          && MaximumDiffusionFlux == rhs.MaximumDiffusionFlux
-          && MichaelisCoefficient == rhs.MichaelisCoefficient
-          && MembraneResistance == rhs.MembraneResistance
-          && AreaUnderCurve == rhs.AreaUnderCurve
-          && AlveolarTransfer == rhs.AlveolarTransfer
-          && DiffusingCapacity == rhs.DiffusingCapacity
-          && RelativeDiffusionCoefficient == rhs.RelativeDiffusionCoefficient
-          && SolubilityCoefficient == rhs.SolubilityCoefficient
-          && ClearanceDefinition == rhs.ClearanceDefinition
-          && Aerosolization == rhs.Aerosolization
-          && Pharmacokinetics == rhs.Pharmacokinetics
-          && Pharmacodynamics == rhs.Pharmacodynamics)
-#endif
-    ;
-}
-bool SESubstanceDefinition::operator!=(SESubstanceDefinition const& rhs) const
-{
-  return !(*this == rhs);
-}
-
 //-------------------------------------------------------------------------------
 bool SESubstance::operator==(SESubstanceDefinition const& rhs) const
 {

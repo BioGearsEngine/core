@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 
+#include <algorithm>
+#include <utility>
+
 #include "io/cdm/Substance.h"
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -53,6 +56,51 @@ SESubstanceClearance::SESubstanceClearance(SESubstanceClearanceDefinition defini
 SESubstanceClearance::~SESubstanceClearance()
 {
   Clear();
+}
+SESubstanceClearance::SESubstanceClearance(SESubstanceClearance const& obj)
+  : m_def(obj.m_def)
+  , m_FractionExcretedInFeces(obj.m_FractionExcretedInFeces)
+  , m_FractionExcretedInUrine(obj.m_FractionExcretedInUrine)
+  , m_FractionMetabolizedInGut(obj.m_FractionMetabolizedInGut)
+  , m_FractionUnboundInPlasma(obj.m_FractionUnboundInPlasma)
+{
+}
+SESubstanceClearance::SESubstanceClearance(SESubstanceClearance&& obj)
+  : m_def(std::move(obj.m_def))
+  , m_FractionExcretedInFeces(std::move(obj.m_FractionExcretedInFeces))
+  , m_FractionExcretedInUrine(std::move(obj.m_FractionExcretedInUrine))
+  , m_FractionMetabolizedInGut(std::move(obj.m_FractionMetabolizedInGut))
+  , m_FractionUnboundInPlasma(std::move(obj.m_FractionUnboundInPlasma))
+{
+}
+
+SESubstanceClearance& SESubstanceClearance::operator=(SESubstanceClearance const& rhs)
+{
+  if (this == &rhs)
+    return *this;
+
+  SESubstanceClearance temp(rhs); // use the copy constructor
+  std::swap(m_def, temp.m_def);
+  std::swap(m_FractionExcretedInFeces, temp.m_FractionExcretedInFeces);
+  std::swap(m_FractionExcretedInUrine, temp.m_FractionExcretedInUrine);
+  std::swap(m_FractionMetabolizedInGut, temp.m_FractionMetabolizedInGut);
+  std::swap(m_FractionUnboundInPlasma, temp.m_FractionUnboundInPlasma);
+
+  return *this;
+}
+SESubstanceClearance& SESubstanceClearance::operator=(SESubstanceClearance&& rhs)
+{
+  if (this == &rhs)
+    return *this;
+
+  SESubstanceClearance temp(std::move(rhs)); // use the move constructor
+  std::swap(m_def, temp.m_def);
+  std::swap(m_FractionExcretedInFeces, temp.m_FractionExcretedInFeces);
+  std::swap(m_FractionExcretedInUrine, temp.m_FractionExcretedInUrine);
+  std::swap(m_FractionMetabolizedInGut, temp.m_FractionMetabolizedInGut);
+  std::swap(m_FractionUnboundInPlasma, temp.m_FractionUnboundInPlasma);
+
+  return *this;
 }
 //-----------------------------------------------------------------------------
 void SESubstanceClearance::Clear()

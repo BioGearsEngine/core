@@ -59,6 +59,7 @@ void SESubstanceManager::Clear()
   m_OriginalSubstanceData.clear();
 }
 //-----------------------------------------------------------------------------
+#pragma optimize("", off)
 void SESubstanceManager::Reset()
 {
   m_ActiveCompounds.clear();
@@ -74,7 +75,7 @@ void SESubstanceManager::Reset()
   }
 }
 //-----------------------------------------------------------------------------
-
+#pragma optimize("", on)
 /**
  * TRANSFERS OWNERSHIP TO THE MANAGER
  */

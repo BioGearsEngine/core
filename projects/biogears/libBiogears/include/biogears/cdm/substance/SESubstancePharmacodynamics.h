@@ -14,9 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-
-#include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
+#include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 
 namespace biogears {
 class SEScalarFrequency;
@@ -29,21 +28,26 @@ class SEPharmacodynamicModifier;
 namespace io {
   class Substance;
 }
-} //namespace biogears
+} // namespace biogears
 #pragma warning(disable : 4661)
 
 namespace std {
-  extern template class map<string, biogears::SEPharmacodynamicModifier*>;
+extern template class map<string, biogears::SEPharmacodynamicModifier*>;
 }
 #pragma warning(default : 4661)
 
-  namespace biogears {
+namespace biogears {
 class BIOGEARS_API SESubstancePharmacodynamics : public Loggable {
   friend io::Substance;
 
 public:
   SESubstancePharmacodynamics(SESubstancePharmacodynamics const& obj);
+  SESubstancePharmacodynamics(SESubstancePharmacodynamics&& obj);
   SESubstancePharmacodynamics(Logger* logger = nullptr);
+
+  SESubstancePharmacodynamics& operator=(SESubstancePharmacodynamics const& rhs);
+  SESubstancePharmacodynamics& operator=(SESubstancePharmacodynamics&& rhs);
+
   virtual ~SESubstancePharmacodynamics();
 
   virtual void Clear();
@@ -157,9 +161,13 @@ class BIOGEARS_API SEPharmacodynamicModifier {
 
 public:
   SEPharmacodynamicModifier(SEPharmacodynamicModifier const& obj);
+  SEPharmacodynamicModifier(SEPharmacodynamicModifier&& obj);
   SEPharmacodynamicModifier(SEScalarMassPerVolume const&, SEScalarFraction const&);
   SEPharmacodynamicModifier();
   ~SEPharmacodynamicModifier();
+
+  SEPharmacodynamicModifier& operator=(SEPharmacodynamicModifier const& rhs);
+  SEPharmacodynamicModifier& operator=(SEPharmacodynamicModifier&& rhs);
 
   void Clear();
   bool IsValid() const;

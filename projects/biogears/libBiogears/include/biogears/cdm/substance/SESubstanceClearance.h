@@ -31,15 +31,22 @@ namespace io {
 }
 
 struct BIOGEARS_API SESubstanceClearanceDefinition {
+  SESubstanceClearanceDefinition(SESubstanceClearanceDefinition const&) = default;
+  SESubstanceClearanceDefinition(SESubstanceClearanceDefinition&&) = default;
+  SESubstanceClearanceDefinition() = default;
+
+  SESubstanceClearanceDefinition& operator=(SESubstanceClearanceDefinition const& rhs) = default;
+  SESubstanceClearanceDefinition& operator=(SESubstanceClearanceDefinition&& rhs) = default;
+
   bool HasSystemic = false;
   bool HasCellular = false;
   SEScalarFrequency CellBirthRate;
   SEScalarFrequency CellDeathRate;
 
-  SECharge ChargeInBlood;
+  SECharge ChargeInBlood = SECharge::Invalid;
 
   SEScalarVolumePerTimeMass IntrinsicClearance;
-  RenalDynamicsType RenalDynamic;
+  RenalDynamicsType RenalDynamic = RenalDynamicsType::Invalid;
   SEScalarVolumePerTimeMass RenalClearance;
   SEScalar RenalReabsorptionRatio;
   SEScalarMassPerTime RenalTransportMaximum;
@@ -59,15 +66,18 @@ class BIOGEARS_API SESubstanceClearance : public Loggable {
 public:
   SESubstanceClearance(Logger* logger = nullptr);
   SESubstanceClearance(SESubstanceClearanceDefinition definition, Logger* logger);
+  SESubstanceClearance(SESubstanceClearance const& obj);
+  SESubstanceClearance(SESubstanceClearance&& obj);
   virtual ~SESubstanceClearance();
+
+  SESubstanceClearance& operator=(SESubstanceClearance const& rhs);
+  SESubstanceClearance& operator=(SESubstanceClearance&& rhs);
 
   virtual void Clear();
   virtual bool IsValid() const;
 
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
-
-  void Invalidate();
 
 public:
   virtual bool HasSystemic() const;
