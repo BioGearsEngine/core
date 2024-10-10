@@ -20,9 +20,9 @@
 
 #include <gtest/gtest.h>
 
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
 #include <biogears/cdm/properties/SEProperties.h>
-#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/Logger.h>
 

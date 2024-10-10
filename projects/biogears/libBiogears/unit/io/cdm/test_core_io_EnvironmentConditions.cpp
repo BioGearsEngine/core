@@ -90,8 +90,8 @@ TEST_F(TEST_FIXTURE_NAME, InitialEnvironment)
   source.SetConditionsFile("ConditionFile.xml");
   auto& conditions = source.GetConditions();
 
-  auto nitrogen = subMgr.GetSubstance("Nitrogen");
-  auto sarin = subMgr.GetSubstance("Sarin");
+  auto nitrogen = subMgr.GetSubstance("Nitrogen")->GetDefinition();
+  auto sarin = subMgr.GetSubstance("Sarin")->GetDefinition();
   ASSERT_NE(nullptr, sarin);
   ASSERT_NE(nullptr, nitrogen);
   conditions.SetSurroundingType(biogears::SESurroundingType::Water);
@@ -113,8 +113,8 @@ TEST_F(TEST_FIXTURE_NAME, InitialEnvironment)
   conditions.GetMeanRadiantTemperature().SetValue(1.0, biogears::TemperatureUnit::C);
   conditions.GetRespirationAmbientTemperature().SetValue(1.0, biogears::TemperatureUnit::C);
 
-  conditions.AddAmbientGas(*nitrogen, biogears::SEScalarFraction { 0.05 });
-  conditions.AddAmbientAerosol(*sarin, biogears::SEScalarMassPerVolume { 33, biogears::MassPerVolumeUnit::g_Per_L });
+  conditions.AddAmbientGas(nitrogen, biogears::SEScalarFraction { 0.05 });
+  conditions.AddAmbientAerosol(sarin, biogears::SEScalarMassPerVolume { 33, biogears::MassPerVolumeUnit::g_Per_L });
 
   EXPECT_NE(source, sink);
 
