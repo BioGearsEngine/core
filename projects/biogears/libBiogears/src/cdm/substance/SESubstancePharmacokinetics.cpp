@@ -37,13 +37,19 @@ SESubstancePharmacokinetics::SESubstancePharmacokinetics(Logger* logger)
 //-----------------------------------------------------------------------------
 SESubstancePharmacokinetics::~SESubstancePharmacokinetics()
 {
-  Clear();
+  SAFE_DELETE(m_Physicochemicals)
+  for (auto& [key, value] : m_TissueKinetics) {
+    delete value;
+    value = nullptr;
+  }
 }
 //-----------------------------------------------------------------------------
 #pragma optimize("", off)
 void SESubstancePharmacokinetics::Clear()
 {
-  m_Physicochemicals->Clear();
+  if (m_Physicochemicals) {
+    m_Physicochemicals->Clear();
+  }
 
   for (auto& [key, value] : m_TissueKinetics) {
     delete value;
