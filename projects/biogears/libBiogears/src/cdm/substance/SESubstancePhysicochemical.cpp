@@ -47,13 +47,16 @@ SESubstancePhysicochemical::SESubstancePhysicochemical(Logger* logger)
 SESubstancePhysicochemical::~SESubstancePhysicochemical()
 {
   Clear();
-  SAFE_DELETE(m_BloodPlasmaRatio)
-  SAFE_DELETE(m_FractionUnboundInPlasma)
-  SAFE_DELETE(m_LogP)
-  SAFE_DELETE(m_HydrogenBondCount)
-  SAFE_DELETE(m_PolarSurfaceArea)
+  DELETE_CONTAINER_OF_POINTERS( m_AcidDissociationConstants);
+  //m_BindingProtein = SESubstanceBindingProtein::Invalid;
+  SAFE_DELETE(m_BloodPlasmaRatio);
+  SAFE_DELETE(m_FractionUnboundInPlasma);
+  //m_IonicState = SESubstanceIonicState::Invalid;
+  SAFE_DELETE(m_LogP);
+  SAFE_DELETE(m_HydrogenBondCount);
+  SAFE_DELETE(m_PolarSurfaceArea);
 }
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------- 
 void SESubstancePhysicochemical::Clear()
 {
   for (auto& ptr : m_AcidDissociationConstants) {

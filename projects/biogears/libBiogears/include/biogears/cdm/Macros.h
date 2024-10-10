@@ -146,6 +146,7 @@ inline void DELETE_CONTAINER_OF_POINTERS(ContainerType& container)
 {
   for (auto& element : container) {
     delete element;
+    element = nullptr;
   }
   container.clear();
 }
@@ -156,6 +157,7 @@ inline void DELETE_MAP_OF_POINTERS(std::map<T, K>& map)
 {
   for (auto& [key,value] : map) {
     delete value;
+    value = nullptr;
   }
   map.clear();
 }

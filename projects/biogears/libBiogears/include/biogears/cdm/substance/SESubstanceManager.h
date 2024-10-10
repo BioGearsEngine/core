@@ -18,8 +18,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 
-#include <map>
-#include<set>
+#include <unordered_map>
+#include<unordered_set>
 
 #include <biogears/schema/cdm/Substance.hxx>
 
@@ -47,7 +47,7 @@ public:
   virtual void Reset();
   virtual bool LoadSubstanceDirectory();
 
-  virtual const std::set<SESubstance*>& GetSubstances() const;
+  virtual const std::vector<SESubstance*>& GetSubstances() const;
   virtual SESubstance* GetSubstance(const char* name) const;
   virtual SESubstance* GetSubstance(const std::string& name) const;
   virtual SESubstance* GetSubstance(const SESubstanceDefinition& definition) const;
@@ -55,27 +55,27 @@ public:
   virtual SESubstance* AddSubstance(SESubstanceDefinition const& substance);
 
   virtual bool IsActive(const SESubstance& substance) const;
-  virtual const std::set<SESubstance*>& GetActiveSubstances() const;
+  virtual const std::unordered_set<SESubstance*>& GetActiveSubstances() const;
   virtual void AddActiveSubstance(SESubstance& substance);
   virtual SESubstance* AddActiveSubstance(SESubstanceDefinition const& substance);
   virtual void RemoveActiveSubstance(const SESubstance& substance);
-  virtual void RemoveActiveSubstances(const std::set<SESubstance*>& substances);
+  virtual void RemoveActiveSubstances(const std::unordered_set<SESubstance*>& substances);
   virtual void RemoveActiveSubstances();
 
-  virtual const std::set<SESubstance*>& GetActiveGases() const;
-  virtual const std::set<SESubstance*>& GetActiveLiquids() const;
-  virtual const std::set<SESubstance*>& GetActiveDrugs() const;
+  virtual const std::unordered_set<SESubstance*>& GetActiveGases() const;
+  virtual const std::unordered_set<SESubstance*>& GetActiveLiquids() const;
+  virtual const std::unordered_set<SESubstance*>& GetActiveDrugs() const;
 
-  virtual const std::set<SESubstanceCompound*>& GetCompounds() const;
+  virtual const std::vector<SESubstanceCompound*>& GetCompounds() const;
   virtual SESubstanceCompound* GetCompound(const char* name) const;
   virtual SESubstanceCompound* GetCompound(const std::string& name) const;
   virtual void AddCompound(SESubstanceCompound& compound);
 
   virtual bool IsActive(const SESubstanceCompound& compound) const;
-  virtual const std::set<SESubstanceCompound*>& GetActiveCompounds() const;
+  virtual const std::unordered_set<SESubstanceCompound*>& GetActiveCompounds() const;
   virtual void AddActiveCompound(SESubstanceCompound& compound);
   virtual void RemoveActiveCompound(SESubstanceCompound& compound);
-  virtual void RemoveActiveCompounds(const std::set<SESubstanceCompound*>& compounds);
+  virtual void RemoveActiveCompounds(const std::unordered_set<SESubstanceCompound*>& compounds);
 
   virtual SESubstance* ReadSubstanceFile(const char* xmlFile);
   virtual SESubstance* ReadSubstanceFile(const std::string& xmlFile);
@@ -84,17 +84,18 @@ public:
   bool operator!=(SESubstanceManager const& rhs) const;
 
 protected:
-  std::set<SESubstance*> m_Substances;
-  std::set<SESubstance*> m_ActiveSubstances;
-  std::set<SESubstance*> m_ActiveGases;
-  std::set<SESubstance*> m_ActiveLiquids;
-  std::set<SESubstance*> m_ActiveDrugs;
+  std::vector<SESubstance*> m_Substances;
+  std::vector<SESubstanceCompound*> m_Compounds;
 
-  std::set<SESubstanceCompound*> m_Compounds;
-  std::set<SESubstanceCompound*> m_ActiveCompounds;
+  std::unordered_set<SESubstance*> m_ActiveSubstances;
+  std::unordered_set<SESubstance*> m_ActiveGases;
+  std::unordered_set<SESubstance*> m_ActiveLiquids;
+  std::unordered_set<SESubstance*> m_ActiveDrugs;
+
+  std::unordered_set<SESubstanceCompound*> m_ActiveCompounds;
 
 private:
-  std::map<SESubstance*, SESubstanceDefinition> m_OriginalSubstanceData;
-  std::map<SESubstanceCompound*, SESubstanceCompound> m_OriginalCompoundData;
+  std::unordered_map<SESubstance*, SESubstanceDefinition> m_OriginalSubstanceData;
+  std::unordered_map<SESubstanceCompound*, SESubstanceCompound> m_OriginalCompoundData;
 };
 }

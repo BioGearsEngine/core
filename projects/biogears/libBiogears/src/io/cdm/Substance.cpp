@@ -119,11 +119,11 @@ namespace io {
   void Substance::UnMarshall(const CDM::SubstancePharmacodynamicsData& in, SESubstancePharmacodynamics& out)
   {
     UnMarshall(in.Bronchodilation(), out.GetBronchodilation());
+    UnMarshall(in.CentralNervousModifier(), out.GetCentralNervousModifier());
     UnMarshall(in.DiastolicPressureModifier(), out.GetDiastolicPressureModifier());
-
-    io::Property::UnMarshall(in.EMaxShapeParameter(), out.GetEMaxShapeParameter());
-
     UnMarshall(in.FeverModifier(), out.GetFeverModifier());
+
+
     UnMarshall(in.HeartRateModifier(), out.GetHeartRateModifier());
     UnMarshall(in.HemorrhageModifier(), out.GetHemorrhageModifier());
     UnMarshall(in.NeuromuscularBlock(), out.GetNeuromuscularBlock());
@@ -135,8 +135,8 @@ namespace io {
     UnMarshall(in.SystolicPressureModifier(), out.GetSystolicPressureModifier());
     UnMarshall(in.TidalVolumeModifier(), out.GetTidalVolumeModifier());
     UnMarshall(in.TubularPermeabilityModifier(), out.GetTubularPermeabilityModifier());
-    UnMarshall(in.CentralNervousModifier(), out.GetCentralNervousModifier());
 
+    io::Property::UnMarshall(in.EMaxShapeParameter(), out.GetEMaxShapeParameter());
     io::Property::UnMarshall(in.AntibacterialEffect(), out.GetAntibacterialEffect());
     io::Property::UnMarshall(in.EffectSiteRateConstant(), out.GetEffectSiteRateConstant());
 

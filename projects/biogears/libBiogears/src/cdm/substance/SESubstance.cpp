@@ -55,9 +55,9 @@ SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition const& obj)
 {};
 //-----------------------------------------------------------------------------
 SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition&& obj)
-  : Name(std::move(obj.Name))
-  , Classification(std::move(obj.Classification))
-  , State(std::move(obj.State))
+  : Name(std::exchange(obj.Name, ""))
+  , Classification(std::exchange(obj.Classification, SESubstanceClass::Invalid))
+  , State(std::exchange(obj.State, SESubstanceState::Invalid))
   , Density(std::move(obj.Density))
   , MolarMass(std::move(obj.MolarMass))
   , MaximumDiffusionFlux(std::move(obj.MaximumDiffusionFlux))
@@ -84,9 +84,9 @@ SESubstanceDefinition::SESubstanceDefinition(Logger* logger)
   , Aerosolization(logger)
   , Pharmacokinetics(logger)
   , Pharmacodynamics(logger)
-  , Name()
-  , Classification()
-  , State()
+  , Name("")
+  , Classification(SESubstanceClass::Invalid)
+  , State(SESubstanceState::Invalid)
   , Density()
   , MolarMass()
   , MaximumDiffusionFlux()
@@ -145,26 +145,23 @@ SESubstanceDefinition& SESubstanceDefinition::operator=(SESubstanceDefinition co
 SESubstanceDefinition& SESubstanceDefinition::operator=(SESubstanceDefinition&& rhs)
 {
   if (this != &rhs) {
-
-    SESubstanceDefinition temp(std::move(rhs));
-
-    std::swap(Name, temp.Name);
-    std::swap(Classification, temp.Classification);
-    std::swap(State, temp.State);
-    std::swap(Density, temp.Density);
-    std::swap(MolarMass, temp.MolarMass);
-    std::swap(MaximumDiffusionFlux, temp.MaximumDiffusionFlux);
-    std::swap(MichaelisCoefficient, temp.MichaelisCoefficient);
-    std::swap(MembraneResistance, temp.MembraneResistance);
-    std::swap(AreaUnderCurve, temp.AreaUnderCurve);
-    std::swap(AlveolarTransfer, temp.AlveolarTransfer);
-    std::swap(DiffusingCapacity, temp.DiffusingCapacity);
-    std::swap(RelativeDiffusionCoefficient, temp.RelativeDiffusionCoefficient);
-    std::swap(SolubilityCoefficient, temp.SolubilityCoefficient);
-    std::swap(ClearanceDefinition, temp.ClearanceDefinition);
-    std::swap(Aerosolization, temp.Aerosolization);
-    std::swap(Pharmacokinetics, temp.Pharmacokinetics);
-    std::swap(Pharmacodynamics, temp.Pharmacodynamics);
+    Name =   rhs.Name;
+    Classification =   rhs.Classification;
+    State =   rhs.State;
+    Density =   rhs.Density;
+    MolarMass =   rhs.MolarMass;
+    MaximumDiffusionFlux =   rhs.MaximumDiffusionFlux;
+    MichaelisCoefficient =   rhs.MichaelisCoefficient;
+    MembraneResistance =   rhs.MembraneResistance;
+    AreaUnderCurve =   rhs.AreaUnderCurve;
+    AlveolarTransfer =   rhs.AlveolarTransfer;
+    DiffusingCapacity =   rhs.DiffusingCapacity;
+    RelativeDiffusionCoefficient =   rhs.RelativeDiffusionCoefficient;
+    SolubilityCoefficient =   rhs.SolubilityCoefficient;
+    ClearanceDefinition =   rhs.ClearanceDefinition;
+    Aerosolization =   rhs.Aerosolization;
+    Pharmacokinetics =   rhs.Pharmacokinetics;
+    Pharmacodynamics = rhs.Pharmacodynamics;
   }
   return *this;
 }
@@ -237,21 +234,10 @@ SESubstance::SESubstance(SESubstanceDefinition definition)
 //-----------------------------------------------------------------------------
 SESubstance::~SESubstance()
 {
-  Clear();
 }
 //-----------------------------------------------------------------------------
 void SESubstance::Clear()
 {
-  m_def.Name = "";
-  m_def.State = SESubstanceState::Invalid;
-  m_def.Classification = SESubstanceClass::Invalid;
-  m_def.Density.Invalidate();
-  m_def.MolarMass.Invalidate();
-
-  m_def.MaximumDiffusionFlux.Invalidate();
-  m_def.MichaelisCoefficient.Invalidate();
-  m_def.MembraneResistance.Invalidate();
-  m_def.AreaUnderCurve.Invalidate();
   m_BloodConcentration.Invalidate();
   m_EffectSiteConcentration.Invalidate();
   m_MassInBody.Invalidate();
@@ -260,18 +246,7 @@ void SESubstance::Clear()
   m_PlasmaConcentration.Invalidate();
   m_SystemicMassCleared.Invalidate();
   m_TissueConcentration.Invalidate();
-
-  m_def.AlveolarTransfer.Invalidate();
-  m_def.DiffusingCapacity.Invalidate();
-  m_EndTidalFraction.Invalidate();
-  m_EndTidalPressure.Invalidate();
-  m_def.SolubilityCoefficient.Invalidate();
-  m_def.RelativeDiffusionCoefficient.Invalidate();
-
-  m_def.Aerosolization.Clear();
-  m_Clearance.Clear();
-  m_def.Pharmacokinetics.Clear();
-  m_def.Pharmacodynamics.Clear();
+  
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstance::GetScalar(const char* name)
@@ -831,7 +806,7 @@ bool SESubstance::operator!=(SESubstanceDefinition const& rhs) const
   return !(*this == rhs);
 }
 //------------------------------------------------------------------------------
-SESubstanceDefinition SESubstance::GetDefinition() const
+SESubstanceDefinition const& SESubstance::GetDefinition() const
 {
   // TODO: Refactor PTRs in all member components to simplify true Copies
   return m_def;

@@ -38,12 +38,12 @@ namespace biogears {
 SESubstanceManager::SESubstanceManager(Logger* logger)
   : Loggable(logger)
 {
-  Clear();
 }
 //-----------------------------------------------------------------------------
 SESubstanceManager::~SESubstanceManager()
 {
-  Clear();
+  DELETE_CONTAINER_OF_POINTERS(m_Substances);
+  DELETE_CONTAINER_OF_POINTERS(m_Compounds);
 }
 //-----------------------------------------------------------------------------
 void SESubstanceManager::Clear()
@@ -81,14 +81,14 @@ void SESubstanceManager::Reset()
  */
 void SESubstanceManager::AddSubstance(SESubstance& substance)
 {
-  m_Substances.insert(&substance);
+  m_Substances.push_back(&substance);
 }
 SESubstance* SESubstanceManager::AddSubstance(SESubstanceDefinition const& definition)
 {
   auto existingSubstance = std::find_if(m_Substances.begin(), m_Substances.end(), [&definition](auto substance) { return substance->m_def == definition; });
   if (existingSubstance == m_Substances.end()) {
     auto newSubstance = std::make_unique<SESubstance>(definition).release();
-    m_Substances.insert(newSubstance);
+    m_Substances.push_back(newSubstance);
     return newSubstance;
   }
   return *existingSubstance;
@@ -111,7 +111,7 @@ SESubstance* SESubstanceManager::GetSubstance(const SESubstanceDefinition& defin
   return (existingSubstance == m_Substances.end()) ? nullptr : *existingSubstance;
 }
 //-----------------------------------------------------------------------------
-const std::set<SESubstance*>& SESubstanceManager::GetSubstances() const
+const std::vector<SESubstance*>& SESubstanceManager::GetSubstances() const
 {
   return m_Substances;
 }
@@ -121,7 +121,7 @@ bool SESubstanceManager::IsActive(const SESubstance& substance) const
   return m_ActiveSubstances.contains(const_cast<SESubstance*>(&substance));
 }
 //-----------------------------------------------------------------------------
-const std::set<SESubstance*>& SESubstanceManager::GetActiveSubstances() const
+const std::unordered_set<SESubstance*>& SESubstanceManager::GetActiveSubstances() const
 {
   return m_ActiveSubstances;
 }
@@ -149,7 +149,7 @@ SESubstance* SESubstanceManager::AddActiveSubstance(SESubstanceDefinition const&
   SESubstance* activeSubstance = nullptr;
   if (existingSubstance == m_Substances.end()) {
     activeSubstance = std::make_unique<SESubstance>(definition).release();
-    m_Substances.insert(activeSubstance);
+    m_Substances.push_back(activeSubstance);
   } else {
     activeSubstance = *existingSubstance;
   }
@@ -179,7 +179,7 @@ void SESubstanceManager::RemoveActiveSubstance(const SESubstance& substance)
   std::erase_if(m_ActiveSubstances, [&substance](auto lhs) { return *lhs == substance; });
 }
 //-----------------------------------------------------------------------------
-void SESubstanceManager::RemoveActiveSubstances(const std::set<SESubstance*>& substances)
+void SESubstanceManager::RemoveActiveSubstances(const std::unordered_set<SESubstance*>& substances)
 {
   for (SESubstance* sub : substances)
     RemoveActiveSubstance(*sub);
@@ -187,29 +187,29 @@ void SESubstanceManager::RemoveActiveSubstances(const std::set<SESubstance*>& su
 //-----------------------------------------------------------------------------
 void SESubstanceManager::RemoveActiveSubstances()
 {
-  std::set<SESubstance*> copy(m_ActiveSubstances);
+  std::unordered_set<SESubstance*> copy(m_ActiveSubstances);
   for (SESubstance* sub : copy)
     RemoveActiveSubstance(*sub);
 }
 //-----------------------------------------------------------------------------
-const std::set<SESubstance*>& SESubstanceManager::GetActiveGases() const
+const std::unordered_set<SESubstance*>& SESubstanceManager::GetActiveGases() const
 {
   return m_ActiveGases;
 }
 //-----------------------------------------------------------------------------
-const std::set<SESubstance*>& SESubstanceManager::GetActiveLiquids() const
+const std::unordered_set<SESubstance*>& SESubstanceManager::GetActiveLiquids() const
 {
   return m_ActiveLiquids;
 }
 //-----------------------------------------------------------------------------
-const std::set<SESubstance*>& SESubstanceManager::GetActiveDrugs() const
+const std::unordered_set<SESubstance*>& SESubstanceManager::GetActiveDrugs() const
 {
   return m_ActiveDrugs;
 }
 //-----------------------------------------------------------------------------
 void SESubstanceManager::AddCompound(SESubstanceCompound& compound)
 {
-  m_Compounds.insert(&compound);
+  m_Compounds.push_back(&compound);
 }
 //-----------------------------------------------------------------------------
 SESubstanceCompound* SESubstanceManager::GetCompound(const char* name) const
@@ -226,7 +226,7 @@ SESubstanceCompound* SESubstanceManager::GetCompound(const std::string& name) co
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-const std::set<SESubstanceCompound*>& SESubstanceManager::GetCompounds() const
+const std::vector<SESubstanceCompound*>& SESubstanceManager::GetCompounds() const
 {
   return m_Compounds;
 }
@@ -236,7 +236,7 @@ bool SESubstanceManager::IsActive(const SESubstanceCompound& compound) const
   return m_ActiveCompounds.contains(const_cast<SESubstanceCompound*>(&compound));
 }
 //-----------------------------------------------------------------------------
-const std::set<SESubstanceCompound*>& SESubstanceManager::GetActiveCompounds() const
+const std::unordered_set<SESubstanceCompound*>& SESubstanceManager::GetActiveCompounds() const
 {
   return m_ActiveCompounds;
 }
@@ -251,7 +251,7 @@ void SESubstanceManager::RemoveActiveCompound(SESubstanceCompound& compound)
   std::erase_if(m_ActiveCompounds, [&compound](auto lhs) { return *lhs == compound; });
 }
 //-----------------------------------------------------------------------------
-void SESubstanceManager::RemoveActiveCompounds(const std::set<SESubstanceCompound*>& compounds)
+void SESubstanceManager::RemoveActiveCompounds(const std::unordered_set<SESubstanceCompound*>& compounds)
 {
   for (SESubstanceCompound* c : compounds)
     RemoveActiveCompound(*c);

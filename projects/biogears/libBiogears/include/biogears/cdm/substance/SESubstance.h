@@ -217,7 +217,7 @@ public:
   bool operator==(const SESubstanceDefinition& rhs) const;
   bool operator!=(const SESubstanceDefinition& rhs) const;
 
-  SESubstanceDefinition GetDefinition() const;
+  SESubstanceDefinition const& GetDefinition() const;
 
 private:
   SESubstanceDefinition m_def;

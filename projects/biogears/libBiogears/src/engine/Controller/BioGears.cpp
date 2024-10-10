@@ -875,6 +875,7 @@ BioGears::~BioGears()
   m_CurrentTime = nullptr;
   m_SimulationTime = nullptr;
   m_managedLogger = nullptr;
+  m_Substances = nullptr;
 }
 
 EngineState BioGears::GetState() { return m_State; }
