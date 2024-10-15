@@ -839,8 +839,6 @@ bool BioGears::SetupPatient()
 
 BioGears::~BioGears()
 {
-
-  m_Logger->FormatMessages(false);
   m_Configuration = nullptr;
   m_SaturationCalculator = nullptr;
   m_DiffusionCalculator = nullptr;
@@ -874,6 +872,9 @@ BioGears::~BioGears()
 
   m_CurrentTime = nullptr;
   m_SimulationTime = nullptr;
+  if (m_Logger) {
+    m_Logger->SetLogTime(nullptr);
+  }
   m_managedLogger = nullptr;
   m_Substances = nullptr;
 }

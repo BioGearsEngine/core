@@ -42,14 +42,6 @@ SESubstanceManager::SESubstanceManager(Logger* logger)
 //-----------------------------------------------------------------------------
 SESubstanceManager::~SESubstanceManager()
 {
-  DELETE_CONTAINER_OF_POINTERS(m_Substances);
-  DELETE_CONTAINER_OF_POINTERS(m_Compounds);
-}
-//-----------------------------------------------------------------------------
-void SESubstanceManager::Clear()
-{
-  DELETE_CONTAINER_OF_POINTERS(m_Substances);
-  DELETE_CONTAINER_OF_POINTERS(m_Compounds);
   m_ActiveSubstances.clear();
   m_ActiveCompounds.clear();
   m_ActiveGases.clear();
@@ -57,6 +49,22 @@ void SESubstanceManager::Clear()
 
   m_OriginalCompoundData.clear();
   m_OriginalSubstanceData.clear();
+
+  DELETE_CONTAINER_OF_POINTERS(m_Substances);
+  DELETE_CONTAINER_OF_POINTERS(m_Compounds);
+}
+//-----------------------------------------------------------------------------
+void SESubstanceManager::Clear()
+{
+  m_ActiveSubstances.clear();
+  m_ActiveCompounds.clear();
+  m_ActiveGases.clear();
+  m_ActiveLiquids.clear();
+
+  m_OriginalCompoundData.clear();
+  m_OriginalSubstanceData.clear();
+  DELETE_CONTAINER_OF_POINTERS(m_Substances);
+  DELETE_CONTAINER_OF_POINTERS(m_Compounds);
 }
 //-----------------------------------------------------------------------------
 #pragma optimize("", off)

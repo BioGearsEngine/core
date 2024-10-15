@@ -51,6 +51,7 @@ void SEHemorrhage::Clear()
   SEPatientAction::Clear();
   m_Compartment = "";
   m_MCIS.clear();
+  SAFE_DELETE(m_BleedResistance);
   SAFE_DELETE(m_InitialRate);
 }
 //-----------------------------------------------------------------------------

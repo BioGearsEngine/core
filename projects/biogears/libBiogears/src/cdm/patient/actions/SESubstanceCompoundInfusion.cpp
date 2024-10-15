@@ -28,14 +28,19 @@ SESubstanceCompoundInfusion::SESubstanceCompoundInfusion(const SESubstanceCompou
 //-------------------------------------------------------------------------------
 SESubstanceCompoundInfusion::~SESubstanceCompoundInfusion()
 {
-  Clear();
+  SAFE_DELETE(m_Rate);
+  SAFE_DELETE(m_BagVolume);
 }
 //-------------------------------------------------------------------------------
 void SESubstanceCompoundInfusion::Clear()
 {
   SESubstanceAdministration::Clear();
-  m_Rate = nullptr;
-  m_BagVolume = nullptr;
+  if (m_Rate) {
+    m_Rate->Invalidate();
+  }
+  if (m_BagVolume) {
+    m_BagVolume->Invalidate();
+  }
   // m_Compound=nullptr; Keeping mapping!!
 }
 //-------------------------------------------------------------------------------

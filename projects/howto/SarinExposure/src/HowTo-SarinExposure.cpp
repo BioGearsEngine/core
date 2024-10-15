@@ -53,9 +53,9 @@ int HowToSarinExposure()
   //---Initialize all variables needed for scenario
 
   //Substances
-  SESubstance* Sarin = bg->GetSubstanceManager().GetSubstance("Sarin");
-  SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
-  SESubstance* O2 = bg->GetSubstanceManager().GetSubstance("Oxygen");
+  auto&  Sarin = bg->GetSubstanceManager().GetSubstance("Sarin")->GetDefinition();
+  auto CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
+  auto O2 = bg->GetSubstanceManager().GetSubstance("Oxygen");
 
   //Numerical values
   double exposureTime = 5.0; //Establish how long the patient will be exposed to Sarin
@@ -103,7 +103,7 @@ int HowToSarinExposure()
   // Sarin is introduced as an ambient aerosol and the concentration is set with units of mg/m^3
   SEEnvironmentChange env(bg->GetSubstanceManager());
   SEEnvironmentalConditions& conditions = env.GetConditions();
-  conditions.GetAmbientAerosol(*Sarin).GetConcentration().SetValue(SarinAerosol_mg_Per_m3, MassPerVolumeUnit::mg_Per_m3);
+  conditions.GetAmbientAerosol(Sarin).GetConcentration().SetValue(SarinAerosol_mg_Per_m3, MassPerVolumeUnit::mg_Per_m3);
   SarinActive = SEOnOff::On; //Sarin exposure is active
   bg->ProcessAction(env);
 
@@ -115,9 +115,9 @@ int HowToSarinExposure()
 
     //Check if we have reached the end of the exposure time to Sarin.  If so, remove it from the environment and deactivate it
     if ((bg->GetSimulationTime(TimeUnit::min) > exposureTime + 1) && (SarinActive == SEOnOff::On)) {
-      conditions.RemoveAmbientAerosol(*Sarin);
+      conditions.RemoveAmbientAerosol(Sarin);
       bg->ProcessAction(env);
-      bg->GetLogger()->Info(std::string{ Sarin->GetName() } +" removed from environment");
+      bg->GetLogger()->Info(std::string{ Sarin.Name } +" removed from environment");
       SarinActive = SEOnOff::Off;
     }
 

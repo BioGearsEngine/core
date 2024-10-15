@@ -236,7 +236,7 @@ SESubstancePharmacodynamics& SESubstancePharmacodynamics::operator=(SESubstanceP
 SESubstancePharmacodynamics::~SESubstancePharmacodynamics()
 {
   m_Modifiers.clear(); // NO LEAK JUST A DIFFERENT WAY TO REFERENCE THE BELOW.
-   SEScalarFrequency* m_AntibacterialEffect;
+  SAFE_DELETE(m_AntibacterialEffect);
   SAFE_DELETE(m_Bronchodilation);
   SAFE_DELETE(m_DiastolicPressureModifier);
   SAFE_DELETE(m_EMaxShapeParameter);

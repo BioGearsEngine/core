@@ -49,7 +49,7 @@ void SEScenario::Clear()
   m_EngineStateFile = "";
   SAFE_DELETE(m_InitialParameters);
   SAFE_DELETE(m_AutoSerialization);
-  DELETE_VECTOR(m_Actions);
+  DELETE_CONTAINER_OF_POINTERS(m_Actions);
   m_DataRequestMgr.Clear();
 }
 //-----------------------------------------------------------------------------

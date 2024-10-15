@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramWaveformLeadNumber.h>
 #include <biogears/io/io-manager.h>
+#include <biogears/cdm/Macros.h>
 
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/ecg.h>
@@ -40,7 +41,10 @@ SEElectroCardioGramInterpolator::SEElectroCardioGramInterpolator(Logger* logger)
 //-------------------------------------------------------------------------------
 SEElectroCardioGramInterpolator::~SEElectroCardioGramInterpolator()
 {
-  Clear();
+  for (auto i : m_Waveforms)
+    for (auto j : i.second)
+      delete j.second;
+  m_Waveforms.clear();
 }
 //-------------------------------------------------------------------------------
 void SEElectroCardioGramInterpolator::Clear()

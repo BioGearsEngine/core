@@ -347,35 +347,35 @@ std::unique_ptr<CDM::ObjectData> Serializer::ReadBuffer(XMLByte const* buffer, s
   std::unique_ptr<CDM::ObjectData> obj = std::unique_ptr<CDM::ObjectData>();
   // Check the name and read it into the right object type
   if (name.compare("Substance") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Substance(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::Substance(*doc).release());
   if (name.compare("Patient") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Patient(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::Patient(*doc).release());
   if (name.compare("SubstanceCompound") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::SubstanceCompound(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::SubstanceCompound(*doc).release());
   if (name.compare("Scenario") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Scenario(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::Scenario(*doc).release());
   if (name.compare("EnvironmentalConditions") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::EnvironmentalConditions(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::EnvironmentalConditions(*doc).release());
   if (name.compare("ElectroCardioGramWaveformInterpolator") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::ElectroCardioGramWaveformInterpolator(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::ElectroCardioGramWaveformInterpolator(*doc).release());
   if (name.compare("Nutrition") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Nutrition(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::Nutrition(*doc).release());
   if (name.compare("PhysiologyEngineDynamicStabilization") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineDynamicStabilization(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::PhysiologyEngineDynamicStabilization(*doc).release());
   if (name.compare("PhysiologyEngineTimedStabilization") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::PhysiologyEngineTimedStabilization(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::PhysiologyEngineTimedStabilization(*doc).release());
   if (name.compare("CircuitManager") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CircuitManager(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::CircuitManager(*doc).release());
   if (name.compare("CompartmentManager") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::CompartmentManager(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::CompartmentManager(*doc).release());
   if (name.compare("BioGearsConfiguration") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsConfiguration(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::BioGearsConfiguration(*doc).release());
   if (name.compare("BioGearsState") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::BioGearsState(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::BioGearsState(*doc).release());
   if (name.compare("DataRequests") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::DataRequests(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::DataRequests(*doc).release());
   if (name.compare("Actions") == 0)
-    return std::unique_ptr<CDM::ObjectData>((CDM::ObjectData*)CDM::Actions(*doc).release());
+    return std::unique_ptr<CDM::ObjectData>(CDM::Actions(*doc).release());
 
   /// \error Unsupported root tag
   err << "Unsupported root tag " << name << " found in buffer" << std::ends;

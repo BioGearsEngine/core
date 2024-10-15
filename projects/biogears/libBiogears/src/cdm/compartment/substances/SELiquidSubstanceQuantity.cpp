@@ -63,7 +63,14 @@ SELiquidSubstanceQuantity::SELiquidSubstanceQuantity(SESubstance& sub, SELiquidC
 //-----------------------------------------------------------------------------
 SELiquidSubstanceQuantity::~SELiquidSubstanceQuantity()
 {
-  Clear();
+  SAFE_DELETE(m_Concentration);
+  SAFE_DELETE(m_Mass);
+  SAFE_DELETE(m_MassCleared);
+  SAFE_DELETE(m_MassDeposited);
+  SAFE_DELETE(m_MassExcreted);
+  SAFE_DELETE(m_Molarity);
+  SAFE_DELETE(m_PartialPressure);
+  SAFE_DELETE(m_Saturation);
 }
 //-----------------------------------------------------------------------------
 void SELiquidSubstanceQuantity::Invalidate()

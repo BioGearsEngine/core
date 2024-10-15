@@ -1,4 +1,4 @@
- /**************************************************************************************
+/**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the License
@@ -26,15 +26,17 @@ SETensionPneumothorax::SETensionPneumothorax()
 //-------------------------------------------------------------------------------
 SETensionPneumothorax::~SETensionPneumothorax()
 {
-  Clear();
+  delete m_Severity;
+  m_Severity = nullptr;
 }
 //-------------------------------------------------------------------------------
 void SETensionPneumothorax::Clear()
 {
   SEPatientAction::Clear();
-  m_Type = (SEPneumothoraxType)-1;
+  m_Type = SEPneumothoraxType::Invalid;
   m_Side = SESide::Invalid;
-  SAFE_DELETE(m_Severity);
+  if (m_Severity)
+    m_Severity->Invalidate();
 }
 //-------------------------------------------------------------------------------
 bool SETensionPneumothorax::IsValid() const
@@ -112,7 +114,7 @@ void SETensionPneumothorax::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
-bool SETensionPneumothorax::operator==( const SETensionPneumothorax& rhs) const
+bool SETensionPneumothorax::operator==(const SETensionPneumothorax& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= m_Side == rhs.m_Side;
@@ -121,7 +123,7 @@ bool SETensionPneumothorax::operator==( const SETensionPneumothorax& rhs) const
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SETensionPneumothorax::operator!=( const SETensionPneumothorax& rhs) const
+bool SETensionPneumothorax::operator!=(const SETensionPneumothorax& rhs) const
 {
   return !(*this == rhs);
 }

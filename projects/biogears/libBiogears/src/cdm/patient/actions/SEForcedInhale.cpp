@@ -25,15 +25,20 @@ SEForcedInhale::SEForcedInhale()
 //-------------------------------------------------------------------------------
 SEForcedInhale::~SEForcedInhale()
 {
-  Clear();
+  SAFE_DELETE(m_InspiratoryCapacityFraction);
+  SAFE_DELETE(m_Period);
 }
 //-------------------------------------------------------------------------------
 void SEForcedInhale::Clear()
 {
   SEConsciousRespirationCommand::Clear();
-  SAFE_DELETE(m_InspiratoryCapacityFraction);
-  SAFE_DELETE(m_Period);
-}
+  if (m_InspiratoryCapacityFraction) {
+    m_InspiratoryCapacityFraction->Invalidate();
+  }
+  if (m_Period) {
+    m_Period->Invalidate();
+  }
+  }
 //-------------------------------------------------------------------------------
 bool SEForcedInhale::IsValid() const
 {
@@ -81,7 +86,7 @@ void SEForcedInhale::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
-bool SEForcedInhale::operator==( const SEForcedInhale& rhs) const
+bool SEForcedInhale::operator==(const SEForcedInhale& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_InspiratoryCapacityFraction && rhs.m_InspiratoryCapacityFraction) ? m_InspiratoryCapacityFraction->operator==(*rhs.m_InspiratoryCapacityFraction) : m_InspiratoryCapacityFraction == rhs.m_InspiratoryCapacityFraction;
@@ -89,7 +94,7 @@ bool SEForcedInhale::operator==( const SEForcedInhale& rhs) const
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEForcedInhale::operator!=( const SEForcedInhale& rhs) const
+bool SEForcedInhale::operator!=(const SEForcedInhale& rhs) const
 {
   return !(*this == rhs);
 }

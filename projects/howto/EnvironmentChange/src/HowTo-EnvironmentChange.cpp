@@ -68,9 +68,9 @@ int HowToEnvironmentChange()
   }
 
   // Get some substances out we will use
-  SESubstance* N2 = bg->GetSubstanceManager().GetSubstance("Nitrogen");
-  SESubstance* O2 = bg->GetSubstanceManager().GetSubstance("Oxygen");
-  SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
+  auto& N2 = bg->GetSubstanceManager().GetSubstance("Nitrogen")->GetDefinition();
+  auto&  O2 = bg->GetSubstanceManager().GetSubstance("Oxygen")->GetDefinition();
+  auto& CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide")->GetDefinition();
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
 
@@ -120,9 +120,9 @@ int HowToEnvironmentChange()
   conditions.GetMeanRadiantTemperature().SetValue(22.0, TemperatureUnit::C);
   conditions.GetRelativeHumidity().SetValue(1.0);
   conditions.GetRespirationAmbientTemperature().SetValue(22.0, TemperatureUnit::C);
-  conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(0.7901);
-  conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.2095);
-  conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
+  conditions.GetAmbientGas(N2).GetFractionAmount().SetValue(0.7901);
+  conditions.GetAmbientGas(O2).GetFractionAmount().SetValue(0.2095);
+  conditions.GetAmbientGas(CO2).GetFractionAmount().SetValue(4.0E-4);
   bg->ProcessAction(env);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
@@ -149,9 +149,9 @@ int HowToEnvironmentChange()
   conditions.GetMeanRadiantTemperature().SetValue(22.0, TemperatureUnit::C);
   conditions.GetRelativeHumidity().SetValue(0.6);
   conditions.GetRespirationAmbientTemperature().SetValue(19, TemperatureUnit::C);
-  conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(0.7896);
-  conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.21);
-  conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
+  conditions.GetAmbientGas(N2).GetFractionAmount().SetValue(0.7896);
+  conditions.GetAmbientGas(O2).GetFractionAmount().SetValue(0.21);
+  conditions.GetAmbientGas(CO2).GetFractionAmount().SetValue(4.0E-4);
   bg->ProcessAction(env);
   bg->AdvanceModelTime(60, TimeUnit::s);
 
