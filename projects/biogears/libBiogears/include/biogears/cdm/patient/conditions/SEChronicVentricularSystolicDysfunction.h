@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/exports.h>
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class BIOGEARS_API SEChronicVentricularSystolicDysfunction : public SEChronicHeartFailure {
@@ -27,18 +26,11 @@ public:
 
   virtual bool IsValid() const override ;
 
-  virtual bool Load(const CDM::ChronicVentricularSystolicDysfunctionData& in);
-  virtual CDM::ChronicVentricularSystolicDysfunctionData* Unload() const override ;
-
   bool operator==(SEChronicVentricularSystolicDysfunction const&) const;
   bool operator!=(SEChronicVentricularSystolicDysfunction const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const;
-
-public:
   virtual std::string GetName() const  override { return "ChronicVentricularSystolicDysfunction"; }
   virtual const char* GetName_cStr() const  override { return "ChronicVentricularSystolicDysfunction"; }
 

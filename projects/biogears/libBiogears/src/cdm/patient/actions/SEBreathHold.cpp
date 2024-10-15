@@ -44,24 +44,6 @@ bool SEBreathHold::IsActive() const
   return SEConsciousRespirationCommand::IsActive();
 }
 //-------------------------------------------------------------------------------
-bool SEBreathHold::Load(const CDM::BreathHoldData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::BreathHoldData* SEBreathHold::Unload() const
-{
-  CDM::BreathHoldData* data(new CDM::BreathHoldData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEBreathHold::Unload(CDM::BreathHoldData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEBreathHold::HasPeriod() const
 {
   return m_Period == nullptr ? false : m_Period->IsValid();

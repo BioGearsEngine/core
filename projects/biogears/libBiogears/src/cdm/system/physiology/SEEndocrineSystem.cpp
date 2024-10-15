@@ -57,27 +57,6 @@ const SEScalar* SEEndocrineSystem::GetScalar(const std::string& name)
 }
 //-------------------------------------------------------------------------------
 
-bool SEEndocrineSystem::Load(const CDM::EndocrineSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::EndocrineSystemData* SEEndocrineSystem::Unload() const
-{
-  CDM::EndocrineSystemData* data = new CDM::EndocrineSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEEndocrineSystem::Unload(CDM::EndocrineSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
-
 bool SEEndocrineSystem::HasInsulinSynthesisRate() const
 {
   return m_InsulinSynthesisRate == nullptr ? false : m_InsulinSynthesisRate->IsValid();

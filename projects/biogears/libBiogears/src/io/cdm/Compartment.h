@@ -17,20 +17,23 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
-#include <biogears/cdm/enums/SECompartmentEnums.h>
+#include <biogears/cdm/circuit/SECircuit.inl>
+#include <biogears/cdm/circuit/SECircuitNode.inl>
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
+#include <biogears/cdm/compartment/SECompartmentNodes.inl>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.h>
+#include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.h>
-
+#include <biogears/cdm/enums/SECompartmentEnums.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
-#define CDM_COMPARTMENT_MARSHALL_HELPER(in, out, func)                               \
+#define CDM_COMPARTMENT_PTR_MARSHALL_HELPER(in, out, func)                               \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Compartment::Marshall(*in.m_##func, out.func());                             \
   }
 
-#define CDM_OPTIONAL_COMPARTMENT_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_COMPARTMENT_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                            \
     io::Compartment::Marshall(*in.m_##func, out.func());        \
   }
@@ -110,7 +113,7 @@ namespace io {
     static void UnMarshall(const CDM::ThermalCompartmentLinkData& in, SEThermalCompartmentLink& out, SECircuitManager* circuits = nullptr);
     static void Marshall(const SEThermalCompartmentLink& in, CDM::ThermalCompartmentLinkData& out);
     // class SECompartmentManager
-    static void UnMarshall(CDM::CompartmentManagerData const & in, SECompartmentManager& out, SECircuitManager* circuits = nullptr);
+    static void UnMarshall(CDM::CompartmentManagerData const& in, SECompartmentManager& out, SECircuitManager* circuits = nullptr);
     static void Marshall(const SECompartmentManager& in, CDM::CompartmentManagerData& out);
   };
   //----------------------------------------------------------------------------------

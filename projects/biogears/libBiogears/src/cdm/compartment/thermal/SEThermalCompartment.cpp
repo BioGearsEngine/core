@@ -51,24 +51,7 @@ void SEThermalCompartment::Clear()
   m_Children.clear();
   m_Nodes.Clear();
 }
-//-----------------------------------------------------------------------------
-bool SEThermalCompartment::Load(const CDM::ThermalCompartmentData& in, SECircuitManager* circuits)
-{
-  io::Compartment::UnMarshall(in, *this, circuits);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ThermalCompartmentData* SEThermalCompartment::Unload()
-{
-  CDM::ThermalCompartmentData* data = new CDM::ThermalCompartmentData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEThermalCompartment::Unload(CDM::ThermalCompartmentData& data)
-{
-  io::Compartment::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 const SEScalar* SEThermalCompartment::GetScalar(const char* name)
 {

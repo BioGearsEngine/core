@@ -48,21 +48,6 @@ void SEDecimalFormat::Set(const SEDecimalFormat& f)
   m_Notation = f.m_Notation;
 }
 
-bool SEDecimalFormat::Load(const CDM::DecimalFormatData& in)
-{
-  io::Property::UnMarshall(in, *this);
-  return true;
-}
-CDM::DecimalFormatData* SEDecimalFormat::Unload()
-{
-  CDM::DecimalFormatData* to = new CDM::DecimalFormatData();
-  Unload(*to);
-  return to;
-}
-void SEDecimalFormat::Unload(CDM::DecimalFormatData& data) const
-{
-  io::Property::Marshall(*this, data);
-}
 
 void SEDecimalFormat::SetPrecision(std::streamsize p)
 {

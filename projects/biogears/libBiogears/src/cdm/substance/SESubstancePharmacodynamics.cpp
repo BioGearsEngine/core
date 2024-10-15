@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 
+#include <biogears/cdm/Macros.h>
+#include <utility>
+
 #include "io/cdm/Substance.h"
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -26,36 +29,214 @@ namespace biogears {
 
 SESubstancePharmacodynamics::SESubstancePharmacodynamics(Logger* logger)
   : Loggable(logger)
+  , m_Modifiers()
+  , m_AntibacterialEffect(new SEScalarFrequency())
+  , m_Bronchodilation(new SEPharmacodynamicModifier())
+  , m_DiastolicPressureModifier(new SEPharmacodynamicModifier())
+  , m_EMaxShapeParameter(new SEScalar())
+  , m_FeverModifier(new SEPharmacodynamicModifier())
+  , m_HeartRateModifier(new SEPharmacodynamicModifier())
+  , m_HemorrhageModifier(new SEPharmacodynamicModifier())
+  , m_NeuromuscularBlock(new SEPharmacodynamicModifier())
+  , m_PainModifier(new SEPharmacodynamicModifier())
+  , m_PupilReactivityModifier(new SEPharmacodynamicModifier())
+  , m_PupilSizeModifier(new SEPharmacodynamicModifier())
+  , m_RespirationRateModifier(new SEPharmacodynamicModifier())
+  , m_Sedation(new SEPharmacodynamicModifier())
+  , m_SystolicPressureModifier(new SEPharmacodynamicModifier())
+  , m_TidalVolumeModifier(new SEPharmacodynamicModifier())
+  , m_TubularPermeabilityModifier(new SEPharmacodynamicModifier())
+  , m_CentralNervousModifier(new SEPharmacodynamicModifier())
+  , m_EffectSiteRateConstant(new SEScalarFrequency())
 {
-  m_AntibacterialEffect = nullptr;
-  m_Bronchodilation = nullptr;
-  m_DiastolicPressureModifier = nullptr;
-  m_EMaxShapeParameter = nullptr;
-  m_FeverModifier = nullptr;
-  m_HeartRateModifier = nullptr;
-  m_HemorrhageModifier = nullptr;
-  m_NeuromuscularBlock = nullptr;
-  m_PainModifier = nullptr;
-  m_PupilReactivityModifier = nullptr;
-  m_PupilSizeModifier = nullptr;
-  m_RespirationRateModifier = nullptr;
-  m_Sedation = nullptr;
-  m_SystolicPressureModifier = nullptr;
-  m_TidalVolumeModifier = nullptr;
-  m_TubularPermeabilityModifier = nullptr;
-  m_CentralNervousModifier = nullptr;
-  m_EffectSiteRateConstant = nullptr;
+  m_Modifiers.clear();
+  m_Modifiers["Bronchodilation"] = m_Bronchodilation;
+  m_Modifiers["CentralNervous"] = m_CentralNervousModifier;
+  m_Modifiers["DiastolicPressure"] = m_DiastolicPressureModifier;
+  m_Modifiers["Fever"] = m_FeverModifier;
+  m_Modifiers["HeartRate"] = m_HeartRateModifier;
+  m_Modifiers["Hemorrhage"] = m_HemorrhageModifier;
+  m_Modifiers["NeuromuscularBlock"] = m_NeuromuscularBlock;
+  m_Modifiers["Pain"] = m_PainModifier;
+  m_Modifiers["PupilReactivity"] = m_PupilReactivityModifier;
+  m_Modifiers["PupilSize"] = m_PupilSizeModifier;
+  m_Modifiers["RespirationRate"] = m_RespirationRateModifier;
+  m_Modifiers["Sedation"] = m_Sedation;
+  m_Modifiers["SystolicPressure"] = m_SystolicPressureModifier;
+  m_Modifiers["TidalVolume"] = m_TidalVolumeModifier;
+  m_Modifiers["TubularPermeability"] = m_TubularPermeabilityModifier;
+}
+//-----------------------------------------------------------------------------
+SESubstancePharmacodynamics::SESubstancePharmacodynamics(SESubstancePharmacodynamics const& obj)
+  : Loggable(obj.GetLogger())
+  , m_Modifiers()
+  , m_AntibacterialEffect(new SEScalarFrequency(*obj.m_AntibacterialEffect))
+  , m_Bronchodilation(new SEPharmacodynamicModifier(*obj.m_Bronchodilation))
+  , m_DiastolicPressureModifier(new SEPharmacodynamicModifier(*obj.m_DiastolicPressureModifier))
+  , m_EMaxShapeParameter(new SEScalar(*obj.m_EMaxShapeParameter))
+  , m_FeverModifier(new SEPharmacodynamicModifier(*obj.m_FeverModifier))
+  , m_HeartRateModifier(new SEPharmacodynamicModifier(*obj.m_HeartRateModifier))
+  , m_HemorrhageModifier(new SEPharmacodynamicModifier(*obj.m_HemorrhageModifier))
+  , m_NeuromuscularBlock(new SEPharmacodynamicModifier(*obj.m_NeuromuscularBlock))
+  , m_PainModifier(new SEPharmacodynamicModifier(*obj.m_PainModifier))
+  , m_PupilReactivityModifier(new SEPharmacodynamicModifier(*obj.m_PupilReactivityModifier))
+  , m_PupilSizeModifier(new SEPharmacodynamicModifier(*obj.m_PupilSizeModifier))
+  , m_RespirationRateModifier(new SEPharmacodynamicModifier(*obj.m_RespirationRateModifier))
+  , m_Sedation(new SEPharmacodynamicModifier(*obj.m_Sedation))
+  , m_SystolicPressureModifier(new SEPharmacodynamicModifier(*obj.m_SystolicPressureModifier))
+  , m_TidalVolumeModifier(new SEPharmacodynamicModifier(*obj.m_TidalVolumeModifier))
+  , m_TubularPermeabilityModifier(new SEPharmacodynamicModifier(*obj.m_TubularPermeabilityModifier))
+  , m_CentralNervousModifier(new SEPharmacodynamicModifier(*obj.m_CentralNervousModifier))
+  , m_EffectSiteRateConstant(new SEScalarFrequency(*obj.m_EffectSiteRateConstant))
+{
+  m_Modifiers.clear();
+  m_Modifiers["Bronchodilation"] = m_Bronchodilation;
+  m_Modifiers["CentralNervous"] = m_CentralNervousModifier;
+  m_Modifiers["DiastolicPressure"] = m_DiastolicPressureModifier;
+  m_Modifiers["Fever"] = m_FeverModifier;
+  m_Modifiers["HeartRate"] = m_HeartRateModifier;
+  m_Modifiers["Hemorrhage"] = m_HemorrhageModifier;
+  m_Modifiers["NeuromuscularBlock"] = m_NeuromuscularBlock;
+  m_Modifiers["Pain"] = m_PainModifier;
+  m_Modifiers["PupilReactivity"] = m_PupilReactivityModifier;
+  m_Modifiers["PupilSize"] = m_PupilSizeModifier;
+  m_Modifiers["RespirationRate"] = m_RespirationRateModifier;
+  m_Modifiers["Sedation"] = m_Sedation;
+  m_Modifiers["SystolicPressure"] = m_SystolicPressureModifier;
+  m_Modifiers["TidalVolume"] = m_TidalVolumeModifier;
+  m_Modifiers["TubularPermeability"] = m_TubularPermeabilityModifier;
+}
+//-----------------------------------------------------------------------------
+SESubstancePharmacodynamics::SESubstancePharmacodynamics(SESubstancePharmacodynamics&& obj)
+  : Loggable(obj.GetLogger())
+  , m_Modifiers(std ::exchange(obj.m_Modifiers, decltype(m_Modifiers)()))
+  , m_AntibacterialEffect(std::exchange(obj.m_AntibacterialEffect, nullptr))
+  , m_Bronchodilation(std::exchange(obj.m_Bronchodilation, nullptr))
+  , m_DiastolicPressureModifier(std::exchange(obj.m_DiastolicPressureModifier, nullptr))
+  , m_EMaxShapeParameter(std::exchange(obj.m_EMaxShapeParameter, nullptr))
+  , m_FeverModifier(std::exchange(obj.m_FeverModifier, nullptr))
+  , m_HeartRateModifier(std::exchange(obj.m_HeartRateModifier, nullptr))
+  , m_HemorrhageModifier(std::exchange(obj.m_HemorrhageModifier, nullptr))
+  , m_NeuromuscularBlock(std::exchange(obj.m_NeuromuscularBlock, nullptr))
+  , m_PainModifier(std::exchange(obj.m_PainModifier, nullptr))
+  , m_PupilReactivityModifier(std::exchange(obj.m_PupilReactivityModifier, nullptr))
+  , m_PupilSizeModifier(std::exchange(obj.m_PupilSizeModifier, nullptr))
+  , m_RespirationRateModifier(std::exchange(obj.m_RespirationRateModifier, nullptr))
+  , m_Sedation(std::exchange(obj.m_Sedation, nullptr))
+  , m_SystolicPressureModifier(std::exchange(obj.m_SystolicPressureModifier, nullptr))
+  , m_TidalVolumeModifier(std::exchange(obj.m_TidalVolumeModifier, nullptr))
+  , m_TubularPermeabilityModifier(std::exchange(obj.m_TubularPermeabilityModifier, nullptr))
+  , m_CentralNervousModifier(std::exchange(obj.m_CentralNervousModifier, nullptr))
+  , m_EffectSiteRateConstant(std::exchange(obj.m_EffectSiteRateConstant, nullptr))
+{
+  m_Modifiers.clear();
+  m_Modifiers["Bronchodilation"] = m_Bronchodilation;
+  m_Modifiers["CentralNervous"] = m_CentralNervousModifier;
+  m_Modifiers["DiastolicPressure"] = m_DiastolicPressureModifier;
+  m_Modifiers["Fever"] = m_FeverModifier;
+  m_Modifiers["HeartRate"] = m_HeartRateModifier;
+  m_Modifiers["Hemorrhage"] = m_HemorrhageModifier;
+  m_Modifiers["NeuromuscularBlock"] = m_NeuromuscularBlock;
+  m_Modifiers["Pain"] = m_PainModifier;
+  m_Modifiers["PupilReactivity"] = m_PupilReactivityModifier;
+  m_Modifiers["PupilSize"] = m_PupilSizeModifier;
+  m_Modifiers["RespirationRate"] = m_RespirationRateModifier;
+  m_Modifiers["Sedation"] = m_Sedation;
+  m_Modifiers["SystolicPressure"] = m_SystolicPressureModifier;
+  m_Modifiers["TidalVolume"] = m_TidalVolumeModifier;
+  m_Modifiers["TubularPermeability"] = m_TubularPermeabilityModifier;
+}
+//-----------------------------------------------------------------------------
+SESubstancePharmacodynamics& SESubstancePharmacodynamics::operator=(SESubstancePharmacodynamics const& rhs)
+{
+  if (this == &rhs)
+    return *this;
+
+  GetAntibacterialEffect() = *rhs.m_AntibacterialEffect;
+  GetBronchodilation() = *rhs.m_Bronchodilation;
+  GetDiastolicPressureModifier() = *rhs.m_DiastolicPressureModifier;
+  GetEMaxShapeParameter() = *rhs.m_EMaxShapeParameter;
+  GetFeverModifier() = *rhs.m_FeverModifier;
+  GetHeartRateModifier() = *rhs.m_HeartRateModifier;
+  GetHemorrhageModifier() = *rhs.m_HemorrhageModifier;
+  GetNeuromuscularBlock() = *rhs.m_NeuromuscularBlock;
+  GetPainModifier() = *rhs.m_PainModifier;
+  GetPupilReactivityModifier() = *rhs.m_PupilReactivityModifier;
+  GetPupilSizeModifier() = *rhs.m_PupilSizeModifier;
+  GetRespirationRateModifier() = *rhs.m_RespirationRateModifier;
+  GetSedation() = *rhs.m_Sedation;
+  GetSystolicPressureModifier() = *rhs.m_SystolicPressureModifier;
+  GetTidalVolumeModifier() = *rhs.m_TidalVolumeModifier;
+  GetTubularPermeabilityModifier() = *rhs.m_TubularPermeabilityModifier;
+  GetCentralNervousModifier() = *rhs.m_CentralNervousModifier;
+
+  m_Modifiers.clear();
+  m_Modifiers["Bronchodilation"] = m_Bronchodilation;
+  m_Modifiers["CentralNervous"] = m_CentralNervousModifier;
+  m_Modifiers["DiastolicPressure"] = m_DiastolicPressureModifier;
+  m_Modifiers["Fever"] = m_FeverModifier;
+  m_Modifiers["HeartRate"] = m_HeartRateModifier;
+  m_Modifiers["Hemorrhage"] = m_HemorrhageModifier;
+  m_Modifiers["NeuromuscularBlock"] = m_NeuromuscularBlock;
+  m_Modifiers["Pain"] = m_PainModifier;
+  m_Modifiers["PupilReactivity"] = m_PupilReactivityModifier;
+  m_Modifiers["PupilSize"] = m_PupilSizeModifier;
+  m_Modifiers["RespirationRate"] = m_RespirationRateModifier;
+  m_Modifiers["Sedation"] = m_Sedation;
+  m_Modifiers["SystolicPressure"] = m_SystolicPressureModifier;
+  m_Modifiers["TidalVolume"] = m_TidalVolumeModifier;
+  m_Modifiers["TubularPermeability"] = m_TubularPermeabilityModifier;
+
+  return *this;
+}
+SESubstancePharmacodynamics& SESubstancePharmacodynamics::operator=(SESubstancePharmacodynamics&& rhs)
+{
+  if (this == &rhs)
+    return *this;
+
+  m_Modifiers = std::move(rhs.m_Modifiers);
+  GetAntibacterialEffect() = std::move(*rhs.m_AntibacterialEffect);
+  GetBronchodilation() = std::move(*rhs.m_Bronchodilation);
+  GetDiastolicPressureModifier() = std::move(*rhs.m_DiastolicPressureModifier);
+  GetEMaxShapeParameter() = std::move(*rhs.m_EMaxShapeParameter);
+  GetFeverModifier() = std::move(*rhs.m_FeverModifier);
+  GetHeartRateModifier() = std::move(*rhs.m_HeartRateModifier);
+  GetHemorrhageModifier() = std::move(*rhs.m_HemorrhageModifier);
+  GetNeuromuscularBlock() = std::move(*rhs.m_NeuromuscularBlock);
+  GetPainModifier() = std::move(*rhs.m_PainModifier);
+  GetPupilReactivityModifier() = std::move(*rhs.m_PupilReactivityModifier);
+  GetPupilSizeModifier() = std::move(*rhs.m_PupilSizeModifier);
+  GetRespirationRateModifier() = std::move(*rhs.m_RespirationRateModifier);
+  GetSedation() = std::move(*rhs.m_Sedation);
+  GetSystolicPressureModifier() = std::move(*rhs.m_SystolicPressureModifier);
+  GetTidalVolumeModifier() = std::move(*rhs.m_TidalVolumeModifier);
+  GetTubularPermeabilityModifier() = std::move(*rhs.m_TubularPermeabilityModifier);
+  GetCentralNervousModifier() = std::move(*rhs.m_CentralNervousModifier);
+  GetEffectSiteRateConstant() = std::move(*rhs.m_EffectSiteRateConstant);
+
+  m_Modifiers.clear();
+  m_Modifiers["Bronchodilation"] = m_Bronchodilation;
+  m_Modifiers["CentralNervous"] = m_CentralNervousModifier;
+  m_Modifiers["DiastolicPressure"] = m_DiastolicPressureModifier;
+  m_Modifiers["Fever"] = m_FeverModifier;
+  m_Modifiers["HeartRate"] = m_HeartRateModifier;
+  m_Modifiers["Hemorrhage"] = m_HemorrhageModifier;
+  m_Modifiers["NeuromuscularBlock"] = m_NeuromuscularBlock;
+  m_Modifiers["Pain"] = m_PainModifier;
+  m_Modifiers["PupilReactivity"] = m_PupilReactivityModifier;
+  m_Modifiers["PupilSize"] = m_PupilSizeModifier;
+  m_Modifiers["RespirationRate"] = m_RespirationRateModifier;
+  m_Modifiers["Sedation"] = m_Sedation;
+  m_Modifiers["SystolicPressure"] = m_SystolicPressureModifier;
+  m_Modifiers["TidalVolume"] = m_TidalVolumeModifier;
+  m_Modifiers["TubularPermeability"] = m_TubularPermeabilityModifier;
+  return *this;
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacodynamics::~SESubstancePharmacodynamics()
 {
-  Clear();
-}
-//-----------------------------------------------------------------------------
-void SESubstancePharmacodynamics::Clear()
-{
-  m_Modifiers.clear();
-  SAFE_DELETE(m_AntibacterialEffect);
+  m_Modifiers.clear(); // NO LEAK JUST A DIFFERENT WAY TO REFERENCE THE BELOW.
+   SEScalarFrequency* m_AntibacterialEffect;
   SAFE_DELETE(m_Bronchodilation);
   SAFE_DELETE(m_DiastolicPressureModifier);
   SAFE_DELETE(m_EMaxShapeParameter);
@@ -73,6 +254,64 @@ void SESubstancePharmacodynamics::Clear()
   SAFE_DELETE(m_TubularPermeabilityModifier);
   SAFE_DELETE(m_CentralNervousModifier);
   SAFE_DELETE(m_EffectSiteRateConstant);
+}
+//-----------------------------------------------------------------------------
+void SESubstancePharmacodynamics::Clear()
+{
+  if (m_AntibacterialEffect) {
+    m_AntibacterialEffect->Clear();
+  }
+  if (m_Bronchodilation) {
+    m_Bronchodilation->Clear();
+  }
+  if (m_DiastolicPressureModifier) {
+    m_DiastolicPressureModifier->Clear();
+  }
+  if (m_EMaxShapeParameter) {
+    m_EMaxShapeParameter->Clear();
+  }
+  if (m_FeverModifier) {
+    m_FeverModifier->Clear();
+  }
+  if (m_HeartRateModifier) {
+    m_HeartRateModifier->Clear();
+  }
+  if (m_HemorrhageModifier) {
+    m_HemorrhageModifier->Clear();
+  }
+  if (m_NeuromuscularBlock) {
+    m_NeuromuscularBlock->Clear();
+  }
+  if (m_PainModifier) {
+    m_PainModifier->Clear();
+  }
+  if (m_PupilReactivityModifier) {
+    m_PupilReactivityModifier->Clear();
+  }
+  if (m_PupilSizeModifier) {
+    m_PupilSizeModifier->Clear();
+  }
+  if (m_RespirationRateModifier) {
+    m_RespirationRateModifier->Clear();
+  }
+  if (m_Sedation) {
+    m_Sedation->Clear();
+  }
+  if (m_SystolicPressureModifier) {
+    m_SystolicPressureModifier->Clear();
+  }
+  if (m_TidalVolumeModifier) {
+    m_TidalVolumeModifier->Clear();
+  }
+  if (m_TubularPermeabilityModifier) {
+    m_TubularPermeabilityModifier->Clear();
+  }
+  if (m_CentralNervousModifier) {
+    m_CentralNervousModifier->Clear();
+  }
+  if (m_EffectSiteRateConstant) {
+    m_EffectSiteRateConstant->Clear();
+  }
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::IsValid() const
@@ -165,26 +404,6 @@ const SEScalar* SESubstancePharmacodynamics::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SESubstancePharmacodynamics::Load(const CDM::SubstancePharmacodynamicsData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstancePharmacodynamicsData* SESubstancePharmacodynamics::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::SubstancePharmacodynamicsData* data = new CDM::SubstancePharmacodynamicsData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstancePharmacodynamics::Unload(CDM::SubstancePharmacodynamicsData& data) const
-{
-  io::Substance::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasAntibacterialEffect() const
 {
   return (m_AntibacterialEffect == nullptr) ? false : m_AntibacterialEffect->IsValid();
@@ -222,9 +441,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetBronchodilation()
   return *m_Bronchodilation;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetBronchodilation() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetBronchodilation() const
 {
-  return m_Bronchodilation;
+  return *m_Bronchodilation;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasDiastolicPressureModifier() const
@@ -241,9 +460,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetDiastolicPressureModi
   return *m_DiastolicPressureModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetDiastolicPressureModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetDiastolicPressureModifier() const
 {
-  return m_DiastolicPressureModifier;
+  return *m_DiastolicPressureModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasEMaxShapeParameter() const
@@ -283,9 +502,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetFeverModifier()
   return *m_FeverModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetFeverModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetFeverModifier() const
 {
-  return m_FeverModifier;
+  return *m_FeverModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasHeartRateModifier() const
@@ -302,9 +521,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetHeartRateModifier()
   return *m_HeartRateModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetHeartRateModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetHeartRateModifier() const
 {
-  return m_HeartRateModifier;
+  return *m_HeartRateModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasHemorrhageModifier() const
@@ -321,9 +540,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetHemorrhageModifier()
   return *m_HemorrhageModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetHemorrhageModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetHemorrhageModifier() const
 {
-  return m_HemorrhageModifier;
+  return *m_HemorrhageModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasNeuromuscularBlock() const
@@ -340,9 +559,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetNeuromuscularBlock()
   return *m_NeuromuscularBlock;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetNeuromuscularBlock() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetNeuromuscularBlock() const
 {
-  return m_NeuromuscularBlock;
+  return *m_NeuromuscularBlock;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasPainModifier() const
@@ -359,9 +578,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetPainModifier()
   return *m_PainModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetPainModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetPainModifier() const
 {
-  return m_PainModifier;
+  return *m_PainModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasPupilReactivityModifier() const
@@ -378,9 +597,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetPupilReactivityModifi
   return *m_PupilReactivityModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetPupilReactivityModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetPupilReactivityModifier() const
 {
-  return m_PupilReactivityModifier;
+  return *m_PupilReactivityModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasPupilSizeModifier() const
@@ -397,9 +616,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetPupilSizeModifier()
   return *m_PupilSizeModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetPupilSizeModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetPupilSizeModifier() const
 {
-  return m_PupilSizeModifier;
+  return *m_PupilSizeModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasRespirationRateModifier() const
@@ -416,9 +635,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetRespirationRateModifi
   return *m_RespirationRateModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetRespirationRateModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetRespirationRateModifier() const
 {
-  return m_RespirationRateModifier;
+  return *m_RespirationRateModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasSedation() const
@@ -435,9 +654,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetSedation()
   return *m_Sedation;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetSedation() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetSedation() const
 {
-  return m_Sedation;
+  return *m_Sedation;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasSystolicPressureModifier() const
@@ -454,9 +673,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetSystolicPressureModif
   return *m_SystolicPressureModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetSystolicPressureModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetSystolicPressureModifier() const
 {
-  return m_SystolicPressureModifier;
+  return *m_SystolicPressureModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasTidalVolumeModifier() const
@@ -473,9 +692,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetTidalVolumeModifier()
   return *m_TidalVolumeModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetTidalVolumeModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetTidalVolumeModifier() const
 {
-  return m_TidalVolumeModifier;
+  return *m_TidalVolumeModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasTubularPermeabilityModifier() const
@@ -490,9 +709,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetTubularPermeabilityMo
   return *m_TubularPermeabilityModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetTubularPermeabilityModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetTubularPermeabilityModifier() const
 {
-  return m_TubularPermeabilityModifier;
+  return *m_TubularPermeabilityModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasCentralNervousModifier() const
@@ -509,9 +728,9 @@ SEPharmacodynamicModifier& SESubstancePharmacodynamics::GetCentralNervousModifie
   return *m_CentralNervousModifier;
 }
 //-----------------------------------------------------------------------------
-const SEPharmacodynamicModifier* SESubstancePharmacodynamics::GetCentralNervousModifier() const
+SEPharmacodynamicModifier const& SESubstancePharmacodynamics::GetCentralNervousModifier() const
 {
-  return m_CentralNervousModifier;
+  return *m_CentralNervousModifier;
 }
 //-----------------------------------------------------------------------------
 bool SESubstancePharmacodynamics::HasEffectSiteRateConstant() const
@@ -539,30 +758,69 @@ std::map<std::string, SEPharmacodynamicModifier*> SESubstancePharmacodynamics::G
 {
   return m_Modifiers;
 }
-
-SEPharmacodynamicModifier::SEPharmacodynamicModifier(SEScalarMassPerVolume const& ec50, SEScalarFraction const& max)
-  : m_EC50(nullptr)
-  , m_EMax(nullptr)
-{
-  GetEMax() = max;
-  GetEC50() = ec50;
-}
+//-----------------------------------------------------------------------------
 SEPharmacodynamicModifier::SEPharmacodynamicModifier()
-  : m_EC50(nullptr)
-  , m_EMax(nullptr)
+  : m_EC50(std::make_unique<SEScalarMassPerVolume>().release())
+  , m_EMax(std::make_unique<SEScalarFraction>().release())
 {
 }
+//-----------------------------------------------------------------------------
+SEPharmacodynamicModifier::SEPharmacodynamicModifier(SEScalarMassPerVolume const& ec50, SEScalarFraction const& max)
+  : m_EC50(std::make_unique<SEScalarMassPerVolume>(ec50).release())
+  , m_EMax(std::make_unique<SEScalarFraction>(max).release())
+{
+}
+//-----------------------------------------------------------------------------
+SEPharmacodynamicModifier::SEPharmacodynamicModifier(SEPharmacodynamicModifier const& obj)
+  : m_EC50(std::make_unique<SEScalarMassPerVolume>(*obj.m_EC50).release())
+  , m_EMax(std::make_unique<SEScalarFraction>(*obj.m_EMax).release())
+{
+}
+//-----------------------------------------------------------------------------
+SEPharmacodynamicModifier::SEPharmacodynamicModifier(SEPharmacodynamicModifier&& obj)
+  : m_EC50(std::exchange(obj.m_EC50, std::make_unique<SEScalarMassPerVolume>().release()))
+  , m_EMax(std::exchange(obj.m_EMax, std::make_unique<SEScalarFraction>().release()))
+{
+}
+//-----------------------------------------------------------------------------
+
+SEPharmacodynamicModifier& SEPharmacodynamicModifier::operator=(SEPharmacodynamicModifier const& rhs)
+{
+  if (this != &rhs) {
+    auto temp = SEPharmacodynamicModifier(std::move(rhs));
+    GetEC50() = std::move(temp.GetEC50());
+    GetEMax() = std::move(temp.GetEMax());
+  }
+  return *this;
+}
+//-----------------------------------------------------------------------------
+SEPharmacodynamicModifier& SEPharmacodynamicModifier::operator=(SEPharmacodynamicModifier&& rhs)
+{
+  if (this != &rhs) {
+    auto temp = SEPharmacodynamicModifier(std::move(rhs));
+    GetEC50() = std::move(rhs.GetEC50());
+    GetEMax() = std::move(rhs.GetEMax());
+  }
+  return *this;
+}
+
 //-----------------------------------------------------------------------------
 SEPharmacodynamicModifier::~SEPharmacodynamicModifier()
-{
-  Clear();
-}
-//-----------------------------------------------------------------------------
-void SEPharmacodynamicModifier::Clear()
 {
   SAFE_DELETE(m_EMax);
   SAFE_DELETE(m_EC50);
 }
+//-----------------------------------------------------------------------------
+void SEPharmacodynamicModifier::Clear()
+{
+  if (m_EMax) {
+    m_EMax->Clear();
+  }
+  if (m_EC50) {
+    m_EC50->Clear();
+  }
+}
+#pragma optimize("", off)
 //-----------------------------------------------------------------------------
 bool SEPharmacodynamicModifier::IsValid() const
 {
@@ -584,31 +842,11 @@ const SEScalar* SEPharmacodynamicModifier::GetScalar(const std::string& name)
   }
   return nullptr;
 }
-//-----------------------------------------------------------------------------
-bool SEPharmacodynamicModifier::Load(const CDM::PharmacodynamicModifierData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::PharmacodynamicModifierData* SEPharmacodynamicModifier::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::PharmacodynamicModifierData* data = new CDM::PharmacodynamicModifierData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEPharmacodynamicModifier::Unload(CDM::PharmacodynamicModifierData& data) const
-{
-  io::Substance::Marshall(*this, data);
-}
-
+#pragma optimize("", off)
 //-----------------------------------------------------------------------------
 bool SEPharmacodynamicModifier::HasEMax() const
 {
-  return (m_EMax == nullptr) ? false : m_EMax->IsValid();
+  return m_EMax ? m_EMax->IsValid() : false;
 }
 //-----------------------------------------------------------------------------
 SEScalarFraction& SEPharmacodynamicModifier::GetEMax()
@@ -626,10 +864,11 @@ double SEPharmacodynamicModifier::GetEMax() const
   }
   return m_EMax->GetValue();
 }
+#pragma optimize("", off)
 //-----------------------------------------------------------------------------
 bool SEPharmacodynamicModifier::HasEC50() const
 {
-  return (m_EC50 == nullptr) ? false : m_EC50->IsValid();
+  return m_EC50 ? m_EC50->IsValid() : false;
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SEPharmacodynamicModifier::GetEC50()

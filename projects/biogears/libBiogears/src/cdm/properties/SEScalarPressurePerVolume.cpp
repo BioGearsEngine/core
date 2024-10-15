@@ -19,7 +19,7 @@ namespace biogears {
 const PressurePerVolumeUnit PressurePerVolumeUnit::mmHg_Per_mL("mmHg/mL");
 const PressurePerVolumeUnit PressurePerVolumeUnit::cmH2O_Per_mL("cmH2O/mL");
 
-template class SEScalarQuantity<PressurePerVolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<PressurePerVolumeUnit>;
 
 PressurePerVolumeUnit::PressurePerVolumeUnit(const char* u)
   : PressurePerVolumeUnit(std::string { u })
@@ -42,15 +42,7 @@ SEScalarPressurePerVolume::SEScalarPressurePerVolume()
 SEScalarPressurePerVolume::~SEScalarPressurePerVolume(){
 
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarPressurePerVolumeData* SEScalarPressurePerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPressurePerVolumeData* data(new CDM::ScalarPressurePerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool PressurePerVolumeUnit::IsValidUnit(const char* unit)
 {

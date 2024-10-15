@@ -11,7 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Drugs.h>
 
+#include "io/cdm/Actions.h"
 #include "io/cdm/PatientActions.h"
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -48,7 +51,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace std {
 template class std::map<const biogears::SESubstance*, biogears::SESubstanceBolusState*>;
@@ -85,7 +87,7 @@ void Drugs::Clear()
   m_IVToVenaCava = nullptr;
   m_Sarin = nullptr;
   m_Pralidoxime = nullptr;
-  DELETE_MAP_SECOND(m_BolusAdministrations);
+  DELETE_MAP_OF_POINTERS(m_BolusAdministrations);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -116,83 +118,6 @@ void Drugs::Initialize()
   m_AgedRbcAcetylcholinesterase_nM = 0.0;
 }
 
-bool Drugs::Load(const CDM::BioGearsDrugSystemData& in)
-{
-  if (!SEDrugSystem::Load(in))
-    return false;
-
-  m_SarinRbcAcetylcholinesteraseComplex_nM = in.SarinRbcAcetylcholinesteraseComplex_nM();
-  m_AgedRbcAcetylcholinesterase_nM = in.AgedRbcAcetylcholinesterase_nM();
-
-  BioGearsSystem::LoadState();
-
-  for (const CDM::SubstanceBolusStateData& bData : in.BolusAdministration()) {
-    SESubstance* sub = m_data.GetSubstances().GetSubstance(bData.Substance());
-    if (sub == nullptr) {
-      /// \error Error: Unable to find substance for IV bolus administration
-      m_ss << "Unable to find substance " << bData.Substance();
-      Error(m_ss.str(), "Drugs::Load::BolusAdministration");
-      return false;
-    }
-    SESubstanceBolusState* bolusState = new SESubstanceBolusState(*sub);
-    m_BolusAdministrations[sub] = bolusState;
-    bolusState->Load(bData);
-  }
-
-  for (const CDM::TransmucosalStateData& otData : in.TransmucosalStates()) {
-    SESubstance* sub = m_data.GetSubstances().GetSubstance(otData.Substance());
-    if (sub == nullptr) {
-      m_ss << "Unable to find subtance " << otData.Substance();
-      Error(m_ss.str(), "Drugs::Load::OralAdministration");
-      return false;
-    }
-    SETransmucosalState* otState = new SETransmucosalState(*sub);
-    m_TransmucosalStates[sub] = otState;
-    otState->Load(otData);
-  }
-
-  for (const CDM::NasalStateData& nData : in.NasalStates()) {
-    SESubstance* sub = m_data.GetSubstances().GetSubstance(nData.Substance());
-    if (sub == nullptr) {
-      m_ss << "Unable to find subtance " << nData.Substance();
-      Error(m_ss.str(), "Drugs::Load::NasalAdministration");
-      return false;
-    }
-    SENasalState* nState = new SENasalState(*sub);
-    m_NasalStates[sub] = nState;
-    nState->Load(nData);
-  }
-
-  return true;
-}
-CDM::BioGearsDrugSystemData* Drugs::Unload() const
-{
-  CDM::BioGearsDrugSystemData* data = new CDM::BioGearsDrugSystemData();
-  Unload(*data);
-  return data;
-}
-void Drugs::Unload(CDM::BioGearsDrugSystemData& data) const
-{
-  SEDrugSystem::Unload(data);
-  data.SarinRbcAcetylcholinesteraseComplex_nM(m_SarinRbcAcetylcholinesteraseComplex_nM);
-  data.AgedRbcAcetylcholinesterase_nM(m_AgedRbcAcetylcholinesterase_nM);
-
-  for (auto itr : m_BolusAdministrations) {
-    if (itr.second != nullptr)
-      data.BolusAdministration().push_back(std::unique_ptr<CDM::SubstanceBolusStateData>(itr.second->Unload()));
-  }
-
-  for (auto itr : m_TransmucosalStates) {
-    if (itr.second != nullptr)
-      data.TransmucosalStates().push_back(std::unique_ptr<CDM::TransmucosalStateData>(itr.second->Unload()));
-  }
-
-  for (auto itr : m_NasalStates) {
-    if (itr.second != nullptr)
-      data.NasalStates().push_back(std::unique_ptr<CDM::NasalStateData>(itr.second->Unload()));
-  }
-}
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Initializes parameters for the Drugs Class
@@ -215,7 +140,7 @@ void Drugs::SetUp()
   m_Sarin = m_data.GetSubstances().GetSubstance("Sarin");
   m_Pralidoxime = m_data.GetSubstances().GetSubstance("Pralidoxime");
   m_Atropine = m_data.GetSubstances().GetSubstance("Atropine");
-  DELETE_MAP_SECOND(m_BolusAdministrations);
+  DELETE_MAP_OF_POINTERS(m_BolusAdministrations);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -676,7 +601,7 @@ void Drugs::AdministerSubstanceCompoundInfusion()
       subQ->GetMass().IncrementValue(massIncrement_ug, MassUnit::ug);
 
       // Blood Transfusion//
-      if (component.GetSubstance().GetName() == "RedBloodCell") {
+      if (component.GetSubstance().Name == "RedBloodCell") {
         /*
          //Transfusiuon-Associated Circulatory Overload (TACO) CHECK
          if (totalRate_mL_Per_s >= 3) { // Rate should not exceed 2 mL/s plus a 50% deviation to be safe (little diagnostic research on the topic/underreported but common reaction)
@@ -963,9 +888,9 @@ void Drugs::CalculateDrugEffects()
     auto modifiers = pd.GetPharmacodynamicModifiers();
 
     // Loop over all pharmacodynamic modifiers for substance and add them overall effect for each property
-    for (auto mod : modifiers) {
-      eMax = mod.second->GetEMax().GetValue();
-      ec50_ug_Per_mL = mod.second->GetEC50(MassPerVolumeUnit::ug_Per_mL);
+    for (auto& [key,modifier ]  : modifiers) {
+      eMax = modifier->GetEMax().GetValue();
+      ec50_ug_Per_mL = modifier->GetEC50(MassPerVolumeUnit::ug_Per_mL);
       if (std::abs(eMax) < ZERO_APPROX) {
         continue; // If no effect (i.e. eMax = 0), move on to next effect.  Save some time and also don't run risk of dividing by 0 somewhere since non-defined EC50s are set to 0
       }
@@ -976,7 +901,7 @@ void Drugs::CalculateDrugEffects()
       } else {
         effect = eMax * std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) / (std::pow(effectSiteConcentration_ug_Per_mL, shapeParameter) + std::pow(ec50_ug_Per_mL, shapeParameter));
       }
-      effects_unitless[mod.first] += effect;
+      effects_unitless[key] += effect;
     }
 
     // Antibiotic Effects -- Do not evaluate unless the patient has inflammation casued by infection

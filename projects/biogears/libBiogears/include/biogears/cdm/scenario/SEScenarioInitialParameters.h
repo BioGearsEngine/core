@@ -12,15 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/exports.h>
-#include <biogears/schema/cdm/DataRequests.hxx>
-
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/scenario/SECondition.h>
 #include <biogears/cdm/scenario/SEScenario.h>
+#include <biogears/exports.h>
 
-CDM_BIND_DECL(ScenarioInitialParametersData)
 
 namespace biogears {
 
@@ -41,14 +38,7 @@ public:
   bool operator==(SEScenarioInitialParameters const&) const;
   bool operator!=(SEScenarioInitialParameters const&) const;
 
-public:
   virtual void Clear(); // clear memory
-
-  bool Load(const CDM::ScenarioInitialParametersData& in);
-  CDM::ScenarioInitialParametersData* Unload() const;
-
-protected:
-  void Unload(CDM::ScenarioInitialParametersData& data) const;
 
 public:
   virtual bool IsValid() const;

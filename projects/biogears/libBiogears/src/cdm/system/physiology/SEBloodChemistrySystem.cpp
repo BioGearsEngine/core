@@ -306,28 +306,7 @@ const SEScalar* SEBloodChemistrySystem::GetScalar(const std::string& name)
 
   return nullptr;
 }
-//-------------------------------------------------------------------------------
 
-bool SEBloodChemistrySystem::Load(const CDM::BloodChemistrySystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::BloodChemistrySystemData* SEBloodChemistrySystem::Unload() const
-{
-  CDM::BloodChemistrySystemData* data = new CDM::BloodChemistrySystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEBloodChemistrySystem::Unload(CDM::BloodChemistrySystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
 //-------------------------------------------------------------------------------
 
 bool SEBloodChemistrySystem::HasBloodDensity() const
@@ -1308,85 +1287,6 @@ void SEInflammatoryResponse::Clear()
   SAFE_DELETE(m_Trauma);
   SAFE_DELETE(m_TumorNecrosisFactor);
   m_InflammationSources.clear();
-}
-//-------------------------------------------------------------------------------
-bool SEInflammatoryResponse::Load(const CDM::InflammatoryResponseData& in)
-{
-  GetLocalPathogen().Load(in.LocalPathogen());
-  GetLocalMacrophage().Load(in.LocalMacrophage());
-  GetLocalNeutrophil().Load(in.LocalNeutrophil());
-  GetLocalBarrier().Load(in.LocalBarrier());
-
-  io::Property::UnMarshall(in.ActiveTLR(), m_ActiveTLR);
-
-  GetAutonomicResponseLevel().Load(in.AutonomicResponseLevel());
-  GetCatecholamines().Load(in.Catecholamines());
-  GetConstitutiveNOS().Load(in.ConstitutiveNOS());
-  GetInducibleNOSPre().Load(in.InducibleNOSPre());
-  GetInducibleNOS().Load(in.InducibleNOS());
-  GetInflammationTime().Load(in.InflammationTime());
-  GetInterleukin6().Load(in.Interleukin6());
-  GetInterleukin10().Load(in.Interleukin10());
-  GetInterleukin12().Load(in.Interleukin12());
-  GetMacrophageResting().Load(in.MacrophageResting());
-  GetMacrophageActive().Load(in.MacrophageActive());
-  GetNeutrophilResting().Load(in.NeutrophilResting());
-  GetNeutrophilActive().Load(in.NeutrophilActive());
-  GetNitrate().Load(in.Nitrate());
-  GetNitricOxide().Load(in.NitricOxide());
-  GetBloodPathogen().Load(in.BloodPathogen());
-  GetTissueIntegrity().Load(in.TissueIntegrity());
-  GetTrauma().Load(in.Trauma());
-  GetTumorNecrosisFactor().Load(in.TumorNecrosisFactor());
-
-  SEInflammationSource conversion;
-  for (auto src : in.Source()) {
-
-    io::Physiology::UnMarshall(src, conversion);
-    m_InflammationSources.push_back(conversion);
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::InflammatoryResponseData* SEInflammatoryResponse::Unload() const
-{
-  CDM::InflammatoryResponseData* data = new CDM::InflammatoryResponseData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEInflammatoryResponse::Unload(CDM::InflammatoryResponseData& data) const
-{
-  data.LocalPathogen(std::unique_ptr<CDM::ScalarData>(m_LocalPathogen->Unload()));
-  data.LocalMacrophage(std::unique_ptr<CDM::ScalarData>(m_LocalMacrophage->Unload()));
-  data.LocalNeutrophil(std::unique_ptr<CDM::ScalarData>(m_LocalNeutrophil->Unload()));
-  data.LocalBarrier(std::unique_ptr<CDM::ScalarData>(m_LocalBarrier->Unload()));
-  io::Property::Marshall(m_ActiveTLR, data.ActiveTLR());
-  data.AutonomicResponseLevel(std::unique_ptr<CDM::ScalarData>(m_AutonomicResponseLevel->Unload()));
-  data.Catecholamines(std::unique_ptr<CDM::ScalarData>(m_Catecholamines->Unload()));
-  data.ConstitutiveNOS(std::unique_ptr<CDM::ScalarData>(m_ConstitutiveNOS->Unload()));
-  data.InducibleNOSPre(std::unique_ptr<CDM::ScalarData>(m_InducibleNOSPre->Unload()));
-  data.InducibleNOS(std::unique_ptr<CDM::ScalarData>(m_InducibleNOS->Unload()));
-  data.InflammationTime(std::unique_ptr<CDM::ScalarTimeData>(m_InflammationTime->Unload()));
-  data.Interleukin6(std::unique_ptr<CDM::ScalarData>(m_Interleukin6->Unload()));
-  data.Interleukin10(std::unique_ptr<CDM::ScalarData>(m_Interleukin10->Unload()));
-  data.Interleukin12(std::unique_ptr<CDM::ScalarData>(m_Interleukin12->Unload()));
-  data.MacrophageResting(std::unique_ptr<CDM::ScalarData>(m_MacrophageResting->Unload()));
-  data.MacrophageActive(std::unique_ptr<CDM::ScalarData>(m_MacrophageActive->Unload()));
-  data.NeutrophilResting(std::unique_ptr<CDM::ScalarData>(m_NeutrophilResting->Unload()));
-  data.NeutrophilActive(std::unique_ptr<CDM::ScalarData>(m_NeutrophilActive->Unload()));
-  data.Nitrate(std::unique_ptr<CDM::ScalarData>(m_Nitrate->Unload()));
-  data.NitricOxide(std::unique_ptr<CDM::ScalarData>(m_NitricOxide->Unload()));
-  data.BloodPathogen(std::unique_ptr<CDM::ScalarData>(m_BloodPathogen->Unload()));
-  data.TissueIntegrity(std::unique_ptr<CDM::Scalar0To1Data>(m_TissueIntegrity->Unload()));
-  data.Trauma(std::unique_ptr<CDM::ScalarData>(m_Trauma->Unload()));
-  data.TumorNecrosisFactor(std::unique_ptr<CDM::ScalarData>(m_TumorNecrosisFactor->Unload()));
-
-  CDM::enumInflammationSource conversion;
-  for (auto src : m_InflammationSources) {
-    io::Physiology::Marshall(src, conversion);
-    data.Source().push_back(conversion);
-  }
 }
 //-------------------------------------------------------------------------------
 void SEInflammatoryResponse::Initialize()

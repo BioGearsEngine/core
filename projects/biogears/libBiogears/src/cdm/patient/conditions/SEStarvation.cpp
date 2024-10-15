@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/PatientConditions.hxx>
+
 #include "io/cdm/PatientConditions.h"
 
 namespace biogears {
@@ -37,26 +38,8 @@ bool SEStarvation::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasTimeSinceMeal();
 }
-//-----------------------------------------------------------------------------
-bool SEStarvation::Load(const CDM::StarvationData& in)
-{
-  io::PatientConditions::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::StarvationData* SEStarvation::Unload() const
-{
-  CDM::StarvationData* data(new CDM::StarvationData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEStarvation::Unload(CDM::StarvationData& data) const
-{
-  SEPatientCondition::Unload(data);
-  if (m_TimeSinceMeal != nullptr)
-    data.TimeSinceMeal(std::unique_ptr<CDM::ScalarTimeData>(m_TimeSinceMeal->Unload()));
-}
+
+
 //-----------------------------------------------------------------------------
 bool SEStarvation::HasTimeSinceMeal() const
 {

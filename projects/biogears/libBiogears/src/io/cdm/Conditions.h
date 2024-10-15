@@ -15,6 +15,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <random>
+#include <vector>
+#include <memory>
 #include <type_traits>
 
 #include "Conditions.h"
@@ -24,7 +26,7 @@ specific language governing permissions and limitations under the License.
 
 // Question: To Serialize Invalid units or not to Serialize?
 //           TO Throw an exception when a member is invalid?
-#define CDM_CONDITIONS_MARSHALL_HELPER(in, out, func)                                        \
+#define CDM_CONDITIONS_PTR_MARSHALL_HELPER(in, out, func)                                        \
   if (in.m_##func && in.m_##func->IsValid()) {                                               \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>());         \
     io::Conditions::Marshall(*in.m_##func, out.func());                                      \
@@ -32,30 +34,39 @@ specific language governing permissions and limitations under the License.
      throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
    }*/
 
-#define CDM_OPTIONAL_CONDITIONS_MARSHALL_HELPER(in, out, func)                              \
+#define CDM_OPTIONAL_CONDITIONS_PTR_MARSHALL_HELPER(in, out, func)                              \
   if (in.m_##func && in.m_##func->IsValid()) {                                              \
     io::Conditions::Marshall(*in.m_##func, out.func());                                     \
   } /*else if (in.m_##func) {                                                               \
     throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
   }*/
 
-#define SE_CONDITIONS_ENUM_MARSHALL_HELPER(in, out, func)                            \
+#define SE_CONDITIONS_ENUM_PTR_MARSHALL_HELPER(in, out, func)                            \
   if (in.Has##func()) {                                                              \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Conditions::Marshall(in.m_##func, out.func());                               \
   }
 
-#define SE_OPTIONAL_CONDITIONS_ENUM_MARSHALL_HELPER(in, out, func) \
+#define SE_OPTIONAL_CONDITIONS_ENUM_PTR_MARSHALL_HELPER(in, out, func) \
   io::Conditions::Marshall(in.m_##func, out.func());
 
 namespace biogears {
 
 class SECondition;
 class SEConditionList;
+class SESubstanceManager;
+class SEConditionManager;
 
 namespace io {
   class BIOGEARS_PRIVATE_API Conditions {
   public:
+    // class Factories;
+    static std::vector<std::unique_ptr<SECondition>> condition_factory(const CDM::ConditionListData& in, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+
+    static std::unique_ptr<SECondition> factory(CDM::ConditionData const* conditionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<CDM::ConditionData> factory(const SECondition* data);
+
+    static void Marshall(SEConditionManager const& in, std::vector<std::unique_ptr<CDM::ConditionData>>& out);
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -68,9 +79,8 @@ namespace io {
     static void UnMarshall(const CDM::ConditionData& in, SECondition& out);
     static void Marshall(const SECondition& in, CDM::ConditionData& out);
     // class ConditionList
-    //static void UnMarshall(const CDM::ConditionListData& in, SEConditionList& out, std::default_random_engine* re = nullptr);
-    //static void Marshall(const SEConditionList& in, CDM::ConditionListData& out);
-
+    // static void UnMarshall(const CDM::ConditionListData& in, SEConditionList& out, std::default_random_engine* re = nullptr);
+    // static void Marshall(const SEConditionList& in, CDM::ConditionListData& out);
   };
 
   //----------------------------------------------------------------------------------

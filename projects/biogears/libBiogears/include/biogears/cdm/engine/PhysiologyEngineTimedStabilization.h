@@ -14,9 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/cdm/EngineConfiguration.hxx>
 
-CDM_BIND_DECL(PhysiologyEngineTimedConditionStabilizationData)
 
 namespace biogears {
 namespace io {
@@ -31,14 +29,8 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::PhysiologyEngineTimedConditionStabilizationData& in);
-  virtual CDM::PhysiologyEngineTimedConditionStabilizationData* Unload() const;
-
-   bool operator==(PhysiologyEngineTimedStabilizationCriteria const&) const;
+  bool operator==(PhysiologyEngineTimedStabilizationCriteria const&) const;
   bool operator!=(PhysiologyEngineTimedStabilizationCriteria const&) const;
-
-protected:
-  virtual void Unload(CDM::PhysiologyEngineTimedConditionStabilizationData& data) const;
 
 public:
   virtual std::string GetName() const;
@@ -57,7 +49,6 @@ protected:
   SEScalarTime m_Time;
 };
 
-CDM_BIND_DECL(PhysiologyEngineTimedStabilizationData)
 class PhysiologyEngineTimedStabilization : public PhysiologyEngineStabilization {
 public:
   friend io::EngineConfiguration;
@@ -66,14 +57,8 @@ public:
 
   BIOGEARS_API virtual void Clear() override;
 
-  BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineTimedStabilizationData& in);
-  BIOGEARS_API virtual CDM::PhysiologyEngineTimedStabilizationData* Unload() const override;
-
   BIOGEARS_API bool operator==(PhysiologyEngineTimedStabilization const&) const;
   BIOGEARS_API bool operator!=(PhysiologyEngineTimedStabilization const&) const;
-
-protected:
-  BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const;
 
 public:
   BIOGEARS_API virtual bool Load(const char* file) override;

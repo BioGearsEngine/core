@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 #include <biogears/engine/test/BioGearsEngineTest.h>
 
+#include "io/cdm/Patient.h"
 namespace biogears {
 enum Driver { Sinusoid = 0,
   Heart };
@@ -125,9 +126,10 @@ void BioGearsEngineTest::TuneCardiovascularCircuitTest(SETestSuite& testSuite, c
   timer.Start("TestCase");
   BioGears bg(testSuite.GetLogger() );
   testSuite.GetLogger()->Info("Running " + sTestName);
-  CDM_COPY((&patient), (&bg.GetPatient()));
-  bg.m_Config->EnableRenal(SEOnOff::On);
-  bg.m_Config->EnableTissue(SEOnOff::On);
+  
+  CDM_PATIENT_COPY(Patient, patient, bg.GetPatient())
+  bg.m_Configuration->EnableRenal(SEOnOff::On);
+  bg.m_Configuration->EnableTissue(SEOnOff::On);
   bg.SetupPatient();
   bg.CreateCircuitsAndCompartments();
 
@@ -189,8 +191,8 @@ void BioGearsEngineTest::CardiovascularCircuitAndTransportTest(CardiovascularDri
     bg.GetPatient().GetHeartRateBaseline().SetValue(heartRate_bpm, FrequencyUnit::Per_min);
   }
 
-  bg.m_Config->EnableRenal(connectRenal ? SEOnOff::On : SEOnOff::Off);
-  bg.m_Config->EnableTissue(connectTissue ? SEOnOff::On : SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(connectRenal ? SEOnOff::On : SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(connectTissue ? SEOnOff::On : SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   std::vector<SESubstance*> subs2Track;

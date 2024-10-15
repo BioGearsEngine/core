@@ -13,12 +13,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
+#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 
 #include <random>
-
-CDM_BIND_DECL(ActiveHeatingData)
 
 namespace biogears {
 class SEScalar;
@@ -39,16 +37,9 @@ public:
   virtual void Clear();
   virtual void Reset();
 
-  virtual bool Load(const CDM::ActiveHeatingData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ActiveHeatingData* Unload() const;
-
   bool operator==(SEActiveHeating const&) const;
   bool operator!=(SEActiveHeating const&) const;
 
-protected:
-  virtual void Unload(CDM::ActiveHeatingData& data) const;
-
-public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
@@ -65,6 +56,8 @@ public:
   virtual double GetSurfaceAreaFraction() const;
 
   virtual void ToString(std::ostream& str) const;
+
+  virtual bool IsValid() const;
 
 protected:
   SEScalarPower* m_Power;

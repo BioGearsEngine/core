@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const PowerPerAreaTemperatureToTheFourthUnit PowerPerAreaTemperatureToTheFourthUnit::W_Per_m2_K4("W/ m^2 K^4");
 
-template class SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
+template class BIOGEARS_API SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
 
 PowerPerAreaTemperatureToTheFourthUnit::PowerPerAreaTemperatureToTheFourthUnit(const char* u)
   : PowerPerAreaTemperatureToTheFourthUnit(std::string { u })
@@ -41,15 +41,7 @@ SEScalarPowerPerAreaTemperatureToTheFourth::SEScalarPowerPerAreaTemperatureToThe
 SEScalarPowerPerAreaTemperatureToTheFourth::~SEScalarPowerPerAreaTemperatureToTheFourth()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarPowerPerAreaTemperatureToTheFourthData* SEScalarPowerPerAreaTemperatureToTheFourth::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPowerPerAreaTemperatureToTheFourthData* data(new CDM::ScalarPowerPerAreaTemperatureToTheFourthData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool PowerPerAreaTemperatureToTheFourthUnit::IsValidUnit(const char* unit)
 {

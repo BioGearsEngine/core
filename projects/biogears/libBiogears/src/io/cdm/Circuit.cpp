@@ -546,7 +546,7 @@ namespace io {
   //----------------------------------------------------------------------------------
   void Circuit::Marshall(const SECircuitManager& in, CDM::CircuitManagerData& out)
   {
-    for (auto itr : in.m_ElectricalLedger.nodes) {
+     for (auto itr : in.m_ElectricalLedger.nodes) {
       auto ecnData = CDM::ElectricalCircuitNodeData();
       Marshall(*itr.second, ecnData);
       out.ElectricalNode().push_back(ecnData);

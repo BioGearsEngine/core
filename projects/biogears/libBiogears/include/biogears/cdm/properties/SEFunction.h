@@ -17,7 +17,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEProperty.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
-CDM_BIND_DECL(FunctionData)
 
 namespace biogears {
 namespace io {
@@ -32,8 +31,6 @@ public:
 
   virtual void Clear(); //clear memory
 
-  virtual bool Load(const CDM::FunctionData& in);
-  virtual CDM::FunctionData* Unload() const;
 
   virtual bool IsValid() const;
   virtual void Invalidate();
@@ -48,10 +45,6 @@ public:
 
   bool operator==(const SEFunction&) const;
   bool operator!=(const SEFunction&) const;
-
-protected:
-  virtual void Unload(CDM::FunctionData& data) const;
-
 
 protected:
   std::vector<double> m_Dependent;

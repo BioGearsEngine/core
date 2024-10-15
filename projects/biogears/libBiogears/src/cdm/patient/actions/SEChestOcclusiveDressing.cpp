@@ -48,24 +48,6 @@ void SEChestOcclusiveDressing::SetActive(bool b)
   m_State = b ? SEOnOff::On : SEOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SEChestOcclusiveDressing::Load(const CDM::ChestOcclusiveDressingData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ChestOcclusiveDressingData* SEChestOcclusiveDressing::Unload() const
-{
-  CDM::ChestOcclusiveDressingData* data(new CDM::ChestOcclusiveDressingData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEChestOcclusiveDressing::Unload(CDM::ChestOcclusiveDressingData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 SESide SEChestOcclusiveDressing::GetSide() const
 {
   return m_Side;

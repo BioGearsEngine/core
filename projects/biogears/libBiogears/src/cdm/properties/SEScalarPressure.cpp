@@ -22,7 +22,7 @@ const PressureUnit PressureUnit::cmH2O("cmH2O");
 const PressureUnit PressureUnit::psi("psi");
 const PressureUnit PressureUnit::atm("atm");
 
-template class SEScalarQuantity<PressureUnit>;
+template class BIOGEARS_API SEScalarQuantity<PressureUnit>;
 
 PressureUnit::PressureUnit(const char* u)
   : PressureUnit(std::string { u })
@@ -45,15 +45,7 @@ SEScalarPressure::SEScalarPressure()
 SEScalarPressure::~SEScalarPressure()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarPressureData* SEScalarPressure::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPressureData* data(new CDM::ScalarPressureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool PressureUnit::IsValidUnit(const char* unit)
 {

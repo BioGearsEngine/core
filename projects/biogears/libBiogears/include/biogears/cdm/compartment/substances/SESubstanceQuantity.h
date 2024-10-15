@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/schema/cdm/SubstanceQuantity.hxx>
+
 
 namespace biogears {
 namespace io {
@@ -31,12 +31,6 @@ public:
 
   virtual bool operator==(SESubstanceQuantity const&) const = 0;
   virtual bool operator!=(SESubstanceQuantity const&) const = 0;
-
-  virtual bool Load(const CDM::SubstanceQuantityData& in);
-  virtual CDM::SubstanceQuantityData* Unload() = 0;
-
-protected:
-  virtual void Unload(CDM::SubstanceQuantityData& data);
 
 public:
   virtual SESubstance& GetSubstance() const { return m_Substance; }

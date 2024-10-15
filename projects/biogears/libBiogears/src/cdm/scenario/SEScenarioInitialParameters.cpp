@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 
 #include "io/cdm/Scenario.h"
+#include "io/cdm/EngineConfiguration.h"
+#include "io/cdm/Patient.h"
 
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -47,24 +49,6 @@ void SEScenarioInitialParameters::Clear()
   DELETE_VECTOR(m_Conditions);
 }
 //-----------------------------------------------------------------------------
-bool SEScenarioInitialParameters::Load(const CDM::ScenarioInitialParametersData& in)
-{
-  io::Scenario::UnMarshall(in, *this);
-  return IsValid();
-}
-//-----------------------------------------------------------------------------
-CDM::ScenarioInitialParametersData* SEScenarioInitialParameters::Unload() const
-{
-  CDM::ScenarioInitialParametersData* data = new CDM::ScenarioInitialParametersData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEScenarioInitialParameters::Unload(CDM::ScenarioInitialParametersData& data) const
-{
-  io::Scenario::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::IsValid() const
 {
   if (HasPatientFile() || HasPatient())
@@ -91,7 +75,7 @@ const PhysiologyEngineConfiguration* SEScenarioInitialParameters::GetConfigurati
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::SetConfiguration(const PhysiologyEngineConfiguration& config)
 {
-  CDM_COPY((&config), (&GetConfiguration()));
+  CDM_BIOGEARS_CONFIGURATION_COPY(PhysiologyEngineConfiguration, config, GetConfiguration());
 }
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::InvalidateConfiguration()
@@ -141,7 +125,7 @@ const SEPatient* SEScenarioInitialParameters::GetPatient() const
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::SetPatient(const SEPatient& patient)
 {
-  CDM_COPY((&patient), (&GetPatient()));
+  CDM_PATIENT_COPY(Patient, patient, GetPatient());
 }
 //-----------------------------------------------------------------------------
 bool SEScenarioInitialParameters::HasPatient() const
@@ -156,9 +140,11 @@ void SEScenarioInitialParameters::InvalidatePatient()
 //-----------------------------------------------------------------------------
 void SEScenarioInitialParameters::AddCondition(const SECondition& c)
 {
-  CDM::ConditionData* bind = c.Unload();
-  m_Conditions.push_back(SECondition::newFromBind(*bind, m_SubMgr));
-  delete bind;
+
+  auto conditionData = io::Conditions::factory(&c);
+  auto conditionCopy = io::Conditions::factory(conditionData.get(), m_SubMgr).release();
+  m_Conditions.push_back(conditionCopy);
+
 }
 //-----------------------------------------------------------------------------
 const std::vector<SECondition*>& SEScenarioInitialParameters::GetConditions() const

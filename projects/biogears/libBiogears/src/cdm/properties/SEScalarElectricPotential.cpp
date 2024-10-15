@@ -19,7 +19,7 @@ namespace biogears {
 const ElectricPotentialUnit ElectricPotentialUnit::V("V");
 const ElectricPotentialUnit ElectricPotentialUnit::mV("mV");
 
-template class SEScalarQuantity<ElectricPotentialUnit>;
+template class BIOGEARS_API SEScalarQuantity<ElectricPotentialUnit>;
 
 ElectricPotentialUnit::ElectricPotentialUnit(const char* u)
   : ElectricPotentialUnit(std::string { u })
@@ -39,15 +39,7 @@ ElectricPotentialUnit::~ElectricPotentialUnit()
 SEScalarElectricPotential::~SEScalarElectricPotential()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarElectricPotentialData* SEScalarElectricPotential::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricPotentialData* data(new CDM::ScalarElectricPotentialData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool ElectricPotentialUnit::IsValidUnit(const char* unit)
 {

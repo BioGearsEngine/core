@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentLink.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/cdm/Compartment.hxx>
+
 
 #include <map>
 #include <string>
@@ -39,16 +39,11 @@ public:
 
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::ThermalCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::ThermalCompartmentLinkData* Unload() override;
 
   bool operator==(const SEThermalCompartmentLink& rhs) const;
   bool operator!=(const SEThermalCompartmentLink& rhs) const;
   bool operator==(const SECompartmentLink& rhs) const final;
   bool operator!=(const SECompartmentLink& rhs) const final;
-
-protected:
-  virtual void Unload(CDM::ThermalCompartmentLinkData& data);
 
 public:
   virtual const SEScalar* GetScalar(const char* name) override;
@@ -77,10 +72,11 @@ protected:
   SEThermalCircuitPath* m_Path;
 };
 }
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartmentLink*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartmentLink*>;
+extern template class vector<biogears::SEThermalCompartmentLink*>;
+extern template class map<string, biogears::SEThermalCompartmentLink*>;
 }
 
 #include <biogears/cdm/compartment/SECompartmentGraph.h>
@@ -91,4 +87,7 @@ public:
   SEThermalCompartmentGraph(const std::string& name, Logger* logger);
   virtual ~SEThermalCompartmentGraph() override;
 };
+
+#pragma warning(default : 4661)
+
 } // namespace biogears

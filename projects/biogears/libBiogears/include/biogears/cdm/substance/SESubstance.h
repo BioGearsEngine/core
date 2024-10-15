@@ -14,56 +14,82 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Substance.hxx>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstanceAerosolization.h>
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 #include <biogears/cdm/substance/SESubstancePharmacodynamics.h>
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
+#include <string>
 #include <vector>
 
-CDM_BIND_DECL(SubstanceData)
-
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarElectricResistance.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarInversePressure.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
+#include <biogears/cdm/properties/SEScalarMassPerAreaTime.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTimeMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
 namespace biogears {
-class SEScalarAmountPerVolume;
-class AmountPerVolumeUnit;
-class SEScalarMass;
-class MassUnit;
-class SEScalarMassPerAmount;
-class MassPerAmountUnit;
-class SEScalarVolumePerTimePressure;
-class VolumePerTimePressureUnit;
-class SEScalarInversePressure;
-class InversePressureUnit;
-class SEScalarMassPerAreaTime;
-class MassPerAreaTimeUnit;
-class SESubstancePharmacodynamics;
-class SEScalarElectricResistance;
-class ElectricResistanceUnit;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
-class SEScalarPressure;
-class PressureUnit;
-class SEScalarTimeMassPerVolume;
-class TimeMassPerVolumeUnit;
+class SESubstanceManager;
 namespace io {
   class Substance;
-}
+} // namespace io
+
+class BIOGEARS_API SESubstanceDefinition {
+
+public:
+  SESubstanceDefinition(SESubstanceDefinition const& obj);
+  SESubstanceDefinition(SESubstanceDefinition&& obj);
+ ~SESubstanceDefinition();
+  SESubstanceDefinition(Logger* logger = nullptr);
+
+  SESubstanceDefinition(SESubstanceClearanceDefinition definition, Logger* logger = nullptr);
+
+  SESubstanceDefinition& operator=(SESubstanceDefinition const& rhs);
+  SESubstanceDefinition& operator=(SESubstanceDefinition&& rhs);
+  bool operator==(SESubstanceDefinition const& rhs) const;
+  bool operator!=(SESubstanceDefinition const& rhs) const;
+
+  std::string Name;
+  SESubstanceClass Classification = SESubstanceClass::Invalid;
+  SESubstanceState State = SESubstanceState::Invalid;
+
+  SEScalarMassPerVolume Density;
+  SEScalarMassPerAmount MolarMass;
+  SEScalarMassPerAreaTime MaximumDiffusionFlux;
+  SEScalar MichaelisCoefficient;
+  SEScalarElectricResistance MembraneResistance;
+  SEScalarTimeMassPerVolume AreaUnderCurve;
+  SEScalarVolumePerTime AlveolarTransfer;
+  SEScalarVolumePerTimePressure DiffusingCapacity;
+  SEScalar RelativeDiffusionCoefficient;
+  SEScalarInversePressure SolubilityCoefficient;
+
+  SESubstanceClearanceDefinition ClearanceDefinition;
+  SESubstanceAerosolization Aerosolization;
+  SESubstancePharmacokinetics Pharmacokinetics;
+  SESubstancePharmacodynamics Pharmacodynamics;
+};
+
 class BIOGEARS_API SESubstance : public Loggable {
   friend io::Substance;
+  friend SESubstanceManager;
 
 public:
   SESubstance(Logger* logger);
+  SESubstance(SESubstanceDefinition definition);
   virtual ~SESubstance();
 
   virtual void Clear();
 
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
-
-  virtual bool Load(const CDM::SubstanceData& in);
-  virtual CDM::SubstanceData* Unload() const;
 
   virtual std::string GetName() const;
   virtual const char* GetName_cStr() const;
@@ -188,44 +214,44 @@ public:
   bool operator==(const SESubstance& rhs) const;
   bool operator!=(const SESubstance& rhs) const;
 
-protected:
-  virtual void Unload(CDM::SubstanceData& data) const;
+  bool operator==(const SESubstanceDefinition& rhs) const;
+  bool operator!=(const SESubstanceDefinition& rhs) const;
 
-protected:
-  std::string m_Name;
-  SESubstanceClass m_Classification;
-  SESubstanceState m_State;
-  SEScalarMassPerVolume* m_Density;
-  SEScalarMassPerAmount* m_MolarMass;
+  SESubstanceDefinition const& GetDefinition() const;
 
-  SEScalarMassPerAreaTime* m_MaximumDiffusionFlux;
-  SEScalar* m_MichaelisCoefficient;
-  SEScalarElectricResistance* m_MembraneResistance;
+private:
+  SESubstanceDefinition m_def;
 
-  SESubstanceAerosolization* m_Aerosolization;
-  SEScalarTimeMassPerVolume* m_AreaUnderCurve;
-  SEScalarMassPerVolume* m_BloodConcentration;
-  SEScalarMassPerVolume* m_EffectSiteConcentration;
-  SEScalarMass* m_MassInBody;
-  SEScalarMass* m_MassInBlood;
-  SEScalarMass* m_MassInTissue;
-  SEScalarMassPerVolume* m_PlasmaConcentration;
-  SEScalarMass* m_SystemicMassCleared;
-  SEScalarMassPerVolume* m_TissueConcentration;
+  SESubstanceClearance m_Clearance;
 
-  SEScalarVolumePerTime* m_AlveolarTransfer;
-  SEScalarVolumePerTimePressure* m_DiffusingCapacity;
-  SEScalarFraction* m_EndTidalFraction;
-  SEScalarPressure* m_EndTidalPressure;
-  SEScalar* m_RelativeDiffusionCoefficient;
-  SEScalarInversePressure* m_SolubilityCoefficient;
+  SEScalarMassPerVolume m_BloodConcentration;
+  SEScalarMassPerVolume m_EffectSiteConcentration;
+  SEScalarMass m_MassInBody;
+  SEScalarMass m_MassInBlood;
+  SEScalarMass m_MassInTissue;
+  SEScalarMassPerVolume m_PlasmaConcentration;
+  SEScalarMass m_SystemicMassCleared;
+  SEScalarMassPerVolume m_TissueConcentration;
 
-  SESubstanceClearance* m_Clearance;
-  SESubstancePharmacokinetics* m_Pharmacokinetics;
-  SESubstancePharmacodynamics* m_Pharmacodynamics;
+  SEScalarFraction m_EndTidalFraction;
+  SEScalarPressure m_EndTidalPressure;
 };
-} //namespace biogears
+
+inline bool operator==(const SESubstanceDefinition& lhs, const SESubstance& rhs)
+{
+  return rhs == lhs;
+}
+
+inline bool operator!=(const SESubstanceDefinition& lhs, const SESubstance& rhs)
+{
+  return rhs == lhs;
+}
+
+} // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SESubstance*>;
-}
+extern template class vector<biogears::SESubstance*>;
+} // namespace std
+
+#pragma warning(default : 4661)

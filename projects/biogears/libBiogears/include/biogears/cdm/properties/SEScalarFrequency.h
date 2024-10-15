@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API FrequencyUnit : public CCompoundUnit {
@@ -36,16 +35,16 @@ public:
   static const FrequencyUnit Per_hr;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<FrequencyUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<FrequencyUnit>;
 
 class BIOGEARS_API SEScalarFrequency : public SEScalarQuantity<FrequencyUnit> {
 public:
   SEScalarFrequency();
   virtual ~SEScalarFrequency();
 
-  CDM::ScalarFrequencyData* Unload() const override;
-
   using SEScalarQuantity<FrequencyUnit>::SetValue;
   using SEScalarQuantity<FrequencyUnit>::GetValue;
 };
+#pragma warning(default : 4661)
 }

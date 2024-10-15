@@ -39,24 +39,6 @@ void SEThermalCircuitPath::Clear()
   SECircuitPath::Clear();
 }
 //-------------------------------------------------------------------------------
-bool SEThermalCircuitPath::Load(const CDM::ThermalCircuitPathData& in)
-{
-  io::Circuit::UnMarshall(in, *this);
-  return HasValidElements();
-}
-//-------------------------------------------------------------------------------
-CDM::ThermalCircuitPathData* SEThermalCircuitPath::Unload() const
-{
-  CDM::ThermalCircuitPathData* data = new CDM::ThermalCircuitPathData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEThermalCircuitPath::Unload(CDM::ThermalCircuitPathData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 
 ////////////////////////////////
 // Thermal Resistance Types//

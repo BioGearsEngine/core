@@ -354,28 +354,6 @@ const SEScalar* SERenalSystem::GetScalar(const std::string& name)
 }
 //-------------------------------------------------------------------------------
 
-bool SERenalSystem::Load(const CDM::RenalSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::RenalSystemData* SERenalSystem::Unload() const
-{
-  CDM::RenalSystemData* data = new CDM::RenalSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SERenalSystem::Unload(CDM::RenalSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
-
 bool SERenalSystem::HasBladderPressure() const
 {
   return m_BladderPressure == nullptr ? false : m_BladderPressure->IsValid();

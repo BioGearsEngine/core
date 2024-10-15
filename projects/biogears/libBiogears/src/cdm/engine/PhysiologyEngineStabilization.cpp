@@ -37,24 +37,7 @@ void PhysiologyEngineStabilization::Clear()
   SAFE_DELETE(m_StabilizationDuration);
   SAFE_DELETE(m_CurrentTime);
 }
-//-------------------------------------------------------------------------------
-bool PhysiologyEngineStabilization::Load(const CDM::PhysiologyEngineStabilizationData& in)
-{
-  io::EngineConfiguration::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PhysiologyEngineStabilizationData* PhysiologyEngineStabilization::Unload() const
-{
-  CDM::PhysiologyEngineStabilizationData* data(new CDM::PhysiologyEngineStabilizationData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void PhysiologyEngineStabilization::Unload(CDM::PhysiologyEngineStabilizationData& data) const
-{
-  io::EngineConfiguration::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 void PhysiologyEngineStabilization::LogProgress(bool b)
 {

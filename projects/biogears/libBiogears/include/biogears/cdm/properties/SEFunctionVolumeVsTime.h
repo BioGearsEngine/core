@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEFunction.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 namespace io {
@@ -27,12 +26,6 @@ public:
   virtual ~SEFunctionVolumeVsTime();
 
   virtual void Clear();
-
-  virtual bool Load(const CDM::FunctionVolumeVsTimeData& in);
-  virtual CDM::FunctionVolumeVsTimeData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::FunctionVolumeVsTimeData& data) const;
 
 public:
   double GetIndependentValue(unsigned int index) = delete;

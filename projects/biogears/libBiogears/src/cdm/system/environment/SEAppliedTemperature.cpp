@@ -11,8 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/SEAppliedTemperature.h>
 
-#include "io/cdm/Environment.h"
-
 #include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -57,24 +55,6 @@ const SEScalar* SEAppliedTemperature::GetScalar(const std::string& name)
   if (name.compare("SurfaceAreaFraction") == 0)
     return &GetSurfaceAreaFraction();
   return nullptr;
-}
-//-----------------------------------------------------------------------------
-bool SEAppliedTemperature::Load(const CDM::AppliedTemperatureData& in, std::default_random_engine* rd)
-{
-  io::Environment::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::AppliedTemperatureData* SEAppliedTemperature::Unload() const
-{
-  CDM::AppliedTemperatureData* data = new CDM::AppliedTemperatureData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEAppliedTemperature::Unload(CDM::AppliedTemperatureData& data) const
-{
-  io::Environment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEAppliedTemperature::HasTemperature() const
@@ -155,6 +135,14 @@ void SEAppliedTemperature::ToString(std::ostream& str) const
   HasSurfaceAreaFraction() ? str << *m_SurfaceAreaFraction : str << "NaN";
   str << "\n\tState :" << m_State;
   str << std::flush;
+}
+//-----------------------------------------------------------------------------
+bool SEAppliedTemperature::IsValid() const
+{
+  return m_State != SEOnOff::Invalid
+    && (m_Temperature
+        || m_SurfaceArea
+        || m_SurfaceAreaFraction);
 }
 //-----------------------------------------------------------------------------
 bool SEAppliedTemperature::operator==(SEAppliedTemperature const& rhs) const

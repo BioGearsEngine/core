@@ -11,6 +11,8 @@
 
 
 namespace biogears {
+#pragma optimize("", off)
     template class SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex,
      SELiquidTransportSubstance, SELiquidSubstanceQuantity>;
+#pragma optimize("", on)
 }

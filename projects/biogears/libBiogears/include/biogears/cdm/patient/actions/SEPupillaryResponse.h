@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/utils/Logger.h>
-#include <biogears/schema/cdm/Physiology.hxx>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <random>
 
@@ -38,9 +37,6 @@ public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  virtual bool Load(const CDM::PupillaryResponseData& in);
-  virtual CDM::PupillaryResponseData* Unload() const;
-
   virtual bool HasReactivityModifier() const;
   virtual SEScalarNeg1To1& GetReactivityModifier();
   virtual double GetReactivityModifier() const;
@@ -55,9 +51,6 @@ public:
     
   bool operator==(const SEPupillaryResponse& rhs) const;
   bool operator!=(const SEPupillaryResponse& rhs) const;
-
-protected:
-  virtual void Unload(CDM::PupillaryResponseData& data) const;
 
 private:
   SEScalarNeg1To1* m_ReactivityModifier;

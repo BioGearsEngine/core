@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 
@@ -38,9 +37,6 @@ public:
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::SubstanceOralDoseData* Unload() const;
-
   virtual SEOralAdministrationType GetAdminRoute() const;
   virtual void SetAdminRoute(SEOralAdministrationType name);
   virtual bool HasAdminRoute() const;
@@ -54,9 +50,6 @@ public:
 
   bool operator==(const SESubstanceOralDose& rhs) const;
   bool operator!=(const SESubstanceOralDose& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceOralDoseData& data) const;
 
 private:
   SEOralAdministrationType m_AdminRoute;
@@ -72,9 +65,6 @@ public:
   ~SETransmucosalState();
   virtual void Clear();
 
-  virtual bool Load(const CDM::TransmucosalStateData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::TransmucosalStateData* Unload() const;
-
   bool Initialize(SEScalarMass& dose);
 
   SEScalarMass& GetMouthSolidMass();
@@ -88,9 +78,6 @@ public:
 
   bool operator==(const SETransmucosalState& rhs) const;
   bool operator!=(const SETransmucosalState& rhs) const;
-
-protected:
-  virtual void Unload(CDM::TransmucosalStateData& data) const;
 
 private:
   // Transumucosal specific values

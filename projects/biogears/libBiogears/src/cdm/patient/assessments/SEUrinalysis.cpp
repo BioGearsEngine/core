@@ -79,24 +79,7 @@ void SEUrinalysis::Reset()
 
   SAFE_DELETE(m_Microscopic);
 }
-//-------------------------------------------------------------------------------
-bool SEUrinalysis::Load(const CDM::UrinalysisData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::UrinalysisData* SEUrinalysis::Unload()
-{
-  CDM::UrinalysisData* data = new CDM::UrinalysisData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEUrinalysis::Unload(CDM::UrinalysisData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEUrinalysis::HasColorResult() const
 {

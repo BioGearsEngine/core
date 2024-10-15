@@ -10,6 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramWaveformLeadNumber.h>
 
 #include "io/cdm/ElectroCardioGram.h"
 
@@ -23,11 +24,11 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SEElectroCardioGramInterpolationWaveform::SEElectroCardioGramInterpolationWaveform(Logger* logger)
   : Loggable(logger)
+  , m_LeadNumber(0, logger)
 {
   m_TimeStep = nullptr;
   m_Data = nullptr;
   m_Rhythm = SEHeartRhythm::Invalid;
-  m_LeadNumber = 0;
 }
 //-----------------------------------------------------------------------------
 SEElectroCardioGramInterpolationWaveform::~SEElectroCardioGramInterpolationWaveform()
@@ -43,30 +44,13 @@ void SEElectroCardioGramInterpolationWaveform::Clear()
   SAFE_DELETE(m_Data);
   m_ActiveIndicies.clear();
 }
+
 //-----------------------------------------------------------------------------
-bool SEElectroCardioGramInterpolationWaveform::Load(const CDM::ElectroCardioGramInterpolationWaveformData& in)
-{
-  io::ElectroCardioGram::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ElectroCardioGramInterpolationWaveformData* SEElectroCardioGramInterpolationWaveform::Unload() const
-{
-  CDM::ElectroCardioGramInterpolationWaveformData* data(new CDM::ElectroCardioGramInterpolationWaveformData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEElectroCardioGramInterpolationWaveform::Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const
-{
-  io::ElectroCardioGram::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
-CDM::ElectroCardioGramWaveformLeadNumberData SEElectroCardioGramInterpolationWaveform::GetLeadNumber() const
+SEElectroCardioGramWaveformLeadNumber SEElectroCardioGramInterpolationWaveform::GetLeadNumber() const
 {
   return m_LeadNumber;
 }
-void SEElectroCardioGramInterpolationWaveform::SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumberData n)
+void SEElectroCardioGramInterpolationWaveform::SetLeadNumber(SEElectroCardioGramWaveformLeadNumber n)
 {
   m_LeadNumber = n;
 }

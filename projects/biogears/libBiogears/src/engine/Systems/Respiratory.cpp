@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/Systems/Respiratory.h>
 
+#include "io/cdm/Physiology.h"
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
@@ -48,7 +51,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4305 4244) // Disable some warning messages
@@ -143,8 +146,8 @@ void Respiratory::Clear()
   m_GroundToConnection = nullptr;
 
   m_BloodPHRunningAverage.Reset();
-  m_ArterialO2Average_mmHg.Reset();
-  m_ArterialCO2Average_mmHg.Reset();
+  m_ArterialOxygenAverage_mmHg.Reset();
+  m_ArterialCarbonDioxideAverage_mmHg.Reset();
 
   m_OverrideRRBaseline_Per_min = 0.0;
 }
@@ -224,7 +227,7 @@ void Respiratory::Initialize()
   GetRespirationCyclePercentComplete().SetValue(0.0);
   GetRespirationDriverFrequency().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverPressure().SetValue(m_PeakRespiratoryDrivePressure_cmH2O, PressureUnit::cmH2O);
-  GetCarricoIndex().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
+  GetCarricoIndex().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2().GetDefinition()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
   GetMeanPleuralPressure().SetValue(AbsolutePleuralPressure_mmHg - EnvironmentPressure_mmHg, PressureUnit::mmHg);
   GetTotalAlveolarVentilation().SetValue(RespirationRate_Per_min * (TidalVolume_L - DeadSpace_L), VolumePerTimeUnit::L_Per_min);
@@ -237,111 +240,6 @@ void Respiratory::Initialize()
 
   //Get the fluid mechanics to a good starting point
   TuneCircuit();
-}
-
-bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)
-{
-  if (!SERespiratorySystem::Load(in))
-    return false;
-
-  m_InitialExpiratoryReserveVolume_L = in.InitialExpiratoryReserveVolume_L();
-  m_InitialFunctionalResidualCapacity_L = in.InitialFunctionalResidualCapacity_L();
-  m_InitialInspiratoryCapacity_L = in.InitialInspiratoryCapacity_L();
-  m_InitialResidualVolume_L = in.InitialResidualVolume_L();
-
-  m_bNotBreathing = in.NotBreathing();
-  m_TopBreathTotalVolume_L = in.TopBreathTotalVolume_L();
-  m_TopBreathAlveoliVolume_L = in.TopBreathAlveoliVolume_L();
-  m_TopBreathDeadSpaceVolume_L = in.TopBreathDeadSpaceVolume_L();
-  m_TopBreathPleuralPressure_cmH2O = in.TopBreathPleuralPressure_cmH2O();
-  m_LastCardiacCycleBloodPH = in.LastCardiacCycleBloodPH();
-  m_PreviousTotalLungVolume_L = in.PreviousTotalLungVolume_L();
-  m_BloodPHRunningAverage.Load(in.BloodPHRunningAverage());
-
-  m_BreathingCycle = in.BreathingCycle();
-  m_ArterialO2PartialPressure_mmHg = in.ArterialOxygenPressure_mmHg();
-  m_ArterialCO2PartialPressure_mmHg = in.ArterialCarbonDioxidePressure_mmHg();
-  m_BreathingCycleTime_s = in.BreathingCycleTime_s();
-  m_BreathTimeExhale_min = in.BreathTimeExhale_min();
-  m_DefaultDrivePressure_cmH2O = in.DefaultDrivePressure_cmH2O();
-  m_DriverPressure_cmH2O = in.DriverPressure_cmH2O();
-  m_DriverPressureMin_cmH2O = in.DriverPressureMin_cmH2O();
-  m_ElapsedBreathingCycleTime_min = in.ElapsedBreathingCycleTime_min();
-  m_IEscaleFactor = in.IEscaleFactor();
-  m_InstantaneousFunctionalResidualCapacity_L = in.InstantaneousFunctionalResidualCapacity_L();
-  m_MaxDriverPressure_cmH2O = in.MaxDriverPressure_cmH2O();
-  m_PeakRespiratoryDrivePressure_cmH2O = in.PeakRespiratoryDrivePressure_cmH2O();
-
-  m_VentilationFrequency_Per_min = in.VentilationFrequency_Per_min();
-  m_ArterialO2Average_mmHg.Load(in.ArterialOxygenAverage_mmHg());
-  m_ArterialCO2Average_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
-
-  m_ConsciousBreathing = in.ConsciousBreathing();
-  m_ConsciousRespirationPeriod_s = in.ConsciousRespirationPeriod_s();
-  m_ConsciousRespirationRemainingPeriod_s = in.ConsciousRespirationRemainingPeriod_s();
-  m_ExpiratoryReserveVolumeFraction = in.ExpiratoryReserveVolumeFraction();
-  m_InspiratoryCapacityFraction = in.InspiratoryCapacityFraction();
-  m_ConsciousStartPressure_cmH2O = in.ConsciousStartPressure_cmH2O();
-  m_ConsciousEndPressure_cmH2O = in.ConsciousEndPressure_cmH2O();
-
-  m_HadAirwayObstruction = in.HadAirwayObstruction();
-  m_HadBronchoconstriction = in.HadBronchoconstriction();
-
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsRespiratorySystemData* Respiratory::Unload() const
-{
-  CDM::BioGearsRespiratorySystemData* data = new CDM::BioGearsRespiratorySystemData();
-  Unload(*data);
-  return data;
-}
-void Respiratory::Unload(CDM::BioGearsRespiratorySystemData& data) const
-{
-  SERespiratorySystem::Unload(data);
-
-  data.InitialExpiratoryReserveVolume_L(m_InitialExpiratoryReserveVolume_L);
-  data.InitialFunctionalResidualCapacity_L(m_InitialFunctionalResidualCapacity_L);
-  data.InitialInspiratoryCapacity_L(m_InitialInspiratoryCapacity_L);
-  data.InitialResidualVolume_L(m_InitialResidualVolume_L);
-
-  data.NotBreathing(m_bNotBreathing);
-  data.TopBreathTotalVolume_L(m_TopBreathTotalVolume_L);
-  data.TopBreathAlveoliVolume_L(m_TopBreathAlveoliVolume_L);
-  data.TopBreathDeadSpaceVolume_L(m_TopBreathDeadSpaceVolume_L);
-  data.TopBreathPleuralPressure_cmH2O(m_TopBreathPleuralPressure_cmH2O);
-  data.LastCardiacCycleBloodPH(m_LastCardiacCycleBloodPH);
-  data.PreviousTotalLungVolume_L(m_PreviousTotalLungVolume_L);
-  data.BloodPHRunningAverage(std::unique_ptr<CDM::RunningAverageData>(m_BloodPHRunningAverage.Unload()));
-
-  data.BreathingCycle(m_BreathingCycle);
-  data.ArterialOxygenPressure_mmHg(m_ArterialO2PartialPressure_mmHg);
-  data.ArterialCarbonDioxidePressure_mmHg(m_ArterialCO2PartialPressure_mmHg);
-  data.BreathingCycleTime_s(m_BreathingCycleTime_s);
-  data.BreathTimeExhale_min(m_BreathTimeExhale_min);
-  data.DefaultDrivePressure_cmH2O(m_DefaultDrivePressure_cmH2O);
-  data.DriverPressure_cmH2O(m_DriverPressure_cmH2O);
-  data.DriverPressureMin_cmH2O(m_DriverPressureMin_cmH2O);
-  data.ElapsedBreathingCycleTime_min(m_ElapsedBreathingCycleTime_min);
-  data.IEscaleFactor(m_IEscaleFactor);
-  data.InstantaneousFunctionalResidualCapacity_L(m_InstantaneousFunctionalResidualCapacity_L);
-  data.MaxDriverPressure_cmH2O(m_MaxDriverPressure_cmH2O);
-  data.PeakRespiratoryDrivePressure_cmH2O(m_PeakRespiratoryDrivePressure_cmH2O);
-
-  data.VentilationFrequency_Per_min(m_VentilationFrequency_Per_min);
-  data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2Average_mmHg.Unload()));
-  data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCO2Average_mmHg.Unload()));
-
-  data.ConsciousBreathing(m_ConsciousBreathing);
-  data.ConsciousRespirationPeriod_s(m_ConsciousRespirationPeriod_s);
-  data.ConsciousRespirationRemainingPeriod_s(m_ConsciousRespirationRemainingPeriod_s);
-  data.ExpiratoryReserveVolumeFraction(m_ExpiratoryReserveVolumeFraction);
-  data.InspiratoryCapacityFraction(m_InspiratoryCapacityFraction);
-  data.ConsciousStartPressure_cmH2O(m_ConsciousStartPressure_cmH2O);
-  data.ConsciousEndPressure_cmH2O(m_ConsciousEndPressure_cmH2O);
-
-  data.HadAirwayObstruction(m_HadAirwayObstruction);
-  data.HadBronchoconstriction(m_HadBronchoconstriction);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -918,14 +816,14 @@ void Respiratory::RespiratoryDriver()
   ///\ToDo:  Running averages were mostly used for chemoreceptors that have been moved to Nervous.
   /// ToDo:  However, they are still used in some calculations in CalculateVitals.  Should we move/consolidate these?
   //Keep a running average of the Arterial Partial Pressures
-  m_ArterialO2Average_mmHg.Sample(m_AortaO2->GetPartialPressure(PressureUnit::mmHg));
-  m_ArterialCO2Average_mmHg.Sample(m_AortaCO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialOxygenAverage_mmHg.Sample(m_AortaO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialCarbonDioxideAverage_mmHg.Sample(m_AortaCO2->GetPartialPressure(PressureUnit::mmHg));
   //Reset at start of cardiac cycle
   if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
-    m_ArterialO2PartialPressure_mmHg = m_ArterialO2Average_mmHg.Value();
-    m_ArterialCO2PartialPressure_mmHg = m_ArterialCO2Average_mmHg.Value();
-    m_ArterialO2Average_mmHg.Reset();
-    m_ArterialCO2Average_mmHg.Reset();
+    m_ArterialO2PartialPressure_mmHg = m_ArterialOxygenAverage_mmHg.Value();
+    m_ArterialCO2PartialPressure_mmHg = m_ArterialCarbonDioxideAverage_mmHg.Value();
+    m_ArterialOxygenAverage_mmHg.Reset();
+    m_ArterialCarbonDioxideAverage_mmHg.Reset();
   }
 
 #ifdef TUNING
@@ -1813,7 +1711,7 @@ void Respiratory::CalculateVitalSigns()
   double fractionInspiredO2 = 0.0;
   switch (m_data.GetAirwayMode()) {
   case SEBioGearsAirwayMode::Free:
-    fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2().GetDefinition()).GetFractionAmount().GetValue();
     break;
   case SEBioGearsAirwayMode::AnesthesiaMachine:
     fractionInspiredO2 = m_data.GetAnesthesiaMachine().GetOxygenFraction().GetValue();
@@ -1825,7 +1723,7 @@ void Respiratory::CalculateVitalSigns()
     //Unclear what O2 fraction in an inhaler is, let this case flow into default for now.
   default:
     //Use environment as default
-    fractionInspiredO2 = fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    fractionInspiredO2 = fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2().GetDefinition()).GetFractionAmount().GetValue();
   }
   GetCarricoIndex().SetValue(arterialPartialPressureO2_mmHg / fractionInspiredO2, PressureUnit::mmHg);
 

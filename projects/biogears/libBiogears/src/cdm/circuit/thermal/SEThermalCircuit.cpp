@@ -25,7 +25,7 @@ template class map<const biogears::SEThermalCircuitNode*, size_t>;
 
 namespace biogears {
 
-template class SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>;
+template class SECircuit<SEThermalCircuitNode, SEThermalCircuitPath>;
 
 SEThermalCircuit::SEThermalCircuit(const char* name, SECircuitManager& mgr)
   : SEThermalCircuit(std::string { name }, mgr)
@@ -33,7 +33,7 @@ SEThermalCircuit::SEThermalCircuit(const char* name, SECircuitManager& mgr)
 }
 //-------------------------------------------------------------------------------
 SEThermalCircuit::SEThermalCircuit(const std::string& name, SECircuitManager& mgr)
-  : SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>(name, mgr.GetLogger())
+  : SECircuit<SEThermalCircuitNode, SEThermalCircuitPath>(name, mgr.GetLogger())
   , m_Mgr(mgr)
 {
 }
@@ -42,16 +42,7 @@ SEThermalCircuit::~SEThermalCircuit()
 {
   Clear();
 }
-//-------------------------------------------------------------------------------
-void SEThermalCircuit::Unload(CDM::ThermalCircuitData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
-bool SEThermalCircuit::Load(const CDM::ThermalCircuitData& in, SECircuitLedger<SEThermalCircuitNode, SEThermalCircuitPath, SEThermalCircuit> const& ledger)
-{ // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
-  io::Circuit::UnMarshall(in, ledger, *this);
-  return true;
-}
+
 //-------------------------------------------------------------------------------
 SEThermalCircuitNode& SEThermalCircuit::CreateNode(const char* name)
 {

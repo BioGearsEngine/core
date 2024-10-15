@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 
@@ -31,12 +30,9 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::SubstanceAdministrationData& in);
-
   bool operator==(const SESubstanceAdministration& rhs) const;
   bool operator!=(const SESubstanceAdministration& rhs) const;
 
-protected:
-  virtual void Unload(CDM::SubstanceAdministrationData& data) const;
+
 };
 }

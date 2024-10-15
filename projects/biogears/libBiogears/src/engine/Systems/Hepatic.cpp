@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/Systems/Hepatic.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
@@ -22,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 namespace biogears {
 auto Hepatic::make_unique(BioGears& bg) -> std::unique_ptr<Hepatic>
@@ -86,26 +88,6 @@ void Hepatic::Initialize()
   GetKetoneProductionRate().SetValue(300.0, AmountPerTimeUnit::umol_Per_min);
   /// \cite boron2012medical
   GetHepaticGluconeogenesisRate().SetValue(180, MassPerTimeUnit::g_Per_day);
-}
-
-bool Hepatic::Load(const CDM::BioGearsHepaticSystemData& in)
-{
-  if (!SEHepaticSystem::Load(in))
-    return false;
-
-  BioGearsSystem::LoadState();
-
-  return true;
-}
-CDM::BioGearsHepaticSystemData* Hepatic::Unload() const
-{
-  CDM::BioGearsHepaticSystemData* data = new CDM::BioGearsHepaticSystemData();
-  Unload(*data);
-  return data;
-}
-void Hepatic::Unload(CDM::BioGearsHepaticSystemData& data) const
-{
-  SEHepaticSystem::Unload(data);
 }
 
 //--------------------------------------------------------------------------------------------------

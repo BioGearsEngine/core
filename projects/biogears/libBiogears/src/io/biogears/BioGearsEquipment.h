@@ -18,25 +18,39 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/biogears/BioGearsEquipment.hxx>
 
-#define CDM_BIOGEARS_EQUIPMENT_MARSHALL_HELPER(xsd, func)                           \
-  if (m_##func) {                                                                    \
-    xsd.func(std::make_unique<std::remove_reference<decltype(xsd.func())>::type>()); \
-    io::BiogearsEquipment::Marshall(*m_##func, xsd.func());                        \
-  }
+// Question: To Serialize Invalid units or not to Serialize?
+//           TO Throw an exception when a member is invalid?
+#define CDM_BIOGEARS_EQUIPMENT_PTR_MARSHALL_HELPER(in, out, func)                                \
+  if (in.m_##func && in.m_##func->IsValid()) {                                               \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>());         \
+    io::BiogearsEquipment::Marshall(*in.m_##func, out.func());                               \
+  } /* else if (in.m_##func) {                                                               \
+     throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
+   }*/
 
-#define CDM_OPTIONAL_BIOGEARS_EQUIPMENT_MARSHALL_HELPER(in, out, func) \
-  if (in.m_##func) {                                                    \
-    io::BiogearsEquipment::Marshall(*in.m_##func, out.func());        \
-  }
+#define CDM_OPTIONAL_BIOGEARS_EQUIPMENT_PTR_MARSHALL_HELPER(in, out, func)                      \
+  if (in.m_##func && in.m_##func->IsValid()) {                                              \
+    io::BiogearsEquipment::Marshall(*in.m_##func, out.func());                              \
+  } /*else if (in.m_##func) {                                                               \
+    throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
+  }*/
 
 namespace biogears {
 class AnesthesiaMachine;
 class ECG;
 class Inhaler;
+class SESystem;
+class BioGears;
+class SESubstanceManager;
 
 namespace io {
   class BIOGEARS_PRIVATE_API BiogearsEquipment {
   public:
+    // class Factories;
+    static std::unique_ptr<SESystem> factory(CDM::SystemData const* systemData, biogears::BioGears& bgData);
+
+    static std::unique_ptr<CDM::SystemData> factory(const SESystem* data);
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);

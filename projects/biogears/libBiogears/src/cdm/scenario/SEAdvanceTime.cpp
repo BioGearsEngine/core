@@ -39,24 +39,6 @@ bool SEAdvanceTime::IsValid() const
   return HasTime() && m_Time->IsValid();
 }
 //-----------------------------------------------------------------------------
-bool SEAdvanceTime::Load(const CDM::AdvanceTimeData& in, std::default_random_engine *rd)
-{
-  io::Actions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::AdvanceTimeData* SEAdvanceTime::Unload() const
-{
-  CDM::AdvanceTimeData* data = new CDM::AdvanceTimeData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEAdvanceTime::Unload(CDM::AdvanceTimeData& data) const
-{
-  io::Actions::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 void SEAdvanceTime::ToString(std::ostream& str) const
 {
   if (HasComment())

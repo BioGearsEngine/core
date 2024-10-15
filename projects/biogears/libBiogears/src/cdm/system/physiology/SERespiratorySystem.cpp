@@ -179,28 +179,6 @@ const SEScalar* SERespiratorySystem::GetScalar(const std::string& name)
 }
 //-------------------------------------------------------------------------------
 
-bool SERespiratorySystem::Load(const CDM::RespiratorySystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::RespiratorySystemData* SERespiratorySystem::Unload() const
-{
-  CDM::RespiratorySystemData* data = new CDM::RespiratorySystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SERespiratorySystem::Unload(CDM::RespiratorySystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
-
 bool SERespiratorySystem::HasAlveolarArterialGradient() const
 {
   return m_AlveolarArterialGradient == nullptr ? false : m_AlveolarArterialGradient->IsValid();

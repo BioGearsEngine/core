@@ -15,8 +15,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/enums/SEPropertyEnums.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class SESubstance;
@@ -38,15 +36,6 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::AnesthesiaMachineChamberData& in);
-  virtual CDM::AnesthesiaMachineChamberData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::AnesthesiaMachineChamberData& data) const;
-
-  virtual void Merge(const SEAnesthesiaMachineChamber& from);
-
-public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
@@ -68,6 +57,9 @@ public:
 
   bool operator==(SEAnesthesiaMachineChamber const& rhs) const;
   bool operator!=(SEAnesthesiaMachineChamber const& rhs) const;
+
+protected:
+  virtual void Merge(const SEAnesthesiaMachineChamber& from);
 
 protected:
   SEOnOff m_State;

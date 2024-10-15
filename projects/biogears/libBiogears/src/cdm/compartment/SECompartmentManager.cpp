@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/SECompartmentTransportGraph.inl>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartmentLink.inl>
+#include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/schema/cdm/Compartment.hxx>
@@ -97,25 +98,6 @@ void SECompartmentManager::Clear()
   m_TissueName2Compartments.clear();
 }
 
-
-
-bool SECompartmentManager::Load(const CDM::CompartmentManagerData& in, SECircuitManager* circuits)
-{       
-  io::Compartment::UnMarshall(in, *this, circuits);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::CompartmentManagerData* SECompartmentManager::Unload() const
-{
-  CDM::CompartmentManagerData* data = new CDM::CompartmentManagerData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SECompartmentManager::Unload(CDM::CompartmentManagerData& data) const
-{
-  io::Compartment::Marshall(*this, data);
-}
 //-------------------------------------------------------------------------------
 bool SECompartmentManager::HasCompartment(SECompartmentType type, const char* name) const
 {

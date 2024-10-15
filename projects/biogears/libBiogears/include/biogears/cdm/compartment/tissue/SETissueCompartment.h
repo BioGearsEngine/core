@@ -16,23 +16,16 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/compartment/SECompartment.h>
-#include <biogears/schema/cdm/Compartment.hxx>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include <vector>
 #include <map>
 #include <string>
 
 namespace biogears {
-class SEScalar0To1;
 class SESubstance;
 class SESubstanceManager;
 class SELiquidCompartment;
-class SEScalarMassPerMass;
-class MassPerMassUnit;
-class SEScalarElectricPotential;
-class ElectricPotentialUnit;
-class SEScalarMass;
-class MassUnit;
 class SECompartmentManager;
 
 namespace io {
@@ -51,11 +44,6 @@ public:
 
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::TissueCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::TissueCompartmentData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::TissueCompartmentData& data);
 
 public:
   virtual const SEScalar* GetScalar(const char* name) override;
@@ -123,8 +111,10 @@ protected:
   std::vector<SETissueCompartment*> m_Leaves;
 };
 }                                     //namespac biogears
+#pragma warning(default : 4661)
 
 namespace std {
-  BG_EXT template class BIOGEARS_API vector<biogears::SETissueCompartment*> ;
-  BG_EXT template class BIOGEARS_API map<string, biogears::SETissueCompartment*> ;
+  extern template class vector<biogears::SETissueCompartment*> ;
+  extern template class map<string, biogears::SETissueCompartment*> ;
 }
+#pragma warning(disable : 4661)

@@ -19,18 +19,19 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
-#define CDM_ANESTHESIA_ACTIONS_MARSHALL_HELPER(in, out, func)                       \
+#define CDM_ANESTHESIA_ACTIONS_PTR_MARSHALL_HELPER(in, out, func)                       \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::AnesthesiaActions::Marshall(*in.m_##func, out.func());                     \
   }
 
-#define CDM_OPTIONAL_ANESTHESIA_ACTIONS_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_ANESTHESIA_ACTIONS_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                                    \
     io::AnesthesiaActions::Marshall(*in.m_##func, out.func());        \
   }
 
 namespace biogears {
+class SEAction;
 class SEAnesthesiaMachineActionCollection;
 class SEAnesthesiaMachineAction;
 class SEAnesthesiaMachineConfiguration;
@@ -46,10 +47,15 @@ class SEVentilatorPressureLoss;
 class SEYPieceDisconnect;
 class SEOxygenWallPortPressureLoss;
 class SEOxygenTankPressureLoss;
+class SESubstanceManager;
 
 namespace io {
   class BIOGEARS_PRIVATE_API AnesthesiaActions {
   public:
+    //Factories
+    static std::unique_ptr<CDM::AnesthesiaMachineActionData> factory(const SEAnesthesiaMachineAction*);
+    static std::unique_ptr<SEAction> factory(CDM::AnesthesiaMachineActionData const* patientActionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEAnesthesiaMachineActionCollection& in, std::vector<std::unique_ptr<CDM::ActionData>>& out);
     //
     static void Marshall(const SEAnesthesiaMachineActionCollection&, std::vector<CDM::ActionData*>& out);
     //template <typename SE, typename XSD>  option
@@ -99,8 +105,6 @@ namespace io {
     //class SEOxygenTankPressureLoss
     static void UnMarshall(const CDM::OxygenTankPressureLossData& in, SEOxygenTankPressureLoss& out, std::default_random_engine* rd = nullptr);
     static void Marshall(const SEOxygenTankPressureLoss& in, CDM::OxygenTankPressureLossData& out);
-    //Factories
-    static std::unique_ptr<CDM::AnesthesiaMachineActionData> factory(const SEAnesthesiaMachineAction*);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>

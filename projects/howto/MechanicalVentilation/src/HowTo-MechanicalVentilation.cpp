@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>
 #include <biogears/cdm/patient/conditions/SEImpairedAlveolarExchange.h>
 #include <biogears/cdm/patient/conditions/SELobarPneumonia.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>

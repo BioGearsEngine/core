@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Nervous.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/patient/actions/SESleep.h>
@@ -35,7 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGears.h>
 
 #include "biogears/math/angles.h"
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4275)
@@ -151,123 +153,6 @@ void Nervous::Initialize()
   //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorHeart ", m_OxygenAutoregulatorHeart);
   //m_data.GetDataTrack().Probe("m_OxygenAutoregulatorMuscle ", m_OxygenAutoregulatorMuscle);
 
-}
-
-bool Nervous::Load(const CDM::BioGearsNervousSystemData& in)
-{
-  if (!SENervousSystem::Load(in))
-    return false;
-  BioGearsSystem::LoadState();
-  // We assume state have to be after all stabilization
-  m_FeedbackActive = true;
-
-  m_AfferentChemoreceptor_Hz = in.AfferentChemoreceptor_Hz();
-  m_AfferentPulmonaryStretchReceptor_Hz = in.AfferentPulmonaryStrechReceptor_Hz();
-  m_AorticBaroreceptorStrain = in.AorticBaroreceptorStrain();
-  m_ArterialCarbonDioxideBaseline_mmHg = in.ArterialCarbonDioxideBaseline_mmHg();
-  m_ArterialOxygenBaseline_mmHg = in.ArterialOxygenBaseline_mmHg();
-  m_BaroreceptorOperatingPoint_mmHg = in.BaroreceptorOperatingPoint_mmHg();
-  m_CardiopulmonaryInputBaseline_mmHg = in.CardiopulmonaryInputBaseline_mmHg();
-  m_CardiopulmonaryInput_mmHg = in.CardiopulmonaryInput_mmHg();
-  m_CarotidBaroreceptorStrain = in.CarotidBaroreceptorStrain();
-  m_CentralFrequencyDelta_Per_min = in.CentralFrequencyDelta_Per_min();
-  m_CentralPressureDelta_cmH2O = in.CentralPressureDelta_cmH2O();
-  m_CerebralArteriesEffectors_Large.clear();
-  for (auto effectorLarge : in.CerebralArteriesEffectors_Large()) {
-    m_CerebralArteriesEffectors_Large.push_back(effectorLarge);
-  }
-  m_CerebralArteriesEffectors_Small.clear();
-  for (auto effectorSmall : in.CerebralArteriesEffectors_Small()) {
-    m_CerebralArteriesEffectors_Small.push_back(effectorSmall);
-  }
-  m_CerebralBloodFlowBaseline_mL_Per_s = in.CerebralBloodFlowBaseline_mL_Per_s();
-  m_CerebralBloodFlowInput_mL_Per_s = in.CerebralBloodFlowInput_mL_Per_s();
-  m_CerebralOxygenSaturationBaseline = in.CerebralOxygenSaturationBaseline();
-  m_CerebralPerfusionPressureBaseline_mmHg = in.CerebralPerfusionPressureBaseline_mmHg();
-  m_ChemoreceptorFiringRateSetPoint_Hz = in.ChemoreceptorFiringRateSetPoint_Hz();
-  m_ComplianceModifier = in.ComplianceModifier();
-  m_HeartElastanceModifier = in.HeartElastanceModifier();
-  m_HeartOxygenBaseline = in.HeartOxygenBaseline();
-  m_HeartRateModifierSympathetic = in.HeartRateModifierSympathetic();
-  m_HeartRateModifierVagal = in.HeartRateModifierVagal();
-  m_HypercapniaThresholdHeart = in.HypercapniaThresholdHeart();
-  m_HypercapniaThresholdPeripheral = in.HypercapniaThresholdPeripheral();
-  m_HypoxiaThresholdHeart = in.HypoxiaThresholdHeart();
-  m_HypoxiaThresholdPeripheral = in.HypoxiaThresholdPeripheral();
-  m_MeanLungVolume_L = in.MeanLungVolume_L();
-  m_MuscleOxygenBaseline = in.MuscleOxygenBaseline();
-  m_OxygenAutoregulatorHeart = in.OxygenAutoregulatorHeart();
-  m_OxygenAutoregulatorMuscle = in.OxygenAutoregulatorMuscle();
-  m_PeripheralBloodGasInteractionBaseline_Hz = in.ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz();
-  m_PeripheralFrequencyDelta_Per_min = in.PeripheralFrequencyDelta_Per_min();
-  m_PeripheralPressureDelta_cmH2O = in.PeripheralPressureDelta_cmH2O();
-  m_ResistanceModifierExtrasplanchnic = in.ResistanceModifierExtrasplanchnic();
-  m_ResistanceModifierMuscle = in.ResistanceModifierMuscle();
-  m_ResistanceModifierSplanchnic = in.ResistanceModifierSplanchnic();
-  m_SympatheticPeripheralSignalBaseline_Hz = in.SympatheticPeripheralSignalBaseline();
-  m_SympatheticSinoatrialSignalBaseline_Hz = in.SympatheticSinoatrialSignalBaseline();
-  m_SympatheticPeripheralSignalFatigue = in.SympatheticPeripheralSignalFatigue();
-  m_VagalSignalBaseline_Hz = in.VagalSignalBaseline();
-
-  return true;
-}
-CDM::BioGearsNervousSystemData* Nervous::Unload() const
-{
-  CDM::BioGearsNervousSystemData* data = new CDM::BioGearsNervousSystemData();
-  Unload(*data);
-  return data;
-}
-void Nervous::Unload(CDM::BioGearsNervousSystemData& data) const
-{
-  SENervousSystem::Unload(data);
-  data.AfferentChemoreceptor_Hz(m_AfferentChemoreceptor_Hz);
-  data.AfferentPulmonaryStrechReceptor_Hz(m_AfferentPulmonaryStretchReceptor_Hz);
-  data.AorticBaroreceptorStrain(m_AorticBaroreceptorStrain);
-  data.AttentionLapses(m_AttentionLapses);
-  data.ArterialCarbonDioxideBaseline_mmHg(m_ArterialCarbonDioxideBaseline_mmHg);
-  data.ArterialOxygenBaseline_mmHg(m_ArterialOxygenBaseline_mmHg);
-  data.BaroreceptorOperatingPoint_mmHg(m_BaroreceptorOperatingPoint_mmHg);
-  data.BiologicalDebt(m_BiologicalDebt);
-  data.CardiopulmonaryInputBaseline_mmHg(m_CardiopulmonaryInputBaseline_mmHg);
-  data.CardiopulmonaryInput_mmHg(m_CardiopulmonaryInput_mmHg);
-  data.CarotidBaroreceptorStrain(m_CarotidBaroreceptorStrain);
-  data.CentralFrequencyDelta_Per_min(m_CentralFrequencyDelta_Per_min);
-  data.CentralPressureDelta_cmH2O(m_CentralPressureDelta_cmH2O);
-  for (auto eLarge : m_CerebralArteriesEffectors_Large) {
-    data.CerebralArteriesEffectors_Large().push_back(eLarge);
-  }
-  for (auto eSmall : m_CerebralArteriesEffectors_Small) {
-    data.CerebralArteriesEffectors_Small().push_back(eSmall);
-  }
-
-  data.CerebralBloodFlowBaseline_mL_Per_s(m_CerebralBloodFlowBaseline_mL_Per_s);
-  data.CerebralBloodFlowInput_mL_Per_s(m_CerebralBloodFlowInput_mL_Per_s);
-  data.CerebralOxygenSaturationBaseline(m_CerebralOxygenSaturationBaseline);
-  data.CerebralPerfusionPressureBaseline_mmHg(m_CerebralPerfusionPressureBaseline_mmHg);
-  data.ChemoreceptorFiringRateSetPoint_Hz(m_ChemoreceptorFiringRateSetPoint_Hz);
-  data.ChemoreceptorPeripheralBloodGasInteractionBaseline_Hz(m_PeripheralBloodGasInteractionBaseline_Hz);
-  data.ComplianceModifier(m_ComplianceModifier);
-  data.HeartElastanceModifier(m_HeartElastanceModifier);
-  data.HeartOxygenBaseline(m_HeartOxygenBaseline);
-  data.HeartRateModifierSympathetic(m_HeartRateModifierSympathetic);
-  data.HeartRateModifierVagal(m_HeartRateModifierVagal);
-  data.HypercapniaThresholdHeart(m_HypercapniaThresholdHeart);
-  data.HypercapniaThresholdPeripheral(m_HypercapniaThresholdPeripheral);
-  data.HypoxiaThresholdHeart(m_HypoxiaThresholdHeart);
-  data.HypoxiaThresholdPeripheral(m_HypoxiaThresholdPeripheral);
-  data.MeanLungVolume_L(m_MeanLungVolume_L);
-  data.MuscleOxygenBaseline(m_MuscleOxygenBaseline);
-  data.OxygenAutoregulatorHeart(m_OxygenAutoregulatorHeart);
-  data.OxygenAutoregulatorMuscle(m_OxygenAutoregulatorMuscle);
-  data.PeripheralFrequencyDelta_Per_min(m_PeripheralFrequencyDelta_Per_min);
-  data.PeripheralPressureDelta_cmH2O(m_PeripheralPressureDelta_cmH2O);
-  data.ResistanceModifierExtrasplanchnic(m_ResistanceModifierExtrasplanchnic);
-  data.ResistanceModifierMuscle(m_ResistanceModifierMuscle);
-  data.ResistanceModifierSplanchnic(m_ResistanceModifierSplanchnic);
-  data.SympatheticPeripheralSignalBaseline(m_SympatheticPeripheralSignalBaseline_Hz);
-  data.SympatheticSinoatrialSignalBaseline(m_SympatheticSinoatrialSignalBaseline_Hz);
-  data.SympatheticPeripheralSignalFatigue(m_SympatheticPeripheralSignalFatigue);
-  data.VagalSignalBaseline(m_VagalSignalBaseline_Hz);
 }
 
 //--------------------------------------------------------------------------------------------------

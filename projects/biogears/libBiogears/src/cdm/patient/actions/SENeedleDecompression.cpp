@@ -48,24 +48,6 @@ void SENeedleDecompression::SetActive(bool b)
   m_State = b ? SEOnOff::On : SEOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SENeedleDecompression::Load(const CDM::NeedleDecompressionData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::NeedleDecompressionData* SENeedleDecompression::Unload() const
-{
-  CDM::NeedleDecompressionData* data(new CDM::NeedleDecompressionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SENeedleDecompression::Unload(CDM::NeedleDecompressionData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 SESide SENeedleDecompression::GetSide() const
 {
   return m_Side;

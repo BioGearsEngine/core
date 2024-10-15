@@ -38,24 +38,6 @@ bool SEChestCompression::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SEChestCompression::Load(const CDM::ChestCompressionData& in)
-{
-  io::PatientActions::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ChestCompressionData* SEChestCompression::Unload() const
-{
-  CDM::ChestCompressionData* data(new CDM::ChestCompressionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEChestCompression::Unload(CDM::ChestCompressionData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 void SEChestCompression::ToString(std::ostream& str) const
 {
   str << "Patient Action : Chest Compression";

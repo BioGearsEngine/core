@@ -20,18 +20,19 @@ namespace biogears {
 class SESubstanceManager;
 class SEAction;
 class PhysiologyEngine;
+namespace io {
+  class Actions;
+}
 
 class BIOGEARS_API SEActionManager : public Loggable {
+	friend class io::Actions; 
 public:
   SEActionManager(SESubstanceManager&);
   ~SEActionManager();
 
   void Clear();
 
-  void Unload(std::vector<CDM::ActionData*>& to);
-
   bool ProcessAction(const SEAction& action, const PhysiologyEngine& engine);
-  bool ProcessAction(const CDM::ActionData& in, const PhysiologyEngine& engine);
 
   SEEnvironmentActionCollection& GetEnvironmentActions() { return m_EnvironmentActions; }
   SEPatientActionCollection& GetPatientActions() { return m_PatientActions; }
@@ -44,8 +45,6 @@ protected:
   SEPatientActionCollection m_PatientActions;
   SEAnesthesiaMachineActionCollection m_AnesthesiaMachineActions;
   SEInhalerActionCollection m_InhalerActions;
-
-  std::vector<CDM::ActionData*> m_ProcessedActions;
 
   std::stringstream m_ss;
 };

@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -9,10 +10,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
-#include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
-
 #include "io/cdm/Environment.h"
-
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
@@ -25,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/io/io-manager.h>
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/environments.h>
@@ -72,7 +71,7 @@ void SEEnvironmentalConditions::Clear()
   m_cAmbientAerosols.clear();
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentalConditions::IsValid()
+bool SEEnvironmentalConditions::IsValid() const
 {
   return (m_SurroundingType != SESurroundingType::Invalid)
     && (m_AmbientTemperature != nullptr
@@ -114,24 +113,6 @@ const SEScalar* SEEnvironmentalConditions::GetScalar(const std::string& name)
     return &GetRespirationAmbientTemperature();
   // I did not support for getting a specific gas/aerosol scalars due to lack of coffee
   return nullptr;
-}
-//-----------------------------------------------------------------------------
-bool SEEnvironmentalConditions::Load(const CDM::EnvironmentalConditionsData& in)
-{
-  io::Environment::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::EnvironmentalConditionsData* SEEnvironmentalConditions::Unload() const
-{
-  CDM::EnvironmentalConditionsData* data = new CDM::EnvironmentalConditionsData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::Unload(CDM::EnvironmentalConditionsData& data) const
-{
-  io::Environment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 void SEEnvironmentalConditions::Merge(const SEEnvironmentalConditions& from)
@@ -180,7 +161,7 @@ void SEEnvironmentalConditions::Merge(const SEEnvironmentalConditions& from)
 
   if (from.HasAmbientAerosol()) {
     for (SESubstanceConcentration* sc : from.m_AmbientAerosols) {
-      SESubstanceConcentration& mine = GetAmbientAerosol(sc->GetSubstance());
+      auto& mine = GetAmbientAerosol(sc->GetSubstance());
       mine.GetConcentration().Set(sc->GetConcentration());
     }
   }
@@ -215,9 +196,8 @@ bool SEEnvironmentalConditions::Load(const std::string& given)
     Error(ss);
     return false;
   }
-  if (!Load(*eData))
-    return false;
 
+  io::Environment::UnMarshall(*eData, *this);
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -447,10 +427,10 @@ bool SEEnvironmentalConditions::HasAmbientGas() const
   return m_AmbientGases.size() == 0 ? false : true;
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentalConditions::HasAmbientGas(const SESubstance& s) const
+bool SEEnvironmentalConditions::HasAmbientGas(SESubstanceDefinition const& s) const
 {
   for (const SESubstanceFraction* sf : m_AmbientGases) {
-    if (&s == &sf->GetSubstance())
+    if (s == sf->GetSubstance())
       return true;
   }
   return false;
@@ -466,10 +446,10 @@ const std::vector<const SESubstanceFraction*>& SEEnvironmentalConditions::GetAmb
   return m_cAmbientGases;
 }
 //-----------------------------------------------------------------------------
-SESubstanceFraction& SEEnvironmentalConditions::GetAmbientGas(SESubstance& s)
+SESubstanceFraction& SEEnvironmentalConditions::GetAmbientGas(SESubstanceDefinition const& s)
 {
   for (SESubstanceFraction* sf : m_AmbientGases) {
-    if (&s == &sf->GetSubstance())
+    if (s == sf->GetSubstance())
       return *sf;
   }
   SESubstanceFraction* sf = new SESubstanceFraction(s);
@@ -479,30 +459,30 @@ SESubstanceFraction& SEEnvironmentalConditions::GetAmbientGas(SESubstance& s)
   return *sf;
 }
 //-----------------------------------------------------------------------------
-const SESubstanceFraction* SEEnvironmentalConditions::GetAmbientGas(const SESubstance& s) const
+const SESubstanceFraction* SEEnvironmentalConditions::GetAmbientGas(SESubstanceDefinition const& s) const
 {
   const SESubstanceFraction* sf = nullptr;
   for (unsigned int i = 0; i < m_AmbientGases.size(); i++) {
     sf = m_AmbientGases[i];
-    if (&s == &sf->GetSubstance())
+    if (s == sf->GetSubstance())
       return sf;
   }
   return sf;
 }
 //-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::AddAmbientGas(SESubstance const& substance, SEScalarFraction const& fraction)
+void SEEnvironmentalConditions::AddAmbientGas(SESubstanceDefinition const& substance, SEScalarFraction const& fraction)
 {
   auto substanceFraction = new SESubstanceFraction(substance, fraction);
   m_AmbientGases.push_back(substanceFraction);
   m_cAmbientGases.push_back(substanceFraction);
 }
 //-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::RemoveAmbientGas(const SESubstance& s)
+void SEEnvironmentalConditions::RemoveAmbientGas(SESubstanceDefinition const& s)
 {
   const SESubstanceFraction* sf;
   for (unsigned int i = 0; i < m_AmbientGases.size(); i++) {
     sf = m_AmbientGases[i];
-    if (&s == &sf->GetSubstance()) {
+    if (s == sf->GetSubstance()) {
       m_AmbientGases.erase(m_AmbientGases.begin() + i);
       m_cAmbientGases.erase(m_cAmbientGases.begin() + i);
       delete sf;
@@ -521,10 +501,10 @@ bool SEEnvironmentalConditions::HasAmbientAerosol() const
   return m_AmbientAerosols.size() == 0 ? false : true;
 }
 //-----------------------------------------------------------------------------
-bool SEEnvironmentalConditions::HasAmbientAerosol(const SESubstance& substance) const
+bool SEEnvironmentalConditions::HasAmbientAerosol(SESubstanceDefinition const& substance) const
 {
   for (const SESubstanceConcentration* sc : m_AmbientAerosols) {
-    if (&substance == &sc->GetSubstance())
+    if (substance == sc->GetSubstance())
       return true;
   }
   return false;
@@ -540,10 +520,10 @@ const std::vector<const SESubstanceConcentration*>& SEEnvironmentalConditions::G
   return m_cAmbientAerosols;
 }
 //-----------------------------------------------------------------------------
-SESubstanceConcentration& SEEnvironmentalConditions::GetAmbientAerosol(SESubstance& substance)
+SESubstanceConcentration& SEEnvironmentalConditions::GetAmbientAerosol(SESubstanceDefinition const & substance)
 {
   for (SESubstanceConcentration* sc : m_AmbientAerosols) {
-    if (&substance == &sc->GetSubstance())
+    if (substance == sc->GetSubstance())
       return *sc;
   }
   SESubstanceConcentration* sc = new SESubstanceConcentration(substance);
@@ -553,30 +533,30 @@ SESubstanceConcentration& SEEnvironmentalConditions::GetAmbientAerosol(SESubstan
   return *sc;
 }
 //-----------------------------------------------------------------------------
-const SESubstanceConcentration* SEEnvironmentalConditions::GetAmbientAerosol(const SESubstance& substance) const
+const SESubstanceConcentration* SEEnvironmentalConditions::GetAmbientAerosol(const SESubstanceDefinition& substance) const
 {
   const SESubstanceConcentration* sc = nullptr;
   for (unsigned int i = 0; i < m_AmbientAerosols.size(); i++) {
     sc = m_AmbientAerosols[i];
-    if (&substance == &sc->GetSubstance())
+    if (substance == sc->GetSubstance())
       return sc;
   }
   return sc;
 }
 //-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::AddAmbientAerosol(const SESubstance& substance, SEScalarMassPerVolume const& concentration)
+void SEEnvironmentalConditions::AddAmbientAerosol(SESubstanceDefinition const& substance, SEScalarMassPerVolume const& concentration)
 {
   auto substanceConcentration = new SESubstanceConcentration { substance, concentration };
   m_AmbientAerosols.push_back(substanceConcentration);
   m_cAmbientAerosols.push_back(substanceConcentration);
 }
 //-----------------------------------------------------------------------------
-void SEEnvironmentalConditions::RemoveAmbientAerosol(const SESubstance& substance)
+void SEEnvironmentalConditions::RemoveAmbientAerosol(SESubstanceDefinition const& substance)
 {
   const SESubstanceConcentration* sc;
   for (unsigned int i = 0; i < m_AmbientAerosols.size(); i++) {
     sc = m_AmbientAerosols[i];
-    if (&substance == &sc->GetSubstance()) {
+    if (substance == sc->GetSubstance()) {
       m_AmbientAerosols.erase(m_AmbientAerosols.begin() + i);
       m_cAmbientAerosols.erase(m_cAmbientAerosols.begin() + i);
       delete sc;
@@ -595,8 +575,11 @@ bool SEEnvironmentalConditions::operator==(SEEnvironmentalConditions const& rhs)
   if (this == &rhs)
     return true;
 
-  bool equivilant = m_Name == rhs.m_Name
-    && ((m_AirDensity && rhs.m_AirDensity) ? m_AirDensity->operator==(*rhs.m_AirDensity) : m_AirDensity == rhs.m_AirDensity)
+  bool equivilant = m_Name == rhs.m_Name;
+
+#if defined(BIOGEARS_RIGOROUS_EQUIVILANCE_CHECKS) && !defined(BIOGEARS_LINIENT_ENVIRONMENT_CHECKS)
+
+  equivilant &= ((m_AirDensity && rhs.m_AirDensity) ? m_AirDensity->operator==(*rhs.m_AirDensity) : m_AirDensity == rhs.m_AirDensity)
     && ((m_AirVelocity && rhs.m_AirVelocity) ? m_AirVelocity->operator==(*rhs.m_AirVelocity) : m_AirVelocity == rhs.m_AirVelocity)
     && ((m_AmbientTemperature && rhs.m_AmbientTemperature) ? m_AmbientTemperature->operator==(*rhs.m_AmbientTemperature) : m_AmbientTemperature == rhs.m_AmbientTemperature)
     && ((m_AtmosphericPressure && rhs.m_AtmosphericPressure) ? m_AtmosphericPressure->operator==(*rhs.m_AtmosphericPressure) : m_AtmosphericPressure == rhs.m_AtmosphericPressure)
@@ -628,6 +611,7 @@ bool SEEnvironmentalConditions::operator==(SEEnvironmentalConditions const& rhs)
       }
     }
   }
+#endif
   return equivilant;
 }
 bool SEEnvironmentalConditions::operator!=(SEEnvironmentalConditions const& rhs) const

@@ -39,22 +39,6 @@ void SEElectricalCircuitPath::Clear()
   SECircuitPath::Clear();
 }
 
-bool SEElectricalCircuitPath::Load(const CDM::ElectricalCircuitPathData& in)
-{
-  io::Circuit::UnMarshall(in, *this);
-  return HasValidElements();
-}
-CDM::ElectricalCircuitPathData* SEElectricalCircuitPath::Unload() const
-{
-  CDM::ElectricalCircuitPathData* data = new CDM::ElectricalCircuitPathData();
-  Unload(*data);
-  return data;
-}
-void SEElectricalCircuitPath::Unload(CDM::ElectricalCircuitPathData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
-
 ////////////////////////////////
 // Electrical Resistance Types//
 ////////////////////////////////

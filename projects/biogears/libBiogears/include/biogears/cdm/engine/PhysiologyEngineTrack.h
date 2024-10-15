@@ -31,9 +31,13 @@ specific language governing permissions and limitations under the License.
 #include <ostream>
 #include <string>
 
+#pragma warning(disable : 4661)
+
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SESystem*>;
+extern template class vector<biogears::SESystem*>;
 }
+#pragma warning(default : 4661)
+
 namespace biogears {
 
 enum class CompartmentUpdate { None,
@@ -86,10 +90,12 @@ public:
 };
 
 } // namespac biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
+extern template class map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
 } // Namespace std
+#pragma warning(default : 4661)
 
 namespace biogears {
 std::ostream& operator<<(std::ostream& os, SEDataRequestScalar& v);

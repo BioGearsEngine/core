@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Substance.hxx>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 
 namespace biogears {
@@ -26,13 +25,12 @@ class BIOGEARS_API SESubstanceTissuePharmacokinetics : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger);
+  SESubstanceTissuePharmacokinetics(SESubstanceTissuePharmacokinetics const& obj);
+  SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger = nullptr);
   virtual ~SESubstanceTissuePharmacokinetics();
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::SubstanceTissuePharmacokineticsData& in);
-  virtual CDM::SubstanceTissuePharmacokineticsData* Unload() const;
 public:
   const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
@@ -46,9 +44,6 @@ public:
 
   bool operator==( const SESubstanceTissuePharmacokinetics& rhs) const;
   bool operator!=( const SESubstanceTissuePharmacokinetics& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceTissuePharmacokineticsData& data) const;
 
 protected:
   std::string m_Name;

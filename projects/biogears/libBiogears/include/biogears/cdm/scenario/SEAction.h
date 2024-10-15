@@ -18,7 +18,6 @@ specific language governing permissions and limitations under the License.
 
 #include <random>
 
-CDM_BIND_DECL(ActionData);
 
 namespace biogears {
 class SESubstanceManager;
@@ -45,16 +44,9 @@ public:
   *  This method will encapsulate that logic in a single function */
   virtual bool IsActive() const { return IsValid(); }
 
-  static SEAction* newFromBind(const CDM::ActionData& action, SESubstanceManager& substances, std::default_random_engine *rd = nullptr);
-
-  virtual bool Load(const CDM::ActionData& in);
-  virtual CDM::ActionData* Unload() const;
 
   bool operator==(const SEAction& rhs) const;
   bool operator!=(const SEAction& rhs) const;
-
-protected:
-  void Unload(CDM::ActionData& data) const;
 
 public:
   virtual const char* GetComment() const;
@@ -78,6 +70,9 @@ inline std::ostream& operator<<(std::ostream& out, const SEAction& a)
 }
 }//namespace biogears
 
+#pragma warning(disable : 4661)
+
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEAction*>;
+extern template class vector<biogears::SEAction*>;
 }
+#pragma warning(default : 4661)

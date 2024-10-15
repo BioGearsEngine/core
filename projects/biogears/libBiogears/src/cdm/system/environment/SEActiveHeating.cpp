@@ -11,8 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
 
-#include "io/cdm/Environment.h"
-
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarPower.h>
@@ -47,7 +45,7 @@ void SEActiveHeating::Reset()
 //-----------------------------------------------------------------------------
 const SEScalar* SEActiveHeating::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEActiveHeating::GetScalar(const std::string& name)
@@ -59,24 +57,6 @@ const SEScalar* SEActiveHeating::GetScalar(const std::string& name)
   if (name.compare("SurfaceAreaFraction") == 0)
     return &GetSurfaceAreaFraction();
   return nullptr;
-}
-//-----------------------------------------------------------------------------
-bool SEActiveHeating::Load(const CDM::ActiveHeatingData& in, std::default_random_engine *rd)
-{
-  io::Environment::UnMarshall(in, *this, rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ActiveHeatingData* SEActiveHeating::Unload() const
-{
-  CDM::ActiveHeatingData* data = new CDM::ActiveHeatingData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEActiveHeating::Unload(CDM::ActiveHeatingData& data) const
-{
-  io::Environment::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEActiveHeating::HasPower() const
@@ -146,6 +126,13 @@ void SEActiveHeating::ToString(std::ostream& str) const
   str << "\n\tSurfaceAreaFraction :";
   HasSurfaceAreaFraction() ? str << *m_SurfaceAreaFraction : str << "NaN";
   str << std::flush;
+}
+//-----------------------------------------------------------------------------
+bool SEActiveHeating::IsValid() const
+{
+  return m_Power
+    || m_SurfaceArea
+    || m_SurfaceAreaFraction;
 }
 //-----------------------------------------------------------------------------
 bool SEActiveHeating::operator==(SEActiveHeating const& rhs) const

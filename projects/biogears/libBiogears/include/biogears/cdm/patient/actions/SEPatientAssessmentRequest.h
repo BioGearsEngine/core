@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 
@@ -37,14 +36,8 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::PatientAssessmentRequestData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::PatientAssessmentRequestData* Unload() const override;
-
   bool operator==(const SEPatientAssessmentRequest& rhs) const;
   bool operator!=(const SEPatientAssessmentRequest& rhs) const;
-
-protected:
-  virtual void Unload(CDM::PatientAssessmentRequestData& data) const;
 
 public:
   virtual SEPatientAssessmentType GetType() const;

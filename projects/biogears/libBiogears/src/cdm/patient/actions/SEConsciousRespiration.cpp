@@ -52,28 +52,6 @@ bool SEConsciousRespiration::IsActive() const
   return SEPatientAction::IsActive();
 }
 //-------------------------------------------------------------------------------
-
-bool SEConsciousRespiration::Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::ConsciousRespirationData* SEConsciousRespiration::Unload() const
-{
-  CDM::ConsciousRespirationData* data(new CDM::ConsciousRespirationData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEConsciousRespiration::Unload(CDM::ConsciousRespirationData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
-
 SEConsciousRespirationCommand* SEConsciousRespiration::GetActiveCommand()
 {
   if (!m_Commands.empty())

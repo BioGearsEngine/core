@@ -17,9 +17,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/substance/SESubstancePhysicochemical.h>
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
-#include <biogears/schema/cdm/Substance.hxx>
-
-CDM_BIND_DECL(SubstancePharmacokineticsData)
 
 namespace biogears {
 namespace io {
@@ -27,15 +24,20 @@ namespace io {
 }
 } // namespace biogears
 
+#pragma warning(disable : 4661)
+
 namespace std {
-BG_EXT template class BIOGEARS_API map<string, biogears::SESubstanceTissuePharmacokinetics*>;
+extern template class map<string, biogears::SESubstanceTissuePharmacokinetics*>;
 }
+#pragma warning(default : 4661)
+
 namespace biogears {
 class BIOGEARS_API SESubstancePharmacokinetics : public Loggable {
   friend io::Substance;
 
 public:
-  SESubstancePharmacokinetics(Logger* logger);
+  SESubstancePharmacokinetics(SESubstancePharmacokinetics const& obj);
+  SESubstancePharmacokinetics(Logger* logger = nullptr);
   virtual ~SESubstancePharmacokinetics();
 
   virtual void Clear();
@@ -43,9 +45,6 @@ public:
 
   virtual const SEScalar* GetScalar(const std::string& name);
   virtual const SEScalar* GetScalar(const char* name);
-
-  virtual bool Load(const CDM::SubstancePharmacokineticsData& in);
-  virtual CDM::SubstancePharmacokineticsData* Unload() const;
 
   virtual bool HasPhysicochemicals() const;
   virtual SESubstancePhysicochemical& GetPhysicochemicals();
@@ -61,11 +60,9 @@ public:
   virtual void RemoveTissueKinetics(const char* name);
   virtual void RemoveTissueKinetics(const std::string& name);
 
+  SESubstancePharmacokinetics& operator=(SESubstancePharmacokinetics const& rhs);
   bool operator==(const SESubstancePharmacokinetics& rhs) const;
   bool operator!=(const SESubstancePharmacokinetics& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstancePharmacokineticsData& data) const;
 
 protected:
   SESubstancePhysicochemical* m_Physicochemicals;

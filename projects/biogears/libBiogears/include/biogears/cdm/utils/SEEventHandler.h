@@ -16,8 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/cdm/enums/SEAnesthesiaEnums.h>
 #include <biogears/cdm/utils/Logger.h>
-#include <biogears/schema/cdm/Anesthesia.hxx>
-#include <biogears/schema/cdm/Patient.hxx>
 
 namespace CDM = mil::tatrc::physiology::datamodel;
 

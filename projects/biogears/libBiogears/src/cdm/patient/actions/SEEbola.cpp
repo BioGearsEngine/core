@@ -43,24 +43,6 @@ SEEbola::SEEbola()
     return m_Severity == SEInfectionSeverity::Eliminated ? false : true;
   }
   //-------------------------------------------------------------------------------
-  bool SEEbola::Load(const CDM::EbolaData& in, std::default_random_engine *rd)
-  {
-    io::PatientActions::UnMarshall(in, *this, rd);
-    return true;
-  }
-  //-------------------------------------------------------------------------------
-  CDM::EbolaData* SEEbola::Unload() const
-  {
-    CDM::EbolaData* data(new CDM::EbolaData());
-    Unload(*data);
-    return data;
-  }
-  //-------------------------------------------------------------------------------
-  void SEEbola::Unload(CDM::EbolaData& data) const
-  {
-    io::PatientActions::Marshall(*this, data);
-  }
-  //-------------------------------------------------------------------------------
   SEInfectionSeverity SEEbola::GetSeverity() const
   {
     return m_Severity;

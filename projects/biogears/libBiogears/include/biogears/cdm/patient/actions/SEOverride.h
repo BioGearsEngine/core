@@ -30,7 +30,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTemperature.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 
@@ -54,12 +53,6 @@ public:
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
-
-  virtual bool Load(const CDM::OverrideData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::OverrideData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::OverrideData& data) const;
 
 public:
   SEOnOff GetOverrideState() const;

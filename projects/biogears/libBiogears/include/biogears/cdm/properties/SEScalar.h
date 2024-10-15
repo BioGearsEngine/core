@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 
 #include <random>
 
-CDM_BIND_DECL(ScalarData)
 
 namespace biogears {
 class SEGenericScalar;
@@ -42,6 +41,8 @@ protected:
 public:
   friend io::Property;
   SEScalar();
+  SEScalar(SEScalar const&);
+  SEScalar(SEScalar&&);
   SEScalar(double v, bool ro=false);
 
   virtual ~SEScalar();
@@ -52,21 +53,19 @@ public:
   Note that this does not affect bounds
   */
   virtual void Invalidate();
-  virtual void Load(const CDM::ScalarData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ScalarData* Unload() const;
 
   /**
    * Copies ONLY the value and unit
    * ONLY if the provided scalar is valid.
    */
-  bool Set(const SEScalar& s);
+  bool Set(SEScalar const& s);
 
   /**
    * Copies the entire contents
    * of the provided scalar to this.
    * Even if s is invalid.
    */
-  void Copy(const SEScalar& s);
+  void Copy(SEScalar const& s);
 
   virtual bool IsValid() const;
   bool IsInfinity() const { return std::isinf(m_value); }
@@ -81,16 +80,16 @@ public:
   virtual double GetValue() const;
   virtual void SetValue(double d);
 
-  double Increment(const SEScalar& s);
+  double Increment(SEScalar const& s);
   double IncrementValue(double d);
-  double Decrement(const SEScalar& s);
+  double Decrement(SEScalar const& s);
   double DecrementValue(double d);
-  double Multiply(const SEScalar& s);
+  double Multiply(SEScalar const& s);
   double MultiplyValue(double d);
-  double Divide(const SEScalar& s);
+  double Divide(SEScalar const& s);
   double DivideValue(double d);
 
-  bool Equals(const SEScalar& to) const;
+  bool Equals(SEScalar const& to) const;
 
   virtual std::string ToString() const;
 
@@ -101,42 +100,40 @@ public:
 
   static const std::string unitless;
 
-  SEScalar& operator=(const SEScalar& rhs);
+  SEScalar& operator=(SEScalar const& rhs);
+  SEScalar& operator=(SEScalar&& rhs);
 
-  bool operator<(const SEScalar& rhs) const;
-  bool operator<=(const SEScalar& rhs) const;
-  bool operator>(const SEScalar& rhs) const;
-  bool operator>=(const SEScalar& rhs) const;
+  bool operator<(SEScalar const& rhs) const;
+  bool operator<=(SEScalar const& rhs) const;
+  bool operator>(SEScalar const& rhs) const;
+  bool operator>=(SEScalar const& rhs) const;
 
-  bool operator==(const SEScalar& rhs) const { return Equals(rhs); }
-  bool operator!=(const SEScalar& rhs) const { return !Equals(rhs); }
+  bool operator==(SEScalar const& rhs) const { return Equals(rhs); }
+  bool operator!=(SEScalar const& rhs) const { return !Equals(rhs); }
 
-  SEScalar operator+(const SEScalar& rhs) const;
-  SEScalar& operator+=(const SEScalar& rhs);
-  SEScalar operator-(const SEScalar& rhs) const;
-  SEScalar& operator-=(const SEScalar& rhs);
-  SEScalar operator/(const SEScalar& rhs) const;
-  SEScalar& operator/=(const SEScalar& rhs);
-  SEScalar operator*(const SEScalar& rhs) const;
-  SEScalar& operator*=(const SEScalar& rhs);
+  SEScalar operator+(SEScalar const& rhs) const;
+  SEScalar& operator+=(SEScalar const& rhs);
+  SEScalar operator-(SEScalar const& rhs) const;
+  SEScalar& operator-=(SEScalar const& rhs);
+  SEScalar operator/(SEScalar const& rhs) const;
+  SEScalar& operator/=(SEScalar const& rhs);
+  SEScalar operator*(SEScalar const& rhs) const;
+  SEScalar& operator*=(SEScalar const& rhs);
 
-
-protected:
-  virtual void Unload(CDM::ScalarData& s) const;
 };
 //-------------------------------------------------------------------------------
-inline SEScalar operator+(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Increment(rhs); };
-inline SEScalar operator-(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Decrement(rhs); };
-inline SEScalar operator/(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Divide(rhs); };
-inline SEScalar operator*(double lhs, const SEScalar& rhs) { return SEScalar { lhs }.Multiply(rhs); };
-inline bool operator<(double lhs, const SEScalar& rhs) { return SEScalar { lhs } < rhs; };
-inline bool operator<=(double lhs, const SEScalar& rhs) { return SEScalar { lhs } <= rhs; };
-inline bool operator>(double lhs, const SEScalar& rhs) { return SEScalar { lhs } > rhs; };
-inline bool operator>=(double lhs, const SEScalar& rhs) { return SEScalar { lhs } >= rhs; };
-inline bool operator==(double lhs, const SEScalar& rhs) { return rhs.operator==(lhs); }
-inline bool operator!=(double lhs, const SEScalar& rhs) { return rhs.operator!=(lhs); }
+inline SEScalar operator+(double lhs, SEScalar const& rhs) { return SEScalar { lhs }.Increment(rhs); };
+inline SEScalar operator-(double lhs, SEScalar const& rhs) { return SEScalar { lhs }.Decrement(rhs); };
+inline SEScalar operator/(double lhs, SEScalar const& rhs) { return SEScalar { lhs }.Divide(rhs); };
+inline SEScalar operator*(double lhs, SEScalar const& rhs) { return SEScalar { lhs }.Multiply(rhs); };
+inline bool operator<(double lhs, SEScalar const& rhs) { return SEScalar { lhs } < rhs; };
+inline bool operator<=(double lhs, SEScalar const& rhs) { return SEScalar { lhs } <= rhs; };
+inline bool operator>(double lhs, SEScalar const& rhs) { return SEScalar { lhs } > rhs; };
+inline bool operator>=(double lhs, SEScalar const& rhs) { return SEScalar { lhs } >= rhs; };
+inline bool operator==(double lhs, SEScalar const& rhs) { return rhs.operator==(lhs); }
+inline bool operator!=(double lhs, SEScalar const& rhs) { return rhs.operator!=(lhs); }
 //-------------------------------------------------------------------------------
-inline std::ostream& operator<<(std::ostream& out, const SEScalar* s)
+inline std::ostream& operator<<(std::ostream& out, SEScalar const* s)
 {
   if (s == nullptr)
     out << SEScalar::NaN;
@@ -145,12 +142,12 @@ inline std::ostream& operator<<(std::ostream& out, const SEScalar* s)
   return out;
 }
 //-------------------------------------------------------------------------------
-inline std::ostream& operator<<(std::ostream& out, const SEScalar& s)
+inline std::ostream& operator<<(std::ostream& out, SEScalar const& s)
 {
   out << s.ToString();
   return out;
 }
-inline void Override(const SEScalar& from, SEScalar& to)
+inline void Override(SEScalar const& from, SEScalar& to)
 {
   bool b = to.IsReadOnly();
   to.SetReadOnly(false);

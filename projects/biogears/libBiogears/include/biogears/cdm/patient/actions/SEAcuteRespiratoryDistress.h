@@ -39,9 +39,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::AcuteRespiratoryDistressData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::AcuteRespiratoryDistressData* Unload() const override;
-
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
@@ -49,9 +46,6 @@ public:
 
   bool operator==(const SEAcuteRespiratoryDistress& rhs) const;
   bool operator!=(const SEAcuteRespiratoryDistress& rhs) const;
-
-protected:
-  virtual void Unload(CDM::AcuteRespiratoryDistressData& data) const;
 
 private:
   SEScalar0To1* m_Severity;

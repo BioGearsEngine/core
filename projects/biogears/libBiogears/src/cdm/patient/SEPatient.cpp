@@ -13,10 +13,21 @@ specific language governing permissions and limitations under the License.
 
 #include "io/cdm/Patient.h"
 #include <biogears/cdm/Serializer.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEScalarArea.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarNeg1To1.h>
+#include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/io/io-manager.h>
-
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/patients.h>
 #endif
@@ -122,7 +133,8 @@ bool SEPatient::Load(const std::string& patientFile)
     Error(ss);
     return false;
   }
-  return Load(*pData);
+  io::Patient::UnMarshall(*pData, *this);
+  return true;
 }
 //-----------------------------------------------------------------------------
 void SEPatient::Clear()
@@ -256,24 +268,6 @@ const SEScalar* SEPatient::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SEPatient::Load(const CDM::PatientData& in)
-{
-  io::Patient::UnMarshall(in, *this);
-
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::PatientData* SEPatient::Unload() const
-{
-  CDM::PatientData* data = new CDM::PatientData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEPatient::Unload(CDM::PatientData& data) const
-{
-  io::Patient::Marshall(*this, data);
-};
 void SEPatient::SetEventCallback(SEPatientEventType type, void (*callback)(bool))
 {
   m_EventCallbacks[type] = callback;
@@ -852,12 +846,12 @@ double SEPatient::GetHeight(const LengthUnit& unit) const
   return m_Height->GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-void SEPatient::CalculateWeightByBMI(const CDM::ScalarData& bmi)
+void SEPatient::CalculateWeightByBMI(const double& bmi)
 {
   if (!HasWeight()) {
     m_Weight = new SEScalarMass();
     double height_m = GetHeight(LengthUnit::m);
-    double weightByBMI_kg = bmi.value() * std::pow(height_m, 2.);
+    double weightByBMI_kg = bmi * std::pow(height_m, 2.);
 
     m_Weight->SetValue(weightByBMI_kg, MassUnit::kg);
     std::stringstream ss;
@@ -866,12 +860,12 @@ void SEPatient::CalculateWeightByBMI(const CDM::ScalarData& bmi)
   }
 }
 //-----------------------------------------------------------------------------
-void SEPatient::CalculateHeightByBMI(const CDM::ScalarData& bmi)
+void SEPatient::CalculateHeightByBMI(const double& bmi)
 {
   if (!HasHeight()) {
     m_Height = new SEScalarLength();
     double weight_kg = GetWeight(MassUnit::kg);
-    double heightByBMI_m = std::sqrt(weight_kg / bmi.value());
+    double heightByBMI_m = std::sqrt(weight_kg / bmi);
 
     m_Height->SetValue(heightByBMI_m, LengthUnit::m);
     std::stringstream ss;

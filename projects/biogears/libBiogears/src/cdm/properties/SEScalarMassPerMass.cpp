@@ -19,7 +19,7 @@ namespace biogears {
 const MassPerMassUnit MassPerMassUnit::ug_Per_kg("ug/kg");
 const MassPerMassUnit MassPerMassUnit::mg_Per_g("mg/g");
 
-template class SEScalarQuantity<MassPerMassUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassPerMassUnit>;
 
 MassPerMassUnit::MassPerMassUnit(const char* u)
   : MassPerMassUnit(std::string { u })
@@ -41,15 +41,7 @@ SEScalarMassPerMass::SEScalarMassPerMass()
 SEScalarMassPerMass::~SEScalarMassPerMass()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerMassData* SEScalarMassPerMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerMassData* data(new CDM::ScalarMassPerMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool MassPerMassUnit::IsValidUnit(const char* unit)
 {

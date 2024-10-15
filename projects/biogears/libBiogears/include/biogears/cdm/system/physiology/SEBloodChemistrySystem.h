@@ -14,28 +14,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/cdm/enums/SEPhysiologyEnums.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {
-class SEScalar;
-class SEScalar0To1;
-class SEScalarMass;
-class MassUnit;
-class SEScalarTime;
-class TimeUnit;
-class SEScalarMassPerVolume;
-class MassPerVolumeUnit;
-class SEScalarHeatCapacitancePerMass;
-class HeatCapacitancePerMassUnit;
-class SEScalarFraction;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarAmountPerVolume;
-class AmountPerVolumeUnit;
-class SEScalarPressure;
-class PressureUnit;
 class SEInflammatoryResponse;
 
 namespace io {
@@ -61,17 +43,11 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override; /**< @copydoc DOXY_CDM_GET_SCALAR */
 
-  /**  @name Serialization */ //@{
-  bool Load(const CDM::BloodChemistrySystemData& in); /**< @copydoc DOXY_CDM_LOAD */
-  CDM::BloodChemistrySystemData* Unload() const override; /**< @copydoc DOXY_CDM_UNLOAD */
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SEBloodChemistrySystem const&) const;
   bool operator!=(SEBloodChemistrySystem const&) const;
 
-protected:
-  void Unload(CDM::BloodChemistrySystemData& data) const; /**< @copydoc DOXY_CDM_UNLOAD_TO */ //@}
 public:
   /**  @name BloodDensity */ //@{ @copybrief Physiology_BloodChemistrySystemData_BloodDensity
   bool HasBloodDensity() const; /**< @copydoc DOXY_CDM_HAS */
@@ -487,9 +463,6 @@ public:
   size_t hash_code() const { return TypeHash(); }
 
   void Clear();
-
-  bool Load(const CDM::InflammatoryResponseData& in);
-  CDM::InflammatoryResponseData* Unload() const;
   bool IsValid();
 
   void Initialize();
@@ -498,9 +471,6 @@ public:
 
   bool operator==(SEInflammatoryResponse const&) const;
   bool operator!=(SEInflammatoryResponse const&) const;
-
-protected:
-  void Unload(CDM::InflammatoryResponseData& data) const;
 
 public:
   bool HasLocalPathogen() const;

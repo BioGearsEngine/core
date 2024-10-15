@@ -19,7 +19,7 @@ namespace biogears {
 const InverseVolumeUnit InverseVolumeUnit::Inverse_L("1/L");
 const InverseVolumeUnit InverseVolumeUnit::Inverse_mL("1/mL");
 
-template class SEScalarQuantity<InverseVolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<InverseVolumeUnit>;
 
 InverseVolumeUnit::InverseVolumeUnit(const char* u)
   : InverseVolumeUnit(std::string { u })
@@ -42,15 +42,7 @@ SEScalarInverseVolume::SEScalarInverseVolume()
 SEScalarInverseVolume::~SEScalarInverseVolume()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarInverseVolumeData* SEScalarInverseVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarInverseVolumeData* data(new CDM::ScalarInverseVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool InverseVolumeUnit::IsValidUnit(const char* unit)
 {

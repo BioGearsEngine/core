@@ -148,26 +148,12 @@ bool SEAnesthesiaMachine::Load(const std::string& file)
     Error(ss);
     return false;
   }
-  return Load(*pData);
-}
-//-----------------------------------------------------------------------------
-bool SEAnesthesiaMachine::Load(const CDM::AnesthesiaMachineData& in)
-{
-  io::Anesthesia::UnMarshall(in, *this);
+  io::Anesthesia::UnMarshall(*pData, *this);
   return true;
 }
-//-----------------------------------------------------------------------------
-CDM::AnesthesiaMachineData* SEAnesthesiaMachine::Unload() const
-{
-  CDM::AnesthesiaMachineData* data = new CDM::AnesthesiaMachineData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEAnesthesiaMachine::Unload(CDM::AnesthesiaMachineData& data) const
-{
-  io::Anesthesia::Marshall(*this, data);
-}
+
+
+
 //-----------------------------------------------------------------------------
 const SEScalar* SEAnesthesiaMachine::GetScalar(const char* name)
 {

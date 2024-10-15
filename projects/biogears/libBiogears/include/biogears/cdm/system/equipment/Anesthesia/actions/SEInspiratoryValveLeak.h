@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include "biogears/cdm/properties/SEScalar0To1.h"
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
@@ -33,16 +32,9 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::InspiratoryValveLeakData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::InspiratoryValveLeakData* Unload() const override;
-
   bool operator==(SEInspiratoryValveLeak const& rhs) const;
   bool operator!=(SEInspiratoryValveLeak const& rhs) const;
 
-protected:
-  virtual void Unload(CDM::InspiratoryValveLeakData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 

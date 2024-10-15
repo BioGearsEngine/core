@@ -49,24 +49,6 @@ bool SESubstanceInfusion::IsActive() const
   return IsValid() ? !m_Rate->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceInfusion::Load(const CDM::SubstanceInfusionData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceInfusionData* SESubstanceInfusion::Unload() const
-{
-  CDM::SubstanceInfusionData* data(new CDM::SubstanceInfusionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceInfusion::Unload(CDM::SubstanceInfusionData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SESubstanceInfusion::HasRate() const
 {
   return m_Rate == nullptr ? false : m_Rate->IsValid();

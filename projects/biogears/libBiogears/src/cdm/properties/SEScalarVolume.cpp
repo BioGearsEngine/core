@@ -22,7 +22,7 @@ const VolumeUnit VolumeUnit::mL("mL");
 const VolumeUnit VolumeUnit::uL("uL");
 const VolumeUnit VolumeUnit::m3("m^3");
 
-template class SEScalarQuantity<VolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<VolumeUnit>;
 
 VolumeUnit::VolumeUnit(const char* u)
   : VolumeUnit(std::string { u })
@@ -45,15 +45,7 @@ SEScalarVolume::SEScalarVolume()
 SEScalarVolume::~SEScalarVolume()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarVolumeData* SEScalarVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarVolumeData* data(new CDM::ScalarVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool VolumeUnit::IsValidUnit(const char* unit)
 {

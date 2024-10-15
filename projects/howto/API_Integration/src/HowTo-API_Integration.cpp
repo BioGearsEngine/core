@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
@@ -35,7 +35,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
-#include <biogears/schema/cdm/PatientAssessments.hxx>
 
 #include <biogears/string/manipulation.h>
 //!
@@ -98,9 +97,9 @@ bool action_env_change(std::unique_ptr<biogears::BioGearsEngine>& engine, biogea
   // This example only uses three partial gasses. You could submit a vector of name/value pairs.
   // Then this section could be modified to Get every substance in the pair list.
   //
-  auto* N2 = engine->GetSubstanceManager().GetSubstance("Nitrogen");
-  auto* O2 = engine->GetSubstanceManager().GetSubstance("Oxygen");
-  auto* CO2 = engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
+  auto N2 = engine->GetSubstanceManager().GetSubstance("Nitrogen")->GetDefinition();
+  auto O2 = engine->GetSubstanceManager().GetSubstance("Oxygen")->GetDefinition();
+  auto CO2 = engine->GetSubstanceManager().GetSubstance("CarbonDioxide")->GetDefinition();
 
   auto conditions = environment.GetConditions();
   conditions.Clear(); // Reset he existing conditions
@@ -114,9 +113,9 @@ bool action_env_change(std::unique_ptr<biogears::BioGearsEngine>& engine, biogea
   conditions.GetRelativeHumidity().SetValue(new_conditions.GetRelativeHumidity().GetValue());
   conditions.GetRespirationAmbientTemperature().SetValue(new_conditions.GetRespirationAmbientTemperature().GetValue(biogears::TemperatureUnit::C), biogears::TemperatureUnit::C);
 
-  conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(*N2).GetFractionAmount().GetValue());
-  conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(*O2).GetFractionAmount().GetValue());
-  conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(*CO2).GetFractionAmount().GetValue());
+  conditions.GetAmbientGas(N2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(N2).GetFractionAmount().GetValue());
+  conditions.GetAmbientGas(O2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(O2).GetFractionAmount().GetValue());
+  conditions.GetAmbientGas(CO2).GetFractionAmount().SetValue(new_conditions.GetAmbientGas(CO2).GetFractionAmount().GetValue());
 
   if (environment.IsValid()) {
     engine->ProcessAction(environment);
@@ -404,7 +403,7 @@ bool addCompoundComponents(std::unique_ptr<biogears::BioGearsEngine>& engine, st
 {
 
   if (biogears::SESubstance* substance = engine->GetSubstanceManager().GetSubstance(substance_str)) {
-    auto substance_concentration = biogears::SESubstanceConcentration(*substance);
+    auto substance_concentration = biogears::SESubstanceConcentration(substance->GetDefinition());
     substance_concentration.GetConcentration().SetValue(10.0, biogears::MassPerVolumeUnit::mg_Per_mL);
     compound->GetComponents().push_back(substance_concentration);
 
@@ -531,9 +530,9 @@ void BioGearsPlugin::run()
           // This function as the patient changes locations.
 
           auto conditions = biogears::SEEnvironmentalConditions(_pimpl->engine->GetSubstanceManager());
-          auto* N2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Nitrogen");
-          auto* O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen");
-          auto* CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide");
+          auto N2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Nitrogen")->GetDefinition();
+          auto O2 = _pimpl->engine->GetSubstanceManager().GetSubstance("Oxygen")->GetDefinition();
+          auto CO2 = _pimpl->engine->GetSubstanceManager().GetSubstance("CarbonDioxide")->GetDefinition();
 
           conditions.SetSurroundingType(SESurroundingType::Water);
           conditions.GetAirVelocity().SetValue(0, LengthPerTimeUnit::m_Per_s);
@@ -544,9 +543,9 @@ void BioGearsPlugin::run()
           conditions.GetMeanRadiantTemperature().SetValue(22.0, TemperatureUnit::C);
           conditions.GetRelativeHumidity().SetValue(1.0);
           conditions.GetRespirationAmbientTemperature().SetValue(22.0, TemperatureUnit::C);
-          conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(0.7901);
-          conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.2095);
-          conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
+          conditions.GetAmbientGas(N2).GetFractionAmount().SetValue(0.7901);
+          conditions.GetAmbientGas(O2).GetFractionAmount().SetValue(0.2095);
+          conditions.GetAmbientGas(CO2).GetFractionAmount().SetValue(4.0E-4);
 
           action_env_change(_pimpl->engine, conditions);
           _pimpl->engine->AdvanceModelTime(1, biogears::TimeUnit::s);
@@ -572,8 +571,8 @@ void BioGearsPlugin::run()
             for (auto& component : customCompound->GetComponents()) {
               // Example of creating data request for tracking the components of the new substance.
               // Note: String based DataRequest will cause runtime instability if no Scalar matches the input string.
-              if (component.GetSubstance().HasPK()) {
-                _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component.GetSubstance().GetName()), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+              if (component.GetSubstance().Pharmacokinetics.IsValid()) {
+                _pimpl->engine->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_pimpl->engine->GetSubstanceManager().GetSubstance(component.GetSubstance().Name), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
               }
             }
             auto compound_name = substance_register_compound(_pimpl->engine, std::move(customCompound)); //<  _pimpl->engine takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)

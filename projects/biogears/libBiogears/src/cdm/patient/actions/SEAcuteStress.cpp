@@ -44,24 +44,6 @@ bool SEAcuteStress::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEAcuteStress::Load(const CDM::AcuteStressData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::AcuteStressData* SEAcuteStress::Unload() const
-{
-  CDM::AcuteStressData* data(new CDM::AcuteStressData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEAcuteStress::Unload(CDM::AcuteStressData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEAcuteStress::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();

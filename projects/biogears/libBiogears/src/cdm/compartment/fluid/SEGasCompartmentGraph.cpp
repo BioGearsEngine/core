@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/utils/Logger.h>
 #include <biogears/schema/cdm/Compartment.hxx>
 
+
 namespace std {
 template class vector<biogears::SEGasTransportVertex*>;
 template class vector<biogears::SEGasTransportEdge*>;
@@ -43,24 +44,7 @@ SEGasCompartmentGraph::SEGasCompartmentGraph(const std::string& name, Logger* lo
 SEGasCompartmentGraph::~SEGasCompartmentGraph()
 {
 }
-//-----------------------------------------------------------------------------
-bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr)
-{
-  io::Compartment::UnMarshall(in, *this, cmptMgr);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::GasCompartmentGraphData* SEGasCompartmentGraph::Unload()
-{
-  CDM::GasCompartmentGraphData* data = new CDM::GasCompartmentGraphData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEGasCompartmentGraph::Unload(CDM::GasCompartmentGraphData& data)
-{
-  io::Compartment::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 void SEGasCompartmentGraph::BalanceByIntensive()
 {

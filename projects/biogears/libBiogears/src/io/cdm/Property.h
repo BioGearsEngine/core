@@ -17,13 +17,20 @@ specific language governing permissions and limitations under the License.
 #include <type_traits>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/cdm/enums/SEPropertyEnums.h>
+#include <biogears/cdm/properties/SEDecimalFormat.h>
+#include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
+#include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
+#include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+#include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/utils/RunningAverage.h>
+
 #include <biogears/schema/cdm/Properties.hxx>
 
 // Question: To Serialize Invalid units or not to Serialize?
 //           TO Throw an exception when a member is invalid?
-#define CDM_PROPERTY_MARSHALL_HELPER(in, out, func)                                          \
+#define CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, func)                                      \
   if (in.m_##func && in.m_##func->IsValid()) {                                               \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>());         \
     io::Property::Marshall(*in.m_##func, out.func());                                        \
@@ -31,102 +38,45 @@ specific language governing permissions and limitations under the License.
      throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
    }*/
 
-#define CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, func)                                \
+#define CDM_PROPERTY_MARSHALL_HELPER(in, out, func)                                          \
+  if (in.m_##func.IsValid()) {                                                               \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>());         \
+    io::Property::Marshall(in.m_##func, out.func());                                         \
+  } /* else if (in.m_##func) {                                                               \
+     throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
+   }*/
+
+#define CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, func)                            \
   if (in.m_##func && in.m_##func->IsValid()) {                                              \
     io::Property::Marshall(*in.m_##func, out.func());                                       \
   } /*else if (in.m_##func) {                                                               \
     throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
   }*/
 
-#define CDM_ENUM_MARSHALL_HELPER(in, out, func) \
-  if (in.Has##func()) {                         \
-    out.func(in.m_##func);                      \
-  }
+#define CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, func)                                \
+  if (in.m_##func.IsValid()) {                                                              \
+    io::Property::Marshall(in.m_##func, out.func());                                        \
+  } /*else if (in.m_##func) {                                                               \
+    throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
+  }*/
 
-#define SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, func)                              \
+#define CDM_RUNNING_AVERAGE_PTR_MARSHALL_HELPER(in, out, func)                     \
+                                                                                   \
+  out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+  io::Property::Marshall(in.m_##func, out.func());
+
+#define SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, func)                          \
   if (in.Has##func()) {                                                              \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Property::Marshall(in.m_##func, out.func());                                 \
   }
 
-#define SE_OPTIONAL_PROPERTY_ENUM_MARSHALL_HELPER(in, out, func) \
-  io::Property::Marshall(in.m_##func, out.func());
+#define SE_OPTIONAL_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func != decltype(in.m_##func)::Invalid) {               \
+    io::Property::Marshall(in.m_##func, out.func());                 \
+  }
 
 namespace biogears {
-class RunningAverage;
-
-class SEDecimalFormat;
-template <typename T>
-class SEScalarQuantity;
-class SEFunctionElectricPotentialVsTime;
-class SEFunction;
-class SEFunctionVolumeVsTime;
-class SEHistogramFractionVsLength;
-class SEHistogram;
-class SEProperty;
-class SEScalar0To1;
-class SEScalarAmount;
-class SEScalarAmountPerMass;
-class SEScalarAmountPerTime;
-class SEScalarAmountPerVolume;
-class SEScalarArea;
-class SEScalarAreaPerTimePressure;
-class SEScalarElectricCapacitance;
-class SEScalarElectricCharge;
-class SEScalarElectricCurrent;
-class SEScalarElectricInductance;
-class SEScalarElectricPotential;
-class SEScalarElectricResistance;
-class SEScalarEnergy;
-class SEScalarEnergyPerAmount;
-class SEScalarEnergyPerMass;
-class SEScalarFlowCompliance;
-class SEScalarFlowElastance;
-class SEScalarFlowInertance;
-class SEScalarFlowResistance;
-class SEScalarForce;
-class SEScalarFraction;
-class SEScalarFrequency;
-class SEScalar;
-class SEScalarHeatCapacitance;
-class SEScalarHeatCapacitancePerAmount;
-class SEScalarHeatCapacitancePerMass;
-class SEScalarHeatConductance;
-class SEScalarHeatConductancePerArea;
-class SEScalarHeatInductance;
-class SEScalarHeatResistanceArea;
-class SEScalarHeatResistance;
-class SEScalarInversePressure;
-class SEScalarInverseVolume;
-class SEScalarLength;
-class SEScalarLengthPerTime;
-class SEScalarLengthPerTimePressure;
-class SEScalarMass;
-class SEScalarMassPerAmount;
-class SEScalarMassPerAreaTime;
-class SEScalarMassPerMass;
-class SEScalarMassPerTime;
-class SEScalarMassPerVolume;
-class SEScalarNeg1To1;
-class SEScalarOsmolality;
-class SEScalarOsmolarity;
-class SEScalarPower;
-class SEScalarPowerPerAreaTemperatureToTheFourth;
-class SEScalarPressure;
-class SEScalarPressurePerVolume;
-class SEScalarPressureTimePerArea;
-class SEScalarPressureTimePerVolumeArea;
-class SEScalarTemperature;
-class SEScalarTime;
-class SEScalarVolume;
-class SEScalarVolumePerPressure;
-class SEScalarVolumePerTimeArea;
-class SEScalarVolumePerTime;
-class SEScalarVolumePerTimeMass;
-class SEScalarVolumePerTimePressureArea;
-class SEScalarVolumePerTimePressure;
-class SEUnitScalar;
-
 namespace io {
   class BIOGEARS_PRIVATE_API Property {
   public:
@@ -193,7 +143,6 @@ namespace io {
     //  SEErrorType
     static void UnMarshall(const CDM::enumErrorType& in, SEErrorType& out);
     static void Marshall(const SEErrorType& in, CDM::enumErrorType& out);
-
   };
 
   //-------------------------------------------------------------------------------
@@ -220,9 +169,9 @@ namespace io {
     out.unit(in.m_unit->GetString());
     out.readOnly(in.m_readOnly);
 
-//    out.value(std::make_unique<std::remove_reference<decltype(out.value())>::type>(in.m_value));
-//    out.unit(std::make_unique<std::remove_reference<decltype(out.unit())>::type>(in.m_unit->GetString()));
-//    out.readOnly(std::make_unique<std::remove_reference<decltype(out.readOnly())>::type>(in.m_readOnly));
+    //    out.value(std::make_unique<std::remove_reference<decltype(out.value())>::type>(in.m_value));
+    //    out.unit(std::make_unique<std::remove_reference<decltype(out.unit())>::type>(in.m_unit->GetString()));
+    //    out.readOnly(std::make_unique<std::remove_reference<decltype(out.readOnly())>::type>(in.m_readOnly));
   }
   //----------------------------------------------------------------------------------
 

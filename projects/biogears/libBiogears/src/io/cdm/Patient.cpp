@@ -1,9 +1,9 @@
+
 #include "Patient.h"
 
 #include "Property.h"
 
 #include <biogears/cdm/properties/SEProperties.h>
-
 #include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
 
@@ -28,9 +28,9 @@ namespace io {
 
     if (in.BodyMassIndex().present()) {
     if (!in.Weight().present() && in.Height().present()) {
-        out.CalculateWeightByBMI(in.BodyMassIndex().get());
+        out.CalculateWeightByBMI(in.BodyMassIndex().get().value());
     } else if (in.Weight().present() && !in.Height().present()) {
-        out.CalculateHeightByBMI(in.BodyMassIndex().get());
+        out.CalculateHeightByBMI(in.BodyMassIndex().get().value());
     } else {
         std::stringstream ss;
         ss << "BodyMassIndex as an input must be provided with height OR weight (and not neither/both). BMI input value is not being used and default inputs will be used." << std::endl;
@@ -95,47 +95,47 @@ namespace io {
     if (in.HasAnnotation()) {
       out.Annotation(in.m_Annotation);
     }
-    SE_OPTIONAL_PATIENT_ENUM_MARSHALL_HELPER(in, out, Sex)
+    SE_OPTIONAL_PATIENT_ENUM_PTR_MARSHALL_HELPER(in, out, Sex)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Age);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Weight)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Height)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AlveoliSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BasalMetabolicRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Age);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Weight)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Height)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AlveoliSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BasalMetabolicRate)
     if (in.HasBloodRh()) {
       out.BloodTypeRh(in.m_BloodRh);
     }
 
     Patient::Marshall(in.m_BloodType, out.BloodTypeABO());
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodVolumeBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BodyDensity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BodyFatFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DiastolicArterialPressureBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExpiratoryReserveVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FunctionalResidualCapacity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRateBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRateMaximum)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRateMinimum)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Hyperhidrosis)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryCapacity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryReserveVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeanBodyMass)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MaxWorkRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MuscleMass)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanArterialPressureBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PainSusceptibility)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ResidualVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationRateBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespiratoryDriverAmplitudeBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightLungRatio)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SleepAmount)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SystolicArterialPressureBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalVentilationBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TidalVolumeBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalLungCapacity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VitalCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BloodVolumeBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BodyDensity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BodyFatFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DiastolicArterialPressureBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExpiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, FunctionalResidualCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartRateBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartRateMaximum)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartRateMinimum)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Hyperhidrosis)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InspiratoryCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InspiratoryReserveVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeanBodyMass)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MaxWorkRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MuscleMass)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanArterialPressureBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PainSusceptibility)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ResidualVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationRateBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespiratoryDriverAmplitudeBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightLungRatio)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SleepAmount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SystolicArterialPressureBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalVentilationBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TidalVolumeBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalLungCapacity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VitalCapacity)
 
     SEScalarTime time;
     for (auto itr : in.m_EventState) {

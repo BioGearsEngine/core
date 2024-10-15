@@ -16,6 +16,7 @@
 #include <biogears/schema/cdm/Generators.hxx>
 #include <biogears/schema/cdm/Patient.hxx>
 #include <biogears/schema/cdm/Scenario.hxx>
+#include <biogears/cdm/utils/Logger.h>
 
 #ifdef _WIN32
 #include <direct.h>
@@ -35,7 +36,6 @@
 #include <strstream>
 #include <vector>
 
-#include <biogears/cdm/Serializer.h>
 #include <biogears/string/manipulation.h>
 
 namespace mil {
@@ -125,9 +125,9 @@ static void WriteScenarioFile(std::string const directory, std::string const nam
 
       biogears::Logger logger;
 
-      auto result = Serializer::ReadBuffer((XMLByte*)contents.data(), contents.size(), &logger);
-
-      CDM::Scenario(oFileStream, *((CDM::ScenarioData*)result.get()), info);
+      std::istringstream is {contents.data()};
+      auto ScenarioData = CDM::Scenario(is);
+      CDM::Scenario(oFileStream, *ScenarioData, info);
       #ifdef WIN32
         std::cout << std::format("Saved {}/{}/{}\n", PREFIX_DIR,directory.c_str(),name);
       #else

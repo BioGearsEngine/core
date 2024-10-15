@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
@@ -157,9 +157,9 @@ int HowToInfusionDrug()
   SESubstance* morphine = bg->GetSubstanceManager().GetSubstance("Morphine");
   SESubstance* saline = bg->GetSubstanceManager().GetSubstance("Saline");
   if (albumin && morphine && saline) {
-    auto albuminConcentration = SESubstanceConcentration(*albumin);
-    auto morphineConcentration = SESubstanceConcentration(*morphine);
-    auto salineConcentration = SESubstanceConcentration(*saline);
+    auto albuminConcentration = SESubstanceConcentration(albumin->GetDefinition());
+    auto morphineConcentration = SESubstanceConcentration(morphine->GetDefinition());
+    auto salineConcentration = SESubstanceConcentration(saline->GetDefinition());
 
     albuminConcentration.GetConcentration().SetValue (10.0, MassPerVolumeUnit::mg_Per_mL);
     morphineConcentration.GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_mL);

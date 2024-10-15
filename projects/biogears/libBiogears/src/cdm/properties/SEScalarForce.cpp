@@ -20,7 +20,7 @@ const ForceUnit ForceUnit::N("N");
 const ForceUnit ForceUnit::lbf("lbf");
 const ForceUnit ForceUnit::dyn("dyn");
 
-template class SEScalarQuantity<ForceUnit>;
+template class BIOGEARS_API SEScalarQuantity<ForceUnit>;
 
 ForceUnit::ForceUnit(const char* u)
   : ForceUnit(std::string { u })
@@ -43,15 +43,7 @@ SEScalarForce::SEScalarForce()
 SEScalarForce::~SEScalarForce()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarForceData* SEScalarForce::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarForceData* data(new CDM::ScalarForceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool ForceUnit::IsValidUnit(const char* unit)
 {

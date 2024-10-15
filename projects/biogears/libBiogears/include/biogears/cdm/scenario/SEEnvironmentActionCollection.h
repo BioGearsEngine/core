@@ -14,22 +14,22 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentChange.h>
 #include <biogears/cdm/system/environment/actions/SEThermalApplication.h>
-#include <biogears/schema/cdm/EnvironmentActions.hxx>
 
 namespace biogears {
 class PhysiologyEngine;
-
+namespace io {
+  class EnvironmentActions;
+}
 class BIOGEARS_API SEEnvironmentActionCollection : public Loggable {
+  friend class io::EnvironmentActions;
+
 public:
   SEEnvironmentActionCollection(SESubstanceManager&);
   ~SEEnvironmentActionCollection();
 
   void Clear();
 
-  void Unload(std::vector<CDM::ActionData*>& to);
-
   bool ProcessAction(const SEEnvironmentAction& action, const PhysiologyEngine& engine);
-  bool ProcessAction(const CDM::EnvironmentActionData& action, const PhysiologyEngine& engine);
 
   // STATE ACTION
   bool HasChange() const;

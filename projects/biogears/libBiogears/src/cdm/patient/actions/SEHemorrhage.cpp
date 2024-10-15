@@ -64,24 +64,6 @@ bool SEHemorrhage::IsActive() const
   return IsValid() ? !(m_InitialRate->GetValue(VolumePerTimeUnit::mL_Per_min) <= ZERO_APPROX) : false;
 }
 //-----------------------------------------------------------------------------
-bool SEHemorrhage::Load(const CDM::HemorrhageData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::HemorrhageData* SEHemorrhage::Unload() const
-{
-  CDM::HemorrhageData* data(new CDM::HemorrhageData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEHemorrhage::Unload(CDM::HemorrhageData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 void SEHemorrhage::SetMCIS()
 {
   m_MCIS.clear();

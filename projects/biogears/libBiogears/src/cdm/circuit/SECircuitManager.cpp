@@ -39,24 +39,7 @@ void SECircuitManager::Clear()
   m_FluidLedger.Clear();
   m_ThermalLedger.Clear();
 }
-//-------------------------------------------------------------------------------
-bool SECircuitManager::Load(const CDM::CircuitManagerData& in)
-{
-  io::Circuit::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::CircuitManagerData* SECircuitManager::Unload() const
-{
-  CDM::CircuitManagerData* data = new CDM::CircuitManagerData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SECircuitManager::Unload(CDM::CircuitManagerData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 void SECircuitManager::SetReadOnly(bool b)
 {

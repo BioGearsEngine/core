@@ -20,7 +20,7 @@ const PressureTimePerVolumeAreaUnit PressureTimePerVolumeAreaUnit::mmHg_min_Per_
 const PressureTimePerVolumeAreaUnit PressureTimePerVolumeAreaUnit::mmHg_s_Per_mL_m2("mmHg s/mL m^2");
 const PressureTimePerVolumeAreaUnit PressureTimePerVolumeAreaUnit::dyn_s_Per_cm5_m2("dyn s/cm^5 m^2");
 
-template class SEScalarQuantity<PressureTimePerVolumeAreaUnit>;
+template class BIOGEARS_API SEScalarQuantity<PressureTimePerVolumeAreaUnit>;
 
 PressureTimePerVolumeAreaUnit::PressureTimePerVolumeAreaUnit(const char* u)
   : PressureTimePerVolumeAreaUnit(std::string { u })
@@ -43,15 +43,7 @@ SEScalarPressureTimePerVolumeArea::SEScalarPressureTimePerVolumeArea()
 SEScalarPressureTimePerVolumeArea::~SEScalarPressureTimePerVolumeArea()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarPressureTimePerVolumeAreaData* SEScalarPressureTimePerVolumeArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPressureTimePerVolumeAreaData* data(new CDM::ScalarPressureTimePerVolumeAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool PressureTimePerVolumeAreaUnit::IsValidUnit(const char* unit)
 {

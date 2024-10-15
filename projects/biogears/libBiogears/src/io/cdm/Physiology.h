@@ -20,25 +20,33 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Physiology.hxx>
 
-#define CDM_PHYSIOLOGY_MARSHALL_HELPER(in, out, func)                                \
+#define CDM_PHYSIOLOGY_PTR_MARSHALL_HELPER(in, out, func)                                \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Physiology::Marshall(*in.m_##func, out.func());                              \
   }
 
-#define CDM_OPTIONAL_PHYSIOLOGY_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_PHYSIOLOGY_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                           \
     io::Physiology::Marshall(*in.m_##func, out.func());        \
   }
 
-#define SE_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, func)                              \
+#define SE_PHYSIOLOGY_ENUM_PTR_MARSHALL_HELPER(in, out, func)                            \
   if (in.Has##func()) {                                                              \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Physiology::Marshall(in.m_##func, out.func());                                 \
+    io::Physiology::Marshall(in.m_##func, out.func());                               \
   }
 
-#define SE_OPTIONAL_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, func) \
+#define SE_OPTIONAL_PHYSIOLOGY_ENUM_PTR_MARSHALL_HELPER(in, out, func) \
   io::Physiology::Marshall(in.m_##func, out.func());
+
+#define CDM_PHYSIOLOGY_COPY(type, in, out) \
+  {                                        \
+    CDM::##type##Data middle;              \
+    io::Patient::Marshall(in, middle);     \
+    io::Patient::UnMarshall(middle, out);  \
+  }
+
 namespace biogears {
 class SEPupillaryResponse;
 class SEInflammatoryResponse;
@@ -49,6 +57,7 @@ class SEDrugSystem;
 class SEEndocrineSystem;
 class SEEnergySystem;
 class SEGastrointestinalSystem;
+class SEDrugTransitState;
 class SEHepaticSystem;
 class SENervousSystem;
 class SERenalSystem;
@@ -89,6 +98,9 @@ namespace io {
     // class SEGastrointestinalSystem
     static void UnMarshall(const CDM::GastrointestinalSystemData& in, SEGastrointestinalSystem& out);
     static void Marshall(const SEGastrointestinalSystem& in, CDM::GastrointestinalSystemData& out);
+    // class SEDrugTransitState
+    static void UnMarshall(const CDM::DrugTransitStateData& in, SEDrugTransitState& out);
+    static void Marshall(const SEDrugTransitState& in, CDM::DrugTransitStateData& out);
     // class SEHepaticSystem
     static void UnMarshall(const CDM::HepaticSystemData& in, SEHepaticSystem& out);
     static void Marshall(const SEHepaticSystem& in, CDM::HepaticSystemData& out);

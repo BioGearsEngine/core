@@ -22,7 +22,7 @@ const FlowInertanceUnit FlowInertanceUnit::cmH2O_s2_Per_mL("cmH2O s^2/mL");
 const FlowInertanceUnit FlowInertanceUnit::cmH2O_s2_Per_L("cmH2O s^2/L");
 const FlowInertanceUnit FlowInertanceUnit::Pa_s2_Per_m3("Pa s^2/m^3");
 
-template class SEScalarQuantity<FlowInertanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<FlowInertanceUnit>;
 
 FlowInertanceUnit::FlowInertanceUnit(const char* u)
   : FlowInertanceUnit(std::string { u })
@@ -45,15 +45,7 @@ SEScalarFlowInertance::SEScalarFlowInertance()
 SEScalarFlowInertance::~SEScalarFlowInertance()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarFlowInertanceData* SEScalarFlowInertance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarFlowInertanceData* data(new CDM::ScalarFlowInertanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool FlowInertanceUnit::IsValidUnit(const char* unit)
 {

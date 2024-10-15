@@ -18,27 +18,56 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/engine/Controller/BioGearsEnums.h>
-#include <biogears/schema/biogears/BioGears.hxx>
 
-#define CDM_BIOGEARS_MARSHALL_HELPER(in, out, func)                                  \
+#include <biogears/schema/biogears/BioGears.hxx>
+#include <biogears/schema/cdm/Circuit.hxx>
+#include <biogears/schema/cdm/Compartment.hxx>
+
+#define CDM_BIOGEARS_PTR_MARSHALL_HELPER(in, out, func)                                  \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::BioGears::Marshall(*in.m_##func, out.func());                                \
   }
 
-#define CDM_OPTIONAL_BIOGEARS_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_BIOGEARS_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                         \
-    io::BioGears::Marshall(*in.m_##func, out.func());        \
   }
 
+#define SE_BIOGEARS_ENUM_PTR_MARSHALL_HELPER(in, out, func)                              \
+  if (in.Has##func()) {                                                              \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::BioGears::Marshall(in.m_##func, out.func());                                 \
+  }
+
+#define SE_BIOGEARS_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func != decltype(in.m_##func)::Invalid) {           \
+    io::BioGears::Marshall(in.m_##func, out.func());             \
+  }
+
+#define CDM_BIOGEARS_COPY(type, in, out)   \
+  {                                        \
+    CDM::##type##Data middle;              \
+    io::BioGears::Marshall(in, middle);    \
+    io::BioGears::UnMarshall(middle, out); \
+  }
 namespace biogears {
 class BiogearsPhysiologyEngine;
 
 class BioGearsEngine;
+class BioGearsCircuits;
+class BioGearsCompartments;
+class SECircuitManager;
+class BioGears;
+class SESystem;
 
 namespace io {
   class BIOGEARS_PRIVATE_API BioGears {
   public:
+    // class Factories;
+    static std::unique_ptr<SESystem> factory(CDM::SystemData const* systemData, biogears::BioGears& bgData);
+
+    static std::unique_ptr<CDM::SystemData> factory(const SESystem* data);
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -50,6 +79,14 @@ namespace io {
     // class BioGears
     static void UnMarshall(const CDM::BioGearsStateData& in, BioGearsEngine& out, const SEScalarTime* simTime = nullptr);
     static void Marshall(const BioGearsEngine& in, CDM::BioGearsStateData& out);
+
+    // class BioGearsCompartments
+    static void UnMarshall(const CDM::CompartmentManagerData& in, BioGearsCompartments& out, SECircuitManager* circuits);
+    static void Marshall(const BioGearsCompartments& in, CDM::CompartmentManagerData& out);
+
+    // class BioGearsCircuits
+    static void UnMarshall(const CDM::CircuitManagerData& in, BioGearsCircuits& ou);
+    static void Marshall(const BioGearsCircuits& in, CDM::CircuitManagerData& out);
 
     //  SEErrorType
     static void UnMarshall(const CDM::enumBioGearsAirwayMode& in, SEBioGearsAirwayMode& out);

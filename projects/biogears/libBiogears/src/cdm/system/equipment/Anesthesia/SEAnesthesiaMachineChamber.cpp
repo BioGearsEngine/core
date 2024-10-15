@@ -42,27 +42,6 @@ void SEAnesthesiaMachineChamber::Clear()
   m_Substance = nullptr;
 }
 //-------------------------------------------------------------------------------
- 
-bool SEAnesthesiaMachineChamber::Load(const CDM::AnesthesiaMachineChamberData& in)
-{
-  io::Anesthesia::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::AnesthesiaMachineChamberData* SEAnesthesiaMachineChamber::Unload() const
-{
-  CDM::AnesthesiaMachineChamberData* data = new CDM::AnesthesiaMachineChamberData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEAnesthesiaMachineChamber::Unload(CDM::AnesthesiaMachineChamberData& data) const
-{
-  io::Anesthesia::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 
 void SEAnesthesiaMachineChamber::Merge(const SEAnesthesiaMachineChamber& from)
 {

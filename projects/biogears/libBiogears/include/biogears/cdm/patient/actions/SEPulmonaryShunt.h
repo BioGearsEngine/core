@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
-#include <biogears/schema/cdm/Actions.hxx>
 
 #include <random>
 
@@ -37,13 +36,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::PulmonaryShuntData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::PulmonaryShuntData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::PulmonaryShuntData& data) const;
-
-public:
   virtual bool HasFlowRateScale() const;
   virtual SEScalar0To1& GetFlowRateScale();
 

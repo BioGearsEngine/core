@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsEquipment.hxx>
 
 namespace biogears {
 /**
@@ -56,13 +55,8 @@ public:
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  bool Load(const CDM::BioGearsInhalerData& in);
-  CDM::BioGearsInhalerData* Unload() const override;
 
 protected:
-  void Unload(CDM::BioGearsInhalerData& data) const;
-
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
   void SetUp() override;
 

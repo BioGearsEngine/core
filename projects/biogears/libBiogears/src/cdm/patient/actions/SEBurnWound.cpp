@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEBurnWound.h>
 
 #include "io/cdm/PatientActions.h"
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
@@ -55,24 +55,6 @@ bool SEBurnWound::IsValid() const
 bool SEBurnWound::IsActive() const
 {
   return IsValid() ? !(m_TBSA->GetValue() < ZERO_APPROX) : false;
-}
-//-----------------------------------------------------------------------------
-bool SEBurnWound::Load(const CDM::BurnWoundData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::BurnWoundData* SEBurnWound::Unload() const
-{
-  CDM::BurnWoundData* data(new CDM::BurnWoundData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEBurnWound::Unload(CDM::BurnWoundData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool SEBurnWound::HasTotalBodySurfaceArea() const

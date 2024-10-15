@@ -18,13 +18,13 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Inhaler.hxx>
 
-#define CDM_INHALER_MARSHALL_HELPER(in, out, func)                                  \
+#define CDM_INHALER_PTR_MARSHALL_HELPER(in, out, func)                                  \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Inhaler::Marshall(*in.m_##func, out.func());                               \
   }
 
-#define CDM_OPTIONAL_INHALER_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_INHALER_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                         \
     io::Inhaler::Marshall(*in.m_##func, out.func());       \
   }

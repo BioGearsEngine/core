@@ -19,10 +19,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Scenario.hxx>
-#include <biogears/schema/cdm/DataRequests.hxx>
-#include <biogears/schema/cdm/Actions.hxx>
-
 namespace biogears {
 
 class SEDecimalFormat;
@@ -42,17 +38,8 @@ public:
 
   virtual void Clear(); // clear memory
 
-  bool Load(const CDM::ScenarioData& in);
-  bool Load(const CDM::ActionListData& in);
-
-  CDM::ScenarioData* Unload() const;
-
   bool operator==(SEScenario const&) const;
   bool operator!=(SEScenario const&) const;
-
-protected:
-  void Unload(CDM::ScenarioData& data) const;
-  void Unload(CDM::ActionListData& data) const;
 
 public:
   bool Load(const char* scenarioFile);

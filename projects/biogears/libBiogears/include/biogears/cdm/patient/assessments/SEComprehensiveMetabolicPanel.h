@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
-#include <biogears/schema/cdm/PatientAssessments.hxx>
 #include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 
 namespace biogears {
@@ -34,12 +33,6 @@ public:
 
   virtual void Reset() override; // reset values
   virtual void Clear() override; // clear memory
-
-  virtual bool Load(const CDM::ComprehensiveMetabolicPanelData& in);
-  virtual CDM::ComprehensiveMetabolicPanelData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::ComprehensiveMetabolicPanelData& data);
 
 public:
   bool HasAlbumin() const;

@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEProperty.h>
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 
-CDM_BIND_DECL(HistogramData)
 
 namespace biogears {
 namespace io {
@@ -23,16 +22,12 @@ namespace io {
 class BIOGEARS_API SEHistogram : public SEProperty {
 public:
   friend io::Property;
+  SEHistogram(SEHistogram const& obj);
   SEHistogram();
   virtual ~SEHistogram();
 
   virtual void Clear(); //clear memory
 
-  virtual bool Load(const CDM::HistogramData& in);
-  virtual CDM::HistogramData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::HistogramData& data) const;
 
 public:
   virtual bool IsValid() const;
@@ -49,6 +44,8 @@ public:
   std::vector<double>& GetIndependent();
   const std::vector<double>& GetIndependent() const;
      
+  //-------------------------------------------------------------------------------
+  SEHistogram& operator=(const SEHistogram& rhs);
   bool operator==(const SEHistogram&) const;
   bool operator!=(const SEHistogram&) const;
 

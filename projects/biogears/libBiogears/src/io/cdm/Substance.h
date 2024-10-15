@@ -20,25 +20,42 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Substance.hxx>
 
-#define CDM_SUBSTANCE_MARSHALL_HELPER(in, out, func)                                 \
+#define CDM_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, func)                             \
   if (in.m_##func && in.m_##func->IsValid()) {                                       \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Substance::Marshall(*in.m_##func, out.func());                               \
   }
+#define CDM_SUBSTANCE_MARSHALL_HELPER(in, out, func)                                 \
+  if (in.m_##func.IsValid()) {                                                       \
+    out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
+    io::Substance::Marshall(in.m_##func, out.func());                                \
+  }
+#define CDM_OPTIONAL_SUBSTANCE_PTR_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func && in.m_##func->IsValid()) {                    \
+    io::Substance::Marshall(*in.m_##func, out.func());            \
+  }
 
 #define CDM_OPTIONAL_SUBSTANCE_MARSHALL_HELPER(in, out, func) \
-  if (in.m_##func && in.m_##func->IsValid()) {                \
-    io::Substance::Marshall(*in.m_##func, out.func());        \
+  if (in.m_##func.IsValid()) {                                \
+    io::Substance::Marshall(in.m_##func, out.func());         \
   }
-#define SE_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, func)                              \
+#define SE_SUBSTANCE_ENUM_PTR_MARSHALL_HELPER(in, out, func)                         \
   if (in.Has##func()) {                                                              \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::Substance::Marshall(in.m_##func, out.func());                                 \
+    io::Substance::Marshall(in.m_##func, out.func());                                \
   }
 
-#define SE_OPTIONAL_SUBSTANCE_ENUM_MARSHALL_HELPER(in, out, func) \
-  io::Substance::Marshall(in.m_##func, out.func());
+#define SE_OPTIONAL_SUBSTANCE_ENUM_PTR_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func != decltype(in.m_##func)::Invalid) {                \
+    io::Substance::Marshall(in.m_##func, out.func());                 \
+  }
 
+#define CDM_SUBSTANCE_COPY(type, in, out)   \
+  {                                         \
+    CDM::##type##Data middle;               \
+    io::Substance::Marshall(in, middle);    \
+    io::Substance::UnMarshall(middle, out); \
+  }
 namespace biogears {
 
 class SESubstanceManager;

@@ -11,12 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
 
-#include "io/cdm/PatientActions.h"
-#include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
-#include <biogears/schema/cdm/Properties.hxx>
 
+#pragma warning(disable : 4661)
 namespace biogears {
 SESubstanceNasalDose::SESubstanceNasalDose(const SESubstance& substance)
   : SESubstanceAdministration()
@@ -44,24 +41,6 @@ bool SESubstanceNasalDose::IsValid() const
 bool SESubstanceNasalDose::IsActive() const
 {
   return IsValid();
-}
-//-------------------------------------------------------------------------------
-bool SESubstanceNasalDose::Load(const CDM::SubstanceNasalDoseData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceNasalDoseData* SESubstanceNasalDose::Unload() const
-{
-  CDM::SubstanceNasalDoseData* data(new CDM::SubstanceNasalDoseData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceNasalDose::Unload(CDM::SubstanceNasalDoseData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceNasalDose::HasDose() const
@@ -109,7 +88,7 @@ SENasalState::SENasalState(const SESubstance& sub)
   : m_Substance(&sub)
 {
   m_TotalNasalDose = nullptr;
-  //m_VenaCavaConcentration = nullptr;
+  // m_VenaCavaConcentration = nullptr;
   m_NumUnreleasedMasses = 3; // Hard-coded for current model implementation!
   m_NumReleasedMasses = 3; // Hard-coded for current model implementation!
 }
@@ -122,7 +101,7 @@ SENasalState::~SENasalState()
 void SENasalState::Clear()
 {
   SAFE_DELETE(m_TotalNasalDose);
-  //SAFE_DELETE(m_VenaCavaConcentration);
+  // SAFE_DELETE(m_VenaCavaConcentration);
   m_UnreleasedDrugMasses.clear();
   m_ReleasedDrugMasses.clear();
 }
@@ -130,50 +109,12 @@ void SENasalState::Clear()
 bool SENasalState::Initialize(SEScalarMass& dose)
 {
   GetTotalNasalDose().Set(dose);
-  //GetVenaCavaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
+  // GetVenaCavaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_mL);
   std::vector<double> initUnreleasedMasses(m_NumUnreleasedMasses);
   std::vector<double> initReleasedMasses(m_NumReleasedMasses);
   bool unrelSet = SetUnreleasedNasalMasses(initUnreleasedMasses, MassUnit::mg);
   bool relSet = SetReleasedNasalMasses(initReleasedMasses, MassUnit::mg);
   return (unrelSet && relSet);
-}
-//-------------------------------------------------------------------------------
-bool SENasalState::Load(const CDM::NasalStateData& in, std::default_random_engine *rd)
-{
-
-  GetTotalNasalDose().Load(in.TotalNasalDose());
-  m_UnreleasedDrugMasses.clear();
-  for (auto umData : in.UnreleasedDrugMasses()) {
-    SEScalarMass unrelMass;
-    unrelMass.Load(umData, rd);
-    m_UnreleasedDrugMasses.push_back(unrelMass);
-  }
-  m_ReleasedDrugMasses.clear();
-  for (auto rmData : in.ReleasedDrugMasses()) {
-    SEScalarMass relMass;
-    relMass.Load(rmData, rd);
-    m_ReleasedDrugMasses.push_back(relMass);
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::NasalStateData* SENasalState::Unload() const
-{
-  CDM::NasalStateData* data = new CDM::NasalStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SENasalState::Unload(CDM::NasalStateData& data) const
-{
-  data.TotalNasalDose(std::unique_ptr<CDM::ScalarMassData>(m_TotalNasalDose->Unload()));
-  for (auto umData : m_UnreleasedDrugMasses) {
-    data.UnreleasedDrugMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(umData.Unload()));
-  }
-  for (auto rmData : m_ReleasedDrugMasses) {
-    data.ReleasedDrugMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(rmData.Unload()));
-  }
-  data.Substance(m_Substance->GetName());
 }
 //-------------------------------------------------------------------------------
 SEScalarMass& SENasalState::GetTotalNasalDose()
@@ -183,7 +124,7 @@ SEScalarMass& SENasalState::GetTotalNasalDose()
   return *m_TotalNasalDose;
 }
 //-------------------------------------------------------------------------------
-//SEScalarMassPerVolume& SENasalState::GetVenaCavaConcentration()
+// SEScalarMassPerVolume& SENasalState::GetVenaCavaConcentration()
 //{
 //  if (m_VenaCavaConcentration == nullptr)
 //    m_VenaCavaConcentration = new SEScalarMassPerVolume();
@@ -272,8 +213,8 @@ bool SENasalState::operator==(const SENasalState& rhs) const
   bool equivilant = (m_Substance && rhs.m_Substance) ? m_Substance->operator==(*rhs.m_Substance) : m_Substance == rhs.m_Substance;
   equivilant &= (m_TotalNasalDose && rhs.m_TotalNasalDose) ? m_TotalNasalDose->operator==(*rhs.m_TotalNasalDose)
                                                            : m_TotalNasalDose == rhs.m_TotalNasalDose;
-  //equivilant &= (m_VenaCavaConcentration && rhs.m_VenaCavaConcentration) ? m_VenaCavaConcentration->operator==(*rhs.m_VenaCavaConcentration)
-                                                                         //: m_VenaCavaConcentration == rhs.m_VenaCavaConcentration;
+  // equivilant &= (m_VenaCavaConcentration && rhs.m_VenaCavaConcentration) ? m_VenaCavaConcentration->operator==(*rhs.m_VenaCavaConcentration)
+  //: m_VenaCavaConcentration == rhs.m_VenaCavaConcentration;
   equivilant &= m_UnreleasedDrugMasses == rhs.m_UnreleasedDrugMasses;
   equivilant &= m_ReleasedDrugMasses == rhs.m_ReleasedDrugMasses;
   equivilant &= m_NumUnreleasedMasses == rhs.m_NumUnreleasedMasses;

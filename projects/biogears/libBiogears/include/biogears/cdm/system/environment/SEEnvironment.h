@@ -11,9 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/cdm/Environment.hxx>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
+#include <biogears/cdm/system/SESystem.h>
 
 namespace biogears {
 class SESubstance;
@@ -47,14 +46,12 @@ public:
 
   void Clear() override;
 
-  bool Load(const CDM::EnvironmentData& in);
   bool Load(const char* environmentFile);
   bool Load(const std::string& environmentFile);
 
   bool operator==(SEEnvironment const&) const;
   bool operator!=(SEEnvironment const&) const;
 
-  CDM::EnvironmentData* Unload() const override;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
   /** @name ProcessChange
    * @brief - Will change this class as directed by the Action
@@ -120,8 +117,7 @@ public:
   SEScalarPower& GetSkinHeatLoss();
   double GetSkinHeatLoss(const PowerUnit& unit) const;
 
-protected:
-  void Unload(CDM::EnvironmentData& data) const;
+  bool IsValid() const;
 
 protected:
   std::string m_Name;

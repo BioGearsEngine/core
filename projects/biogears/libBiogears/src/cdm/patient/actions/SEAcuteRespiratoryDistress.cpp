@@ -21,59 +21,41 @@ SEAcuteRespiratoryDistress::SEAcuteRespiratoryDistress()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEAcuteRespiratoryDistress::~SEAcuteRespiratoryDistress()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEAcuteRespiratoryDistress::Clear()
 {
 
   SEPatientAction::Clear();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAcuteRespiratoryDistress::IsValid() const
 {
   return SEPatientAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEAcuteRespiratoryDistress::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
 }
-
-bool SEAcuteRespiratoryDistress::Load(const CDM::AcuteRespiratoryDistressData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-
-CDM::AcuteRespiratoryDistressData* SEAcuteRespiratoryDistress::Unload() const
-{
-  CDM::AcuteRespiratoryDistressData* data(new CDM::AcuteRespiratoryDistressData());
-  Unload(*data);
-  return data;
-}
-
-void SEAcuteRespiratoryDistress::Unload(CDM::AcuteRespiratoryDistressData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-
+//-------------------------------------------------------------------------------
 bool SEAcuteRespiratoryDistress::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
-
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEAcuteRespiratoryDistress::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEAcuteRespiratoryDistress::ToString(std::ostream& str) const
 {
   str << "Patient Action : Acute Respiratory Distress";

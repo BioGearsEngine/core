@@ -32,15 +32,5 @@ bool SEPatientCondition::IsValid() const
 {
   return SECondition::IsValid();
 }
-//-------------------------------------------------------------------------------
-bool SEPatientCondition::Load(const CDM::PatientConditionData& in)
-{
-  io::PatientConditions::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-void SEPatientCondition::Unload(CDM::PatientConditionData& data) const
-{
-  io::PatientConditions::Marshall(*this, data);
-}
+
 }

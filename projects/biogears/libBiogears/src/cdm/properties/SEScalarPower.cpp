@@ -23,7 +23,7 @@ const PowerUnit PowerUnit::kcal_Per_day("kcal/day");
 const PowerUnit PowerUnit::J_Per_s("J/s");
 const PowerUnit PowerUnit::BTU_Per_hr("BTU/hr");
 
-template class SEScalarQuantity<PowerUnit>;
+template class BIOGEARS_API SEScalarQuantity<PowerUnit>;
 
 PowerUnit::PowerUnit(const char* u)
   : PowerUnit(std::string { u })
@@ -46,15 +46,7 @@ SEScalarPower::SEScalarPower()
 SEScalarPower::~SEScalarPower()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarPowerData* SEScalarPower::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPowerData* data(new CDM::ScalarPowerData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool PowerUnit::IsValidUnit(const char* unit)
 {

@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 // Question: To Serialize Invalid units or not to Serialize?
 //           TO Throw an exception when a member is invalid?
-#define CDM_ACTIONS_MARSHALL_HELPER(in, out, func)                                           \
+#define CDM_ACTIONS_PTR_MARSHALL_HELPER(in, out, func)                                           \
   if (in.m_##func && in.m_##func->IsValid()) {                                               \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>());         \
     io::Actions::Marshall(*in.m_##func, out.func());                                         \
@@ -32,34 +32,42 @@ specific language governing permissions and limitations under the License.
      throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
    }*/
 
-#define CDM_OPTIONAL_ACTIONS_MARSHALL_HELPER(in, out, func)                                 \
+#define CDM_OPTIONAL_ACTIONS_PTR_MARSHALL_HELPER(in, out, func)                                 \
   if (in.m_##func && in.m_##func->IsValid()) {                                              \
     io::Actions::Marshall(*in.m_##func, out.func());                                        \
   } /*else if (in.m_##func) {                                                               \
     throw biogears::CommonDataModelException("func is InValid and cannot be Unmarshalled"); \
   }*/
 
-#define SE_ACTIONS_ENUM_MARSHALL_HELPER(in, out, func)                               \
+#define SE_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, func)                               \
   if (in.Has##func()) {                                                              \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Actions::Marshall(in.m_##func, out.func());                                  \
   }
 
-#define SE_OPTIONAL_ACTIONS_ENUM_MARSHALL_HELPER(in, out, func) \
+#define SE_OPTIONAL_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, func) \
   io::Actions::Marshall(in.m_##func, out.func());
 
 namespace biogears {
-
+class SESubstanceManager;
 class SEAction;
+class SEActionManager;
 class SEActionList;
 class SEAdvanceTime;
-//enum class SESerializationType;
+// enum class SESerializationType;
 class SESerializeState;
-//class SERandomSeed;
+// class SERandomSeed;
 
 namespace io {
   class BIOGEARS_PRIVATE_API Actions {
   public:
+    // class Factories;
+    static std::vector<std::unique_ptr<SEAction>> action_factory(const CDM::ActionListData& in, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<SEAction> factory(CDM::ActionData const* actionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<CDM::ActionData> factory(const SEAction* data);
+
+    static void Marshall(SEActionManager const& in, std::vector<std::unique_ptr<CDM::ActionData>>& out);
+
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD, std::enable_if_t<std::is_enum<SE>::value>* = nullptr>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
@@ -72,9 +80,9 @@ namespace io {
     static void UnMarshall(const CDM::ActionData& in, SEAction& out);
     static void Marshall(const SEAction& in, CDM::ActionData& out);
     //// class SEActionList;
-    //static void UnMarshall(const CDM::ActionListData& in, SEActionList& out, std::default_random_engine* rd = nullptr);
-    //static void Marshall(const SEActionList& in, CDM::ActionListData& out);
-    // class SEAdvanceTime;
+    // static void UnMarshall(const CDM::ActionListData& in, SEActionList& out, std::default_random_engine* rd = nullptr);
+    // static void Marshall(const SEActionList& in, CDM::ActionListData& out);
+    //  class SEAdvanceTime;
     static void UnMarshall(const CDM::AdvanceTimeData& in, SEAdvanceTime& out, std::default_random_engine* re = nullptr);
     static void Marshall(const SEAdvanceTime& in, CDM::AdvanceTimeData& out);
     // class SESerializationType;
@@ -84,8 +92,8 @@ namespace io {
     static void UnMarshall(const CDM::SerializeStateData& in, SESerializeState& out);
     static void Marshall(const SESerializeState& in, CDM::SerializeStateData& out);
     // class SERandomSeed
-    //static void UnMarshall(const CDM::RandomSeed& in, SERandomSeed& out, std::default_random_engine* rd = nullptr);
-    //static void Marshall(const SERandomSeed& in, CDM::RandomSeed& out);
+    // static void UnMarshall(const CDM::RandomSeed& in, SERandomSeed& out, std::default_random_engine* rd = nullptr);
+    // static void Marshall(const SERandomSeed& in, CDM::RandomSeed& out);
   };
 
   //----------------------------------------------------------------------------------

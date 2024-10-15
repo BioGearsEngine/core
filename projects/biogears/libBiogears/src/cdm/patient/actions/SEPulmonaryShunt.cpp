@@ -21,52 +21,34 @@ SEPulmonaryShunt::SEPulmonaryShunt()
 {
   m_FlowRateScaling = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEPulmonaryShunt::~SEPulmonaryShunt()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEPulmonaryShunt::Clear()
 {
 
   SEPatientAction::Clear();
   SAFE_DELETE(m_FlowRateScaling);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryShunt::IsValid() const
 {
   return SEPatientAction::IsValid() && HasFlowRateScale();
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryShunt::IsActive() const
 {
   return IsValid() ? !m_FlowRateScaling->IsZero() : false;
 }
-
-bool SEPulmonaryShunt::Load(const CDM::PulmonaryShuntData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-
-CDM::PulmonaryShuntData* SEPulmonaryShunt::Unload() const
-{
-  CDM::PulmonaryShuntData* data(new CDM::PulmonaryShuntData());
-  Unload(*data);
-  return data;
-}
-
-void SEPulmonaryShunt::Unload(CDM::PulmonaryShuntData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryShunt::HasFlowRateScale() const
 {
   return m_FlowRateScaling == nullptr ? false : m_FlowRateScaling->IsValid();
 }
-
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEPulmonaryShunt::GetFlowRateScale()
 {
   if (m_FlowRateScaling == nullptr)
@@ -86,7 +68,7 @@ bool SEPulmonaryShunt::operator!=(const SEPulmonaryShunt& rhs) const
 {
   return !(*this == rhs);
 }
-
+//-------------------------------------------------------------------------------
 void SEPulmonaryShunt::ToString(std::ostream& str) const
 {
   str << "Patient Action : Pulmonary Shunt";
@@ -96,4 +78,5 @@ void SEPulmonaryShunt::ToString(std::ostream& str) const
   HasFlowRateScale() ? str << *m_FlowRateScaling : str << "Not Set";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
 }

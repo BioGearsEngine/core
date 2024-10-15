@@ -78,24 +78,7 @@ void SEComprehensiveMetabolicPanel::Reset()
   INVALIDATE_PROPERTY(m_TotalBilirubin);
   INVALIDATE_PROPERTY(m_TotalProtein);
 }
-//-------------------------------------------------------------------------------
-bool SEComprehensiveMetabolicPanel::Load(const CDM::ComprehensiveMetabolicPanelData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ComprehensiveMetabolicPanelData* SEComprehensiveMetabolicPanel::Unload()
-{
-  CDM::ComprehensiveMetabolicPanelData* data = new CDM::ComprehensiveMetabolicPanelData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEComprehensiveMetabolicPanel::Unload(CDM::ComprehensiveMetabolicPanelData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasAlbumin() const
 {

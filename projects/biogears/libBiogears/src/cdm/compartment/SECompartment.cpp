@@ -36,17 +36,6 @@ void SECompartment::Clear()
 {
 }
 //-----------------------------------------------------------------------------
-bool SECompartment::Load(const CDM::CompartmentData& in, SECircuitManager* circuits)
-{
-  io::Compartment::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-void SECompartment::Unload(CDM::CompartmentData& data)
-{
-  io::Compartment::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 std::string SECompartment::GetName() const
 {
   return m_Name;

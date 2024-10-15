@@ -38,24 +38,7 @@ bool SEDiabetesType2::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasInsulinProductionSeverity() && HasInsulinResistanceSeverity();
 }
-//-----------------------------------------------------------------------------
-bool SEDiabetesType2::Load(const CDM::DiabetesType2Data& in)
-{
-  io::PatientConditions::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::DiabetesType2Data* SEDiabetesType2::Unload() const
-{
-  CDM::DiabetesType2Data* data(new CDM::DiabetesType2Data());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEDiabetesType2::Unload(CDM::DiabetesType2Data& data) const
-{
-  io::PatientConditions::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 bool SEDiabetesType2::HasInsulinProductionSeverity() const
 {

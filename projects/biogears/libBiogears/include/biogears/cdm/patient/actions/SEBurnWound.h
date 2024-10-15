@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+
 
 #include <random>
 
@@ -47,9 +47,6 @@ public:
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
-
-  virtual bool Load(const CDM::BurnWoundData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::BurnWoundData* Unload() const override;
 
   bool HasTotalBodySurfaceArea() const;
   double GetTotalBodySurfaceArea() const;
@@ -95,7 +92,6 @@ public:
   double getRightLegBurnIntensity() const;
 
 protected:
-  virtual void Unload(CDM::BurnWoundData& data) const;
   void calculateCompartmentDistribution();
 
 private:

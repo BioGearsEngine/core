@@ -11,10 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include "biogears/cdm/properties/SEScalarFraction.h"
-#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
-
-CDM_BIND_DECL(AppliedTemperatureData)
+#include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 
 namespace biogears {
 class SEScalar;
@@ -34,16 +32,9 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::AppliedTemperatureData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::AppliedTemperatureData* Unload() const;
-
   bool operator==(SEAppliedTemperature const&) const;
   bool operator!=(SEAppliedTemperature const&) const;
 
-protected:
-  virtual void Unload(CDM::AppliedTemperatureData& data) const;
-
-public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
@@ -63,6 +54,8 @@ public:
   virtual void SetState(SEOnOff onOff);
 
   virtual void ToString(std::ostream& str) const;
+
+  virtual bool IsValid() const;
 
 protected:
   SEScalarTemperature* m_Temperature;

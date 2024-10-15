@@ -20,7 +20,7 @@ const FlowElastanceUnit FlowElastanceUnit::cmH2O_Per_L("cmH2O/L");
 const FlowElastanceUnit FlowElastanceUnit::mmHg_Per_mL("mmHg/mL");
 const FlowElastanceUnit FlowElastanceUnit::Pa_Per_m3("Pa/m^3");
 
-template class SEScalarQuantity<FlowElastanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<FlowElastanceUnit>;
 
 FlowElastanceUnit::FlowElastanceUnit(const char* u)
   : FlowElastanceUnit(std::string { u })
@@ -43,15 +43,7 @@ SEScalarFlowElastance::SEScalarFlowElastance()
 SEScalarFlowElastance::~SEScalarFlowElastance()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarFlowElastanceData* SEScalarFlowElastance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarFlowElastanceData* data(new CDM::ScalarFlowElastanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool FlowElastanceUnit::IsValidUnit(const char* unit)
 {

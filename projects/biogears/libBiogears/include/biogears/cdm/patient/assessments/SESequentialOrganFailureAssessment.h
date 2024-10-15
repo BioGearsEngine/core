@@ -15,8 +15,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 #include <biogears/cdm/properties/SEScalar.h>
 
-#include <biogears/schema/cdm/PatientAssessments.hxx>
-
 namespace biogears {
 class SEScalar;
 namespace io {
@@ -34,12 +32,6 @@ public:
 
   virtual void Reset() override; // reset values
   virtual void Clear() override; // clear memory
-
-  virtual bool Load(const CDM::SequentialOrganFailureAssessmentData& in);
-  virtual CDM::SequentialOrganFailureAssessmentData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::SequentialOrganFailureAssessmentData& data);
 
 public:
   virtual bool HasRespirationSOFA();

@@ -23,7 +23,7 @@ const LengthPerTimeUnit LengthPerTimeUnit::cm_Per_min("cm/min");
 const LengthPerTimeUnit LengthPerTimeUnit::ft_Per_s("ft/s");
 const LengthPerTimeUnit LengthPerTimeUnit::ft_Per_min("ft/min");
 
-template class SEScalarQuantity<LengthPerTimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<LengthPerTimeUnit>;
 
 LengthPerTimeUnit::LengthPerTimeUnit(const char* u)
   : CCompoundUnit(u)
@@ -46,15 +46,7 @@ SEScalarLengthPerTime::SEScalarLengthPerTime()
 SEScalarLengthPerTime::~SEScalarLengthPerTime()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarLengthPerTimeData* SEScalarLengthPerTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarLengthPerTimeData* data(new CDM::ScalarLengthPerTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool LengthPerTimeUnit::IsValidUnit(const char* unit)
 {

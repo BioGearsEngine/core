@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
 namespace biogears {
 class SEScalarElectricPotential;
@@ -38,17 +37,11 @@ public:
   BIOGEARS_API const SEScalar* GetScalar(const char* name) override;
   BIOGEARS_API const SEScalar* GetScalar(const std::string& name) override;
 
-  BIOGEARS_API bool Load(const CDM::ElectroCardioGramData& in);
-  BIOGEARS_API CDM::ElectroCardioGramData* Unload() const override;
   BIOGEARS_API Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   BIOGEARS_API bool operator==(SEElectroCardioGram const&) const;
   BIOGEARS_API bool operator!=(SEElectroCardioGram const&) const;
 
-protected:
-  BIOGEARS_API void Unload(CDM::ElectroCardioGramData& data) const;
-
-public:
   BIOGEARS_API bool HasLead1ElectricPotential() const;
   BIOGEARS_API SEScalarElectricPotential& GetLead1ElectricPotential();
   BIOGEARS_API double GetLead1ElectricPotential(const ElectricPotentialUnit& unit) const;

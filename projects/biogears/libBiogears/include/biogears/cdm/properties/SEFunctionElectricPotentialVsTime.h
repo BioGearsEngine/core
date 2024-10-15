@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEFunction.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class TimeUnit;
@@ -27,12 +26,6 @@ public:
   virtual ~SEFunctionElectricPotentialVsTime();
 
   virtual void Clear();
-
-  virtual bool Load(const CDM::FunctionElectricPotentialVsTimeData& in);
-  virtual CDM::FunctionElectricPotentialVsTimeData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::FunctionElectricPotentialVsTimeData& data) const;
 
 public:
   double GetIndependentValue(unsigned int index) = delete;

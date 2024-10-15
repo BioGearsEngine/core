@@ -1,6 +1,7 @@
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/SECircuit.inl>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>

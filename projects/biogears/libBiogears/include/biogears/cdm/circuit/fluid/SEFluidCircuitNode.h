@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class SECircuitManager;
@@ -31,12 +30,6 @@ public:
   virtual ~SEFluidCircuitNode();
 
   virtual void Clear(); //clear memory
-
-  virtual bool Load(const CDM::FluidCircuitNodeData& in);
-  virtual CDM::FluidCircuitNodeData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::FluidCircuitNodeData& data) const;
 
 public:
   virtual bool HasPressure() const;

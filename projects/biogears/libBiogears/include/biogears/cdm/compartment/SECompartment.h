@@ -17,9 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include<biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/utils/Logger.h>
-#include <biogears/schema/cdm/Compartment.hxx>
 
-CDM_BIND_DECL(CompartmentData)
 
 namespace biogears {
 
@@ -43,12 +41,6 @@ public:
   virtual ~SECompartment() override;
 
   virtual void Clear();
-
-  virtual bool Load(const CDM::CompartmentData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::CompartmentData* Unload() = 0;
-
-protected:
-  virtual void Unload(CDM::CompartmentData& data);
 
 public:
   virtual std::string GetName() const;

@@ -19,37 +19,45 @@ specific language governing permissions and limitations under the License.
 #include "Conditions.h"
 
 #include <biogears/cdm/substance/SESubstanceManager.h>
-#include <biogears/schema/cdm/Scenario.hxx>
 #include <biogears/schema/cdm/DataRequests.hxx>
+#include <biogears/schema/cdm/Scenario.hxx>
 
-#define CDM_SCENARIO_MARSHALL_HELPER(in, out, func)                                  \
+#define CDM_SCENARIO_PTR_MARSHALL_HELPER(in, out, func)                                  \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Scenario::Marshall(*in.m_##func, out.func());                                \
   }
 
-#define CDM_OPTIONAL_SCENARIO_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_SCENARIO_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                         \
     io::Scenario::Marshall(*in.m_##func, out.func());        \
   }
+
+#define CDM_SCENARIO_COPY(type, in, out)   \
+  {                                        \
+    CDM::##type##Data middle;              \
+    io::Scenario::Marshall(in, middle);    \
+    io::Scenario::UnMarshall(middle, out); \
+  }
+
 namespace biogears {
 
 class SEScenario;
 class SEScenarioInitialParameters;
 class SEScenarioAutoSerialization;
 
-
 namespace io {
   class BIOGEARS_PRIVATE_API Scenario {
   public:
-
+    // class factories
+    static std::unique_ptr<CDM::ActionData> factory(const SEAction* in);
     // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
     static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
 
-     // class SEScenario;
+    // class SEScenario;
     static void UnMarshall(const CDM::ScenarioData& in, SEScenario& out);
     static void Marshall(const SEScenario& in, CDM::ScenarioData& out);
     static void Marshall(const SEScenario& in, CDM::ActionListData& out);
@@ -59,8 +67,7 @@ namespace io {
     // class SEScenarioAutoSerialization;
     static void UnMarshall(const CDM::ScenarioAutoSerializationData& in, SEScenarioAutoSerialization& out);
     static void Marshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out);
-    
-    static std::unique_ptr<CDM::ActionData> factory(const SEAction* in);
+
   };
 
   //----------------------------------------------------------------------------------

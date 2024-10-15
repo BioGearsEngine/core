@@ -18,19 +18,20 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class PhysiologyEngine;
-
+namespace io {
+  class InhalerActions;
+}
 class BIOGEARS_API SEInhalerActionCollection : public Loggable {
+  friend class io::InhalerActions;
+
 public:
   SEInhalerActionCollection(SESubstanceManager&);
   ~SEInhalerActionCollection();
 
   void Clear();
 
-  void Unload(std::vector<CDM::ActionData*>& to);
-
   bool ProcessAction(const SEInhalerAction& action, const PhysiologyEngine& engine);
-  bool ProcessAction(const CDM::InhalerActionData& action, const PhysiologyEngine& engine);
-
+ 
   // STATE ACTION
   bool HasConfiguration() const;
   SEInhalerConfiguration* GetConfiguration() const;

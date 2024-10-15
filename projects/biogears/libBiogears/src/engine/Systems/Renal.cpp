@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Renal.h>
 
+#include "io/cdm/Physiology.h"
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
@@ -43,7 +46,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
 auto Renal::make_unique(BioGears& bg) -> std::unique_ptr<Renal>
@@ -67,102 +69,102 @@ void Renal::Clear()
 {
   SERenalSystem::Clear();
 
-  m_patient = nullptr;
+  m_Patient = nullptr;
   m_RenalCircuit = nullptr;
-  m_leftGlomerularNode = nullptr;
-  m_leftBowmansNode = nullptr;
-  m_leftPeritubularNode = nullptr;
-  m_leftTubulesNode = nullptr;
-  m_leftRenalArteryNode = nullptr;
-  m_rightGlomerularNode = nullptr;
-  m_rightBowmansNode = nullptr;
-  m_rightPeritubularNode = nullptr;
-  m_rightTubulesNode = nullptr;
-  m_rightRenalArteryNode = nullptr;
-  m_bladderNode = nullptr;
-  m_leftNetGlomerularCapillariesNode = nullptr;
-  m_leftNetBowmansCapsulesNode = nullptr;
-  m_leftNetPeritubularCapillariesNode = nullptr;
-  m_leftNetTubulesNode = nullptr;
-  m_rightNetGlomerularCapillariesNode = nullptr;
-  m_rightNetBowmansCapsulesNode = nullptr;
-  m_rightNetPeritubularCapillariesNode = nullptr;
-  m_rightNetTubulesNode = nullptr;
-  m_leftGlomerularOsmoticSourcePath = nullptr;
-  m_leftBowmansOsmoticSourcePath = nullptr;
-  m_leftReabsorptionResistancePath = nullptr;
-  m_leftTubulesOsmoticSourcePath = nullptr;
-  m_leftPeritubularOsmoticSourcePath = nullptr;
-  m_leftUreterPath = nullptr;
-  m_leftGlomerularFilterResistancePath = nullptr;
-  m_leftAfferentArteriolePath = nullptr;
-  m_rightReabsorptionResistancePath = nullptr;
-  m_rightGlomerularOsmoticSourcePath = nullptr;
-  m_rightBowmansOsmoticSourcePath = nullptr;
-  m_rightTubulesOsmoticSourcePath = nullptr;
-  m_rightPeritubularOsmoticSourcePath = nullptr;
-  m_rightUreterPath = nullptr;
-  m_rightGlomerularFilterResistancePath = nullptr;
-  m_rightAfferentArteriolePath = nullptr;
-  m_bladderToGroundPressurePath = nullptr;
-  m_urethraPath = nullptr;
-  m_leftTubulesPath = nullptr;
-  m_rightTubulesPath = nullptr;
-  m_leftEfferentArteriolePath = nullptr;
-  m_rightEfferentArteriolePath = nullptr;
+  m_LeftGlomerularNode = nullptr;
+  m_LeftBowmansNode = nullptr;
+  m_LeftPeritubularNode = nullptr;
+  m_LeftTubulesNode = nullptr;
+  m_LeftRenalArteryNode = nullptr;
+  m_RightGlomerularNode = nullptr;
+  m_RightBowmansNode = nullptr;
+  m_RightPeritubularNode = nullptr;
+  m_RightTubulesNode = nullptr;
+  m_RightRenalArteryNode = nullptr;
+  m_BladderNode = nullptr;
+  m_LeftNetGlomerularCapillariesNode = nullptr;
+  m_LeftNetBowmansCapsulesNode = nullptr;
+  m_LeftNetPeritubularCapillariesNode = nullptr;
+  m_LeftNetTubulesNode = nullptr;
+  m_RightNetGlomerularCapillariesNode = nullptr;
+  m_RightNetBowmansCapsulesNode = nullptr;
+  m_RightNetPeritubularCapillariesNode = nullptr;
+  m_RightNetTubulesNode = nullptr;
+  m_LeftGlomerularOsmoticSourcePath = nullptr;
+  m_LeftBowmansOsmoticSourcePath = nullptr;
+  m_LeftReabsorptionResistancePath = nullptr;
+  m_LeftTubulesOsmoticSourcePath = nullptr;
+  m_LeftPeritubularOsmoticSourcePath = nullptr;
+  m_LeftUreterPath = nullptr;
+  m_LeftGlomerularFilterResistancePath = nullptr;
+  m_LeftAfferentArteriolePath = nullptr;
+  m_RightReabsorptionResistancePath = nullptr;
+  m_RightGlomerularOsmoticSourcePath = nullptr;
+  m_RightBowmansOsmoticSourcePath = nullptr;
+  m_RightTubulesOsmoticSourcePath = nullptr;
+  m_RightPeritubularOsmoticSourcePath = nullptr;
+  m_RightUreterPath = nullptr;
+  m_RightGlomerularFilterResistancePath = nullptr;
+  m_RightAfferentArteriolePath = nullptr;
+  m_BladderToGroundPressurePath = nullptr;
+  m_UrethraPath = nullptr;
+  m_LeftTubulesPath = nullptr;
+  m_RightTubulesPath = nullptr;
+  m_LeftEfferentArteriolePath = nullptr;
+  m_RightEfferentArteriolePath = nullptr;
 
-  m_sodium = nullptr;
-  m_urea = nullptr;
-  m_glucose = nullptr;
-  m_lactate = nullptr;
-  m_potassium = nullptr;
-  m_aorta = nullptr;
-  m_venaCava = nullptr;
-  m_bladder = nullptr;
-  m_rightKidneyTissue = nullptr;
-  m_leftKidneyTissue = nullptr;
-  m_leftUreter = nullptr;
-  m_leftPeritubular = nullptr;
-  m_rightUreter = nullptr;
-  m_rightPeritubular = nullptr;
-  m_leftGlomerular = nullptr;
-  m_leftBowmans = nullptr;
-  m_rightGlomerular = nullptr;
-  m_rightBowmans = nullptr;
-  m_leftTubules = nullptr;
-  m_rightTubules = nullptr;
+  m_Sodium = nullptr;
+  m_Urea = nullptr;
+  m_Glucose = nullptr;
+  m_Lactate = nullptr;
+  m_Potassium = nullptr;
+  m_Aorta = nullptr;
+  m_VenaCava = nullptr;
+  m_Bladder = nullptr;
+  m_RightKidneyTissue = nullptr;
+  m_LeftKidneyTissue = nullptr;
+  m_LeftUreter = nullptr;
+  m_LeftPeritubular = nullptr;
+  m_RightUreter = nullptr;
+  m_RightPeritubular = nullptr;
+  m_LeftGlomerular = nullptr;
+  m_LeftBowmans = nullptr;
+  m_RightGlomerular = nullptr;
+  m_RightBowmans = nullptr;
+  m_LeftTubules = nullptr;
+  m_RightTubules = nullptr;
 
-  m_aortaLactate = nullptr;
+  m_AortaLactate = nullptr;
 
-  m_leftPeritubularGlucose = nullptr;
-  m_leftPeritubularPotassium = nullptr;
-  m_leftUreterLactate = nullptr;
-  m_leftUreterPotassium = nullptr;
+  m_LeftPeritubularGlucose = nullptr;
+  m_LeftPeritubularPotassium = nullptr;
+  m_LeftUreterLactate = nullptr;
+  m_LeftUreterPotassium = nullptr;
 
-  m_rightPeritubularGlucose = nullptr;
-  m_rightPeritubularPotassium = nullptr;
-  m_rightUreterLactate = nullptr;
-  m_rightUreterPotassium = nullptr;
+  m_RightPeritubularGlucose = nullptr;
+  m_RightPeritubularPotassium = nullptr;
+  m_RightUreterLactate = nullptr;
+  m_RightUreterPotassium = nullptr;
 
-  m_bladderAlbumin = nullptr;
-  m_bladderGlucose = nullptr;
-  m_bladderPotassium = nullptr;
-  m_bladderSodium = nullptr;
-  m_bladderUrea = nullptr;
-  m_leftTubulesSodium = nullptr;
-  m_rightTubulesSodium = nullptr;
+  m_BladderAlbumin = nullptr;
+  m_BladderGlucose = nullptr;
+  m_BladderPotassium = nullptr;
+  m_BladderSodium = nullptr;
+  m_BladderUrea = nullptr;
+  m_LeftTubulesSodium = nullptr;
+  m_RightTubulesSodium = nullptr;
 
-  m_leftKidneyIntracellularLactate = nullptr;
-  m_rightKidneyIntracellularLactate = nullptr;
+  m_LeftKidneyIntracellularLactate = nullptr;
+  m_RightKidneyIntracellularLactate = nullptr;
 
-  m_urineProductionRate_mL_Per_min_runningAvg.Reset();
-  m_urineOsmolarity_mOsm_Per_L_runningAvg.Reset();
-  m_sodiumExcretionRate_mg_Per_min_runningAvg.Reset();
-  m_rightSodiumFlow_mg_Per_s_runningAvg.Reset();
-  m_leftSodiumFlow_mg_Per_s_runningAvg.Reset();
-  m_leftRenalArterialPressure_mmHg_runningAvg.Reset();
-  m_rightRenalArterialPressure_mmHg_runningAvg.Reset();
-  m_sodiumConcentration_mg_Per_mL_runningAvg.Reset();
+  m_UrineProductionRate_mL_Per_min.Reset();
+  m_UrineOsmolarity_mOsm_Per_L.Reset();
+  m_SodiumExcretionRate_mg_Per_min.Reset();
+  m_RightSodiumFlow_mg_Per_s.Reset();
+  m_LeftSodiumFlow_mg_Per_s.Reset();
+  m_LeftRenalArterialPressure_mmHg.Reset();
+  m_RightRenalArterialPressure_mmHg.Reset();
+  m_SodiumConcentration_mg_Per_mL.Reset();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -174,10 +176,10 @@ void Renal::Initialize()
   BioGearsSystem::Initialize();
 
   m_Urinating = false;
-  m_leftAfferentResistance_mmHg_s_Per_mL = m_leftAfferentArteriolePath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-  m_rightAfferentResistance_mmHg_s_Per_mL = m_rightAfferentArteriolePath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
-  m_leftSodiumFlowSetPoint_mg_Per_s = 4.7;
-  m_rightSodiumFlowSetPoint_mg_Per_s = 4.7;
+  m_LeftAfferentResistance_mmHg_s_Per_mL = m_LeftAfferentArteriolePath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+  m_RightAfferentResistance_mmHg_s_Per_mL = m_RightAfferentArteriolePath->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
+  m_LeftSodiumFlowSetPoint_mg_Per_s = 4.7;
+  m_RightSodiumFlowSetPoint_mg_Per_s = 4.7;
 
   // Initialize system data
   GetLeftGlomerularFluidPermeability().SetValue(m_data.GetConfiguration().GetLeftGlomerularFluidPermeabilityBaseline(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2), VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
@@ -194,43 +196,43 @@ void Renal::Initialize()
   GetGlomerularFiltrationRate().SetValue(180.0, VolumePerTimeUnit::L_Per_day);
 
   GetLeftBowmansCapsulesHydrostaticPressure().SetValue(18.0, PressureUnit::mmHg);
-  GetLeftBowmansCapsulesOsmoticPressure().SetValue(m_leftBowmansOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetLeftBowmansCapsulesOsmoticPressure().SetValue(m_LeftBowmansOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
   GetLeftGlomerularCapillariesHydrostaticPressure().SetValue(60.0, PressureUnit::mmHg);
-  GetLeftGlomerularCapillariesOsmoticPressure().SetValue(m_leftGlomerularOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg); // circuit pressure source baseline
+  GetLeftGlomerularCapillariesOsmoticPressure().SetValue(m_LeftGlomerularOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg); // circuit pressure source baseline
   GetLeftGlomerularFiltrationCoefficient().SetValue(12.5, VolumePerTimePressureUnit::mL_Per_min_mmHg);
   GetLeftGlomerularFiltrationRate().SetValue(90.0, VolumePerTimeUnit::L_Per_day);
   GetLeftNetFiltrationPressure().SetValue(10.0, PressureUnit::mmHg);
   GetLeftNetReabsorptionPressure().SetValue(10.0, PressureUnit::mmHg);
   GetLeftPeritubularCapillariesHydrostaticPressure().SetValue(13.0, PressureUnit::mmHg);
-  GetLeftPeritubularCapillariesOsmoticPressure().SetValue(m_leftPeritubularOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetLeftPeritubularCapillariesOsmoticPressure().SetValue(m_LeftPeritubularOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
   GetLeftReabsorptionFiltrationCoefficient().SetValue(12.4, VolumePerTimePressureUnit::mL_Per_min_mmHg);
   GetLeftReabsorptionRate().SetValue(62.0, VolumePerTimeUnit::mL_Per_min);
   GetLeftTubularHydrostaticPressure().SetValue(6.0, PressureUnit::mmHg);
-  GetLeftTubularOsmoticPressure().SetValue(m_leftTubulesOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetLeftTubularOsmoticPressure().SetValue(m_LeftTubulesOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
   GetLeftFiltrationFraction().SetValue(0.2);
   GetLeftReabsorptionRate().SetValue(62.0, VolumePerTimeUnit::mL_Per_min);
   GetLeftFiltrationFraction().SetValue(0.2);
-  GetLeftAfferentArterioleResistance().Set(m_leftAfferentArteriolePath->GetResistanceBaseline());
-  GetLeftEfferentArterioleResistance().Set(m_leftEfferentArteriolePath->GetResistanceBaseline());
+  GetLeftAfferentArterioleResistance().Set(m_LeftAfferentArteriolePath->GetResistanceBaseline());
+  GetLeftEfferentArterioleResistance().Set(m_LeftEfferentArteriolePath->GetResistanceBaseline());
 
   GetRightBowmansCapsulesHydrostaticPressure().SetValue(18.0, PressureUnit::mmHg);
-  GetRightBowmansCapsulesOsmoticPressure().SetValue(m_rightBowmansOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetRightBowmansCapsulesOsmoticPressure().SetValue(m_RightBowmansOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
   GetRightGlomerularCapillariesHydrostaticPressure().SetValue(60.0, PressureUnit::mmHg);
-  GetRightGlomerularCapillariesOsmoticPressure().SetValue(m_rightGlomerularOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetRightGlomerularCapillariesOsmoticPressure().SetValue(m_RightGlomerularOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
   GetRightGlomerularFiltrationCoefficient().SetValue(12.5, VolumePerTimePressureUnit::mL_Per_min_mmHg);
   GetRightGlomerularFiltrationRate().SetValue(90.0, VolumePerTimeUnit::L_Per_day);
   GetRightNetFiltrationPressure().SetValue(10.0, PressureUnit::mmHg);
   GetRightNetReabsorptionPressure().SetValue(10.0, PressureUnit::mmHg);
   GetRightPeritubularCapillariesHydrostaticPressure().SetValue(13.0, PressureUnit::mmHg);
-  GetRightPeritubularCapillariesOsmoticPressure().SetValue(m_rightPeritubularOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetRightPeritubularCapillariesOsmoticPressure().SetValue(m_RightPeritubularOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
   GetRightReabsorptionFiltrationCoefficient().SetValue(12.4, VolumePerTimePressureUnit::mL_Per_min_mmHg);
   GetRightTubularHydrostaticPressure().SetValue(6.0, PressureUnit::mmHg);
-  GetRightTubularOsmoticPressure().SetValue(m_rightTubulesOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
+  GetRightTubularOsmoticPressure().SetValue(m_RightTubulesOsmoticSourcePath->GetPressureSourceBaseline().GetValue(PressureUnit::mmHg), PressureUnit::mmHg);
   GetRightFiltrationFraction().SetValue(0.2);
   GetRightReabsorptionRate().SetValue(62.0, VolumePerTimeUnit::mL_Per_min);
   GetRightFiltrationFraction().SetValue(0.2);
-  GetRightAfferentArterioleResistance().Set(m_rightAfferentArteriolePath->GetResistanceBaseline());
-  GetRightEfferentArterioleResistance().Set(m_rightEfferentArteriolePath->GetResistanceBaseline());
+  GetRightAfferentArterioleResistance().Set(m_RightAfferentArteriolePath->GetResistanceBaseline());
+  GetRightEfferentArterioleResistance().Set(m_RightEfferentArteriolePath->GetResistanceBaseline());
 
   GetRenalBloodFlow().SetValue(1132.0, VolumePerTimeUnit::mL_Per_min);
   GetRenalPlasmaFlow().SetValue(660.0, VolumePerTimeUnit::mL_Per_min);
@@ -251,10 +253,10 @@ void Renal::Initialize()
   for (SESubstance* sub : m_data.GetSubstances().GetSubstances()) {
     CalculateFilterability(*sub);
     if (!sub->GetClearance().HasRenalDynamic())
-      sub->GetClearance().SetRenalDynamic(RenalDynamic::Clearance);
+      sub->GetClearance().SetRenalDynamic(RenalDynamicsType::Clearance);
     if (!sub->GetClearance().HasRenalClearance())
       sub->GetClearance().GetRenalClearance().SetValue(0.0, VolumePerTimeMassUnit::mL_Per_min_kg);
-    if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Regulation) {
+    if (sub->GetClearance().GetRenalDynamic() == RenalDynamicsType::Regulation) {
       sub->GetClearance().GetRenalFiltrationRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
       sub->GetClearance().GetRenalReabsorptionRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
       sub->GetClearance().GetRenalExcretionRate().SetValue(0.0, MassPerTimeUnit::g_Per_min);
@@ -263,174 +265,125 @@ void Renal::Initialize()
   }
 }
 
-bool Renal::Load(const CDM::BioGearsRenalSystemData& in)
-{
-  if (!SERenalSystem::Load(in))
-    return false;
-
-  m_Urinating = in.Urinating();
-  m_leftAfferentResistance_mmHg_s_Per_mL = in.LeftAfferentResistance_mmHg_s_Per_mL();
-  m_rightAfferentResistance_mmHg_s_Per_mL = in.RightAfferentResistance_mmHg_s_Per_mL();
-  m_leftSodiumFlowSetPoint_mg_Per_s = in.LeftSodiumFlowSetPoint_mg_Per_s();
-  m_rightSodiumFlowSetPoint_mg_Per_s = in.RightSodiumFlowSetPoint_mg_Per_s();
-
-  m_urineProductionRate_mL_Per_min_runningAvg.Load(in.UrineProductionRate_mL_Per_min());
-  m_urineOsmolarity_mOsm_Per_L_runningAvg.Load(in.UrineOsmolarity_mOsm_Per_L());
-  m_sodiumConcentration_mg_Per_mL_runningAvg.Load(in.SodiumConcentration_mg_Per_mL());
-  m_sodiumExcretionRate_mg_Per_min_runningAvg.Load(in.SodiumExcretionRate_mg_Per_min());
-  m_leftSodiumFlow_mg_Per_s_runningAvg.Load(in.LeftSodiumFlow_mg_Per_s());
-  m_rightSodiumFlow_mg_Per_s_runningAvg.Load(in.RightSodiumFlow_mg_Per_s());
-  m_leftRenalArterialPressure_mmHg_runningAvg.Load(in.LeftRenalArterialPressure_mmHg());
-  m_rightRenalArterialPressure_mmHg_runningAvg.Load(in.RightRenalArterialPressure_mmHg());
-
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsRenalSystemData* Renal::Unload() const
-{
-  CDM::BioGearsRenalSystemData* data = new CDM::BioGearsRenalSystemData();
-  Unload(*data);
-  return data;
-}
-void Renal::Unload(CDM::BioGearsRenalSystemData& data) const
-{
-  SERenalSystem::Unload(data);
-
-  data.Urinating(m_Urinating);
-  data.LeftAfferentResistance_mmHg_s_Per_mL(m_leftAfferentResistance_mmHg_s_Per_mL);
-  data.RightAfferentResistance_mmHg_s_Per_mL(m_rightAfferentResistance_mmHg_s_Per_mL);
-  data.LeftSodiumFlowSetPoint_mg_Per_s(m_leftSodiumFlowSetPoint_mg_Per_s);
-  data.RightSodiumFlowSetPoint_mg_Per_s(m_rightSodiumFlowSetPoint_mg_Per_s);
-
-  data.UrineProductionRate_mL_Per_min(std::unique_ptr<CDM::RunningAverageData>(m_urineProductionRate_mL_Per_min_runningAvg.Unload()));
-  data.UrineOsmolarity_mOsm_Per_L(std::unique_ptr<CDM::RunningAverageData>(m_urineOsmolarity_mOsm_Per_L_runningAvg.Unload()));
-  data.SodiumConcentration_mg_Per_mL(std::unique_ptr<CDM::RunningAverageData>(m_sodiumConcentration_mg_Per_mL_runningAvg.Unload()));
-  data.SodiumExcretionRate_mg_Per_min(std::unique_ptr<CDM::RunningAverageData>(m_sodiumExcretionRate_mg_Per_min_runningAvg.Unload()));
-  data.LeftSodiumFlow_mg_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_leftSodiumFlow_mg_Per_s_runningAvg.Unload()));
-  data.RightSodiumFlow_mg_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_rightSodiumFlow_mg_Per_s_runningAvg.Unload()));
-  data.LeftRenalArterialPressure_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_leftRenalArterialPressure_mmHg_runningAvg.Unload()));
-  data.RightRenalArterialPressure_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_rightRenalArterialPressure_mmHg_runningAvg.Unload()));
-}
-
 void Renal::SetUp()
 {
   m_dt = m_data.GetTimeStep().GetValue(TimeUnit::s);
-  m_patient = &m_data.GetPatient();
+  m_Patient = &m_data.GetPatient();
 
   // Substances
-  m_albumin = &m_data.GetSubstances().GetAlbumin();
-  m_sodium = &m_data.GetSubstances().GetSodium();
-  m_urea = &m_data.GetSubstances().GetUrea();
-  m_glucose = &m_data.GetSubstances().GetGlucose();
-  m_lactate = &m_data.GetSubstances().GetLactate();
-  m_potassium = &m_data.GetSubstances().GetPotassium();
+  m_Albumin = &m_data.GetSubstances().GetAlbumin();
+  m_Sodium = &m_data.GetSubstances().GetSodium();
+  m_Urea = &m_data.GetSubstances().GetUrea();
+  m_Glucose = &m_data.GetSubstances().GetGlucose();
+  m_Lactate = &m_data.GetSubstances().GetLactate();
+  m_Potassium = &m_data.GetSubstances().GetPotassium();
 
   // Substance quantities
 
   // Compartments
-  m_aorta = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
-  m_venaCava = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava);
+  m_Aorta = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
+  m_VenaCava = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::VenaCava);
 
-  m_leftKidneyTissue = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::LeftKidney);
-  m_leftGlomerular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftGlomerularCapillaries);
-  m_leftPeritubular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftPeritubularCapillaries);
-  m_leftBowmans = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftBowmansCapsules);
-  m_leftTubules = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftTubules);
-  m_rightKidneyTissue = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::RightKidney);
-  m_rightGlomerular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightGlomerularCapillaries);
-  m_rightPeritubular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightPeritubularCapillaries);
-  m_rightBowmans = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightBowmansCapsules);
-  m_rightTubules = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightTubules);
+  m_LeftKidneyTissue = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::LeftKidney);
+  m_LeftGlomerular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftGlomerularCapillaries);
+  m_LeftPeritubular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftPeritubularCapillaries);
+  m_LeftBowmans = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftBowmansCapsules);
+  m_LeftTubules = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::LeftTubules);
+  m_RightKidneyTissue = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::RightKidney);
+  m_RightGlomerular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightGlomerularCapillaries);
+  m_RightPeritubular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightPeritubularCapillaries);
+  m_RightBowmans = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightBowmansCapsules);
+  m_RightTubules = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::RightTubules);
 
-  m_bladder = m_data.GetCompartments().GetLiquidCompartment(BGE::UrineCompartment::Bladder);
-  m_leftUreter = m_data.GetCompartments().GetLiquidCompartment(BGE::UrineCompartment::LeftUreter);
-  m_rightUreter = m_data.GetCompartments().GetLiquidCompartment(BGE::UrineCompartment::RightUreter);
+  m_Bladder = m_data.GetCompartments().GetLiquidCompartment(BGE::UrineCompartment::Bladder);
+  m_LeftUreter = m_data.GetCompartments().GetLiquidCompartment(BGE::UrineCompartment::LeftUreter);
+  m_RightUreter = m_data.GetCompartments().GetLiquidCompartment(BGE::UrineCompartment::RightUreter);
 
   // Configuration parameters
-  m_defaultOpenResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  m_defaultClosedResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetDefaultClosedFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  m_maxLeftAfferentResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetMaximumAfferentResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  m_minLeftAfferentResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetMinimumAfferentResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  m_maxRightAfferentResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetMaximumAfferentResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  m_minRightAfferentResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetMinimumAfferentResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL = m_data.GetConfiguration().GetPlasmaSodiumConcentrationSetPoint(MassPerVolumeUnit::mg_Per_mL);
+  m_DefaultOpenResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetDefaultOpenFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+  m_DefaultClosedResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetDefaultClosedFlowResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+  m_MaxLeftAfferentResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetMaximumAfferentResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+  m_MinLeftAfferentResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetMinimumAfferentResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+  m_MaxRightAfferentResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetMaximumAfferentResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+  m_MinRightAfferentResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetMinimumAfferentResistance(FlowResistanceUnit::mmHg_s_Per_mL);
+  m_SodiumPlasmaConcentrationSetpoint_mg_Per_mL = m_data.GetConfiguration().GetPlasmaSodiumConcentrationSetPoint(MassPerVolumeUnit::mg_Per_mL);
   m_CVOpenResistance_mmHg_s_Per_mL = m_data.GetConfiguration().GetCardiovascularOpenResistance(FlowResistanceUnit::mmHg_s_Per_mL);
-  m_baselinePotassiumConcentration_g_Per_dL = m_data.GetConfiguration().GetPeritubularPotassiumConcentrationSetPoint(MassPerVolumeUnit::g_Per_dL);
-  m_leftReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2 = m_data.GetConfiguration().GetLeftTubularReabsorptionFluidPermeabilityBaseline(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
-  m_rightReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2 = m_data.GetConfiguration().GetRightTubularReabsorptionFluidPermeabilityBaseline(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
+  m_BaselinePotassiumConcentration_g_Per_dL = m_data.GetConfiguration().GetPeritubularPotassiumConcentrationSetPoint(MassPerVolumeUnit::g_Per_dL);
+  m_LeftReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2 = m_data.GetConfiguration().GetLeftTubularReabsorptionFluidPermeabilityBaseline(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
+  m_RightReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2 = m_data.GetConfiguration().GetRightTubularReabsorptionFluidPermeabilityBaseline(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
   m_RenalCircuit = &m_data.GetCircuits().GetRenalCircuit();
   // Left
-  m_leftGlomerularNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftGlomerularCapillaries);
-  m_leftNetGlomerularCapillariesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftNetGlomerularCapillaries);
-  m_leftBowmansNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftBowmansCapsules);
-  m_leftNetBowmansCapsulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftNetBowmansCapsules);
-  m_leftPeritubularNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftPeritubularCapillaries);
-  m_leftNetPeritubularCapillariesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftNetPeritubularCapillaries);
-  m_leftTubulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftTubules);
-  m_leftNetTubulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftNetTubules);
-  m_leftRenalArteryNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftRenalArtery);
+  m_LeftGlomerularNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftGlomerularCapillaries);
+  m_LeftNetGlomerularCapillariesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftNetGlomerularCapillaries);
+  m_LeftBowmansNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftBowmansCapsules);
+  m_LeftNetBowmansCapsulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftNetBowmansCapsules);
+  m_LeftPeritubularNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftPeritubularCapillaries);
+  m_LeftNetPeritubularCapillariesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftNetPeritubularCapillaries);
+  m_LeftTubulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftTubules);
+  m_LeftNetTubulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftNetTubules);
+  m_LeftRenalArteryNode = m_RenalCircuit->GetNode(BGE::RenalNode::LeftRenalArtery);
   // Right
-  m_rightGlomerularNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightGlomerularCapillaries);
-  m_rightNetGlomerularCapillariesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightNetGlomerularCapillaries);
-  m_rightBowmansNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightBowmansCapsules);
-  m_rightNetBowmansCapsulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightNetBowmansCapsules);
-  m_rightPeritubularNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightPeritubularCapillaries);
-  m_rightNetPeritubularCapillariesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightNetPeritubularCapillaries);
-  m_rightTubulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightTubules);
-  m_rightNetTubulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightNetTubules);
-  m_rightRenalArteryNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightRenalArtery);
+  m_RightGlomerularNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightGlomerularCapillaries);
+  m_RightNetGlomerularCapillariesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightNetGlomerularCapillaries);
+  m_RightBowmansNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightBowmansCapsules);
+  m_RightNetBowmansCapsulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightNetBowmansCapsules);
+  m_RightPeritubularNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightPeritubularCapillaries);
+  m_RightNetPeritubularCapillariesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightNetPeritubularCapillaries);
+  m_RightTubulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightTubules);
+  m_RightNetTubulesNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightNetTubules);
+  m_RightRenalArteryNode = m_RenalCircuit->GetNode(BGE::RenalNode::RightRenalArtery);
   // Individual
-  m_bladderNode = m_RenalCircuit->GetNode(BGE::RenalNode::Bladder);
+  m_BladderNode = m_RenalCircuit->GetNode(BGE::RenalNode::Bladder);
   // Left
-  m_leftGlomerularOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftGlomerularCapillariesToNetGlomerularCapillaries);
-  m_leftBowmansOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftBowmansCapsulesToNetBowmansCapsules);
-  m_leftReabsorptionResistancePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftNetTubulesToNetPeritubularCapillaries);
-  m_leftTubulesOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftTubulesToNetTubules);
-  m_leftPeritubularOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftPeritubularCapillariesToNetPeritubularCapillaries);
-  m_leftUreterPath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftTubulesToUreter);
-  m_leftGlomerularFilterResistancePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftNetGlomerularCapillariesToNetBowmansCapsules);
-  m_leftAfferentArteriolePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftAfferentArterioleToGlomerularCapillaries);
-  m_leftTubulesPath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftBowmansCapsulesToTubules);
-  m_leftEfferentArteriolePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftEfferentArterioleToPeritubularCapillaries);
+  m_LeftGlomerularOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftGlomerularCapillariesToNetGlomerularCapillaries);
+  m_LeftBowmansOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftBowmansCapsulesToNetBowmansCapsules);
+  m_LeftReabsorptionResistancePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftNetTubulesToNetPeritubularCapillaries);
+  m_LeftTubulesOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftTubulesToNetTubules);
+  m_LeftPeritubularOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftPeritubularCapillariesToNetPeritubularCapillaries);
+  m_LeftUreterPath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftTubulesToUreter);
+  m_LeftGlomerularFilterResistancePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftNetGlomerularCapillariesToNetBowmansCapsules);
+  m_LeftAfferentArteriolePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftAfferentArterioleToGlomerularCapillaries);
+  m_LeftTubulesPath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftBowmansCapsulesToTubules);
+  m_LeftEfferentArteriolePath = m_RenalCircuit->GetPath(BGE::RenalPath::LeftEfferentArterioleToPeritubularCapillaries);
 
   // Right
-  m_rightGlomerularOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightGlomerularCapillariesToNetGlomerularCapillaries);
-  m_rightBowmansOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightBowmansCapsulesToNetBowmansCapsules);
-  m_rightReabsorptionResistancePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightNetTubulesToNetPeritubularCapillaries);
-  m_rightTubulesOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightTubulesToNetTubules);
-  m_rightPeritubularOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightPeritubularCapillariesToNetPeritubularCapillaries);
-  m_rightUreterPath = m_RenalCircuit->GetPath(BGE::RenalPath::RightTubulesToUreter);
-  m_rightGlomerularFilterResistancePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightNetGlomerularCapillariesToNetBowmansCapsules);
-  m_rightAfferentArteriolePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightAfferentArterioleToGlomerularCapillaries);
-  m_rightTubulesPath = m_RenalCircuit->GetPath(BGE::RenalPath::RightBowmansCapsulesToTubules);
-  m_rightEfferentArteriolePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightEfferentArterioleToPeritubularCapillaries);
+  m_RightGlomerularOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightGlomerularCapillariesToNetGlomerularCapillaries);
+  m_RightBowmansOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightBowmansCapsulesToNetBowmansCapsules);
+  m_RightReabsorptionResistancePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightNetTubulesToNetPeritubularCapillaries);
+  m_RightTubulesOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightTubulesToNetTubules);
+  m_RightPeritubularOsmoticSourcePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightPeritubularCapillariesToNetPeritubularCapillaries);
+  m_RightUreterPath = m_RenalCircuit->GetPath(BGE::RenalPath::RightTubulesToUreter);
+  m_RightGlomerularFilterResistancePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightNetGlomerularCapillariesToNetBowmansCapsules);
+  m_RightAfferentArteriolePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightAfferentArterioleToGlomerularCapillaries);
+  m_RightTubulesPath = m_RenalCircuit->GetPath(BGE::RenalPath::RightBowmansCapsulesToTubules);
+  m_RightEfferentArteriolePath = m_RenalCircuit->GetPath(BGE::RenalPath::RightEfferentArterioleToPeritubularCapillaries);
   // Individual
-  m_bladderToGroundPressurePath = m_RenalCircuit->GetPath(BGE::RenalPath::BladderToGroundPressure);
-  m_urethraPath = m_RenalCircuit->GetPath(BGE::RenalPath::BladderToGroundUrinate);
+  m_BladderToGroundPressurePath = m_RenalCircuit->GetPath(BGE::RenalPath::BladderToGroundPressure);
+  m_UrethraPath = m_RenalCircuit->GetPath(BGE::RenalPath::BladderToGroundUrinate);
 
-  m_aortaLactate = m_aorta->GetSubstanceQuantity(*m_lactate);
+  m_AortaLactate = m_Aorta->GetSubstanceQuantity(*m_Lactate);
 
-  m_leftPeritubularGlucose = m_leftPeritubular->GetSubstanceQuantity(*m_glucose);
-  m_leftPeritubularPotassium = m_leftPeritubular->GetSubstanceQuantity(*m_potassium);
-  m_leftUreterLactate = m_leftUreter->GetSubstanceQuantity(*m_lactate);
-  m_leftUreterPotassium = m_leftUreter->GetSubstanceQuantity(*m_potassium);
+  m_LeftPeritubularGlucose = m_LeftPeritubular->GetSubstanceQuantity(*m_Glucose);
+  m_LeftPeritubularPotassium = m_LeftPeritubular->GetSubstanceQuantity(*m_Potassium);
+  m_LeftUreterLactate = m_LeftUreter->GetSubstanceQuantity(*m_Lactate);
+  m_LeftUreterPotassium = m_LeftUreter->GetSubstanceQuantity(*m_Potassium);
 
-  m_rightPeritubularGlucose = m_rightPeritubular->GetSubstanceQuantity(*m_glucose);
-  m_rightPeritubularPotassium = m_rightPeritubular->GetSubstanceQuantity(*m_potassium);
-  m_rightUreterLactate = m_rightUreter->GetSubstanceQuantity(*m_lactate);
-  m_rightUreterPotassium = m_rightUreter->GetSubstanceQuantity(*m_potassium);
+  m_RightPeritubularGlucose = m_RightPeritubular->GetSubstanceQuantity(*m_Glucose);
+  m_RightPeritubularPotassium = m_RightPeritubular->GetSubstanceQuantity(*m_Potassium);
+  m_RightUreterLactate = m_RightUreter->GetSubstanceQuantity(*m_Lactate);
+  m_RightUreterPotassium = m_RightUreter->GetSubstanceQuantity(*m_Potassium);
 
-  m_bladderAlbumin = m_bladder->GetSubstanceQuantity(*m_albumin);
-  m_bladderGlucose = m_bladder->GetSubstanceQuantity(*m_glucose);
-  m_bladderPotassium = m_bladder->GetSubstanceQuantity(*m_potassium);
-  m_bladderSodium = m_bladder->GetSubstanceQuantity(*m_sodium);
-  m_bladderUrea = m_bladder->GetSubstanceQuantity(*m_urea);
-  m_leftTubulesSodium = m_leftTubules->GetSubstanceQuantity(*m_sodium);
-  m_rightTubulesSodium = m_rightTubules->GetSubstanceQuantity(*m_sodium);
+  m_BladderAlbumin = m_Bladder->GetSubstanceQuantity(*m_Albumin);
+  m_BladderGlucose = m_Bladder->GetSubstanceQuantity(*m_Glucose);
+  m_BladderPotassium = m_Bladder->GetSubstanceQuantity(*m_Potassium);
+  m_BladderSodium = m_Bladder->GetSubstanceQuantity(*m_Sodium);
+  m_BladderUrea = m_Bladder->GetSubstanceQuantity(*m_Urea);
+  m_LeftTubulesSodium = m_LeftTubules->GetSubstanceQuantity(*m_Sodium);
+  m_RightTubulesSodium = m_RightTubules->GetSubstanceQuantity(*m_Sodium);
 
-  m_leftKidneyIntracellularLactate = m_data.GetCompartments().GetIntracellularFluid(*m_leftKidneyTissue).GetSubstanceQuantity(*m_lactate);
-  m_rightKidneyIntracellularLactate = m_data.GetCompartments().GetIntracellularFluid(*m_rightKidneyTissue).GetSubstanceQuantity(*m_lactate);
+  m_LeftKidneyIntracellularLactate = m_data.GetCompartments().GetIntracellularFluid(*m_LeftKidneyTissue).GetSubstanceQuantity(*m_Lactate);
+  m_RightKidneyIntracellularLactate = m_data.GetCompartments().GetIntracellularFluid(*m_RightKidneyTissue).GetSubstanceQuantity(*m_Lactate);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -551,22 +504,22 @@ void Renal::CalculateUltrafiltrationFeedback()
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
     if (kidney == 0) {
       // LEFT
-      filterResistancePath = m_leftGlomerularFilterResistancePath;
+      filterResistancePath = m_LeftGlomerularFilterResistancePath;
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetLeftGlomerularFluidPermeability().GetValue(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
       surfaceArea_m2 = GetLeftGlomerularFiltrationSurfaceArea().GetValue(AreaUnit::m2);
 
-      glomerularOsmoticSourcePath = m_leftGlomerularOsmoticSourcePath;
-      bowmansOsmoticSourcePath = m_leftBowmansOsmoticSourcePath;
-      glomerularCapillaries = m_leftGlomerular;
+      glomerularOsmoticSourcePath = m_LeftGlomerularOsmoticSourcePath;
+      bowmansOsmoticSourcePath = m_LeftBowmansOsmoticSourcePath;
+      glomerularCapillaries = m_LeftGlomerular;
     } else {
       // RIGHT
-      filterResistancePath = m_rightGlomerularFilterResistancePath;
+      filterResistancePath = m_RightGlomerularFilterResistancePath;
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetRightGlomerularFluidPermeability().GetValue(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
       surfaceArea_m2 = GetRightGlomerularFiltrationSurfaceArea().GetValue(AreaUnit::m2);
 
-      glomerularOsmoticSourcePath = m_rightGlomerularOsmoticSourcePath;
-      bowmansOsmoticSourcePath = m_rightBowmansOsmoticSourcePath;
-      glomerularCapillaries = m_rightGlomerular;
+      glomerularOsmoticSourcePath = m_RightGlomerularOsmoticSourcePath;
+      bowmansOsmoticSourcePath = m_RightBowmansOsmoticSourcePath;
+      glomerularCapillaries = m_RightGlomerular;
     }
 
     // Set the filter resistance based on its physical properties
@@ -587,7 +540,7 @@ void Renal::CalculateUltrafiltrationFeedback()
     ///\todo turn on colloid osmotic pressure once substances have been handled properly (and GI)
     // CACHE THIS SUBSTANCE QUANTITY IN SETUP
     CalculateColloidOsmoticPressure(glomerularCapillaries->GetSubstanceQuantity(m_data.GetSubstances().GetAlbumin())->GetConcentration(), glomerularOsmoticSourcePath->GetNextPressureSource());
-    // CalculateColloidOsmoticPressure(bowmansNode->GetSubstanceQuantity(m_albumin)->GetNextConcentration(), bowmansOsmoticSourcePath->GetNextPressureSource());
+    // CalculateColloidOsmoticPressure(bowmansNode->GetSubstanceQuantity(m_Albumin)->GetNextConcentration(), bowmansOsmoticSourcePath->GetNextPressureSource());
   }
 }
 
@@ -627,23 +580,23 @@ void Renal::CalculateReabsorptionFeedback()
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
     if (kidney == 0) {
       // LEFT
-      filterResistancePath = m_leftReabsorptionResistancePath;
+      filterResistancePath = m_LeftReabsorptionResistancePath;
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetLeftTubularReabsorptionFluidPermeability().GetValue(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
       surfaceArea_m2 = GetLeftTubularReabsorptionFiltrationSurfaceArea().GetValue(AreaUnit::m2);
 
-      peritubularOsmoticSourcePath = m_leftPeritubularOsmoticSourcePath;
-      tubulesOsmoticSourcePath = m_leftTubulesOsmoticSourcePath;
-      peritubularCapillaries = m_leftPeritubular;
+      peritubularOsmoticSourcePath = m_LeftPeritubularOsmoticSourcePath;
+      tubulesOsmoticSourcePath = m_LeftTubulesOsmoticSourcePath;
+      peritubularCapillaries = m_LeftPeritubular;
       renalInterstitial = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::LeftKidneyExtracellular);
     } else {
       // RIGHT
-      filterResistancePath = m_rightReabsorptionResistancePath;
+      filterResistancePath = m_RightReabsorptionResistancePath;
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetRightTubularReabsorptionFluidPermeability().GetValue(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
       surfaceArea_m2 = GetRightTubularReabsorptionFiltrationSurfaceArea().GetValue(AreaUnit::m2);
 
-      peritubularOsmoticSourcePath = m_rightPeritubularOsmoticSourcePath;
-      tubulesOsmoticSourcePath = m_rightTubulesOsmoticSourcePath;
-      peritubularCapillaries = m_rightPeritubular;
+      peritubularOsmoticSourcePath = m_RightPeritubularOsmoticSourcePath;
+      tubulesOsmoticSourcePath = m_RightTubulesOsmoticSourcePath;
+      peritubularCapillaries = m_RightPeritubular;
       renalInterstitial = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::RightKidneyExtracellular);
     }
 
@@ -697,14 +650,14 @@ void Renal::CalculateGluconeogenesis()
     double glucoseReabsorptionMass_mg = 0.0;
     if (kidney == 0) {
       // LEFT
-      ureterLactate = m_leftUreterLactate;
-      peritubularGlucose = m_leftPeritubularGlucose;
+      ureterLactate = m_LeftUreterLactate;
+      peritubularGlucose = m_LeftPeritubularGlucose;
       glucoseReabsorptionMass_mg = m_SubstanceTransport.leftGlucoseReabsorptionMass_mg;
       lactateExcreted_mg = m_SubstanceTransport.leftLactateExcretedMass_mg;
     } else {
       // RIGHT
-      ureterLactate = m_rightUreterLactate;
-      peritubularGlucose = m_rightPeritubularGlucose;
+      ureterLactate = m_RightUreterLactate;
+      peritubularGlucose = m_RightPeritubularGlucose;
       glucoseReabsorptionMass_mg = m_SubstanceTransport.rightGlucoseReabsorptionMass_mg;
       lactateExcreted_mg = m_SubstanceTransport.rightLactateExcretedMass_mg;
     }
@@ -713,8 +666,8 @@ void Renal::CalculateGluconeogenesis()
 
     // Convert 1-to-1 Lactate to Glucose and put in PeritubularCapillaries
     // If Converted Glucose + Reabsorbed Glucose > TM, the difference is excreted as Lactate
-    if (!m_glucose->GetClearance().GetRenalTransportMaximum().IsInfinity()) {
-      double transportMaximum_mg_Per_s = m_glucose->GetClearance().GetRenalTransportMaximum(MassPerTimeUnit::mg_Per_s);
+    if (!m_Glucose->GetClearance().GetRenalTransportMaximum().IsInfinity()) {
+      double transportMaximum_mg_Per_s = m_Glucose->GetClearance().GetRenalTransportMaximum(MassPerTimeUnit::mg_Per_s);
       reabsorptionRate_mg_Per_s = std::min(reabsorptionRate_mg_Per_s, transportMaximum_mg_Per_s);
     }
 
@@ -743,17 +696,17 @@ void Renal::CalculateGluconeogenesis()
   }
 
   // Set the substance output values
-  m_lactate->GetClearance().GetRenalExcretionRate().SetValue(totalLactateExcretionRate_mg_Per_s, MassPerTimeUnit::mg_Per_s);
+  m_Lactate->GetClearance().GetRenalExcretionRate().SetValue(totalLactateExcretionRate_mg_Per_s, MassPerTimeUnit::mg_Per_s);
 
-  double plasmaConcentration_mg_Per_mL = m_aortaLactate->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
-  double patientWeight_kg = m_patient->GetWeight(MassUnit::kg);
-  m_lactate->GetClearance().GetRenalClearance().SetValue(totalLactateExcretionRate_mg_Per_s / plasmaConcentration_mg_Per_mL / patientWeight_kg, VolumePerTimeMassUnit::mL_Per_s_kg);
+  double plasmaConcentration_mg_Per_mL = m_AortaLactate->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
+  double patientWeight_kg = m_Patient->GetWeight(MassUnit::kg);
+  m_Lactate->GetClearance().GetRenalClearance().SetValue(totalLactateExcretionRate_mg_Per_s / plasmaConcentration_mg_Per_mL / patientWeight_kg, VolumePerTimeMassUnit::mL_Per_s_kg);
 
   double singleExcreted_mg = totalLactateExcretionRate_mg_Per_s * m_dt * 0.5; // We are assuming the kidneys are each doing the same amount of work
-  m_leftKidneyIntracellularLactate->GetMassExcreted().IncrementValue(singleExcreted_mg, MassUnit::mg);
-  m_leftKidneyIntracellularLactate->GetMassCleared().IncrementValue(singleExcreted_mg, MassUnit::mg);
-  m_rightKidneyIntracellularLactate->GetMassExcreted().IncrementValue(singleExcreted_mg, MassUnit::mg);
-  m_rightKidneyIntracellularLactate->GetMassCleared().IncrementValue(singleExcreted_mg, MassUnit::mg);
+  m_LeftKidneyIntracellularLactate->GetMassExcreted().IncrementValue(singleExcreted_mg, MassUnit::mg);
+  m_LeftKidneyIntracellularLactate->GetMassCleared().IncrementValue(singleExcreted_mg, MassUnit::mg);
+  m_RightKidneyIntracellularLactate->GetMassExcreted().IncrementValue(singleExcreted_mg, MassUnit::mg);
+  m_RightKidneyIntracellularLactate->GetMassCleared().IncrementValue(singleExcreted_mg, MassUnit::mg);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -796,16 +749,16 @@ void Renal::CalculateActiveTransport()
       continue;
     if (!sub->GetClearance().HasRenalDynamic())
       continue;
-    if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Regulation) {
+    if (sub->GetClearance().GetRenalDynamic() == RenalDynamicsType::Regulation) {
       // This is the generic methodology
       CalculateGlomerularTransport(*sub);
       CalculateReabsorptionTransport(*sub);
-      if (sub == m_potassium) {
+      if (sub == m_Potassium) {
         CalculateSecretion();
       }
 
       CalculateExcretion(*sub);
-    } else if (sub->GetClearance().GetRenalDynamic() == RenalDynamic::Clearance) {
+    } else if (sub->GetClearance().GetRenalDynamic() == RenalDynamicsType::Clearance) {
       // This bypasses the generic methodology and just automatically clears
       CalculateAutomaticClearance(*sub);
     } else {
@@ -841,14 +794,14 @@ void Renal::CalculateGlomerularTransport(SESubstance& sub)
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
     if (kidney == 0) {
       // LEFT
-      glomerular = m_leftGlomerular;
-      bowmans = m_leftBowmans;
-      filterResistancePath = m_leftGlomerularFilterResistancePath;
+      glomerular = m_LeftGlomerular;
+      bowmans = m_LeftBowmans;
+      filterResistancePath = m_LeftGlomerularFilterResistancePath;
     } else {
       // RIGHT
-      glomerular = m_rightGlomerular;
-      bowmans = m_rightBowmans;
-      filterResistancePath = m_rightGlomerularFilterResistancePath;
+      glomerular = m_RightGlomerular;
+      bowmans = m_RightBowmans;
+      filterResistancePath = m_RightGlomerularFilterResistancePath;
     }
     if (!sub.GetClearance().HasGlomerularFilterability()) {
       CalculateFilterability(sub);
@@ -920,23 +873,23 @@ void Renal::CalculateSecretion()
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
     if (kidney == 0) {
       // LEFT
-      ureterPotassium = m_leftUreterPotassium;
-      peritubularPotassium = m_leftPeritubularPotassium;
-      peritubularVolume_dL = m_leftPeritubular->GetVolume().GetValue(VolumeUnit::dL);
+      ureterPotassium = m_LeftUreterPotassium;
+      peritubularPotassium = m_LeftPeritubularPotassium;
+      peritubularVolume_dL = m_LeftPeritubular->GetVolume().GetValue(VolumeUnit::dL);
     } else {
       // RIGHT
-      ureterPotassium = m_rightUreterPotassium;
-      peritubularPotassium = m_rightPeritubularPotassium;
-      peritubularVolume_dL = m_rightPeritubular->GetVolume().GetValue(VolumeUnit::dL);
+      ureterPotassium = m_RightUreterPotassium;
+      peritubularPotassium = m_RightPeritubularPotassium;
+      peritubularVolume_dL = m_RightPeritubular->GetVolume().GetValue(VolumeUnit::dL);
     }
 
     // grab current concentration and volume,
     potassiumConcentration_g_Per_dL = peritubularPotassium->GetConcentration().GetValue(MassPerVolumeUnit::g_Per_dL);
 
     // only do if current levels of potassium are too high:
-    if (potassiumConcentration_g_Per_dL > m_baselinePotassiumConcentration_g_Per_dL) {
+    if (potassiumConcentration_g_Per_dL > m_BaselinePotassiumConcentration_g_Per_dL) {
       // calculate mass to move in mg:
-      massPotassiumToMove_mg = (potassiumConcentration_g_Per_dL - m_baselinePotassiumConcentration_g_Per_dL) * peritubularVolume_dL;
+      massPotassiumToMove_mg = (potassiumConcentration_g_Per_dL - m_BaselinePotassiumConcentration_g_Per_dL) * peritubularVolume_dL;
 
       // Increment & decrement
       peritubularPotassium->GetMass().IncrementValue(-massPotassiumToMove_mg, MassUnit::mg);
@@ -1024,12 +977,12 @@ void Renal::CalculateGolmerularReabsorption(SESubstance& sub)
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
     if (kidney == 0) {
       // LEFT
-      bowmansSubQ = m_leftTubules->GetSubstanceQuantity(sub);
-      glomerularSubQ = m_leftPeritubular->GetSubstanceQuantity(sub);
+      bowmansSubQ = m_LeftTubules->GetSubstanceQuantity(sub);
+      glomerularSubQ = m_LeftPeritubular->GetSubstanceQuantity(sub);
     } else {
       // RIGHT
-      bowmansSubQ = m_rightTubules->GetSubstanceQuantity(sub);
-      glomerularSubQ = m_rightPeritubular->GetSubstanceQuantity(sub);
+      bowmansSubQ = m_RightTubules->GetSubstanceQuantity(sub);
+      glomerularSubQ = m_RightPeritubular->GetSubstanceQuantity(sub);
     }
 
     // we can assume the check for whole blood already happened in active transport routine
@@ -1080,18 +1033,18 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
     if (kidney == 0) {
       // LEFT
 
-      tubulesSubQ = m_leftTubules->GetSubstanceQuantity(sub);
-      peritubularSubQ = m_leftPeritubular->GetSubstanceQuantity(sub);
-      reabsorptionResistancePath = m_leftReabsorptionResistancePath;
+      tubulesSubQ = m_LeftTubules->GetSubstanceQuantity(sub);
+      peritubularSubQ = m_LeftPeritubular->GetSubstanceQuantity(sub);
+      reabsorptionResistancePath = m_LeftReabsorptionResistancePath;
       // Add a factor to make substances reabsorb more or less avidly
-      permeabilityModificationFactor = m_leftReabsorptionPermeabilityModificationFactor;
+      permeabilityModificationFactor = m_LeftReabsorptionPermeabilityModificationFactor;
     } else {
       // RIGHT
-      tubulesSubQ = m_rightTubules->GetSubstanceQuantity(sub);
-      peritubularSubQ = m_rightPeritubular->GetSubstanceQuantity(sub);
-      reabsorptionResistancePath = m_rightReabsorptionResistancePath;
+      tubulesSubQ = m_RightTubules->GetSubstanceQuantity(sub);
+      peritubularSubQ = m_RightPeritubular->GetSubstanceQuantity(sub);
+      reabsorptionResistancePath = m_RightReabsorptionResistancePath;
       // Add a factor to make substances reabsorb more or less avidly
-      permeabilityModificationFactor = m_rightReabsorptionPermeabilityModificationFactor;
+      permeabilityModificationFactor = m_RightReabsorptionPermeabilityModificationFactor;
     }
 
     // Now do the transport
@@ -1129,7 +1082,7 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
     }
 
     // Store information about glucose to be used later in Gluconeogenesis
-    if (&sub == m_glucose) {
+    if (&sub == m_Glucose) {
       if (kidney == 0) {
         // Left
         m_SubstanceTransport.leftGlucoseReabsorptionMass_mg = massToMove_mg;
@@ -1181,12 +1134,12 @@ void Renal::CalculateExcretion(SESubstance& sub)
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
     if (kidney == 0) {
       // LEFT
-      tubules = m_leftTubules;
-      excretionPath = m_leftUreterPath;
+      tubules = m_LeftTubules;
+      excretionPath = m_LeftUreterPath;
     } else {
       // RIGHT
-      tubules = m_rightTubules;
-      excretionPath = m_rightUreterPath;
+      tubules = m_RightTubules;
+      excretionPath = m_RightUreterPath;
     }
 
     // Note: this will be off a little because the concentration is a time-step behind
@@ -1198,7 +1151,7 @@ void Renal::CalculateExcretion(SESubstance& sub)
     // Make sure it's not a super small negative number
     totalExcretionRate_mg_Per_s += std::max(excretionRate_mg_Per_s, 0.0);
 
-    if (&sub == m_lactate) {
+    if (&sub == m_Lactate) {
       if (kidney == 0) {
         // Left
         m_SubstanceTransport.leftLactateExcretedMass_mg = excretionRate_mg_Per_s * m_dt;
@@ -1211,8 +1164,8 @@ void Renal::CalculateExcretion(SESubstance& sub)
 
   sub.GetClearance().GetRenalExcretionRate().SetValue(totalExcretionRate_mg_Per_s, MassPerTimeUnit::mg_Per_s);
 
-  double plasmaConcentration_mg_Per_mL = m_aorta->GetSubstanceQuantity(sub)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
-  double patientWeight_kg = m_patient->GetWeight(MassUnit::kg);
+  double plasmaConcentration_mg_Per_mL = m_Aorta->GetSubstanceQuantity(sub)->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
+  double patientWeight_kg = m_Patient->GetWeight(MassUnit::kg);
 
   if (totalExcretionRate_mg_Per_s <= 0.0 || patientWeight_kg <= 0.0) {
     sub.GetClearance().GetRenalClearance().SetValue(0.0, VolumePerTimeMassUnit::mL_Per_s_kg);
@@ -1221,9 +1174,9 @@ void Renal::CalculateExcretion(SESubstance& sub)
 
   // Set substance compartment effects
   // Gluconeogenesis calculates it for Lactate later
-  if (&sub != m_lactate) {
-    SELiquidSubstanceQuantity* leftKidneySubQ = m_data.GetCompartments().GetIntracellularFluid(*m_leftKidneyTissue).GetSubstanceQuantity(sub);
-    SELiquidSubstanceQuantity* rightKidneySubQ = m_data.GetCompartments().GetIntracellularFluid(*m_rightKidneyTissue).GetSubstanceQuantity(sub);
+  if (&sub != m_Lactate) {
+    SELiquidSubstanceQuantity* leftKidneySubQ = m_data.GetCompartments().GetIntracellularFluid(*m_LeftKidneyTissue).GetSubstanceQuantity(sub);
+    SELiquidSubstanceQuantity* rightKidneySubQ = m_data.GetCompartments().GetIntracellularFluid(*m_RightKidneyTissue).GetSubstanceQuantity(sub);
 
     double singleExcreted_mg = totalExcretionRate_mg_Per_s * m_dt * 0.5; // We are assuming the kindneys are doing the same amount of work
     leftKidneySubQ->GetMassExcreted().IncrementValue(singleExcreted_mg, MassUnit::mg);
@@ -1245,7 +1198,7 @@ void Renal::CalculateExcretion(SESubstance& sub)
 //--------------------------------------------------------------------------------------------------
 void Renal::CalculateAutomaticClearance(SESubstance& sub)
 {
-  double patientWeight_kg = m_patient->GetWeight(MassUnit::kg);
+  double patientWeight_kg = m_Patient->GetWeight(MassUnit::kg);
   double renalVolumeCleared_mL = 0.0;
 
   SESubstanceClearance& clearance = sub.GetClearance();
@@ -1259,17 +1212,17 @@ void Renal::CalculateAutomaticClearance(SESubstance& sub)
   double massCleared_ug = 0.0;
 
   // Right Kidney Clearance
-  m_data.GetSubstances().CalculateGenericClearance(renalVolumeCleared_mL, *m_rightKidneyTissue, sub, &m_spCleared);
-  massCleared_ug += m_spCleared.GetValue(MassUnit::ug);
+  m_data.GetSubstances().CalculateGenericClearance(renalVolumeCleared_mL, *m_RightKidneyTissue, sub, &m_SPCleared);
+  massCleared_ug += m_SPCleared.GetValue(MassUnit::ug);
 
   // Left Kidney Clearance
-  m_data.GetSubstances().CalculateGenericClearance(renalVolumeCleared_mL, *m_leftKidneyTissue, sub, &m_spCleared);
-  massCleared_ug += m_spCleared.GetValue(MassUnit::ug);
+  m_data.GetSubstances().CalculateGenericClearance(renalVolumeCleared_mL, *m_LeftKidneyTissue, sub, &m_SPCleared);
+  massCleared_ug += m_SPCleared.GetValue(MassUnit::ug);
 
   // Put it in the bladder
   // We don't have to determine RenalClearance, because we just implement the already determined value
   // We won't set the excretion, since we don't know filtration or reabsorption
-  SELiquidSubstanceQuantity* subQ = m_bladder->GetSubstanceQuantity(sub);
+  SELiquidSubstanceQuantity* subQ = m_Bladder->GetSubstanceQuantity(sub);
   subQ->GetMass().IncrementValue(massCleared_ug, MassUnit::ug);
   subQ->Balance(BalanceLiquidBy::Mass);
 }
@@ -1310,22 +1263,22 @@ void Renal::CalculateVitalSigns()
 
     if (kidney == 0) {
       // LEFT
-      filterResistancePath = m_leftGlomerularFilterResistancePath;
-      glomerularOsmoticSourcePath = m_leftPeritubularOsmoticSourcePath;
-      bowmansOsmoticSourcePath = m_leftBowmansOsmoticSourcePath;
-      glomerularNode = m_leftGlomerularNode;
-      bowmansNode = m_leftBowmansNode;
-      netGlomerularCapillariesNode = m_leftNetGlomerularCapillariesNode;
-      netBowmansCapsulesNode = m_leftNetBowmansCapsulesNode;
-      netPeritubularNode = m_leftNetPeritubularCapillariesNode;
-      netTubulesNode = m_leftNetTubulesNode;
-      reabsorptionResistancePath = m_leftReabsorptionResistancePath;
-      peritubularOsmoticSourcePath = m_leftPeritubularOsmoticSourcePath;
-      tubulesOsmoticSourcePath = m_leftTubulesOsmoticSourcePath;
-      peritubularNode = m_leftPeritubularNode;
-      tubulesNode = m_leftTubulesNode;
-      afferentArteriolePath = m_leftAfferentArteriolePath;
-      efferentArteriolePath = m_leftEfferentArteriolePath;
+      filterResistancePath = m_LeftGlomerularFilterResistancePath;
+      glomerularOsmoticSourcePath = m_LeftPeritubularOsmoticSourcePath;
+      bowmansOsmoticSourcePath = m_LeftBowmansOsmoticSourcePath;
+      glomerularNode = m_LeftGlomerularNode;
+      bowmansNode = m_LeftBowmansNode;
+      netGlomerularCapillariesNode = m_LeftNetGlomerularCapillariesNode;
+      netBowmansCapsulesNode = m_LeftNetBowmansCapsulesNode;
+      netPeritubularNode = m_LeftNetPeritubularCapillariesNode;
+      netTubulesNode = m_LeftNetTubulesNode;
+      reabsorptionResistancePath = m_LeftReabsorptionResistancePath;
+      peritubularOsmoticSourcePath = m_LeftPeritubularOsmoticSourcePath;
+      tubulesOsmoticSourcePath = m_LeftTubulesOsmoticSourcePath;
+      peritubularNode = m_LeftPeritubularNode;
+      tubulesNode = m_LeftTubulesNode;
+      afferentArteriolePath = m_LeftAfferentArteriolePath;
+      efferentArteriolePath = m_LeftEfferentArteriolePath;
 
       GetLeftAfferentArterioleResistance().Set(afferentArteriolePath->GetNextResistance());
       GetLeftEfferentArterioleResistance().Set(efferentArteriolePath->GetNextResistance());
@@ -1357,7 +1310,7 @@ void Renal::CalculateVitalSigns()
         filtrationCoefficient = GetLeftReabsorptionRate().GetValue(VolumePerTimeUnit::mL_Per_s) / GetLeftNetReabsorptionPressure().GetValue(PressureUnit::mmHg);
       GetLeftReabsorptionFiltrationCoefficient().SetValue(filtrationCoefficient, VolumePerTimePressureUnit::mL_Per_s_mmHg);
 
-      afferentArteriolePath = m_leftAfferentArteriolePath;
+      afferentArteriolePath = m_LeftAfferentArteriolePath;
       double renalBloodFlow_mL_Per_s = afferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
       double renalPlasmaFlow_mL_Per_s = renalBloodFlow_mL_Per_s * (1.0 - hematocrit);
 
@@ -1368,22 +1321,22 @@ void Renal::CalculateVitalSigns()
       GetLeftFiltrationFraction().SetValue(filtrationFraction);
     } else {
       // RIGHT
-      filterResistancePath = m_rightGlomerularFilterResistancePath;
-      glomerularOsmoticSourcePath = m_rightPeritubularOsmoticSourcePath;
-      bowmansOsmoticSourcePath = m_rightBowmansOsmoticSourcePath;
-      glomerularNode = m_rightGlomerularNode;
-      bowmansNode = m_rightBowmansNode;
-      netGlomerularCapillariesNode = m_rightNetGlomerularCapillariesNode;
-      netBowmansCapsulesNode = m_rightNetBowmansCapsulesNode;
-      netPeritubularNode = m_rightNetPeritubularCapillariesNode;
-      netTubulesNode = m_rightNetTubulesNode;
-      reabsorptionResistancePath = m_rightReabsorptionResistancePath;
-      peritubularOsmoticSourcePath = m_rightPeritubularOsmoticSourcePath;
-      tubulesOsmoticSourcePath = m_rightTubulesOsmoticSourcePath;
-      peritubularNode = m_rightPeritubularNode;
-      tubulesNode = m_rightTubulesNode;
-      afferentArteriolePath = m_rightAfferentArteriolePath;
-      efferentArteriolePath = m_rightEfferentArteriolePath;
+      filterResistancePath = m_RightGlomerularFilterResistancePath;
+      glomerularOsmoticSourcePath = m_RightPeritubularOsmoticSourcePath;
+      bowmansOsmoticSourcePath = m_RightBowmansOsmoticSourcePath;
+      glomerularNode = m_RightGlomerularNode;
+      bowmansNode = m_RightBowmansNode;
+      netGlomerularCapillariesNode = m_RightNetGlomerularCapillariesNode;
+      netBowmansCapsulesNode = m_RightNetBowmansCapsulesNode;
+      netPeritubularNode = m_RightNetPeritubularCapillariesNode;
+      netTubulesNode = m_RightNetTubulesNode;
+      reabsorptionResistancePath = m_RightReabsorptionResistancePath;
+      peritubularOsmoticSourcePath = m_RightPeritubularOsmoticSourcePath;
+      tubulesOsmoticSourcePath = m_RightTubulesOsmoticSourcePath;
+      peritubularNode = m_RightPeritubularNode;
+      tubulesNode = m_RightTubulesNode;
+      afferentArteriolePath = m_RightAfferentArteriolePath;
+      efferentArteriolePath = m_RightEfferentArteriolePath;
 
       GetRightAfferentArterioleResistance().Set(afferentArteriolePath->GetNextResistance());
       GetRightEfferentArterioleResistance().Set(efferentArteriolePath->GetNextResistance());
@@ -1415,7 +1368,7 @@ void Renal::CalculateVitalSigns()
         filtrationCoefficient = GetRightReabsorptionRate().GetValue(VolumePerTimeUnit::mL_Per_s) / GetRightNetReabsorptionPressure().GetValue(PressureUnit::mmHg);
       GetRightReabsorptionFiltrationCoefficient().SetValue(filtrationCoefficient, VolumePerTimePressureUnit::mL_Per_s_mmHg);
 
-      afferentArteriolePath = m_rightAfferentArteriolePath;
+      afferentArteriolePath = m_RightAfferentArteriolePath;
       double renalBloodFlow_mL_Per_s = afferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
       double renalPlasmaFlow_mL_Per_s = renalBloodFlow_mL_Per_s * (1.0 - hematocrit);
       double filtrationFraction = 0.0;
@@ -1434,20 +1387,20 @@ void Renal::CalculateVitalSigns()
 
   GetGlomerularFiltrationRate().SetValue(GetLeftGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s) + GetRightGlomerularFiltrationRate().GetValue(VolumePerTimeUnit::mL_Per_s), VolumePerTimeUnit::mL_Per_s);
 
-  double renalBloodFlow_mL_Per_s = m_rightAfferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s) + m_leftAfferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
+  double renalBloodFlow_mL_Per_s = m_RightAfferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s) + m_LeftAfferentArteriolePath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
   GetRenalBloodFlow().SetValue(renalBloodFlow_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
 
   GetRenalPlasmaFlow().SetValue(renalBloodFlow_mL_Per_s * (1.0 - hematocrit), VolumePerTimeUnit::mL_Per_s);
 
-  double pressureDiff_mmHg = m_aorta->GetPressure(PressureUnit::mmHg) - m_venaCava->GetPressure(PressureUnit::mmHg);
+  double pressureDiff_mmHg = m_Aorta->GetPressure(PressureUnit::mmHg) - m_VenaCava->GetPressure(PressureUnit::mmHg);
   if (renalBloodFlow_mL_Per_s != 0.0)
     GetRenalVascularResistance().SetValue(pressureDiff_mmHg / renalBloodFlow_mL_Per_s, FlowResistanceUnit::mmHg_s_Per_mL);
   else
     GetRenalVascularResistance().SetValue(m_CVOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
 
   // Do the urine specific values
-  GetUrineVolume().SetValue(m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL), VolumeUnit::mL);
-  double urineProductionRate_mL_Per_s = m_leftUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s) + m_rightUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
+  GetUrineVolume().SetValue(m_BladderNode->GetNextVolume().GetValue(VolumeUnit::mL), VolumeUnit::mL);
+  double urineProductionRate_mL_Per_s = m_LeftUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s) + m_RightUreterPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
   GetUrineProductionRate().SetValue(urineProductionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
   // Mean urine output -- tracks urine production w/ time-weighted parameter (larger number weights more recent values more heavily)
   const double sampleWeight = 0.05;
@@ -1457,7 +1410,7 @@ void Renal::CalculateVitalSigns()
 
   // Urine specific gravity is calculated by dividing the mass of all the substances in a fluid & the fluid itself by the weight of just the fluid
   SEScalarMass substanceMass;
-  for (SELiquidSubstanceQuantity* subQ : m_bladder->GetSubstanceQuantities()) {
+  for (SELiquidSubstanceQuantity* subQ : m_Bladder->GetSubstanceQuantities()) {
     if (subQ->HasMass())
       substanceMass.Increment(subQ->GetMass());
   }
@@ -1467,9 +1420,9 @@ void Renal::CalculateVitalSigns()
 
   // Urine osmolality is the osmotic pressure of sodium, glucose and urea over the weight of the fluid
 
-  GeneralMath::CalculateOsmolality(m_bladderSodium->GetMolarity(), m_bladderPotassium->GetMolarity(), m_bladderGlucose->GetMolarity(), m_bladderUrea->GetMolarity(), GetUrineSpecificGravity(), GetUrineOsmolality());
-  GeneralMath::CalculateOsmolarity(m_bladderSodium->GetMolarity(), m_bladderPotassium->GetMolarity(), m_bladderGlucose->GetMolarity(), m_bladderUrea->GetMolarity(), GetUrineOsmolarity());
-  double urineUreaConcentration_g_Per_L = m_bladderUrea->GetConcentration(MassPerVolumeUnit::g_Per_L);
+  GeneralMath::CalculateOsmolality(m_BladderSodium->GetMolarity(), m_BladderPotassium->GetMolarity(), m_BladderGlucose->GetMolarity(), m_BladderUrea->GetMolarity(), GetUrineSpecificGravity(), GetUrineOsmolality());
+  GeneralMath::CalculateOsmolarity(m_BladderSodium->GetMolarity(), m_BladderPotassium->GetMolarity(), m_BladderGlucose->GetMolarity(), m_BladderUrea->GetMolarity(), GetUrineOsmolarity());
+  double urineUreaConcentration_g_Per_L = m_BladderUrea->GetConcentration(MassPerVolumeUnit::g_Per_L);
   // 2.14 = MW Urea(60) / MW N2 (2*14)
   GetUrineUreaNitrogenConcentration().SetValue(urineUreaConcentration_g_Per_L / 2.14, MassPerVolumeUnit::g_Per_L);
 
@@ -1482,9 +1435,9 @@ void Renal::CalculateVitalSigns()
   // Only calculate the running average when not urinating, since the production rate shuts off during urination
   // This will keep the events from freaking out when urinating
   if (m_Urinating == false) {
-    m_urineProductionRate_mL_Per_min_runningAvg.Sample(Convert(urineProductionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s, VolumePerTimeUnit::mL_Per_min));
-    m_urineOsmolarity_mOsm_Per_L_runningAvg.Sample(GetUrineOsmolarity(OsmolarityUnit::mOsm_Per_L));
-    m_sodiumExcretionRate_mg_Per_min_runningAvg.Sample(m_sodium->GetClearance().GetRenalExcretionRate(MassPerTimeUnit::mg_Per_min));
+    m_UrineProductionRate_mL_Per_min.Sample(Convert(urineProductionRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s, VolumePerTimeUnit::mL_Per_min));
+    m_UrineOsmolarity_mOsm_Per_L.Sample(GetUrineOsmolarity(OsmolarityUnit::mOsm_Per_L));
+    m_SodiumExcretionRate_mg_Per_min.Sample(m_Sodium->GetClearance().GetRenalExcretionRate(MassPerTimeUnit::mg_Per_min));
   }
 
   // Only check these once each cardiac cycle (using running average for entire cycle)
@@ -1494,62 +1447,62 @@ void Renal::CalculateVitalSigns()
       // Handle Events
       /// \cite lahav1992intermittent
       /// 2.5 mL/min
-      if (m_urineProductionRate_mL_Per_min_runningAvg.Value() > 2.5) {
+      if (m_UrineProductionRate_mL_Per_min.Value() > 2.5) {
         /// \event Patient: Diuresis. Occurs when the urine production rate double to around 2.5 ml/min. \cite lahav1992intermittent
-        m_patient->SetEvent(SEPatientEventType::Diuresis, true, m_data.GetSimulationTime());
-      } else if (m_urineProductionRate_mL_Per_min_runningAvg.Value() < 1.0) {
+        m_Patient->SetEvent(SEPatientEventType::Diuresis, true, m_data.GetSimulationTime());
+      } else if (m_UrineProductionRate_mL_Per_min.Value() < 1.0) {
         /// \event Patient: Ends when the urine production rate falls below 1.0 mL/min (near normal urine production). \cite lahav1992intermittent
-        m_patient->SetEvent(SEPatientEventType::Diuresis, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::Diuresis, false, m_data.GetSimulationTime());
       }
 
       /// \cite valtin1995renal
       /// p. 116
       /// urine osmolarity must be hyperosmotic relative to plasma and urine production rate must be less than 0.5 mL/min
-      if (m_urineProductionRate_mL_Per_min_runningAvg.Value() < 0.5 && m_urineOsmolarity_mOsm_Per_L_runningAvg.Value() > 280) {
+      if (m_UrineProductionRate_mL_Per_min.Value() < 0.5 && m_UrineOsmolarity_mOsm_Per_L.Value() > 280) {
         /// \event Patient: Antidiuresis occurs when urine production rate is less than 0.5 mL/min and the urine osmolarity is hyperosmotic to the plasma \cite valtin1995renal
-        m_patient->SetEvent(SEPatientEventType::Antidiuresis, true, m_data.GetSimulationTime());
-      } else if ((m_urineProductionRate_mL_Per_min_runningAvg.Value() > 0.55 || m_urineOsmolarity_mOsm_Per_L_runningAvg.Value() < 275)) {
+        m_Patient->SetEvent(SEPatientEventType::Antidiuresis, true, m_data.GetSimulationTime());
+      } else if ((m_UrineProductionRate_mL_Per_min.Value() > 0.55 || m_UrineOsmolarity_mOsm_Per_L.Value() < 275)) {
         /// \event Patient: Antidiuresis. Ends when urine production rate rises back above 0.55 mL/min or the urine osmolarity falls below that of the plasma \cite valtin1995renal
-        m_patient->SetEvent(SEPatientEventType::Antidiuresis, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::Antidiuresis, false, m_data.GetSimulationTime());
       }
 
       /// \cite Zager1988HypoperfusionRate
       /// Computing percent decrease as (1-1.6/11.2)*100 = 85 percent decrease or 15% total flow (using 20ml/s as "normal" value, below 3ml/s):
       if (renalBloodFlow_mL_Per_s < 3.0) {
         /// \event Patient: hypoperfusion occurs when renal blood flow decreases below 3 ml/s
-        m_patient->SetEvent(SEPatientEventType::RenalHypoperfusion, true, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::RenalHypoperfusion, true, m_data.GetSimulationTime());
       } else if (renalBloodFlow_mL_Per_s > 4.0) {
         /// \event Patient: hypoperfusion ends when blood flow recovers above 4 ml/s
-        m_patient->SetEvent(SEPatientEventType::RenalHypoperfusion, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::RenalHypoperfusion, false, m_data.GetSimulationTime());
       }
 
       /// \cite moss2014hormonal
       ///  1:6 ratio for sodium excretion in pressure natriuresis in rats, validation for sodium excretion = 2.4 mg/min
       // sub->GetClearance()->GetRenalExcretionRate().SetValue(excretionRate_mg_Per_s, MassPerTimeUnit::mg_Per_s);
 
-      if (m_sodiumExcretionRate_mg_Per_min_runningAvg.Value() > 14.4) {
+      if (m_SodiumExcretionRate_mg_Per_min.Value() > 14.4) {
         /// \event Patient: Natriuresis. Occurs when the sodium excretion rate rises above 14.4 mg/min \cite moss2013hormonal
-        m_patient->SetEvent(SEPatientEventType::Natriuresis, true, m_data.GetSimulationTime());
-      } else if (m_sodiumExcretionRate_mg_Per_min_runningAvg.Value() < 14.0) {
+        m_Patient->SetEvent(SEPatientEventType::Natriuresis, true, m_data.GetSimulationTime());
+      } else if (m_SodiumExcretionRate_mg_Per_min.Value() < 14.0) {
         /// \event Patient: Ends when the sodium excretion rate falls below 14.0 mg/min \cite moss2013hormonal
-        m_patient->SetEvent(SEPatientEventType::Natriuresis, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::Natriuresis, false, m_data.GetSimulationTime());
       }
 
       if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Infection)) {
         double systolicBP = m_data.GetCardiovascular().GetSystolicArterialPressure(PressureUnit::mmHg);
         if (systolicBP <= 100.0 && GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) <= 0.5) {
-          m_patient->SetEvent(SEPatientEventType::SevereSepsis, true, m_data.GetSimulationTime());
+          m_Patient->SetEvent(SEPatientEventType::SevereSepsis, true, m_data.GetSimulationTime());
         }
-        if (m_patient->IsEventActive(SEPatientEventType::SevereSepsis) && m_urineProductionRate_mL_Per_min_runningAvg.Value() >= 0.55 && systolicBP > 90.0) {
-          m_patient->SetEvent(SEPatientEventType::SevereSepsis, false, m_data.GetSimulationTime());
+        if (m_Patient->IsEventActive(SEPatientEventType::SevereSepsis) && m_UrineProductionRate_mL_Per_min.Value() >= 0.55 && systolicBP > 90.0) {
+          m_Patient->SetEvent(SEPatientEventType::SevereSepsis, false, m_data.GetSimulationTime());
         }
       }
     }
 
     // reset at start of cardiac cycle
-    m_urineProductionRate_mL_Per_min_runningAvg.Reset();
-    m_urineOsmolarity_mOsm_Per_L_runningAvg.Reset();
-    m_sodiumExcretionRate_mg_Per_min_runningAvg.Reset();
+    m_UrineProductionRate_mL_Per_min.Reset();
+    m_UrineOsmolarity_mOsm_Per_L.Reset();
+    m_SodiumExcretionRate_mg_Per_min.Reset();
   }
 }
 
@@ -1569,9 +1522,9 @@ void Renal::Urinate()
   GetUrinationRate().SetValue(0.0, VolumePerTimeUnit::mL_Per_min);
 
   // Check and see if the bladder is overfull or if there is an action called
-  if (m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) > bladderMaxVolume_mL) {
+  if (m_BladderNode->GetNextVolume().GetValue(VolumeUnit::mL) > bladderMaxVolume_mL) {
     /// \event Patient: FunctionalIncontinence: The patient's bladder has reached a maximum
-    m_patient->SetEvent(SEPatientEventType::FunctionalIncontinence, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::FunctionalIncontinence, true, m_data.GetSimulationTime());
     m_Urinating = true;
   }
 
@@ -1583,32 +1536,32 @@ void Renal::Urinate()
   // Now deal with the action
   if (m_Urinating) {
     ////Stop urinating when the bladder volume drops below 1.0 mL
-    // if (m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) < 1.0) {
+    // if (m_BladderNode->GetNextVolume().GetValue(VolumeUnit::mL) < 1.0) {
     //   m_Urinating = false;
     //   //The urethra resistances will use the baselines value of an open switch to stop the flow
 
     //  //Turn off the event
-    //  if (m_patient->IsEventActive(SEPatientEventType::FunctionalIncontinence)) {
-    //    m_patient->SetEvent(SEPatientEventType::FunctionalIncontinence, false, m_data.GetSimulationTime());
+    //  if (m_Patient->IsEventActive(SEPatientEventType::FunctionalIncontinence)) {
+    //    m_Patient->SetEvent(SEPatientEventType::FunctionalIncontinence, false, m_data.GetSimulationTime());
     //  }
     //} else {
     //  //Prevent anything from leaving except for what's in the bladder
-    //  m_leftUreterPath->GetNextResistance().SetValue(m_defaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
-    //  m_rightUreterPath->GetNextResistance().SetValue(m_defaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+    //  m_LeftUreterPath->GetNextResistance().SetValue(m_DefaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+    //  m_RightUreterPath->GetNextResistance().SetValue(m_DefaultOpenResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     //  //Reduce the urethra resistance to urinate
     //  //Use a urethra resistance based on the validated urination flow
     //  //R = (4 mmHg - 0 mmHg) / 22 mL/s = 0.182
-    //  m_urethraPath->GetNextResistance().SetValue(0.01, FlowResistanceUnit::mmHg_s_Per_mL); //0.182
+    //  m_UrethraPath->GetNextResistance().SetValue(0.01, FlowResistanceUnit::mmHg_s_Per_mL); //0.182
     //}
-    m_bladderNode->GetNextVolume().SetValue(1.0, VolumeUnit::mL);
+    m_BladderNode->GetNextVolume().SetValue(1.0, VolumeUnit::mL);
     for (auto sub : m_data.GetSubstances().GetActiveSubstances()) {
-      if (m_bladder->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug) > ZERO_APPROX) {
-        m_bladder->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Concentration);
+      if (m_Bladder->GetSubstanceQuantity(*sub)->GetMass(MassUnit::ug) > ZERO_APPROX) {
+        m_Bladder->GetSubstanceQuantity(*sub)->Balance(BalanceLiquidBy::Concentration);
       }
     }
     m_Urinating = false;
 
-    GetUrinationRate().Set(m_urethraPath->GetNextFlow());
+    GetUrinationRate().Set(m_UrethraPath->GetNextFlow());
   }
 }
 
@@ -1626,14 +1579,14 @@ void Renal::UpdateBladderVolume()
 
   // Manually modify the bladder volume based on flow
   // This will work for both filling the bladder and urinating
-  double bladderFlow_mL_Per_s = m_bladderToGroundPressurePath->GetNextFlow(VolumePerTimeUnit::mL_Per_s);
+  double bladderFlow_mL_Per_s = m_BladderToGroundPressurePath->GetNextFlow(VolumePerTimeUnit::mL_Per_s);
   double volumeIncrement_mL = bladderFlow_mL_Per_s * m_dt;
-  double bladderVolume_mL = m_bladderNode->GetNextVolume().GetValue(VolumeUnit::mL) + volumeIncrement_mL;
+  double bladderVolume_mL = m_BladderNode->GetNextVolume().GetValue(VolumeUnit::mL) + volumeIncrement_mL;
 
   // Don't let this get below zero during urination
   // The urination action will catch it next time around, so this shouldn't be hit more than once (and likely never)
   bladderVolume_mL = std::max(bladderVolume_mL, 0.0);
-  m_bladderNode->GetNextVolume().SetValue(bladderVolume_mL, VolumeUnit::mL);
+  m_BladderNode->GetNextVolume().SetValue(bladderVolume_mL, VolumeUnit::mL);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1686,7 +1639,7 @@ bool Renal::CalculateUrinalysis(SEUrinalysis& u)
   }
 
   // u.SetApperanceResult();
-  double bladder_glucose_mg_Per_dL = m_bladderGlucose->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL);
+  double bladder_glucose_mg_Per_dL = m_BladderGlucose->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_dL);
 
   if (bladder_glucose_mg_Per_dL >= 100.0) /// \cite roxe1990urinalysis
     u.SetGlucoseResult(SEPresenceIndicator::Positive);
@@ -1762,7 +1715,7 @@ void Renal::CalculateOsmoreceptorFeedback()
 
   ///\todo get the aorta osmolarity instead of sodium concentration
   double sodiumConcentration_mg_Per_mL = m_data.GetSubstances().GetSodium().GetBloodConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
-  sodiumConcentration_mg_Per_mL = m_sodiumConcentration_mg_Per_mL_runningAvg.Sample(sodiumConcentration_mg_Per_mL);
+  sodiumConcentration_mg_Per_mL = m_SodiumConcentration_mg_Per_mL.Sample(sodiumConcentration_mg_Per_mL);
 
   // Do it separate for both kidneys
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
@@ -1770,10 +1723,10 @@ void Renal::CalculateOsmoreceptorFeedback()
       // LEFT
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetLeftTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
-      m_leftReabsorptionPermeabilityModificationFactor = std::pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / std::pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
+      m_LeftReabsorptionPermeabilityModificationFactor = std::pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / std::pow(m_SodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
 
-      if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
-        permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_leftReabsorptionPermeabilityModificationFactor;
+      if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+        permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_LeftReabsorptionPermeabilityModificationFactor;
 
         // Modify reabsorption resistance
         GetLeftTubularReabsorptionFluidPermeability().SetValue(permeability_mL_Per_s_Per_mmHg_Per_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
@@ -1782,17 +1735,17 @@ void Renal::CalculateOsmoreceptorFeedback()
       // RIGHT
       permeability_mL_Per_s_Per_mmHg_Per_m2 = GetRightTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
-      m_rightReabsorptionPermeabilityModificationFactor = std::pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / std::pow(m_sodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
-      if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
-        permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_rightReabsorptionPermeabilityModificationFactor;
+      m_RightReabsorptionPermeabilityModificationFactor = std::pow(sodiumConcentration_mg_Per_mL, sodiumSensitivity) / std::pow(m_SodiumPlasmaConcentrationSetpoint_mg_Per_mL, sodiumSensitivity);
+      if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+        permeability_mL_Per_s_Per_mmHg_Per_m2 *= m_RightReabsorptionPermeabilityModificationFactor;
 
         // Modify reabsorption resistance
         GetRightTubularReabsorptionFluidPermeability().SetValue(permeability_mL_Per_s_Per_mmHg_Per_m2, VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
       }
     }
   }
-  if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
-    m_sodiumConcentration_mg_Per_mL_runningAvg.Reset();
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+    m_SodiumConcentration_mg_Per_mL.Reset();
   }
 }
 
@@ -1826,15 +1779,15 @@ void Renal::CalculateTubuloglomerularFeedback()
   for (unsigned int kidney = 0; kidney < 2; kidney++) {
     if (kidney == 0) {
       // LEFT
-      afferentResistancePath = m_leftAfferentArteriolePath;
-      tubulesPath = m_leftTubulesPath;
+      afferentResistancePath = m_LeftAfferentArteriolePath;
+      tubulesPath = m_LeftTubulesPath;
 
       // set max/min afferent equal to the member variable
-      maxAfferentResistance_mmHg_s_Per_mL = m_maxLeftAfferentResistance_mmHg_s_Per_mL;
-      minAfferentResistance_mmHg_s_Per_mL = m_minLeftAfferentResistance_mmHg_s_Per_mL;
+      maxAfferentResistance_mmHg_s_Per_mL = m_MaxLeftAfferentResistance_mmHg_s_Per_mL;
+      minAfferentResistance_mmHg_s_Per_mL = m_MinLeftAfferentResistance_mmHg_s_Per_mL;
 
       // Get the concentration and flow rate on tubules path to compute sodium flow rate
-      sodiumConcentration_mg_Per_mL = m_leftTubulesSodium->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
+      sodiumConcentration_mg_Per_mL = m_LeftTubulesSodium->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
 
       if (tubulesPath->HasNextFlow()) {
         tubulesFlow_mL_Per_s = tubulesPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
@@ -1846,24 +1799,24 @@ void Renal::CalculateTubuloglomerularFeedback()
         continue;
 
       // Keep a running average, so the resistance doesn't go crazy
-      sodiumFlow_mg_Per_s = m_leftSodiumFlow_mg_Per_s_runningAvg.Sample(sodiumFlow_mg_Per_s);
+      sodiumFlow_mg_Per_s = m_LeftSodiumFlow_mg_Per_s.Sample(sodiumFlow_mg_Per_s);
 
       // Save off the last set point from initial stabilization for use after stabilization
-      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+      if (m_data.GetState() == EngineState::InitialStabilization && m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         // Don't change the resistance - just figure out what it is
-        m_leftSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
+        m_LeftSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
       }
-      sodiumFlowSetPoint_mg_Per_s = m_leftSodiumFlowSetPoint_mg_Per_s;
+      sodiumFlowSetPoint_mg_Per_s = m_LeftSodiumFlowSetPoint_mg_Per_s;
     } else {
       // RIGHT
-      afferentResistancePath = m_rightAfferentArteriolePath;
-      tubulesPath = m_rightTubulesPath;
+      afferentResistancePath = m_RightAfferentArteriolePath;
+      tubulesPath = m_RightTubulesPath;
 
-      maxAfferentResistance_mmHg_s_Per_mL = m_maxRightAfferentResistance_mmHg_s_Per_mL;
-      minAfferentResistance_mmHg_s_Per_mL = m_minRightAfferentResistance_mmHg_s_Per_mL;
+      maxAfferentResistance_mmHg_s_Per_mL = m_MaxRightAfferentResistance_mmHg_s_Per_mL;
+      minAfferentResistance_mmHg_s_Per_mL = m_MinRightAfferentResistance_mmHg_s_Per_mL;
 
       // Get the concentration and flow rate on tubules path to compute sodium flow rate
-      sodiumConcentration_mg_Per_mL = m_rightTubulesSodium->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
+      sodiumConcentration_mg_Per_mL = m_RightTubulesSodium->GetConcentration().GetValue(MassPerVolumeUnit::mg_Per_mL);
 
       if (tubulesPath->HasNextFlow()) {
         tubulesFlow_mL_Per_s = tubulesPath->GetNextFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
@@ -1875,17 +1828,17 @@ void Renal::CalculateTubuloglomerularFeedback()
         continue;
 
       // Keep a running average, so the resistance doesn't go crazy
-      sodiumFlow_mg_Per_s = m_rightSodiumFlow_mg_Per_s_runningAvg.Sample(sodiumFlow_mg_Per_s);
+      sodiumFlow_mg_Per_s = m_RightSodiumFlow_mg_Per_s.Sample(sodiumFlow_mg_Per_s);
 
       // Save off the last set point from initial stabilization for use after stabilization
-      if (m_data.GetState() == EngineState::InitialStabilization && m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+      if (m_data.GetState() == EngineState::InitialStabilization && m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         // Don't change the resistance - just figure out what it is
-        m_rightSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
+        m_RightSodiumFlowSetPoint_mg_Per_s = sodiumFlow_mg_Per_s;
       }
-      sodiumFlowSetPoint_mg_Per_s = m_rightSodiumFlowSetPoint_mg_Per_s;
+      sodiumFlowSetPoint_mg_Per_s = m_RightSodiumFlowSetPoint_mg_Per_s;
     }
 
-    if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+    if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
       // Us the "current" resistance, to continually drive towards the response we want - the next value is overwritten by the baseline during postprocess
       double currentAfferentResistance_mmHg_s_Per_mL = afferentResistancePath->GetResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
       double nextAfferentResistance_mmHg_s_Per_mL = afferentResistancePath->GetNextResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
@@ -1910,26 +1863,26 @@ void Renal::CalculateTubuloglomerularFeedback()
       BLIM(nextAfferentResistance_mmHg_s_Per_mL, minAfferentResistance_mmHg_s_Per_mL, maxAfferentResistance_mmHg_s_Per_mL);
       if (kidney == 0) {
         // LEFT
-        m_leftAfferentResistance_mmHg_s_Per_mL = nextAfferentResistance_mmHg_s_Per_mL;
+        m_LeftAfferentResistance_mmHg_s_Per_mL = nextAfferentResistance_mmHg_s_Per_mL;
       } else {
         // RIGHT
-        m_rightAfferentResistance_mmHg_s_Per_mL = nextAfferentResistance_mmHg_s_Per_mL;
+        m_RightAfferentResistance_mmHg_s_Per_mL = nextAfferentResistance_mmHg_s_Per_mL;
       }
     }
 
     // set the resistance each time step:
     if (kidney == 0) {
       // LEFT
-      afferentResistancePath->GetNextResistance().SetValue(m_leftAfferentResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      afferentResistancePath->GetNextResistance().SetValue(m_LeftAfferentResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     } else {
       // RIGHT
-      afferentResistancePath->GetNextResistance().SetValue(m_rightAfferentResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
+      afferentResistancePath->GetNextResistance().SetValue(m_RightAfferentResistance_mmHg_s_Per_mL, FlowResistanceUnit::mmHg_s_Per_mL);
     }
   }
   // reset sodium flow at start of cardiac cycle
-  if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
-    m_leftSodiumFlow_mg_Per_s_runningAvg.Reset();
-    m_rightSodiumFlow_mg_Per_s_runningAvg.Reset();
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+    m_LeftSodiumFlow_mg_Per_s.Reset();
+    m_RightSodiumFlow_mg_Per_s.Reset();
   }
 }
 
@@ -1963,17 +1916,17 @@ void Renal::CalculateFluidPermeability()
       permeability_mL_Per_s_mmHg_m2 = GetLeftTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
       // get the renal arterial pressure:
-      leftArterialPressure_mmHg = m_leftRenalArteryNode->GetNextPressure().GetValue(PressureUnit::mmHg);
+      leftArterialPressure_mmHg = m_LeftRenalArteryNode->GetNextPressure().GetValue(PressureUnit::mmHg);
 
       // take a sample so that permeability doesn't go crazy:
-      leftArterialPressure_mmHg = m_leftRenalArterialPressure_mmHg_runningAvg.Sample(leftArterialPressure_mmHg);
+      leftArterialPressure_mmHg = m_LeftRenalArterialPressure_mmHg.Sample(leftArterialPressure_mmHg);
 
       // compute desired permeability as a function of arterial pressure, else set as baseline
-      if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+      if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         if (round(leftArterialPressure_mmHg) >= 80.0) {
           permeability_mL_Per_s_mmHg_m2 = a * std::pow(leftArterialPressure_mmHg, 2) + b * leftArterialPressure_mmHg + c;
         } else {
-          permeability_mL_Per_s_mmHg_m2 = m_leftReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2;
+          permeability_mL_Per_s_mmHg_m2 = m_LeftReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2;
         }
       }
 
@@ -1989,17 +1942,17 @@ void Renal::CalculateFluidPermeability()
       permeability_mL_Per_s_mmHg_m2 = GetRightTubularReabsorptionFluidPermeability(VolumePerTimePressureAreaUnit::mL_Per_s_mmHg_m2);
 
       // get the renal arterial pressure:
-      rightArterialPressure_mmHg = m_rightRenalArteryNode->GetNextPressure().GetValue(PressureUnit::mmHg);
+      rightArterialPressure_mmHg = m_RightRenalArteryNode->GetNextPressure().GetValue(PressureUnit::mmHg);
 
       // take a sample so that permeability doesn't go crazy:
-      rightArterialPressure_mmHg = m_rightRenalArterialPressure_mmHg_runningAvg.Sample(rightArterialPressure_mmHg);
+      rightArterialPressure_mmHg = m_RightRenalArterialPressure_mmHg.Sample(rightArterialPressure_mmHg);
 
       // compute desired permeability as a function of arterial pressure, else set as baseline
-      if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+      if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
         if (round(rightArterialPressure_mmHg) >= 80.0) {
           permeability_mL_Per_s_mmHg_m2 = a * std::pow(rightArterialPressure_mmHg, 2) + b * rightArterialPressure_mmHg + c;
         } else {
-          permeability_mL_Per_s_mmHg_m2 = m_rightReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2;
+          permeability_mL_Per_s_mmHg_m2 = m_RightReabsorptionPermeabilitySetpoint_mL_Per_s_mmHg_m2;
         }
       }
 
@@ -2013,9 +1966,9 @@ void Renal::CalculateFluidPermeability()
     }
   }
   // reset average at start of cardiac cycle
-  if (m_patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
-    m_leftRenalArterialPressure_mmHg_runningAvg.Reset();
-    m_rightRenalArterialPressure_mmHg_runningAvg.Reset();
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+    m_LeftRenalArterialPressure_mmHg.Reset();
+    m_RightRenalArterialPressure_mmHg.Reset();
   }
 }
 

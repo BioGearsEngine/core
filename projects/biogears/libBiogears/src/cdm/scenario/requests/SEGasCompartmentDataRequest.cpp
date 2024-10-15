@@ -27,24 +27,7 @@ SEGasCompartmentDataRequest::~SEGasCompartmentDataRequest()
 {
   Clear();
 }
-//-------------------------------------------------------------------------------
-bool SEGasCompartmentDataRequest::Load(const CDM::GasCompartmentDataRequestData& in, const SESubstanceManager& substances)
-{
-  io::DataRequests::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::GasCompartmentDataRequestData* SEGasCompartmentDataRequest::Unload() const
-{
-  CDM::GasCompartmentDataRequestData* data = new CDM::GasCompartmentDataRequestData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEGasCompartmentDataRequest::Unload(CDM::GasCompartmentDataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEGasCompartmentDataRequest ::operator==(SEGasCompartmentDataRequest const& rhs) const
 {

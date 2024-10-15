@@ -26,8 +26,9 @@ class SECircuitManager;
 namespace io {
   class Circuit;
 }
+#pragma warning(disable : 4661)
 
-BG_EXT template class BIOGEARS_API SECircuitPath<FLUID_CIRCUIT_PATH>;
+extern template class SECircuitPath<FLUID_CIRCUIT_PATH>;
 
 class BIOGEARS_API SEFluidCircuitPath : public SECircuitPath<FLUID_CIRCUIT_PATH> {
   friend class SECircuitManager;
@@ -41,12 +42,6 @@ public:
   virtual ~SEFluidCircuitPath();
 
   virtual void Clear(); // clear memory
-
-  bool Load(const CDM::FluidCircuitPathData& in);
-  CDM::FluidCircuitPathData* Unload() const;
-
-protected:
-  void Unload(CDM::FluidCircuitPathData& data) const;
 
 public:
   virtual SEFluidCircuitNode& GetSourceNode() const { return m_FluidSourceNode; }
@@ -121,4 +116,6 @@ protected:
   SEFluidCircuitNode& m_FluidTargetNode;
   SEResistancePathType m_CardiovascularRegion;
 };
+#pragma warning(default : 4661)
+
 }

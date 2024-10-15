@@ -18,13 +18,13 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/System.hxx>
 
-#define CDM_SYSTEM_MARSHALL_HELPER(in, out, func)                              \
+#define CDM_SYSTEM_PTR_MARSHALL_HELPER(in, out, func)                              \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::System::Marshall(*in.m_##func, out.func());                            \
   }
 
-#define CDM_OPTIONAL_SYSTEM_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_SYSTEM_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                             \
     io::System::Marshall(*in.m_##func, out.func());        \
   }

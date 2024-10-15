@@ -1,5 +1,6 @@
 #include "EngineConfiguration.h"
 
+#include "ElectroCardioGram.h"
 #include "Property.h"
 
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
@@ -34,7 +35,10 @@ namespace io {
         throw CommonDataModelException("Unable to load ElectroCardioGram Waveforms file");
       }
     } else if (in.ElectroCardioGramInterpolator().present()) {
-      if (!out.GetECGInterpolator().Load(in.ElectroCardioGramInterpolator().get())) {
+      try {
+        io::ElectroCardioGram::UnMarshall(in.ElectroCardioGramInterpolator(), out.GetECGInterpolator());
+
+      } catch (CommonDataModelException ex) {
         throw CommonDataModelException("Unable to load ElectroCardioGram Waveforms");
       }
     }
@@ -66,11 +70,15 @@ namespace io {
       dData = dynamic_cast<const CDM::PhysiologyEngineDynamicStabilizationData*>(&in.StabilizationCriteria().get());
     }
     if (tData != nullptr) {
-      if (!out.GetTimedStabilizationCriteria().Load(*tData)) {
+      try {
+        UnMarshall(*tData, out.GetTimedStabilizationCriteria());
+      } catch (CommonDataModelException ex) {
         throw CommonDataModelException("Unable to load Stabilization Criteria");
       }
     } else if (dData != nullptr) {
-      if (!out.GetDynamicStabilizationCriteria().Load(*dData)) {
+      try {
+        UnMarshall(*dData, out.GetDynamicStabilizationCriteria());
+      } catch (CommonDataModelException ex) {
         throw CommonDataModelException("Unable to load Stabilization Criteria");
       }
     }
@@ -78,12 +86,24 @@ namespace io {
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineConfiguration& in, CDM::PhysiologyEngineConfigurationData& out)
   {
-    if (in.HasECGInterpolator())
-      out.ElectroCardioGramInterpolator(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(in.m_ECGInterpolator->Unload()));
-    if (in.HasStabilizationCriteria())
-      out.StabilizationCriteria(std::unique_ptr<CDM::PhysiologyEngineStabilizationData>(in.m_StabilizationCriteria->Unload()));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TimeStep)
-    io::Property::Marshall(in.m_WritePatientBaselineFile, out.WritePatientBaselineFile());
+
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TimeStep)
+    SE_OPTIONAL_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, WritePatientBaselineFile)
+
+    if (in.m_ECGInterpolator) {
+      io::ElectroCardioGram::Marshall(*in.m_ECGInterpolator, out.ElectroCardioGramInterpolator());
+    }
+
+    if (in.HasDynamicStabilizationCriteria()) {
+      auto dsc = std::make_unique<CDM::PhysiologyEngineDynamicStabilizationData>();
+      io::EngineConfiguration::Marshall(*in.GetDynamicStabilizationCriteria(), *dsc);
+      out.StabilizationCriteria(std::move(dsc));
+    }
+    if (in.HasTimedStabilizationCriteria()) {
+      auto tsc = std::make_unique<CDM::PhysiologyEngineTimedStabilizationData>();
+      io::EngineConfiguration::Marshall(*in.GetTimedStabilizationCriteria(), *tsc);
+      out.StabilizationCriteria(std::move(tsc));
+    }
   }
   //----------------------------------------------------------------------------------
   // class PhysiologyEngineStabilization
@@ -106,8 +126,8 @@ namespace io {
     out.Canceled(in.m_Canceled);
     out.LogProgress(in.m_LogProgress);
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CurrentTime)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StabilizationDuration)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CurrentTime)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StabilizationDuration)
   }
   //----------------------------------------------------------------------------------
   // class PhysiologyEngineTimedStabilization
@@ -197,20 +217,25 @@ namespace io {
     io::Property::UnMarshall(in.ConvergenceTime(), out.GetConvergenceTime());
     io::Property::UnMarshall(in.MinimumReactionTime(), out.GetMinimumReactionTime());
     io::Property::UnMarshall(in.MaximumAllowedStabilizationTime(), out.GetMaximumAllowedStabilizationTime());
-    for (auto pcData : in.PropertyConvergence())
+    for (auto pcData : in.PropertyConvergence()) {
+      // if (pcData.PercentDifference() != pcData.PercentDifference()) {
       out.CreateSystemPropertyConvergence(pcData.PercentDifference(), pcData.Name());
+      //}
+    }
   }
   //----------------------------------------------------------------------------------
   void EngineConfiguration::Marshall(const PhysiologyEngineDynamicStabilizationCriteria& in, CDM::PhysiologyEngineDynamicStabilizationCriteriaData& out)
   {
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, ConvergenceTime)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, MinimumReactionTime)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, MaximumAllowedStabilizationTime)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, ConvergenceTime)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, MinimumReactionTime)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, MaximumAllowedStabilizationTime)
     for (auto pc : in.m_PropertyConvergence) {
-      std::unique_ptr<CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData> pcData(new CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData());
+      auto pcData = std::make_unique<CDM::PhysiologyEngineDynamicStabilizationCriteriaPropertyData>();
+      // if (pcData->PercentDifference() != pcData->PercentDifference()) {
       pcData->Name(pc->GetDataRequest().GetName());
       pcData->PercentDifference(pc->m_Target);
       out.PropertyConvergence().push_back(*pcData.get());
+      //}
     }
   }
   //----------------------------------------------------------------------------------

@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricCapacitanceUnit ElectricCapacitanceUnit::F("F");
 
-template class SEScalarQuantity<ElectricCapacitanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<ElectricCapacitanceUnit>;
 
 ElectricCapacitanceUnit::ElectricCapacitanceUnit(const char* u)
   : ElectricCapacitanceUnit(std::string { u })
@@ -34,20 +34,14 @@ ElectricCapacitanceUnit::~ElectricCapacitanceUnit()
 {
 }
 //-----------------------------------------------------------------------------
-SEScalarElectricCapacitance::SEScalarElectricCapacitance(){
-}
-//-----------------------------------------------------------------------------
-SEScalarElectricCapacitance::~SEScalarElectricCapacitance(){
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarElectricCapacitanceData* SEScalarElectricCapacitance::Unload() const
+SEScalarElectricCapacitance::SEScalarElectricCapacitance()
 {
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricCapacitanceData* data(new CDM::ScalarElectricCapacitanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
+//-----------------------------------------------------------------------------
+SEScalarElectricCapacitance::~SEScalarElectricCapacitance()
+{
+}
+
 //-----------------------------------------------------------------------------
 bool ElectricCapacitanceUnit::IsValidUnit(const char* unit)
 {

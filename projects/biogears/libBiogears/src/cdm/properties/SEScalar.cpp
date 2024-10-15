@@ -55,59 +55,32 @@ SEScalar::SEScalar()
 {
   Clear();
 }
+//-------------------------------------------------------------------------------
+SEScalar::SEScalar(SEScalar const& obj) 
+: SEProperty( obj)
+  , m_readOnly(obj.m_readOnly)
+  , m_value(obj.m_value)
+{
 
+}
+//-------------------------------------------------------------------------------
+SEScalar::SEScalar(SEScalar&& obj) 
+: SEProperty()
+  , m_readOnly(std::exchange(obj.m_readOnly, false))
+  , m_value(std::exchange(obj.m_value, 1.0))
+{
+
+}
 //-------------------------------------------------------------------------------
 SEScalar::~SEScalar()
 {
-  Clear();
 }
 
 //-------------------------------------------------------------------------------
 void SEScalar::Clear()
 {
-  SEProperty::Clear();
   m_readOnly = false;
   Invalidate();
-}
-
-//-------------------------------------------------------------------------------
-void SEScalar::Load(const CDM::ScalarData& in, std::default_random_engine *rd)
-{
-  Clear();
-  SEProperty::Load(in);
-
-  if (in.deviation().present() && rd) {
-    auto nd = std::normal_distribution(in.value(), in.deviation().get());
-    SetValue( nd(*rd) );
-  } else {
-    SetValue(in.value()); 
-  }
-  if (in.unit().present()) {
-    std::string u = in.unit().get();
-    if (!("unitless" == u || "" == u || u.empty())) {
-      throw CommonDataModelException("CDM::Scalar API is intended to be unitless, You are trying to load a ScalarData with a unit defined");
-    }
-  }
-  m_readOnly = in.readOnly();
-}
-
-//-------------------------------------------------------------------------------
-CDM::ScalarData* SEScalar::Unload() const
-{
-  if (!IsValid()) {
-    return nullptr;
-  }
-  CDM::ScalarData* data(new CDM::ScalarData());
-  Unload(*data);
-  return data;
-}
-
-//-------------------------------------------------------------------------------
-void SEScalar::Unload(CDM::ScalarData& data) const
-{
-  SEProperty::Unload(data);
-  data.value(m_value);
-  data.readOnly(m_readOnly);
 }
 
 //-------------------------------------------------------------------------------
@@ -132,7 +105,7 @@ void SEScalar::Copy(const SEScalar& s)
 {
   if (m_readOnly) {
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
-    throw CommonDataModelException("Scalar: " + s.ToString() +  "is marked read-only");
+    throw CommonDataModelException("Scalar: " + s.ToString() + "is marked read-only");
 #else
     return;
 #endif
@@ -152,13 +125,13 @@ void SEScalar::Invalidate()
   }
   m_value = NaN;
 }
-
+#pragma optimize("", off)
 //-------------------------------------------------------------------------------
 bool SEScalar::IsValid() const
 {
   return !std::isnan(m_value);
 }
-
+#pragma optimize("", on)
 //-------------------------------------------------------------------------------
 bool SEScalar::IsZero(double limit) const
 {
@@ -296,11 +269,11 @@ double SEScalar::DivideValue(double d)
 //-------------------------------------------------------------------------------
 bool SEScalar::Equals(const SEScalar& to) const
 {
-  if (std::isnan(m_value) && std::isnan(to.m_value)) //This Violates C++ Spec
+  if (std::isnan(m_value) && std::isnan(to.m_value)) // This Violates C++ Spec
     return true;
   if (std::isnan(m_value) || std::isnan(to.m_value))
     return false;
-  if (std::isinf(m_value) && std::isinf(to.m_value)) //This implies -> -inf == +inf
+  if (std::isinf(m_value) && std::isinf(to.m_value)) // This implies -> -inf == +inf
     return true;
   if (std::isinf(m_value) || std::isinf(to.m_value))
     return false;
@@ -310,13 +283,13 @@ bool SEScalar::Equals(const SEScalar& to) const
 //-------------------------------------------------------------------------------
 std::string SEScalar::ToString() const
 {
-  #ifndef ANDROID
+#ifndef ANDROID
   return std::to_string(m_value);
-  #else
+#else
   std::stringstream ss;
   ss << m_value;
   return ss.str();
-  #endif
+#endif
 }
 
 //-------------------------------------------------------------------------------
@@ -339,10 +312,23 @@ SEScalar& SEScalar::operator=(const SEScalar& rhs)
 {
   if (this == &rhs)
     return *this;
-
+  auto temp = SEScalar(rhs);
+  SEProperty::operator=(temp);
   this->m_value = rhs.m_value;
   this->m_readOnly = rhs.m_readOnly;
 
+  return *this;
+}
+
+//-------------------------------------------------------------------------------
+SEScalar& SEScalar::operator=(SEScalar&& rhs)
+{
+  if (this == &rhs)
+    return *this;
+  auto temp = SEScalar(std::move(rhs));
+  SEProperty::operator=(std::move(temp));
+  std::swap(m_value, temp.m_value);
+  std::swap(m_readOnly, temp.m_readOnly);
   return *this;
 }
 //-------------------------------------------------------------------------------

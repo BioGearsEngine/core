@@ -51,24 +51,7 @@ void SELiquidCompartment::Clear()
   SAFE_DELETE(m_WaterVolumeFraction);
   m_Children.clear();
 }
-//-----------------------------------------------------------------------------
-bool SELiquidCompartment::Load(const CDM::LiquidCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
-{
-  io::Compartment::UnMarshall(in, *this, subMgr, circuits);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::LiquidCompartmentData* SELiquidCompartment::Unload()
-{
-  CDM::LiquidCompartmentData* data = new CDM::LiquidCompartmentData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SELiquidCompartment::Unload(CDM::LiquidCompartmentData& data)
-{
-  io::Compartment::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 const SEScalar* SELiquidCompartment::GetScalar(const char* name)
 {

@@ -24,32 +24,22 @@ template class map<const biogears::SEElectricalCircuitNode*, size_t>;
 }
 namespace biogears {
 
-template class SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
+template class SECircuit<SEElectricalCircuitNode, SEElectricalCircuitPath>;
 
 SEElectricalCircuit::SEElectricalCircuit(const std::string& name, SECircuitManager& mgr)
-  : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger())
+  : SECircuit<SEElectricalCircuitNode,  SEElectricalCircuitPath>(name, mgr.GetLogger())
   , m_Mgr(mgr)
 {
 }
 //-------------------------------------------------------------------------------
 SEElectricalCircuit::SEElectricalCircuit(const char* name, SECircuitManager& mgr)
-  : SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>(name, mgr.GetLogger())
+  : SECircuit<SEElectricalCircuitNode,  SEElectricalCircuitPath>(name, mgr.GetLogger())
   , m_Mgr(mgr)
 {
 }
 //-------------------------------------------------------------------------------
 SEElectricalCircuit::~SEElectricalCircuit()
 {
-}
-//-------------------------------------------------------------------------------
-void SEElectricalCircuit::Unload(CDM::ElectricalCircuitData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
-bool SEElectricalCircuit::Load(const CDM::ElectricalCircuitData& in, SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit> const& ledger)
-{ // note: not clearing here as the derived class needs to clear and call this super class Load last to get the ref node hooked up
-  io::Circuit::UnMarshall(in, ledger, *this);
-  return true;
 }
 //-------------------------------------------------------------------------------
 SEElectricalCircuitNode& SEElectricalCircuit::CreateNode(const char* name)

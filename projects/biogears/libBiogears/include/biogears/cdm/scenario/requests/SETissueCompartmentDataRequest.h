@@ -31,14 +31,9 @@ public:
   virtual ~SETissueCompartmentDataRequest();
 
   virtual void Clear(); //clear memory
-  virtual bool Load(const CDM::TissueCompartmentDataRequestData& in);
-  virtual CDM::TissueCompartmentDataRequestData* Unload() const;
-
+  
   bool operator==(SETissueCompartmentDataRequest const&) const;
   bool operator!=(SETissueCompartmentDataRequest const&) const;
-
-protected:
-  virtual void Unload(CDM::TissueCompartmentDataRequestData& data) const;
 
 public:
   virtual size_t HashCode();

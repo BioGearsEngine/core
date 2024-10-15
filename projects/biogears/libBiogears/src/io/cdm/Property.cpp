@@ -2,39 +2,6 @@
 
 #include <biogears/schema/cdm/Properties.hxx>
 
-#include <biogears/cdm/properties/SEDecimalFormat.h>
-#include <biogears/cdm/properties/SEFunction.h>
-#include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
-#include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
-#include <biogears/cdm/properties/SEHistogram.h>
-#include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
-#include <biogears/cdm/properties/SEScalarAmount.h>
-#include <biogears/cdm/properties/SEScalarAreaPerTimePressure.h>
-#include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
-#include <biogears/cdm/properties/SEScalarElectricCharge.h>
-#include <biogears/cdm/properties/SEScalarElectricCurrent.h>
-#include <biogears/cdm/properties/SEScalarElectricInductance.h>
-#include <biogears/cdm/properties/SEScalarElectricPotential.h>
-#include <biogears/cdm/properties/SEScalarElectricResistance.h>
-#include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
-#include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
-#include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
-#include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
-#include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
-#include <biogears/cdm/properties/SEScalarHeatConductance.h>
-#include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
-#include <biogears/cdm/properties/SEScalarHeatInductance.h>
-#include <biogears/cdm/properties/SEScalarInversePressure.h>
-#include <biogears/cdm/properties/SEScalarInverseVolume.h>
-#include <biogears/cdm/properties/SEScalarLengthPerTime.h>
-#include <biogears/cdm/properties/SEScalarMassPerMass.h>
-#include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
-#include <biogears/cdm/properties/SEScalarVolumePerPressure.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
-#include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
-#include <biogears/cdm/utils/RunningAverage.h>
-
 #if defined(BIOGEARS_THROW_READONLY_EXCEPTIONS)
 #define READ_ONLY_CHECK() \
   if (out.m_readOnly)     \

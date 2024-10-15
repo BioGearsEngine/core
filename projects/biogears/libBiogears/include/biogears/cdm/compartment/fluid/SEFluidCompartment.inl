@@ -56,56 +56,7 @@ void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Clear()
   DELETE_VECTOR(m_SubstanceQuantities);
   m_Nodes.Clear();
 }
-//-----------------------------------------------------------------------------
-template <FLUID_COMPARTMENT_TEMPLATE>
-bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits)
-{
-  if (!SECompartment::Load(in, circuits))
-    return false;
-  // Not Loading In/Out Flow, those are calculated on demand
-  if (!in.Child().empty())
-    return true;
-  else if (!in.Node().empty()) {
-    if (circuits == nullptr) {
-      Error("Compartment is mapped to circuit nodes, but no circuit manager was provided, cannot load");
-      return false;
-    }
-    for (auto name : in.Node()) {
-      SEFluidCircuitNode* node = circuits->GetFluidNode(name);
-      if (node == nullptr) {
-        Error("Compartment is mapped to circuit node, " + std::string{ name } +", but provided circuit manager did not have that node");
-        return false;
-      }
-      MapNode(*node);
-    }
-  } else { // Only load these if you don't have children or nodes
-    if (in.Pressure().present())
-      GetPressure().Load(in.Pressure().get());
-    if (in.Volume().present())
-      GetVolume().Load(in.Volume().get());
-  }
-  return true;
-}
-//-----------------------------------------------------------------------------
-template <FLUID_COMPARTMENT_TEMPLATE>
-void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::Unload(CDM::FluidCompartmentData& data)
-{
-  SECompartment::Unload(data);
-  for (SEFluidCompartment* child : m_FluidChildren)
-    data.Child().push_back(child->GetName());
-  for (SEFluidCircuitNode* nodes : m_Nodes.GetNodes())
-    data.Node().push_back(nodes->GetName());
-  // Even if you have children or nodes, I am unloading everything, this makes the xml actually usefull...
-  if (HasInFlow())
-    data.InFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(GetInFlow().Unload()));
-  if (HasOutFlow())
-    data.OutFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(GetOutFlow().Unload()));
-  if (HasPressure())
-    data.Pressure(std::unique_ptr<CDM::ScalarPressureData>(GetPressure().Unload()));
-  if (HasVolume())
-    data.Volume(std::unique_ptr<CDM::ScalarVolumeData>(GetVolume().Unload()));
-}
-//-----------------------------------------------------------------------------
+////-----------------------------------------------------------------------------
 template <FLUID_COMPARTMENT_TEMPLATE>
 std::string SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetName() const
 {
@@ -123,7 +74,7 @@ const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const cha
 {
   return GetScalar(std::string{ name });
 }
-//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------s
 template <FLUID_COMPARTMENT_TEMPLATE>
 const SEScalar* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetScalar(const std::string& name)
 {
@@ -388,7 +339,7 @@ template <FLUID_COMPARTMENT_TEMPLATE>
 bool SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::HasSubstanceQuantity(const SESubstance& substance) const
 {
   for (SubstanceQuantityType* sq : m_SubstanceQuantities) {
-    if (&sq->GetSubstance() == &substance)
+    if (sq->GetSubstance() == substance)
       return true;
   }
   return false;
@@ -398,7 +349,7 @@ template <FLUID_COMPARTMENT_TEMPLATE>
 SubstanceQuantityType* SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::GetSubstanceQuantity(const SESubstance& substance) const
 {
   for (SubstanceQuantityType* sq : m_SubstanceQuantities) {
-    if (&sq->GetSubstance() == &substance)
+    if (sq->GetSubstance() == substance)
       return sq;
   }
   return nullptr;
@@ -414,7 +365,7 @@ template <FLUID_COMPARTMENT_TEMPLATE>
 void SEFluidCompartment<FLUID_COMPARTMENT_TYPES>::RemoveSubstanceQuantity(const SESubstance& substance)
 {
   for (size_t i = 0; i < m_SubstanceQuantities.size(); i++) {
-    if (&m_SubstanceQuantities[i]->GetSubstance() == &substance) {
+    if (m_SubstanceQuantities[i]->GetSubstance() == substance) {
       SAFE_DELETE(m_SubstanceQuantities[i]);
       SAFE_DELETE(m_TransportSubstances[i]); // Assumes these are in sync
       m_SubstanceQuantities.erase(m_SubstanceQuantities.begin() + i);

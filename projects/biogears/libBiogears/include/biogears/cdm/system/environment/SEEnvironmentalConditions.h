@@ -14,16 +14,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Environment.hxx>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
-
 
 #include <random>
 
-CDM_BIND_DECL(EnvironmentalConditionsData)
-
 namespace biogears {
 class SESubstance;
+class SESubstanceDefinition;
 class SESubstanceFraction;
 class SESubstanceConcentration;
 class SEEnvironment;
@@ -60,15 +57,13 @@ public:
   virtual ~SEEnvironmentalConditions();
 
   void Clear();
-  bool IsValid();
+  bool IsValid() const;
 
   bool operator==(SEEnvironmentalConditions const& rhs) const;
   bool operator!=(SEEnvironmentalConditions const& rhs) const;
 
-  bool Load(const CDM::EnvironmentalConditionsData& in);
   bool Load(const char* environmentFile);
   bool Load(const std::string& environmentFile);
-  CDM::EnvironmentalConditionsData* Unload() const;
 
   const SEScalar* GetScalar(const char* name);
   const SEScalar* GetScalar(const std::string& name);
@@ -122,27 +117,26 @@ public:
   double GetRespirationAmbientTemperature(const TemperatureUnit& unit) const;
 
   bool HasAmbientGas() const;
-  bool HasAmbientGas(const SESubstance& substance) const;
+  bool HasAmbientGas(SESubstanceDefinition const& substance) const;
   const std::vector<SESubstanceFraction*>& GetAmbientGases();
   const std::vector<const SESubstanceFraction*>& GetAmbientGases() const;
-  SESubstanceFraction& GetAmbientGas(SESubstance& substance);
-  const SESubstanceFraction* GetAmbientGas(const SESubstance& substance) const;
-  void AddAmbientGas(const SESubstance& substance, SEScalarFraction const& concentration);
-  void RemoveAmbientGas(const SESubstance& substance);
+  SESubstanceFraction& GetAmbientGas(SESubstanceDefinition const& substance);
+  const SESubstanceFraction* GetAmbientGas(SESubstanceDefinition const& substance) const;
+  void AddAmbientGas(SESubstanceDefinition const& substance, SEScalarFraction const& concentration);
+  void RemoveAmbientGas(SESubstanceDefinition const& substance);
   void RemoveAmbientGases();
 
   bool HasAmbientAerosol() const;
-  bool HasAmbientAerosol(const SESubstance& substance) const;
+  bool HasAmbientAerosol(SESubstanceDefinition const& substance) const;
   const std::vector<SESubstanceConcentration*>& GetAmbientAerosols();
   const std::vector<const SESubstanceConcentration*>& GetAmbientAerosols() const;
-  SESubstanceConcentration& GetAmbientAerosol(SESubstance& substance);
-  const SESubstanceConcentration* GetAmbientAerosol(const SESubstance& substance) const;
-  void AddAmbientAerosol(const SESubstance& substance, SEScalarMassPerVolume const& concentration);
-  void RemoveAmbientAerosol(const SESubstance& substance);
+  SESubstanceConcentration& GetAmbientAerosol(SESubstanceDefinition const& substance);
+  const SESubstanceConcentration* GetAmbientAerosol(SESubstanceDefinition const& substance) const;
+  void AddAmbientAerosol(SESubstanceDefinition const& substance, SEScalarMassPerVolume const& concentration);
+  void RemoveAmbientAerosol(SESubstanceDefinition const& substance);
   void RemoveAmbientAerosols();
 
 protected:
-  void Unload(CDM::EnvironmentalConditionsData& data) const;
   void Merge(const SEEnvironmentalConditions& from);
 
 protected:

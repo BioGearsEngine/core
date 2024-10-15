@@ -15,9 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 
-#include <biogears/schema/cdm/Properties.hxx>
-
-CDM_BIND_DECL(PhysiologyEngineStabilizationData)
 
 namespace biogears {
 class PhysiologyEngine;
@@ -37,14 +34,8 @@ public:
 
   BIOGEARS_API virtual void Clear();
 
-  BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineStabilizationData& in);
-  BIOGEARS_API virtual CDM::PhysiologyEngineStabilizationData* Unload() const;
-
   BIOGEARS_API bool operator==(PhysiologyEngineStabilization const&) const;
   BIOGEARS_API bool operator!=(PhysiologyEngineStabilization const&) const;
-
-protected:
-  BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineStabilizationData& data) const;
 
 public:
   BIOGEARS_API virtual bool Load(const char* file) = 0;

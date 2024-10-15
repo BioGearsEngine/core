@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.h>
-#include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
 class SESubstance;
@@ -29,13 +28,8 @@ public:
   SEGasCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEGasCompartmentDataRequest();
 
-  virtual bool Load(const CDM::GasCompartmentDataRequestData& in, const SESubstanceManager& substances);
-  virtual CDM::GasCompartmentDataRequestData* Unload() const;
-
   bool operator==(SEGasCompartmentDataRequest const&) const;
   bool operator!=(SEGasCompartmentDataRequest const&) const;
 
-protected:
-  virtual void Unload(CDM::GasCompartmentDataRequestData& data) const;
 };
 }

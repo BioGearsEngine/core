@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/exports.h>
-#include <biogears/schema/biogears/BioGearsEngineConfiguration.hxx>
 #include "biogears/cdm/properties/SEScalarFlowElastance.h"
 
 namespace biogears {
@@ -80,13 +79,6 @@ public:
   virtual void Merge(const BioGearsConfiguration& from);
 
   bool Load(const std::string& file);
-
-  virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
-  virtual bool Load(const CDM::BioGearsConfigurationData& in);
-  virtual CDM::BioGearsConfigurationData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::BioGearsConfigurationData& data) const;
 
   SESubstanceManager& m_Substances;
 

@@ -45,23 +45,6 @@ void SEFluidCircuitPath::Clear()
   m_CardiovascularRegion = SEResistancePathType::Invalid;
 }
 
-bool SEFluidCircuitPath::Load(const CDM::FluidCircuitPathData& in)
-{
-  io::Circuit::UnMarshall(in, *this);
-  return HasValidElements();
-}
-
-CDM::FluidCircuitPathData* SEFluidCircuitPath::Unload() const
-{
-  CDM::FluidCircuitPathData* data = new CDM::FluidCircuitPathData();
-  Unload(*data);
-  return data;
-}
-
-void SEFluidCircuitPath::Unload(CDM::FluidCircuitPathData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
 
 ////////////////////////////////
 // Fluid Resistance Types//

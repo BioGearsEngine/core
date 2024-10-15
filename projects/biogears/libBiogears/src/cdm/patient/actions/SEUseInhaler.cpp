@@ -41,24 +41,6 @@ bool SEUseInhaler::IsActive() const
   return SEConsciousRespirationCommand::IsActive();
 }
 //-------------------------------------------------------------------------------
-bool SEUseInhaler::Load(const CDM::UseInhalerData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::UseInhalerData* SEUseInhaler::Unload() const
-{
-  CDM::UseInhalerData* data(new CDM::UseInhalerData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEUseInhaler::Unload(CDM::UseInhalerData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 void SEUseInhaler::ToString(std::ostream& str) const
 {
   str << "Use Inhaler";

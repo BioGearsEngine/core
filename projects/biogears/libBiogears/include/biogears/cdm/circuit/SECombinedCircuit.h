@@ -11,8 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 
-#define COMBINED_CIRCUIT_TEMPLATE typename CombinedCircuitBindType, typename CircuitType, typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType
-#define COMBINED_CIRCUIT_TYPES CombinedCircuitBindType, CircuitType, CircuitBindType, NodeType, CircuitNodeBindType, PathType, CircuitPathBindType
+#define COMBINED_CIRCUIT_TEMPLATE typename CircuitType,  typename NodeType,  typename PathType
+#define COMBINED_CIRCUIT_TYPES CircuitType, NodeType, PathType
 
 #include <string>
 
@@ -26,11 +26,6 @@ public:
 
   virtual void Clear() override; //clear memory
 
-  bool Load(const CombinedCircuitBindType& in);
-  CombinedCircuitBindType* Unload() const;
-
-protected:
-  void Unload(CombinedCircuitBindType& data) const;
 
 public:
   virtual void AddCircuit(CircuitType& c) override;

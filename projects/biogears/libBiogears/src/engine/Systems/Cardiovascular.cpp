@@ -11,12 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Cardiovascular.h>
 
-#include <biogears/cdm/enums/SECircuitEnums.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentGraph.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
-#include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/enums/SECircuitEnums.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/conditions/SEChronicAnemia.h>
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
 #include <biogears/cdm/patient/conditions/SEChronicPericardialEffusion.h>
@@ -51,7 +51,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
+#include "io/cdm/Physiology.h"
+#include "io/cdm/Property.h"
 
 namespace biogears {
 auto Cardiovascular::make_unique(BioGears& bg) -> std::unique_ptr<Cardiovascular>
@@ -166,16 +168,16 @@ void Cardiovascular::Initialize()
 
   m_StartSystole = true;
   m_HeartFlowDetected = false;
-  m_CardiacCyclePeriod_s = 0.8; //seconds per beat
+  m_CardiacCyclePeriod_s = 0.8; // seconds per beat
   m_CardiacCycleDiastolicVolume_mL = 0.0;
   m_CardiacCycleStrokeVolume_mL = 0;
   m_CurrentCardiacCycleDuration_s = 0;
 
-  //Heart Elastance Parameters
+  // Heart Elastance Parameters
   m_LeftHeartElastance_mmHg_Per_mL = 0.0;
   m_LeftHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetLeftHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
   m_LeftHeartElastanceMin_mmHg_Per_mL = m_data.GetConfiguration().GetLeftHeartElastanceMinimum(FlowElastanceUnit::mmHg_Per_mL);
-  m_LeftHeartElastanceModifier = 1.0; //Utilized for reducing the maximum elastance to represent left ventricular systolic dysfunction
+  m_LeftHeartElastanceModifier = 1.0; // Utilized for reducing the maximum elastance to represent left ventricular systolic dysfunction
   m_RightHeartElastance_mmHg_Per_mL = 0.0;
   m_RightHeartElastanceMax_mmHg_Per_mL = m_data.GetConfiguration().GetRightHeartElastanceMaximum(FlowElastanceUnit::mmHg_Per_mL);
   m_RightHeartElastanceMin_mmHg_Per_mL = m_data.GetConfiguration().GetRightHeartElastanceMinimum(FlowElastanceUnit::mmHg_Per_mL);
@@ -243,102 +245,6 @@ void Cardiovascular::Initialize()
   m_OverrideRHEMax_Conformant_mmHg = m_RightHeartElastanceMax_mmHg_Per_mL;
 
   m_overrideTime_s = 0.0;
-}
-
-bool Cardiovascular::Load(const CDM::BioGearsCardiovascularSystemData& in)
-{
-  if (!SECardiovascularSystem::Load(in))
-    return false;
-
-  m_StartSystole = in.StartSystole();
-  m_HeartFlowDetected = in.HeartFlowDetected();
-  m_EnterCardiacArrest = in.EnterCardiacArrest();
-  m_CardiacCyclePeriod_s = in.CardiacCyclePeriod_s();
-  m_CurrentCardiacCycleDuration_s = in.CurrentCardiacCycleDuration_s();
-  m_LeftHeartElastanceModifier = in.LeftHeartElastanceModifier();
-  m_LeftHeartElastance_mmHg_Per_mL = in.LeftHeartElastance_mmHg_Per_mL();
-  m_LeftHeartElastanceMax_mmHg_Per_mL = in.LeftHeartElastanceMax_mmHg_Per_mL();
-  m_LeftHeartElastanceMin_mmHg_Per_mL = in.LeftHeartElastanceMin_mmHg_Per_mL();
-  m_RightHeartElastance_mmHg_Per_mL = in.RightHeartElastance_mmHg_Per_mL();
-  m_RightHeartElastanceMax_mmHg_Per_mL = in.RightHeartElastanceMax_mmHg_Per_mL();
-  m_RightHeartElastanceMin_mmHg_Per_mL = in.RightHeartElastanceMin_mmHg_Per_mL();
-
-  // need to initialize these on a state load or there is an nan error that pops up,
-  /// todo: might want to revisit the override functionality to properly do this
-  m_OverrideLHEMax_Conformant_mmHg = m_LeftHeartElastanceMax_mmHg_Per_mL;
-  m_OverrideRHEMax_Conformant_mmHg = m_RightHeartElastanceMax_mmHg_Per_mL;
-  m_OverrideLHEMin_Conformant_mmHg = m_LeftHeartElastanceMin_mmHg_Per_mL;
-  m_OverrideRHEMin_Conformant_mmHg = m_RightHeartElastanceMin_mmHg_Per_mL;
-
-  m_CompressionTime_s = in.CompressionTime_s();
-  m_CompressionRatio = in.CompressionRatio();
-  m_CompressionPeriod_s = in.CompressionPeriod_s();
-
-  m_CurrentCardiacCycleTime_s = in.CurrentCardiacCycleTime_s();
-  m_CardiacCycleDiastolicVolume_mL = in.CardiacCycleDiastolicVolume_mL();
-  m_CardiacCycleAortaPressureLow_mmHg = in.CardiacCycleAortaPressureLow_mmHg();
-  m_CardiacCycleAortaPressureHigh_mmHg = in.CardiacCycleAortaPressureHigh_mmHg();
-  m_CardiacCyclePulmonaryArteryPressureLow_mmHg = in.CardiacCyclePulmonaryArteryPressureLow_mmHg();
-  m_CardiacCyclePulmonaryArteryPressureHigh_mmHg = in.CardiacCyclePulmonaryArteryPressureHigh_mmHg();
-  m_LastCardiacCycleMeanArterialCO2PartialPressure_mmHg = in.LastCardiacCycleMeanArterialCO2PartialPressure_mmHg();
-  m_CardiacCycleStrokeVolume_mL = in.CardiacCycleStrokeVolume_mL();
-
-  m_CardiacCycleArterialPressure_mmHg.Load(in.CardiacCycleArterialPressure_mmHg());
-  m_CardiacCycleArterialCO2PartialPressure_mmHg.Load(in.CardiacCycleArterialCO2PartialPressure_mmHg());
-  m_CardiacCyclePulmonaryCapillariesWedgePressure_mmHg.Load(in.CardiacCyclePulmonaryCapillariesWedgePressure_mmHg());
-  m_CardiacCyclePulmonaryCapillariesFlow_mL_Per_s.Load(in.CardiacCyclePulmonaryCapillariesFlow_mL_Per_s());
-  m_CardiacCyclePulmonaryShuntFlow_mL_Per_s.Load(in.CardiacCyclePulmonaryShuntFlow_mL_Per_s());
-  m_CardiacCyclePulmonaryArteryPressure_mmHg.Load(in.CardiacCyclePulmonaryArteryPressure_mmHg());
-  m_CardiacCycleCentralVenousPressure_mmHg.Load(in.CardiacCycleCentralVenousPressure_mmHg());
-  m_CardiacCycleSkinFlow_mL_Per_s.Load(in.CardiacCycleSkinFlow_mL_Per_s());
-
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsCardiovascularSystemData* Cardiovascular::Unload() const
-{
-  CDM::BioGearsCardiovascularSystemData* data = new CDM::BioGearsCardiovascularSystemData();
-  Unload(*data);
-  return data;
-}
-void Cardiovascular::Unload(CDM::BioGearsCardiovascularSystemData& data) const
-{
-  SECardiovascularSystem::Unload(data);
-
-  data.StartSystole(m_StartSystole);
-  data.HeartFlowDetected(m_HeartFlowDetected);
-  data.EnterCardiacArrest(m_EnterCardiacArrest);
-  data.CardiacCyclePeriod_s(m_CardiacCyclePeriod_s);
-  data.CurrentCardiacCycleDuration_s(m_CurrentCardiacCycleDuration_s);
-  data.LeftHeartElastance_mmHg_Per_mL(m_LeftHeartElastance_mmHg_Per_mL);
-  data.LeftHeartElastanceModifier(m_LeftHeartElastanceModifier);
-  data.LeftHeartElastanceMax_mmHg_Per_mL(m_LeftHeartElastanceMax_mmHg_Per_mL);
-  data.LeftHeartElastanceMin_mmHg_Per_mL(m_LeftHeartElastanceMin_mmHg_Per_mL);
-  data.RightHeartElastance_mmHg_Per_mL(m_RightHeartElastance_mmHg_Per_mL);
-  data.RightHeartElastanceMax_mmHg_Per_mL(m_RightHeartElastanceMax_mmHg_Per_mL);
-  data.RightHeartElastanceMin_mmHg_Per_mL(m_RightHeartElastanceMin_mmHg_Per_mL);
-
-  data.CompressionTime_s(m_CompressionTime_s);
-  data.CompressionRatio(m_CompressionRatio);
-  data.CompressionPeriod_s(m_CompressionPeriod_s);
-
-  data.CurrentCardiacCycleTime_s(m_CurrentCardiacCycleTime_s);
-  data.CardiacCycleDiastolicVolume_mL(m_CardiacCycleDiastolicVolume_mL);
-  data.CardiacCycleAortaPressureLow_mmHg(m_CardiacCycleAortaPressureLow_mmHg);
-  data.CardiacCycleAortaPressureHigh_mmHg(m_CardiacCycleAortaPressureHigh_mmHg);
-  data.CardiacCyclePulmonaryArteryPressureLow_mmHg(m_CardiacCyclePulmonaryArteryPressureLow_mmHg);
-  data.CardiacCyclePulmonaryArteryPressureHigh_mmHg(m_CardiacCyclePulmonaryArteryPressureHigh_mmHg);
-  data.LastCardiacCycleMeanArterialCO2PartialPressure_mmHg(m_LastCardiacCycleMeanArterialCO2PartialPressure_mmHg);
-  data.CardiacCycleStrokeVolume_mL(m_CardiacCycleStrokeVolume_mL);
-
-  data.CardiacCycleArterialPressure_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_CardiacCycleArterialPressure_mmHg.Unload()));
-  data.CardiacCycleArterialCO2PartialPressure_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_CardiacCycleArterialCO2PartialPressure_mmHg.Unload()));
-  data.CardiacCyclePulmonaryCapillariesWedgePressure_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_CardiacCyclePulmonaryCapillariesWedgePressure_mmHg.Unload()));
-  data.CardiacCyclePulmonaryCapillariesFlow_mL_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_CardiacCyclePulmonaryCapillariesFlow_mL_Per_s.Unload()));
-  data.CardiacCyclePulmonaryShuntFlow_mL_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_CardiacCyclePulmonaryShuntFlow_mL_Per_s.Unload()));
-  data.CardiacCyclePulmonaryArteryPressure_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_CardiacCyclePulmonaryArteryPressure_mmHg.Unload()));
-  data.CardiacCycleCentralVenousPressure_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_CardiacCycleCentralVenousPressure_mmHg.Unload()));
-  data.CardiacCycleSkinFlow_mL_Per_s(std::unique_ptr<CDM::RunningAverageData>(m_CardiacCycleSkinFlow_mL_Per_s.Unload()));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -430,8 +336,8 @@ void Cardiovascular::SetUp()
   SEFluidCircuitNode* aorta = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Aorta1);
   SEFluidCircuitNode* ground = m_CirculatoryCircuit->GetNode(BGE::CardiovascularNode::Ground);
 
-  //Cache resistance paths that will be affected by nervous feedback.  We exclude cerebral because we do not want those paths pushed on to systemic paths vector.  This way, cerebral
-  //paths won't be affected by drugs.
+  // Cache resistance paths that will be affected by nervous feedback.  We exclude cerebral because we do not want those paths pushed on to systemic paths vector.  This way, cerebral
+  // paths won't be affected by drugs.
   for (SEFluidCircuitPath* path : m_CirculatoryCircuit->GetPaths()) {
     if (&path->GetSourceNode() == aorta && path->HasResistanceBaseline()) {
       if (&path->GetTargetNode() != ground && path->HasCardiovascularRegion()) {
@@ -926,7 +832,7 @@ void Cardiovascular::CalculateVitalSigns()
       m_patient->SetEvent(SEPatientEventType::HypovolemicShock, false, m_data.GetSimulationTime());
     }
 
-    //Check for cardiogenic shock
+    // Check for cardiogenic shock
     if (GetCardiacIndex().GetValue(VolumePerTimeAreaUnit::L_Per_min_m2) < 2.2 && GetSystolicArterialPressure(PressureUnit::mmHg) < 90.0 && GetPulmonaryCapillariesWedgePressure(PressureUnit::mmHg) > 15.0) {
       /// \event Patient: Cardiogenic Shock: Cardiac Index has fallen below 2.2 L/min-m^2, Systolic Arterial Pressure is below 90 mmHg, and Pulmonary Capillary Wedge Pressure is above 15.0.
       /// \cite dhakam2008review
@@ -935,7 +841,7 @@ void Cardiovascular::CalculateVitalSigns()
       m_patient->SetEvent(SEPatientEventType::CardiogenicShock, false, m_data.GetSimulationTime());
     }
 
-    //Check for Tachycardia, Bradycardia, and asystole
+    // Check for Tachycardia, Bradycardia, and asystole
     /// \event Patient: Tachycardia: heart rate exceeds 100 beats per minute.  This state is alleviated if it decreases below 90.
     if (GetHeartRate().GetValue(FrequencyUnit::Per_min) < 90)
       m_patient->SetEvent(SEPatientEventType::Tachycardia, false, m_data.GetSimulationTime());
@@ -1221,14 +1127,14 @@ void Cardiovascular::Hemorrhage()
     bleedoutTime = (bloodVolume_mL - (0.5 * baselineBloodVolume_mL)) / TotalLossRate_mL_Per_s * (1.0 / 60.0);
   }
 
-  //We already filtered tourniquet actions during Action Loading to make sure that we do not have a tourniquet that A) Aligns with a non-existent hemorrhage
-  //or B) refers to an incompatible compartments.  We are therefore safe to loop through this map without further checks.
+  // We already filtered tourniquet actions during Action Loading to make sure that we do not have a tourniquet that A) Aligns with a non-existent hemorrhage
+  // or B) refers to an incompatible compartments.  We are therefore safe to loop through this map without further checks.
 
   for (auto tPair : tourniquets) {
     tournCmpt = tPair.first;
     tourniquet = tPair.second;
     auto tLevel = tourniquet->GetTourniquetLevel();
-    //Take advantage of the fact that extremities are all named as Aorta1ToLeftArm1 and LeftArm1ToLeftArm2
+    // Take advantage of the fact that extremities are all named as Aorta1ToLeftArm1 and LeftArm1ToLeftArm2
     std::string supplyPathName = "Aorta1To" + tournCmpt + "1";
     std::string returnPathName = tournCmpt + "1To" + tournCmpt + "2";
     SEFluidCircuitPath* supplyPath = m_CirculatoryCircuit->GetPath(supplyPathName);
@@ -1241,10 +1147,10 @@ void Cardiovascular::Hemorrhage()
       tResModifier = 100.0;
       break;
     case SETourniquetApplicationType::Misapplied:
-      tResModifier = 3.0; //Slow blood flow, but don't stop entirely
+      tResModifier = 3.0; // Slow blood flow, but don't stop entirely
       break;
     case SETourniquetApplicationType::NotApplied:
-      //This case shouldn't get hit because "None" deactivates tourniquet, but account for it just in case
+      // This case shouldn't get hit because "None" deactivates tourniquet, but account for it just in case
     default:
       tResModifier = 1.0;
     }
@@ -1544,7 +1450,7 @@ void Cardiovascular::HeartDriver()
   if (!m_patient->IsEventActive(SEPatientEventType::CardiacArrest)) {
     if (m_CurrentCardiacCycleTime_s + m_dT_s > m_CardiacCyclePeriod_s) {
       m_StartSystole = true; // A new cardiac cycle will begin next time step
-      m_CurrentCardiacCycleDuration_s += (m_CardiacCyclePeriod_s - m_CurrentCardiacCycleTime_s); //Add leftover time to current duration so Calc Heart Rate has an accuracte notion of how long this cycle lasted
+      m_CurrentCardiacCycleDuration_s += (m_CardiacCyclePeriod_s - m_CurrentCardiacCycleTime_s); // Add leftover time to current duration so Calc Heart Rate has an accuracte notion of how long this cycle lasted
     }
     AdjustVascularTone();
     CalculateHeartElastance();
@@ -1601,7 +1507,7 @@ void Cardiovascular::BeginCardiacCycle()
     SEOverride* override = m_data.GetActions().GetPatientActions().GetOverride();
     m_OverrideOnOffCheck = true;
     m_overrideTime_s += m_data.GetTimeStep().GetValue(TimeUnit::s);
-    //Blood pressure override processing
+    // Blood pressure override processing
     if (override->HasSystolicArterialPressureOverride()) {
       systolicOverride_mmHg = override->GetSystolicArterialPressureOverride().GetValue(PressureUnit::mmHg);
     }
@@ -1679,7 +1585,7 @@ void Cardiovascular::BeginCardiacCycle()
   BLIM(HeartDriverFrequency_Per_Min, m_data.GetPatient().GetHeartRateMinimum(FrequencyUnit::Per_min), m_data.GetPatient().GetHeartRateMaximum(FrequencyUnit::Per_min));
   m_OverrideHR_Conformant_Per_min = HeartDriverFrequency_Per_Min;
 
-  //Apply heart failure effects
+  // Apply heart failure effects
   m_LeftHeartElastanceMax_mmHg_Per_mL *= m_LeftHeartElastanceModifier;
 
   // Now set the cardiac cycle period and the cardiac arrest event if applicable
@@ -2208,7 +2114,7 @@ void Cardiovascular::CalculateHeartRate()
     HeartRate_Per_s = 1.0 / (m_CurrentCardiacCycleDuration_s - m_dT_s);
   }
   GetHeartRate().SetValue(HeartRate_Per_s * 60.0, FrequencyUnit::Per_min);
-  m_CurrentCardiacCycleDuration_s = 0.0; //Incremented each time step in HeartDriver
+  m_CurrentCardiacCycleDuration_s = 0.0; // Incremented each time step in HeartDriver
 }
 
 SEScalar& Cardiovascular::CalculateCardiovascularSOFA()

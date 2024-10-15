@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-#include <biogears/schema/biogears/BioGears.hxx>
+
 
 namespace biogears {
 class TimeUnit;
@@ -59,7 +59,6 @@ protected:
 };
 
 class PhysiologyEngineDynamicStabilization;
-CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationCriteriaData)
 class BIOGEARS_API PhysiologyEngineDynamicStabilizationCriteria : public Loggable {
   friend PhysiologyEngineDynamicStabilization;
   friend io::EngineConfiguration;
@@ -70,11 +69,6 @@ public:
   virtual ~PhysiologyEngineDynamicStabilizationCriteria();
 
   virtual void Clear();
-  virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationCriteriaData& in);
-  virtual CDM::PhysiologyEngineDynamicStabilizationCriteriaData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationCriteriaData& data) const;
 
 public:
   virtual std::string GetName() const;
@@ -150,7 +144,6 @@ protected:
   const std::vector<PropertyConvergence*>& m_properties;
 };
 
-CDM_BIND_DECL(PhysiologyEngineDynamicStabilizationData)
 class PhysiologyEngineDynamicStabilization : public PhysiologyEngineStabilization {
 public:
   friend io::EngineConfiguration;
@@ -158,12 +151,6 @@ public:
   BIOGEARS_API virtual ~PhysiologyEngineDynamicStabilization();
 
   BIOGEARS_API virtual void Clear() override;
-
-  BIOGEARS_API virtual bool Load(const CDM::PhysiologyEngineDynamicStabilizationData& in);
-  BIOGEARS_API virtual CDM::PhysiologyEngineDynamicStabilizationData* Unload() const override;
-
-protected:
-  BIOGEARS_API virtual void Unload(CDM::PhysiologyEngineDynamicStabilizationData& data) const;
 
 public:
   BIOGEARS_API virtual bool Load(const char* file) override;

@@ -42,24 +42,7 @@ SEGasCompartment::SEGasCompartment(const std::string& name, Logger* logger)
 SEGasCompartment::~SEGasCompartment()
 {
 }
-//-------------------------------------------------------------------------------
-bool SEGasCompartment::Load(const CDM::GasCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
-{
-  io::Compartment::UnMarshall(in, *this, subMgr, circuits);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::GasCompartmentData* SEGasCompartment::Unload()
-{
-  CDM::GasCompartmentData* data = new CDM::GasCompartmentData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEGasCompartment::Unload(CDM::GasCompartmentData& data)
-{
-  io::Compartment::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 void SEGasCompartment::StateChange()
 {

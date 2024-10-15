@@ -36,21 +36,4 @@ bool SEAnesthesiaMachineAction::IsValid() const
   return SEAction::IsValid();
 }
 
-bool SEAnesthesiaMachineAction::Load(const CDM::AnesthesiaMachineActionData& in, std::default_random_engine* rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-
-CDM::AnesthesiaMachineActionData* SEAnesthesiaMachineAction::Unload() const
-{
-  CDM::AnesthesiaMachineActionData* data = new CDM::AnesthesiaMachineActionData();
-  Unload(*data);
-  return data;
-}
-
-void SEAnesthesiaMachineAction::Unload(CDM::AnesthesiaMachineActionData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
 }

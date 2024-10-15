@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <ostream>
+#include <string>
 
 namespace biogears {
 
@@ -59,7 +60,13 @@ enum class SESubstanceClass {
   Sedative
 };
 
-inline std::string ToString(const SESubstanceState& bit)
+enum class RenalDynamicsType {
+  Invalid = -1,
+  Clearance = 0,
+  Regulation
+};
+
+inline ::std::string ToString(const SESubstanceState& bit)
 {
   switch (bit) {
   case SESubstanceState::Solid:
@@ -75,7 +82,7 @@ inline std::string ToString(const SESubstanceState& bit)
   }
 }
 
-inline std::string ToString(const SESubstanceIonicState& bit)
+inline ::std::string ToString(const SESubstanceIonicState& bit)
 {
   switch (bit) {
   case SESubstanceIonicState::WeakBase:
@@ -93,7 +100,7 @@ inline std::string ToString(const SESubstanceIonicState& bit)
   }
 }
 
-inline std::string ToString(const SESubstanceBindingProtein& bit)
+inline ::std::string ToString(const SESubstanceBindingProtein& bit)
 {
   switch (bit) {
   case SESubstanceBindingProtein::Albumin:
@@ -107,7 +114,7 @@ inline std::string ToString(const SESubstanceBindingProtein& bit)
   }
 }
 
-inline std::string ToString(const SECharge& bit)
+inline ::std::string ToString(const SECharge& bit)
 {
   switch (bit) {
   case SECharge::Positive:
@@ -121,7 +128,19 @@ inline std::string ToString(const SECharge& bit)
   }
 }
 
-inline std::string ToString(const SESubstanceClass& bit)
+inline ::std::string ToString(const RenalDynamicsType& bit)
+{
+  switch (bit) {
+  case RenalDynamicsType::Clearance:
+    return "Anesthetic";
+  case RenalDynamicsType::Regulation:
+    return "Antibiotic";
+  default:
+    return "Invalid";
+  }
+}
+
+inline ::std::string ToString(const SESubstanceClass& bit)
 {
   switch (bit) {
   case SESubstanceClass::Anesthetic:
@@ -143,31 +162,37 @@ inline std::string ToString(const SESubstanceClass& bit)
   }
 }
 
-inline std::ostream& operator<<(std::ostream& os, const SESubstanceState& pt)
+inline ::std::ostream& operator<<(::std::ostream& os, const SESubstanceState& pt)
 {
   os << ToString(pt);
   return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const SESubstanceIonicState& pt)
+inline ::std::ostream& operator<<(::std::ostream& os, const SESubstanceIonicState& pt)
 {
   os << ToString(pt);
   return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const SESubstanceBindingProtein& pt)
+inline ::std::ostream& operator<<(::std::ostream& os, const SESubstanceBindingProtein& pt)
 {
   os << ToString(pt);
   return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const SECharge& pt)
+inline ::std::ostream& operator<<(::std::ostream& os, const SECharge& pt)
 {
   os << ToString(pt);
   return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const SESubstanceClass& pt)
+inline ::std::ostream& operator<<(::std::ostream& os, const SESubstanceClass& pt)
+{
+  os << ToString(pt);
+  return os;
+}
+
+inline ::std::ostream& operator<<(::std::ostream& os, const RenalDynamicsType& pt)
 {
   os << ToString(pt);
   return os;

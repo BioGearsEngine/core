@@ -36,9 +36,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ExampleActionData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::ExampleActionData* Unload() const override;
-
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
@@ -46,9 +43,6 @@ public:
 
   bool operator==(const SEExampleAction& rhs) const;
   bool operator!=(const SEExampleAction& rhs) const;
-
-protected:
-  virtual void Unload(CDM::ExampleActionData& data) const;
 
 private:
   SEScalar0To1* m_Severity;

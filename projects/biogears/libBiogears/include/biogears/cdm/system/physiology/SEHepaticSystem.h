@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
 
 namespace biogears {
@@ -40,16 +40,10 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::HepaticSystemData& in);
-  CDM::HepaticSystemData* Unload() const override;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SEHepaticSystem const&) const;
   bool operator!=(SEHepaticSystem const&) const;
-
-protected:
-  void Unload(CDM::HepaticSystemData& data) const;
 
 public:
   bool HasKetoneProductionRate() const;

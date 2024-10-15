@@ -15,10 +15,9 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
-CDM_BIND_DECL(CircuitManagerData);
 
+#pragma warning(disable : 4661)
 namespace biogears {
 namespace io {
   class Circuit;
@@ -33,12 +32,6 @@ public:
   virtual ~SECircuitManager();
 
   virtual void Clear(); // clear memory
-
-  virtual bool Load(const CDM::CircuitManagerData& in);
-  virtual CDM::CircuitManagerData* Unload() const;
-
-protected:
-  void Unload(CDM::CircuitManagerData& data) const;
 
 public:
   void SetReadOnly(bool b);
@@ -460,3 +453,4 @@ const CircuitType* SECircuitManager::GetCircuit(const std::string& name, const S
 //-------------------------------------------------------------------------------
 
 }
+#pragma warning(default : 4661)

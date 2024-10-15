@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+
 
 namespace biogears {
 class SEScalar0To1;
@@ -37,9 +37,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::BrainInjuryData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::BrainInjuryData* Unload() const override;
-
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
@@ -52,9 +49,6 @@ public:
 
   bool operator==(const SEBrainInjury& rhs) const;
   bool operator!=(const SEBrainInjury& rhs) const;
-
-protected:
-  virtual void Unload(CDM::BrainInjuryData& data) const;
 
 protected:
   SEScalar0To1* m_Severity;

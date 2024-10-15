@@ -18,7 +18,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/cdm/Serializer.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
 
@@ -37,9 +36,12 @@ int HowToScenarioBase()
   bg->GetLogger()->Info("HowToScenarioBase");
   
 	
-	//Let's read the scenario we want to base this engine on
+	//Load will search for a file in several fall back locations listed in 
+    // io-manager.h.  The primary places are the current_directory and 
+    // the current_directory/Scenarios.  Each Scenario file may have references to 
+    // Additional Patient and DataRequest files. See AsthmaAttack.xml for an example
 	SEScenario sce(bg->GetSubstanceManager());
-	sce.Load("YourScenario.xml");
+	sce.Load("Showcase/AsthmaAttack.xml");
 
   if (sce.HasEngineStateFile())
   {
@@ -75,20 +77,6 @@ int HowToScenarioBase()
       }
     }
   }
-  CDM::DataRequestManagerData* drData;
-  // NOTE : You can just make a DataRequests xml file that holds only data requests
-  // And serialize that in instead of a sceanrio file, if all you want is a consistent
-  // set of data requests for all your scenarios
-  std::unique_ptr<CDM::ObjectData> obj = Serializer::ReadFile("YourDataRequestsFile.xml", bg->GetLogger());
-  drData = dynamic_cast<CDM::DataRequestManagerData*>(obj.get());
-  bg->GetEngineTrack()->GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
-  // Don't need to delete drData as obj is wrapped in a unique_ptr
- 
-  // Make a copy of the data requests, not this clears out data requests from the engine
-  // This will clear out the data requests if any exist in the DataRequestManager
-  drData = sce.GetDataRequestManager().Unload();
-  bg->GetEngineTrack()->GetDataRequestManager().Load(*drData, bg->GetSubstanceManager());
-  delete drData;
 
   if (!bg->GetEngineTrack()->GetDataRequestManager().HasResultsFilename()) {
     bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("./ResultsFileName.csv");

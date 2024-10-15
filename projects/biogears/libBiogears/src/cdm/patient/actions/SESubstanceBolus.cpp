@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 
 #include "io/cdm/PatientActions.h"
+
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -52,24 +53,6 @@ bool SESubstanceBolus::IsValid() const
 bool SESubstanceBolus::IsActive() const
 {
   return IsValid();
-}
-//-------------------------------------------------------------------------------
-bool SESubstanceBolus::Load(const CDM::SubstanceBolusData& in, std::default_random_engine* rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceBolusData* SESubstanceBolus::Unload() const
-{
-  CDM::SubstanceBolusData* data(new CDM::SubstanceBolusData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceBolus::Unload(CDM::SubstanceBolusData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasAdminTime() const
@@ -158,27 +141,6 @@ SESubstanceBolusState::SESubstanceBolusState(const SESubstance& sub)
 //-------------------------------------------------------------------------------
 SESubstanceBolusState::~SESubstanceBolusState()
 {
-}
-//-------------------------------------------------------------------------------
-bool SESubstanceBolusState::Load(const CDM::SubstanceBolusStateData& in, std::default_random_engine* rd)
-{
-  m_ElapsedTime.Load(in.ElapsedTime(), rd);
-  m_AdministeredDose.Load(in.AdministeredDose(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceBolusStateData* SESubstanceBolusState::Unload() const
-{
-  CDM::SubstanceBolusStateData* data = new CDM::SubstanceBolusStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceBolusState::Unload(CDM::SubstanceBolusStateData& data) const
-{
-  data.Substance(m_Substance.GetName());
-  data.ElapsedTime(std::unique_ptr<CDM::ScalarTimeData>(m_ElapsedTime.Unload()));
-  data.AdministeredDose(std::unique_ptr<CDM::ScalarVolumeData>(m_AdministeredDose.Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceBolus::operator==(const SESubstanceBolus& rhs) const

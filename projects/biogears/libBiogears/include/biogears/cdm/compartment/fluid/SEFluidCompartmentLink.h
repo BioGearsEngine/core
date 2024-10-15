@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/compartment/SECompartmentLink.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/cdm/Compartment.hxx>
+
 
 #define FLUID_COMPARTMENT_LINK_TEMPLATE typename EdgeType, typename VertexType, typename CompartmentType
 #define FLUID_COMPARTMENT_LINK_TYPES EdgeType, VertexType, CompartmentType
@@ -25,6 +25,7 @@ namespace io {
   class Compartment;
 }
 
+#pragma warning(disable : 4661)
 template <FLUID_COMPARTMENT_LINK_TEMPLATE>
 class SEFluidCompartmentLink : public SECompartmentLink, public EdgeType {
   friend io::Compartment;
@@ -38,16 +39,10 @@ public:
 
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::FluidCompartmentLinkData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::FluidCompartmentLinkData* Unload() override = 0;
-
   bool operator==(const SEFluidCompartmentLink& rhs) const;
   bool operator!=(const SEFluidCompartmentLink& rhs) const;
   bool operator==(const SECompartmentLink& rhs) const final;
   bool operator!=(const SECompartmentLink& rhs) const final;
-
-protected:
-  virtual void Unload(CDM::FluidCompartmentLinkData& data);
 
 public:
   virtual const SEScalar* GetScalar(const char* name) override;
@@ -88,4 +83,5 @@ protected:
   VertexType& m_TargetVertex;
   SEFluidCircuitPath* m_Path;
 };
+#pragma warning(default : 4661)
 }

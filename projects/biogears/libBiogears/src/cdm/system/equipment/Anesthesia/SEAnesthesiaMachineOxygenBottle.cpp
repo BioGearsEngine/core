@@ -41,27 +41,6 @@ void SEAnesthesiaMachineOxygenBottle::Clear()
 }
 //-------------------------------------------------------------------------------
 
-bool SEAnesthesiaMachineOxygenBottle::Load(const CDM::AnesthesiaMachineOxygenBottleData& in)
-{
-  io::Anesthesia::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::AnesthesiaMachineOxygenBottleData* SEAnesthesiaMachineOxygenBottle::Unload() const
-{
-  CDM::AnesthesiaMachineOxygenBottleData* data = new CDM::AnesthesiaMachineOxygenBottleData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEAnesthesiaMachineOxygenBottle::Unload(CDM::AnesthesiaMachineOxygenBottleData& data) const
-{
-  io::Anesthesia::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
-
 void SEAnesthesiaMachineOxygenBottle::Merge(const SEAnesthesiaMachineOxygenBottle& from)
 {
   COPY_PROPERTY(Volume);

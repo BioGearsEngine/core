@@ -36,12 +36,6 @@ SELiquidCompartmentLink::SELiquidCompartmentLink(SELiquidCompartment& src, SELiq
 SELiquidCompartmentLink::~SELiquidCompartmentLink()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::LiquidCompartmentLinkData* SELiquidCompartmentLink::Unload()
-{
-  CDM::LiquidCompartmentLinkData* data = new CDM::LiquidCompartmentLinkData();
-  SEFluidCompartmentLink::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 }

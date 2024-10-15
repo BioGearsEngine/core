@@ -39,12 +39,6 @@ void SESubstanceCompoundInfusion::Clear()
   // m_Compound=nullptr; Keeping mapping!!
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::IsValid() const
 {
   return SESubstanceAdministration::IsValid() && HasRate() && HasBagVolume();
@@ -53,18 +47,6 @@ bool SESubstanceCompoundInfusion::IsValid() const
 bool SESubstanceCompoundInfusion::IsActive() const
 {
   return IsValid() ? !m_Rate->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceCompoundInfusionData* SESubstanceCompoundInfusion::Unload() const
-{
-  CDM::SubstanceCompoundInfusionData* data(new CDM::SubstanceCompoundInfusionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceCompoundInfusion::Unload(CDM::SubstanceCompoundInfusionData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::HasRate() const

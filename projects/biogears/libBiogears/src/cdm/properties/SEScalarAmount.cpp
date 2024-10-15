@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const AmountUnit AmountUnit::mol("mol");
 const AmountUnit AmountUnit::pmol("pmol");
-template class SEScalarQuantity<AmountUnit>;
+template class BIOGEARS_API SEScalarQuantity<AmountUnit>;
 
 //-----------------------------------------------------------------------------
 SEScalarAmount::SEScalarAmount()
@@ -43,15 +43,7 @@ AmountUnit::AmountUnit(const std::string& u)
 AmountUnit::~AmountUnit()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarAmountData* SEScalarAmount::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAmountData* data(new CDM::ScalarAmountData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool AmountUnit::IsValidUnit(const char* unit)
 {

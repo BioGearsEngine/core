@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API MassPerAmountUnit : public CCompoundUnit {
@@ -43,14 +42,13 @@ public:
   static const MassPerAmountUnit pg_Per_ct;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<MassPerAmountUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<MassPerAmountUnit>;
 
 class BIOGEARS_API SEScalarMassPerAmount : public SEScalarQuantity<MassPerAmountUnit> {
 public:
   SEScalarMassPerAmount();
   virtual ~SEScalarMassPerAmount();
-
-  CDM::ScalarMassPerAmountData* Unload() const override;
 
   using SEScalarQuantity<MassPerAmountUnit>::SetValue;
   using SEScalarQuantity<MassPerAmountUnit>::GetValue;

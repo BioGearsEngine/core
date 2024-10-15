@@ -27,22 +27,6 @@ RunningAverage::~RunningAverage()
 {
 }
 
-bool RunningAverage::Load(const CDM::RunningAverageData& in)
-{
-  io::Property::UnMarshall(in, *this);
-  return true;
-}
-CDM::RunningAverageData* RunningAverage::Unload() const
-{
-  CDM::RunningAverageData* data = new CDM::RunningAverageData();
-  Unload(*data);
-  return data;
-}
-void RunningAverage::Unload(CDM::RunningAverageData& data) const
-{
-  io::Property::Marshall(*this, data);
-}
-
 void RunningAverage::Reset()
 {
   m_Sum = 0.0;

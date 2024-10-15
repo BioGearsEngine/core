@@ -18,15 +18,22 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/biogears/BioGearsEngineConfiguration.hxx>
 
-#define CDM_BIOGEARS_ENGINE_CONFIGURATION_MARSHALL_HELPER(in, out, func)            \
+#define CDM_BIOGEARS_ENGINE_CONFIGURATION_PTR_MARSHALL_HELPER(in, out, func)             \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::BiogearsEngineConfiguration::Marshall(*in.m_##func, out.func());           \
+    io::BiogearsEngineConfiguration::Marshall(*in.m_##func, out.func());             \
   }
 
-#define CDM_OPTIONAL_BIOGEARS_ENGINE_CONFIGURATION_MARSHALL_HELPER(in, out, func) \
-  if (in.m_##func) {                                                               \
-    io::BiogearsEngineConfiguration::Marshall(*in.m_##func, out.func());         \
+#define CDM_OPTIONAL_BIOGEARS_ENGINE_CONFIGURATION_PTR_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                              \
+    io::BiogearsEngineConfiguration::Marshall(*in.m_##func, out.func());          \
+  }
+
+#define CDM_BIOGEARS_ENGINE_CONFIGURATION_COPY(type, in, out) \
+  {                                                           \
+    CDM::##type##Data middle;                                 \
+    io::BiogearsEngineConfiguration::Marshall(in, middle);    \
+    io::BiogearsEngineConfiguration::UnMarshall(middle, out); \
   }
 namespace biogears {
 
@@ -84,7 +91,7 @@ namespace io {
   template <typename SE, typename XSD>
   void BiogearsEngineConfiguration::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
-    if (!option_in.present()) {
+    if (!option_in.present() && !out.m_Merge) {
       out.Clear();
     } else {
       UnMarshall(option_in.get(), out);

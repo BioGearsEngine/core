@@ -34,24 +34,6 @@ bool SEChronicVentricularSystolicDysfunction::IsValid() const
   return SEChronicHeartFailure::IsValid();
 }
 //-----------------------------------------------------------------------------
-bool SEChronicVentricularSystolicDysfunction::Load(const CDM::ChronicVentricularSystolicDysfunctionData& in)
-{
-  io::PatientConditions::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ChronicVentricularSystolicDysfunctionData* SEChronicVentricularSystolicDysfunction::Unload() const
-{
-  CDM::ChronicVentricularSystolicDysfunctionData* data(new CDM::ChronicVentricularSystolicDysfunctionData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEChronicVentricularSystolicDysfunction::Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const
-{
-  io::PatientConditions::Marshall(*this, data);
-}
-//-----------------------------------------------------------------------------
 void SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const
 {
   str << "Patient Condition : Ventricular Systolic Dysfunction Heart Failure";

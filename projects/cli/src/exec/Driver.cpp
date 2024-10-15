@@ -18,6 +18,7 @@
 #include <iostream>
 #include <mutex>
 #include <system_error>
+#include <strstream>
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
 #define WIN32_LEAN_AND_MEAN
@@ -30,7 +31,6 @@
 
 #include "../utils/Executor.h"
 
-#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/utils/DataTrack.h>
@@ -58,6 +58,8 @@
 #include <biogears/schema/cdm/Scenario.hxx>
 #include <biogears/string/manipulation.h>
 #include <xsd/cxx/tree/exceptions.hxx>
+
+#pragma optimize("", off)
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
 inline std::string fmt_localtime()
@@ -99,6 +101,7 @@ Driver::Driver(char* exe_name, size_t thread_count)
   , _thread_count(0)
   , _process_count(0)
   , _total_work(0)
+  , _content_buffer(5 * 1024 * 1024,'\0')
 {
   biogears::filesystem::path p { exe_name };
   _relative_path = p.parent_path();
@@ -302,14 +305,28 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
         return;
       }
-      obj = Serializer::ReadBuffer((XMLByte*)content, content_size, &logger);
+      std::istringstream is = std::istringstream(std::string(content, content_size));
+      scenario = CDM::Scenario(is);
+      
 #endif
     } else {
       std::cout << "Reading " << exec.Scenario() << std::endl;
-      obj = Serializer::ReadFile(resolved_filepath,
-                                 &logger);
+      size_t content_size = 0;
+      memset(&_content_buffer.front(), '\0', 5 * 1024 * 1024);
+
+      content_size = io.read_resource_file(resolved_filepath.ToString().c_str(), &_content_buffer.front(), 5 * 1024 * 1024);
+      if (content_size == 0) {
+        std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
+        return;
+      }
+      
+      std::istringstream is = std::istringstream(std::string(&_content_buffer.front(), content_size));
+      ::xml_schema::properties properties;
+      properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
+      properties.no_namespace_schema_location();
+      scenario = CDM::Scenario(is, 0, properties);
     }
-    scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+   
     if (scenario == nullptr) {
       throw std::runtime_error(exec.Scenario() + " is not a valid Scenario file.");
     }
@@ -838,18 +855,13 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       return;
     }
     using biogears::filesystem::path;
-    using mil::tatrc::physiology::datamodel::ScenarioData;
-    std::unique_ptr<ScenarioData> scenario;
+    auto scenario = std::make_unique<SEScenario>(eng->GetSubstanceManager());
     try {
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      auto obj = Serializer::ReadFile(resolved_filepath,
-                                      eng->GetLogger());
-      scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+     scenario->Load(resolved_filepath);
+    
       if (scenario == nullptr) {
         throw std::runtime_error(ex.Scenario() + " is not a valid Scenario file.");
-      }
-      if (scenario->Actions().RandomSeed().present()) {
-        std::cout << "Using seed=" << scenario->Actions().RandomSeed() << std::endl;
       }
     } catch (std::runtime_error e) {
       std::cout << "Error while processing " << ex.Scenario() << "\n";
@@ -867,10 +879,9 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       return;
     }
 
-    biogears::SEPatient patient { sce.GetLogger() };
-    ex.Patient(scenario->InitialParameters()->Patient().get().Name());
-    patient.Load(scenario->InitialParameters()->Patient().get());
-    sce.GetInitialParameters().SetPatient(patient);
+    
+    ex.Patient(scenario->GetInitialParameters().GetPatient().GetName());
+    sce.GetInitialParameters().SetPatient(scenario->GetInitialParameters().GetPatient());
   }
 
   console_logger.Info("Starting " + ex.Name());

@@ -14,23 +14,16 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API SEProperty {
 protected:
+
 public:
   SEProperty();
   virtual ~SEProperty();
-
-  virtual void Clear(); //clear memory
-
+  virtual void Clear() = 0;
   virtual void Invalidate() = 0;
   virtual bool IsValid() const = 0;
-
-  virtual bool Load(const CDM::PropertyData& in);
-
-protected:
-  virtual void Unload(CDM::PropertyData& data) const;
 };
 }

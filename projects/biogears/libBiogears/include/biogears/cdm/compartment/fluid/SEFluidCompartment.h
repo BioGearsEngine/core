@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
 
@@ -44,6 +43,7 @@ class SEFluidCompartmentLink;
 #define FLUID_COMPARTMENT_TEMPLATE typename LinkType, typename VertexType, typename TransportSubstanceType, typename SubstanceQuantityType
 #define FLUID_COMPARTMENT_TYPES LinkType, VertexType, TransportSubstanceType, SubstanceQuantityType
 
+#pragma warning(disable : 4661)
 template <FLUID_COMPARTMENT_TEMPLATE>
 class SEFluidCompartment : public SECompartment, public VertexType {
   friend io::Compartment;
@@ -60,14 +60,9 @@ public:
 
   void Clear() override;
 
-  virtual bool Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits = nullptr);
-  CDM::FluidCompartmentData* Unload() override = 0;
-
   virtual bool operator==(SEFluidCompartment const&) const = 0;
   virtual bool operator!=(SEFluidCompartment const&) const = 0;
 
-protected:
-  virtual void Unload(CDM::FluidCompartmentData& data);
 
 public:
   std::string GetName() const override;
@@ -138,4 +133,5 @@ protected:
   std::vector<SEFluidCompartment*> m_FluidChildren;
   SECompartmentNodes<FLUID_COMPARTMENT_NODE> m_Nodes;
 };
+#pragma warning(default : 4661)
 }

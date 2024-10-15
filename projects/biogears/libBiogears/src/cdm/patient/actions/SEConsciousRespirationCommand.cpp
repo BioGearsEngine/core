@@ -29,18 +29,6 @@ void SEConsciousRespirationCommand::Clear()
   m_Comment = "";
 }
 //-------------------------------------------------------------------------------
-bool SEConsciousRespirationCommand::Load(const CDM::ConsciousRespirationCommandData& in)
-{
-  io::PatientActions::UnMarshall(in, *this);
-  ;
-  return true;
-}
-//-------------------------------------------------------------------------------
-void SEConsciousRespirationCommand::Unload(CDM::ConsciousRespirationCommandData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEConsciousRespirationCommand::IsValid() const
 {
   return true;

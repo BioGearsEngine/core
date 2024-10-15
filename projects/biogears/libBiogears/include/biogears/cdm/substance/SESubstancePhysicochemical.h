@@ -14,14 +14,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/schema/cdm/Substance.hxx>
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 
-CDM_BIND_DECL(SubstancePhysicochemicalData)
-
 namespace biogears {
-  class SEScalar;
-  class SEScalarFraction;
+class SEScalar;
+class SEScalarFraction;
 namespace io {
   class Substance;
 }
@@ -29,6 +26,7 @@ class BIOGEARS_API SESubstancePhysicochemical : public Loggable {
   friend io::Substance;
 
 public:
+  SESubstancePhysicochemical(SESubstancePhysicochemical const& obj);
   SESubstancePhysicochemical(Logger* logger);
   virtual ~SESubstancePhysicochemical();
 
@@ -37,9 +35,6 @@ public:
 
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
-
-  virtual bool Load(const CDM::SubstancePhysicochemicalData& in);
-  virtual CDM::SubstancePhysicochemicalData* Unload() const;
 
   virtual bool HasPrimaryPKA() const;
   virtual SEScalar& GetPrimaryPKA();
@@ -77,13 +72,11 @@ public:
 
   virtual bool HasPolarSurfaceArea() const;
   virtual SEScalar& GetPolarSurfaceArea();
-  virtual double GetPolarSurfaceArea() const;       
-  
-  bool operator==( const SESubstancePhysicochemical& rhs) const;
-  bool operator!=( const SESubstancePhysicochemical& rhs) const;
+  virtual double GetPolarSurfaceArea() const;
 
-protected:
-  virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;
+  SESubstancePhysicochemical& operator=(const SESubstancePhysicochemical& rhs);
+  bool operator==(const SESubstancePhysicochemical& rhs) const;
+  bool operator!=(const SESubstancePhysicochemical& rhs) const;
 
 protected:
   std::vector<SEScalar*> m_AcidDissociationConstants;

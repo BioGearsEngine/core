@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
 class SEAnesthesiaMachine;
@@ -29,13 +28,6 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::AnesthesiaMachineConfigurationData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::AnesthesiaMachineConfigurationData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::AnesthesiaMachineConfigurationData& data) const;
-
-public:
   bool HasConfiguration() const;
   SEAnesthesiaMachine& GetConfiguration();
   const SEAnesthesiaMachine* GetConfiguration() const;

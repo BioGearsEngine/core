@@ -99,27 +99,9 @@ bool SEExercise::IsActive() const
   }
 }
 //-------------------------------------------------------------------------------
-bool SEExercise::Load(const CDM::ExerciseData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
 SEExercise::ExerciseType SEExercise::GetExerciseType() const
 {
   return m_mode;
-}
-//-------------------------------------------------------------------------------
-CDM::ExerciseData* SEExercise::Unload() const
-{
-  CDM::ExerciseData* data(new CDM::ExerciseData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEExercise::Unload(CDM::ExerciseData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEExercise::HasGenericExercise() const { return m_mode == GENERIC; };

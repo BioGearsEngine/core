@@ -57,27 +57,7 @@ void SEElectroCardioGram::Clear()
   SAFE_DELETE(m_Lead11ElectricPotential);
   SAFE_DELETE(m_Lead12ElectricPotential);
 }
-//-------------------------------------------------------------------------------
 
-bool SEElectroCardioGram::Load(const CDM::ElectroCardioGramData& in)
-{
-  io::ElectroCardioGram::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::ElectroCardioGramData* SEElectroCardioGram::Unload() const
-{
-  CDM::ElectroCardioGramData* data = new CDM::ElectroCardioGramData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEElectroCardioGram::Unload(CDM::ElectroCardioGramData& data) const
-{
-  io::ElectroCardioGram::Marshall(*this, data);
-}
 //-------------------------------------------------------------------------------
 const SEScalar* SEElectroCardioGram::GetScalar(const char* name)
 {

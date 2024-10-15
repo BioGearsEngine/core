@@ -37,24 +37,6 @@ void SETensionPneumothorax::Clear()
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
-bool SETensionPneumothorax::Load(const CDM::TensionPneumothoraxData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::TensionPneumothoraxData* SETensionPneumothorax::Unload() const
-{
-  CDM::TensionPneumothoraxData* data(new CDM::TensionPneumothoraxData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETensionPneumothorax::Unload(CDM::TensionPneumothoraxData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SETensionPneumothorax::IsValid() const
 {
   return SEPatientAction::IsValid() && HasType() && HasSide() && HasSeverity();

@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/utils/testing/SETestErrorStatistics.h>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEFunction.h>
 #include <biogears/schema/cdm/TestReport.hxx>
 
@@ -35,65 +37,7 @@ void SETestErrorStatistics::Clear()
 void SETestErrorStatistics::Reset()
 {
 }
-//-------------------------------------------------------------------------------
-bool SETestErrorStatistics::Load(const CDM::TestErrorStatisticsData& in)
-{
-  Reset();
-  m_MinimumError = in.MinimumError().get();
-  m_MaximumError = in.MaximumError().get();
-  m_AverageError = in.AverageError().get();
-  m_StandardDeviation = in.StandardDeviation().get();
 
-  std::string dData;
-  for (unsigned int i = 0; i < in.Differences().size(); i++) {
-    dData = (std::string)in.Differences().at(i);
-    if (!dData.empty())
-      m_Differences.push_back(dData);
-  }
-  m_ComputedPropertyID = in.ComputedPropertyID();
-  m_ExpectedPropertyID = in.ExpectedPropertyID();
-  m_NumberOfErrors = in.NumberOfErrors().get();
-  m_PercentTolerance = in.PercentTolerance();
-  m_PropertyName = in.PropertyName();
-  return IsValid();
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<CDM::TestErrorStatisticsData> SETestErrorStatistics::Unload() const
-{
-  std::unique_ptr<CDM::TestErrorStatisticsData> data(new CDM::TestErrorStatisticsData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETestErrorStatistics::Unload(CDM::TestErrorStatisticsData& data) const
-{
-  if (!std::isnan(m_MinimumError))
-    data.MinimumError(m_MinimumError);
-  if (!std::isnan(m_MaximumError))
-    data.MaximumError(m_MaximumError);
-  if (!std::isnan(m_AverageError))
-    data.AverageError(m_AverageError);
-  if (!std::isnan(m_StandardDeviation))
-    data.StandardDeviation(m_StandardDeviation);
-
-  std::string dData;
-  for (unsigned int i = 0; i < m_Differences.size(); i++) {
-    dData = m_Differences.at(i);
-    if (!dData.empty())
-      data.Differences().push_back(dData);
-  }
-  if (!m_ComputedPropertyID.empty())
-    data.ComputedPropertyID(m_ComputedPropertyID);
-  if (!m_ExpectedPropertyID.empty())
-    data.ExpectedPropertyID(m_ExpectedPropertyID);
-  data.NumberOfErrors(m_NumberOfErrors);
-  data.PercentTolerance(m_PercentTolerance);
-  if (!m_PropertyName.empty())
-    data.PropertyName(m_PropertyName);
-  if (m_PercentToleranceVsNumErrors != nullptr) {
-    data.PercentToleranceVsNumErrors(std::unique_ptr<CDM::FunctionData>(m_PercentToleranceVsNumErrors->Unload()));
-  }
-}
 //-------------------------------------------------------------------------------
 bool SETestErrorStatistics::IsValid()
 {

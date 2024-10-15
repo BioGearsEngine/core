@@ -33,12 +33,12 @@ namespace io {
     if (!in.m_Name.empty()) {
       out.Name(in.m_Name);
     }
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Carbohydrate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Fat)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Protein)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Calcium)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Sodium)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Water)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Carbohydrate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Fat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Protein)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Calcium)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Sodium)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Water)
   }
   //----------------------------------------------------------------------------------
 }

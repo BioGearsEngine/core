@@ -82,25 +82,6 @@ bool SEMechanicalVentilation::IsActive() const
   return GetState() == SEOnOff::On;
 }
 //-------------------------------------------------------------------------------
-bool SEMechanicalVentilation::Load(const CDM::MechanicalVentilationData& in, const SESubstanceManager& subMgr, std::default_random_engine *rd)
-{
-  
-  io::PatientActions::UnMarshall(in, subMgr, *this, rd);
-  return IsValid();
-}
-//-------------------------------------------------------------------------------
-CDM::MechanicalVentilationData* SEMechanicalVentilation::Unload() const
-{
-  CDM::MechanicalVentilationData* data = new CDM::MechanicalVentilationData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEMechanicalVentilation::Unload(CDM::MechanicalVentilationData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 SEOnOff SEMechanicalVentilation::GetState() const
 {
   return m_State;

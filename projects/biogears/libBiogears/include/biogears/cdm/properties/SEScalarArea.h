@@ -13,8 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
 
-#include <biogears/schema/cdm/Properties.hxx>
-
 namespace biogears {
 class BIOGEARS_API AreaUnit : public CCompoundUnit {
 public:
@@ -35,16 +33,17 @@ public:
   static const AreaUnit m2;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<AreaUnit>;
+
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<AreaUnit>;
 
 class BIOGEARS_API SEScalarArea : public SEScalarQuantity<AreaUnit> {
 public:
   SEScalarArea();
   virtual ~SEScalarArea();
 
-  CDM::ScalarAreaData* Unload() const override;
-
   using SEScalarQuantity<AreaUnit>::SetValue;
   using SEScalarQuantity<AreaUnit>::GetValue;
 };
+#pragma warning(default : 4661)
 }

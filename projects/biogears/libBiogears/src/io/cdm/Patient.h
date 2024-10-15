@@ -19,25 +19,32 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/Patient.hxx>
 
-#define CDM_PATIENT_MARSHALL_HELPER(in, out, func)                                   \
+#define CDM_PATIENT_PTR_MARSHALL_HELPER(in, out, func)                                   \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Patient::Marshall(*in.m_##func, out.func());                                 \
   }
 
-#define CDM_OPTIONAL_PATIENT_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_PATIENT_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                        \
     io::Patient::Marshall(*in.m_##func, out.func());        \
   }
 
-#define SE_PATIENT_ENUM_MARSHALL_HELPER(in, out, func)                               \
+#define SE_PATIENT_ENUM_PTR_MARSHALL_HELPER(in, out, func)                               \
   if (in.Has##func()) {                                                              \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::Patient::Marshall(in.m_##func, out.func());                                  \
   }
 
-#define SE_OPTIONAL_PATIENT_ENUM_MARSHALL_HELPER(in, out, func) \
+#define SE_OPTIONAL_PATIENT_ENUM_PTR_MARSHALL_HELPER(in, out, func) \
   io::Patient::Marshall(in.m_##func, out.func());
+
+#define CDM_PATIENT_COPY(type, in, out)   \
+  {                                       \
+    CDM::##type##Data middle;             \
+    io::Patient::Marshall(in, middle);    \
+    io::Patient::UnMarshall(middle, out); \
+  }
 
 namespace biogears {
 class SEPatient;
@@ -153,6 +160,5 @@ inline bool operator!=(SEPatientEventType const& lhs, CDM::enumPatientEvent cons
 {
   return !(rhs == lhs);
 }
-
 
 } // Namespace Biogears

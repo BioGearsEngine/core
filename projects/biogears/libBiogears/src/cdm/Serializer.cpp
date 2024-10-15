@@ -16,6 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <type_traits>
 #include <fstream>
 
+#include <biogears/schema/BioGearsDataModel.hxx>
+
 //Project Includes
 #include <biogears/cdm/Serializer.h>
 

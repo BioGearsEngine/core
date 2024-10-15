@@ -49,24 +49,7 @@ void SEOxygenWallPortPressureLoss::SetActive(bool b)
 {
   m_State = b ? SEOnOff::On : SEOnOff::Off;
 }
-//-------------------------------------------------------------------------------
-bool SEOxygenWallPortPressureLoss::Load(const CDM::OxygenWallPortPressureLossData& in, std::default_random_engine *rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::OxygenWallPortPressureLossData* SEOxygenWallPortPressureLoss::Unload() const
-{
-  CDM::OxygenWallPortPressureLossData* data = new CDM::OxygenWallPortPressureLossData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEOxygenWallPortPressureLoss::Unload(CDM::OxygenWallPortPressureLossData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 void SEOxygenWallPortPressureLoss::ToString(std::ostream& str) const
 {

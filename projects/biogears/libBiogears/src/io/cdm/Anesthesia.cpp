@@ -85,7 +85,7 @@ namespace io {
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::AnesthesiaMachineData&>(out));
 
-    SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, Connection)
+    SE_OPTIONAL_ANESTHESIA_ENUM_PTR_MARSHALL_HELPER(in, out, Connection)
 
     if (in.m_InletFlow != nullptr) {
       io::Property::Marshall(*in.m_InletFlow, out.InletFlow());
@@ -97,13 +97,13 @@ namespace io {
       io::Property::Marshall(*in.m_OxygenFraction, out.OxygenFraction());
     }
 
-    SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, OxygenSource)
+    SE_OPTIONAL_ANESTHESIA_ENUM_PTR_MARSHALL_HELPER(in, out, OxygenSource)
 
     if (in.m_PositiveEndExpiredPressure != nullptr) {
       io::Property::Marshall(*in.m_PositiveEndExpiredPressure, out.PositiveEndExpiredPressure());
     }
 
-    SE_OPTIONAL_ANESTHESIA_ENUM_MARSHALL_HELPER(in, out, PrimaryGas)
+    SE_OPTIONAL_ANESTHESIA_ENUM_PTR_MARSHALL_HELPER(in, out, PrimaryGas)
 
     if (in.m_RespiratoryRate != nullptr) {
       io::Property::Marshall(*in.m_RespiratoryRate, out.RespiratoryRate());

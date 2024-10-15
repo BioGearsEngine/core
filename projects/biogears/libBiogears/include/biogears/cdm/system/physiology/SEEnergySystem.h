@@ -11,24 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/system/SESystem.h>
 
 namespace biogears {
 class SEScalarFraction;
-class SEScalarMass;
-class MassUnit;
-class SEScalarTemperature;
-class TemperatureUnit;
-class SEScalarAmountPerTime;
-class AmountPerTimeUnit;
-class SEScalarPressure;
-class PressureUnit;
-class SEScalarMassPerTime;
-class MassPerTimeUnit;
-class SEScalarPower;
-class PowerUnit;
 
 namespace io {
   class Physiology;
@@ -50,16 +38,10 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::EnergySystemData& in);
-  CDM::EnergySystemData* Unload() const override;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SEEnergySystem const&) const;
   bool operator!=(SEEnergySystem const&) const;
-
-protected:
-  void Unload(CDM::EnergySystemData& data) const;
 
 public:
   bool HasAchievedExerciseLevel() const;

@@ -33,9 +33,9 @@ namespace io {
     if (in.HasState()) {
       io::Property::Marshall(in.m_State, out.State());
     }
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeteredDose)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, NozzleLoss)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SpacerVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeteredDose)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, NozzleLoss)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SpacerVolume)
     if (in.HasSubstance())
       out.Substance(in.m_Substance->GetName());
   }

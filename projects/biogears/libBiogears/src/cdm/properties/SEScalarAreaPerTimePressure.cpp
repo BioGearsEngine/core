@@ -21,7 +21,7 @@ const AreaPerTimePressureUnit AreaPerTimePressureUnit::cm2_Per_s_mmHg("cm^2/s mm
 const AreaPerTimePressureUnit AreaPerTimePressureUnit::m2_Per_min_mmHg("m^2/min mmHg");
 const AreaPerTimePressureUnit AreaPerTimePressureUnit::cm2_Per_min_mmHg("cm^2/min mmHg");
 
-template class SEScalarQuantity<AreaPerTimePressureUnit>;
+template class BIOGEARS_API SEScalarQuantity<AreaPerTimePressureUnit>;
 
 //-----------------------------------------------------------------------------
 AreaPerTimePressureUnit::AreaPerTimePressureUnit(const char* u)
@@ -45,15 +45,7 @@ SEScalarAreaPerTimePressure::SEScalarAreaPerTimePressure()
 SEScalarAreaPerTimePressure::~SEScalarAreaPerTimePressure()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarAreaPerTimePressureData* SEScalarAreaPerTimePressure::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAreaPerTimePressureData* data(new CDM::ScalarAreaPerTimePressureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool AreaPerTimePressureUnit::IsValidUnit(const char* unit)
 {

@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Endocrine.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
@@ -30,7 +32,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 namespace biogears {
 auto Endocrine::make_unique(BioGears& bg) -> std::unique_ptr<Endocrine>
@@ -65,24 +67,6 @@ void Endocrine::Clear()
 void Endocrine::Initialize()
 {
   BioGearsSystem::Initialize();
-}
-
-bool Endocrine::Load(const CDM::BioGearsEndocrineSystemData& in)
-{
-  if (!SEEndocrineSystem::Load(in))
-    return false;
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsEndocrineSystemData* Endocrine::Unload() const
-{
-  CDM::BioGearsEndocrineSystemData* data = new CDM::BioGearsEndocrineSystemData();
-  Unload(*data);
-  return data;
-}
-void Endocrine::Unload(CDM::BioGearsEndocrineSystemData& data) const
-{
-  SEEndocrineSystem::Unload(data);
 }
 
 void Endocrine::SetUp()

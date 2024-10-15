@@ -146,24 +146,6 @@ const SEScalar* SETissueSystem::GetScalar(const std::string& name)
   return nullptr;
 }
 //-------------------------------------------------------------------------------
-bool SETissueSystem::Load(const CDM::TissueSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::TissueSystemData* SETissueSystem::Unload() const
-{
-  CDM::TissueSystemData* data = new CDM::TissueSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETissueSystem::Unload(CDM::TissueSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SETissueSystem::HasCarbonDioxideProductionRate() const
 {
   return m_CarbonDioxideProductionRate == nullptr ? false : m_CarbonDioxideProductionRate->IsValid();

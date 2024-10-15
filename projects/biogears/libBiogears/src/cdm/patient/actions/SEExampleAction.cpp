@@ -44,24 +44,6 @@ bool SEExampleAction::IsActive() const
   return IsValid() ? !m_Severity->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEExampleAction::Load(const CDM::ExampleActionData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ExampleActionData* SEExampleAction::Unload() const
-{
-  CDM::ExampleActionData* data(new CDM::ExampleActionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEExampleAction::Unload(CDM::ExampleActionData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEExampleAction::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();

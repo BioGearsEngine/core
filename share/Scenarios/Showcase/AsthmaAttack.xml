@@ -6,7 +6,7 @@
 
 	<!-- Base system data required for asthma attack showcase scenario -->
   <DataRequests SamplesPerSecond="50">
-    <DataRequestFile>DataRequests/Standard.xml</DataRequestFile>  
+    <DataRequestFile>DataRequests/StandardDataRequests.xml</DataRequestFile>  
   </DataRequests>
   
 	<Actions>

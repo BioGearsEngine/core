@@ -77,7 +77,7 @@ namespace io {
       if (sub->GetState() != SESubstanceState::Solid && sub->GetState() != SESubstanceState::Liquid) {
         throw CommonDataModelException("Substance not a liquid or solid : " + scData.Name());
       }
-      SESubstanceConcentration* sc = new SESubstanceConcentration(*sub);
+      SESubstanceConcentration* sc = new SESubstanceConcentration(sub->GetDefinition());
       io::Substance::UnMarshall(scData, *sc);
       out.m_AmbientAerosols.push_back(sc);
       out.m_cAmbientAerosols.push_back(sc);
@@ -98,14 +98,14 @@ namespace io {
     if (in.m_AirDensity && in.m_AirDensity->IsValid()) {
       io::Property::Marshall(*in.m_AirDensity, out.AirDensity());
     };
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AirVelocity);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AmbientTemperature);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AtmosphericPressure);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ClothingResistance);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Emissivity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanRadiantTemperature)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RelativeHumidity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationAmbientTemperature)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AirVelocity);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AmbientTemperature);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AtmosphericPressure);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ClothingResistance);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Emissivity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanRadiantTemperature)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RelativeHumidity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationAmbientTemperature)
 
     for (SESubstanceFraction* sf : in.m_AmbientGases) {
       auto sfData = std::make_unique<CDM::SubstanceFractionData>();
@@ -129,9 +129,9 @@ namespace io {
   }
   void Environment::Marshall(const SEActiveHeating& in, CDM::ActiveHeatingData& out)
   {
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Power);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SurfaceArea)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SurfaceAreaFraction);
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Power);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SurfaceArea)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SurfaceAreaFraction);
   }
   //----------------------------------------------------------------------------------
   // class SEActiveCooling
@@ -143,9 +143,9 @@ namespace io {
   }
   void Environment::Marshall(const SEActiveCooling& in, CDM::ActiveCoolingData& out)
   {
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Power);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SurfaceArea);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SurfaceAreaFraction);
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Power);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SurfaceArea);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SurfaceAreaFraction);
   }
   //----------------------------------------------------------------------------------
   // class SEAppliedTemperature
@@ -161,9 +161,9 @@ namespace io {
   }
   void Environment::Marshall(const SEAppliedTemperature& in, CDM::AppliedTemperatureData& out)
   {
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Temperature);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SurfaceArea);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SurfaceAreaFraction);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Temperature);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SurfaceArea);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SurfaceAreaFraction);
     io::Property::Marshall(in.m_State, out.State());
   }
   //----------------------------------------------------------------------------------
@@ -201,15 +201,15 @@ namespace io {
       out.Name("Unknown Environment");
     }
 
-    CDM_OPTIONAL_ENVIRONMENT_MARSHALL_HELPER(in, out, Conditions);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ConvectiveHeatLoss);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ConvectiveHeatTranferCoefficient);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, EvaporativeHeatLoss);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, EvaporativeHeatTranferCoefficient);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RadiativeHeatLoss);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RadiativeHeatTranferCoefficient);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationHeatLoss);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinHeatLoss);
+    CDM_OPTIONAL_ENVIRONMENT_PTR_MARSHALL_HELPER(in, out, Conditions);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ConvectiveHeatLoss);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ConvectiveHeatTranferCoefficient);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, EvaporativeHeatLoss);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, EvaporativeHeatTranferCoefficient);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RadiativeHeatLoss);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RadiativeHeatTranferCoefficient);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationHeatLoss);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinHeatLoss);
   }
   //-----------------------------------------------------------------------------
   // class SESurroundingType;

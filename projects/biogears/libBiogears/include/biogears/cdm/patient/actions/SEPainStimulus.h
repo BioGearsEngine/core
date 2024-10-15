@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
@@ -39,9 +38,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::PainStimulusData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::PainStimulusData* Unload() const override;
-
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 
@@ -58,9 +54,6 @@ public:
 
   bool operator==(const SEPainStimulus& rhs) const;
   bool operator!=(const SEPainStimulus& rhs) const;
-
-protected:
-  virtual void Unload(CDM::PainStimulusData& data) const;
 
 protected:
   SEScalar0To1* m_Severity;

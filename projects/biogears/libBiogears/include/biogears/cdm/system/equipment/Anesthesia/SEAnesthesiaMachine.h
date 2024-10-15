@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEAnesthesiaEnums.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
 
@@ -39,15 +38,16 @@ namespace io {
   class Anesthesia;
 }
 } // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<biogears::SEAnesthesiaMachineEvent, bool>;
-BG_EXT template class BIOGEARS_API map<biogears::SEAnesthesiaMachineEvent, double>;
+extern template class map<biogears::SEAnesthesiaMachineEvent, bool>;
+extern template class map<biogears::SEAnesthesiaMachineEvent, double>;
 }
+#pragma warning(default : 4661)
 
 namespace biogears {
 class BIOGEARS_API SEAnesthesiaMachine : public SESystem {
-protected:
   friend SEAnesthesiaMachineConfiguration;
   friend io::Anesthesia;
 
@@ -62,13 +62,8 @@ public:
 
   void Clear() override;
 
-  bool Load(const CDM::AnesthesiaMachineData& in);
-  CDM::AnesthesiaMachineData* Unload() const override;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
-protected:
-  void Unload(CDM::AnesthesiaMachineData& data) const;
 
   /** @name StateChange
    *   @brief - This method is called when ever there is a state change
@@ -79,7 +74,7 @@ protected:
   void Merge(const SEAnesthesiaMachine& from);
   void ProcessConfiguration(const SEAnesthesiaMachineConfiguration& config);
 
-public:
+
   bool Load(const std::string& file);
 
   const SEScalar* GetScalar(const char* name) override;

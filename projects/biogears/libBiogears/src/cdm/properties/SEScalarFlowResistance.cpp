@@ -22,7 +22,7 @@ const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_mL("mmHg min/mL");
 const FlowResistanceUnit FlowResistanceUnit::mmHg_min_Per_L("mmHg min/L");
 const FlowResistanceUnit FlowResistanceUnit::Pa_s_Per_m3("Pa s/m^3");
 
-template class SEScalarQuantity<FlowResistanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<FlowResistanceUnit>;
 
 FlowResistanceUnit::FlowResistanceUnit(const char* u)
   : FlowResistanceUnit(std::string { u })
@@ -45,15 +45,7 @@ SEScalarFlowResistance::SEScalarFlowResistance()
 SEScalarFlowResistance::~SEScalarFlowResistance()
 {
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarFlowResistanceData* SEScalarFlowResistance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarFlowResistanceData* data(new CDM::ScalarFlowResistanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-----------------------------------------------------------------------------
 bool FlowResistanceUnit::IsValidUnit(const char* unit)
 {

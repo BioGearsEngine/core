@@ -139,24 +139,6 @@ void PhysiologyEngineTimedStabilization::Clear()
   DELETE_VECTOR(m_ConditionCriteria);
 }
 //-------------------------------------------------------------------------------
-bool PhysiologyEngineTimedStabilization::Load(const CDM::PhysiologyEngineTimedStabilizationData& in)
-{
-  io::EngineConfiguration::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PhysiologyEngineTimedStabilizationData* PhysiologyEngineTimedStabilization::Unload() const
-{
-  CDM::PhysiologyEngineTimedStabilizationData* data(new CDM::PhysiologyEngineTimedStabilizationData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void PhysiologyEngineTimedStabilization::Unload(CDM::PhysiologyEngineTimedStabilizationData& data) const
-{
-  io::EngineConfiguration::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool PhysiologyEngineTimedStabilization::Load(const char* file)
 {
   return Load(std::string { file });
@@ -186,7 +168,8 @@ bool PhysiologyEngineTimedStabilization::Load(const std::string& file)
     Info(ss);
     return false;
   }
-  return Load(*pData);
+  io::EngineConfiguration::UnMarshall(*pData, *this);
+  return true;
 }
 //-------------------------------------------------------------------------------
 SEScalarTime& PhysiologyEngineTimedStabilization::GetRestingStabilizationTime()
@@ -304,27 +287,6 @@ void PhysiologyEngineTimedStabilizationCriteria::Clear()
 {
   InvalidateName();
   m_Time.Invalidate();
-}
-//-------------------------------------------------------------------------------
-bool PhysiologyEngineTimedStabilizationCriteria::Load(const CDM::PhysiologyEngineTimedConditionStabilizationData& in)
-{
-  Clear();
-  SetName(in.Name());
-  GetTime().Load(in.Time());
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PhysiologyEngineTimedConditionStabilizationData* PhysiologyEngineTimedStabilizationCriteria::Unload() const
-{
-  CDM::PhysiologyEngineTimedConditionStabilizationData* data(new CDM::PhysiologyEngineTimedConditionStabilizationData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void PhysiologyEngineTimedStabilizationCriteria::Unload(CDM::PhysiologyEngineTimedConditionStabilizationData& data) const
-{
-  data.Name(m_Name);
-  data.Time(std::unique_ptr<CDM::ScalarTimeData>(GetTime().Unload()));
 }
 //-------------------------------------------------------------------------------
 std::string PhysiologyEngineTimedStabilizationCriteria::GetName() const

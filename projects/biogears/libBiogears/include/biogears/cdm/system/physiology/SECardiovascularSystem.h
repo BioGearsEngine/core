@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
-#include <biogears/schema/cdm/Physiology.hxx>
 
 namespace biogears {
 class SEScalarPressure;
@@ -55,16 +54,10 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::CardiovascularSystemData& in);
-  CDM::CardiovascularSystemData* Unload() const override;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SECardiovascularSystem const&) const;
   bool operator!=(SECardiovascularSystem const&) const;
-
-protected:
-  void Unload(CDM::CardiovascularSystemData& data) const;
 
 public:
   bool HasArterialPressure() const;

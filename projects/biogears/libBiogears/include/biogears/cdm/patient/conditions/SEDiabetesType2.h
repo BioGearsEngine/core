@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/exports.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
@@ -33,19 +32,11 @@ public:
 
   virtual bool IsValid() const override ;
 
-  virtual bool Load(const CDM::DiabetesType2Data& in);
-  virtual CDM::DiabetesType2Data* Unload() const override ;
-
   bool operator==(SEDiabetesType2 const&) const;
   bool operator!=(SEDiabetesType2 const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-
-protected:
-  virtual void Unload(CDM::DiabetesType2Data& data) const;
-
-public:
   virtual std::string GetName() const  override { return "DiabetesType2"; }
   virtual const char* GetName_cStr() const  override { return "DiabetesType2"; }
 

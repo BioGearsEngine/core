@@ -33,10 +33,13 @@ struct Timer {
   State state = State::Ready;
 };
 } //namespace biogearsK
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<string, biogears::Timer>;
+extern template class map<string, biogears::Timer>;
 }
+#pragma warning(default : 4661)
+
 namespace biogears {
 class BIOGEARS_API TimingProfile : public Loggable {
 public:

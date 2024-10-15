@@ -19,15 +19,17 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitLedger.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
+#include <biogears/schema/cdm/Circuit.hxx>
 
+#pragma warning(disable : 4661)
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEFluidCircuitNode*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEFluidCircuitPath*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, vector<biogears::SEFluidCircuitPath*>*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEFluidCircuitNode*, size_t>;
+extern template class vector<biogears::SEFluidCircuitNode*>;
+extern template class vector<biogears::SEFluidCircuitPath*>;
+extern template class map<const biogears::SEFluidCircuitNode*, vector<biogears::SEFluidCircuitPath*>*>;
+extern template class map<const biogears::SEFluidCircuitNode*, size_t>;
 }
-
-#define FLUID_CIRCUIT_TYPES CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData
+#pragma warning(default : 4661)
+#define FLUID_CIRCUIT_TYPES SEFluidCircuitNode, SEFluidCircuitPath
 
 #define FLUID_LEDGER_TYPES SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit
 
@@ -36,10 +38,10 @@ class SECircuitManager;
 namespace io {
   class Circuit;
 }
+#pragma warning(disable : 4661)
+extern template class SECircuit<SEFluidCircuitNode, SEFluidCircuitPath>;
 
-BG_EXT template class BIOGEARS_API SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData>;
-
-class BIOGEARS_API SEFluidCircuit : public SECircuit<CDM::FluidCircuitData, SEFluidCircuitNode, CDM::FluidCircuitNodeData, SEFluidCircuitPath, CDM::FluidCircuitPathData> {
+class BIOGEARS_API SEFluidCircuit : public SECircuit<SEFluidCircuitNode, SEFluidCircuitPath> {
   friend class SECircuitManager;
   friend io::Circuit;
 
@@ -49,9 +51,6 @@ protected:
 
 public:
   virtual ~SEFluidCircuit();
-
-  void Unload(CDM::FluidCircuitData& data) const override;
-  bool Load(const CDM::FluidCircuitData& in, SECircuitLedger<SEFluidCircuitNode, SEFluidCircuitPath, SEFluidCircuit> const& ledger);
 
   SEFluidCircuitNode& CreateNode(const std::string& name);
   SEFluidCircuitNode& CreateNode(const char* name);
@@ -64,6 +63,6 @@ protected:
   SECircuitManager& m_Mgr;
 };
 
-BG_EXT template class BIOGEARS_API SECircuitLedger<FLUID_LEDGER_TYPES>;
-
+extern template class SECircuitLedger<FLUID_LEDGER_TYPES>;
+#pragma warning(default : 4661)
 }

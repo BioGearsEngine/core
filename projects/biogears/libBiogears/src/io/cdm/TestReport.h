@@ -18,13 +18,13 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/schema/cdm/TestReport.hxx>
 
-#define CDM_TEST_REPORT_MARSHALL_HELPER(in, out, func)                              \
+#define CDM_TEST_REPORT_PTR_MARSHALL_HELPER(in, out, func)                              \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
     io::TestReport::Marshall(*in.m_##func, out.func());                            \
   }
 
-#define CDM_OPTIONAL_TEST_REPORT_MARSHALL_HELPER(in, out, func) \
+#define CDM_OPTIONAL_TEST_REPORT_PTR_MARSHALL_HELPER(in, out, func) \
   if (in.m_##func) {                                             \
     io::TestReport::Marshall(*in.m_##func, out.func());        \
   }

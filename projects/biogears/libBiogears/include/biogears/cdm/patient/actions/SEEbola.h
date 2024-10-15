@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+
 
 #include <random>
 
@@ -41,9 +41,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::EbolaData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::EbolaData* Unload() const override;
-
   virtual bool HasSeverity() const;
   virtual SEInfectionSeverity GetSeverity() const;
   virtual void SetSeverity(SEInfectionSeverity t);
@@ -53,9 +50,6 @@ public:
 
   bool operator==(const SEEbola& rhs) const;
   bool operator!=(const SEEbola& rhs) const;
-
-protected:
-  virtual void Unload(CDM::EbolaData& data) const;
 
 protected:
   SEInfectionSeverity m_Severity;

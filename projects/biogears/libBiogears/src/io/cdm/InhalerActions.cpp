@@ -4,9 +4,11 @@
 #include "Property.h"
 #include "Scenario.h"
 
+#include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/cdm/system/equipment/Inhaler/SEInhaler.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
+#include <biogears/cdm/scenario/SEInhalerActionCollection.h>
 
 #define POLYMORPHIC_MARSHALL(paramName, typeName)                               \
   if (auto typeName = dynamic_cast<SE##typeName const*>(paramName); typeName) { \
@@ -69,5 +71,23 @@ namespace io {
 
     throw biogears::CommonDataModelException("InhalerActions::factory does not support the derived SEInhalerAction. If you are not a developer contact upstream for support.");
   }
-}
-}
+
+  std::unique_ptr<SEAction> InhalerActions::factory(CDM::InhalerActionData const* inhalerActionData, SESubstanceManager& substances, std::default_random_engine* rd)
+  {
+    if (auto InhalerConfigurationData = dynamic_cast<CDM::InhalerConfigurationData const*>(inhalerActionData); InhalerConfigurationData) {
+      auto InhalerConfiguration = std::make_unique<SEInhalerConfiguration>(substances);
+      InhalerActions::UnMarshall(*InhalerConfigurationData, *InhalerConfiguration);
+      return std::move(InhalerConfiguration);
+    }
+    throw biogears::CommonDataModelException("PatientActions:Factory - Unsupported Inhaler Action Received.");
+  }
+
+  void InhalerActions::Marshall(const SEInhalerActionCollection& in, std::vector<std::unique_ptr<CDM::ActionData>>& out) {
+    if (nullptr != in.m_Configuration) {
+      out.push_back(InhalerActions::factory(in.m_Configuration));
+    }
+  }
+
+
+} // namespace io
+} // namespace biogears

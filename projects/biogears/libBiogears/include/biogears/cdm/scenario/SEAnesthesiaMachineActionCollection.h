@@ -30,18 +30,20 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 class PhysiologyEngine;
+namespace io {
+  class AnesthesiaActions;
+}
 
 class BIOGEARS_API SEAnesthesiaMachineActionCollection : public Loggable {
+  friend io::AnesthesiaActions;
+
 public:
   SEAnesthesiaMachineActionCollection(SESubstanceManager&);
   ~SEAnesthesiaMachineActionCollection();
 
   void Clear();
 
-  void Unload(std::vector<CDM::ActionData*>& to);
-
   bool ProcessAction(const SEAnesthesiaMachineAction& action, const PhysiologyEngine& engine);
-  bool ProcessAction(const CDM::AnesthesiaMachineActionData& action, const PhysiologyEngine& engine);
 
   // STATE ACTION
   bool HasConfiguration() const;

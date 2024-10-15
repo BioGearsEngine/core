@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+
 
 #include <random>
 
@@ -39,9 +39,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::ConsumeNutrientsData& in, std::default_random_engine* rd = nullptr);
-  virtual CDM::ConsumeNutrientsData* Unload() const override;
-
   bool HasNutrition() const;
   SENutrition& GetNutrition();
   const SENutrition* GetNutrition() const;
@@ -57,9 +54,6 @@ public:
 
   bool operator==(const SEConsumeNutrients& rhs) const;
   bool operator!=(const SEConsumeNutrients& rhs) const;
-
-protected:
-  virtual void Unload(CDM::ConsumeNutrientsData& data) const;
 
 protected:
   SENutrition* m_Nutrition;

@@ -46,24 +46,6 @@ namespace biogears
     return m_Severity == SEInfectionSeverity::Eliminated ? false : true;
   }
   //-------------------------------------------------------------------------------
-  bool SEInfection::Load(const CDM::InfectionData& in, std::default_random_engine * rd)
-  {
-    io::PatientActions::UnMarshall(in, *this, rd);
-    return true;
-  }
-  //-------------------------------------------------------------------------------
-  CDM::InfectionData* SEInfection::Unload() const
-  {
-    CDM::InfectionData* data(new CDM::InfectionData());
-    Unload(*data);
-    return data;
-  }
-  //-------------------------------------------------------------------------------
-  void SEInfection::Unload(CDM::InfectionData& data) const
-  {
-    io::PatientActions::Marshall(*this, data);
-  }
-  //-------------------------------------------------------------------------------
   const char* SEInfection::GetLocation_cStr() const
   {
     return m_Location.c_str();

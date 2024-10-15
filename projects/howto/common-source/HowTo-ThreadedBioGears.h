@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #include <mutex>
 #include <thread>
 
-// #include <biogears/schema/biogears-cdm.hxx>
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 // This class will run BioGears in it's own thread and accept changes to hemorrage and iv flow as the engine is running

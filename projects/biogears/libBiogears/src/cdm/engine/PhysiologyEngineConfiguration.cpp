@@ -57,7 +57,7 @@ void PhysiologyEngineConfiguration::Clear()
 void PhysiologyEngineConfiguration::Merge(const PhysiologyEngineConfiguration& from)
 {
   m_Merge = true;
-  CDM_COPY((&from), this);
+  CDM_BIOGEARS_CONFIGURATION_COPY(PhysiologyEngineConfiguration, from, *this)
   m_Merge = false;
 }
 //-----------------------------------------------------------------------------
@@ -92,26 +92,8 @@ bool PhysiologyEngineConfiguration::Load(const std::string& file)
     Info(ss);
     return true;
   }
-  return Load(*pData);
-}
-//-----------------------------------------------------------------------------
-
-bool PhysiologyEngineConfiguration::Load(const CDM::PhysiologyEngineConfigurationData& in)
-{
-  io::EngineConfiguration::UnMarshall(in, *this);
+  io::EngineConfiguration::UnMarshall(*pData, *this);
   return true;
-}
-//-----------------------------------------------------------------------------
-CDM::PhysiologyEngineConfigurationData* PhysiologyEngineConfiguration::Unload() const
-{
-  CDM::PhysiologyEngineConfigurationData* data(new CDM::PhysiologyEngineConfigurationData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void PhysiologyEngineConfiguration::Unload(CDM::PhysiologyEngineConfigurationData& data) const
-{
-  io::EngineConfiguration::Marshall(*this, data);
 }
 //-----------------------------------------------------------------------------
 bool PhysiologyEngineConfiguration::HasECGInterpolator() const

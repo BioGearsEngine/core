@@ -10,6 +10,7 @@
 #include "PatientActions.h"
 #include "PatientConditions.h"
 #include "Property.h"
+#include "DataRequests.h"
 
 #include <biogears/cdm/scenario/SEAction.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
@@ -47,7 +48,7 @@ namespace io {
 
   //-----------------------------------------------------------------------------
   // class SEScenario
-#pragma optimize("", off)
+
   void Scenario::UnMarshall(const CDM::ScenarioData& in, SEScenario& out)
   {
 
@@ -75,7 +76,7 @@ namespace io {
       }
 
       for (auto& action : actionList->Action()) {
-        auto new_action = PatientActions::factory(&action, scenario.m_SubMgr, default_random_engine.get());
+        auto new_action = Actions::factory(&action, scenario.m_SubMgr, default_random_engine.get());
         if (new_action != nullptr) {
           scenario.m_Actions.push_back(new_action.release());
         }
@@ -155,7 +156,6 @@ namespace io {
     if (in.HasEngineStateFile()) {
       out.EngineStateFile(in.m_EngineStateFile);
     } else if (in.HasInitialParameters()) {
-      out.InitialParameters(std::make_unique<CDM::ScenarioInitialParametersData>());
       Marshall(*in.m_InitialParameters, out.InitialParameters());
     }
 
@@ -164,7 +164,7 @@ namespace io {
       Marshall(*in.m_AutoSerialization, out.AutoSerialization());
     }
 
-    out.DataRequests(std::unique_ptr<CDM::DataRequestManagerData>(in.m_DataRequestMgr.Unload()));
+    io::DataRequests::Marshall(in.m_DataRequestMgr, out.DataRequests());
 
     out.Actions(std::make_unique<CDM::ActionListData>());
     if (in.HasActionFile()) {
@@ -186,7 +186,7 @@ namespace io {
       out.Action().push_back(std::move(actionData));
     }
   }
-#pragma optimize("", on)
+
   //-----------------------------------------------------------------------------
   // class SEScenarioInitialParameters
   void Scenario::UnMarshall(const CDM::ScenarioInitialParametersData& in, SEScenarioInitialParameters& out)
@@ -194,18 +194,18 @@ namespace io {
     out.Clear();
 
     if (in.Configuration().present()) {
-      out.GetConfiguration().Load(in.Configuration().get());
+      io::EngineConfiguration::UnMarshall(in.Configuration(), out.GetConfiguration());
     }
     if (in.PatientFile().present()) {
       out.m_PatientFile = in.PatientFile().get();
-    } else if (in.Patient().present()) {
-      out.GetPatient().Load(in.Patient().get());
+    } else if (in.Patient().present()) {      
+      io::Patient::UnMarshall(in.Patient().get(), out.GetPatient());
     } else {
       throw CommonDataModelException("No patient provided");
     }
 
     for (auto const& conditionData : in.Condition()) {
-      out.m_Conditions.push_back(PatientConditions::factory(&conditionData, out.m_SubMgr).release());
+      out.m_Conditions.push_back(Conditions::factory(&conditionData, out.m_SubMgr).release());
     }
 
     if (!out.IsValid()) {
@@ -220,7 +220,7 @@ namespace io {
       Patient::Marshall(*in.m_Patient, out.Patient());
     }
     for (SECondition* condition : in.m_Conditions) {
-      auto conditionData = PatientConditions::factory(condition);
+      auto conditionData = Conditions::factory(condition);
       out.Condition().push_back(std::move(conditionData));
     }
     if (in.HasConfiguration()) {
@@ -251,12 +251,12 @@ namespace io {
   }
   void Scenario::Marshall(const SEScenarioAutoSerialization& in, CDM::ScenarioAutoSerializationData& out)
   {
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Period)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Period)
 
 
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, PeriodTimeStamps)
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, AfterActions)
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, ReloadState)
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, PeriodTimeStamps)
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, AfterActions)
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, ReloadState)
 
     if (in.HasDirectory()) {
       out.Directory(in.m_Directory);
@@ -300,5 +300,6 @@ namespace io {
 
     throw biogears::CommonDataModelException("Scenario::factory does not support the derived SEAction. If you are not a developer contact upstream for support.");
   }
+
 }
 }

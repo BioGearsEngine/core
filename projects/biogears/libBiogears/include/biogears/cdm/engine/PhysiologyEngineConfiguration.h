@@ -12,9 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/utils/GeneralMath.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
-CDM_BIND_DECL(PhysiologyEngineConfigurationData)
 
 namespace biogears {
 class SEElectroCardioGramInterpolator;
@@ -37,9 +35,6 @@ public:
   virtual void Clear();
 
   virtual void Merge(const PhysiologyEngineConfiguration& from);
-
-  virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
-  virtual CDM::PhysiologyEngineConfigurationData* Unload() const;
 
   virtual bool Load(const char* file);
   virtual bool Load(const std::string& file);
@@ -74,9 +69,6 @@ public:
   virtual bool HasWritePatientBaselineFile() const { return m_WritePatientBaselineFile != SEOnOff::Invalid; }
   virtual bool WritePatientBaselineFile() const { return m_WritePatientBaselineFile == SEOnOff::On; }
   virtual void SetWritePatientBaselineFile(SEOnOff v) { m_WritePatientBaselineFile = v; }
-
-protected:
-  void Unload(CDM::PhysiologyEngineConfigurationData& data) const;
 
 protected:
   bool m_Merge;

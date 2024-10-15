@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
 
 #include <random>
@@ -36,9 +35,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::PericardialEffusionData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::PericardialEffusionData* Unload() const override;
-
   virtual bool HasEffusionRate() const;
   virtual SEScalarVolumePerTime& GetEffusionRate();
 
@@ -46,10 +42,6 @@ public:
 
   bool operator==( const SEPericardialEffusion& rhs) const;
   bool operator!=( const SEPericardialEffusion& rhs) const;
-
-protected:
-  virtual void Unload(CDM::PericardialEffusionData& data) const;
-
 
 protected:
   SEScalarVolumePerTime* m_EffusionRate;

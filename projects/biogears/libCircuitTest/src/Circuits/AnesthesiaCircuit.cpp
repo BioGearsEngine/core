@@ -50,8 +50,8 @@ void BioGearsEngineTest::AnesthesiaMachineCircuitAndTransportTest(RespiratoryCon
   BioGears bg(sTestDirectory + "/AnesthesiaMachineCircuitAndTransportTest.log");
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(SEOnOff::Off);
-  bg.m_Config->EnableTissue(SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
   SEEnvironmentalConditions env(bg.GetSubstances());
   env.Load("StandardEnvironment.xml");

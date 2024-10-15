@@ -22,7 +22,7 @@ AmountPerVolumeUnit AmountPerVolumeUnit::mmol_Per_mL("mmol/mL");
 AmountPerVolumeUnit AmountPerVolumeUnit::ct_Per_L("ct/L");
 AmountPerVolumeUnit AmountPerVolumeUnit::ct_Per_uL("ct/uL");
 
-template class SEScalarQuantity<AmountPerVolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<AmountPerVolumeUnit>;
 
 AmountPerVolumeUnit::AmountPerVolumeUnit(const char* u)
   : AmountPerVolumeUnit(std::string { u })
@@ -45,15 +45,7 @@ SEScalarAmountPerVolume::SEScalarAmountPerVolume()
 SEScalarAmountPerVolume::~SEScalarAmountPerVolume()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarAmountPerVolumeData* SEScalarAmountPerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAmountPerVolumeData* data(new CDM::ScalarAmountPerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool AmountPerVolumeUnit::IsValidUnit(const char* unit)
 {

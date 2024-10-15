@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
@@ -51,18 +51,6 @@ int HowToCreateAPatient()
   patient.GetHeartRateBaseline().SetValue(72, FrequencyUnit::Per_min);
   patient.GetRespirationRateBaseline().SetValue(16, FrequencyUnit::Per_min);
   patient.GetSystolicArterialPressureBaseline().SetValue(114, PressureUnit::mmHg);
-
-  // You can save off the patient if you want to use it later
-  CDM::PatientData* pData = patient.Unload();
-  // Write out the stable patient state
-  std::ofstream stream("./patients/HowToCreateAPatient.xml");
-  // Write out the xml file
-  xml_schema::namespace_infomap map;
-  map[""].name = "uri:/mil/tatrc/physiology/datamodel";
-  //TODO: What constructor are these from
-  // Patient(stream, *pData, map);
-  stream.close();
-  SAFE_DELETE(pData);
 
   if (!bg->InitializeEngine(patient)) {
     bg->GetLogger()->Error("Could not load state, check the error");

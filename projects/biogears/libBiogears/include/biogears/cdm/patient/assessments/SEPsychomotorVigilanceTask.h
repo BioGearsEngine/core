@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
-#include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
 class SENervousSystem;
@@ -36,12 +35,6 @@ public:
 
   virtual void Reset() override ; // reset values
   virtual void Clear() override ; // clear memory
-
-  virtual bool Load(const CDM::PsychomotorVigilanceTaskData& in);
-  virtual CDM::PsychomotorVigilanceTaskData* Unload() override ;
-
-protected:
-  virtual void Unload(CDM::PsychomotorVigilanceTaskData& data);
 
 public:
   bool HasAttentionLapses();

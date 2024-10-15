@@ -14,37 +14,44 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <memory>
+#include <random>
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/schema/cdm/EnvironmentConditions.hxx>
 
-#define CDM_ENVIRONMENT_CONDITIONS_MARSHALL_HELPER(in, out, func)                   \
+#define CDM_ENVIRONMENT_CONDITIONS_PTR_MARSHALL_HELPER(in, out, func)                    \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::EnvironmentConditions::Marshall(*in.m_##func, out.func());                 \
+    io::EnvironmentConditions::Marshall(*in.m_##func, out.func());                   \
   }
 
-#define CDM_OPTIONAL_ENVIRONMENT_CONDITIONS_MARSHALL_HELPER(in, out, func) \
-  if (in.m_##func) {                                                        \
-    io::EnvironmentConditions::Marshall(*in.m_##func, out.func());        \
+#define CDM_OPTIONAL_ENVIRONMENT_CONDITIONS_PTR_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                       \
+    io::EnvironmentConditions::Marshall(*in.m_##func, out.func());         \
   }
 
 namespace biogears {
+class SECondition;
+class SESubstanceManager;
 class SEEnvironmentCondition;
 class SEInitialEnvironment;
 
 namespace io {
   class BIOGEARS_PRIVATE_API EnvironmentConditions {
   public:
-    //template <typename SE, typename XSD>  option
+    // class Factories;
+    static std::unique_ptr<SECondition> factory(CDM::EnvironmentConditionData const* environmentConditionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<CDM::EnvironmentConditionData> factory(const SEEnvironmentCondition* data);
+
+    // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
     static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
     static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
-    //class SEEnvironmentCondition
+    // class SEEnvironmentCondition
     static void UnMarshall(const CDM::EnvironmentConditionData& in, SEEnvironmentCondition& out);
     static void Marshall(const SEEnvironmentCondition& in, CDM::EnvironmentConditionData& out);
-    //class SEInitialEnvironment
+    // class SEInitialEnvironment
     static void UnMarshall(const CDM::InitialEnvironmentData& in, SEInitialEnvironment& out);
     static void Marshall(const SEInitialEnvironment& in, CDM::InitialEnvironmentData& out);
   };
@@ -67,4 +74,4 @@ namespace io {
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+} // Namespace Biogears

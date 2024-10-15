@@ -25,72 +25,64 @@
 
 #include "biogears/cdm/substance/SESubstanceManager.h"
 
-#define PATIENT_CONDITION_POLYMORPHIC_MARSHALL(paramName, typeName)             \
+#define POLYMORPHIC_MARSHALL(paramName, typeName)                               \
   if (auto typeName = dynamic_cast<SE##typeName const*>(paramName); typeName) { \
     auto typeName##Data = std::make_unique<CDM::typeName##Data>();              \
     Marshall(*typeName, *typeName##Data);                                       \
     return std::move(typeName##Data);                                           \
   }
 
-#define PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(paramName, typeName, schema)                      \
+#define POLYMORPHIC_UNMARSHALL(paramName, typeName, schema)                                        \
   if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
     auto typeName = std::make_unique<SE##typeName>();                                              \
     schema::UnMarshall(*typeName##Data, *typeName);                                                \
     return std::move(typeName);                                                                    \
   }
 
+#define STOCASTIC_POLYMORPHIC_UNMARSHALL(paramName, typeName, schema, engine)                      \
+  if (auto typeName##Data = dynamic_cast<CDM::typeName##Data const*>(paramName); typeName##Data) { \
+    auto typeName = std::make_unique<SE##typeName>();                                              \
+    schema::UnMarshall(*typeName##Data, *typeName, engine);                                        \
+    return std::move(typeName);                                                                    \
+  }
+
 namespace biogears {
 namespace io {
-  // class SEConditionList
-  std::vector<std::unique_ptr<SECondition>> PatientConditions::condition_factory(const CDM::ConditionListData& in, SESubstanceManager& substances)
-  {
-    std::vector<std::unique_ptr<SECondition>> r_vec;
-    for (const auto condition_data : in.Condition()) {
-      r_vec.emplace_back(factory(&condition_data, substances));
-    }
-    return std::move(r_vec);
-  }
   //----------------------------------------------------------------------------------
-  std::unique_ptr<SECondition> PatientConditions::factory(const CDM::ConditionData* conditionData, SESubstanceManager& substances)
+  std::unique_ptr<SECondition> PatientConditions::factory(CDM::PatientConditionData const* patientConditionData, SESubstanceManager& substances, std::default_random_engine* rd)
   {
     // Could speed up case by testing Patient Conditions vs another type
     // But we only have 1 type at this time, and a few conditions to support
 
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, ChronicAnemia, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, ChronicObstructivePulmonaryDisease, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, ChronicVentricularSystolicDysfunction, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, ChronicPericardialEffusion, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, ChronicRenalStenosis, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, Dehydration, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, DiabetesType1, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, DiabetesType2, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, Starvation, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, ImpairedAlveolarExchange, PatientConditions)
-    PATIENT_CONDITION_POLYMORPHIC_UNMARSHALL(conditionData, LobarPneumonia, PatientConditions)
-
-    if (const auto initialEnvironmentData = dynamic_cast<const CDM::InitialEnvironmentData*>(conditionData); initialEnvironmentData) {
-      auto initialEnvironmentAction = std::make_unique<SEInitialEnvironment>(substances);
-      EnvironmentConditions::UnMarshall(*initialEnvironmentData, *initialEnvironmentAction);
-      return initialEnvironmentAction;
-    }
+    POLYMORPHIC_UNMARSHALL(patientConditionData, ChronicAnemia, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, ChronicObstructivePulmonaryDisease, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, ChronicVentricularSystolicDysfunction, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, ChronicPericardialEffusion, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, ChronicRenalStenosis, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, Dehydration, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, DiabetesType1, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, DiabetesType2, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, Starvation, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, ImpairedAlveolarExchange, PatientConditions)
+    POLYMORPHIC_UNMARSHALL(patientConditionData, LobarPneumonia, PatientConditions)
 
     throw CommonDataModelException("Unsupported Condition Received in PatientConditions::factory");
   }
 
-  std::unique_ptr<CDM::ConditionData> PatientConditions::factory(const SECondition* conditionData)
+  std::unique_ptr<CDM::PatientConditionData> PatientConditions::factory(const SEPatientCondition* patientConditionData)
   {
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, ChronicAnemia)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, ChronicHeartFailure)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, ChronicVentricularSystolicDysfunction)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, ChronicObstructivePulmonaryDisease)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, ChronicPericardialEffusion)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, ChronicRenalStenosis)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, Dehydration)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, DiabetesType1)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, DiabetesType2)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, ImpairedAlveolarExchange)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, LobarPneumonia)
-    PATIENT_CONDITION_POLYMORPHIC_MARSHALL(conditionData, Starvation)
+    POLYMORPHIC_MARSHALL(patientConditionData, ChronicAnemia)
+    POLYMORPHIC_MARSHALL(patientConditionData, ChronicHeartFailure)
+    POLYMORPHIC_MARSHALL(patientConditionData, ChronicVentricularSystolicDysfunction)
+    POLYMORPHIC_MARSHALL(patientConditionData, ChronicObstructivePulmonaryDisease)
+    POLYMORPHIC_MARSHALL(patientConditionData, ChronicPericardialEffusion)
+    POLYMORPHIC_MARSHALL(patientConditionData, ChronicRenalStenosis)
+    POLYMORPHIC_MARSHALL(patientConditionData, Dehydration)
+    POLYMORPHIC_MARSHALL(patientConditionData, DiabetesType1)
+    POLYMORPHIC_MARSHALL(patientConditionData, DiabetesType2)
+    POLYMORPHIC_MARSHALL(patientConditionData, ImpairedAlveolarExchange)
+    POLYMORPHIC_MARSHALL(patientConditionData, LobarPneumonia)
+    POLYMORPHIC_MARSHALL(patientConditionData, Starvation)
     throw biogears::CommonDataModelException("PatientConditions::factory does not support the derived SEPatientCondition. If you are not a developer contact upstream for support.");
   }
   //----------------------------------------------------------------------------------
@@ -114,7 +106,7 @@ namespace io {
   void PatientConditions::Marshall(const SEChronicAnemia& in, CDM::ChronicAnemiaData& out)
   {
     PatientConditions::Marshall(static_cast<const SEPatientCondition&>(in), static_cast<CDM::PatientConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, ReductionFactor)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, ReductionFactor)
   }
   //----------------------------------------------------------------------------------
   // SEChronicHeartFailure
@@ -151,8 +143,8 @@ namespace io {
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
 
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, BronchitisSeverity)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, EmphysemaSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, BronchitisSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, EmphysemaSeverity)
   }
   //----------------------------------------------------------------------------------
   // SEChronicPericardialEffusion
@@ -165,7 +157,7 @@ namespace io {
   void PatientConditions::Marshall(const SEChronicPericardialEffusion& in, CDM::ChronicPericardialEffusionData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, AccumulatedVolume)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, AccumulatedVolume)
   }
   //----------------------------------------------------------------------------------
   // SEChronicRenalStenosis
@@ -179,8 +171,8 @@ namespace io {
   void PatientConditions::Marshall(const SEChronicRenalStenosis& in, CDM::ChronicRenalStenosisData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftKidneySeverity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightKidneySeverity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftKidneySeverity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightKidneySeverity)
   }
   //----------------------------------------------------------------------------------
   // SEDehydration
@@ -193,7 +185,7 @@ namespace io {
   void PatientConditions::Marshall(const SEDehydration& in, CDM::DehydrationData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, DehydrationFraction)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, DehydrationFraction)
   }
   //----------------------------------------------------------------------------------
   // SEDiabetesType1
@@ -206,7 +198,7 @@ namespace io {
   void PatientConditions::Marshall(const SEDiabetesType1& in, CDM::DiabetesType1Data& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InsulinProductionSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InsulinProductionSeverity)
   }
   //----------------------------------------------------------------------------------
   // SEDiabetesType2
@@ -220,8 +212,8 @@ namespace io {
   void PatientConditions::Marshall(const SEDiabetesType2& in, CDM::DiabetesType2Data& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InsulinProductionSeverity)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InsulinResistanceSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InsulinProductionSeverity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InsulinResistanceSeverity)
   }
   //----------------------------------------------------------------------------------
   // SEImpairedAlveolarExchange
@@ -235,8 +227,8 @@ namespace io {
   void PatientConditions::Marshall(const SEImpairedAlveolarExchange& in, CDM::ImpairedAlveolarExchangeData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ImpairedSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ImpairedFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ImpairedSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ImpairedFraction)
   }
   //----------------------------------------------------------------------------------
   // SELobarPneumonia
@@ -251,9 +243,9 @@ namespace io {
   void PatientConditions::Marshall(const SELobarPneumonia& in, CDM::LobarPneumoniaData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Severity)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, LeftLungAffected)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, RightLungAffected)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftLungAffected)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightLungAffected)
   }
   //----------------------------------------------------------------------------------
   // SEStarvation
@@ -266,7 +258,7 @@ namespace io {
   void PatientConditions::Marshall(const SEStarvation& in, CDM::StarvationData& out)
   {
     Conditions::Marshall(static_cast<const SECondition&>(in), static_cast<CDM::ConditionData&>(out));
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, TimeSinceMeal)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, TimeSinceMeal)
   }
   //----------------------------------------------------------------------------------
 }

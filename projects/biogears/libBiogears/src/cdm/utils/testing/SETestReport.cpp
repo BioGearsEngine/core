@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/TestReport.hxx>
 
+#include "io/cdm/TestReport.h"
+
 namespace biogears {
 SETestReport::SETestReport(Logger* logger)
   : Loggable(logger)
@@ -39,38 +41,7 @@ void SETestReport::Clear()
 void SETestReport::Reset()
 {
 }
-//-------------------------------------------------------------------------------
-bool SETestReport::Load(const CDM::TestReportData& in)
-{
-  Reset();
 
-  SETestSuite* sx;
-  CDM::TestSuiteData* sData;
-  for (unsigned int i = 0; i < in.TestSuite().size(); i++) {
-    sData = (CDM::TestSuiteData*)&in.TestSuite().at(i);
-    if (sData != nullptr) {
-      sx = new SETestSuite(GetLogger());
-      sx->Load(*sData);
-    }
-    m_testSuite.push_back(sx);
-  }
-
-  return true;
-}
-//-------------------------------------------------------------------------------
-std::unique_ptr<CDM::TestReportData> SETestReport::Unload() const
-{
-  std::unique_ptr<CDM::TestReportData> data(new CDM::TestReportData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETestReport::Unload(CDM::TestReportData& data) const
-{
-  for (unsigned int i = 0; i < m_testSuite.size(); i++) {
-    data.TestSuite().push_back(*m_testSuite.at(i)->Unload());
-  }
-}
 //-------------------------------------------------------------------------------
 bool SETestReport::WriteFile(const std::string& fileName)
 {
@@ -82,7 +53,8 @@ bool SETestReport::WriteFile(const std::string& fileName)
     std::ofstream outFile;
     auto io = m_Logger->GetIoManager().lock();
     outFile.open(io->ResolveLogFileLocation(fileName));
-    std::unique_ptr<CDM::TestReportData> unloaded = Unload();
+    auto unloaded = std::make_unique<CDM::TestReportData>();
+    io::TestReport::Marshall(*this, *unloaded);
     CDM::TestReport(outFile, *unloaded, map);
   } catch (const xml_schema::exception& e) {
     Error(e.what());

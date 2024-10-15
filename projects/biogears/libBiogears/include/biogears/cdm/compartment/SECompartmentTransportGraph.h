@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 #define COMPARTMENT_TRANSPORT_GRAPH_TYPES GraphType, GraphVertexType, GraphEdgeType, CompartmentType, CompartmentLinkType
 
 namespace biogears {
-
+#pragma warning(disable : 4661)
 
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 class SECompartmentTransportGraph : public GraphType, public SECompartmentGraph<COMPARTMENT_GRAPH_TYPES> {
@@ -30,12 +30,6 @@ public:
   virtual ~SECompartmentTransportGraph();
 
   virtual void Clear() override;
-  /*
-  virtual bool Load(const BindType& in);
-  virtual BindType* Unload() = 0;
-protected:
-  virtual void Unload(BindType& data);
-*/
 
 public:
   virtual std::string GetName() const override;
@@ -55,4 +49,5 @@ protected:
   std::map<const GraphVertexType*, std::vector<GraphEdgeType*>*> m_SourceEdgeMap;
   std::map<const GraphVertexType*, std::vector<GraphEdgeType*>*> m_TargetEdgeMap;
 };
+#pragma warning(default : 4661)
 }

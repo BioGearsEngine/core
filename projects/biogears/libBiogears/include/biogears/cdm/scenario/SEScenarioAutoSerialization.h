@@ -14,9 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/enums/SEPropertyEnums.h>
-#include <biogears/schema/cdm/DataRequests.hxx>
 
-CDM_BIND_DECL(ScenarioAutoSerializationData)
 namespace biogears {
 namespace io {
   class Scenario;
@@ -31,14 +29,8 @@ public:
   virtual void Clear();
   virtual bool IsValid() const;
 
-  virtual bool Load(const CDM::ScenarioAutoSerializationData& in);
-  virtual CDM::ScenarioAutoSerializationData* Unload() const;
-
   bool operator==(SEScenarioAutoSerialization const&) const;
   bool operator!=(SEScenarioAutoSerialization const&) const;
-
-protected:
-  virtual void Unload(CDM::ScenarioAutoSerializationData& data) const;
 
 public:
   virtual bool HasPeriod() const;

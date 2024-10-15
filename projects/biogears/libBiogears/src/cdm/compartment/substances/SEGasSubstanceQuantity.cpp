@@ -58,24 +58,7 @@ void SEGasSubstanceQuantity::Clear()
   SAFE_DELETE(m_VolumeFraction);
   m_Children.clear();
 }
-//-------------------------------------------------------------------------------
-bool SEGasSubstanceQuantity::Load(const CDM::GasSubstanceQuantityData& in)
-{
-  io::SubstanceQuantity::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::GasSubstanceQuantityData* SEGasSubstanceQuantity::Unload()
-{
-  CDM::GasSubstanceQuantityData* data = new CDM::GasSubstanceQuantityData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEGasSubstanceQuantity::Unload(CDM::GasSubstanceQuantityData& data)
-{
-  io::SubstanceQuantity::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 void SEGasSubstanceQuantity::SetToZero()
 {

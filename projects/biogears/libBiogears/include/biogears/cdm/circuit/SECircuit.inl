@@ -13,8 +13,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/circuit/SECircuit.h>
 
-#include <biogears/schema/cdm/Circuit.hxx>
-
 #include "io/cdm/Circuit.h"
 
 #define OPEN_RESISTANCE 1e100
@@ -58,14 +56,6 @@ void SECircuit<CIRCUIT_TYPES>::Clear()
   m_CalculatorIndex.clear();
   m_ValvePaths.clear();
   m_PolarizedElementPaths.clear();
-}
-//-----------------------------------------------------------------------------
-template <CIRCUIT_TEMPLATE>
-CircuitBindType* SECircuit<CIRCUIT_TYPES>::Unload() const
-{
-  CircuitBindType* data = new CircuitBindType();
-  Unload(*data);
-  return data;
 }
 
 //-----------------------------------------------------------------------------

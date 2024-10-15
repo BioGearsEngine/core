@@ -21,7 +21,7 @@ const TemperatureUnit TemperatureUnit::C("degC");
 const TemperatureUnit TemperatureUnit::K("K");
 const TemperatureUnit TemperatureUnit::R("degR");
 
-template class SEScalarQuantity<TemperatureUnit>;
+template class BIOGEARS_API SEScalarQuantity<TemperatureUnit>;
 
 TemperatureUnit::TemperatureUnit(const char* u)
   : TemperatureUnit(std::string{ u })
@@ -35,15 +35,7 @@ TemperatureUnit::TemperatureUnit(const std::string& u)
   : CCompoundUnit(u)
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarTemperatureData* SEScalarTemperature::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarTemperatureData* data(new CDM::ScalarTemperatureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool TemperatureUnit::IsValidUnit(const char* unit)
 {

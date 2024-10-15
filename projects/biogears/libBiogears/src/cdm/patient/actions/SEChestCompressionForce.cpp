@@ -43,24 +43,6 @@ bool SEChestCompressionForce::IsActive() const
   return IsValid() ? !m_Force->IsZero() : false;
 }
 //-------------------------------------------------------------------------------
-bool SEChestCompressionForce::Load(const CDM::ChestCompressionForceData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ChestCompressionForceData* SEChestCompressionForce::Unload() const
-{
-  CDM::ChestCompressionForceData* data(new CDM::ChestCompressionForceData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEChestCompressionForce::Unload(CDM::ChestCompressionForceData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEChestCompressionForce::HasForce() const
 {
   return m_Force == nullptr ? false : m_Force->IsValid();

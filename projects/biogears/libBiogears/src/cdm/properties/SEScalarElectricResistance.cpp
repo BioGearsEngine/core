@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 const ElectricResistanceUnit ElectricResistanceUnit::Ohm("ohm");
 
-template class SEScalarQuantity<ElectricResistanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<ElectricResistanceUnit>;
 
 ElectricResistanceUnit::ElectricResistanceUnit(const char* u)
   : ElectricResistanceUnit(std::string { u })
@@ -41,15 +41,7 @@ SEScalarElectricResistance::SEScalarElectricResistance()
 SEScalarElectricResistance::~SEScalarElectricResistance()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarElectricResistanceData* SEScalarElectricResistance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricResistanceData* data(new CDM::ScalarElectricResistanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool ElectricResistanceUnit::IsValidUnit(const char* unit)
 {

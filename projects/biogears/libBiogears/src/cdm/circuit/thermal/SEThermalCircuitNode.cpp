@@ -35,24 +35,6 @@ void SEThermalCircuitNode::Clear()
   SECircuitNode::Clear();
 }
 //-------------------------------------------------------------------------------
-bool SEThermalCircuitNode::Load(const CDM::ThermalCircuitNodeData& in)
-{
-  io::Circuit::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ThermalCircuitNodeData* SEThermalCircuitNode::Unload() const
-{
-  CDM::ThermalCircuitNodeData* data = new CDM::ThermalCircuitNodeData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEThermalCircuitNode::Unload(CDM::ThermalCircuitNodeData& data) const
-{
-  io::Circuit::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SEThermalCircuitNode::HasTemperature() const
 {
   return HasPotential();

@@ -15,16 +15,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitNode.h>
 #include <biogears/cdm/circuit/SECircuitPath.h>
 
-#define CIRCUIT_TEMPLATE typename CircuitBindType, typename NodeType, typename CircuitNodeBindType, typename PathType, typename CircuitPathBindType
-#define CIRCUIT_TYPES CircuitBindType, NodeType, CircuitNodeBindType, PathType, CircuitPathBindType
+#define CIRCUIT_TEMPLATE  typename NodeType,  typename PathType
+#define CIRCUIT_TYPES  NodeType,  PathType
 
-CDM_BIND_DECL(CircuitData)
 
 namespace biogears {
 namespace io {
   class Circuit;
 }
-
+#pragma warning(disable : 4661)
 template <CIRCUIT_TEMPLATE>
 class SECircuit : public Loggable {
   friend io::Circuit;
@@ -35,11 +34,6 @@ public:
   virtual ~SECircuit();
 
   virtual void Clear(); // clear memory
-
-  virtual CircuitBindType* Unload() const;
-
-protected:
-  virtual void Unload(CircuitBindType& data) const = 0;
 
 public:
   virtual std::string GetName() const;
@@ -104,5 +98,5 @@ protected:
   std::vector<PathType*> m_PolarizedElementPaths;
   std::map<const NodeType*, size_t> m_CalculatorIndex; // A unique id (starting at 0) for all nodes except the reference node
 };
-
+#pragma warning(default : 4661)
 }

@@ -32,7 +32,7 @@ const MassPerVolumeUnit MassPerVolumeUnit::mg_Per_dL("mg/dL");
 const MassPerVolumeUnit MassPerVolumeUnit::kg_Per_mL("kg/mL");
 const MassPerVolumeUnit MassPerVolumeUnit::kg_Per_L("kg/L");
 
-template class SEScalarQuantity<MassPerVolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassPerVolumeUnit>;
 
 MassPerVolumeUnit::MassPerVolumeUnit(const char* u)
   : MassPerVolumeUnit(std::string { u })
@@ -47,15 +47,7 @@ MassPerVolumeUnit::MassPerVolumeUnit(const std::string& u)
 MassPerVolumeUnit::~MassPerVolumeUnit()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerVolumeData* SEScalarMassPerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerVolumeData* data(new CDM::ScalarMassPerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool MassPerVolumeUnit::IsValidUnit(const char* unit)
 {

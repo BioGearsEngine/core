@@ -27,17 +27,6 @@ void SESystem::Clear()
 {
 }
 //-------------------------------------------------------------------------------
-bool SESystem::Load(const CDM::SystemData& in)
-{
-  io::System::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-void SESystem::Unload(CDM::SystemData& data) const
-{
-  io::System::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 const SEScalar* SESystem::GetScalar(const std::string& name, std::vector<SESystem*>* systems)
 {
   const SEScalar* s;

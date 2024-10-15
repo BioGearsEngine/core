@@ -62,24 +62,7 @@ void SETissueCompartment::Clear()
   SAFE_DELETE(m_TissueToPlasmaLipoproteinRatio);
   SAFE_DELETE(m_TotalMass);
 }
-//-----------------------------------------------------------------------------
-bool SETissueCompartment::Load(const CDM::TissueCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
-{
-  io::Compartment::UnMarshall(in, *this, subMgr, circuits);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::TissueCompartmentData* SETissueCompartment::Unload()
-{
-  CDM::TissueCompartmentData* data = new CDM::TissueCompartmentData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SETissueCompartment::Unload(CDM::TissueCompartmentData& data)
-{
-  io::Compartment::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 const SEScalar* SETissueCompartment::GetScalar(const char* name)
 {

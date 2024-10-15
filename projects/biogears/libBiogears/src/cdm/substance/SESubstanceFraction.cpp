@@ -40,24 +40,6 @@ void SESubstanceFraction::Clear()
   SAFE_DELETE(m_FractionAmount);
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceFraction::Load(const CDM::SubstanceFractionData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceFractionData* SESubstanceFraction::Unload() const
-{
-  CDM::SubstanceFractionData* data = new CDM::SubstanceFractionData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceFraction::Unload(CDM::SubstanceFractionData& data) const
-{
-  io::Substance::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 bool SESubstanceFraction::HasFractionAmount() const
 {
   return m_FractionAmount == nullptr ? false : m_FractionAmount->IsValid();

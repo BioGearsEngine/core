@@ -56,24 +56,7 @@ void SEArterialBloodGasAnalysis::Reset()
   INVALIDATE_PROPERTY(m_StandardBicarbonate);
   INVALIDATE_PROPERTY(m_OxygenSaturation);
 }
-//-------------------------------------------------------------------------------
-bool SEArterialBloodGasAnalysis::Load(const CDM::ArterialBloodGasAnalysisData& in)
-{
-  io::PatientAssessments::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ArterialBloodGasAnalysisData* SEArterialBloodGasAnalysis::Unload()
-{
-  CDM::ArterialBloodGasAnalysisData* data = new CDM::ArterialBloodGasAnalysisData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEArterialBloodGasAnalysis::Unload(CDM::ArterialBloodGasAnalysisData& data)
-{
-  io::PatientAssessments::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::HaspH()
 {

@@ -28,12 +28,7 @@ public:
 
   virtual void Clear() override; //clear memory
   size_t HashCode() const override;
-  virtual bool Load(const CDM::EnvironmentDataRequestData& in);
-  virtual CDM::EnvironmentDataRequestData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::EnvironmentDataRequestData& data) const;
-
+  
 public:
 protected:
 };

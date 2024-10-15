@@ -11,15 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
-#include "io/cdm/Physiology.h"
-
 #include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace std {
 template class map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
@@ -72,24 +70,6 @@ const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
       return GetStomachContents().GetScalar(prop);
   }
   return nullptr;
-}
-//-------------------------------------------------------------------------------
-bool SEGastrointestinalSystem::Load(const CDM::GastrointestinalSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::GastrointestinalSystemData* SEGastrointestinalSystem::Unload() const
-{
-  CDM::GastrointestinalSystemData* data = new CDM::GastrointestinalSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEGastrointestinalSystem::Unload(CDM::GastrointestinalSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
 }
 //-------------------------------------------------------------------------------
 bool SEGastrointestinalSystem::HasChymeAbsorptionRate() const
@@ -199,53 +179,6 @@ void SEDrugTransitState::Clear()
   m_EnterocyteMasses.clear();
   SAFE_DELETE(m_TotalMassExcreted);
   SAFE_DELETE(m_TotalMassMetabolized);
-}
-//-------------------------------------------------------------------------------
-bool SEDrugTransitState::Load(const CDM::DrugTransitStateData& in)
-{
-  m_LumenDissolvedMasses.clear();
-  for (auto disMass : in.LumenDissolvedMasses()) {
-    SEScalarMass dMass;
-    dMass.Load(disMass);
-    m_LumenDissolvedMasses.push_back(dMass);
-  }
-  m_LumenSolidMasses.clear();
-  for (auto solMass : in.LumenSolidMasses()) {
-    SEScalarMass sMass;
-    sMass.Load(solMass);
-    m_LumenSolidMasses.push_back(sMass);
-  }
-  m_EnterocyteMasses.clear();
-  for (auto entMass : in.EnterocyteMasses()) {
-    SEScalarMass eMass;
-    eMass.Load(entMass);
-    m_EnterocyteMasses.push_back(eMass);
-  }
-  GetTotalMassExcreted().Load(in.MassExcreted());
-  GetTotalMassMetabolized().Load(in.MassMetabolized());
-  return true;
-}
-CDM::DrugTransitStateData* SEDrugTransitState::Unload() const
-{
-  CDM::DrugTransitStateData* data = new CDM::DrugTransitStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEDrugTransitState::Unload(CDM::DrugTransitStateData& data) const
-{
-  for (auto tdMass : m_LumenDissolvedMasses) {
-    data.LumenDissolvedMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(tdMass.Unload()));
-  }
-  for (auto tsMass : m_LumenSolidMasses) {
-    data.LumenSolidMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(tsMass.Unload()));
-  }
-  for (auto eMass : m_EnterocyteMasses) {
-    data.EnterocyteMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(eMass.Unload()));
-  }
-  data.MassMetabolized(std::unique_ptr<CDM::ScalarMassData>(m_TotalMassMetabolized->Unload()));
-  data.MassExcreted(std::unique_ptr<CDM::ScalarMassData>(m_TotalMassExcreted->Unload()));
-  data.Substance(m_Substance->GetName());
 }
 //-------------------------------------------------------------------------------
 bool SEDrugTransitState::Initialize(SEScalarMass& dose, SEOralAdministrationType route)

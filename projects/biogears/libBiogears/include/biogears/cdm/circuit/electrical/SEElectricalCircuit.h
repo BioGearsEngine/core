@@ -16,23 +16,27 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
 
+#include <biogears/schema/cdm/Circuit.hxx>
+
+#pragma warning(disable:4661)
 namespace std {
-
-BG_EXT template class BIOGEARS_API vector<biogears::SEElectricalCircuitPath*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEElectricalCircuitNode*, size_t>;
+extern template class vector<biogears::SEElectricalCircuitPath*>;
+extern template class map<const biogears::SEElectricalCircuitNode*, vector<biogears::SEElectricalCircuitPath*>*>;
+extern template class map<const biogears::SEElectricalCircuitNode*, size_t>;
 }
+#pragma warning(default:4661)
 
 
-#define ELECTRICAL_CIRCUIT_TYPES CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData
+#define ELECTRICAL_CIRCUIT_TYPES SEElectricalCircuitNode, SEElectricalCircuitPath
 #define ELECTRICAL_LEDGER_TYPES SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit
 
 namespace biogears {
 class SECircuitManager;
 
-BG_EXT template class BIOGEARS_API SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData>;
+#pragma warning(disable: 4661)
+extern template class SECircuit<SEElectricalCircuitNode, SEElectricalCircuitPath>;
 
-class BIOGEARS_API SEElectricalCircuit : public SECircuit<CDM::ElectricalCircuitData, SEElectricalCircuitNode, CDM::ElectricalCircuitNodeData, SEElectricalCircuitPath, CDM::ElectricalCircuitPathData> {
+class BIOGEARS_API SEElectricalCircuit : public SECircuit<SEElectricalCircuitNode, SEElectricalCircuitPath> {
   friend class SECircuitManager;
 
 protected:
@@ -41,11 +45,6 @@ protected:
 
 public:
   virtual ~SEElectricalCircuit();
-
-  //-----------------------------------------------------------------------------
-
-  void Unload(CDM::ElectricalCircuitData& data) const override;
-  bool Load(const CDM::ElectricalCircuitData& in, SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit> const& ledger);
 
   SEElectricalCircuitNode& CreateNode(const std::string& name);
   SEElectricalCircuitNode& CreateNode(const char* name);
@@ -57,6 +56,6 @@ protected:
   SECircuitManager& m_Mgr;
 };
 
-BG_EXT template class BIOGEARS_API SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
-
+extern template class SECircuitLedger<SEElectricalCircuitNode, SEElectricalCircuitPath, SEElectricalCircuit>;
+#pragma warning(default : 4661)
 }

@@ -23,7 +23,7 @@ const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::s_ug_Per_mL("s ug/mL");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::min_ug_Per_mL("min ug/mL");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::hr_ug_Per_mL("hr ug/mL");
 
-template class SEScalarQuantity<TimeMassPerVolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<TimeMassPerVolumeUnit>;
 
 TimeMassPerVolumeUnit::TimeMassPerVolumeUnit(const char* u)
   : TimeMassPerVolumeUnit(std::string { u })
@@ -46,15 +46,7 @@ SEScalarTimeMassPerVolume::SEScalarTimeMassPerVolume()
 SEScalarTimeMassPerVolume::~SEScalarTimeMassPerVolume()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarTimeMassPerVolumeData* SEScalarTimeMassPerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarTimeMassPerVolumeData* data(new CDM::ScalarTimeMassPerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool TimeMassPerVolumeUnit::IsValidUnit(const char* unit)
 {

@@ -34,22 +34,4 @@ bool SEEnvironmentAction::IsValid() const
 {
   return SEAction::IsValid();
 }
-
-bool SEEnvironmentAction::Load(const CDM::EnvironmentActionData& in)
-{
-  io::EnvironmentActions::UnMarshall(in, *this);
-  return true;
-}
-
-CDM::EnvironmentActionData* SEEnvironmentAction::Unload() const
-{
-  CDM::EnvironmentActionData* data = new CDM::EnvironmentActionData();
-  Unload(*data);
-  return data;
-}
-
-void SEEnvironmentAction::Unload(CDM::EnvironmentActionData& data) const
-{
-  io::EnvironmentActions::Marshall(*this, data);
-}
 }

@@ -15,14 +15,13 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentTransportGraph.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/cdm/Compartment.hxx>
+
 
 #include <vector>
 #include <map>
 #include <string>
 
 
-CDM_BIND_DECL(LiquidCompartmentGraphData)
 
 namespace biogears {
 class SECompartmentManager;
@@ -30,15 +29,20 @@ namespace io {
   class Compartment;
 }
 } //namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidTransportVertex*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidTransportEdge*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*, size_t>;
-BG_EXT template class BIOGEARS_API map<const biogears::SELiquidTransportVertex*, vector<biogears::SELiquidTransportEdge*>*>;
+extern template class vector<biogears::SELiquidTransportVertex*>;
+extern template class vector<biogears::SELiquidTransportEdge*>;
+extern template class map<const biogears::SELiquidTransportVertex*, size_t>;
+extern template class map<const biogears::SELiquidTransportVertex*, vector<biogears::SELiquidTransportEdge*>*>;
 }
+#pragma warning(default : 4661)
+
 
 namespace biogears {
+#pragma warning(disable : 4661)
+
 class BIOGEARS_API SELiquidCompartmentGraph : public SECompartmentTransportGraph<SELiquidTransportGraph, SELiquidTransportVertex, SELiquidTransportEdge, SELiquidCompartment, SELiquidCompartmentLink> {
   friend class SECompartmentManager;
   friend io::Compartment;
@@ -52,18 +56,18 @@ public:
 
   void AddGraph(SELiquidCompartmentGraph& graph);
 
-  virtual bool Load(const CDM::LiquidCompartmentGraphData& in, SECompartmentManager& cmptMgr);
-  virtual CDM::LiquidCompartmentGraphData* Unload();
-
-protected:
-  virtual void Unload(CDM::LiquidCompartmentGraphData& data);
 
 protected:
   void BalanceByIntensive() override;
 };
+#pragma warning(default : 4661)
+
 } //namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartmentGraph*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartmentGraph*>;
+extern template class vector<biogears::SELiquidCompartmentGraph*>;
+extern template class map<string, biogears::SELiquidCompartmentGraph*>;
+#pragma warning(default : 4661)
+
 }

@@ -49,23 +49,7 @@ size_t SESubstanceDataRequest::HashCode() const
   return m_Hash;
 }
 //-----------------------------------------------------------------------------
-bool SESubstanceDataRequest::Load(const CDM::SubstanceDataRequestData& in, const SESubstanceManager& substances)
-{
-  io::DataRequests::UnMarshall(in, substances, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceDataRequestData* SESubstanceDataRequest::Unload() const
-{
-  CDM::SubstanceDataRequestData* data = new CDM::SubstanceDataRequestData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstanceDataRequest::Unload(CDM::SubstanceDataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 const char* SESubstanceDataRequest::GetCompartment() const
 {

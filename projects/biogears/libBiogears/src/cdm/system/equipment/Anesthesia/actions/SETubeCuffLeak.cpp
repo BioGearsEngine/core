@@ -44,24 +44,7 @@ bool SETubeCuffLeak::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-//-------------------------------------------------------------------------------
-bool SETubeCuffLeak::Load(const CDM::TubeCuffLeakData& in, std::default_random_engine *rd)
-{
-  io::AnesthesiaActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::TubeCuffLeakData* SETubeCuffLeak::Unload() const
-{
-  CDM::TubeCuffLeakData* data = new CDM::TubeCuffLeakData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETubeCuffLeak::Unload(CDM::TubeCuffLeakData& data) const
-{
-  io::AnesthesiaActions::Marshall(*this, data);
-}
+
 //-------------------------------------------------------------------------------
 bool SETubeCuffLeak::HasSeverity() const
 {

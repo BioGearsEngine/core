@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 #include <biogears/cdm/enums/SEEnvironmentEnums.h>
-#include <biogears/schema/cdm/Environment.hxx>
 
 #include <random>
 
@@ -38,16 +37,9 @@ public:
   virtual void Clear();
   virtual void Reset();
 
-  virtual bool Load(const CDM::ActiveCoolingData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ActiveCoolingData* Unload() const;
-
   bool operator==(SEActiveCooling const&) const;
   bool operator!=(SEActiveCooling const&) const;
 
-protected:
-  virtual void Unload(CDM::ActiveCoolingData& data) const;
-
-public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
@@ -64,6 +56,8 @@ public:
   virtual double GetSurfaceAreaFraction() const;
 
   virtual void ToString(std::ostream& str) const;
+
+  virtual bool IsValid() const;
 
 protected:
   SEScalarPower* m_Power;

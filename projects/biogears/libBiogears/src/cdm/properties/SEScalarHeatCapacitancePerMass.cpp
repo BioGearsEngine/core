@@ -21,7 +21,7 @@ const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kJ_Per_K_kg("kJ/K k
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kcal_Per_K_kg("kcal/K kg");
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kcal_Per_C_kg("kcal/degC kg");
 
-template class SEScalarQuantity<HeatCapacitancePerMassUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatCapacitancePerMassUnit>;
 
 HeatCapacitancePerMassUnit::HeatCapacitancePerMassUnit(const char* u)
   : HeatCapacitancePerMassUnit(std::string { u })
@@ -44,15 +44,7 @@ SEScalarHeatCapacitancePerMass::SEScalarHeatCapacitancePerMass()
 SEScalarHeatCapacitancePerMass::~SEScalarHeatCapacitancePerMass()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatCapacitancePerMassData* SEScalarHeatCapacitancePerMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatCapacitancePerMassData* data(new CDM::ScalarHeatCapacitancePerMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool HeatCapacitancePerMassUnit::IsValidUnit(const char* unit)
 {

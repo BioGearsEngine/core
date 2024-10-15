@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerAction.h>
-#include <biogears/schema/cdm/InhalerActions.hxx>
 
 namespace biogears {
 class SEInhaler;
@@ -34,13 +33,6 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::InhalerConfigurationData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::InhalerConfigurationData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::InhalerConfigurationData& data) const;
-
-public:
   bool HasConfiguration() const;
   SEInhaler& GetConfiguration();
   const SEInhaler* GetConfiguration() const;

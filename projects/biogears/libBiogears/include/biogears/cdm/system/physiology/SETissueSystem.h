@@ -12,21 +12,11 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 namespace biogears {
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
-class SEScalar0To1;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarAmountPerVolume;
-class AmountPerVolumeUnit;
-class SEScalarMassPerVolume;
-class MassPerVolumeUnit;
-class SEScalarMass;
-class MassUnit;
 namespace io {
   class Physiology;
 }
@@ -47,16 +37,10 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::TissueSystemData& in);
-  CDM::TissueSystemData* Unload() const override;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SETissueSystem const&) const;
   bool operator!=(SETissueSystem const&) const;
-
-protected:
-  void Unload(CDM::TissueSystemData& data) const;
 
 public:
   bool HasCarbonDioxideProductionRate() const;

@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
 
 namespace biogears {
 class SEScalar;
@@ -49,16 +48,10 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::DrugSystemData& in);
-  CDM::DrugSystemData* Unload() const override;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SEDrugSystem const&) const;
   bool operator!=(SEDrugSystem const&) const;
-
-protected:
-  void Unload(CDM::DrugSystemData& data) const;
 
 public:
   bool HasAntibioticActivity() const;

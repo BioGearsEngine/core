@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API AreaPerTimePressureUnit : public CCompoundUnit {
@@ -36,16 +35,16 @@ public:
   static const AreaPerTimePressureUnit cm2_Per_min_mmHg;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<AreaPerTimePressureUnit>;
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<AreaPerTimePressureUnit>;
 
 class BIOGEARS_API SEScalarAreaPerTimePressure : public SEScalarQuantity<AreaPerTimePressureUnit> {
 public:
   SEScalarAreaPerTimePressure();
   virtual ~SEScalarAreaPerTimePressure();
 
-  CDM::ScalarAreaPerTimePressureData* Unload() const override;   
-
   using SEScalarQuantity<AreaPerTimePressureUnit>::SetValue;
   using SEScalarQuantity<AreaPerTimePressureUnit>::GetValue;
 };
+#pragma warning(default : 4661)
 }

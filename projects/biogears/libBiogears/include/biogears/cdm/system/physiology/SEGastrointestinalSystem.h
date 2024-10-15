@@ -16,26 +16,24 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/system/SESystem.h>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include <biogears/cdm/properties/SEProperties.h>
 
 #include <map>
 
 namespace biogears {
-class SEScalarMass;
-class MassUnit;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
-class SESubstance;
 class SEDrugTransitState;
+class SESubstance;
 
 namespace io {
   class Physiology;
 }
 } // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
+extern template class map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
 }
+#pragma warning(default : 4661)
 
 namespace biogears {
 class BIOGEARS_API SEGastrointestinalSystem : public SESystem {
@@ -71,13 +69,7 @@ public:
   SEDrugTransitState* GetDrugTransitState(const SESubstance* sub);
   SEDrugTransitState* NewDrugTransitState(const SESubstance* sub);
 
-  bool Load(const CDM::GastrointestinalSystemData& in);
-  CDM::GastrointestinalSystemData* Unload() const override;
-
   Tree<const char*> GetPhysiologyRequestGraph() const override;
-
-protected:
-  void Unload(CDM::GastrointestinalSystemData& data) const;
 
 protected:
   SEScalarVolumePerTime* m_ChymeAbsorptionRate;
@@ -86,14 +78,12 @@ protected:
 };
 
 class BIOGEARS_API SEDrugTransitState {
+  friend io::Physiology;
 public:
   SEDrugTransitState(const SESubstance& sub);
   ~SEDrugTransitState();
 
   virtual void Clear();
-
-  virtual bool Load(const CDM::DrugTransitStateData& in);
-  virtual CDM::DrugTransitStateData* Unload() const;
 
   bool Initialize(SEScalarMass& dose, SEOralAdministrationType route);
 
@@ -119,7 +109,7 @@ public:
   bool operator!=(SEDrugTransitState const&) const;
 
 protected:
-  virtual void Unload(CDM::DrugTransitStateData& data) const;
+
   const SESubstance* m_Substance;
   std::vector<SEScalarMass> m_LumenSolidMasses;
   std::vector<SEScalarMass> m_LumenDissolvedMasses;

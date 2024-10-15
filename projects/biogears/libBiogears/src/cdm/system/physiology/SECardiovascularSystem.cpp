@@ -230,28 +230,6 @@ const SEScalar* SECardiovascularSystem::GetScalar(const std::string& name)
 }
 //-------------------------------------------------------------------------------
 
-bool SECardiovascularSystem::Load(const CDM::CardiovascularSystemData& in)
-{
-  io::Physiology::UnMarshall(in, *this);
-
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::CardiovascularSystemData* SECardiovascularSystem::Unload() const
-{
-  CDM::CardiovascularSystemData* data = new CDM::CardiovascularSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SECardiovascularSystem::Unload(CDM::CardiovascularSystemData& data) const
-{
-  io::Physiology::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
-
 bool SECardiovascularSystem::HasArterialPressure() const
 {
   return m_ArterialPressure == nullptr ? false : m_ArterialPressure->IsValid();

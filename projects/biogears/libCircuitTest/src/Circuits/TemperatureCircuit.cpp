@@ -40,8 +40,8 @@ void BioGearsEngineTest::InternalTemperatureVariableBMRCircuitTest(const std::st
   BioGears bg(sTestDirectory + "/" + "InternalTemperatureVariableBMRCircuitTest.log");
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(SEOnOff::Off);
-  bg.m_Config->EnableTissue(SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   SEThermalCircuit& m_TCircuit = bg.GetCircuits().GetInternalTemperatureCircuit();
@@ -109,8 +109,8 @@ void BioGearsEngineTest::InternalTemperatureVariableSkinCircuitTest(const std::s
   BioGears bg(sTestDirectory + "/InternalTemperatureVariableSkinCircuitTest.log");
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(SEOnOff::Off);
-  bg.m_Config->EnableTissue(SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   SEThermalCircuit& m_TCircuit = bg.GetCircuits().GetInternalTemperatureCircuit();
@@ -193,8 +193,8 @@ void BioGearsEngineTest::InternalTemperatureVariableCoreCircuitTest(const std::s
   BioGears bg(sTestDirectory + "/InternalTemperatureVariableCoreCircuitTest.log");
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(SEOnOff::Off);
-  bg.m_Config->EnableTissue(SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   SEThermalCircuit& m_TCircuit = bg.GetCircuits().GetInternalTemperatureCircuit();
@@ -276,8 +276,8 @@ void BioGearsEngineTest::EnvironmentVariableTemperatureCircuitTest(const std::st
   BioGears bg(sTestDirectory + "/EnvironmentVariableTemperatureCircuitTest.log");
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(SEOnOff::Off);
-  bg.m_Config->EnableTissue(SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   //Grab the circuit
@@ -385,8 +385,8 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentVariableBMRandTemperature
   BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentVariableBMRandTemperatureCircuitTest.log");
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(SEOnOff::Off);
-  bg.m_Config->EnableTissue(SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   SEThermalCircuit& m_TECircuit = bg.GetCircuits().GetTemperatureCircuit();
@@ -512,8 +512,8 @@ void BioGearsEngineTest::CombinedInternalAndEnvironmentSkinTempDropCircuitTest(c
   BioGears bg(sTestDirectory + "/CombinedInternalAndEnvironmentSkinTempDropCircuitTest.log");
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(SEOnOff::Off);
-  bg.m_Config->EnableTissue(SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
 
   SEThermalCircuit& m_TECircuit = bg.GetCircuits().GetTemperatureCircuit();
@@ -602,8 +602,8 @@ void BioGearsEngineTest::EnvironmentISO7730ComparisonTest(const std::string& sTe
   BioGears bg(sTestDirectory + "/" + "EnvironmentTemperatureInput.log");
   bg.GetPatient().Load("StandardMale.xml");
   bg.SetupPatient();
-  bg.m_Config->EnableRenal(SEOnOff::Off);
-  bg.m_Config->EnableTissue(SEOnOff::Off);
+  bg.m_Configuration->EnableRenal(SEOnOff::Off);
+  bg.m_Configuration->EnableTissue(SEOnOff::Off);
   bg.CreateCircuitsAndCompartments();
   Environment& env = (Environment&)bg.GetEnvironment();
   env.Initialize();

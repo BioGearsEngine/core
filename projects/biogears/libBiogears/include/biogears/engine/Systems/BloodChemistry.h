@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 namespace biogears {
 class SEArterialBloodGasAnalysis;
@@ -67,13 +67,7 @@ public:
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  bool Load(const CDM::BioGearsBloodChemistrySystemData& in);
-  CDM::BioGearsBloodChemistrySystemData* Unload() const override;
-
 protected:
-  void Unload(CDM::BioGearsBloodChemistrySystemData& data) const;
-
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
   void SetUp() override;
 
@@ -103,8 +97,8 @@ protected:
   void OverrideControlLoop();
 
   // Serializable member variables (Set in Initialize and in schema)
-  RunningAverage m_ArterialOxygen_mmHg;
-  RunningAverage m_ArterialCarbonDioxide_mmHg;
+  RunningAverage m_ArterialOxygenAverage_mmHg;
+  RunningAverage m_ArterialCarbonDioxideAverage_mmHg;
 
   // Patient
   SEPatient* m_Patient;

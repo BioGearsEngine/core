@@ -189,7 +189,7 @@ void PhysiologyEngineTrack::Clear()
 {
   ResetFile();
   m_ForceConnection = false;
-  DELETE_MAP_SECOND(m_Request2Scalar);
+  DELETE_MAP_OF_POINTERS(m_Request2Scalar);
 }
 
 void PhysiologyEngineTrack::ResetFile()

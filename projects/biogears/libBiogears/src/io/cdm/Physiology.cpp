@@ -7,6 +7,7 @@
 
 #include <biogears/cdm/properties/SEProperties.h>
 
+#include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
@@ -31,9 +32,9 @@ namespace io {
   }
   void Physiology::Marshall(const SEPupillaryResponse& in, CDM::PupillaryResponseData& out)
   {
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ReactivityModifier)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ShapeModifier)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SizeModifier)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ReactivityModifier)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ShapeModifier)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SizeModifier)
   }
   //----------------------------------------------------------------------------------
   // class SEInflammationState
@@ -77,31 +78,31 @@ namespace io {
   void Physiology::Marshall(const SEInflammatoryResponse& in, CDM::InflammatoryResponseData& out)
   {
 
-    SE_PROPERTY_ENUM_MARSHALL_HELPER(in, out, ActiveTLR);
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, ActiveTLR);
 
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, LocalPathogen)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, LocalMacrophage)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, LocalNeutrophil)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, LocalBarrier)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, AutonomicResponseLevel)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Catecholamines)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, ConstitutiveNOS)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InducibleNOSPre)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InducibleNOS)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Interleukin6)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Interleukin10)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Interleukin12)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, MacrophageResting)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, MacrophageActive)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, NeutrophilResting)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, NeutrophilActive)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Nitrate)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, NitricOxide)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, BloodPathogen)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, TissueIntegrity)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, Trauma)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, TumorNecrosisFactor)
-    CDM_PROPERTY_MARSHALL_HELPER(in, out, InflammationTime)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, LocalPathogen)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, LocalMacrophage)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, LocalNeutrophil)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, LocalBarrier)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, AutonomicResponseLevel)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Catecholamines)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, ConstitutiveNOS)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InducibleNOSPre)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InducibleNOS)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Interleukin6)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Interleukin10)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Interleukin12)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, MacrophageResting)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, MacrophageActive)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, NeutrophilResting)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, NeutrophilActive)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Nitrate)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, NitricOxide)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, BloodPathogen)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, TissueIntegrity)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Trauma)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, TumorNecrosisFactor)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InflammationTime)
 
     CDM::enumInflammationSource conversion;
     for (auto src : in.m_InflammationSources) {
@@ -161,44 +162,44 @@ namespace io {
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodDensity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ArterialBloodPH)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ArterialBloodPHBaseline)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VenousBloodPH)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodSpecificHeat)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodUreaNitrogenConcentration)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CarbonDioxideSaturation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CarbonMonoxideSaturation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Hematocrit)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HemoglobinContent)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HemoglobinLostToUrine)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LymphocyteCellCount)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, NeutrophilCellCount)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, OxygenSaturation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, OxygenVenousSaturation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, Phosphate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PlasmaVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulseOximetry)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RedBloodCellAcetylcholinesterase)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RedBloodCellCount)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ShuntFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StrongIonDifference)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalBilirubin)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalProteinConcentration)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RhTransfusionReactionVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ViralLoad)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VolumeFractionNeutralPhospholipidInPlasma)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VolumeFractionNeutralLipidInPlasma)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WhiteBloodCellCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BloodDensity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ArterialBloodPH)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ArterialBloodPHBaseline)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VenousBloodPH)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BloodSpecificHeat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BloodUreaNitrogenConcentration)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CarbonDioxideSaturation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CarbonMonoxideSaturation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Hematocrit)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HemoglobinContent)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HemoglobinLostToUrine)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LymphocyteCellCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, NeutrophilCellCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, OxygenSaturation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, OxygenVenousSaturation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Phosphate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PlasmaVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulseOximetry)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RedBloodCellAcetylcholinesterase)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RedBloodCellCount)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ShuntFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StrongIonDifference)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalBilirubin)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalProteinConcentration)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RhTransfusionReactionVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ViralLoad)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VolumeFractionNeutralPhospholipidInPlasma)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VolumeFractionNeutralLipidInPlasma)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, WhiteBloodCellCount)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ArterialCarbonDioxidePressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ArterialOxygenPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryArterialCarbonDioxidePressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryArterialOxygenPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryVenousCarbonDioxidePressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryVenousOxygenPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VenousCarbonDioxidePressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, VenousOxygenPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ArterialCarbonDioxidePressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ArterialOxygenPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryArterialCarbonDioxidePressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryArterialOxygenPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryVenousCarbonDioxidePressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryVenousOxygenPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VenousCarbonDioxidePressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, VenousOxygenPressure)
 
     Marshall(*in.m_InflammatoryResponse, out.InflammatoryResponse());
   }
@@ -249,43 +250,43 @@ namespace io {
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
 
-    SE_OPTIONAL_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, HeartRhythm)
+    SE_OPTIONAL_PHYSIOLOGY_ENUM_PTR_MARSHALL_HELPER(in, out, HeartRhythm)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ArterialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BloodVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CardiacIndex)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CardiacOutput)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CentralVenousPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CerebralBloodFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CerebralPerfusionPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DiastolicArterialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ArterialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BloodVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CardiacIndex)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CardiacOutput)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CentralVenousPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CerebralBloodFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CerebralPerfusionPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DiastolicArterialPressure)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExtremityPressureLeftArm)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExtremityPressureLeftLeg)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExtremityPressureRightArm)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExtremityPressureRightLeg)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExtremityPressureLeftArm)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExtremityPressureLeftLeg)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExtremityPressureRightArm)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExtremityPressureRightLeg)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartEjectionFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartStrokeVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, IntracranialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanArterialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanArterialCarbonDioxidePartialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanArterialCarbonDioxidePartialPressureDelta)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanCentralVenousPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanSkinFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryArterialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryCapillariesWedgePressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryDiastolicArterialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryMeanArterialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryMeanCapillaryFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryMeanShuntFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonarySystolicArterialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryVascularResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryVascularResistanceIndex)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulsePressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SystolicArterialPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SystemicVascularResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartEjectionFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartStrokeVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, IntracranialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanArterialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanArterialCarbonDioxidePartialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanArterialCarbonDioxidePartialPressureDelta)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanCentralVenousPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanSkinFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryArterialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryCapillariesWedgePressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryDiastolicArterialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryMeanArterialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryMeanCapillaryFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryMeanShuntFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonarySystolicArterialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryVascularResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryVascularResistanceIndex)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulsePressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SystolicArterialPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SystemicVascularResistance)
   }
   //----------------------------------------------------------------------------------
   // class SEDrugSystem
@@ -310,20 +311,20 @@ namespace io {
   void Physiology::Marshall(const SEDrugSystem& in, CDM::DrugSystemData& out)
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AntibioticActivity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BronchodilationLevel)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FeverChange)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRateChange)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HemorrhageChange)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanBloodPressureChange)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, NeuromuscularBlockLevel)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PainToleranceChange)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulsePressureChange)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationRateChange)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SedationLevel)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TidalVolumeChange)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TubularPermeabilityChange)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CentralNervousResponse)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AntibioticActivity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BronchodilationLevel)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, FeverChange)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartRateChange)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HemorrhageChange)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanBloodPressureChange)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, NeuromuscularBlockLevel)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PainToleranceChange)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulsePressureChange)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationRateChange)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SedationLevel)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TidalVolumeChange)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TubularPermeabilityChange)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CentralNervousResponse)
   }
   //----------------------------------------------------------------------------------
   // class SEEndocrineSystem
@@ -336,8 +337,8 @@ namespace io {
   void Physiology::Marshall(const SEEndocrineSystem& in, CDM::EndocrineSystemData& out)
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InsulinSynthesisRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, GlucagonSynthesisRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InsulinSynthesisRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, GlucagonSynthesisRate)
   }
   //----------------------------------------------------------------------------------
   // class SEEnergySystem
@@ -371,28 +372,28 @@ namespace io {
   void Physiology::Marshall(const SEEnergySystem& in, CDM::EnergySystemData& out)
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AchievedExerciseLevel)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ChlorideLostToSweat)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CoreTemperature)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CreatinineProductionRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, EnergyDeficit)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExerciseEnergyDemand)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExerciseMeanArterialPressureDelta)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FatigueLevel)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LactateProductionRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PotassiumLostToSweat)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinTemperature)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinTemperatureTorso)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinTemperatureHead)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinTemperatureLeftArm)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinTemperatureRightArm)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinTemperatureLeftLeg)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SkinTemperatureRightLeg)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BurnSkinTemperature);
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SodiumLostToSweat)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SweatRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalMetabolicRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalWorkRateLevel)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AchievedExerciseLevel)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ChlorideLostToSweat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CoreTemperature)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CreatinineProductionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, EnergyDeficit)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExerciseEnergyDemand)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExerciseMeanArterialPressureDelta)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, FatigueLevel)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LactateProductionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PotassiumLostToSweat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinTemperature)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinTemperatureTorso)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinTemperatureHead)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinTemperatureLeftArm)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinTemperatureRightArm)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinTemperatureLeftLeg)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SkinTemperatureRightLeg)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BurnSkinTemperature);
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SodiumLostToSweat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SweatRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalMetabolicRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalWorkRateLevel)
   }
   //----------------------------------------------------------------------------------
   // class SEGastrointestinalSystem
@@ -403,14 +404,62 @@ namespace io {
       io::Property::UnMarshall(in.ChymeAbsorptionRate(), out.GetChymeAbsorptionRate());
     }
     if (in.StomachContents().present()) {
-      out.GetStomachContents().Load(in.StomachContents().get());
+      io::PatientNutrition::UnMarshall(in.StomachContents(), out.GetStomachContents());
     }
   }
   void Physiology::Marshall(const SEGastrointestinalSystem& in, CDM::GastrointestinalSystemData& out)
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ChymeAbsorptionRate)
-    CDM_OPTIONAL_PATIENT_NUTRITION_MARSHALL_HELPER(in, out, StomachContents)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ChymeAbsorptionRate)
+    CDM_OPTIONAL_PATIENT_NUTRITION_PTR_MARSHALL_HELPER(in, out, StomachContents)
+  }
+  //----------------------------------------------------------------------------------
+  // class SEDrugTransitState
+  void Physiology::UnMarshall(const CDM::DrugTransitStateData& in, SEDrugTransitState& out) {
+    out.m_LumenDissolvedMasses.clear();
+    SEScalarMass mass;
+    for (auto disMass : in.LumenDissolvedMasses()) {
+      io::Property::UnMarshall(disMass, mass);
+      out.m_LumenDissolvedMasses.push_back(mass);
+    }
+    out.m_LumenSolidMasses.clear();
+    for (auto solMass : in.LumenSolidMasses()) {
+      io::Property::UnMarshall(solMass, mass);
+      out.m_LumenSolidMasses.push_back(mass);
+    }
+    out.m_EnterocyteMasses.clear();
+    for (auto entMass : in.EnterocyteMasses()) {
+      io::Property::UnMarshall(entMass, mass);
+      out.m_EnterocyteMasses.push_back(mass);
+    }
+    io::Property::UnMarshall(in.MassExcreted(), out.GetTotalMassExcreted());
+    io::Property::UnMarshall(in.MassMetabolized(), out.GetTotalMassMetabolized());
+  
+  }
+
+  void Physiology::Marshall(const SEDrugTransitState& in, CDM::DrugTransitStateData& out) {
+    for (auto tdMass : in.m_LumenDissolvedMasses) {
+      out.LumenDissolvedMasses().push_back(std::unique_ptr<CDM::ScalarMassData>());
+      io::Property::Marshall(tdMass, out.LumenDissolvedMasses().back());
+    }
+    for (auto tsMass : in.m_LumenSolidMasses) {
+      out.LumenSolidMasses().push_back(std::unique_ptr<CDM::ScalarMassData>());
+      io::Property::Marshall(tsMass, out.LumenSolidMasses().back());
+    }
+    for (auto eMass : in.m_EnterocyteMasses) {
+      out.EnterocyteMasses().push_back(std::unique_ptr<CDM::ScalarMassData>());
+      io::Property::Marshall(eMass, out.EnterocyteMasses().back());
+    }
+    if (in.m_TotalMassMetabolized && in.m_TotalMassMetabolized->IsValid()) {
+      out.MassMetabolized(std::make_unique<std::remove_reference<decltype(out.MassMetabolized())>::type>());
+      io::Property::Marshall(*in.m_TotalMassMetabolized, out.MassMetabolized());
+    }
+    if (in.m_TotalMassExcreted && in.m_TotalMassExcreted->IsValid()) {
+      out.MassExcreted(std::make_unique<std::remove_reference<decltype(out.MassExcreted())>::type>());
+      io::Property::Marshall(*in.m_TotalMassMetabolized, out.MassExcreted());
+    }
+
+    out.Substance(in.m_Substance->GetName());
   }
   //----------------------------------------------------------------------------------
   // class SEHepaticSystem
@@ -424,8 +473,8 @@ namespace io {
   void Physiology::Marshall(const SEHepaticSystem& in, CDM::HepaticSystemData& out)
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, KetoneProductionRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HepaticGluconeogenesisRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, KetoneProductionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HepaticGluconeogenesisRate)
   }
   //----------------------------------------------------------------------------------
   // class SENervousSystem
@@ -480,28 +529,28 @@ namespace io {
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ComplianceScale)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartRateScale)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, HeartElastanceScale)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MentalStatus)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, GlasgowComaScalar)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ComplianceScale)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartRateScale)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, HeartElastanceScale)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MentalStatus)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, GlasgowComaScalar)
     Marshall(*in.m_LeftEyePupillaryResponse, out.LeftEyePupillaryResponse());
     Marshall(*in.m_RightEyePupillaryResponse, out.RightEyePupillaryResponse());
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PainVisualAnalogueScale)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ResistanceScaleExtrasplanchnic)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ResistanceScaleMuscle)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ResistanceScaleMyocardium)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ResistanceScaleSplanchnic)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SleepTime)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, WakeTime)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PainVisualAnalogueScale)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ResistanceScaleExtrasplanchnic)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ResistanceScaleMuscle)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ResistanceScaleMyocardium)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ResistanceScaleSplanchnic)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SleepTime)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, WakeTime)
 
-    SE_OPTIONAL_PHYSIOLOGY_ENUM_MARSHALL_HELPER(in, out, SleepState)
+    SE_OPTIONAL_PHYSIOLOGY_ENUM_PTR_MARSHALL_HELPER(in, out, SleepState)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BiologicalDebt)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BiologicalDebt)
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ReactionTime)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AttentionLapses)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RichmondAgitationSedationScale)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ReactionTime)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AttentionLapses)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RichmondAgitationSedationScale)
   }
   //----------------------------------------------------------------------------------
   // class SERenalSystem
@@ -573,62 +622,62 @@ namespace io {
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
 
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, BladderPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, GlomerularFiltrationRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FiltrationFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftAfferentArterioleResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftBowmansCapsulesHydrostaticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftBowmansCapsulesOsmoticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftEfferentArterioleResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularCapillariesHydrostaticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularCapillariesOsmoticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularFiltrationCoefficient)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularFiltrationRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularFiltrationSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftGlomerularFluidPermeability)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftFiltrationFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftNetFiltrationPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftNetReabsorptionPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftPeritubularCapillariesHydrostaticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftPeritubularCapillariesOsmoticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftReabsorptionFiltrationCoefficient)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftReabsorptionRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftTubularReabsorptionFiltrationSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftTubularReabsorptionFluidPermeability)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftTubularHydrostaticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LeftTubularOsmoticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RenalBloodFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RenalPlasmaFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RenalVascularResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightAfferentArterioleResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightBowmansCapsulesHydrostaticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightBowmansCapsulesOsmoticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightEfferentArterioleResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightGlomerularCapillariesHydrostaticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightGlomerularCapillariesOsmoticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightGlomerularFiltrationCoefficient)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightGlomerularFiltrationRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightGlomerularFiltrationSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightGlomerularFluidPermeability)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightFiltrationFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightNetFiltrationPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightNetReabsorptionPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightPeritubularCapillariesHydrostaticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightPeritubularCapillariesOsmoticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightReabsorptionFiltrationCoefficient)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightReabsorptionRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightTubularReabsorptionFiltrationSurfaceArea)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightTubularReabsorptionFluidPermeability)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightTubularHydrostaticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RightTubularOsmoticPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrinationRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineOsmolality)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineOsmolarity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineProductionRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanUrineOutput)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineSpecificGravity)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, UrineUreaNitrogenConcentration)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BladderPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, GlomerularFiltrationRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, FiltrationFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftAfferentArterioleResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftBowmansCapsulesHydrostaticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftBowmansCapsulesOsmoticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftEfferentArterioleResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftGlomerularCapillariesHydrostaticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftGlomerularCapillariesOsmoticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftGlomerularFiltrationCoefficient)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftGlomerularFiltrationRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftGlomerularFiltrationSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftGlomerularFluidPermeability)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftFiltrationFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftNetFiltrationPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftNetReabsorptionPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftPeritubularCapillariesHydrostaticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftPeritubularCapillariesOsmoticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftReabsorptionFiltrationCoefficient)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftReabsorptionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftTubularReabsorptionFiltrationSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftTubularReabsorptionFluidPermeability)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftTubularHydrostaticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LeftTubularOsmoticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RenalBloodFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RenalPlasmaFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RenalVascularResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightAfferentArterioleResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightBowmansCapsulesHydrostaticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightBowmansCapsulesOsmoticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightEfferentArterioleResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightGlomerularCapillariesHydrostaticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightGlomerularCapillariesOsmoticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightGlomerularFiltrationCoefficient)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightGlomerularFiltrationRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightGlomerularFiltrationSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightGlomerularFluidPermeability)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightFiltrationFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightNetFiltrationPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightNetReabsorptionPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightPeritubularCapillariesHydrostaticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightPeritubularCapillariesOsmoticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightReabsorptionFiltrationCoefficient)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightReabsorptionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightTubularReabsorptionFiltrationSurfaceArea)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightTubularReabsorptionFluidPermeability)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightTubularHydrostaticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RightTubularOsmoticPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrinationRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineOsmolality)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineOsmolarity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineProductionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanUrineOutput)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineSpecificGravity)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, UrineUreaNitrogenConcentration)
   }
   //----------------------------------------------------------------------------------
   // class SERespiratorySystem
@@ -661,28 +710,28 @@ namespace io {
   void Physiology::Marshall(const SERespiratorySystem& in, CDM::RespiratorySystemData& out)
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, AlveolarArterialGradient)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CarricoIndex)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, EndTidalCarbonDioxideFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, EndTidalCarbonDioxidePressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExpiratoryFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryExpiratoryRatio)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, InspiratoryFlow)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MeanPleuralPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryCompliance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, PulmonaryResistance)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationDriverFrequency)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationDriverPressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationMusclePressure)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespirationRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, SpecificVentilation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TargetPulmonaryVentilation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TidalVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalAlveolarVentilation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalDeadSpaceVentilation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalLungVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalPulmonaryVentilation)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TranspulmonaryPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, AlveolarArterialGradient)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CarricoIndex)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, EndTidalCarbonDioxideFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, EndTidalCarbonDioxidePressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExpiratoryFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InspiratoryExpiratoryRatio)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, InspiratoryFlow)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MeanPleuralPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryCompliance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, PulmonaryResistance)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationDriverFrequency)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationDriverPressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationMusclePressure)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespirationRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, SpecificVentilation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TargetPulmonaryVentilation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TidalVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalAlveolarVentilation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalDeadSpaceVentilation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalLungVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalPulmonaryVentilation)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TranspulmonaryPressure)
   }
   //----------------------------------------------------------------------------------
   // class SETissueSystem
@@ -712,28 +761,27 @@ namespace io {
   void Physiology::Marshall(const SETissueSystem& in, CDM::TissueSystemData& out)
   {
     System::Marshall(static_cast<const SESystem&>(in), static_cast<CDM::SystemData&>(out));
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, CarbonDioxideProductionRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, DehydrationFraction)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExtracellularFluidVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, ExtravascularFluidVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, IntracellularFluidPH)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, IntracellularFluidVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, TotalBodyFluidVolume)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, OxygenConsumptionRate)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, RespiratoryExchangeRatio)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LiverInsulinSetPoint)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LiverGlucagonSetPoint)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MuscleInsulinSetPoint)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MuscleGlucagonSetPoint)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FatInsulinSetPoint)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, FatGlucagonSetPoint)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, LiverGlycogen)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, MuscleGlycogen)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StoredProtein)
-    CDM_OPTIONAL_PROPERTY_MARSHALL_HELPER(in, out, StoredFat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, CarbonDioxideProductionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, DehydrationFraction)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExtracellularFluidVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, ExtravascularFluidVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, IntracellularFluidPH)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, IntracellularFluidVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, TotalBodyFluidVolume)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, OxygenConsumptionRate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, RespiratoryExchangeRatio)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LiverInsulinSetPoint)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LiverGlucagonSetPoint)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MuscleInsulinSetPoint)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MuscleGlucagonSetPoint)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, FatInsulinSetPoint)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, FatGlucagonSetPoint)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, LiverGlycogen)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, MuscleGlycogen)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StoredProtein)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, StoredFat)
   }
   //----------------------------------------------------------------------------------
-
   // SEInflammationSource
   void Physiology::UnMarshall(const CDM::enumInflammationSource& in, SEInflammationSource& out)
   {
@@ -779,6 +827,7 @@ namespace io {
       break;
     }
   }
+  //----------------------------------------------------------------------------------
   // SEHeartRhythm
   void Physiology::UnMarshall(const CDM::enumHeartRhythm& in, SEHeartRhythm& out)
   {
@@ -812,6 +861,7 @@ namespace io {
       break;
     }
   }
+  //----------------------------------------------------------------------------------
   // SESleepState
   void Physiology::UnMarshall(const CDM::enumSleepState& in, SESleepState& out)
   {
@@ -845,6 +895,7 @@ namespace io {
       break;
     }
   }
+  //----------------------------------------------------------------------------------
 }
 
 bool operator==(CDM::enumInflammationSource const& lhs, SEInflammationSource const& rhs)

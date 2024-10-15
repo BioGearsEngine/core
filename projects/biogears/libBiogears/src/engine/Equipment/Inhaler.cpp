@@ -22,9 +22,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+#include <biogears/engine/Controller/BioGears.h>
+
+#include "io/cdm/Inhaler.h"
 
 namespace biogears {
 /*
@@ -32,24 +33,23 @@ namespace biogears {
 Constructors
 ========================
 */
-
 auto Inhaler::make_unique(BioGears& bg) -> std::unique_ptr<Inhaler>
 {
   return std::unique_ptr<Inhaler>(new Inhaler(bg));
 }
-
+//--------------------------------------------------------------------------------------------------
 Inhaler::Inhaler(BioGears& bg)
   : SEInhaler(bg.GetSubstances())
   , m_data(bg)
 {
   Clear();
 }
-
+//--------------------------------------------------------------------------------------------------
 Inhaler::~Inhaler()
 {
   Clear();
 }
-
+//--------------------------------------------------------------------------------------------------
 void Inhaler::Clear()
 {
   SEInhaler::Clear();
@@ -58,7 +58,6 @@ void Inhaler::Clear()
   m_AmbientEnv = nullptr;
   m_InhalerDrug = nullptr;
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Initializes system properties to valid homeostatic values.
@@ -67,24 +66,6 @@ void Inhaler::Initialize()
 {
   BioGearsSystem::Initialize();
   m_InhalerDrug = nullptr;
-}
-
-bool Inhaler::Load(const CDM::BioGearsInhalerData& in)
-{
-  if (!SEInhaler::Load(in))
-    return false;
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsInhalerData* Inhaler::Unload() const
-{
-  CDM::BioGearsInhalerData* data = new CDM::BioGearsInhalerData();
-  Unload(*data);
-  return data;
-}
-void Inhaler::Unload(CDM::BioGearsInhalerData& data) const
-{
-  SEInhaler::Unload(data);
 }
 
 void Inhaler::SetUp()
@@ -157,12 +138,12 @@ void Inhaler::PreProcess()
     }
   }
 }
+//--------------------------------------------------------------------------------------------------
 
 void Inhaler::StateChange()
 {
   SEInhaler::StateChange();
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Administer Substance Using Inhaler
@@ -174,7 +155,6 @@ void Inhaler::StateChange()
 /// \details
 /// This method initializes substance values in the inhaler when actuated.  It is called once
 /// per actuation.
-//--------------------------------------------------------------------------------------------------
 void Inhaler::Administer()
 {
   // Check to see if the inhaler is already on. We should not run this method unless the
@@ -244,7 +224,6 @@ void Inhaler::Administer()
   }
   m_InhalerDrug->Balance(BalanceLiquidBy::Mass);
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Inhaler system process function
@@ -255,7 +234,6 @@ void Inhaler::Administer()
 void Inhaler::Process()
 {
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Inhaler system postprocess function
@@ -266,4 +244,5 @@ void Inhaler::Process()
 void Inhaler::PostProcess()
 {
 }
+//--------------------------------------------------------------------------------------------------
 }

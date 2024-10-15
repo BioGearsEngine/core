@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
 #include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
-#include <biogears/schema/cdm/PatientAssessments.hxx>
 
 namespace biogears {
 class SEPatient;
@@ -36,12 +35,6 @@ public:
 
   virtual void Reset() override;
   virtual void Clear() override;
-
-  virtual bool Load(const CDM::PulmonaryFunctionTestData& in);
-  virtual CDM::PulmonaryFunctionTestData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::PulmonaryFunctionTestData& data);
 
 public:
   virtual int GetNumberOfPlotPoints() { return m_NumberOfPlotPoints; }

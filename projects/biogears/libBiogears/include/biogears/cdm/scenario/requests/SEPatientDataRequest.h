@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
-#include <biogears/schema/cdm/DataRequests.hxx>
 
 namespace biogears {
 class SEDataRequestManager;
@@ -30,13 +29,6 @@ public:
 
   virtual void Clear() override; //clear memory
   size_t HashCode() const override;
-  virtual bool Load(const CDM::PatientDataRequestData& in);
-  virtual CDM::PatientDataRequestData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::PatientDataRequestData& data) const;
-
-public:
-protected:
+  
 };
 }

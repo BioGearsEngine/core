@@ -21,7 +21,7 @@ const HeatConductanceUnit HeatConductanceUnit::W_Per_C("W/degC");
 const HeatConductanceUnit HeatConductanceUnit::kcal_Per_K_s("kcal/K s");
 const HeatConductanceUnit HeatConductanceUnit::kcal_Per_C_s("kcal/degC s");
 
-template class SEScalarQuantity<HeatConductanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatConductanceUnit>;
 
 HeatConductanceUnit::HeatConductanceUnit(const char* u)
   : HeatConductanceUnit(std::string { u })
@@ -44,15 +44,7 @@ SEScalarHeatConductance::SEScalarHeatConductance()
 SEScalarHeatConductance::~SEScalarHeatConductance()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatConductanceData* SEScalarHeatConductance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatConductanceData* data(new CDM::ScalarHeatConductanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool HeatConductanceUnit::IsValidUnit(const char* unit)
 {

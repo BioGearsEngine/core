@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include "io/cdm/DataRequests.h"
 
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
@@ -47,16 +48,7 @@ size_t SECompartmentSubstanceDataRequest::HashCode() const
   return m_Hash;
 }
 //-----------------------------------------------------------------------------
-bool SECompartmentSubstanceDataRequest::Load(const CDM::CompartmentSubstanceDataRequestData& in, const SESubstanceManager& substances)
-{
-  io::DataRequests::UnMarshall(in, substances, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-void SECompartmentSubstanceDataRequest::Unload(CDM::CompartmentSubstanceDataRequestData& data) const
-{
-  io::DataRequests::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 SESubstance* SECompartmentSubstanceDataRequest::GetSubstance() const
 {
@@ -109,6 +101,7 @@ void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance
   m_Hash = 0;
 }
 //-------------------------------------------------------------------------------
+#pragma warning(disable : 4661)
 bool SECompartmentSubstanceDataRequest ::operator==(SECompartmentSubstanceDataRequest const& rhs) const
 {
   if (this == &rhs)

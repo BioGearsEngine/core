@@ -13,13 +13,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/compartment/SECompartment.h>
 #include <biogears/cdm/compartment/SECompartmentNodes.h>
-#include <biogears/schema/cdm/Compartment.hxx>
+
 
 #include <map>
 #include <string>
 #include <vector>
 
-CDM_BIND_DECL(ThermalCompartmentData)
 
 namespace biogears {
 class SEThermalCompartmentLink;
@@ -46,14 +45,8 @@ public:
 
   virtual void Clear() override;
 
-  virtual bool Load(const CDM::ThermalCompartmentData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::ThermalCompartmentData* Unload() override;
-
   bool operator==(SEThermalCompartment const&) const;
   bool operator!=(SEThermalCompartment const&) const;
-
-protected:
-  virtual void Unload(CDM::ThermalCompartmentData& data);
 
 public:
   virtual const SEScalar* GetScalar(const std::string& name) override;
@@ -112,8 +105,10 @@ protected:
   SECompartmentNodes<THERMAL_COMPARTMENT_NODE> m_Nodes;
 };
 } // namespace biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEThermalCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SEThermalCompartment*>;
+extern template class vector<biogears::SEThermalCompartment*>;
+extern template class map<string, biogears::SEThermalCompartment*>;
 }
+#pragma warning(default : 4661)

@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 #include <biogears/cdm/enums/SEPatientActionsEnums.h>
 
 #include <random>
@@ -37,9 +36,6 @@ public:
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::RadiationAbsorbedDoseData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::RadiationAbsorbedDoseData* Unload() const override;
-
   virtual bool HasDose() const;
   virtual SEScalarEnergyPerMass& GetDose();
 
@@ -47,9 +43,6 @@ public:
   
   bool operator==(const SERadiationAbsorbedDose& rhs) const;
   bool operator!=(const SERadiationAbsorbedDose& rhs) const;
-
-protected:
-  virtual void Unload(CDM::RadiationAbsorbedDoseData& data) const;
 
 protected:
   SEScalarEnergyPerMass* m_RadiationDose;

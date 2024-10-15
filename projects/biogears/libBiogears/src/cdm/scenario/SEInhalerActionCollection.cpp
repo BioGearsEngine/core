@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEInhalerActionCollection.h>
 
 #include "io/cdm/Scenario.h"
+#include "io/cdm/InhalerActions.h"
 
 namespace biogears {
 SEInhalerActionCollection::SEInhalerActionCollection(SESubstanceManager& substances)
@@ -33,29 +34,13 @@ void SEInhalerActionCollection::Clear()
   RemoveConfiguration();
 }
 
-void SEInhalerActionCollection::Unload(std::vector<CDM::ActionData*>& to)
-{
-  if (HasConfiguration())
-    to.push_back(GetConfiguration()->Unload());
-}
-
 bool SEInhalerActionCollection::ProcessAction(const SEInhalerAction& action, const PhysiologyEngine& engine)
 {
-  if (!IsValid(action))
-    return false;
-  CDM::InhalerActionData* bind = action.Unload();
-  bool b = ProcessAction(*bind, engine);
-  delete bind;
-  return b;
-}
 
-bool SEInhalerActionCollection::ProcessAction(const CDM::InhalerActionData& action, const PhysiologyEngine& engine)
-{
-  const CDM::InhalerConfigurationData* config = dynamic_cast<const CDM::InhalerConfigurationData*>(&action);
-  if (config != nullptr) {
+  if (auto config = dynamic_cast<SEInhalerConfiguration const*>(&action)) {
     if (m_Configuration == nullptr)
       m_Configuration = new SEInhalerConfiguration(m_Substances);
-    m_Configuration->Load(*config);
+    io::InhalerActions::UnMarshall(*(CDM::InhalerConfigurationData*)(io::InhalerActions::factory(config).get()), *m_Configuration);
     return IsValid(*m_Configuration);
   }
 

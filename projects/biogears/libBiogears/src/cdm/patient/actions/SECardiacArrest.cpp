@@ -46,24 +46,6 @@ void SECardiacArrest::SetActive(bool b)
   m_State = b ? SEOnOff::On : SEOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SECardiacArrest::Load(const CDM::CardiacArrestData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::CardiacArrestData* SECardiacArrest::Unload() const
-{
-  CDM::CardiacArrestData* data(new CDM::CardiacArrestData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SECardiacArrest::Unload(CDM::CardiacArrestData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 void SECardiacArrest::ToString(std::ostream& str) const
 {
   str << "Patient Action : Cardiac Arrest";

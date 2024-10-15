@@ -17,8 +17,6 @@ specific language governing permissions and limitations under the License.
 
 #include <random>
 
-CDM_BIND_DECL(ScalarData)
-
 namespace biogears {
 namespace io {
   class Property;
@@ -31,7 +29,8 @@ public:
 
   friend io::Property;
   SEScalarQuantity();
-  SEScalarQuantity(const SEScalarQuantity&);
+  SEScalarQuantity(SEScalarQuantity const&);
+  SEScalarQuantity(SEScalarQuantity&&);
   explicit SEScalarQuantity(double, const Unit&, bool ro = false);
 
   ~SEScalarQuantity() override;
@@ -40,8 +39,6 @@ public:
   void Invalidate() override;
   bool IsValid() const override;
 
-  virtual void Load(const CDM::ScalarData& in, std::default_random_engine *rd = nullptr) override;
-  virtual CDM::ScalarData* Unload() const override;
 
   virtual bool Set(const SEScalarQuantity<Unit>& s);
   void Copy(const SEScalarQuantity<Unit>& s);
@@ -68,7 +65,8 @@ public:
   SEScalarQuantity& DivideValue(double d);
   SEScalarQuantity& Divide(const SEScalar& s);
 
-  SEScalarQuantity& operator=(const SEScalarQuantity& rhs);
+  SEScalarQuantity& operator=(SEScalarQuantity const& rhs);
+  SEScalarQuantity& operator=(SEScalarQuantity&& rhs);
 
   bool operator<(const SEScalarQuantity& rhs) const;
   bool operator<=(const SEScalarQuantity& rhs) const;
@@ -97,12 +95,10 @@ public:
   const Unit* GetCompoundUnit(const std::string& unit) const override;
 
 protected:
-  virtual void Unload(CDM::ScalarData& s) const override;
-
-protected:
   const Unit* m_unit;
 };
 
+#pragma warning(disable : 4661)
 //-------------------------------------------------------------------------------
 template <class Unit>
 inline void Override(const SEScalarQuantity<Unit>& from, SEScalarQuantity<Unit>& to)
@@ -131,4 +127,5 @@ inline void IncrementOverride(SEScalarQuantity<Unit>& s, double value, const Uni
   s.SetReadOnly(b);
 }
 //-------------------------------------------------------------------------------
+#pragma warning(default : 4661)
 }

@@ -22,69 +22,53 @@ SEForcedExhale::SEForcedExhale()
   m_ExpiratoryReserveVolumeFraction = nullptr;
   m_Period = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEForcedExhale::~SEForcedExhale()
 {
   Clear();
 }
-
+//-------------------------------------------------------------------------------
 void SEForcedExhale::Clear()
 {
   SEConsciousRespirationCommand::Clear();
   SAFE_DELETE(m_ExpiratoryReserveVolumeFraction);
   SAFE_DELETE(m_Period);
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedExhale::IsValid() const
 {
   return SEConsciousRespirationCommand::IsValid() && HasExpiratoryReserveVolumeFraction() && HasPeriod();
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedExhale::IsActive() const
 {
   return SEConsciousRespirationCommand::IsActive();
 }
-
-bool SEForcedExhale::Load(const CDM::ForcedExhaleData& in, std::default_random_engine *rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return true;
-}
-
-CDM::ForcedExhaleData* SEForcedExhale::Unload() const
-{
-  CDM::ForcedExhaleData* data(new CDM::ForcedExhaleData());
-  Unload(*data);
-  return data;
-}
-
-void SEForcedExhale::Unload(CDM::ForcedExhaleData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-
+//-------------------------------------------------------------------------------
 bool SEForcedExhale::HasExpiratoryReserveVolumeFraction() const
 {
   return m_ExpiratoryReserveVolumeFraction == nullptr ? false : m_ExpiratoryReserveVolumeFraction->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEForcedExhale::GetExpiratoryReserveVolumeFraction()
 {
   if (m_ExpiratoryReserveVolumeFraction == nullptr)
     m_ExpiratoryReserveVolumeFraction = new SEScalar0To1();
   return *m_ExpiratoryReserveVolumeFraction;
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedExhale::HasPeriod() const
 {
   return m_Period == nullptr ? false : m_Period->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTime& SEForcedExhale::GetPeriod()
 {
   if (m_Period == nullptr)
     m_Period = new SEScalarTime();
   return *m_Period;
 }
-
+//-------------------------------------------------------------------------------
 void SEForcedExhale::ToString(std::ostream& str) const
 {
   str << "Forced Exhale";
@@ -96,4 +80,5 @@ void SEForcedExhale::ToString(std::ostream& str) const
   HasPeriod() ? str << *m_Period : str << "NaN";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
 }

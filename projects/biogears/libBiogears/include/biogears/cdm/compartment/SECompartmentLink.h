@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 
-CDM_BIND_DECL(CompartmentLinkData)
 
 namespace biogears {
 class SECircuitManager;
@@ -33,14 +32,8 @@ public:
 
   virtual void Clear();
 
-  virtual bool Load(const CDM::CompartmentLinkData& in, SECircuitManager* circuits = nullptr);
-  virtual CDM::CompartmentLinkData* Unload() = 0;
-
   virtual bool operator==(const SECompartmentLink& rhs) const = 0;
   virtual bool operator!=(const SECompartmentLink& rhs) const = 0;
-
-protected:
-  virtual void Unload(CDM::CompartmentLinkData& data);
 
 public:
   virtual std::string GetName() const;

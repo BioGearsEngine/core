@@ -53,24 +53,7 @@ bool SEEnvironmentChange::IsValid() const
 {
   return SEEnvironmentAction::IsValid() && (HasConditions() || HasConditionsFile());
 }
-//-----------------------------------------------------------------------------
-bool SEEnvironmentChange::Load(const CDM::EnvironmentChangeData& in, std::default_random_engine* rd)
-{
-  io::EnvironmentActions::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::EnvironmentChangeData* SEEnvironmentChange::Unload() const
-{
-  CDM::EnvironmentChangeData* data = new CDM::EnvironmentChangeData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEEnvironmentChange::Unload(CDM::EnvironmentChangeData& data) const
-{
-  io::EnvironmentActions::Marshall(*this, data);
-}
+
 //-----------------------------------------------------------------------------
 bool SEEnvironmentChange::HasConditions() const
 {
@@ -105,7 +88,7 @@ SEEnvironmentalConditions& SEEnvironmentChange::GetConditions()
         Error(ss);
       } else {
         m_ConditionsFile = "";
-        m_Conditions->Load(*ecData);
+        io::Environment::UnMarshall(*ecData, *m_Conditions);
       }
     }
   }
@@ -178,7 +161,7 @@ void SEEnvironmentChange::ToString(std::ostream& str) const
     }
     if (m_Conditions->HasAmbientAerosol()) {
       for (SESubstanceConcentration* sc : m_Conditions->GetAmbientAerosols()) {
-        str << "\n\tSubstance : " << sc->GetSubstance().GetName() << " Concentration " << sc->GetConcentration();
+        str << "\n\tSubstance : " << sc->GetSubstance().Name << " Concentration " << sc->GetConcentration();
       }
     }
   }

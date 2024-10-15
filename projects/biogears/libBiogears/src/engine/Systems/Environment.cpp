@@ -41,7 +41,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
+#include "io/cdm/Environment.h"
+#include "io/biogears/BioGearsEnvironment.h"
 
 namespace biogears {
 auto Environment::make_unique(BioGears& bg) -> std::unique_ptr<Environment>
@@ -110,27 +112,6 @@ void Environment::Initialize()
   m_PatientEquivalentDiameter_m = std::pow(Convert(patientMass_g / patientDensity_g_Per_mL, VolumeUnit::mL, VolumeUnit::m3) / (pi * patientHeight_m), 0.5);
 }
 
-bool Environment::Load(const CDM::BioGearsEnvironmentData& in)
-{
-  if (!SEEnvironment::Load(in))
-    return false;
-  BioGearsSystem::LoadState();
-  m_PatientEquivalentDiameter_m = in.PatientEquivalentDiameter_m();
-  StateChange();
-  return true;
-}
-CDM::BioGearsEnvironmentData* Environment::Unload() const
-{
-  CDM::BioGearsEnvironmentData* data = new CDM::BioGearsEnvironmentData();
-  Unload(*data);
-  return data;
-}
-void Environment::Unload(CDM::BioGearsEnvironmentData& data) const
-{
-  SEEnvironment::Unload(data);
-  data.PatientEquivalentDiameter_m(m_PatientEquivalentDiameter_m);
-}
-
 void Environment::SetUp()
 {
   // Patient and Actions
@@ -189,7 +170,7 @@ void Environment::SetUp()
 /// \details
 /// This is called any time the environment change action/condition.  It sets the ambient node
 /// values needed for the fluid systems.
-//--------------------------------------------------------------------------------------------------
+#pragma optimize("", off)
 void Environment::StateChange()
 {
   using namespace std::string_literals;
@@ -227,17 +208,22 @@ void Environment::StateChange()
 
   // Add aerosols to the environment
   for (auto s : GetConditions().GetAmbientAerosols()) {
-    SESubstance& sub = s->GetSubstance();
-    if (!sub.HasAerosolization()) {
-      Error("Ignoring environment aerosol as it does not have any aerosol data : "s + sub.GetName());
+    auto sub = s->GetSubstance();
+    if (!sub.Aerosolization.IsValid()) {
+      Error("Ignoring environment aerosol as it does not have any aerosol data : "s + sub.Name);
       continue;
     }
     m_data.GetSubstances().AddActiveSubstance(sub);
     SELiquidSubstanceQuantity* subQ = m_AmbientAerosols->GetSubstanceQuantity(sub);
-    subQ->GetConcentration().Set(s->GetConcentration());
+    if (subQ) {
+        subQ->GetConcentration().Set(s->GetConcentration());
+    } else {
+      Error("aerosol "s + sub.Name + " is not present in AmbientAerosols"s);
+      continue;
+    }
   }
 }
-
+#pragma optimize("", on)
 void Environment::AtSteadyState()
 {
   if (m_data.GetState() == EngineState::AtInitialStableState) {

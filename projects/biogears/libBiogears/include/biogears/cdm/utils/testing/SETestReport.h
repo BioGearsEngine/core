@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/utils/testing/SETestSuite.h>
 
-CDM_BIND_DECL(TestReportData)
 namespace biogears {
 namespace io {
   class TestReport;
@@ -28,16 +27,9 @@ public:
   virtual void Reset(); //reset values
   virtual void Clear(); //clear memory
 
-  bool Load(const CDM::TestReportData& in);
-  std::unique_ptr<CDM::TestReportData> Unload() const;
-
   bool operator==(SETestReport const&) const;
   bool operator!=(SETestReport const&) const;
 
-protected:
-  void Unload(CDM::TestReportData& data) const;
-
-public:
   bool WriteFile(const std::string& filename);
 
   SETestSuite& CreateTestSuite();

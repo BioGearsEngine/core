@@ -200,24 +200,6 @@ bool SEOverride::IsActive() const
   return (GetOverrideState() == SEOnOff::On);
 }
 //-------------------------------------------------------------------------------
-bool SEOverride::Load(const CDM::OverrideData& in, std::default_random_engine* rd)
-{
-  io::PatientActions::UnMarshall(in, *this, rd);
-  return IsValid();
-}
-//-------------------------------------------------------------------------------
-CDM::OverrideData* SEOverride::Unload() const
-{
-  CDM::OverrideData* data(new CDM::OverrideData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEOverride::Unload(CDM::OverrideData& data) const
-{
-  io::PatientActions::Marshall(*this, data);
-}
-//-------------------------------------------------------------------------------
 SEOnOff SEOverride::GetOverrideState() const
 {
   return m_OverrideState;

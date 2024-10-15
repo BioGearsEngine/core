@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceClearance.h>
 
+#include <algorithm>
+#include <utility>
+
 #include "io/cdm/Substance.h"
 
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -23,95 +26,152 @@ specific language governing permissions and limitations under the License.
 namespace biogears {
 SESubstanceClearance::SESubstanceClearance(Logger* logger)
   : Loggable(logger)
+  , m_def()
+  , m_FractionExcretedInFeces()
+  , m_FractionExcretedInUrine()
+  , m_FractionMetabolizedInGut()
+  , m_FractionUnboundInPlasma()
 {
-  m_hasSystemic = false;
-  m_hasCellular = false;
-  m_CellDeathRate = nullptr;
-  m_CellBirthRate = nullptr;
-  m_ChargeInBlood = (SECharge)-1;
-  m_FractionExcretedInFeces = nullptr;
-  m_FractionExcretedInUrine = nullptr;
-  m_FractionMetabolizedInGut = nullptr;
-  m_FractionUnboundInPlasma = nullptr;
-  m_GlomerularFilterability = nullptr;
-  m_IntrinsicClearance = nullptr;
-  m_RenalDynamic = (RenalDynamic)-1;
-  m_RenalClearance = nullptr;
-  m_RenalReabsorptionRatio = nullptr;
-  m_RenalTransportMaximum = nullptr;
-  m_RenalFiltrationRate = nullptr;
-  m_RenalReabsorptionRate = nullptr;
-  m_RenalExcretionRate = nullptr;
-  m_SystemicClearance = nullptr;
+  m_def.HasSystemic = false;
+  m_def.HasCellular = false;
+
+  m_def.ChargeInBlood = SECharge::Invalid;
+  m_def.RenalDynamic = RenalDynamicsType::Invalid;
+}
+SESubstanceClearance::SESubstanceClearance(SESubstanceClearanceDefinition definition, Logger* logger)
+  : Loggable(logger)
+  , m_def(definition)
+  , m_FractionExcretedInFeces()
+  , m_FractionExcretedInUrine()
+  , m_FractionMetabolizedInGut()
+  , m_FractionUnboundInPlasma()
+{
+  m_def.HasSystemic = false;
+  m_def.HasCellular = false;
+
+  m_def.ChargeInBlood = SECharge::Invalid;
+  m_def.RenalDynamic = RenalDynamicsType::Invalid;
 }
 //-----------------------------------------------------------------------------
 SESubstanceClearance::~SESubstanceClearance()
 {
   Clear();
 }
+SESubstanceClearance::SESubstanceClearance(SESubstanceClearance const& obj)
+  : m_def(obj.m_def)
+  , m_FractionExcretedInFeces(obj.m_FractionExcretedInFeces)
+  , m_FractionExcretedInUrine(obj.m_FractionExcretedInUrine)
+  , m_FractionMetabolizedInGut(obj.m_FractionMetabolizedInGut)
+  , m_FractionUnboundInPlasma(obj.m_FractionUnboundInPlasma)
+{
+}
+SESubstanceClearance::SESubstanceClearance(SESubstanceClearance&& obj)
+  : m_def(std::move(obj.m_def))
+  , m_FractionExcretedInFeces(std::move(obj.m_FractionExcretedInFeces))
+  , m_FractionExcretedInUrine(std::move(obj.m_FractionExcretedInUrine))
+  , m_FractionMetabolizedInGut(std::move(obj.m_FractionMetabolizedInGut))
+  , m_FractionUnboundInPlasma(std::move(obj.m_FractionUnboundInPlasma))
+{
+}
+
+SESubstanceClearance& SESubstanceClearance::operator=(SESubstanceClearance const& rhs)
+{
+  if (this == &rhs)
+    return *this;
+
+  SESubstanceClearance temp(rhs); // use the copy constructor
+  std::swap(m_def, temp.m_def);
+  std::swap(m_FractionExcretedInFeces, temp.m_FractionExcretedInFeces);
+  std::swap(m_FractionExcretedInUrine, temp.m_FractionExcretedInUrine);
+  std::swap(m_FractionMetabolizedInGut, temp.m_FractionMetabolizedInGut);
+  std::swap(m_FractionUnboundInPlasma, temp.m_FractionUnboundInPlasma);
+
+  return *this;
+}
+SESubstanceClearance& SESubstanceClearance::operator=(SESubstanceClearance&& rhs)
+{
+  if (this == &rhs)
+    return *this;
+
+  SESubstanceClearance temp(std::move(rhs)); // use the move constructor
+  std::swap(m_def, temp.m_def);
+  std::swap(m_FractionExcretedInFeces, temp.m_FractionExcretedInFeces);
+  std::swap(m_FractionExcretedInUrine, temp.m_FractionExcretedInUrine);
+  std::swap(m_FractionMetabolizedInGut, temp.m_FractionMetabolizedInGut);
+  std::swap(m_FractionUnboundInPlasma, temp.m_FractionUnboundInPlasma);
+
+  return *this;
+}
 //-----------------------------------------------------------------------------
 void SESubstanceClearance::Clear()
 {
-  m_hasSystemic = false;
-  m_hasCellular = false;
-  SAFE_DELETE(m_CellDeathRate);
-  SAFE_DELETE(m_CellBirthRate);
-  m_ChargeInBlood = (SECharge)-1;
-  SAFE_DELETE(m_FractionExcretedInFeces);
-  SAFE_DELETE(m_FractionExcretedInUrine);
-  SAFE_DELETE(m_FractionMetabolizedInGut);
-  SAFE_DELETE(m_FractionUnboundInPlasma);
-  SAFE_DELETE(m_GlomerularFilterability);
-  SAFE_DELETE(m_IntrinsicClearance);
-  m_RenalDynamic = (RenalDynamic)-1;
-  SAFE_DELETE(m_RenalClearance);
-  SAFE_DELETE(m_RenalReabsorptionRatio);
-  SAFE_DELETE(m_RenalTransportMaximum);
-  SAFE_DELETE(m_RenalFiltrationRate);
-  SAFE_DELETE(m_RenalReabsorptionRate);
-  SAFE_DELETE(m_RenalExcretionRate);
-  SAFE_DELETE(m_SystemicClearance);
+  m_def.HasSystemic = false;
+  m_def.HasCellular = false;
+
+  m_def.ChargeInBlood = SECharge::Invalid;
+  m_FractionExcretedInFeces.Invalidate();
+  m_FractionExcretedInUrine.Invalidate();
+  m_FractionMetabolizedInGut.Invalidate();
+  m_FractionUnboundInPlasma.Invalidate();
+  m_def.GlomerularFilterability.Invalidate();
+  m_def.IntrinsicClearance.Invalidate();
+  m_def.RenalDynamic = RenalDynamicsType::Invalid;
+  m_def.RenalClearance.Invalidate();
+  m_def.RenalReabsorptionRatio.Invalidate();
+  m_def.RenalTransportMaximum.Invalidate();
+  m_def.RenalFiltrationRate.Invalidate();
+  m_def.RenalReabsorptionRate.Invalidate();
+  m_def.RenalExcretionRate.Invalidate();
+  m_def.SystemicClearance.Invalidate();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::IsValid() const
 {
   if (HasSystemic()) {
-    if (!HasFractionExcretedInFeces())
-      return false;
-    if (!HasFractionUnboundInPlasma())
-      return false;
-    if (!HasIntrinsicClearance())
-      return false;
-    if (!HasRenalClearance())
-      return false;
-    if (!HasSystemicClearance())
-      return false;
+    return HasFractionExcretedInFeces()
+      && HasFractionUnboundInPlasma()
+      && HasIntrinsicClearance()
+      && HasRenalClearance()
+      && HasSystemicClearance();
   }
 
   if (HasRenalDynamic()) {
-    if (GetRenalDynamic() == RenalDynamic::Regulation) {
-      if (!HasChargeInBlood())
-        return false;
-      if (!HasFractionUnboundInPlasma())
-        return false;
-      if (!HasRenalReabsorptionRatio())
-        return false;
-      if (!HasRenalTransportMaximum())
-        return false;
-    } else if (GetRenalDynamic() == RenalDynamic::Clearance) {
-      if (!HasRenalClearance())
-        return false;
+    if (GetRenalDynamic() == RenalDynamicsType::Regulation) {
+      return HasChargeInBlood()
+        && HasFractionUnboundInPlasma()
+        && HasRenalReabsorptionRatio()
+        && HasRenalTransportMaximum();
+    } else if (GetRenalDynamic() == RenalDynamicsType::Clearance) {
+      return HasRenalClearance();
     } else
       return false;
   }
 
   if (HasCellular()) {
-    if (!HasCellBirthRate())
-      return false;
-    if (!HasCellDeathRate())
-      return false;
+    return HasCellBirthRate()
+      && HasCellDeathRate();
   }
   return true;
+}
+//-----------------------------------------------------------------------------
+bool SESubstanceClearance::HasSystemic() const
+{
+  return m_def.HasSystemic;
+}
+//-----------------------------------------------------------------------------
+void SESubstanceClearance::SetSystemic(bool b)
+{
+  m_def.HasSystemic = b;
+}
+//-----------------------------------------------------------------------------
+bool SESubstanceClearance::HasCellular() const
+{
+  return m_def.HasCellular;
+}
+//-----------------------------------------------------------------------------
+void SESubstanceClearance::SetCellular(bool b)
+{
+  m_def.HasCellular = b;
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceClearance::GetScalar(const char* name)
@@ -154,385 +214,346 @@ const SEScalar* SESubstanceClearance::GetScalar(const std::string& name)
 
   return nullptr;
 }
-//-----------------------------------------------------------------------------
-bool SESubstanceClearance::Load(const CDM::SubstanceClearanceData& in)
-{
-  io::Substance::UnMarshall(in, *this);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceClearanceData* SESubstanceClearance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::SubstanceClearanceData* data = new CDM::SubstanceClearanceData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstanceClearance::Unload(CDM::SubstanceClearanceData& data) const
-{
-  io::Substance::Marshall(*this, data);
-};
 
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasCellBirthRate() const
 {
-  return (m_CellBirthRate == nullptr) ? false : m_CellBirthRate->IsValid();
+  return m_def.CellBirthRate.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarFrequency& SESubstanceClearance::GetCellBirthRate()
 {
-  if (m_CellBirthRate == nullptr)
-    m_hasCellular = true;
-    m_CellBirthRate = new SEScalarFrequency();
-  return *m_CellBirthRate;
+
+  return m_def.CellBirthRate;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetCellBirthRate(const FrequencyUnit& unit) const
 {
-  if (m_CellBirthRate == nullptr)
-    return SEScalar::dNaN();
-  return m_CellBirthRate->GetValue(unit);
+  return m_def.CellBirthRate.GetValue(unit);
 }
 
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasCellDeathRate() const
 {
-  return (m_CellDeathRate == nullptr) ? false : m_CellDeathRate->IsValid();
+  return m_def.CellDeathRate.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarFrequency& SESubstanceClearance::GetCellDeathRate()
 {
-  if (m_CellDeathRate == nullptr)
-    m_hasCellular = true;
-    m_CellDeathRate = new SEScalarFrequency();
-  return *m_CellDeathRate;
+  m_def.HasCellular = true;
+  return m_def.CellDeathRate;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetCellDeathRate(const FrequencyUnit& unit) const
 {
-  if (m_CellDeathRate == nullptr)
-    return SEScalar::dNaN();
-  return m_CellDeathRate->GetValue(unit);
+  return m_def.CellDeathRate.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 SECharge SESubstanceClearance::GetChargeInBlood() const
 {
-  return m_ChargeInBlood;
+  return m_def.ChargeInBlood;
 }
 //-----------------------------------------------------------------------------
 void SESubstanceClearance::SetChargeInBlood(SECharge c)
 {
-  m_ChargeInBlood = c;
+  m_def.ChargeInBlood = c;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasChargeInBlood() const
 {
-  return m_ChargeInBlood == SECharge::Invalid ? false : true;
+  return m_def.ChargeInBlood == SECharge::Invalid ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SESubstanceClearance::InvalidateChargeInBlood()
 {
-  m_ChargeInBlood = (SECharge)-1;
+  m_def.ChargeInBlood = (SECharge)-1;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasFractionExcretedInFeces() const
 {
-  return (m_FractionExcretedInFeces == nullptr) ? false : m_FractionExcretedInFeces->IsValid();
+  return m_FractionExcretedInFeces.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarFraction& SESubstanceClearance::GetFractionExcretedInFeces()
 {
-  if (m_FractionExcretedInFeces == nullptr)
-    m_FractionExcretedInFeces = new SEScalarFraction();
-  return *m_FractionExcretedInFeces;
+  return m_FractionExcretedInFeces;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetFractionExcretedInFeces() const
 {
-  if (m_FractionExcretedInFeces == nullptr)
-    return SEScalar::dNaN();
-  return m_FractionExcretedInFeces->GetValue();
+  return m_FractionExcretedInFeces.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasFractionExcretedInUrine() const
 {
-  return (m_FractionExcretedInUrine == nullptr) ? false : m_FractionExcretedInUrine->IsValid();
+  return m_FractionExcretedInUrine.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarFraction& SESubstanceClearance::GetFractionExcretedInUrine()
 {
-  if (m_FractionExcretedInUrine == nullptr)
-    m_FractionExcretedInUrine = new SEScalarFraction();
-  return *m_FractionExcretedInUrine;
+  return m_FractionExcretedInUrine;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetFractionExcretedInUrine() const
 {
-  if (m_FractionExcretedInUrine == nullptr)
-    return SEScalar::dNaN();
-  return m_FractionExcretedInUrine->GetValue();
+
+  return m_FractionExcretedInUrine.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasFractionMetabolizedInGut() const
 {
-  return (m_FractionMetabolizedInGut == nullptr) ? false : m_FractionMetabolizedInGut->IsValid();
+  return m_FractionMetabolizedInGut.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarFraction& SESubstanceClearance::GetFractionMetabolizedInGut()
 {
-  if (m_FractionMetabolizedInGut == nullptr)
-    m_FractionMetabolizedInGut = new SEScalarFraction();
-  return *m_FractionMetabolizedInGut;
+  return m_FractionMetabolizedInGut;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetFractionMetabolizedInGut() const
 {
-  if (m_FractionMetabolizedInGut == nullptr)
-    return SEScalar::dNaN();
-  return m_FractionMetabolizedInGut->GetValue();
+
+  return m_FractionMetabolizedInGut.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasFractionUnboundInPlasma() const
 {
-  return (m_FractionUnboundInPlasma == nullptr) ? false : m_FractionUnboundInPlasma->IsValid();
+  return m_FractionUnboundInPlasma.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarFraction& SESubstanceClearance::GetFractionUnboundInPlasma()
 {
-  if (m_FractionUnboundInPlasma == nullptr)
-    m_FractionUnboundInPlasma = new SEScalarFraction();
-  return *m_FractionUnboundInPlasma;
+
+  return m_FractionUnboundInPlasma;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetFractionUnboundInPlasma() const
 {
-  if (m_FractionUnboundInPlasma == nullptr)
-    return SEScalar::dNaN();
-  return m_FractionUnboundInPlasma->GetValue();
+  return m_FractionUnboundInPlasma.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasIntrinsicClearance() const
 {
-  return (m_IntrinsicClearance == nullptr) ? false : m_IntrinsicClearance->IsValid();
+  return m_def.IntrinsicClearance.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarVolumePerTimeMass& SESubstanceClearance::GetIntrinsicClearance()
 {
-  if (m_IntrinsicClearance == nullptr)
-    m_IntrinsicClearance = new SEScalarVolumePerTimeMass();
-  return *m_IntrinsicClearance;
+  return m_def.IntrinsicClearance;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetIntrinsicClearance(const VolumePerTimeMassUnit& unit) const
 {
-  if (m_IntrinsicClearance == nullptr)
-    return SEScalar::dNaN();
-  return m_IntrinsicClearance->GetValue(unit);
+
+  return m_def.IntrinsicClearance.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
-RenalDynamic SESubstanceClearance::GetRenalDynamic() const
+RenalDynamicsType SESubstanceClearance::GetRenalDynamic() const
 {
-  return m_RenalDynamic;
+  return m_def.RenalDynamic;
 }
 //-----------------------------------------------------------------------------
-void SESubstanceClearance::SetRenalDynamic(RenalDynamic d)
+void SESubstanceClearance::SetRenalDynamic(RenalDynamicsType d)
 {
-  m_RenalDynamic = d;
+  m_def.RenalDynamic = d;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasRenalDynamic() const
 {
-  return m_RenalDynamic == ((RenalDynamic)-1) ? false : true;
+  return m_def.RenalDynamic == ((RenalDynamicsType)-1) ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SESubstanceClearance::InvalidateRenalDynamic()
 {
-  m_RenalDynamic = (RenalDynamic)-1;
+  m_def.RenalDynamic = (RenalDynamicsType)-1;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasRenalClearance() const
 {
-  return (m_RenalClearance == nullptr) ? false : m_RenalClearance->IsValid();
+  return m_def.RenalClearance.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarVolumePerTimeMass& SESubstanceClearance::GetRenalClearance()
 {
-  if (m_RenalClearance == nullptr)
-    m_RenalClearance = new SEScalarVolumePerTimeMass();
-  return *m_RenalClearance;
+  return m_def.RenalClearance;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetRenalClearance(const VolumePerTimeMassUnit& unit) const
 {
-  if (m_RenalClearance == nullptr)
-    return SEScalar::dNaN();
-  return m_RenalClearance->GetValue(unit);
+  return m_def.RenalClearance.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasRenalReabsorptionRatio() const
 {
-  return (m_RenalReabsorptionRatio == nullptr) ? false : m_RenalReabsorptionRatio->IsValid();
+  return m_def.RenalReabsorptionRatio.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalar& SESubstanceClearance::GetRenalReabsorptionRatio()
 {
-  if (m_RenalReabsorptionRatio == nullptr)
-    m_RenalReabsorptionRatio = new SEScalar();
-  return *m_RenalReabsorptionRatio;
+  return m_def.RenalReabsorptionRatio;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetRenalReabsorptionRatio() const
 {
-  if (m_RenalReabsorptionRatio == nullptr)
-    return SEScalar::dNaN();
-  return m_RenalReabsorptionRatio->GetValue();
+
+  return m_def.RenalReabsorptionRatio.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasRenalTransportMaximum() const
 {
-  return (m_RenalTransportMaximum == nullptr) ? false : m_RenalTransportMaximum->IsValid();
+  return m_def.RenalTransportMaximum.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerTime& SESubstanceClearance::GetRenalTransportMaximum()
 {
-  if (m_RenalTransportMaximum == nullptr)
-    m_RenalTransportMaximum = new SEScalarMassPerTime();
-  return *m_RenalTransportMaximum;
+  return m_def.RenalTransportMaximum;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetRenalTransportMaximum(const MassPerTimeUnit& unit) const
 {
-  if (m_RenalTransportMaximum == nullptr)
-    return SEScalar::dNaN();
-  return m_RenalTransportMaximum->GetValue(unit);
+
+  return m_def.RenalTransportMaximum.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasRenalFiltrationRate() const
 {
-  return (m_RenalFiltrationRate == nullptr) ? false : m_RenalFiltrationRate->IsValid();
+  return m_def.RenalFiltrationRate.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerTime& SESubstanceClearance::GetRenalFiltrationRate()
 {
-  if (m_RenalFiltrationRate == nullptr)
-    m_RenalFiltrationRate = new SEScalarMassPerTime();
-  return *m_RenalFiltrationRate;
+  return m_def.RenalFiltrationRate;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetRenalFiltrationRate(const MassPerTimeUnit& unit) const
 {
-  if (m_RenalFiltrationRate == nullptr)
-    return SEScalar::dNaN();
-  return m_RenalFiltrationRate->GetValue(unit);
+
+  return m_def.RenalFiltrationRate.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasRenalReabsorptionRate() const
 {
-  return (m_RenalReabsorptionRate == nullptr) ? false : m_RenalReabsorptionRate->IsValid();
+  return m_def.RenalReabsorptionRate.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerTime& SESubstanceClearance::GetRenalReabsorptionRate()
 {
-  if (m_RenalReabsorptionRate == nullptr)
-    m_RenalReabsorptionRate = new SEScalarMassPerTime();
-  return *m_RenalReabsorptionRate;
+  return m_def.RenalReabsorptionRate;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetRenalReabsorptionRate(const MassPerTimeUnit& unit) const
 {
-  if (m_RenalReabsorptionRate == nullptr)
-    return SEScalar::dNaN();
-  return m_RenalReabsorptionRate->GetValue(unit);
+
+  return m_def.RenalReabsorptionRate.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasRenalExcretionRate() const
 {
-  return (m_RenalExcretionRate == nullptr) ? false : m_RenalExcretionRate->IsValid();
+  return m_def.RenalExcretionRate.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerTime& SESubstanceClearance::GetRenalExcretionRate()
 {
-  if (m_RenalExcretionRate == nullptr)
-    m_RenalExcretionRate = new SEScalarMassPerTime();
-  return *m_RenalExcretionRate;
+  return m_def.RenalExcretionRate;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetRenalExcretionRate(const MassPerTimeUnit& unit) const
 {
-  if (m_RenalExcretionRate == nullptr)
-    return SEScalar::dNaN();
-  return m_RenalExcretionRate->GetValue(unit);
+
+  return m_def.RenalExcretionRate.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasGlomerularFilterability() const
 {
-  return (m_GlomerularFilterability == nullptr) ? false : m_GlomerularFilterability->IsValid();
+  return m_def.GlomerularFilterability.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalar& SESubstanceClearance::GetGlomerularFilterability()
 {
-  if (m_GlomerularFilterability == nullptr)
-    m_GlomerularFilterability = new SEScalar();
-  return *m_GlomerularFilterability;
+  return m_def.GlomerularFilterability;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetGlomerularFilterability() const
 {
-  if (m_GlomerularFilterability == nullptr)
-    return SEScalar::dNaN();
-  return m_GlomerularFilterability->GetValue();
+
+  return m_def.GlomerularFilterability.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceClearance::HasSystemicClearance() const
 {
-  return (m_SystemicClearance == nullptr) ? false : m_SystemicClearance->IsValid();
+  return m_def.SystemicClearance.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarVolumePerTimeMass& SESubstanceClearance::GetSystemicClearance()
 {
-  if (m_SystemicClearance == nullptr)
-    m_SystemicClearance = new SEScalarVolumePerTimeMass();
-  return *m_SystemicClearance;
+
+  return m_def.SystemicClearance;
 }
 //-----------------------------------------------------------------------------
 double SESubstanceClearance::GetSystemicClearance(const VolumePerTimeMassUnit& unit) const
 {
-  if (m_SystemicClearance == nullptr)
-    return SEScalar::dNaN();
-  return m_SystemicClearance->GetValue(unit);
+
+  return m_def.SystemicClearance.GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceClearance::operator==( const SESubstanceClearance& rhs) const
+bool SESubstanceClearance::operator==(const SESubstanceClearance& rhs) const
 {
-  bool equivilant = m_hasSystemic == rhs.m_hasSystemic;
-  equivilant &= m_hasCellular == rhs.m_hasCellular;
-  equivilant &= (m_CellBirthRate && rhs.m_CellBirthRate) ? m_CellBirthRate->operator==(*rhs.m_CellBirthRate) : m_CellBirthRate == rhs.m_CellBirthRate;
-  equivilant &= (m_CellDeathRate && rhs.m_CellDeathRate) ? m_CellDeathRate->operator==(*rhs.m_CellDeathRate) : m_CellDeathRate == rhs.m_CellDeathRate;
+  bool equivilant = m_def.HasSystemic == rhs.m_def.HasSystemic;
+  equivilant &= m_def.HasCellular == rhs.m_def.HasCellular;
+  equivilant &= m_def.CellBirthRate == rhs.m_def.CellBirthRate;
+  equivilant &= m_def.CellDeathRate == rhs.m_def.CellDeathRate;
 
-  equivilant &= m_ChargeInBlood == rhs.m_ChargeInBlood;
-  
-  equivilant &= (m_FractionExcretedInFeces && rhs.m_FractionExcretedInFeces) ? m_FractionExcretedInFeces->operator==(*rhs.m_FractionExcretedInFeces) : m_FractionExcretedInFeces == rhs.m_FractionExcretedInFeces;
-  equivilant &= (m_FractionExcretedInUrine && rhs.m_FractionExcretedInUrine) ? m_FractionExcretedInUrine->operator==(*rhs.m_FractionExcretedInUrine) : m_FractionExcretedInUrine == rhs.m_FractionExcretedInUrine;
-  equivilant &= (m_FractionMetabolizedInGut && rhs.m_FractionMetabolizedInGut) ? m_FractionMetabolizedInGut->operator==(*rhs.m_FractionMetabolizedInGut) : m_FractionMetabolizedInGut == rhs.m_FractionMetabolizedInGut;
-  equivilant &= (m_FractionUnboundInPlasma && rhs.m_FractionUnboundInPlasma) ? m_FractionUnboundInPlasma->operator==(*rhs.m_FractionUnboundInPlasma) : m_FractionUnboundInPlasma == rhs.m_FractionUnboundInPlasma;
-  equivilant &= (m_IntrinsicClearance && rhs.m_IntrinsicClearance) ? m_IntrinsicClearance->operator==(*rhs.m_IntrinsicClearance) : m_IntrinsicClearance == rhs.m_IntrinsicClearance;
-  equivilant &= m_RenalDynamic == rhs.m_RenalDynamic;
-  equivilant &= (m_RenalClearance && rhs.m_RenalClearance) ? m_RenalClearance->operator==(*rhs.m_RenalClearance) : m_RenalClearance == rhs.m_RenalClearance;
-  equivilant &= (m_RenalReabsorptionRatio && rhs.m_RenalReabsorptionRatio) ? m_RenalReabsorptionRatio->operator==(*rhs.m_RenalReabsorptionRatio) : m_RenalReabsorptionRatio == rhs.m_RenalReabsorptionRatio;
-  equivilant &= (m_RenalTransportMaximum && rhs.m_RenalTransportMaximum) ? m_RenalTransportMaximum->operator==(*rhs.m_RenalTransportMaximum) : m_RenalTransportMaximum == rhs.m_RenalTransportMaximum;
-  equivilant &= (m_RenalFiltrationRate && rhs.m_RenalFiltrationRate) ? m_RenalFiltrationRate->operator==(*rhs.m_RenalFiltrationRate) : m_RenalFiltrationRate == rhs.m_RenalFiltrationRate;
-  equivilant &= (m_RenalReabsorptionRate && rhs.m_RenalReabsorptionRate) ? m_RenalReabsorptionRate->operator==(*rhs.m_RenalReabsorptionRate) : m_RenalReabsorptionRate == rhs.m_RenalReabsorptionRate;
-  equivilant &= (m_RenalExcretionRate && rhs.m_RenalExcretionRate) ? m_RenalExcretionRate->operator==(*rhs.m_RenalExcretionRate) : m_RenalExcretionRate == rhs.m_RenalExcretionRate;
-  equivilant &= (m_GlomerularFilterability && rhs.m_GlomerularFilterability) ? m_GlomerularFilterability->operator==(*rhs.m_GlomerularFilterability) : m_GlomerularFilterability == rhs.m_GlomerularFilterability;
-  equivilant &= (m_SystemicClearance && rhs.m_SystemicClearance) ? m_SystemicClearance->operator==(*rhs.m_SystemicClearance) : m_SystemicClearance == rhs.m_SystemicClearance;
+  equivilant &= m_def.ChargeInBlood == rhs.m_def.ChargeInBlood;
+
+  equivilant &= m_FractionExcretedInFeces == rhs.m_FractionExcretedInFeces;
+  equivilant &= m_FractionExcretedInUrine == rhs.m_FractionExcretedInUrine;
+  equivilant &= m_FractionMetabolizedInGut == rhs.m_FractionMetabolizedInGut;
+  equivilant &= m_FractionUnboundInPlasma == rhs.m_FractionUnboundInPlasma;
+  equivilant &= m_def.IntrinsicClearance == rhs.m_def.IntrinsicClearance;
+  equivilant &= m_def.RenalDynamic == rhs.m_def.RenalDynamic;
+  equivilant &= m_def.RenalClearance == rhs.m_def.RenalClearance;
+  equivilant &= m_def.RenalReabsorptionRatio == rhs.m_def.RenalReabsorptionRatio;
+  equivilant &= m_def.RenalTransportMaximum == rhs.m_def.RenalTransportMaximum;
+  equivilant &= m_def.RenalFiltrationRate == rhs.m_def.RenalFiltrationRate;
+  equivilant &= m_def.RenalReabsorptionRate == rhs.m_def.RenalReabsorptionRate;
+  equivilant &= m_def.RenalExcretionRate == rhs.m_def.RenalExcretionRate;
+  equivilant &= m_def.GlomerularFilterability == rhs.m_def.GlomerularFilterability;
+  equivilant &= m_def.SystemicClearance == rhs.m_def.SystemicClearance;
   return equivilant;
 }
-//-------------------------------------------------------------------------------
-bool SESubstanceClearance::operator!=( const SESubstanceClearance& rhs) const
+bool SESubstanceClearance::operator!=(const SESubstanceClearance& rhs) const
 {
   return !(*this == rhs);
 }
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+bool SESubstanceClearanceDefinition::operator==(SESubstanceClearanceDefinition const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return (HasCellular == rhs.HasCellular
+          && HasCellular == rhs.HasCellular
+          && CellBirthRate == rhs.CellBirthRate
+          && CellDeathRate == rhs.CellDeathRate
+
+          && ChargeInBlood == rhs.ChargeInBlood
+
+          && IntrinsicClearance == rhs.IntrinsicClearance
+          && RenalDynamic == rhs.RenalDynamic
+          && RenalClearance == rhs.RenalClearance
+          && RenalReabsorptionRatio == rhs.RenalReabsorptionRatio
+          && RenalTransportMaximum == rhs.RenalTransportMaximum
+          && RenalFiltrationRate == rhs.RenalFiltrationRate
+          && RenalReabsorptionRate == rhs.RenalReabsorptionRate
+          && RenalExcretionRate == rhs.RenalExcretionRate
+          && GlomerularFilterability == rhs.GlomerularFilterability
+          && SystemicClearance == rhs.SystemicClearance);
+}
+bool SESubstanceClearanceDefinition::operator!=(SESubstanceClearanceDefinition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
 }

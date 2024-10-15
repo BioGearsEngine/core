@@ -12,9 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
-CDM_BIND_DECL(CircuitManagerData);
 
 #define CIRCUIT_LEDGER_TEMPLATE typename NodeType, typename PathType, typename CircuitType
 #define CIRCUIT_LEDGER_TYPES NodeType, PathType, CircuitType
@@ -35,9 +33,9 @@ public:
   virtual ~SECircuitLedger() { Clear(); };
   void Clear()
   {
-    DELETE_MAP_SECOND(nodes);
-    DELETE_MAP_SECOND(paths);
-    DELETE_MAP_SECOND(circuits);
+    DELETE_MAP_OF_POINTERS(nodes);
+    DELETE_MAP_OF_POINTERS(paths);
+    DELETE_MAP_OF_POINTERS(circuits);
   }
   std::map<std::string, NodeType*> nodes;
   std::map<std::string, PathType*> paths;

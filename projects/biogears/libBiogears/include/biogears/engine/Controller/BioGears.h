@@ -41,7 +41,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Systems/Respiratory.h>
 #include <biogears/engine/Systems/Saturation.h>
 #include <biogears/engine/Systems/Tissue.h>
-#include <biogears/schema/biogears/BioGears.hxx>
 
 #include <memory>
 
@@ -210,6 +209,9 @@ protected:
 
   void ForwardFatal(const std::string& msg, const std::string& origin);
 
+  std::unique_ptr<Logger> m_managedLogger;
+  std::unique_ptr<BioGearsSubstances> m_Substances;
+
   DataTrack* m_DataTrack;
 
   std::unique_ptr<SEScalarTime> m_CurrentTime;
@@ -217,11 +219,10 @@ protected:
   SEBioGearsAirwayMode m_AirwayMode;
   SEOnOff m_Intubation;
 
-  std::unique_ptr<BioGearsConfiguration> m_Config;
+  std::unique_ptr<BioGearsConfiguration> m_Configuration;
   std::unique_ptr<SaturationCalculator> m_SaturationCalculator;
   std::unique_ptr<DiffusionCalculator> m_DiffusionCalculator;
 
-  std::unique_ptr<BioGearsSubstances> m_Substances;
 
   std::unique_ptr<SEActionManager> m_Actions;
   std::unique_ptr<SEConditionManager> m_Conditions;
@@ -249,7 +250,5 @@ protected:
   std::unique_ptr<Inhaler> m_Inhaler;
 
   std::unique_ptr<SEPatient> m_Patient;
-
-  std::unique_ptr<Logger> m_managedLogger;
 };
 } // namespace biogears

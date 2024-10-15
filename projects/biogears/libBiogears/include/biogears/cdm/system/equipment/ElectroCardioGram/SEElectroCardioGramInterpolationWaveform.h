@@ -13,13 +13,12 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
+#include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramWaveformLeadNumber.h>
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-#include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
-CDM_BIND_DECL(ElectroCardioGramInterpolationWaveformData)
+#include <biogears/schema/cdm/ElectroCardioGram.hxx>
 
 namespace biogears {
 
@@ -35,19 +34,12 @@ public:
 
   virtual void Clear(); // Deletes all members
 
-  virtual bool Load(const CDM::ElectroCardioGramInterpolationWaveformData& in);
-  virtual CDM::ElectroCardioGramInterpolationWaveformData* Unload() const;
-
   bool operator==(SEElectroCardioGramInterpolationWaveform const&) const;
   bool operator!=(SEElectroCardioGramInterpolationWaveform const&) const;
 
-protected:
-  virtual void Unload(CDM::ElectroCardioGramInterpolationWaveformData& data) const;
-
-public:
   virtual bool HasLeadNumber() const;
-  virtual CDM::ElectroCardioGramWaveformLeadNumberData GetLeadNumber() const;
-  virtual void SetLeadNumber(CDM::ElectroCardioGramWaveformLeadNumberData n);
+  virtual SEElectroCardioGramWaveformLeadNumber GetLeadNumber() const;
+  virtual void SetLeadNumber(SEElectroCardioGramWaveformLeadNumber n);
   virtual void InvalidateLeadNumber();
 
   virtual SEHeartRhythm GetRhythm() const;
@@ -66,7 +58,7 @@ public:
   virtual std::vector<unsigned int>& GetActiveIndicies() { return m_ActiveIndicies; }
 
 protected:
-  CDM::ElectroCardioGramWaveformLeadNumberData m_LeadNumber;
+  SEElectroCardioGramWaveformLeadNumber m_LeadNumber;
   SEHeartRhythm m_Rhythm;
   SEScalarTime* m_TimeStep;
   SEFunctionElectricPotentialVsTime* m_Data;

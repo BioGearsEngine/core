@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
-#include <biogears/schema/cdm/EnvironmentActions.hxx>
 
 namespace biogears {
 namespace io {
@@ -31,13 +30,6 @@ public:
 
   virtual bool IsValid() const override;
 
-  virtual bool Load(const CDM::EnvironmentChangeData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::EnvironmentChangeData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::EnvironmentChangeData& data) const;
-
-public:
   virtual bool HasConditions() const;
   virtual SEEnvironmentalConditions& GetConditions();
   virtual const SEEnvironmentalConditions* GetConditions() const;

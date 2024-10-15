@@ -25,8 +25,9 @@ class SECircuitManager;
 namespace io {
   class Circuit;
 }
+#pragma warning(disable : 4661)
 
-BG_EXT template class BIOGEARS_API SECircuitPath<THERMAL_CIRCUIT_PATH>;
+extern template class SECircuitPath<THERMAL_CIRCUIT_PATH>;
 
 class BIOGEARS_API SEThermalCircuitPath : public SECircuitPath<THERMAL_CIRCUIT_PATH> {
   friend class SECircuitManager;
@@ -40,12 +41,6 @@ public:
   virtual ~SEThermalCircuitPath() override;
 
   virtual void Clear() override; //clear memory
-
-  bool Load(const CDM::ThermalCircuitPathData& in);
-  CDM::ThermalCircuitPathData* Unload() const override;
-
-protected:
-  void Unload(CDM::ThermalCircuitPathData& data) const;
 
 public:
   virtual SEThermalCircuitNode& GetSourceNode() const override { return m_ThermalSourceNode; }
@@ -114,4 +109,6 @@ protected:
   SEThermalCircuitNode& m_ThermalSourceNode;
   SEThermalCircuitNode& m_ThermalTargetNode;
 };
+#pragma warning(default : 4661)
+
 }

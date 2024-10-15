@@ -10,6 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
+#include <biogears/cdm/utils/Logger.h>
 #include <biogears/cdm/circuit/SECombinedCircuit.h>
 
 
@@ -44,92 +45,6 @@ void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Clear()
   m_RemovedPaths.clear();
   m_Circuits.clear();
   CircuitType::Clear();
-}
-//-----------------------------------------------------------------------------
-template <COMBINED_CIRCUIT_TEMPLATE>
-bool SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Load(const CombinedCircuitBindType& in)
-{ // Note we don't call SECircuit::Load, we will do things ourselves, OUR way (sometimes, parents just don't understand...)
-  Clear();
-  // First load up our sub circuits so any new paths have all nodes we may need
-  for (const CircuitBindType& fData : in.Circuit()) {
-    CircuitType* c = new CircuitType(fData.Name(), GetLogger());
-    c->Load(fData);
-    AddCircuit(*c);
-  }
-  // NOW we can load any other 'connection' Nodes and Paths
-  for (auto nData : in.Node()) {
-    auto& n = CreateNode(nData.Name());
-    n.Load(nData);
-  }
-  for (auto& pData : in.Path()) {
-    auto* src = CircuitType::GetNode(pData.SourceNode());
-    if (src == nullptr) {
-      m_ss << "Source Node " << pData.SourceNode() << " not found for path " << pData.Name();
-      Error(m_ss);
-      return false;
-    }
-    auto* tgt = CircuitType::GetNode(pData.TargetNode());
-    if (tgt == nullptr) {
-      m_ss << "Target Node " << pData.TargetNode() << " not found for path " << pData.Name();
-      Error(m_ss);
-      return false;
-    }
-    auto& p = CreatePath(*src, *tgt, pData.Name());
-    p.Load(pData);
-  }
-  // Take out any nodes/paths that were not part of this combined circuit, but are part of the sub circuits
-  for (auto s : in.RemovedNode()) {
-    NodeType* n = CircuitType::GetNode(s);
-    if (n == nullptr)
-      Error("Unable to find removed node", s);
-    else
-      RemoveNode(*n);
-  }
-  for (auto s : in.RemovedPath()) {
-    PathType* p = CircuitType::GetPath(s);
-    if (p == nullptr)
-      Error("Unable to find removed path", s);
-    else
-      RemovePath(*p);
-  }
-  for (auto ref : in.ReferenceNode()) {
-    NodeType* n = GetNode(ref);
-    if (n == nullptr) {
-      Error("Could not find reference node " + ref);
-      return false;
-    } else
-      AddReferenceNode(*n);
-  }
-  StateChange();
-  return true;
-}
-//-----------------------------------------------------------------------------
-template <COMBINED_CIRCUIT_TEMPLATE>
-CombinedCircuitBindType* SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload() const
-{
-  CombinedCircuitBindType* data = new CombinedCircuitBindType();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-template <COMBINED_CIRCUIT_TEMPLATE>
-void SECombinedCircuit<COMBINED_CIRCUIT_TYPES>::Unload(CombinedCircuitBindType& data) const
-{ // Note we don't call SECircuit::Load, we will do things ourselves, OUR way (sometimes, parents just don't understand...)
-  data.Name(m_Name);
-  if (HasReferenceNode()) {
-    for (NodeType* n : m_ReferenceNodes)
-      data.ReferenceNode().push_back(n->GetName());
-  }
-  for (auto itr : m_Circuits)
-    data.Circuit().push_back(std::unique_ptr<CircuitBindType>(itr.second->Unload()));
-  for (auto* n : m_LinkNodes)
-    data.Node().push_back(std::unique_ptr<CircuitNodeBindType>(n->Unload()));
-  for (auto* p : m_LinkPaths)
-    data.Path().push_back(std::unique_ptr<CircuitPathBindType>(p->Unload()));
-  for (auto s : m_RemovedNodes)
-    data.RemovedNode().push_back(s);
-  for (auto s : m_RemovedPaths)
-    data.RemovedPath().push_back(s);
 }
 //-----------------------------------------------------------------------------
 template <COMBINED_CIRCUIT_TEMPLATE>
