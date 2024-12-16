@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 namespace io {
-  Conditions;
+  class Conditions;
 }
 class PhysiologyEngine;
 

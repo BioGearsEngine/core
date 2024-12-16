@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License.
 
 #define CDM_ELECTRO_CARDIOGRAM_COPY(type, in, out) \
   {                                                           \
-    CDM::##type##Data middle;                                 \
+    CDM::type##Data middle;                                 \
     io::ElectroCardioGram::Marshall(in, middle);    \
     io::ElectroCardioGram::UnMarshall(middle, out); \
   }

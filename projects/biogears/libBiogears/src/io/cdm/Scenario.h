@@ -35,7 +35,7 @@ specific language governing permissions and limitations under the License.
 
 #define CDM_SCENARIO_COPY(type, in, out)   \
   {                                        \
-    CDM::##type##Data middle;              \
+    CDM::type##Data middle;              \
     io::Scenario::Marshall(in, middle);    \
     io::Scenario::UnMarshall(middle, out); \
   }

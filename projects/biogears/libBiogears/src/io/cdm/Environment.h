@@ -43,7 +43,7 @@ specific language governing permissions and limitations under the License.
 
 #define CDM_ENVIRONMENT_COPY(type, in, out)   \
   {                                           \
-    CDM::##type##Data middle;                 \
+    CDM::type##Data middle;                 \
     io::Environment::Marshall(in, middle);    \
     io::Environment::UnMarshall(middle, out); \
   }

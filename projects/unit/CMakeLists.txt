@@ -223,7 +223,6 @@ set(CORE_TEST_LIST ${BIOGEARS_CORE_ENGINE_UNITTEST_SOURCES})
   target_include_directories(unittest
       PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
-      ${GTEST_INCLUDE_DIR}
       ${bio_INCLUDE_DIR}
   )
   if(UNITTEST_biogears-core)

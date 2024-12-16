@@ -52,7 +52,7 @@ specific language governing permissions and limitations under the License.
 
 #define CDM_SUBSTANCE_COPY(type, in, out)   \
   {                                         \
-    CDM::##type##Data middle;               \
+    CDM::type##Data middle;               \
     io::Substance::Marshall(in, middle);    \
     io::Substance::UnMarshall(middle, out); \
   }

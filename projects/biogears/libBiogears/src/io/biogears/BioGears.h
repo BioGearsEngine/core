@@ -46,7 +46,7 @@ specific language governing permissions and limitations under the License.
 
 #define CDM_BIOGEARS_COPY(type, in, out)   \
   {                                        \
-    CDM::##type##Data middle;              \
+    CDM::type##Data middle;              \
     io::BioGears::Marshall(in, middle);    \
     io::BioGears::UnMarshall(middle, out); \
   }

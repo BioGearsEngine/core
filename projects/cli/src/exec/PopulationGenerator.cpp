@@ -34,7 +34,11 @@
 #include <strstream>
 #include <vector>
 #include <chrono>
+
+
+#ifdef WIN32
 #include <format>
+#endif
 
 #include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/string/manipulation.h>

@@ -20,7 +20,7 @@
 #include <gtest/gtest.h>
 
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/engine/controller/BiogearsSubstances.h>
+#include <biogears/engine/Controller/BioGearsSubstances.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/cdm/properties/SEProperties.h>

@@ -20,8 +20,8 @@
 
 #include <gtest/gtest.h>
 
-#include <biogears/cdm/Circuit/SECircuit.h>
-#include <biogears/cdm/Circuit/SECircuitManager.h>
+#include <biogears/cdm/circuit/SECircuit.h>
+#include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -103,7 +103,7 @@ class SECircuitManager;
 //! TYPE GasCircuit
 //! static void UnMarshall(const CDM::GasCircuit& in, SEGasCircuit& out);
 //! static void Marshall(const SEGasCircuit& in, CDM::GasCircuit& out);
-#include <biogears/cdm/Circuit/SECircuit.h>
+#include <biogears/cdm/circuit/SECircuit.h>
 TEST_F(TEST_FIXTURE_NAME, GasCircuit)
 {
   EXPECT_TRUE(true);

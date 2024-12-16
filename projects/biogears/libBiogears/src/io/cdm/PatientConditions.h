@@ -32,7 +32,7 @@ specific language governing permissions and limitations under the License.
 
 #define CDM_PATIENT_CONDITIONS_COPY(type, in, out)  \
   {                                                 \
-    CDM::##type##Data middle;                       \
+    CDM::type##Data middle;                       \
     io::PatientConditions::Marshall(in, middle);    \
     io::PatientConditions::UnMarshall(middle, out); \
   }

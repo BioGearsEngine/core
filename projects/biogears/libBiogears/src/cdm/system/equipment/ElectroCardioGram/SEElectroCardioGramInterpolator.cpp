@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 
 #include "io/cdm/ElectroCardioGram.h"
-#include "io/cdm/property.h"
+#include "io/cdm/Property.h"
 
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>

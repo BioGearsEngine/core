@@ -41,7 +41,7 @@ specific language governing permissions and limitations under the License.
 
 #define CDM_PATIENT_COPY(type, in, out)   \
   {                                       \
-    CDM::##type##Data middle;             \
+    CDM::type##Data middle;             \
     io::Patient::Marshall(in, middle);    \
     io::Patient::UnMarshall(middle, out); \
   }

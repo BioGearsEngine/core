@@ -57,7 +57,9 @@ void PhysiologyEngineConfiguration::Invalidate()
 void PhysiologyEngineConfiguration::Merge(const PhysiologyEngineConfiguration& from)
 {
   m_Merge = true;
-  CDM_BIOGEARS_CONFIGURATION_COPY(PhysiologyEngineConfiguration, from, *this)
+  CDM::PhysiologyEngineConfigurationData middle;
+  io::EngineConfiguration::Marshall(from, middle);
+  io::EngineConfiguration::UnMarshall(middle, *this);
   m_Merge = false;
 }
 //-----------------------------------------------------------------------------
