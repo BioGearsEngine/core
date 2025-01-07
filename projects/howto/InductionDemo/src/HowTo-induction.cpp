@@ -74,7 +74,7 @@ InductionThread::InductionThread(const std::string logFile, std::string stateFil
   //Create the engine and load patient state
   int dochem = (int)(2);
   m_bg = CreateBioGearsEngine(logFile);
-  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", logFile, "% hemorrhage flow rate, for patient"));
+  m_bg->GetLogger()->Info(asprintf("Initiating %f %s", logFile.c_str(), "% hemorrhage flow rate, for patient"));
   std::string statePath = "./states/";
   statePath.append(stateFile);
   m_bg->GetLogger()->Info(statePath);

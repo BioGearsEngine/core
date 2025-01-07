@@ -26,6 +26,8 @@
 #include <biogears/cdm/utils/unitconversion/UCCommon.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include "biogears/cdm/properties/SEScalarMass.h"
+#include "biogears/cdm/properties/SEScalarQuantity.h"
+
 
 #ifdef DISABLE_BIOGEARS_SEScalarQuantity_TEST
 #define TEST_FIXTURE_NAME DISABLED_SEScalarQuantity_Fixture
@@ -96,7 +98,7 @@ using namespace biogears;
   const TestUnit TestUnit::kg = TestUnit{ "kg" };
   const TestUnit TestUnit::lb = TestUnit{ "lb" };
 
-  template class SEScalarQuantity<TestUnit>;
+  template class biogears::SEScalarQuantity<TestUnit>;
 
   class TestScalarQuantity : public SEScalarQuantity<TestUnit> {
   public:
