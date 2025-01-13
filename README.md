@@ -55,13 +55,21 @@ We have made available to the medical simulation community a large set of burn i
 
 ## Release Notes 
 
-### 8.0.0 (November 2024)
+### 8.2.0 (January 2025)
+- Marshall / UnMarshall code migrated from Load/UnLoad functions to private API
+- Additioanl Unit Test for all Seralization code
+- Equality operators
+- Refactored SEScalarTypes
+- Added Enums for all CDM Enums
+- Seperated SESubstance between Definition and State
+- ~~~~
+### 8.0.0 
 - Modified Scenario CDM to require <ACTIONS> Tag around individual actions
 - Allowed import of external ActionList and DataRequestList
 - Updated CMAKE to minimum 3.20
 - Improved various features
 
-### 7.6.0 (December 2023)
+### 7.6.0
 - Improved SWIG bindings
 - Improved Various Models
 
@@ -99,5 +107,3 @@ You can access our public Slack through our [development website](https://www.bi
 Additional Documentation
 --------------------------
 For more detailed documentation including model discussions and implementation details can be found at www.BioGearsEngine.com
-
-
