@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEEscharotomy.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
 #include <biogears/cdm/patient/actions/SEEbola.h>
+#include <biogears/cdm/patient/actions/SEFracture.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SEIntubation.h>
@@ -316,6 +317,11 @@ public:
   SEExercise* GetExercise() const;
   void RemoveExercise();
 
+  /// \todo reconfigure to handle multiple similar to hemorrhage
+  bool HasFracture() const;
+  SEFracture* GetFracture() const;
+  void RemoveFracture();
+
   bool HasHemorrhage() const;
   const std::map<std::string, SEHemorrhage*>& GetHemorrhages() const;
   const MapWrapper<std::string, SEHemorrhage*> GetHemorrhageWrapper() const;
@@ -448,6 +454,7 @@ protected:
   SEConsumeNutrients* m_ConsumeNutrients;
   SEEbola* m_Ebola;
   SEExercise* m_Exercise;
+  SEFracture* m_Fracture;
   SEInfection* m_Infection;
   SEIntubation* m_Intubation;
   SEMechanicalVentilation* m_MechanicalVentilation;

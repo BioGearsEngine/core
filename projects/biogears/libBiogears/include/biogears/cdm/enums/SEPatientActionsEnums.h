@@ -37,6 +37,21 @@ enum class SEBurnDegree {
   Third
 };
 
+enum class SEFracturedBone {
+  Invalid = -1,
+  Radius = 0,
+  Tibia
+};
+
+enum class SEFractureType {
+  Invalid = -1,
+  Transverse = 0,
+  Oblique,
+  Spiral,
+  Segmented,
+  Comminuted
+};
+
 enum class SEInfectionSeverity {
   Invalid = -1,
   Eliminated = 0,
