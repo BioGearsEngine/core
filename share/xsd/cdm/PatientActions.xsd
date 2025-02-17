@@ -419,6 +419,40 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+  
+  <!-- @brief BioGears currently only supports the most commonly fractured bone on each of the arm and leg.-->
+  <xs:simpleType name="enumBone">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Radius"/>
+      <xs:enumeration value="Tibia"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!-- @brief Not all fracture types are currently supported.-->
+  <xs:simpleType name="enumFractureTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Transverse"/>
+      <xs:enumeration value="Oblique"/>
+      <xs:enumeration value="Spiral"/>
+	  <xs:enumeration value="Segmented"/>
+      <xs:enumeration value="Comminuted"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!--@brief A bone fracture, severity of which is determined by proportion of body surface area affected-->
+  <!--@brief While BioGears does not currently support physics-based musculokeletal (MS) representations, this model provides the correlated physiology based on the MS injury type-->
+  <xs:complexType name="FractureData">
+    <xs:complexContent>
+      <xs:extension base="PatientActionData">
+        <xs:sequence>
+		  <xs:element name="FracturedBone" type="enumBone" minOccurs="1" maxOccurs="1"/>
+		  <xs:element name="FractureType" type="enumFractureTypes" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="Severity" type="Scalar0To1Data" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+		<xs:attribute name="Side" type="enumSide" use="required"/> <!--@brief May not be required in future if implementations outside of left/right extremeties are input-->
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
   <!-- @brief A hemorrhage is the loss of blood escaping from the circulatory system. Typically, a healthy person can endure a loss of 10 to 15 percent of the total blood volume without serious medical difficulties. -->
   <xs:complexType name="HemorrhageData">

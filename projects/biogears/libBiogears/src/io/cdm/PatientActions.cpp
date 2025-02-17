@@ -41,6 +41,7 @@
 #include <biogears/cdm/patient/actions/SEEscharotomy.h>
 #include <biogears/cdm/patient/actions/SEExampleAction.h>
 #include <biogears/cdm/patient/actions/SEExercise.h>
+#include <biogears/cdm/patient/actions/SEFracture.h>
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
@@ -143,6 +144,7 @@ namespace io {
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, ExampleAction, PatientActions, rd)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Intubation, PatientActions, rd)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Infection, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Fracture, PatientActions, rd)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Hemorrhage, PatientActions, rd)
     POLYMORPHIC_UNMARSHALL(patientActionData, MechanicalVentilation, PatientActions)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, NasalCannula, PatientActions, rd)
@@ -242,6 +244,7 @@ namespace io {
     POLYMORPHIC_MARSHALL(patientAction, ConsciousRespiration)
     POLYMORPHIC_MARSHALL(patientAction, ConsumeNutrients)
     POLYMORPHIC_MARSHALL(patientAction, Exercise)
+    POLYMORPHIC_MARSHALL(patientAction, Fracture)
     POLYMORPHIC_MARSHALL(patientAction, Hemorrhage)
     POLYMORPHIC_MARSHALL(patientAction, Infection)
     POLYMORPHIC_MARSHALL(patientAction, Intubation)
@@ -327,6 +330,9 @@ namespace io {
     }
     if (in.m_Exercise) {
       out.push_back(PatientActions::factory(in.m_Exercise));
+    }
+    if (in.m_Fracture) {
+      out.push_back(PatientActions::factory(in.m_Fracture));
     }
     if (in.m_Infection) {
       out.push_back(PatientActions::factory(in.m_Infection));
@@ -968,6 +974,29 @@ namespace io {
       io::Marshall(in.m_strengthExercise, *item);
       out.StrengthExercise(std::move(item));
     }
+  }
+  //----------------------------------------------------------------------------------
+  // class SEFracture
+  void PatientActions::UnMarshall(const CDM::FractureData& in, SEFracture& out, std::default_random_engine* rd)
+  {
+    out.Invalidate();
+
+    PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+
+    io::PatientActions::UnMarshall(in.FracturedBone(), out.m_FracturedBone);
+    Property::UnMarshall(in.Side(), out.m_Side);
+    io::PatientActions::UnMarshall(in.FractureType(), out.m_FractureType);
+    io::Property::UnMarshall(in.Severity(), out.GetSeverity(), rd);
+  }
+  void PatientActions::Marshall(const SEFracture& in, CDM::FractureData& out)
+  {
+    PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, FracturedBone)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, FractureType)
+
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
+
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, Side)
   }
   //----------------------------------------------------------------------------------
   // class SEHemorrhage
@@ -1836,6 +1865,90 @@ namespace io {
       break;
     case SEBurnDegree::Third:
       out = CDM::enumBurnDegree::Third;
+      break;
+    default:
+      out = "";
+      break;
+    }
+  }
+  // SEFracturedBone
+  void PatientActions::UnMarshall(const CDM::enumBone& in, SEFracturedBone& out)
+  {
+    try {
+      switch (in) {
+      case CDM::enumBone::Radius:
+        out = SEFracturedBone::Radius;
+        break;
+      case CDM::enumBone::Tibia:
+        out = SEFracturedBone::Tibia;
+        break;
+      default:
+        out = SEFracturedBone::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
+      out = SEFracturedBone::Invalid;
+    }
+  }
+  void PatientActions::Marshall(const SEFracturedBone& in, CDM::enumBone& out)
+  {
+    switch (in) {
+    case SEFracturedBone::Radius:
+      out = CDM::enumBone::Radius;
+      break;
+    case SEFracturedBone::Tibia:
+      out = CDM::enumBone::Tibia;
+      break;
+    default:
+      out = "";
+      break;
+    }
+  }
+  // SEFractureTypes
+  void PatientActions::UnMarshall(const CDM::enumFractureTypes& in, SEFractureType& out)
+  {
+    try {
+      switch (in) {
+      case CDM::enumFractureTypes::Transverse:
+        out = SEFractureType::Transverse;
+        break;
+      case CDM::enumFractureTypes::Oblique:
+        out = SEFractureType::Oblique;
+        break;
+      case CDM::enumFractureTypes::Spiral:
+        out = SEFractureType::Spiral;
+        break;
+      case CDM::enumFractureTypes::Segmented:
+        out = SEFractureType::Segmented;
+        break;
+      case CDM::enumFractureTypes::Comminuted:
+        out = SEFractureType::Comminuted;
+        break;
+      default:
+        out = SEFractureType::Invalid;
+        break;
+      }
+    } catch (xsd::cxx::tree::unexpected_enumerator<char>) {
+      out = SEFractureType::Invalid;
+    }
+  }
+  void PatientActions::Marshall(const SEFractureType& in, CDM::enumFractureTypes& out)
+  {
+    switch (in) {
+    case SEFractureType::Transverse:
+      out = CDM::enumFractureTypes::Transverse;
+      break;
+    case SEFractureType::Oblique:
+      out = CDM::enumFractureTypes::Oblique;
+      break;
+    case SEFractureType::Spiral:
+      out = CDM::enumFractureTypes::Spiral;
+      break;
+    case SEFractureType::Segmented:
+      out = CDM::enumFractureTypes::Segmented;
+      break;
+    case SEFractureType::Comminuted:
+      out = CDM::enumFractureTypes::Comminuted;
       break;
     default:
       out = "";

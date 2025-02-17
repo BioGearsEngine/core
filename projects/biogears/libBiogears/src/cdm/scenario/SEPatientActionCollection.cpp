@@ -685,6 +685,20 @@ bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action, con
     return IsValid(*m_Exercise);
   }
 
+  auto fracture = dynamic_cast<const SEFracture*>(&action);
+  if (fracture != nullptr) {
+    if (m_Fracture == nullptr) {
+      m_Fracture = new SEFracture();
+    }
+
+    CDM_PATIENT_ACTION_COPY(Fracture, *fracture, *m_Fracture)
+    if (!m_Fracture->IsActive()) {
+      m_Logger->Warning("Healing broken bone.");
+      return false;
+    }
+    return IsValid(*m_Fracture);
+  }
+
   auto hem = dynamic_cast<const SEHemorrhage*>(&action);
   if (hem != nullptr) {
     SEHemorrhage* myHem = m_Hemorrhages[hem->GetCompartment()];
@@ -1316,6 +1330,21 @@ SEExercise* SEPatientActionCollection::GetExercise() const
 void SEPatientActionCollection::RemoveExercise()
 {
   SAFE_DELETE(m_Exercise);
+}
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasFracture() const
+{
+  return m_Fracture == nullptr ? false : true;
+}
+//-------------------------------------------------------------------------------
+SEFracture* SEPatientActionCollection::GetFracture() const
+{
+  return m_Fracture;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveFracture()
+{
+  SAFE_DELETE(m_Fracture);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasHemorrhage() const

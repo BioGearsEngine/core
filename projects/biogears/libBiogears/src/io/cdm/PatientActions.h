@@ -81,6 +81,7 @@ class SEUseInhaler;
 class SEConsciousRespiration;
 class SEConsumeNutrients;
 class SEExercise;
+class SEFracture;
 class SEHemorrhage;
 class SEInfection;
 class SEIntubation;
@@ -186,6 +187,9 @@ namespace io {
     // class SEExercise;
     static void UnMarshall(const CDM::ExerciseData& in, SEExercise& out, std::default_random_engine* rd = nullptr);
     static void Marshall(const SEExercise& in, CDM::ExerciseData& out);
+    // class SEFracture;
+    static void UnMarshall(const CDM::FractureData& in, SEFracture& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEFracture& in, CDM::FractureData& out);
     // class SEForcedInhale;
     static void UnMarshall(const CDM::ForcedInhaleData& in, SEForcedInhale& out, std::default_random_engine* rd = nullptr);
     static void Marshall(const SEForcedInhale& in, CDM::ForcedInhaleData& out);
@@ -286,6 +290,12 @@ namespace io {
     // SEBurnDegree
     static void UnMarshall(const CDM::enumBurnDegree& in, SEBurnDegree& out);
     static void Marshall(const SEBurnDegree& in, CDM::enumBurnDegree& out);
+    // SEFracturedBone
+    static void UnMarshall(const CDM::enumBone& in, SEFracturedBone& out);
+    static void Marshall(const SEFracturedBone& in, CDM::enumBone& out);
+    // SEFractureType
+    static void UnMarshall(const CDM::enumFractureTypes& in, SEFractureType& out);
+    static void Marshall(const SEFractureType& in, CDM::enumFractureTypes& out);
     //  SEInfectionSeverity
     static void UnMarshall(const CDM::enumInfectionSeverity& in, SEInfectionSeverity& out);
     static void Marshall(const SEInfectionSeverity& in, CDM::enumInfectionSeverity& out);
