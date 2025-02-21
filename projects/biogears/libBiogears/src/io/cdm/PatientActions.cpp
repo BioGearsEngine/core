@@ -2274,6 +2274,38 @@ bool operator==(CDM::enumBurnDegree const& lhs, SEBurnDegree const& rhs)
     return false;
   }
 }
+bool operator==(CDM::enumBone const& lhs, SEFracturedBone const& rhs)
+{
+  switch (rhs) {
+  case SEFracturedBone::Radius:
+    return (CDM::enumBone::Radius == lhs);
+  case SEFracturedBone::Tibia:
+    return (CDM::enumBone::Tibia == lhs);
+  case SEFracturedBone::Invalid:
+    return ((CDM::enumBone::value)-1 == lhs);
+  default:
+    return false;
+  }
+}
+bool operator==(CDM::enumFractureTypes const& lhs, SEFractureType const& rhs)
+{
+  switch (rhs) {
+  case SEFractureType::Transverse:
+    return (CDM::enumFractureTypes::Transverse == lhs);
+  case SEFractureType::Oblique:
+    return (CDM::enumFractureTypes::Oblique == lhs);
+  case SEFractureType::Spiral:
+    return (CDM::enumFractureTypes::Spiral == lhs);
+  case SEFractureType::Segmented:
+    return (CDM::enumFractureTypes::Segmented == lhs);
+  case SEFractureType::Comminuted:
+    return (CDM::enumFractureTypes::Comminuted == lhs);
+  case SEFractureType::Invalid:
+    return ((CDM::enumFractureTypes::value)-1 == lhs);
+  default:
+    return false;
+  }
+}
 bool operator==(CDM::enumInfectionSeverity const& lhs, SEInfectionSeverity const& rhs)
 {
   switch (rhs) {

@@ -143,6 +143,36 @@ inline std::string ToString(const SEBurnDegree& bd)
   }
 }
 
+inline std::string ToString(const SEFracturedBone& fb)
+{
+  switch (fb) {
+  case SEFracturedBone::Radius:
+    return "Radius";
+  case SEFracturedBone::Tibia:
+    return "Tibia";
+  default:
+    return "Invalid";
+  }
+}
+
+inline std::string ToString(const SEFractureType& ft)
+{
+  switch (ft) {
+  case SEFractureType::Transverse:
+    return "Transverse";
+  case SEFractureType::Oblique:
+    return "Oblique";
+  case SEFractureType::Spiral:
+    return "Spiral";
+  case SEFractureType::Segmented:
+    return "Segmented";
+  case SEFractureType::Comminuted:
+    return "Comminuted";
+  default:
+    return "Invalid";
+  }
+}
+
 inline std::string ToString(const SEInfectionSeverity& ba)
 {
   switch (ba) {
@@ -247,6 +277,16 @@ inline std::ostream& operator<<(std::ostream& os, const SEBolusAdministration& b
 inline std::ostream& operator<<(std::ostream& os, const SEBurnDegree& bd)
 {
   os << ToString(bd);
+  return os;
+}
+inline std::ostream& operator<<(std::ostream& os, const SEFracturedBone& fb)
+{
+  os << ToString(fb);
+  return os;
+}
+inline std::ostream& operator<<(std::ostream& os, const SEFractureType& ft)
+{
+  os << ToString(ft);
   return os;
 }
 inline std::ostream& operator<<(std::ostream& os, const SEInfectionSeverity& is)

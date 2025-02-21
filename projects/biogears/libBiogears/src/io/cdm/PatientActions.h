@@ -351,6 +351,8 @@ namespace io {
 bool operator==(CDM::enumBrainInjuryType const& lhs, SEBrainInjuryType const& rhs);
 bool operator==(CDM::enumBolusAdministration const& lhs, SEBolusAdministration const& rhs);
 bool operator==(CDM::enumBurnDegree const& lhs, SEBurnDegree const& rhs);
+bool operator==(CDM::enumBone const& lhs, SEFracturedBone const& rhs);
+bool operator==(CDM::enumFractureTypes const& lhs, SEFractureType const& rhs);
 bool operator==(CDM::enumInfectionSeverity const& lhs, SEInfectionSeverity const& rhs);
 bool operator==(CDM::enumIntubationType const& lhs, SEIntubationType const& rhs);
 bool operator==(CDM::enumPatientAssessment const& lhs, SEPatientAssessmentType const& rhs);
@@ -367,6 +369,14 @@ inline bool operator==(SEBolusAdministration const& lhs, CDM::enumBolusAdministr
   return rhs == lhs;
 }
 inline bool operator==(SEBurnDegree const& lhs, CDM::enumBurnDegree const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEFracturedBone const& lhs, CDM::enumBone const& rhs)
+{
+  return rhs == lhs;
+}
+inline bool operator==(SEFractureType const& lhs, CDM::enumFractureTypes const& rhs)
 {
   return rhs == lhs;
 }
@@ -407,6 +417,14 @@ inline bool operator!=(CDM::enumBurnDegree const& lhs, SEBurnDegree const& rhs)
 {
   return !(lhs == rhs);
 }
+inline bool operator!=(CDM::enumBone const& lhs, SEFracturedBone const& rhs)
+{
+  return !(lhs == rhs);
+}
+inline bool operator!=(CDM::enumFractureTypes const& lhs, SEFractureType const& rhs)
+{
+  return !(lhs == rhs);
+}
 inline bool operator!=(CDM::enumInfectionSeverity const& lhs, SEInfectionSeverity const& rhs)
 {
   return !(lhs == rhs);
@@ -441,6 +459,14 @@ inline bool operator!=(SEBolusAdministration const& lhs, CDM::enumBolusAdministr
   return !(rhs == lhs);
 }
 inline bool operator!=(SEBurnDegree const& lhs, CDM::enumBurnDegree const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEFracturedBone const& lhs, CDM::enumBone const& rhs)
+{
+  return !(rhs == lhs);
+}
+inline bool operator!=(SEFractureType const& lhs, CDM::enumFractureTypes const& rhs)
 {
   return !(rhs == lhs);
 }
