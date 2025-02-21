@@ -18,12 +18,13 @@ namespace biogears {
 
 SEFracture::SEFracture()
   : SEPatientAction()
+  , m_Severity(nullptr)
 {
   m_Inflammation = false; // When the burn wound is constructed, the corresponding inflammation state has not been established
   m_FracturedBone = SEFracturedBone::Invalid; // User input, bone affected
   m_Side = SESide::Invalid; //Side of Affected Fracture
   m_FractureType = SEFractureType::Invalid; // User input, type of fracture on bone
-  m_Severity = nullptr;
+  m_Severity->SetValue(0.0);
 }
 //-----------------------------------------------------------------------------
 SEFracture::~SEFracture()
@@ -121,6 +122,23 @@ bool SEFracture::HasInflammation() const
 void SEFracture::SetInflammation(bool activate)
 {
   m_Inflammation = activate;
+}
+//-----------------------------------------------------------------------------
+void SEFracture::ToString(std::ostream& str) const
+{
+  // Currently all fields are required, but this should be updated if/when that is changed
+  str << "Patient Action : Musculoskeletal Fracture";
+  if (HasComment())
+    str << "\n\tComment: " << m_Comment;
+  str << "\n\tFractured Bone:  ";
+  str << m_FracturedBone;
+  str << "\n\tFracture Type: ";
+  str << m_FractureType;
+  str << "\n\tSide: ";
+  str << m_Side;
+  str << "\n\tSeverity: ";
+  str << *m_Severity;
+  str << std::flush;
 }
 //-------------------------------------------------------------------------------
 }
