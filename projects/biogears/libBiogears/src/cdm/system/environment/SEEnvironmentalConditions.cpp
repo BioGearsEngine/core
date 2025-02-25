@@ -74,7 +74,8 @@ void SEEnvironmentalConditions::Invalidate()
 bool SEEnvironmentalConditions::IsValid() const
 {
   return (m_SurroundingType != SESurroundingType::Invalid)
-    && (m_AmbientTemperature != nullptr
+    && ( ! m_AmbientAerosols.empty() //Not Empty - Any Aerosol is a valid condition
+        || m_AmbientTemperature != nullptr
         || m_AirDensity != nullptr
         || m_AirVelocity != nullptr
         || m_AmbientTemperature != nullptr
