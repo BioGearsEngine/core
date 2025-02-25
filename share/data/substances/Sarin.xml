@@ -9,7 +9,7 @@
     <InflammationCoefficient readOnly="false" value="1"/>
     <ParticulateSizeDistribution DependentUnit="" IndependentUnit="um">
       <Dependent>
-        <DoubleList>0.895 10 0.005</DoubleList>
+        <DoubleList>0.895 0.10 0.005</DoubleList>
       </Dependent>
       <Independent>
         <DoubleList>1e-05 0.0001 0.001 0.01</DoubleList>
