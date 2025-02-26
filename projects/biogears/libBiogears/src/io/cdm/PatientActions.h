@@ -60,6 +60,7 @@ class SEAcuteRespiratoryDistress;
 class SEAcuteStress;
 class SEExampleAction;
 class SEAirwayObstruction;
+class SEAmputation;
 class SEApnea;
 class SEAsthmaAttack;
 class SEBrainInjury;
@@ -141,6 +142,9 @@ namespace io {
     // class SEAirwayObstruction;
     static void UnMarshall(const CDM::AirwayObstructionData& in, SEAirwayObstruction& out, std::default_random_engine* rd = nullptr);
     static void Marshall(const SEAirwayObstruction& in, CDM::AirwayObstructionData& out);
+    // class SEAmputation;
+    static void UnMarshall(const CDM::AmputationData& in, SEAmputation& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SEAmputation& in, CDM::AmputationData& out);
     // class SEApnea;
     static void UnMarshall(const CDM::ApneaData& in, SEApnea& out, std::default_random_engine* rd = nullptr);
     static void Marshall(const SEApnea& in, CDM::ApneaData& out);

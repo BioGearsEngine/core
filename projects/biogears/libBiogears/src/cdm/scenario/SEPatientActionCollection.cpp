@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 
 namespace std {
 template class map<string, biogears::SEHemorrhage*>;
+template class map<string, biogears::SEAmputation*>;
 template class map<string, biogears::SETourniquet*>;
 template class map<string, biogears::SEEscharotomy*>;
 template class map<string, biogears::SEPainStimulus*>;
@@ -235,6 +236,7 @@ auto VectorWrapper<ValueType>::end() const -> VectorIteratorWrapper<ValueType>
 
 // Template Specializations
 template class PairWrapper<std::string, SEHemorrhage*>;
+template class PairWrapper<std::string, SEAmputation*>;
 template class PairWrapper<std::string, SETourniquet*>;
 template class PairWrapper<std::string, SEEscharotomy*>;
 template class PairWrapper<std::string, SEPainStimulus*>;
@@ -245,6 +247,7 @@ template class PairWrapper<const SESubstance*, SESubstanceNasalDose*>;
 template class PairWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
 template class MapIteratorWrapper<std::string, SEHemorrhage*>;
+template class MapIteratorWrapper<std::string, SEAmputation*>;
 template class MapIteratorWrapper<std::string, SETourniquet*>;
 template class MapIteratorWrapper<std::string, SEEscharotomy*>;
 template class MapIteratorWrapper<std::string, SEPainStimulus*>;
@@ -255,6 +258,7 @@ template class MapIteratorWrapper<const SESubstance*, SESubstanceNasalDose*>;
 template class MapIteratorWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
 template class MapWrapper<std::string, SEHemorrhage*>;
+template class MapWrapper<std::string, SEAmputation*>;
 template class MapWrapper<std::string, SETourniquet*>;
 template class MapWrapper<std::string, SEEscharotomy*>;
 template class MapWrapper<std::string, SEPainStimulus*>;
@@ -360,6 +364,7 @@ void SEPatientActionCollection::Invalidate()
   DELETE_MAP_OF_POINTERS(m_SubstanceOralDoses);
   DELETE_MAP_OF_POINTERS(m_SubstanceCompoundInfusions);
   DELETE_MAP_OF_POINTERS(m_Tourniquets);
+  DELETE_MAP_OF_POINTERS(m_Amputations);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action, const PhysiologyEngine& engine)
@@ -437,7 +442,41 @@ bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action, con
     }
     return IsValid(*m_AirwayObstruction);
   }
+  auto ampData = dynamic_cast<const SEAmputation*>(&action);
+  if (ampData != nullptr) {
+    auto ampItr = m_Amputations.find(ampData->GetCompartment());
+    bool validCmpt = false;
+    std::stringstream warn;
+    SEAmputation* amputation = std::make_unique<SEAmputation>().release();
+      if (ampItr != m_Amputations.end()) {
 
+        amputation = m_Amputations[ampData->GetCompartment()];
+        CDM_PATIENT_ACTION_COPY(Amputation, *ampData, *amputation)
+        validCmpt = true;
+      } else {
+        CDM_PATIENT_ACTION_COPY(Amputation, *ampData, *amputation)
+        if (amputation->IsValid()) {
+          m_Amputations[ampData->GetCompartment()] = amputation;
+          ampItr = m_Amputations.find(ampData->GetCompartment());
+          validCmpt = true;
+        } else {
+          amputation->Invalidate();
+          warn << "\t Invalid amputation location:  Valid options are LeftArm, LeftLeg, RightArm, RightLeg" << std::endl;
+        }
+      }
+    if (validCmpt) {
+      auto Amputation = ampItr->second;
+      CDM_PATIENT_ACTION_COPY(Amputation, *ampData, *Amputation)
+      if (!Amputation->IsActive()) {
+        RemoveAmputation(Amputation->GetCompartment());
+        return true;
+      }
+      return IsValid(*Amputation);
+    } else {
+      Warning(warn);
+      return false;
+    }
+  }
   auto apnea = dynamic_cast<const SEApnea*>(&action);
   if (apnea != nullptr) {
     if (m_Apnea == nullptr) {
@@ -700,7 +739,7 @@ bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action, con
     }
     return IsValid(*myHem);
   }
-
+  
   auto infect = dynamic_cast<const SEInfection*>(&action);
   if (infect != nullptr) {
     if (m_Infection == nullptr) {
@@ -1039,6 +1078,32 @@ SEAirwayObstruction* SEPatientActionCollection::GetAirwayObstruction() const
 void SEPatientActionCollection::RemoveAirwayObstruction()
 {
   SAFE_DELETE(m_AirwayObstruction);
+}
+//-------------------------------------------------------------------------------
+bool SEPatientActionCollection::HasAmputation() const
+{
+  return m_Amputations.empty() ? false : true;
+}
+//-------------------------------------------------------------------------------
+const std::map<std::string, SEAmputation*>& SEPatientActionCollection::GetAmputations() const
+{
+  return m_Amputations;
+}
+const MapWrapper<std::string, SEAmputation*> SEPatientActionCollection::GetAmputationWrapper() const
+{
+  return MapWrapper<std::string, SEAmputation*>(const_cast<SEPatientActionCollection*>(this)->m_Amputations);
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveAmputation(const char* cmpt)
+{
+  RemoveAmputation(std::string { cmpt });
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveAmputation(const std::string& cmpt)
+{
+  SEAmputation* h = m_Amputations[cmpt];
+  m_Amputations.erase(cmpt);
+  SAFE_DELETE(h);
 }
 //-------------------------------------------------------------------------------
 bool SEPatientActionCollection::HasApnea() const

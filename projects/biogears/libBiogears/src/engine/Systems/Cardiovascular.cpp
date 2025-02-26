@@ -1000,6 +1000,7 @@ void Cardiovascular::ProcessActions()
 {
   TraumaticBrainInjury();
   Hemorrhage();
+  Amputation();
   PericardialEffusion();
   CPR();
   CardiacArrest();
@@ -1170,6 +1171,112 @@ void Cardiovascular::Hemorrhage()
   patientMass_kg -= massLost_kg;
 
   m_patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
+}
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// The amputation function simulates an amputation from a specified compartment
+/// \details
+/// The cardiovascular circuit has paths from each compartment to ground (initially open) that represent
+/// bleeding sites.  When an amputation is activated, the compartment determines the blood flow at the 
+/// at the amputation site.
+/// A resistance is set to avoid blood flow returning to the rest of the body. 
+/// The capacitance is set at the amputation site to increase the blood flow out of the amputation site.
+/// Edit about future changes
+//--------------------------------------------------------------------------------------------------
+void Cardiovascular::Amputation()
+{
+  /// \todo Enforce limits and remove fatal errors.
+  SEAmputation* targetAmputation;
+  std::string ampCmpt;
+  SEFluidCircuitPath* resistancePath = nullptr;
+
+  SEFluidCircuitPath* targetPath = nullptr;
+  std::string weightPointer;
+  // Values for tracking physiological metrics
+  double resistance = 0.0;
+  double locationPressure_mmHg = 0.0;
+  double TotalLossRate_mL_Per_s = 0.0;
+  double probabilitySurvival = 0.0;
+  double bleedoutTime = 0.0;
+  double bleedRate_mL_Per_s = 0.0;
+  double drugFlowResistance = 0.0;
+  const double bloodVolume_mL = GetBloodVolume(VolumeUnit::mL);
+  const double baselineBloodVolume_mL = m_patient->GetBloodVolumeBaseline(VolumeUnit::mL);
+
+  const std::map<std::string, SEAmputation*>& amps = m_data.GetActions().GetPatientActions().GetAmputations();
+  
+  for (auto amp : amps) {
+    targetAmputation = amp.second;
+    ampCmpt = targetAmputation->GetCompartment();
+    weightPointer = targetAmputation->GetWeightPercent();
+    double patientMass_kg = m_patient->GetWeight(MassUnit::kg); 
+    if (weightPointer == "WeightNotLost") {
+      
+      if (ampCmpt == "RightLeg" || ampCmpt == "LeftLeg") {
+        if (m_patient->GetSex() == SESex::Male) {
+            m_patient->GetWeight().SetValue(patientMass_kg*0.8332, MassUnit::kg);
+        } else if (m_patient->GetSex() == SESex::Female) {
+          m_patient->GetWeight().SetValue(patientMass_kg * 0.8157, MassUnit::kg);
+        }
+      } else if (ampCmpt == "RightArm" || ampCmpt == "LeftArm") {
+        if (m_patient->GetSex() == SESex::Male) {
+          m_patient->GetWeight().SetValue(patientMass_kg * 0.9423, MassUnit::kg);
+        } else if (m_patient->GetSex() == SESex::Female) {
+          m_patient->GetWeight().SetValue(patientMass_kg * 0.953, MassUnit::kg);
+        }
+      }
+      targetAmputation->SetWeightPercent("WeightLost");
+    }
+
+    targetPath = m_CirculatoryCircuit->GetPath(ampCmpt + "Bleed");
+
+    locationPressure_mmHg = targetPath->GetSourceNode().GetPressure(PressureUnit::mmHg);
+    if (ampCmpt == "RightLeg" || ampCmpt == "LeftLeg") {
+      bleedRate_mL_Per_s = 350.0;
+    }
+    else if (ampCmpt == "RightArm" || ampCmpt == "LeftArm") {
+      bleedRate_mL_Per_s = 138.0;
+    }
+    
+    double newRes = (locationPressure_mmHg / bleedRate_mL_Per_s);
+    LLIM(newRes, 0.0001); 
+
+    targetAmputation->GetBleedResistance().SetValue(newRes, FlowResistanceUnit::mmHg_s_Per_mL);
+
+    resistance = targetAmputation->GetBleedResistance().GetValue(FlowResistanceUnit::mmHg_s_Per_mL);
+  
+    // Use hemorrhage flow modifier to affect hemorrhage resistance path, negative modifier INCREASES resistance thus DECREASES flow out of body
+    // Then set to resistance path AND next resistance to ensure stacked effect over time
+    drugFlowResistance = resistance * (1 - m_data.GetDrugs().GetHemorrhageChange().GetValue());
+    targetAmputation->GetBleedResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+    targetPath->GetNextResistance().SetValue(drugFlowResistance, FlowResistanceUnit::mmHg_s_Per_mL);
+
+    //Set other values in circuit
+
+    targetPath->GetCapacitance().SetValue(100000, FlowComplianceUnit::mL_Per_mmHg);
+    resistancePath = m_CirculatoryCircuit->GetPath(ampCmpt + "1To" + ampCmpt + "2");
+    resistancePath->GetNextResistance().SetValue(100000, FlowResistanceUnit::mmHg_s_Per_mL);
+
+    TotalLossRate_mL_Per_s += targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s);
+    double bloodLossIncrement_mL = targetPath->GetFlow(VolumePerTimeUnit::mL_Per_s) * m_dT_s;
+    GetTotalBloodVolumeLost().IncrementValue(bloodLossIncrement_mL, VolumeUnit::mL);
+    bleedoutTime = (bloodVolume_mL - (0.5 * baselineBloodVolume_mL)) / TotalLossRate_mL_Per_s * (1.0 / 60.0);
+  }
+
+  /*
+  Stub to try to calculate a probability of survival based on the bleeding rate and approximate time to bleed out.
+  if (bleedoutTime!=0)
+  probabilitySurvival = 100.0-100.0*(0.9127*exp(-0.008*bleedoutTime));  //relationship from Table 5 in champion2003profile
+  */
+
+  // Mass lost based on blood only (adjustment has not been made for body weight)
+  double bloodDensity_kg_Per_mL = m_data.GetBloodChemistry().GetBloodDensity(MassPerVolumeUnit::kg_Per_mL);
+  double massLost_kg = TotalLossRate_mL_Per_s * bloodDensity_kg_Per_mL * m_dT_s;
+  double patientMass_kg = m_patient->GetWeight(MassUnit::kg);
+  patientMass_kg -= massLost_kg;
+
+  m_patient->GetWeight().SetValue(patientMass_kg, MassUnit::kg);
+
 }
 
 //--------------------------------------------------------------------------------------------------

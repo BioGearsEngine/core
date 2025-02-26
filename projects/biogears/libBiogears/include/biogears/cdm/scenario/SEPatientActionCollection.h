@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEExampleAction.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
+#include <biogears/cdm/patient/actions/SEAmputation.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 #include <biogears/cdm/patient/actions/SEBrainInjury.h>
@@ -61,6 +62,7 @@ specific language governing permissions and limitations under the License.
 
 namespace std {
 extern template class map<string, biogears::SEHemorrhage*>;
+extern template class map<string, biogears::SEAmputation*>;
 extern template class map<string, biogears::SETourniquet*>;
 extern template class map<string, biogears::SEEscharotomy*>;
 extern template class map<string, biogears::SEPainStimulus*>;
@@ -172,6 +174,7 @@ private:
 #pragma warning(disable : 4661)
 
 extern template class PairWrapper<std::string, SEHemorrhage*>;
+extern template class PairWrapper<std::string, SEAmputation*>;
 extern template class PairWrapper<std::string, SETourniquet*>;
 extern template class PairWrapper<std::string, SEEscharotomy*>;
 extern template class PairWrapper<std::string, SEPainStimulus*>;
@@ -182,6 +185,7 @@ extern template class PairWrapper<const SESubstance*, SESubstanceNasalDose*>;
 extern template class PairWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
 extern template class MapIteratorWrapper<std::string, SEHemorrhage*>;
+extern template class MapIteratorWrapper<std::string, SEAmputation*>;
 extern template class MapIteratorWrapper<std::string, SETourniquet*>;
 extern template class MapIteratorWrapper<std::string, SEEscharotomy*>;
 extern template class MapIteratorWrapper<std::string, SEPainStimulus*>;
@@ -192,6 +196,7 @@ extern template class MapIteratorWrapper<const SESubstance*, SESubstanceNasalDos
 extern template class MapIteratorWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
 
 extern template class MapWrapper<std::string, SEHemorrhage*>;
+extern template class MapWrapper<std::string, SEAmputation*>;
 extern template class MapWrapper<std::string, SETourniquet*>;
 extern template class MapWrapper<std::string, SEEscharotomy*>;
 extern template class MapWrapper<std::string, SEPainStimulus*>;
@@ -235,6 +240,12 @@ public:
   bool HasAirwayObstruction() const;
   SEAirwayObstruction* GetAirwayObstruction() const;
   void RemoveAirwayObstruction();
+
+  bool HasAmputation() const;
+  const std::map<std::string, SEAmputation*>& GetAmputations() const;
+  const MapWrapper<std::string, SEAmputation*> GetAmputationWrapper() const;
+  void RemoveAmputation(const char* cmpt);
+  void RemoveAmputation(const std::string& cmpt);
 
   bool HasApnea() const;
   SEApnea* GetApnea() const;
@@ -456,7 +467,7 @@ protected:
 
   std::map<std::string, SEHemorrhage*> m_Hemorrhages;
   mutable std::map<std::string, SEHemorrhage*>::const_iterator m_HemorrhageItr;
-
+  std::map<std::string, SEAmputation*> m_Amputations;
   std::map<std::string, SETourniquet*> m_Tourniquets;
   std::map<std::string, SEEscharotomy*> m_Escharotomies;
   std::map<std::string, SEPainStimulus*> m_PainStimuli;
