@@ -56,6 +56,7 @@ public:
 
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
+  void SetSeverity(SEFracturedBone bone, SEFractureType type);
 
   bool HasInflammation() const; //May need; Check back before merging
   void SetInflammation(bool activate);

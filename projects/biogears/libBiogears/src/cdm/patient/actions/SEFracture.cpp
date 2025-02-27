@@ -20,7 +20,7 @@ SEFracture::SEFracture()
   : SEPatientAction()
   , m_Severity(nullptr)
 {
-  m_Inflammation = false; // When the burn wound is constructed, the corresponding inflammation state has not been established
+  m_Inflammation = false; // When the fracture is constructed, the corresponding inflammation state has not been established
   m_FracturedBone = SEFracturedBone::Invalid; // User input, bone affected
   m_Side = SESide::Invalid; //Side of Affected Fracture
   m_FractureType = SEFractureType::Invalid; // User input, type of fracture on bone
@@ -112,6 +112,32 @@ SEScalar0To1& SEFracture::GetSeverity()
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
+}
+//-----------------------------------------------------------------------------
+void SEFracture::SetSeverity(SEFracturedBone bone, SEFractureType type)
+{
+  switch (bone) {
+  case SEFracturedBone::Radius:
+    switch (type) {
+    case SEFractureType::Comminuted:
+      m_Severity->SetValue(0.3); // If comminuted AIS code 3 (severe, not life threatening)
+      break;
+    default:
+      m_Severity->SetValue(0.2); // Default to AIS code 2 (moderate) for radius fracture
+    }
+    break;
+  case SEFracturedBone::Tibia:
+    switch (type) {
+    case SEFractureType::Comminuted:
+      m_Severity->SetValue(0.3); // If comminuted AIS code 3 (severe, not life threatening)
+      break;
+    default:
+      m_Severity->SetValue(0.2); // Default to AIS code 2 (moderate) for tibia fracture
+    }
+  default:
+    m_Severity->SetValue(0.0);
+    break;
+  }
 }
 //-----------------------------------------------------------------------------
 bool SEFracture::HasInflammation() const
