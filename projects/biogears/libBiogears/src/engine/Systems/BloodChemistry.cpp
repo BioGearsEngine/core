@@ -1375,6 +1375,7 @@ void BloodChemistry::InflammatoryResponse()
       m_InflammatoryResponse->GetInflammationSources().push_back(SEInflammationSource::Hemorrhage);
     }
   }
+  /* 
   if (m_data.GetActions().GetPatientActions().HasFracture()) {
     SEFracture* fracture = m_data.GetActions().GetPatientActions().GetFracture();
     SEFracturedBone bone = fracture->GetFracturedBone();
@@ -1383,7 +1384,7 @@ void BloodChemistry::InflammatoryResponse()
     fracture->SetSeverity(bone, type);
     fractureSeverity = fracture->GetSeverity().GetValue(); // double fractureSeverity = 0.0; // fracture->GetSeverity().GetValue();
     double fractureTrauma = 100 * fractureSeverity;
-    /*// Use fracture type & affected bone to quantify "fracture severity" input via AIS score
+    // Use fracture type & affected bone to quantify "fracture severity" input via AIS score
     switch (m_data.GetActions().GetPatientActions().GetFracture()->GetFracturedBone()) {
     case SEFracturedBone::Radius:
       switch (m_data.GetActions().GetPatientActions().GetFracture()->GetFractureType()) {
@@ -1404,7 +1405,7 @@ void BloodChemistry::InflammatoryResponse()
       }
     default:
       break;
-    } */
+    }
     if (fractureSeverity > 0) {
       m_InflammatoryResponse->GetTrauma().SetValue(fractureTrauma);
     }
@@ -1413,7 +1414,7 @@ void BloodChemistry::InflammatoryResponse()
     //   m_InflammatoryResponse->GetInflammationSources().push_back(SEInflammationSource::Fracture);
     // }
   }
-
+  */
   // Perform this check after looking for inflammatory actions (otherwise we'll never process)
   if (!m_InflammatoryResponse->HasInflammationSources()) {
     return;
@@ -1512,6 +1513,7 @@ void BloodChemistry::InflammatoryResponse()
   double antibacterialEffect = m_data.GetDrugs().GetAntibioticActivity().GetValue();
 
   //------------------Inflammation source specific modifications and/or actions --------------------------------
+  /*
   if (fractureSeverity != 0) {
     // Parameters modified to recreate trends for inflammatory response to bone fracture
     kDTR = 11.0 * (100 * fractureSeverity); // We assume that larger burns inflict damage more rapidly
@@ -1520,6 +1522,7 @@ void BloodChemistry::InflammatoryResponse()
     kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
     scale = 1.0;
   }
+  */
   if (burnTotalBodySurfaceAreaIntensity != 0) {
     // Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
     kDTR = 11.0 * burnTotalBodySurfaceAreaIntensity; // We assume that larger burns inflict damage more rapidly

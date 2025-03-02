@@ -293,6 +293,7 @@ SEPatientActionCollection::SEPatientActionCollection(SESubstanceManager& substan
   m_RightChestOcclusiveDressing = nullptr;
   m_Exercise = nullptr;
   m_Ebola = nullptr;
+  m_Fracture = nullptr;
   m_Infection = nullptr;
   m_Intubation = nullptr;
   m_MechanicalVentilation = nullptr;
@@ -724,16 +725,16 @@ bool SEPatientActionCollection::ProcessAction(const SEPatientAction& action, con
     return IsValid(*m_Exercise);
   }
 
-  auto fracture = dynamic_cast<const SEFracture*>(&action);
-  if (fracture != nullptr) {
+  auto fract = dynamic_cast<const SEFracture*>(&action);
+  if (fract != nullptr) {
     if (m_Fracture == nullptr) {
       m_Fracture = new SEFracture();
     }
-
-    CDM_PATIENT_ACTION_COPY(Fracture, *fracture, *m_Fracture)
+    CDM_PATIENT_ACTION_COPY(Fracture, *fract, *m_Fracture)
     if (!m_Fracture->IsActive()) {
       m_Logger->Warning("Healing broken bone.");
-      return false;
+      RemoveFracture();
+      return true;
     }
     return IsValid(*m_Fracture);
   }

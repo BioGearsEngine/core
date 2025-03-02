@@ -56,12 +56,15 @@ public:
 
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
-  void SetSeverity(SEFracturedBone bone, SEFractureType type);
+  //void SetSeverity(SEFracturedBone bone, SEFractureType type);
 
   bool HasInflammation() const; //May need; Check back before merging
   void SetInflammation(bool activate);
 
   void ToString(std::ostream& str) const override;
+
+  bool operator==(const SEFracture& rhs) const;
+  bool operator!=(const SEFracture& rhs) const;
 
 protected:
 

@@ -990,7 +990,7 @@ namespace io {
     PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
 
     io::PatientActions::UnMarshall(in.FracturedBone(), out.m_FracturedBone);
-    Property::UnMarshall(in.Side(), out.m_Side);
+    io::Property::UnMarshall(in.Side(), out.m_Side);
     io::PatientActions::UnMarshall(in.FractureType(), out.m_FractureType);
     io::Property::UnMarshall(in.Severity(), out.GetSeverity(), rd);
   }
