@@ -762,6 +762,50 @@ void Energy::UpdateHeatResistance()
         alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
       }
     }
+    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Fracture)) {
+      SEThermalCircuitPath* fractureHeatPath;
+      SEFracture* fracture = m_data.GetActions().GetPatientActions().GetFracture();
+      SEFracturedBone bone = fracture->GetFracturedBone();
+      SEFractureType type = fracture->GetFractureType();
+      SESide side = fracture->GetSide();
+
+      bool isFractureValid = true;
+
+      double typeThermalEffect = 0.0;
+
+      // Only support comminuted for now
+      switch (type) {
+      case SEFractureType::Comminuted:
+        typeThermalEffect = 0.3;
+        break;
+      default:
+        typeThermalEffect = 0.2;
+        break;
+      }
+        
+      switch (bone) {
+      case SEFracturedBone::Radius:
+        if (side == SESide::Left) {
+          fractureHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalLeftArmSkin);
+        } else if (side == SESide::Right) {
+          fractureHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalRightArmSkin);
+        }
+        break;
+      case SEFracturedBone::Tibia:
+        if (side == SESide::Left) {
+          fractureHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalLeftLegSkin);
+        } else if (side == SESide::Right) {
+          fractureHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalRightLegSkin);
+        }
+      default:
+        isFractureValid = false;
+        break;
+      }
+      if (isFractureValid) {
+        double currHeat = fractureHeatPath->GetHeatSource().GetValue(PowerUnit::J_Per_s);
+        fractureHeatPath->GetNextHeatSource().IncrementValue(currHeat * 0.1 * (typeThermalEffect), PowerUnit::J_Per_s);
+      }
+    }
 
     // The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
     // When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin.

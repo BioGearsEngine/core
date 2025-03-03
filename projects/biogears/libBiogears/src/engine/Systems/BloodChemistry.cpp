@@ -1375,46 +1375,18 @@ void BloodChemistry::InflammatoryResponse()
       m_InflammatoryResponse->GetInflammationSources().push_back(SEInflammationSource::Hemorrhage);
     }
   }
-  /* 
   if (m_data.GetActions().GetPatientActions().HasFracture()) {
     SEFracture* fracture = m_data.GetActions().GetPatientActions().GetFracture();
     SEFracturedBone bone = fracture->GetFracturedBone();
     SEFractureType type = fracture->GetFractureType();
     SESide side = fracture->GetSide();
-    fracture->SetSeverity(bone, type);
-    fractureSeverity = fracture->GetSeverity().GetValue(); // double fractureSeverity = 0.0; // fracture->GetSeverity().GetValue();
-    double fractureTrauma = 100 * fractureSeverity;
-    // Use fracture type & affected bone to quantify "fracture severity" input via AIS score
-    switch (m_data.GetActions().GetPatientActions().GetFracture()->GetFracturedBone()) {
-    case SEFracturedBone::Radius:
-      switch (m_data.GetActions().GetPatientActions().GetFracture()->GetFractureType()) {
-      case SEFractureType::Comminuted:
-        fractureSeverity = 30; // If comminuted AIS code 3 (severe, not life threatening)
-        break;
-      default:
-        fractureSeverity = 20; // Default to AIS code 2 (moderate) for radius fracture
-      }
-      break;
-    case SEFracturedBone::Tibia:
-      switch (m_data.GetActions().GetPatientActions().GetFracture()->GetFractureType()) {
-      case SEFractureType::Comminuted:
-        fractureSeverity = 30; // If comminuted AIS code 3 (severe, not life threatening)
-        break;
-      default:
-        fractureSeverity = 20; // Default to AIS code 2 (moderate) for tibia fracture
-      }
-    default:
-      break;
-    }
-    if (fractureSeverity > 0) {
-      m_InflammatoryResponse->GetTrauma().SetValue(fractureTrauma);
-    }
-    // if (std::find(sources.begin(), sources.end(), SEInflammationSource::Fracture) == sources.end()) {
-    //   m_InflammatoryResponse->GetTrauma().SetValue(fractureSeverity); // This causes inflammatory mediators (particulalary IL-6) to peak around 4 hrs at levels similar to those induced by pathogen
-    //   m_InflammatoryResponse->GetInflammationSources().push_back(SEInflammationSource::Fracture);
-    // }
+    double fractureSeverity = fracture->GetSeverity().GetValue(); 
+
+    m_InflammatoryResponse->GetTrauma().SetValue(fractureSeverity);
+    m_InflammatoryResponse->GetAutonomicResponseLevel().SetValue(fractureSeverity);
+    m_InflammatoryResponse->GetInflammationSources().push_back(SEInflammationSource::Fracture);
   }
-  */
+  
   // Perform this check after looking for inflammatory actions (otherwise we'll never process)
   if (!m_InflammatoryResponse->HasInflammationSources()) {
     return;
@@ -1513,16 +1485,13 @@ void BloodChemistry::InflammatoryResponse()
   double antibacterialEffect = m_data.GetDrugs().GetAntibioticActivity().GetValue();
 
   //------------------Inflammation source specific modifications and/or actions --------------------------------
-  /*
-  if (fractureSeverity != 0) {
+  if (m_InflammatoryResponse->HasInflammationSource(SEInflammationSource::Fracture)) {
     // Parameters modified to recreate trends for inflammatory response to bone fracture
-    kDTR = 11.0 * (100 * fractureSeverity); // We assume that larger burns inflict damage more rapidly
-    kTr = 0.25 / (100 * fractureSeverity); // We assume that larger burns take longer for trauma to resolve
-    tiMin = 0.008; // Promotes faster damage accumulation
-    kD6 = 0.3, xD6 = 0.25, kD = 0.1, kNTNF = 0.2, kN6 = 0.557, hD6 = 4, h66 = 4.0, x1210 = 0.049;
-    scale = 1.0;
+    kTr = 2.0 * iTime / (xTr * xTr);
+    kDTR = 0.5*fractureSeverity;
+    kAuto = 2.0 * iTime / (xAuto * xAuto);
+    kD = 0.05;
   }
-  */
   if (burnTotalBodySurfaceAreaIntensity != 0) {
     // Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
     kDTR = 11.0 * burnTotalBodySurfaceAreaIntensity; // We assume that larger burns inflict damage more rapidly
