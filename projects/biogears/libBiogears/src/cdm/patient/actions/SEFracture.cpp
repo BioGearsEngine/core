@@ -18,10 +18,12 @@ namespace biogears {
 
 SEFracture::SEFracture()
   : SEPatientAction()
-  , m_Severity(nullptr)
+  , m_Severity(new SEScalar0To1())
 {
+
   m_Inflammation = false; // When the fracture is constructed, the corresponding inflammation state has not been established
   m_FracturedBone = SEFracturedBone::Invalid; // User input, bone affected
+  m_FractureType = SEFractureType::Invalid; // User input, type of fracture on bone
   m_Side = SESide::Invalid; //Side of Affected Fracture
   m_FractureType = SEFractureType::Invalid; // User input, type of fracture on bone
   m_Severity->SetValue(0.0);
@@ -114,7 +116,7 @@ SEScalar0To1& SEFracture::GetSeverity()
   return *m_Severity;
 }
 //-----------------------------------------------------------------------------
-void SEFracture::SetSeverity(SEFracturedBone bone, SEFractureType type)
+/* void SEFracture::SetSeverity(SEFracturedBone bone, SEFractureType type)
 {
   switch (bone) {
   case SEFracturedBone::Radius:
@@ -138,7 +140,7 @@ void SEFracture::SetSeverity(SEFracturedBone bone, SEFractureType type)
     m_Severity->SetValue(0.0);
     break;
   }
-}
+} */
 //-----------------------------------------------------------------------------
 bool SEFracture::HasInflammation() const
 {
@@ -167,4 +169,19 @@ void SEFracture::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
+bool SEFracture::operator==(const SEFracture& rhs) const
+{
+  bool equivilant = m_Comment == rhs.m_Comment;
+  equivilant &= m_FracturedBone == rhs.m_FracturedBone;
+  equivilant &= m_FractureType == rhs.m_FractureType;
+  equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
+  equivilant &= m_Side == rhs.m_Side;
+
+  return equivilant;
+}
+//-------------------------------------------------------------------------------
+bool SEFracture::operator!=(const SEFracture& rhs) const
+{
+  return !(*this == rhs);
+}
 }

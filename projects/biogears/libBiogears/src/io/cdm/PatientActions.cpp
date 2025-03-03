@@ -22,6 +22,7 @@
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
+#include <biogears/cdm/patient/actions/SEAmputation.h>
 #include <biogears/cdm/patient/actions/SEApnea.h>
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 #include <biogears/cdm/patient/actions/SEBrainInjury.h>
@@ -123,6 +124,7 @@ namespace io {
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AcuteRespiratoryDistress, PatientActions, rd)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AsthmaAttack, PatientActions, rd)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, AirwayObstruction, PatientActions, rd)
+    STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Amputation, PatientActions, rd)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Apnea, PatientActions, rd)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, BrainInjury, PatientActions, rd)
     STOCASTIC_POLYMORPHIC_UNMARSHALL(patientActionData, Bronchoconstriction, PatientActions, rd)
@@ -228,6 +230,7 @@ namespace io {
     POLYMORPHIC_MARSHALL(patientAction, AcuteRespiratoryDistress)
     POLYMORPHIC_MARSHALL(patientAction, AcuteStress)
     POLYMORPHIC_MARSHALL(patientAction, AirwayObstruction)
+    POLYMORPHIC_MARSHALL(patientAction, Amputation)
     POLYMORPHIC_MARSHALL(patientAction, Apnea)
     POLYMORPHIC_MARSHALL(patientAction, AsthmaAttack)
     POLYMORPHIC_MARSHALL(patientAction, BrainInjury)
@@ -384,6 +387,9 @@ namespace io {
     }
 
     for ( auto&[ key, action ] : in.m_Hemorrhages) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto& [key, action] : in.m_Amputations) {
       out.push_back(PatientActions::factory(action));
     }
     for (auto&[ key, action ] : in.m_Tourniquets) {
@@ -984,6 +990,29 @@ namespace io {
     PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
 
     io::PatientActions::UnMarshall(in.FracturedBone(), out.m_FracturedBone);
+    io::Property::UnMarshall(in.Side(), out.m_Side);
+    io::PatientActions::UnMarshall(in.FractureType(), out.m_FractureType);
+    io::Property::UnMarshall(in.Severity(), out.GetSeverity(), rd);
+  }
+  void PatientActions::Marshall(const SEFracture& in, CDM::FractureData& out)
+  {
+    PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, FracturedBone)
+    SE_PATIENT_ACTIONS_ENUM_PTR_MARSHALL_HELPER(in, out, FractureType)
+
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
+
+    SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, Side)
+  }
+  //----------------------------------------------------------------------------------
+  // class SEFracture
+  void PatientActions::UnMarshall(const CDM::FractureData& in, SEFracture& out, std::default_random_engine* rd)
+  {
+    out.Invalidate();
+
+    PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+
+    io::PatientActions::UnMarshall(in.FracturedBone(), out.m_FracturedBone);
     Property::UnMarshall(in.Side(), out.m_Side);
     io::PatientActions::UnMarshall(in.FractureType(), out.m_FractureType);
     io::Property::UnMarshall(in.Severity(), out.GetSeverity(), rd);
@@ -1017,6 +1046,22 @@ namespace io {
     out.Compartment(in.m_Compartment);
     CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, InitialRate)
     CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, BleedResistance)
+  }
+  //----------------------------------------------------------------------------------
+// class SEAmputation
+  void PatientActions::UnMarshall(const CDM::AmputationData& in, SEAmputation& out, std::default_random_engine* rd)
+  {
+    out.Invalidate();
+
+    PatientActions::UnMarshall(static_cast<const CDM::PatientActionData&>(in), static_cast<SEPatientAction&>(out));
+
+    out.m_Compartment = in.Compartment();
+
+  }
+  void PatientActions::Marshall(const SEAmputation& in, CDM::AmputationData& out)
+  {
+    PatientActions::Marshall(static_cast<const SEPatientAction&>(in), static_cast<CDM::PatientActionData&>(out));
+    out.Compartment(in.m_Compartment);
   }
   //----------------------------------------------------------------------------------
   // class SEInfection

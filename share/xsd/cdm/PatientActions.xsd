@@ -469,7 +469,19 @@ specific language governing permissions and limitations under the License.
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+	
 
+	
+	<!-- @brief An amputation is ... -->
+	<xs:complexType name="AmputationData">
+		<xs:complexContent>
+			<xs:extension base="PatientActionData">
+				<xs:attribute name="Compartment" type="xs:string" use="required"/>
+				<!--<<@brief The compartment in which the hemorrhage occurs, maps to specific circuit path TODO: Limit inputs?-->
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
   <!--Infection action types, including sepsis-->
   <xs:simpleType name="enumInfectionSeverity">
     <xs:restriction base="xs:string">

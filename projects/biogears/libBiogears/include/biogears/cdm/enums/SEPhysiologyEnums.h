@@ -19,7 +19,8 @@ enum class SEInflammationSource {
   Burn = 0,
   Hemorrhage,
   Infection,
-  Ebola
+  Ebola,
+  Fracture
 };
 
 enum class SEHeartRhythm {
@@ -44,6 +45,8 @@ inline std::string ToString(const SEInflammationSource& e)
     return "Infection";
   case SEInflammationSource::Ebola:
     return "Ebola";
+  case SEInflammationSource::Fracture:
+    return "Fracture";
   default:
     return "Invalid";
   }

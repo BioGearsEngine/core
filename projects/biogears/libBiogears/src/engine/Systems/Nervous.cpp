@@ -958,6 +958,13 @@ void Nervous::CheckPainStimulus()
     tempPainVAS += (traumaPain * susceptabilityMapping * PainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0));
   }
 
+  // determine pain response from inflammation caused by fracture
+  if (m_data.GetActions().GetPatientActions().HasFracture()) {
+    double traumaPain = m_data.GetActions().GetPatientActions().GetFracture()->GetSeverity().GetValue();
+    traumaPain *= 20.0; 
+    tempPainVAS += (traumaPain * susceptabilityMapping * PainBuffer) / (1 + exp(-m_painStimulusDuration_s + 4.0));
+  }
+
   //iterate over all locations to get a cumulative stimulus and buffer them
   for (auto pain : pains) {
     p = pain.second;

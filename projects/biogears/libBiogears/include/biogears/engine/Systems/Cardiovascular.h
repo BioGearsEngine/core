@@ -106,6 +106,7 @@ private:
   /**/ void CPR();
   /****/ void CalculateAndSetCPRcompressionForce();
   /**/ void Hemorrhage();
+  /**/ void Amputation();
   /**/ void PericardialEffusion();
   /**/ void PericardialEffusionPressureApplication();
   /**/ void CardiacArrest();
