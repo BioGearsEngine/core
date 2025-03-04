@@ -982,7 +982,7 @@ namespace io {
     }
   }
   //----------------------------------------------------------------------------------
-  // class SEFracture
+  /*// class SEFracture
   void PatientActions::UnMarshall(const CDM::FractureData& in, SEFracture& out, std::default_random_engine* rd)
   {
     out.Invalidate();
@@ -1003,7 +1003,7 @@ namespace io {
     CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Severity)
 
     SE_PROPERTY_ENUM_PTR_MARSHALL_HELPER(in, out, Side)
-  }
+  }*/
   //----------------------------------------------------------------------------------
   // class SEFracture
   void PatientActions::UnMarshall(const CDM::FractureData& in, SEFracture& out, std::default_random_engine* rd)
