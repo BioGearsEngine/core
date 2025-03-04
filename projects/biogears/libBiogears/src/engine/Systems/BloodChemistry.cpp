@@ -1491,6 +1491,7 @@ void BloodChemistry::InflammatoryResponse()
     kDTR = 0.5*fractureSeverity;
     kAuto = 2.0 * iTime / (xAuto * xAuto);
     kD = 0.05;
+    k6 = 1.25;
   }
   if (burnTotalBodySurfaceAreaIntensity != 0) {
     // Burns inflammation happens on a differnt time scale.  These parameters were tuned for infecton--return to nominal values
