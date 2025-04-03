@@ -53,6 +53,7 @@ enum class SESubstanceClass {
   Invalid = -1,
   Anesthetic = 0,
   Antibiotic,
+  BloodAgent,
   WholeBlood,
   Ion,
   Opioid,
@@ -147,6 +148,8 @@ inline ::std::string ToString(const SESubstanceClass& bit)
     return "Anesthetic";
   case SESubstanceClass::Antibiotic:
     return "Antibiotic";
+  case SESubstanceClass::BloodAgent:
+    return "BloodAgent";
   case SESubstanceClass::WholeBlood:
     return "WholeBlood";
   case SESubstanceClass::Ion:

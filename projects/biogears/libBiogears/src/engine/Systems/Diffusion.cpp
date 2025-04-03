@@ -28,6 +28,8 @@ DiffusionCalculator::DiffusionCalculator(BioGears& bg)
   , m_data(bg)
 {
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
+  m_Ce = 0.;
+  //m_Cp = 0.;
 }
 //-------------------------------------------------------------------------------
 DiffusionCalculator::~DiffusionCalculator()
@@ -296,6 +298,9 @@ void DiffusionCalculator::CalculateNonLinearDiffusionMethods()
         }
         CalculatePerfusionLimitedDiffusion(diffSet, *pkSub, tissueKinetics->GetPartitionCoefficient()); //Balance happens in the method
       }
+      if (pkSub->GetClassification() == SESubstanceClass::BloodAgent) {
+        
+      }
     }
     //Currently only albumin uses MacromoleculeDiffusion and PassiveLymphDiffusion
     CalculateMacromoleculeDiffusion(diffSet, *albumin);
@@ -384,6 +389,7 @@ void DiffusionCalculator::CalculatePerfusionLimitedDiffusion(DiffusionCompartmen
   if (tSubQ == nullptr)
     throw CommonDataModelException("No Tissue-Intracellular Substance Quantity found for substance " + std::string { sub.GetName() });
 
+  double Fp = 0.6;
   double VascularFlow_m_LPer_s = vascular.GetInFlow(VolumePerTimeUnit::mL_Per_s);
   double VascularConcentration_ug_Per_mL = vSubQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
   double tisDensity_kg_Per_L = 1.0;
@@ -399,7 +405,13 @@ void DiffusionCalculator::CalculatePerfusionLimitedDiffusion(DiffusionCompartmen
   double TissueConcentration_ug_Per_mL = tSubQ->GetMass(MassUnit::ug) / tisVolume_mL;
   double massToMoveVI_ug = 0;
   if (!(partitionCoeff == 0)) {
-    massToMoveVI_ug = VascularFlow_m_LPer_s * m_dt_s * (VascularConcentration_ug_Per_mL - (TissueConcentration_ug_Per_mL / partitionCoeff));
+    if (sub.GetClassification() != SESubstanceClass::BloodAgent) {
+      massToMoveVI_ug = VascularFlow_m_LPer_s * m_dt_s * (VascularConcentration_ug_Per_mL - (TissueConcentration_ug_Per_mL / partitionCoeff));
+    } else {
+      double Vp = m_data.GetBloodChemistry().GetPlasmaVolume(VolumeUnit::mL); // ml
+      double Cp = (sub.GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL));
+      massToMoveVI_ug = (Fp * VascularFlow_m_LPer_s * m_dt_s * (Cp - (TissueConcentration_ug_Per_mL / partitionCoeff)));
+    }
   } else {
     massToMoveVI_ug = 0;
   }
@@ -413,15 +425,16 @@ void DiffusionCalculator::CalculatePerfusionLimitedDiffusion(DiffusionCompartmen
     if (tSubQ->GetMass(MassUnit::ug) - (-massToMoveVI_ug) < ZERO_APPROX) {
       massToMoveVI_ug = -tSubQ->GetMass(MassUnit::ug);
     }
-  }
+  } 
 
-  //For all distribute methods, we use VolumeWeighted when mass is entering a compartment and MassWeighted when mass is exiting
+  // For all distribute methods, we use VolumeWeighted when mass is entering a compartment and MassWeighted when mass is exiting
   if (!vascular.HasChildren()) {
     vSubQ->GetMass().IncrementValue(-massToMoveVI_ug, MassUnit::ug);
   } else {
-    //Mass > 0 --> mass is leaving vascular, mass < 0 --> mass is entering vascular
+    // Mass > 0 --> mass is leaving vascular, mass < 0 --> mass is entering vascular
     massToMoveVI_ug > 0.0 ? DistributeMassbyMassWeighted(vascular, sub, -massToMoveVI_ug, MassUnit::ug) : DistributeMassbyVolumeWeighted(vascular, sub, -massToMoveVI_ug, MassUnit::ug);
   }
+
   if (!intracellular.HasChildren()) {
     tSubQ->GetMass().IncrementValue(massToMoveVI_ug, MassUnit::ug);
   } else {

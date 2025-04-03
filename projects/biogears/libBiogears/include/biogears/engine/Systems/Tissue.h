@@ -101,6 +101,7 @@ protected:
 
   // Process Methods
   void CalculateCompartmentalBurn();
+  void TestBloodAgent();
   void CalculateDiffusion();
   void CalculatePulmonaryCapillarySubstanceTransfer();
   void AlveolarPartialPressureGradientDiffusion(SEGasCompartment& pulmonary, SELiquidCompartment& vascular, SESubstance& sub, double DiffusingCapacityO2_mL_Per_s_mmHg, double timestep_s);
@@ -135,6 +136,7 @@ protected:
   double m_Dt_s;
   double m_maxProteinStorage_g;
   double m_lastFatigueTime;
+  double m_S;
 
   double m_leftArmDeltaResistance_mmHg_s_Per_mL;
   double m_rightArmDeltaResistance_mmHg_s_Per_mL;

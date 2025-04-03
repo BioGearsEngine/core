@@ -61,6 +61,7 @@
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/patient/actions/SESubstanceInhalation.h>
 #include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
@@ -198,6 +199,16 @@ namespace io {
         return substanceInfusionAction;
       }
 
+      if (auto substanceInhalationData = dynamic_cast<CDM::SubstanceInhalationData const*>(substanceAdministrationActionData); substanceInhalationData) {
+        auto substance = substances.GetSubstance(substanceInhalationData->Substance());
+        if (substance == nullptr) {
+          throw biogears::CommonDataModelException("PatientActions:Factory - Unknown substance : " + substanceInhalationData->Substance());
+        }
+        auto substanceInhalationAction = std::make_unique<SESubstanceInhalation>(*substance);
+        PatientActions::UnMarshall(*substanceInhalationData, *substanceInhalationAction, rd);
+        return substanceInhalationAction;
+      }
+
       if (auto substanceCompoundInfusionData = dynamic_cast<CDM::SubstanceCompoundInfusionData const*>(substanceAdministrationActionData); substanceCompoundInfusionData) {
         auto compound = substances.GetCompound(substanceCompoundInfusionData->SubstanceCompound());
         if (compound == nullptr) {
@@ -261,6 +272,7 @@ namespace io {
       POLYMORPHIC_MARSHALL(patientAction, SubstanceBolus)
       POLYMORPHIC_MARSHALL(patientAction, SubstanceCompoundInfusion)
       POLYMORPHIC_MARSHALL(patientAction, SubstanceInfusion)
+      POLYMORPHIC_MARSHALL(patientAction, SubstanceInhalation)
       POLYMORPHIC_MARSHALL(patientAction, SubstanceOralDose)
       POLYMORPHIC_MARSHALL(patientAction, SubstanceNasalDose)
     }
@@ -393,6 +405,9 @@ namespace io {
       out.push_back(PatientActions::factory(action));
     }
     for (auto&[ key, action ] : in.m_SubstanceInfusions) {
+      out.push_back(PatientActions::factory(action));
+    }
+    for (auto& [key, action] : in.m_SubstanceInhalations) {
       out.push_back(PatientActions::factory(action));
     }
     for (auto&[ key, action ] : in.m_SubstanceOralDoses) {
@@ -1603,6 +1618,20 @@ namespace io {
   {
     PatientActions::Marshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
     CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Rate)
+    CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Concentration)
+    out.Substance(in.m_Substance.GetName());
+  }
+  //----------------------------------------------------------------------------------
+  // class SESubstanceInhalation
+  void PatientActions::UnMarshall(const CDM::SubstanceInhalationData& in, SESubstanceInhalation& out, std::default_random_engine* rd)
+  {
+    out.Invalidate();
+    PatientActions::UnMarshall(static_cast<const CDM::SubstanceAdministrationData&>(in), static_cast<SESubstanceAdministration&>(out));
+    io::Property::UnMarshall(in.Concentration(), out.GetConcentration(), rd);
+  }
+  void PatientActions::Marshall(const SESubstanceInhalation& in, CDM::SubstanceInhalationData& out)
+  {
+    PatientActions::Marshall(static_cast<const SESubstanceAdministration&>(in), static_cast<CDM::SubstanceAdministrationData&>(out));
     CDM_PROPERTY_PTR_MARSHALL_HELPER(in, out, Concentration)
     out.Substance(in.m_Substance.GetName());
   }

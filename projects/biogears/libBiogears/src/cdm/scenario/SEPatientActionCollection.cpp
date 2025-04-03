@@ -33,6 +33,7 @@ template class map<string, biogears::SEEscharotomy*>;
 template class map<string, biogears::SEPainStimulus*>;
 template class map<const biogears::SESubstance*, biogears::SESubstanceBolus*>;
 template class map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>;
+template class map<const biogears::SESubstance*, biogears::SESubstanceInhalation*>;
 template class map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>;
 template class map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
 template class map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
@@ -240,6 +241,7 @@ template class PairWrapper<std::string, SEEscharotomy*>;
 template class PairWrapper<std::string, SEPainStimulus*>;
 template class PairWrapper<const SESubstance*, SESubstanceBolus*>;
 template class PairWrapper<const SESubstance*, SESubstanceInfusion*>;
+template class PairWrapper<const SESubstance*, SESubstanceInhalation*>;
 template class PairWrapper<const SESubstance*, SESubstanceOralDose*>;
 template class PairWrapper<const SESubstance*, SESubstanceNasalDose*>;
 template class PairWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
@@ -250,6 +252,7 @@ template class MapIteratorWrapper<std::string, SEEscharotomy*>;
 template class MapIteratorWrapper<std::string, SEPainStimulus*>;
 template class MapIteratorWrapper<const SESubstance*, SESubstanceBolus*>;
 template class MapIteratorWrapper<const SESubstance*, SESubstanceInfusion*>;
+template class MapIteratorWrapper<const SESubstance*, SESubstanceInhalation*>;
 template class MapIteratorWrapper<const SESubstance*, SESubstanceOralDose*>;
 template class MapIteratorWrapper<const SESubstance*, SESubstanceNasalDose*>;
 template class MapIteratorWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
@@ -260,6 +263,7 @@ template class MapWrapper<std::string, SEEscharotomy*>;
 template class MapWrapper<std::string, SEPainStimulus*>;
 template class MapWrapper<const SESubstance*, SESubstanceBolus*>;
 template class MapWrapper<const SESubstance*, SESubstanceInfusion*>;
+template class MapWrapper<const SESubstance*, SESubstanceInhalation*>;
 template class MapWrapper<const SESubstance*, SESubstanceOralDose*>;
 template class MapWrapper<const SESubstance*, SESubstanceNasalDose*>;
 template class MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
@@ -1675,6 +1679,23 @@ void SEPatientActionCollection::RemoveSubstanceInfusion(const SESubstance& sub)
   SAFE_DELETE(si);
 }
 //-------------------------------------------------------------------------------
+const std::map<const SESubstance*, SESubstanceInhalation*>& SEPatientActionCollection::GetSubstanceInhalations() const
+{
+  return m_SubstanceInhalations;
+}
+//-------------------------------------------------------------------------------
+const MapWrapper<const SESubstance*, SESubstanceInhalation*> SEPatientActionCollection::GetSubstanceInhalationsWrapper() const
+{
+  return const_cast<SEPatientActionCollection*>(this)->m_SubstanceInhalations;
+}
+//-------------------------------------------------------------------------------
+void SEPatientActionCollection::RemoveSubstanceInhalation(const SESubstance& sub)
+{
+  SESubstanceInhalation* si = m_SubstanceInhalations[&sub];
+  m_SubstanceInhalations.erase(&sub);
+  SAFE_DELETE(si);
+}
+//-------------------------------------------------------------------------------
 const std::map<const SESubstance*, SESubstanceOralDose*>& SEPatientActionCollection::GetSubstanceOralDoses() const
 {
   return m_SubstanceOralDoses;
@@ -1761,6 +1782,23 @@ bool SEPatientActionCollection::AdministerSubstance(const SESubstanceAdministrat
       return true;
     }
     return IsValid(*mySubInfuse);
+  }
+
+  auto subInhalation = dynamic_cast<const SESubstanceInhalation*>(&subAdmin);
+  if (subInhalation != nullptr) {
+    SESubstance* sub = &subInhalation->GetSubstance();
+    SESubstanceInhalation* mySubInhale = m_SubstanceInhalations[sub];
+    if (mySubInhale == nullptr) {
+      mySubInhale = new SESubstanceInhalation(*sub);
+      m_SubstanceInhalations[sub] = mySubInhale;
+      m_Substances.AddActiveSubstance(*sub);
+    }
+    CDM_PATIENT_ACTION_COPY(SubstanceInhalation, *subInhalation, *mySubInhale)
+    if (!mySubInhale->IsActive()) {
+      RemoveSubstanceInhalation(*sub);
+      return true;
+    }
+    return IsValid(*mySubInhale);
   }
 
   auto NasalDose = dynamic_cast<const SESubstanceNasalDose*>(&subAdmin);

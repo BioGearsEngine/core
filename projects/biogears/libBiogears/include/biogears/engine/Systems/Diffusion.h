@@ -86,6 +86,8 @@ private:
   double CalciumPump(double intraCa_M);
 
   double m_dt_s;
+  double m_Ce;
+  //double m_Cp;
 
   std::vector<SESubstance*> m_SimpleDiffusionSubstances;
   std::vector<SESubstance*> m_InstantDiffusionSubstances;

@@ -777,6 +777,9 @@ namespace io {
       case CDM::enumSubstanceClass::Antibiotic:
         out = SESubstanceClass::Antibiotic;
         break;
+      case CDM::enumSubstanceClass::BloodAgent:
+        out = SESubstanceClass::BloodAgent;
+        break;
       case CDM::enumSubstanceClass::WholeBlood:
         out = SESubstanceClass::WholeBlood;
         break;
@@ -808,6 +811,9 @@ namespace io {
       break;
     case SESubstanceClass::Antibiotic:
       out = CDM::enumSubstanceClass::Antibiotic;
+      break;
+    case SESubstanceClass::BloodAgent:
+      out = CDM::enumSubstanceClass::BloodAgent;
       break;
     case SESubstanceClass::WholeBlood:
       out = CDM::enumSubstanceClass::WholeBlood;
@@ -910,6 +916,8 @@ bool operator==(CDM::enumSubstanceClass const& lhs, SESubstanceClass const& rhs)
     return (CDM::enumSubstanceClass::Anesthetic == lhs);
   case SESubstanceClass::Antibiotic:
     return (CDM::enumSubstanceClass::Antibiotic == lhs);
+  case SESubstanceClass::BloodAgent:
+    return (CDM::enumSubstanceClass::BloodAgent == lhs);
   case SESubstanceClass::WholeBlood:
     return (CDM::enumSubstanceClass::WholeBlood == lhs);
   case SESubstanceClass::Ion:

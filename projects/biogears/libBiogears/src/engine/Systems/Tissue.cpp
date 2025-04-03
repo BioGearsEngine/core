@@ -379,6 +379,8 @@ void Tissue::SetUp()
     }
   }
 
+  m_S = 798.; // Steady state Sulfure available (umol)
+
   m_leftArmDeltaResistance_mmHg_s_Per_mL = 0.0;
   m_rightArmDeltaResistance_mmHg_s_Per_mL = 0.0;
   m_leftLegDeltaResistance_mmHg_s_Per_mL = 0.0;
@@ -508,6 +510,7 @@ void Tissue::PreProcess()
   CalculateTissueFluidFluxes();
   CalculateOncoticPressure();
   CalculateCompartmentalBurn();
+  TestBloodAgent();
 }
 //--------------------------------------------------------------------------------------------------
 /// \brief
@@ -545,8 +548,44 @@ void Tissue::PostProcess()
     }
   }
 }
-
 //--------------------------------------------------------------------------------------------------
+/// \brief
+/// Just a test. Not for production.
+///
+//--------------------------------------------------------------------------------------------------
+void Tissue::TestBloodAgent()
+{
+  //double Metscn = 0.;
+  //SESubstance* drug = m_data.GetSubstances().GetSubstance(StandardSubstances::HCN);
+  //for (SESubstance* drug : m_data.GetSubstances().GetActiveDrugs()) {
+  //  if ((drug->GetClassification() == SESubstanceClass::BloodAgent)) {        
+  //    double MW = drug->GetMolarMass(MassPerAmountUnit::g_Per_mol);
+  //    double Vb = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
+  //    double Ch = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Liver)->GetSubstanceQuantity(*drug)->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
+
+  //    SETissueCompartment* tLiver = m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Liver);
+  //    double Vh = tLiver->GetMatrixVolume(VolumeUnit::mL);
+
+  //    double Kfs = 2.2*(1/60); //umol/s
+  //    double Kes = 0.0027 * (1/60); // 1/s
+  //    double Kscn = 0.01*1000*(1/60); // mL/umol/s
+
+  //    double Ch_umol_Per_mL = Ch / MW; 
+  //    Metscn = (Kscn * (Ch_umol_Per_mL)*m_S); // umol/s
+  //    double dS = (Kfs - Metscn - (Kes * m_S)) * m_Dt_s; // umol
+
+  //    double Metcsn_ug = Metscn * MW * m_Dt_s; // ug
+  //    double C_Metabolized_ug_Per_mL = -(Metcsn_ug / Vh);
+
+  //    m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Liver)->GetSubstanceQuantity(*drug)->GetConcentration().IncrementValue(C_Metabolized_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL);
+
+  //    m_S += dS;
+  //  }
+  //}
+  //m_data.GetDataTrack().Probe("m_SulfurAvailable_umol", m_S);
+  //m_data.GetDataTrack().Probe("m_Metscn_umol", Metscn * m_Dt_s);
+}
+  //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Determines the correct type of diffusion for a substance and executes the diffusion.
 ///

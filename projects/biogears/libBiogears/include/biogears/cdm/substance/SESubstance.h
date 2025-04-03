@@ -115,6 +115,7 @@ inline namespace StandardSubstances {
   static constexpr char const* const Globulin = "Globulin";
   static constexpr char const* const Glucagon = "Glucagon";
   static constexpr char const* const Glucose = "Glucose";
+  static constexpr char const* const HCN = "HCN";
   static constexpr char const* const Hemoglobin = "Hemoglobin";
   static constexpr char const* const Insulin = "Insulin";
   static constexpr char const* const Ketamine = "Ketamine";

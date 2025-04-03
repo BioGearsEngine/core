@@ -99,6 +99,7 @@ class SESubstanceBolus;
 class SESubstanceBolusState;
 class SESubstanceCompoundInfusion;
 class SESubstanceInfusion;
+class SESubstanceInhalation;
 class SESubstanceNasalDose;
 class SESubstanceOralDose;
 class SETourniquet;
@@ -261,6 +262,9 @@ namespace io {
     // class SESubstanceInfusion;
     static void UnMarshall(const CDM::SubstanceInfusionData& in, SESubstanceInfusion& out, std::default_random_engine* rd = nullptr);
     static void Marshall(const SESubstanceInfusion& in, CDM::SubstanceInfusionData& out);
+    // class SESubstanceInhalation;
+    static void UnMarshall(const CDM::SubstanceInhalationData& in, SESubstanceInhalation& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SESubstanceInhalation& in, CDM::SubstanceInhalationData& out);
     // class SESubstanceOralDose;
     static void UnMarshall(const CDM::SubstanceOralDoseData& in, SESubstanceOralDose& out, std::default_random_engine* rd = nullptr);
     static void Marshall(const SESubstanceOralDose& in, CDM::SubstanceOralDoseData& out);

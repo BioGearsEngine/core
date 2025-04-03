@@ -128,6 +128,14 @@ void Drugs::Initialize()
 void Drugs::SetUp()
 {
   m_dt_s = m_data.GetTimeStep().GetValue(TimeUnit::s);
+  m_Ce = 0.;
+  m_Met = 0;
+  m_TestCh = 0.;
+  m_TestCm = 0.;
+  m_TestCo = 0.;
+  m_Cpumolperl = 0.;
+  m_Pep = 0.;
+  m_S = 798; //SS
   m_RbcAcetylcholinesteraseFractionInhibited = 0.0;
   m_muscleIntracellular = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::MuscleIntracellular);
   m_aortaVascular = m_data.GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta);
@@ -168,6 +176,15 @@ void Drugs::PreProcess()
   AdministerSubstanceNasal();
   AdministerSubstanceOral();
   AdministerSubstanceInfusion();
+  AdministerSubstanceInhalation();
+  m_data.GetDataTrack().Probe("m_SulfurAvailable_umol", m_S);
+  m_data.GetDataTrack().Probe("m_Metscn_umol", m_Met);
+  m_data.GetDataTrack().Probe("Ce", m_Ce);
+  m_data.GetDataTrack().Probe("LiverC_ug_Per_mL", m_TestCh);
+  m_data.GetDataTrack().Probe("MuscleC_ug_Per_mL", m_TestCm);
+  m_data.GetDataTrack().Probe("OtherC_ug_Per_mL", m_TestCo);
+  m_data.GetDataTrack().Probe("Pep", m_Pep);
+  m_data.GetDataTrack().Probe("CP_umol_Per_L", m_Cpumolperl);
   AdministerSubstanceCompoundInfusion();
 }
 
@@ -334,6 +351,160 @@ void Drugs::AdministerSubstanceInfusion()
   }
   m_data.GetPatient().GetWeight().SetValue(patientMass_kg, MassUnit::kg);
   m_IVToVenaCava->GetNextFlowSource().SetValue(totalRate_mL_Per_s, VolumePerTimeUnit::mL_Per_s);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Increments the mass of a substance to represent drug inhalation
+///
+/// \details
+/// The mass of a substance is increased based on the air plasma partition coefficient and rate in of
+/// ambient concentration
+//--------------------------------------------------------------------------------------------------
+void Drugs::AdministerSubstanceInhalation()
+{
+  const std::map<const SESubstance*, SESubstanceInhalation*>& inhalations = m_data.GetActions().GetPatientActions().GetSubstanceInhalations();
+
+
+  SELiquidSubstanceQuantity* subQ;
+  SESubstanceInhalation* inhalation;
+  SESubstance* sub;
+  double Ppa = 281.;
+  double Fp = 0.6;
+  double Cle = 1098.33; // 65.9*1000./ 60.; // clearance flow between blood and ethrocytes(mL / s)
+
+  double patientMass_ug = m_data.GetPatient().GetWeight(MassUnit::ug);
+  double Qalv_mL_Per_s = m_data.GetRespiratory().GetTotalAlveolarVentilation(VolumePerTimeUnit::mL_Per_s);
+  double plasmaVolume_mL = m_data.GetBloodChemistry().GetPlasmaVolume(VolumeUnit::mL); // ml
+  double bloodVolume_mL = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL);
+  double rbcVolume_mL = bloodVolume_mL - plasmaVolume_mL; // ml
+  
+  double airConcentration_ug_Per_mL = 0.;
+  double currentPlasmaC_ug_Per_mL = 0.;
+  double massInhaled_ug = 0.;
+  double massExhaled_ug = 0.;
+  double massToRBC_ug = 0.;
+
+  for (auto i : inhalations) {
+    sub = (SESubstance*)i.first; /// \todo sub needs to be const
+    inhalation = i.second;
+    airConcentration_ug_Per_mL = inhalation->GetConcentration().GetValue(MassPerVolumeUnit::ug_Per_mL);
+    const double MW = sub->GetMolarMass(MassPerAmountUnit::g_Per_mol);
+    double Emax_umol_Per_L = 140.;
+    double Emax_ug_Per_mL = Emax_umol_Per_L * MW / 1000; 
+   
+    currentPlasmaC_ug_Per_mL = sub->GetPlasmaConcentration(MassPerVolumeUnit::ug_Per_mL);
+    bool testPlasmaC = isnan(currentPlasmaC_ug_Per_mL);
+    if (testPlasmaC) {
+      currentPlasmaC_ug_Per_mL = 0.;
+    }
+    double currentPlasmaC_umol_Per_L = (currentPlasmaC_ug_Per_mL * 1000.) / MW;
+
+    if (airConcentration_ug_Per_mL < 0) {
+      std::stringstream InhalationConcentrationError;
+      InhalationConcentrationError << "Cannot specify a concentration less than 0, setting to a default of 0 ug/mL";
+      Info(InhalationConcentrationError);
+      airConcentration_ug_Per_mL = 0.0;
+      inhalation->GetConcentration().SetValue(airConcentration_ug_Per_mL, MassPerVolumeUnit::ug_Per_mL);
+    }
+
+    if (airConcentration_ug_Per_mL == 0.) {
+      double testLand = 100.;
+    }
+
+    massInhaled_ug = Qalv_mL_Per_s * airConcentration_ug_Per_mL * m_dt_s; // ug
+    massExhaled_ug = (Qalv_mL_Per_s * (currentPlasmaC_ug_Per_mL / Ppa) * m_dt_s); // ug
+
+    double Pep = Emax_umol_Per_L / (currentPlasmaC_umol_Per_L + 1);
+
+    m_Cpumolperl = currentPlasmaC_umol_Per_L;
+    m_Pep = Pep;
+
+    massToRBC_ug = ((Cle * (currentPlasmaC_ug_Per_mL - (m_Ce / Pep)))) * m_dt_s; // ug
+
+    double dPlasmaCBreathing_ug_Per_mL = (massInhaled_ug - massExhaled_ug) / plasmaVolume_mL;
+    double dCp = dPlasmaCBreathing_ug_Per_mL - (massToRBC_ug / plasmaVolume_mL);
+    double dCe = massToRBC_ug / rbcVolume_mL;
+    m_Ce += dCe; //ug/mL
+
+    double massToAdd = (dCp * plasmaVolume_mL);
+
+    subQ = m_aortaVascular->GetSubstanceQuantity(*sub);
+    subQ->GetMass().IncrementValue(massToAdd, MassUnit::ug); // Can we justify some Fp value here????
+
+    patientMass_ug += (massInhaled_ug - massExhaled_ug); //ug to kg
+
+    if ((sub->GetClassification() == SESubstanceClass::BloodAgent)) {
+      SETissueCompartment& tLiver = *m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Liver);
+      SETissueCompartment& tBrain = *m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Brain);
+      SETissueCompartment& tFat = *m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Fat);
+      SETissueCompartment& tlKidney = *m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::LeftKidney);
+      SETissueCompartment& trKidney = *m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::RightKidney);
+      SETissueCompartment& tMusc = *m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Muscle);
+      SETissueCompartment& tlLung = *m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::LeftLung);
+      SETissueCompartment& trLung = *m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::RightLung);
+
+      SELiquidCompartment& icLiver = m_data.GetCompartments().GetIntracellularFluid(tLiver);
+      SELiquidCompartment& icBrain = m_data.GetCompartments().GetIntracellularFluid(tBrain);
+      SELiquidCompartment& icFat = m_data.GetCompartments().GetIntracellularFluid(tFat);
+      SELiquidCompartment& iclKidney = m_data.GetCompartments().GetIntracellularFluid(tlKidney);
+      SELiquidCompartment& icrKidney = m_data.GetCompartments().GetIntracellularFluid(trKidney);
+      SELiquidCompartment& icMusc = m_data.GetCompartments().GetIntracellularFluid(tMusc);
+      SELiquidCompartment& iclLung = m_data.GetCompartments().GetIntracellularFluid(tlLung);
+      SELiquidCompartment& icrLung = m_data.GetCompartments().GetIntracellularFluid(trLung);
+
+      double livTisDensity_kg_Per_L = 1.065;
+      double brainTisDensity_kg_Per_L = 1.081;
+      double fatTisDensity_kg_Per_L = 0.9196;
+      double kidTisDensity_kg_Per_L = 1.65;
+      double muscTisDensity_kg_Per_L = 1.06;
+      double lungTisDensity_kg_Per_L = 0.24;
+      // Getting tissue volume by totalMass/density because tissue compartments do not store a volume ("matrix volume" is not the whole fluid volume)
+      // Even though we store drug in intracellular cmpt, PK equations are derived assuming total tissue volume
+      double tisVolume_mL = (tLiver.GetTotalMass(MassUnit::kg) / livTisDensity_kg_Per_L) * 1000.0;
+      double brainVolume_mL = (tBrain.GetTotalMass(MassUnit::kg) / brainTisDensity_kg_Per_L) * 1000.0;
+      double fatVolume_mL = (tFat.GetTotalMass(MassUnit::kg) / fatTisDensity_kg_Per_L) * 1000.0;
+      double kidVolume_mL = ((tlKidney.GetTotalMass(MassUnit::kg) / kidTisDensity_kg_Per_L) * 1000.0) + ((trKidney.GetTotalMass(MassUnit::kg) / kidTisDensity_kg_Per_L) * 1000.0);
+      double muscVolume_mL = (tMusc.GetTotalMass(MassUnit::kg) / muscTisDensity_kg_Per_L) * 1000.0;
+      double lungVolume_mL = ((tlLung.GetTotalMass(MassUnit::kg) / lungTisDensity_kg_Per_L) * 1000.0) + ((trLung.GetTotalMass(MassUnit::kg) / lungTisDensity_kg_Per_L) * 1000.0);
+
+      SELiquidSubstanceQuantity* livQuant = icLiver.GetSubstanceQuantity(*sub);
+      SELiquidSubstanceQuantity* brainQuant = icBrain.GetSubstanceQuantity(*sub);
+      SELiquidSubstanceQuantity* fatQuant = icFat.GetSubstanceQuantity(*sub);
+      SELiquidSubstanceQuantity* lKidQuant = iclKidney.GetSubstanceQuantity(*sub);
+      SELiquidSubstanceQuantity* rKidQuant = icrKidney.GetSubstanceQuantity(*sub);
+      SELiquidSubstanceQuantity* muscQuant = icMusc.GetSubstanceQuantity(*sub);
+      SELiquidSubstanceQuantity* lLungQuant = iclLung.GetSubstanceQuantity(*sub);
+      SELiquidSubstanceQuantity* rLungQuant = icrLung.GetSubstanceQuantity(*sub);
+
+      double Ch = livQuant->GetMass(MassUnit::ug) / tisVolume_mL;
+      double Vh = tisVolume_mL;
+
+      double Cm = muscQuant->GetMass(MassUnit::ug) / muscVolume_mL;
+      double Co = (brainQuant->GetMass(MassUnit::ug) + fatQuant->GetMass(MassUnit::ug) + lKidQuant->GetMass(MassUnit::ug) + rKidQuant->GetMass(MassUnit::ug) + lLungQuant->GetMass(MassUnit::ug) + rLungQuant->GetMass(MassUnit::ug)) / (brainVolume_mL + fatVolume_mL + kidVolume_mL + lungVolume_mL);
+
+
+
+      m_TestCh = Ch;
+      m_TestCm = Cm;
+      m_TestCo = Co;
+      const double Kfs = 2.2/60.; // umol/s
+      const double Kes = 0.0027/60.; // 1/s
+
+      double Ch_umol_Per_mL = Ch / MW;
+
+      double Metscn = (0.167*(Ch_umol_Per_mL)*m_S); // umol/s; estimate 0.167 for Kscn
+      double dS = (Kfs - Metscn - (Kes * m_S)) * m_dt_s; // umol
+
+      double Metcsn_ug = Metscn*MW*m_dt_s; // ug
+
+      livQuant->GetMass().IncrementValue(-Metcsn_ug, MassUnit::ug);
+
+      m_Met += (Metscn*m_dt_s);
+      m_S += dS;
+    }
+  }
+  m_data.GetPatient().GetWeight().SetValue(patientMass_ug, MassUnit::ug);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1028,7 +1199,7 @@ void Drugs::CalculatePlasmaSubstanceConcentration()
   for (SESubstance* sub : m_data.GetSubstances().GetActiveDrugs()) {
 
     //--Assume that vena cava concentration is representative blood average (this is what we do in BloodChemistry) -
-    double bloodPlasmaRatio = 1.0; // Assume equal distribution for subs without a defined BP ratio
+    double bloodPlasmaRatio = 2.98; // Changed to test BA
     double massInBlood_ug = 0.0;
     if (sub->GetPK().GetPhysicochemicals().HasBloodPlasmaRatio()) {
       bloodPlasmaRatio = sub->GetPK().GetPhysicochemicals().GetBloodPlasmaRatio().GetValue();
@@ -1109,6 +1280,12 @@ void Drugs::CalculateSubstanceClearance()
     double LiverVascularFlow_mL_Per_s = m_liverVascular->GetInFlow().GetValue(VolumePerTimeUnit::mL_Per_s);
     HepaticClearance_mLPers = (LiverVascularFlow_mL_Per_s * FractionUnboundInPlasma * IntrinsicClearance_mLPersPerkg * PatientWeight_kg) / (LiverVascularFlow_mL_Per_s + (FractionUnboundInPlasma * IntrinsicClearance_mLPersPerkg * PatientWeight_kg));
     HepaticVolumeCleared_mL = HepaticClearance_mLPers * m_dt_s;
+
+    if ((sub->GetClassification() == SESubstanceClass::BloodAgent)) {
+      HepaticClearance_mLPers = (IntrinsicClearance_mLPersPerkg * PatientWeight_kg);
+      HepaticVolumeCleared_mL = HepaticClearance_mLPers * m_dt_s;
+    }
+
 
     // Systemic Clearance
     TotalVolumeCleared_mL = clearance.GetSystemicClearance().GetValue(VolumePerTimeMassUnit::mL_Per_s_kg) * PatientWeight_kg * m_dt_s;

@@ -141,6 +141,8 @@ bool SubstanceGenerator::process(const std::string& name, const std::string& val
       substance.Classification(SubstanceData::Classification_type::Anesthetic);
     } else if ("Antibiotic" == value) {
       substance.Classification(SubstanceData::Classification_type::Antibiotic);
+    } else if ("BloodAgent" == value) {
+      substance.Classification(SubstanceData::Classification_type::BloodAgent);
     } else if ("Ion" == value) {
       substance.Classification(SubstanceData::Classification_type::Ion);
     } else if ("Opioid" == value) {

@@ -86,6 +86,7 @@ public:
 protected:
   void AdministerSubstanceBolus();
   void AdministerSubstanceInfusion();
+  void AdministerSubstanceInhalation();
   void AdministerSubstanceCompoundInfusion();
   void AdministerSubstanceNasal();
   void AdministerSubstanceOral();
@@ -107,7 +108,14 @@ protected:
 
   // Stateless member variable (Set in SetUp())
   double m_dt_s;
-
+  double m_Ce;
+  double m_S;
+  double m_Met;
+  double m_TestCh;
+  double m_TestCo;
+  double m_TestCm;
+  double m_Pep;
+  double m_Cpumolperl;
   double m_RbcAcetylcholinesteraseFractionInhibited;
   SELiquidCompartment* m_aortaVascular;
   SELiquidCompartment* m_venaCavaVascular;

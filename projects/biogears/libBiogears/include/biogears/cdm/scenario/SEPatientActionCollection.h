@@ -49,6 +49,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
+#include <biogears/cdm/patient/actions/SESubstanceInhalation.h>
 #include <biogears/cdm/patient/actions/SESubstanceNasalDose.h>
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/actions/SETensionPneumothorax.h>
@@ -66,6 +67,7 @@ extern template class map<string, biogears::SEEscharotomy*>;
 extern template class map<string, biogears::SEPainStimulus*>;
 extern template class map<const biogears::SESubstance*, biogears::SESubstanceBolus*>;
 extern template class map<const biogears::SESubstance*, biogears::SESubstanceInfusion*>;
+extern template class map<const biogears::SESubstance*, biogears::SESubstanceInhalation*>;
 extern template class map<const biogears::SESubstance*, biogears::SESubstanceOralDose*>;
 extern template class map<const biogears::SESubstance*, biogears::SESubstanceNasalDose*>;
 extern template class map<const biogears::SESubstanceCompound*, biogears::SESubstanceCompoundInfusion*>;
@@ -177,6 +179,7 @@ extern template class PairWrapper<std::string, SEEscharotomy*>;
 extern template class PairWrapper<std::string, SEPainStimulus*>;
 extern template class PairWrapper<const SESubstance*, SESubstanceBolus*>;
 extern template class PairWrapper<const SESubstance*, SESubstanceInfusion*>;
+extern template class PairWrapper<const SESubstance*, SESubstanceInhalation*>;
 extern template class PairWrapper<const SESubstance*, SESubstanceOralDose*>;
 extern template class PairWrapper<const SESubstance*, SESubstanceNasalDose*>;
 extern template class PairWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
@@ -187,6 +190,7 @@ extern template class MapIteratorWrapper<std::string, SEEscharotomy*>;
 extern template class MapIteratorWrapper<std::string, SEPainStimulus*>;
 extern template class MapIteratorWrapper<const SESubstance*, SESubstanceBolus*>;
 extern template class MapIteratorWrapper<const SESubstance*, SESubstanceInfusion*>;
+extern template class MapIteratorWrapper<const SESubstance*, SESubstanceInhalation*>;
 extern template class MapIteratorWrapper<const SESubstance*, SESubstanceOralDose*>;
 extern template class MapIteratorWrapper<const SESubstance*, SESubstanceNasalDose*>;
 extern template class MapIteratorWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
@@ -197,6 +201,7 @@ extern template class MapWrapper<std::string, SEEscharotomy*>;
 extern template class MapWrapper<std::string, SEPainStimulus*>;
 extern template class MapWrapper<const SESubstance*, SESubstanceBolus*>;
 extern template class MapWrapper<const SESubstance*, SESubstanceInfusion*>;
+extern template class MapWrapper<const SESubstance*, SESubstanceInhalation*>;
 extern template class MapWrapper<const SESubstance*, SESubstanceOralDose*>;
 extern template class MapWrapper<const SESubstance*, SESubstanceNasalDose*>;
 extern template class MapWrapper<const SESubstanceCompound*, SESubstanceCompoundInfusion*>;
@@ -389,6 +394,10 @@ public:
   const MapWrapper<const SESubstance*, SESubstanceInfusion*> GetSubstanceInfusionsWrapper() const;
   void RemoveSubstanceInfusion(const SESubstance& sub);
 
+  const std::map<const SESubstance*, SESubstanceInhalation*>& GetSubstanceInhalations() const;
+  const MapWrapper<const SESubstance*, SESubstanceInhalation*> GetSubstanceInhalationsWrapper() const;
+  void RemoveSubstanceInhalation(const SESubstance& sub);
+
   const std::map<const SESubstance*, SESubstanceNasalDose*>& GetSubstanceNasalDoses() const;
   const MapWrapper<const SESubstance*, SESubstanceNasalDose*> GetSubstanceNasalDosesWrapper() const;
   void RemoveSubstanceNasalDose(const SESubstance& sub);
@@ -462,6 +471,7 @@ protected:
   std::map<std::string, SEPainStimulus*> m_PainStimuli;
   std::map<const SESubstance*, SESubstanceBolus*> m_SubstanceBolus;
   std::map<const SESubstance*, SESubstanceInfusion*> m_SubstanceInfusions;
+  std::map<const SESubstance*, SESubstanceInhalation*> m_SubstanceInhalations;
   std::map<const SESubstance*, SESubstanceOralDose*> m_SubstanceOralDoses;
   std::map<const SESubstance*, SESubstanceNasalDose*> m_SubstanceNasalDoses;
   std::map<const SESubstanceCompound*, SESubstanceCompoundInfusion*> m_SubstanceCompoundInfusions;

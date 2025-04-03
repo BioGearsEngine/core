@@ -1317,6 +1317,9 @@ void BioGearsSubstances::CalculateGenericClearance(double volumeCleared_mL, SELi
 void BioGearsSubstances::CalculateGenericClearance(double VolumeCleared_mL, SETissueCompartment& tissue, SESubstance& sub, SEScalarMass* cleared)
 {
   SELiquidSubstanceQuantity* subQ = m_data.GetCompartments().GetIntracellularFluid(tissue).GetSubstanceQuantity(sub);
+  SETissueCompartment& tLiver = *m_data.GetCompartments().GetTissueCompartment(BGE::TissueCompartment::Liver);
+  double livTisDensity_kg_Per_L = 1.065;
+  double tisVolume_mL = (tLiver.GetTotalMass(MassUnit::kg) / livTisDensity_kg_Per_L) * 1000.0;
   if (subQ == nullptr)
     throw CommonDataModelException(std::string { "No Substance Quantity found for substance" } + sub.GetName());
   // GetMass and Concentration from the compartment
@@ -1328,6 +1331,9 @@ void BioGearsSubstances::CalculateGenericClearance(double VolumeCleared_mL, SETi
     concentration_ug_Per_mL = concentration.GetValue(MassPerVolumeUnit::ug_Per_mL);
   } else {
     concentration_ug_Per_mL = subQ->GetConcentration(MassPerVolumeUnit::ug_Per_mL);
+  }
+  if (sub.GetName() == "HCN") {
+    concentration_ug_Per_mL = mass_ug / tisVolume_mL;
   }
 
   // Calculate Mass Cleared
