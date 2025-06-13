@@ -98,6 +98,14 @@ std::pair<std::set<std::string>, std::string> find_best_match(std::set<std::stri
         && (std::includes(properties.begin(), properties.end(), key.begin(), key.end())
             || (key.size() == 1 && key.contains(default_key)))) {
       result = { key, distribution.unit() };
+  if (params.size() == 1) {
+    _runs.emplace_back("PopulationTemplate.xml", 20);
+  } else {
+    for (auto i = 0; i < params.size(); ++i) {
+      if (i + 2 <= params.size()) {
+        _runs.emplace_back(params[i], std::stoi(params[i + 1]));
+      }
+      i += 2;
     }
   }
 
@@ -494,6 +502,7 @@ void PopulationGenerator::Generate()
           profile.tags.insert(tag);
         }
 
+<<<<<<< HEAD
         for (auto i = 0; i < profile.count; ++i) {
           CDM::PatientData patient;
           #ifdef WIN32
@@ -515,6 +524,331 @@ void PopulationGenerator::Generate()
               patient.Age().get().unit(unit);
             }
           }
+=======
+
+        //This is a really complicated way of saying (
+        patient.Sex().set(binomial_distribution(gen) ? CDM::enumSex::Female : CDM::enumSex::Male);
+        if (patient.Sex().get() == CDM::enumSex::Male) {
+          uniform_distribution = std::uniform_int_distribution<>(0, static_cast<int>(_boy_names.size() - 1));
+          int name_index = uniform_distribution(gen);
+          
+          patient.Name(_boy_names[name_index]);
+          _boy_names[name_index] = std::move(_boy_names.back());
+          _boy_names.pop_back();
+        } else {
+          uniform_distribution = std::uniform_int_distribution<>(0, static_cast<int> (_girl_names.size() - 1));
+          int name_index = uniform_distribution(gen);
+          patient.Name(_girl_names[name_index]);
+          _girl_names[name_index] = std::move(_girl_names.back());
+          _girl_names.pop_back();
+        }
+        patientFilename.append(patient.Sex().get() + "_");
+
+        if (!population->AgeDistribution().empty()) {
+          unit_str = population->AgeDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->AgeDistribution()[0].mean(),
+                                                             population->AgeDistribution()[0].diviation());
+          for (auto& distribution : population->AgeDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "yr";
+          }
+          double ageMaximum = standard_distribution.max();
+          double ageMinimum = standard_distribution.min();
+          if (population->AgeDistribution()[0].maximum().present()) {
+            ageMaximum = population->AgeDistribution()[0].maximum().get();
+          }
+          if (population->AgeDistribution()[0].minimum().present()) {
+            ageMinimum = population->AgeDistribution()[0].minimum().get();
+          }
+          while (!patient.Age().present() || patient.Age().get().value() > ageMaximum || patient.Age().get().value() < ageMinimum) {
+            patient.Age(standard_distribution(gen));
+            patient.Age()->unit(unit_str);
+          }
+        }
+        patientFilename.append(std::to_string(int(patient.Age().get().value())) + "_");
+
+        if (!population->WeightDistribution().empty()) {
+          unit_str = population->WeightDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->WeightDistribution()[0].mean(),
+                                                             population->WeightDistribution()[0].diviation());
+          for (auto& distribution : population->WeightDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "kg";
+          }
+          double weightMaximum = standard_distribution.max();
+          double weightMinimum = standard_distribution.min();
+          if (population->WeightDistribution()[0].maximum().present()) {
+            weightMaximum = population->WeightDistribution()[0].maximum().get();
+          }
+          if (population->WeightDistribution()[0].minimum().present()) {
+            weightMinimum = population->WeightDistribution()[0].minimum().get();
+          }
+          while (!patient.Weight().present() || patient.Weight().get().value() > weightMaximum || patient.Weight().get().value() < weightMinimum) {
+            patient.Weight(standard_distribution(gen));
+            patient.Weight()->unit(unit_str);
+          }
+        }
+        if (!population->HeightDistribution().empty()) {
+          unit_str = population->HeightDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->HeightDistribution()[0].mean(),
+                                                             population->HeightDistribution()[0].diviation());
+          for (auto& distribution : population->HeightDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "cm";
+          }
+          double heightMaximum = standard_distribution.max();
+          double heightMinimum = standard_distribution.min();
+          if (population->HeightDistribution()[0].maximum().present()) {
+            heightMaximum = population->HeightDistribution()[0].maximum().get();
+          }
+          if (population->HeightDistribution()[0].minimum().present()) {
+            heightMinimum = population->HeightDistribution()[0].minimum().get();
+          }
+          while (!patient.Height().present() || patient.Height().get().value() > heightMaximum || patient.Height().get().value() < heightMinimum) {
+            patient.Height(standard_distribution(gen));
+            patient.Height()->unit(unit_str);
+          }
+        }
+        if ((!population->BMIDistribution().empty() && population->WeightDistribution().empty()) || (!population->BMIDistribution().empty() && population->HeightDistribution().empty())) {
+          unit_str = population->BMIDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->BMIDistribution()[0].mean(),
+                                                             population->BMIDistribution()[0].diviation());
+          for (auto& distribution : population->BMIDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          double bmiMaximum = standard_distribution.max();
+          double bmiMinimum = standard_distribution.min();
+          if (population->BMIDistribution()[0].maximum().present()) {
+            bmiMaximum = population->BMIDistribution()[0].maximum().get();
+          }
+          if (population->BMIDistribution()[0].minimum().present()) {
+            bmiMinimum = population->BMIDistribution()[0].minimum().get();
+          }
+          while (!patient.BMI().present() || patient.BMI().get().value() > bmiMaximum || patient.BMI().get().value() < bmiMinimum) {
+            patient.BMI(standard_distribution(gen));
+            patient.BMI()->unit(unit_str);
+          }
+        }
+
+        //if (!population->BodyFatFractionDistribution().empty()) {
+        //  standard_distribution = std::normal_distribution<>(population->BodyFatFractionDistribution()[0].mean(),
+        //                                                     population->BodyFatFractionDistribution()[0].diviation());
+        //  for (auto& distribution : population->BodyFatFractionDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+
+        //  patient.BodyFatFraction(standard_distribution(gen));
+        //  patient.BodyFatFraction()->unit("");
+        //}
+        if (!population->MaxWorkRateDistribution().empty()) {
+          unit_str = population->MaxWorkRateDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->MaxWorkRateDistribution()[0].mean(),
+                                                             population->MaxWorkRateDistribution()[0].diviation());
+          for (auto& distribution : population->MaxWorkRateDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "W";
+          }
+          patient.MaxWorkRate(standard_distribution(gen));
+          patient.MaxWorkRate()->unit(unit_str);
+        }
+        if (!population->BloodTypeABODistribution().empty()) {
+          std::vector<CDM::DiscreteDistributionRangeData::weight_type> weights;
+          for (auto weight : population->BloodTypeABODistribution()[0].weight()) {
+            weights.emplace_back(weight);
+          }
+          auto discrete_distribution = std::discrete_distribution<>(weights.begin(), weights.end());
+          for (auto& distribution : population->BloodTypeABODistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              weights.clear();
+              for (auto weight : distribution.weight()) {
+                weights.emplace_back(weight);
+              }
+              discrete_distribution = std::discrete_distribution<>(weights.begin(), weights.end());
+            }
+          }
+          //Note: Very easy for the user to key in more weights then blood types and generate
+          //Non Viable Enum Values
+          patient.BloodTypeABO(CDM::enumBloodType::value(discrete_distribution(gen)));
+        }
+        if (!population->BloodTypeRhDistribution().empty()) {
+          binomial_distribution = std::binomial_distribution<>(1, population->BloodTypeRhDistribution()[0].weight());
+          for (auto& distribution : population->BloodTypeRhDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              binomial_distribution = std::binomial_distribution<>(1, distribution.weight());
+            }
+          }
+          patient.BloodTypeRh(binomial_distribution(gen));
+        }
+        //if (!population->AlveoliSurfaceAreaDistribution().empty()) {
+        //  unit_str = population->AlveoliSurfaceAreaDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->AlveoliSurfaceAreaDistribution()[0].mean(),
+        //                                                     population->AlveoliSurfaceAreaDistribution()[0].diviation());
+        //  for (auto& distribution : population->AlveoliSurfaceAreaDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "m^2";
+        //  }
+        //  patient.AlveoliSurfaceArea(standard_distribution(gen));
+        //  patient.AlveoliSurfaceArea()->unit(unit_str);
+        //}
+        //if (!population->HyperhidrosisDistribution().empty()) {
+        //  standard_distribution = std::normal_distribution<>(population->HyperhidrosisDistribution()[0].mean(),
+        //                                                     population->HyperhidrosisDistribution()[0].diviation());
+        //  for (auto& distribution : population->HyperhidrosisDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  patient.Hyperhidrosis(standard_distribution(gen));
+        //  patient.Hyperhidrosis()->unit(unit_str);
+        //}
+        //if (!population->RightLungRatioDistribution().empty()) {
+        //  standard_distribution = std::normal_distribution<>(population->RightLungRatioDistribution()[0].mean(),
+        //                                                     population->RightLungRatioDistribution()[0].diviation());
+        //  for (auto& distribution : population->RightLungRatioDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  patient.RightLungRatio(standard_distribution(gen));
+        //}
+        //if (!population->SkinSurfaceAreaDistribution().empty()) {
+        //  unit_str = population->SkinSurfaceAreaDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->SkinSurfaceAreaDistribution()[0].mean(),
+        //                                                     population->SkinSurfaceAreaDistribution()[0].diviation());
+        //  for (auto& distribution : population->SkinSurfaceAreaDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "m^2";
+        //  }
+        //  patient.SkinSurfaceArea(standard_distribution(gen));
+        //  patient.SkinSurfaceArea()->unit(unit_str);
+        //}
+        if (!population->SleepAmountDistribution().empty()) {
+          unit_str = population->SleepAmountDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->SleepAmountDistribution()[0].mean(),
+                                                             population->SleepAmountDistribution()[0].diviation());
+          for (auto& distribution : population->SleepAmountDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "hr";
+          }
+          patient.SleepAmount(standard_distribution(gen));
+          patient.SleepAmount()->unit(unit_str);
+        }
+        //if (!population->PainSusceptibilityDistribution().empty()) {
+        //  standard_distribution = std::normal_distribution<>(population->PainSusceptibilityDistribution()[0].mean(),
+        //                                                     population->PainSusceptibilityDistribution()[0].diviation());
+        //  for (auto& distribution : population->PainSusceptibilityDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  patient.PainSusceptibility(standard_distribution(gen));
+        //}
+        if (!population->BasalMetabolicRateDistribution().empty()) {
+          unit_str = population->BasalMetabolicRateDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->BasalMetabolicRateDistribution()[0].mean(),
+                                                             population->BasalMetabolicRateDistribution()[0].diviation());
+          for (auto& distribution : population->BasalMetabolicRateDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "kcal/day";
+          }
+          patient.BasalMetabolicRate(standard_distribution(gen));
+          patient.BasalMetabolicRate()->unit(unit_str);
+        }
+        //if (!population->BloodVolumeBaselineDistribution().empty()) {
+        //  unit_str = population->BloodVolumeBaselineDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->BloodVolumeBaselineDistribution()[0].mean(),
+        //                                                     population->BloodVolumeBaselineDistribution()[0].diviation());
+        //  for (auto& distribution : population->BloodVolumeBaselineDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "mL";
+        //  }
+        //  patient.BloodVolumeBaseline(standard_distribution(gen));
+        //  patient.BloodVolumeBaseline()->unit(unit_str);
+        //}
+        if (!population->DiastolicArterialPressureBaselineDistribution().empty()) {
+          unit_str = population->DiastolicArterialPressureBaselineDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->DiastolicArterialPressureBaselineDistribution()[0].mean(),
+                                                             population->DiastolicArterialPressureBaselineDistribution()[0].diviation());
+          for (auto& distribution : population->DiastolicArterialPressureBaselineDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "mmHg";
+          }
+          patient.DiastolicArterialPressureBaseline(standard_distribution(gen));
+          patient.DiastolicArterialPressureBaseline()->unit(unit_str);
+        }
+        if (!population->HeartRateBaselineDistribution().empty()) {
+          unit_str = population->HeartRateBaselineDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->HeartRateBaselineDistribution()[0].mean(),
+                                                             population->HeartRateBaselineDistribution()[0].diviation());
+          for (auto& distribution : population->HeartRateBaselineDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "1/min";
+          }
+          patient.HeartRateBaseline(standard_distribution(gen));
+          patient.HeartRateBaseline()->unit(unit_str);
+        }
+>>>>>>> 76b4f019 (abaird - patient generator generates too many broken patients, commenting out distributions until we can get it to be a bit more reliable, all other data fields seem to work well after testing. Fixing a nan that pops up for the agglutinate model)
 
           if (distributions.find(Weight) != distributions.end()) {
             auto [best_match, unit] = find_best_match(profile.tags, distributions[Weight]);
@@ -523,6 +857,111 @@ void PopulationGenerator::Generate()
               patient.Weight().get().unit(unit);
             }
           }
+<<<<<<< HEAD
+=======
+          if (unit_str.empty()) {
+            unit_str = "1/min";
+          }
+          patient.RespirationRateBaseline(standard_distribution(gen));
+          patient.RespirationRateBaseline()->unit(unit_str);
+        }
+        if (!population->SystolicArterialPressureBaselineDistribution().empty()) {
+          unit_str = population->SystolicArterialPressureBaselineDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->SystolicArterialPressureBaselineDistribution()[0].mean(),
+                                                             population->SystolicArterialPressureBaselineDistribution()[0].diviation());
+          for (auto& distribution : population->SystolicArterialPressureBaselineDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "mmHg";
+          }
+          patient.SystolicArterialPressureBaseline(standard_distribution(gen));
+          patient.SystolicArterialPressureBaseline()->unit(unit_str);
+        }
+        if (!population->HeartRateMaximumDistribution().empty()) {
+          unit_str = population->HeartRateMaximumDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->HeartRateMaximumDistribution()[0].mean(),
+                                                             population->HeartRateMaximumDistribution()[0].diviation());
+          for (auto& distribution : population->HeartRateMaximumDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "1/min";
+          }
+          patient.HeartRateMaximum(standard_distribution(gen));
+          patient.HeartRateMaximum()->unit(unit_str);
+        }
+        if (!population->HeartRateMinimumDistribution().empty()) {
+          unit_str = population->HeartRateMinimumDistribution()[0].unit();
+          standard_distribution = std::normal_distribution<>(population->HeartRateMinimumDistribution()[0].mean(),
+                                                             population->HeartRateMinimumDistribution()[0].diviation());
+          for (auto& distribution : population->HeartRateMinimumDistribution()) {
+            if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+              unit_str = distribution.unit();
+              standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+            }
+          }
+          if (unit_str.empty()) {
+            unit_str = "1/min";
+          }
+          patient.HeartRateMinimum(standard_distribution(gen));
+          patient.HeartRateMinimum()->unit(unit_str);
+        }
+        //if (!population->FunctionalResidualCapacityDistribution().empty()) {
+        //  unit_str = population->FunctionalResidualCapacityDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->FunctionalResidualCapacityDistribution()[0].mean(),
+        //                                                     population->FunctionalResidualCapacityDistribution()[0].diviation());
+        //  for (auto& distribution : population->FunctionalResidualCapacityDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "L";
+        //  }
+        //  patient.FunctionalResidualCapacity(standard_distribution(gen));
+        //  patient.FunctionalResidualCapacity()->unit(unit_str);
+        //}
+        //if (!population->ResidualVolumeDistribution().empty()) {
+        //  unit_str = population->ResidualVolumeDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->ResidualVolumeDistribution()[0].mean(),
+        //                                                     population->ResidualVolumeDistribution()[0].diviation());
+        //  for (auto& distribution : population->ResidualVolumeDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "L";
+        //  }
+        //  patient.ResidualVolume(standard_distribution(gen));
+        //  patient.ResidualVolume()->unit(unit_str);
+        //}
+        //if (!population->TotalLungCapacityDistribution().empty()) {
+        //  unit_str = population->TotalLungCapacityDistribution()[0].unit();
+        //  standard_distribution = std::normal_distribution<>(population->TotalLungCapacityDistribution()[0].mean(),
+        //                                                     population->TotalLungCapacityDistribution()[0].diviation());
+        //  for (auto& distribution : population->TotalLungCapacityDistribution()) {
+        //    if (CDM::enumSex(distribution.group()) == patient.Sex().get()) {
+        //      unit_str = distribution.unit();
+        //      standard_distribution = std::normal_distribution<>(distribution.mean(), distribution.diviation());
+        //    }
+        //  }
+        //  if (unit_str.empty()) {
+        //    unit_str = "L";
+        //  }
+        //  patient.TotalLungCapacity(standard_distribution(gen));
+        //  patient.TotalLungCapacity()->unit(unit_str);
+        //}
+>>>>>>> 76b4f019 (abaird - patient generator generates too many broken patients, commenting out distributions until we can get it to be a bit more reliable, all other data fields seem to work well after testing. Fixing a nan that pops up for the agglutinate model)
 
           if (distributions.find(Height) != distributions.end()) {
             auto [best_match, unit] = find_best_match(profile.tags, distributions[Height]);
