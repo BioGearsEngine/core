@@ -825,7 +825,10 @@ void Renal::CalculateGlomerularTransport(SESubstance& sub)
 
     double massToMove_mg = concentration_mg_Per_mL * flow_mL_Per_s * m_dt * filterability * fractionUnbound;
 
-    // Make sure we don't try to move too much
+    if (sub.GetName() == "Lactate" && m_data.GetBloodChemistry().GetArterialBloodPH().GetValue() < 7.32) {
+      massToMove_mg *= 8.5;
+    }
+
     massToMove_mg = std::min(massToMove_mg, glomerularSubQ->GetMass().GetValue(MassUnit::mg));
 
     // Increment & decrement
@@ -1022,6 +1025,11 @@ void Renal::CalculateReabsorptionTransport(SESubstance& sub)
   SELiquidSubstanceQuantity* tubulesSubQ = nullptr;
   SELiquidSubstanceQuantity* peritubularSubQ = nullptr;
   SEFluidCircuitPath* reabsorptionResistancePath = nullptr;
+
+  //we want to adjust the reabsorption in response to ph in the blood
+  if (sub.GetName() == "Lactate" && m_data.GetBloodChemistry().GetArterialBloodPH().GetValue() < 7.32) {
+    sub.GetClearance().GetRenalReabsorptionRatio().SetValue(0.000001);
+  }
 
   double totalReabsorptionRate_mg_Per_s = 0.0;
   // We'll apply the factor to the effectively make the FiltrationFraction change by the same amount
