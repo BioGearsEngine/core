@@ -160,7 +160,7 @@ HemThread::~HemThread()
 
 void HemThread::AdministerVasopressin(double& bolus)
 {
-  m_VasopressinBolus->SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  m_VasopressinBolus->SetAdminRoute(SEBolusAdministration::Intravenous);
   m_VasopressinBolus->GetConcentration().SetValue(1.0, MassPerVolumeUnit::mg_Per_mL);
   m_VasopressinBolus->GetDose().SetValue(bolus, VolumeUnit::mL);
   m_mutex.lock();
@@ -219,7 +219,7 @@ void HemThread::AdvanceTimeFluids()
     if (m_ivBagVolumeBlood_mL < 0.0) {
       m_bg->GetLogger()->Info("blood bag is empty \n");
       m_ivBagVolumeBlood_mL = 0.0;
-      m_blood->Clear();
+      m_blood->Invalidate();
     }
   }
   //repeat for plasma
@@ -230,7 +230,7 @@ void HemThread::AdvanceTimeFluids()
     if (m_ivBagVolumePlasma_mL < 0.0) {
       m_bg->GetLogger()->Info("blood bag is empty \n");
       m_ivBagVolumePlasma_mL = 0.0;
-      m_plasma->Clear();
+      m_plasma->Invalidate();
     }
   }
   m_bg->GetEngineTrack()->GetDataTrack().Probe("totalFluid_mL", m_TotalVolume_mL);
@@ -379,7 +379,7 @@ void HemThread::FluidLoading(double hemFlow)
     }
 
     //exit checks:
-    if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::IrreversibleState)) {
+    if (m_bg->GetPatient().IsEventActive(SEPatientEventType::IrreversibleState)) {
       //m_bg->GetLogger()->Info(std::stringstream() << "oh no!");
       m_bg->GetLogger()->Info("///////////////////////////////////////////////////////////////");
       m_runThread = false;
