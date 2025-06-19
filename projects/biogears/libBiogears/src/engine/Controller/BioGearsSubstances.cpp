@@ -743,7 +743,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   lymph->GetSubstanceQuantity(*m_ketones)->Balance(BalanceLiquidBy::Molarity);
 
   // LACTATE //
-  concentration.SetValue(80.0, MassPerVolumeUnit::mg_Per_L);
+  concentration.SetValue(10.0, MassPerVolumeUnit::mg_Per_L);
   molarity1.SetValue(concentration.GetValue(MassPerVolumeUnit::g_Per_L) / m_lactate->GetMolarMass(MassPerAmountUnit::g_Per_mol), AmountPerVolumeUnit::mol_Per_L);
   SetSubstanceConcentration(*m_lactate, vascular, concentration);
   // set in tubules zero in urine
@@ -776,7 +776,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   lymph->GetSubstanceQuantity(*m_lactate)->Balance(BalanceLiquidBy::Molarity);
 
   // POTASSIUM //
-  concentration.SetValue(150.5, MassPerVolumeUnit::mg_Per_L);
+  concentration.SetValue(250.5, MassPerVolumeUnit::mg_Per_L);
   SetSubstanceConcentration(*m_potassium, vascular, concentration);
   // Set Urine
   concentration.SetValue(150.5, MassPerVolumeUnit::mg_Per_L);
@@ -809,7 +809,7 @@ void BioGearsSubstances::InitializeLiquidCompartmentNonGases()
   lymph->GetSubstanceQuantity(*m_potassium)->Balance(BalanceLiquidBy::Molarity);
 
   // SODIUM //
-  concentration.SetValue(0.335, MassPerVolumeUnit::g_Per_dL);
+  concentration.SetValue(0.353, MassPerVolumeUnit::g_Per_dL);
   SetSubstanceConcentration(*m_sodium, vascular, concentration);
   // Set Urine
   subQ = leftBowmansCapsules->GetSubstanceQuantity(*m_sodium);
