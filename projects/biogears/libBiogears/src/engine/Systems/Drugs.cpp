@@ -458,7 +458,7 @@ void Drugs::AdministerSubstanceInhalation()
       double fatTisDensity_kg_Per_L = 0.9196;
       double kidTisDensity_kg_Per_L = 1.65;
       double muscTisDensity_kg_Per_L = 1.06;
-      double lungTisDensity_kg_Per_L = 0.24;
+      double lungTisDensity_kg_Per_L = 1.0;
       // Getting tissue volume by totalMass/density because tissue compartments do not store a volume ("matrix volume" is not the whole fluid volume)
       // Even though we store drug in intracellular cmpt, PK equations are derived assuming total tissue volume
       double tisVolume_mL = (tLiver.GetTotalMass(MassUnit::kg) / livTisDensity_kg_Per_L) * 1000.0;
@@ -481,6 +481,10 @@ void Drugs::AdministerSubstanceInhalation()
       double Vh = tisVolume_mL;
 
       double Cm = muscQuant->GetMass(MassUnit::ug) / muscVolume_mL;
+      double Cbrain = brainQuant->GetMass(MassUnit::ug) / brainVolume_mL;
+      double Cfat = fatQuant->GetMass(MassUnit::ug) / fatVolume_mL;
+      double Clung = (lLungQuant->GetMass(MassUnit::ug) + rLungQuant->GetMass(MassUnit::ug)) / lungVolume_mL;
+      double Ckid = (lKidQuant->GetMass(MassUnit::ug) + rKidQuant->GetMass(MassUnit::ug)) / kidVolume_mL;
       double Co = (brainQuant->GetMass(MassUnit::ug) + fatQuant->GetMass(MassUnit::ug) + lKidQuant->GetMass(MassUnit::ug) + rKidQuant->GetMass(MassUnit::ug) + lLungQuant->GetMass(MassUnit::ug) + rLungQuant->GetMass(MassUnit::ug)) / (brainVolume_mL + fatVolume_mL + kidVolume_mL + lungVolume_mL);
 
 
