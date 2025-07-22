@@ -146,15 +146,15 @@ SaturationCalculator::SaturationCalculator(BioGears& bg)
 void SaturationCalculator::Initialize(SESubstanceManager& substances)
 {
   m_Logger = substances.GetLogger();
-  m_O2 = substances.GetSubstance("Oxygen");
-  m_CO2 = substances.GetSubstance("CarbonDioxide");
-  m_CO = substances.GetSubstance("CarbonMonoxide");
-  m_Hb = substances.GetSubstance("Hemoglobin");
-  m_HbO2 = substances.GetSubstance("Oxyhemoglobin");
-  m_HbCO2 = substances.GetSubstance("Carbaminohemoglobin");
-  m_HbCO = substances.GetSubstance("Carboxyhemoglobin");
-  m_HbO2CO2 = substances.GetSubstance("OxyCarbaminohemoglobin");
-  m_HCO3 = substances.GetSubstance("Bicarbonate");
+  m_O2 = substances.GetSubstance(StandardSubstances::Oxygen);
+  m_CO2 = substances.GetSubstance(StandardSubstances::CarbonDioxide);
+  m_CO = substances.GetSubstance(StandardSubstances::CarbonMonoxide);
+  m_Hb = substances.GetSubstance(StandardSubstances::Hemoglobin);
+  m_HbO2 = substances.GetSubstance(StandardSubstances::Oxyhemoglobin);
+  m_HbCO2 = substances.GetSubstance(StandardSubstances::Carbaminohemoglobin);
+  m_HbCO = substances.GetSubstance(StandardSubstances::Carboxyhemoglobin);
+  m_HbO2CO2 = substances.GetSubstance(StandardSubstances::OxyCarbaminohemoglobin);
+  m_HCO3 = substances.GetSubstance(StandardSubstances::Bicarbonate);
 
   if (m_O2 == nullptr)
     Fatal("Oxygen Definition not found");
@@ -804,7 +804,7 @@ void SaturationCalculator::CalculateBloodGasDistribution(SELiquidCompartment& cm
   totalHbRelativeError = (resultantTotalHgb_mM - InputAmountTotalHb_mM) / InputAmountTotalHb_mM;
 
   //These shouldn't really happen unless we're at crazy extremes
-  if (!m_data.GetPatient().IsEventActive(CDM::enumPatientEvent::HemolyticTransfusionReaction)) {
+  if (!m_data.GetPatient().IsEventActive(SEPatientEventType::HemolyticTransfusionReaction)) {
     if (std::abs(totalCO2RelativeError) > tolerance && InputAmountTotalCO2_mM > approxZero) {
       resultantDissolvedCO2_mM += (InputAmountTotalCO2_mM - resultantTotalCO2_mM);
       errMsg << "Failure to conserve CO2 amount (GeneralMath:CalculateBloodGasDistribution);"

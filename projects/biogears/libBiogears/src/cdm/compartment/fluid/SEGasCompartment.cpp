@@ -11,12 +11,22 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 
+#include "io/cdm/Compartment.h"
+#include <biogears/cdm/utils/GeneralMath.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+
 #include <biogears/cdm/compartment/SECompartmentGraph.inl>
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+
+namespace std {
+  template class vector<biogears::SEGasCompartment*>;
+//template class map<string, biogears::SEGasCompartment*>;
+}
+
 
 namespace biogears {
 SEGasCompartment::SEGasCompartment(const char* name, Logger* logger)
@@ -32,38 +42,7 @@ SEGasCompartment::SEGasCompartment(const std::string& name, Logger* logger)
 SEGasCompartment::~SEGasCompartment()
 {
 }
-//-------------------------------------------------------------------------------
-bool SEGasCompartment::Load(const CDM::GasCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
-{
-  if (!SEFluidCompartment::Load(in, circuits))
-    return false;
-  if (in.Child().empty()) {
-    for (const CDM::GasSubstanceQuantityData& d : in.SubstanceQuantity()) {
-      SESubstance* sub = subMgr.GetSubstance(d.Substance());
-      if (sub == nullptr) {
-        Error("Could not find a substance for " + std::string { d.Substance() });
-        return false;
-      }
-      CreateSubstanceQuantity(*sub).Load(d);
-      ;
-    }
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::GasCompartmentData* SEGasCompartment::Unload()
-{
-  CDM::GasCompartmentData* data = new CDM::GasCompartmentData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEGasCompartment::Unload(CDM::GasCompartmentData& data)
-{
-  SEFluidCompartment::Unload(data);
-  for (SEGasSubstanceQuantity* subQ : m_SubstanceQuantities)
-    data.SubstanceQuantity().push_back(std::unique_ptr<CDM::GasSubstanceQuantityData>(subQ->Unload()));
-}
+
 //-------------------------------------------------------------------------------
 void SEGasCompartment::StateChange()
 {
@@ -86,7 +65,7 @@ void SEGasCompartment::Balance(BalanceGasBy by)
     }
     for (SEGasSubstanceQuantity* subQ : GetSubstanceQuantities()) {
       if (!subQ->HasVolume()) {
-        subQ->Invalidate();
+        subQ->MakeInvalid();
         continue;
       } else {
         subQ->GetVolumeFraction().SetValue(subQ->GetVolume(VolumeUnit::mL) / totalVolume_mL);
@@ -100,7 +79,7 @@ void SEGasCompartment::Balance(BalanceGasBy by)
   case BalanceGasBy::VolumeFraction: {
     if (!HasVolume()) {
       for (SEGasSubstanceQuantity* subQ : GetSubstanceQuantities()) {
-        subQ->Invalidate();
+        subQ->MakeInvalid();
         if (HasPressure())
           GeneralMath::CalculatePartialPressureInGas(subQ->GetVolumeFraction(), GetPressure(), subQ->GetPartialPressure(), m_Logger);
       }
@@ -117,7 +96,7 @@ void SEGasCompartment::Balance(BalanceGasBy by)
       double totalVolume_mL = GetVolume(VolumeUnit::mL);
       for (SEGasSubstanceQuantity* subQ : GetSubstanceQuantities()) {
         if (!subQ->HasVolumeFraction())
-          subQ->Invalidate();
+          subQ->MakeInvalid();
         else {
           totalFraction += subQ->GetVolumeFraction().GetValue();
           subQ->GetVolume().SetValue(subQ->GetVolumeFraction().GetValue() * totalVolume_mL, VolumeUnit::mL);

@@ -11,61 +11,39 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include "biogears/cdm/properties/SEScalarFlowElastance.h"
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/exports.h>
-#include <biogears/schema/biogears/BioGearsEngineConfiguration.hxx>
-#include "biogears/cdm/properties/SEScalarFlowElastance.h"
+
+#include <biogears/cdm/properties/SEScalarArea.h>
+#include <biogears/cdm/properties/SEScalarAreaPerTimePressure.h>
+#include <biogears/cdm/properties/SEScalarElectricResistance.h>
+#include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
+#include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
+#include <biogears/cdm/properties/SEScalarFlowElastance.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
+#include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
+#include <biogears/cdm/properties/SEScalarHeatConductance.h>
+#include <biogears/cdm/properties/SEScalarHeatResistance.h>
+#include <biogears/cdm/properties/SEScalarInverseVolume.h>
+#include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarMassPerAmount.h>
+#include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/properties/SEScalarPowerPerAreaTemperatureToTheFourth.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
 
 namespace biogears {
 class SENutrition;
 class SEEnvironmentalConditions;
-class SEScalarArea;
-class AreaUnit;
-class SEScalarLength;
-class LengthUnit;
-class SEScalarAreaPerTimePressure;
-class AreaPerTimePressureUnit;
-class SEScalarFlowElastance;
-class FlowElastanceUnit;
-class SEScalarPowerPerAreaTemperatureToTheFourth;
-class PowerPerAreaTemperatureToTheFourthUnit;
-class SEScalarHeatCapacitancePerAmount;
-class HeatCapacitancePerAmountUnit;
-class SEScalarHeatCapacitancePerMass;
-class HeatCapacitancePerMassUnit;
-class SEScalarEnergyPerAmount;
-class EnergyPerAmountUnit;
-class SEScalarHeatConductance;
-class HeatConductanceUnit;
-class SEScalarEnergyPerMass;
-class EnergyPerMassUnit;
-class SEScalarVolumePerTimePressureArea;
-class VolumePerTimePressureAreaUnit;
-class SEScalarInverseVolume;
-class InverseVolumeUnit;
-class SEScalarMassPerAmount;
-class MassPerAmountUnit;
-class VolumeUnit;
-class SEScalarFlowResistance;
-class FlowResistanceUnit;
-class ElectricResistanceUnit;
-class SEScalarElectricResistance;
-class SEScalarHeatResistance;
-class HeatResistanceUnit;
-class SEScalarTemperatureUnit;
-class TemperatureUnit;
-class MassPerVolumeUnit;
-class SEScalarMassPerTime;
-class MassPerTimeUnit;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
-class PressureUnit;
 namespace io {
   class BiogearsEngineConfiguration;
 }
 /**
-* @brief %BioGears specific configuration parameters for all systems/equipment
-*/
+ * @brief %BioGears specific configuration parameters for all systems/equipment
+ */
 class BIOGEARS_API BioGearsConfiguration : public PhysiologyEngineConfiguration {
   friend class io::BiogearsEngineConfiguration;
 
@@ -73,20 +51,13 @@ public:
   BioGearsConfiguration(SESubstanceManager& substances);
   virtual ~BioGearsConfiguration();
 
-  virtual void Clear();
+  virtual void Invalidate();
   virtual void Initialize();
 
   virtual void Merge(const PhysiologyEngineConfiguration& from);
   virtual void Merge(const BioGearsConfiguration& from);
 
   bool Load(const std::string& file);
-
-  virtual bool Load(const CDM::PhysiologyEngineConfigurationData& in);
-  virtual bool Load(const CDM::BioGearsConfigurationData& in);
-  virtual CDM::BioGearsConfigurationData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::BioGearsConfigurationData& data) const;
 
   SESubstanceManager& m_Substances;
 
@@ -238,12 +209,12 @@ protected:
   /** Drugs */
   ////////////
 public:
-  virtual bool HasUsePDModel() const { return m_PDEnabled != (CDM::enumOnOff::value)-1; }
-  virtual bool IsPDEnabled() const { return m_PDEnabled == CDM::enumOnOff::On; }
-  virtual void UsePDModel(CDM::enumOnOff::value s) { m_PDEnabled = s; }
+  virtual bool HasUsePDModel() const { return m_PDEnabled != SEOnOff::Invalid; }
+  virtual bool IsPDEnabled() const { return m_PDEnabled == SEOnOff::On; }
+  virtual void UsePDModel(SEOnOff s) { m_PDEnabled = s; }
 
 protected:
-  CDM::enumOnOff::value m_PDEnabled;
+  SEOnOff m_PDEnabled;
 
   /////////////
   /** Energy */
@@ -381,21 +352,21 @@ public:
   virtual SEScalarLength& GetPupilDiameterBaseline();
   virtual double GetPupilDiameterBaseline(const LengthUnit& unit) const;
 
-  virtual bool HasEnableCerebral() const { return m_CerebralEnabled != (CDM::enumOnOff::value)-1; }
-  virtual bool IsCerebralEnabled() const { return m_CerebralEnabled == CDM::enumOnOff::On; }
-  virtual void EnableCerebral(CDM::enumOnOff::value s) { m_CerebralEnabled = s; }
+  virtual bool HasEnableCerebral() const { return m_CerebralEnabled != SEOnOff::Invalid; }
+  virtual bool IsCerebralEnabled() const { return m_CerebralEnabled == SEOnOff::On; }
+  virtual void EnableCerebral(SEOnOff s) { m_CerebralEnabled = s; }
 
 protected:
-  CDM::enumOnOff::value m_CerebralEnabled;
+  SEOnOff m_CerebralEnabled;
   SEScalarLength* m_PupilDiameterBaseline;
 
   ////////////
   /** Renal */
   ////////////
 public:
-  virtual bool HasEnableRenal() const { return m_RenalEnabled != (CDM::enumOnOff::value)-1; }
-  virtual bool IsRenalEnabled() const { return m_RenalEnabled == CDM::enumOnOff::On; }
-  virtual void EnableRenal(CDM::enumOnOff::value s) { m_RenalEnabled = s; }
+  virtual bool HasEnableRenal() const { return m_RenalEnabled != SEOnOff::Invalid; }
+  virtual bool IsRenalEnabled() const { return m_RenalEnabled == SEOnOff::On; }
+  virtual void EnableRenal(SEOnOff s) { m_RenalEnabled = s; }
 
   virtual bool HasPlasmaSodiumConcentrationSetPoint() const;
   virtual SEScalarMassPerVolume& GetPlasmaSodiumConcentrationSetPoint();
@@ -449,7 +420,7 @@ public:
   virtual SEScalarMassPerTime& GetTargetSodiumDelivery();
 
 protected:
-  CDM::enumOnOff::value m_RenalEnabled;
+  SEOnOff m_RenalEnabled;
 
   SEScalarMassPerVolume* m_PlasmaSodiumConcentrationSetPoint;
   SEScalarMassPerVolume* m_PeritubularPotassiumConcentrationSetPoint;
@@ -494,11 +465,11 @@ protected:
   /** Tissue */
   /////////////
 public:
-  virtual bool HasEnableTissue() const { return m_TissueEnabled != (CDM::enumOnOff::value)-1; }
-  virtual bool IsTissueEnabled() const { return m_TissueEnabled == CDM::enumOnOff::On; }
-  virtual void EnableTissue(CDM::enumOnOff::value s) { m_TissueEnabled = s; }
+  virtual bool HasEnableTissue() const { return m_TissueEnabled != SEOnOff::Invalid; }
+  virtual bool IsTissueEnabled() const { return m_TissueEnabled == SEOnOff::On; }
+  virtual void EnableTissue(SEOnOff s) { m_TissueEnabled = s; }
 
 protected:
-  CDM::enumOnOff::value m_TissueEnabled;
+  SEOnOff m_TissueEnabled;
 };
 }

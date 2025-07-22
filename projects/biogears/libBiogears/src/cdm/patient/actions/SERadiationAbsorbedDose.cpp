@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SERadiationAbsorbedDose.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,13 +24,13 @@ SERadiationAbsorbedDose::SERadiationAbsorbedDose()
 //-------------------------------------------------------------------------------
 SERadiationAbsorbedDose::~SERadiationAbsorbedDose()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SERadiationAbsorbedDose::Clear()
+void SERadiationAbsorbedDose::Invalidate()
 {
 
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_RadiationDose);
 }
 //-------------------------------------------------------------------------------
@@ -41,27 +42,6 @@ bool SERadiationAbsorbedDose::IsValid() const
 bool SERadiationAbsorbedDose::IsActive() const
 {
   return IsValid() ? !m_RadiationDose->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SERadiationAbsorbedDose::Load(const CDM::RadiationAbsorbedDoseData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetDose().Load(in.RadiationDose(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::RadiationAbsorbedDoseData* SERadiationAbsorbedDose::Unload() const
-{
-  CDM::RadiationAbsorbedDoseData* data(new CDM::RadiationAbsorbedDoseData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SERadiationAbsorbedDose::Unload(CDM::RadiationAbsorbedDoseData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_RadiationDose != nullptr)
-    data.RadiationDose(std::unique_ptr<CDM::ScalarEnergyPerMassData>(m_RadiationDose->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SERadiationAbsorbedDose::HasDose() const

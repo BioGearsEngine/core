@@ -37,17 +37,8 @@ public:
   static AmountPerVolumeUnit ct_Per_uL;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<AmountPerVolumeUnit>;
-
-class BIOGEARS_API SEScalarAmountPerVolume : public SEScalarQuantity<AmountPerVolumeUnit> {
-
-public:
-  SEScalarAmountPerVolume();
-  virtual ~SEScalarAmountPerVolume();
-
-  CDM::ScalarAmountPerVolumeData* Unload() const override;   
-
-  using SEScalarQuantity<AmountPerVolumeUnit>::SetValue;
-  using SEScalarQuantity<AmountPerVolumeUnit>::GetValue;
-};
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<AmountPerVolumeUnit>;
+using SEScalarAmountPerVolume  = SEScalarQuantity<AmountPerVolumeUnit>;
+#pragma warning(default : 4661)
 }

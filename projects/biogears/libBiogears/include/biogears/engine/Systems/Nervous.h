@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/Controller/BioGearsSystem.h>
 #include <biogears/exports.h>
 #include <biogears/cdm/utils/RunningAverage.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 
 
@@ -50,14 +50,10 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  void Invalidate() override;
 
   // Set members to a stable homeostatic state
   void Initialize() override;
-
-  // Load a state
-  virtual bool Load(const CDM::BioGearsNervousSystemData& in);
-  virtual CDM::BioGearsNervousSystemData* Unload() const override;
 
   //Assessments
   SEScalar& CalculateCentralNervousSOFA();
@@ -65,8 +61,6 @@ public:
   int GlasgowEstimator(double cbf);
 
 protected:
-  virtual void Unload(CDM::BioGearsNervousSystemData& data) const;
-
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
   void SetUp() override;
 

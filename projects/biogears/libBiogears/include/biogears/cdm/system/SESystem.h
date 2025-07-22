@@ -18,8 +18,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/container/Tree.h>
 #include <biogears/exports.h>
 
-CDM_BIND_DECL(SystemData)
-
 namespace biogears {
 class SESubstanceManager;
 class SEScalar;
@@ -35,7 +33,7 @@ public:
   virtual const char* classname() const = 0;
   virtual size_t hash_code() const = 0;
 
-  virtual void Clear(); // Deletes all members
+  virtual void Invalidate(); // Deletes all members
 
   /** @name GetScalar
    *   @brief - A reflextion type call that will return the Scalar associated
@@ -54,13 +52,9 @@ public:
   static const SEScalar* GetScalar(const char* name, std::vector<SESystem*>* systems);
   static const SEScalar* GetScalar(const std::string& name, std::vector<SESystem*>* systems);
 
-  bool Load(const CDM::SystemData& in);
-  virtual CDM::SystemData* Unload() const = 0;
-
   virtual Tree<const char*> GetPhysiologyRequestGraph() const = 0;
 
 protected:
-  void Unload(CDM::SystemData& data) const;
 
   std::stringstream m_ss;
 };

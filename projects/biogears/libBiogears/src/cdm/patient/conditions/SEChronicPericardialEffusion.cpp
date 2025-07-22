@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicPericardialEffusion.h>
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEChronicPericardialEffusion::SEChronicPericardialEffusion()
@@ -22,39 +23,18 @@ SEChronicPericardialEffusion::SEChronicPericardialEffusion()
 //-----------------------------------------------------------------------------
 SEChronicPericardialEffusion::~SEChronicPericardialEffusion()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEChronicPericardialEffusion::Clear()
+void SEChronicPericardialEffusion::Invalidate()
 {
-  SEPatientCondition::Clear();
+  SEPatientCondition::Invalidate();
   SAFE_DELETE(m_AccumulatedVolume);
 }
 //-----------------------------------------------------------------------------
 bool SEChronicPericardialEffusion::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasAccumulatedVolume();
-}
-//-----------------------------------------------------------------------------
-bool SEChronicPericardialEffusion::Load(const CDM::ChronicPericardialEffusionData& in)
-{
-  SEPatientCondition::Load(in);
-  GetAccumulatedVolume().Load(in.AccumulatedVolume());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ChronicPericardialEffusionData* SEChronicPericardialEffusion::Unload() const
-{
-  CDM::ChronicPericardialEffusionData* data(new CDM::ChronicPericardialEffusionData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEChronicPericardialEffusion::Unload(CDM::ChronicPericardialEffusionData& data) const
-{
-  SEPatientCondition::Unload(data);
-  if (m_AccumulatedVolume != nullptr)
-    data.AccumulatedVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_AccumulatedVolume->Unload()));
 }
 //-----------------------------------------------------------------------------
 bool SEChronicPericardialEffusion::HasAccumulatedVolume() const

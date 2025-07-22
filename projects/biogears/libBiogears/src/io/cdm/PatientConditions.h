@@ -12,21 +12,29 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <memory>
+#include <random>
 
 #include "biogears/cdm/CommonDataModel.h"
 #include <biogears/exports.h>
 
 #include <biogears/schema/cdm/PatientConditions.hxx>
 
-#define CDM_PATIENT_CONDITIONS_UNMARSHAL_HELPER(in, out, func)                       \
+#define CDM_PATIENT_CONDITIONS_PTR_MARSHALL_HELPER(in, out, func)                        \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::PatientConditions::UnMarshall(*in.m_##func, out.func());                     \
+    io::PatientConditions::Marshall(*in.m_##func, out.func());                       \
   }
 
-#define CDM_OPTIONAL_PATIENT_CONDITIONS_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                                    \
-    io::PatientConditions::UnMarshall(*in.m_##func, out.func());        \
+#define CDM_OPTIONAL_PATIENT_CONDITIONS_PTR_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                   \
+    io::PatientConditions::Marshall(*in.m_##func, out.func());         \
+  }
+
+#define CDM_PATIENT_CONDITIONS_COPY(type, in, out)  \
+  {                                                 \
+    CDM::type##Data middle;                       \
+    io::PatientConditions::Marshall(in, middle);    \
+    io::PatientConditions::UnMarshall(middle, out); \
   }
 
 namespace biogears {
@@ -50,74 +58,74 @@ class SEStarvation;
 namespace io {
   class BIOGEARS_PRIVATE_API PatientConditions {
   public:
-    //class SEConditionList;
-    static std::vector<std::unique_ptr<SECondition>> condition_factory(const CDM::ConditionListData& in, SESubstanceManager& substances);
-    static std::unique_ptr<SECondition> factory(const CDM::ConditionData* data, SESubstanceManager& substances);
-    static std::unique_ptr<CDM::ConditionData> factory(const SECondition* data);
-    //template <typename SE, typename XSD>  option    
-    template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
-    
-    template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    // class Factories;
+    static std::unique_ptr<SECondition> factory(CDM::PatientConditionData const* patientConditionData, SESubstanceManager& substances, std::default_random_engine* rd = nullptr);
+    static std::unique_ptr<CDM::PatientConditionData> factory(const SEPatientCondition* data);
 
-    //SEPatientCondition
-    static void Marshall(const CDM::PatientConditionData& in, SEPatientCondition& out);
-    static void UnMarshall(const SEPatientCondition& in, CDM::PatientConditionData& out);
-    //SEChronicAnemia
-    static void Marshall(const CDM::ChronicAnemiaData& in, SEChronicAnemia& out);
-    static void UnMarshall(const SEChronicAnemia& in, CDM::ChronicAnemiaData& out);
-    //SEChronicHeartFailure
-    static void Marshall(const CDM::ChronicHeartFailureData& in, SEChronicHeartFailure& out);
-    static void UnMarshall(const SEChronicHeartFailure& in, CDM::ChronicHeartFailureData& out);
-    //SEChronicVentricularSystolicDysfunction
-    static void Marshall(const CDM::ChronicVentricularSystolicDysfunctionData& in, SEChronicVentricularSystolicDysfunction& out);
-    static void UnMarshall(const SEChronicVentricularSystolicDysfunction& in, CDM::ChronicVentricularSystolicDysfunctionData& out);
-    //SEChronicObstructivePulmonaryDisease
-    static void Marshall(const CDM::ChronicObstructivePulmonaryDiseaseData& in, SEChronicObstructivePulmonaryDisease& out);
-    static void UnMarshall(const SEChronicObstructivePulmonaryDisease& in, CDM::ChronicObstructivePulmonaryDiseaseData& out);
-    //SEChronicPericardialEffusion
-    static void Marshall(const CDM::ChronicPericardialEffusionData& in, SEChronicPericardialEffusion& out);
-    static void UnMarshall(const SEChronicPericardialEffusion& in, CDM::ChronicPericardialEffusionData& out);
-    //SEChronicRenalStenosis
-    static void Marshall(const CDM::ChronicRenalStenosisData& in, SEChronicRenalStenosis& out);
-    static void UnMarshall(const SEChronicRenalStenosis& in, CDM::ChronicRenalStenosisData& out);
-    //SEDehydration
-    static void Marshall(const CDM::DehydrationData& in, SEDehydration& out);
-    static void UnMarshall(const SEDehydration& in, CDM::DehydrationData& out);
-    //SEDiabetesType1
-    static void Marshall(const CDM::DiabetesType1Data& in, SEDiabetesType1& out);
-    static void UnMarshall(const SEDiabetesType1& in, CDM::DiabetesType1Data& out);
-    //SEDiabetesType2
-    static void Marshall(const CDM::DiabetesType2Data& in, SEDiabetesType2& out);
-    static void UnMarshall(const SEDiabetesType2& in, CDM::DiabetesType2Data& out);
-    //SEImpairedAlveolarExchange
-    static void Marshall(const CDM::ImpairedAlveolarExchangeData& in, SEImpairedAlveolarExchange& out);
-    static void UnMarshall(const SEImpairedAlveolarExchange& in, CDM::ImpairedAlveolarExchangeData& out);
-    //SELobarPneumonia
-    static void Marshall(const CDM::LobarPneumoniaData& in, SELobarPneumonia& out);
-    static void UnMarshall(const SELobarPneumonia& in, CDM::LobarPneumoniaData& out);
-    //SEStarvation
-    static void Marshall(const CDM::StarvationData& in, SEStarvation& out);
-    static void UnMarshall(const SEStarvation& in, CDM::StarvationData& out);
+    // template <typename SE, typename XSD>  option
+    template <typename SE, typename XSD>
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+
+    template <typename SE, typename XSD>
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+
+    // SEPatientCondition
+    static void UnMarshall(const CDM::PatientConditionData& in, SEPatientCondition& out);
+    static void Marshall(const SEPatientCondition& in, CDM::PatientConditionData& out);
+    // SEChronicAnemia
+    static void UnMarshall(const CDM::ChronicAnemiaData& in, SEChronicAnemia& out);
+    static void Marshall(const SEChronicAnemia& in, CDM::ChronicAnemiaData& out);
+    // SEChronicHeartFailure
+    static void UnMarshall(const CDM::ChronicHeartFailureData& in, SEChronicHeartFailure& out);
+    static void Marshall(const SEChronicHeartFailure& in, CDM::ChronicHeartFailureData& out);
+    // SEChronicVentricularSystolicDysfunction
+    static void UnMarshall(const CDM::ChronicVentricularSystolicDysfunctionData& in, SEChronicVentricularSystolicDysfunction& out);
+    static void Marshall(const SEChronicVentricularSystolicDysfunction& in, CDM::ChronicVentricularSystolicDysfunctionData& out);
+    // SEChronicObstructivePulmonaryDisease
+    static void UnMarshall(const CDM::ChronicObstructivePulmonaryDiseaseData& in, SEChronicObstructivePulmonaryDisease& out);
+    static void Marshall(const SEChronicObstructivePulmonaryDisease& in, CDM::ChronicObstructivePulmonaryDiseaseData& out);
+    // SEChronicPericardialEffusion
+    static void UnMarshall(const CDM::ChronicPericardialEffusionData& in, SEChronicPericardialEffusion& out);
+    static void Marshall(const SEChronicPericardialEffusion& in, CDM::ChronicPericardialEffusionData& out);
+    // SEChronicRenalStenosis
+    static void UnMarshall(const CDM::ChronicRenalStenosisData& in, SEChronicRenalStenosis& out);
+    static void Marshall(const SEChronicRenalStenosis& in, CDM::ChronicRenalStenosisData& out);
+    // SEDehydration
+    static void UnMarshall(const CDM::DehydrationData& in, SEDehydration& out);
+    static void Marshall(const SEDehydration& in, CDM::DehydrationData& out);
+    // SEDiabetesType1
+    static void UnMarshall(const CDM::DiabetesType1Data& in, SEDiabetesType1& out);
+    static void Marshall(const SEDiabetesType1& in, CDM::DiabetesType1Data& out);
+    // SEDiabetesType2
+    static void UnMarshall(const CDM::DiabetesType2Data& in, SEDiabetesType2& out);
+    static void Marshall(const SEDiabetesType2& in, CDM::DiabetesType2Data& out);
+    // SEImpairedAlveolarExchange
+    static void UnMarshall(const CDM::ImpairedAlveolarExchangeData& in, SEImpairedAlveolarExchange& out);
+    static void Marshall(const SEImpairedAlveolarExchange& in, CDM::ImpairedAlveolarExchangeData& out);
+    // SELobarPneumonia
+    static void UnMarshall(const CDM::LobarPneumoniaData& in, SELobarPneumonia& out);
+    static void Marshall(const SELobarPneumonia& in, CDM::LobarPneumoniaData& out);
+    // SEStarvation
+    static void UnMarshall(const CDM::StarvationData& in, SEStarvation& out);
+    static void Marshall(const SEStarvation& in, CDM::StarvationData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void PatientConditions::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void PatientConditions::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
-      out.Invalidate();
+      out.MakeInvalid();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void PatientConditions::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void PatientConditions::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+} // Namespace Biogears

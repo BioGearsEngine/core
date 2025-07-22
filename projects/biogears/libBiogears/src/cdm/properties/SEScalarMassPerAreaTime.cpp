@@ -11,11 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarMassPerAreaTime.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const MassPerAreaTimeUnit MassPerAreaTimeUnit::g_Per_cm2_s("g/cm^2 s");
 
-template class SEScalarQuantity<MassPerAreaTimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassPerAreaTimeUnit>;
 
 MassPerAreaTimeUnit::MassPerAreaTimeUnit(const char* u)
   : MassPerAreaTimeUnit(std::string { u })
@@ -30,23 +33,7 @@ MassPerAreaTimeUnit::MassPerAreaTimeUnit(const std::string& u)
 MassPerAreaTimeUnit::~MassPerAreaTimeUnit()
 {
 }
-//-------------------------------------------------------------------------------
-SEScalarMassPerAreaTime::SEScalarMassPerAreaTime()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarMassPerAreaTime::~SEScalarMassPerAreaTime()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerAreaTimeData* SEScalarMassPerAreaTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerAreaTimeData* data(new CDM::ScalarMassPerAreaTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool MassPerAreaTimeUnit::IsValidUnit(const char* unit)
 {

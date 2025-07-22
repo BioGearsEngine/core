@@ -258,15 +258,15 @@ void FluidCircuitTester::TestPreProcess1(double dT, int i)
   if (SWITCHPRESENT) {
     if (i == 8 || i == 34 || i == 19) {
       if (dT < 5) {
-        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(CDM::enumOpenClosed::Open);
+        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(SEOpenClosed::Open);
       } else {
-        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(CDM::enumOpenClosed::Closed);
+        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(SEOpenClosed::Closed);
       }
     } else if (i == 9 || i == 15) {
       if (dT < 5) {
-        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(CDM::enumOpenClosed::Open);
+        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(SEOpenClosed::Open);
       } else {
-        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(CDM::enumOpenClosed::Closed);
+        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(SEOpenClosed::Closed);
       }
     }
   }
@@ -327,15 +327,15 @@ void FluidCircuitTester::TestPreProcess2(double dT, int i)
   if (SWITCHPRESENT) {
     if (i == 8 || i == 34 || i == 19) {
       if (dT < 5) {
-        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(CDM::enumOpenClosed::Open);
+        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(SEOpenClosed::Open);
       } else {
-        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(CDM::enumOpenClosed::Closed);
+        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(SEOpenClosed::Closed);
       }
     } else if (i == 9 || i == 15) {
       if (dT < 5) {
-        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(CDM::enumOpenClosed::Open);
+        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(SEOpenClosed::Open);
       } else {
-        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(CDM::enumOpenClosed::Closed);
+        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(SEOpenClosed::Closed);
       }
     }
   }
@@ -427,15 +427,15 @@ void FluidCircuitTester::TestPreProcess3(double dT, int i)
   if (SWITCHPRESENT) {
     if (i == 8 || i == 34 || i == 19) {
       if (dT < 5) {
-        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(CDM::enumOpenClosed::Open);
+        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(SEOpenClosed::Open);
       } else {
-        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(CDM::enumOpenClosed::Closed);
+        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(SEOpenClosed::Closed);
       }
     } else if (i == 9 || i == 15) {
       if (dT < 5) {
-        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(CDM::enumOpenClosed::Open);
+        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(SEOpenClosed::Open);
       } else {
-        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(CDM::enumOpenClosed::Closed);
+        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(SEOpenClosed::Closed);
       }
     }
   }
@@ -503,15 +503,15 @@ void FluidCircuitTester::TestPreProcess4(double dT, int i)
   if (SWITCHPRESENT) {
     if (i == 8 || i == 34) {
       if (dT < 5) {
-        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(CDM::enumOpenClosed::Open);
+        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(SEOpenClosed::Open);
       } else {
-        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(CDM::enumOpenClosed::Closed);
+        m_Circuits->GetFluidPath("Path2")->SetNextSwitch(SEOpenClosed::Closed);
       }
     } else if (i == 9 || i == 15) {
       if (dT < 5) {
-        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(CDM::enumOpenClosed::Open);
+        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(SEOpenClosed::Open);
       } else {
-        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(CDM::enumOpenClosed::Closed);
+        m_Circuits->GetFluidPath("Path3")->SetNextSwitch(SEOpenClosed::Closed);
       }
     }
   }
@@ -705,6 +705,6 @@ void FluidCircuitTester::ParallelRLCDCTest() //7
   Path3.GetNextCompliance().SetValue(0.001, biogears::FlowComplianceUnit::m3_Per_Pa);
   Path3.GetSourceNode().GetNextVolume().SetValue(5, biogears::VolumeUnit::m3);
   biogears::SEFluidCircuitPath& Path4 = fluidCircuit.CreatePath(Node3, Node2, "Path4");
-  Path4.SetNextValve(CDM::enumOpenClosed::Closed);
+  Path4.SetNextValve(SEOpenClosed::Closed);
   RunDCTest("BasicDiodeDCCurrent", 18);
 }

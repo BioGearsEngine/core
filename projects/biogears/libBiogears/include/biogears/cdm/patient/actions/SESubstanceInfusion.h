@@ -11,32 +11,29 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
-
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <random>
 
 namespace biogears {
 class SESubstance;
-class SEScalarMassPerVolume;
-class SEScalarVolumePerTime;
 namespace io {
   class PatientActions;
 }
 class BIOGEARS_API SESubstanceInfusion : public SESubstanceAdministration {
-friend io::PatientActions;
+  friend io::PatientActions;
+
 public:
   SESubstanceInfusion(const SESubstance& substance);
   virtual ~SESubstanceInfusion();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate(); // clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
 
-  virtual bool Load(const CDM::SubstanceInfusionData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::SubstanceInfusionData* Unload() const;
-public:
   virtual bool HasConcentration() const;
   virtual SEScalarMassPerVolume& GetConcentration();
 
@@ -46,13 +43,9 @@ public:
   virtual SESubstance& GetSubstance() const;
 
   virtual void ToString(std::ostream& str) const;
-    
-  bool operator==( const SESubstanceInfusion& rhs) const;
-  bool operator!=( const SESubstanceInfusion& rhs) const;
 
-protected:
-  virtual void Unload(CDM::SubstanceInfusionData& data) const;
-
+  bool operator==(const SESubstanceInfusion& rhs) const;
+  bool operator!=(const SESubstanceInfusion& rhs) const;
 
 protected:
   SEScalarMassPerVolume* m_Concentration;

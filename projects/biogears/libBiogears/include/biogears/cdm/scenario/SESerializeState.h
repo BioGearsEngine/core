@@ -14,15 +14,15 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/cdm/DataRequests.hxx>
-#include <biogears/schema/cdm/Actions.hxx>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/BiogearsEnums.h>
 
 namespace biogears {
 namespace io {
-  class Scenario;
+  class Actions;
 }
 class BIOGEARS_API SESerializeState : public SEAction {
-  friend io::Scenario;
+  friend io::Actions;
 
 public:
   SESerializeState();
@@ -31,24 +31,18 @@ public:
   static constexpr const char* TypeTag() { return "SESerializeState"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Invalidate() override; //clear memory
 
   virtual bool IsValid() const override;
-
-  virtual bool Load(const CDM::SerializeStateData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::SerializeStateData* Unload() const override;
 
   bool operator==(SESerializeState const&) const;
   bool operator!=(SESerializeState const&) const;
 
-protected:
-  virtual void Unload(CDM::SerializeStateData& data) const;
-
 public:
   virtual void ToString(std::ostream& str) const override;
 
-  virtual CDM::enumSerializationType::value GetType() const;
-  virtual void SetType(CDM::enumSerializationType::value t);
+  virtual SESerializationType GetType() const;
+  virtual void SetType(SESerializationType t);
   virtual bool HasType() const;
   virtual void InvalidateType();
 
@@ -61,6 +55,6 @@ public:
 
 protected:
   std::string m_Filename;
-  CDM::enumSerializationType::value m_Type;
+  SESerializationType m_Type;
 };
 }

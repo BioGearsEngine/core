@@ -17,6 +17,7 @@
 //! Unit Test for Biogears-common Config
 //!
 #include <thread>
+#include <chrono>
 
 #include <gtest/gtest.h>
 

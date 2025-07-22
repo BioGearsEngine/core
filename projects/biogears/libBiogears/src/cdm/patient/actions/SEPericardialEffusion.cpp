@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEPericardialEffusion.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,12 +24,12 @@ SEPericardialEffusion::SEPericardialEffusion()
 //-------------------------------------------------------------------------------
 SEPericardialEffusion::~SEPericardialEffusion()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEPericardialEffusion::Clear()
+void SEPericardialEffusion::Invalidate()
 {
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_EffusionRate);
 }
 //-------------------------------------------------------------------------------
@@ -40,27 +41,6 @@ bool SEPericardialEffusion::IsValid() const
 bool SEPericardialEffusion::IsActive() const
 {
   return IsValid() ? !m_EffusionRate->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEPericardialEffusion::Load(const CDM::PericardialEffusionData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetEffusionRate().Load(in.EffusionRate(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PericardialEffusionData* SEPericardialEffusion::Unload() const
-{
-  CDM::PericardialEffusionData* data(new CDM::PericardialEffusionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEPericardialEffusion::Unload(CDM::PericardialEffusionData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_EffusionRate != nullptr)
-    data.EffusionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_EffusionRate->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEPericardialEffusion::HasEffusionRate() const

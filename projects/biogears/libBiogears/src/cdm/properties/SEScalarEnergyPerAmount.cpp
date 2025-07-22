@@ -11,12 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarEnergyPerAmount.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const EnergyPerAmountUnit EnergyPerAmountUnit::kcal_Per_mol("kcal/mol");
 const EnergyPerAmountUnit EnergyPerAmountUnit::kJ_Per_mol("kJ/mol");
 
-template class SEScalarQuantity<EnergyPerAmountUnit>;
+template class BIOGEARS_API SEScalarQuantity<EnergyPerAmountUnit>;
 
 EnergyPerAmountUnit::EnergyPerAmountUnit(const char* u)
   : EnergyPerAmountUnit(std::string { u })
@@ -30,23 +33,6 @@ EnergyPerAmountUnit::EnergyPerAmountUnit(const std::string& u)
 //-----------------------------------------------------------------------------
 EnergyPerAmountUnit::~EnergyPerAmountUnit()
 {
-}
-//-----------------------------------------------------------------------------
-SEScalarEnergyPerAmount::SEScalarEnergyPerAmount()
-{
-}
-//-----------------------------------------------------------------------------
-SEScalarEnergyPerAmount::~SEScalarEnergyPerAmount()
-{
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarEnergyPerAmountData* SEScalarEnergyPerAmount::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarEnergyPerAmountData* data(new CDM::ScalarEnergyPerAmountData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-----------------------------------------------------------------------------
 bool EnergyPerAmountUnit::IsValidUnit(const char* unit)

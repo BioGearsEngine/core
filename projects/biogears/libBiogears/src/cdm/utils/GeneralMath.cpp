@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 //Standard Includes
 #include <sstream>
 //Project Includes
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
@@ -117,7 +118,7 @@ void GeneralMath::CalculateMass(const SEScalarVolume& volume, const SEScalarMass
 void GeneralMath::CalculateHenrysLawConcentration(const SESubstance& substance, const SEScalarPressure& partialPressure, SEScalarMassPerVolume& concentration, Logger* logger)
 {
   double pp_mmHg = partialPressure.GetValue(PressureUnit::mmHg);
-  if (substance.GetState() != CDM::enumSubstanceState::Gas)
+  if (substance.GetState() != SESubstanceState::Gas)
     throw CommonDataModelException("Cannot calculate a molarity by Henry's law from partial pressure of a non gaseous substance in a liquid");
   if (pp_mmHg < 0.0) {
     std::stringstream ss;
@@ -173,7 +174,7 @@ void GeneralMath::CalculatePartialPressureInGas(const SEScalarFraction& volumeFr
 //--------------------------------------------------------------------------------------------------
 void GeneralMath::CalculatePartialPressureInLiquid(const SESubstance& substance, const SEScalarMassPerVolume& concentration, SEScalarPressure& partialPressure, Logger* logger)
 {
-  if (substance.GetState() != CDM::enumSubstanceState::Gas)
+  if (substance.GetState() != SESubstanceState::Gas)
     throw CommonDataModelException("Cannot calculate a partial pressure of a non gaseous substance in a liquid");
   double concentration_ug_Per_mL = concentration.GetValue(MassPerVolumeUnit::ug_Per_mL);
   if (concentration_ug_Per_mL < 0.0) {
@@ -414,9 +415,9 @@ double GeneralMath::CalculateNernstPotential(SELiquidCompartment& extra, SELiqui
   double intraIon_M = intra.GetSubstanceQuantity(*ion)->GetMolarity(AmountPerVolumeUnit::mol_Per_L);
   double extraIon_M = extra.GetSubstanceQuantity(*ion)->GetMolarity(AmountPerVolumeUnit::mol_Per_L);
   double z = 1.0;
-  if (ion->GetName() == "Chloride")
+  if (ion->GetName() == StandardSubstances::Chloride)
     z = -1.0;
-  if (ion->GetName() == "Calcium")
+  if (ion->GetName() == StandardSubstances::Calcium)
     z = 2.0;
 
   double nernst_V = (gasConstant_J_Per_mol * coreTemp_K) / (faradaysConstant_C_Per_mol * z) * log(extraIon_M / intraIon_M);

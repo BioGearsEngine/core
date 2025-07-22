@@ -35,7 +35,7 @@ TimingProfile::~TimingProfile()
 {
 }
 
-void TimingProfile::Clear()
+void TimingProfile::Invalidate()
 {
   m_timers.clear();
 }

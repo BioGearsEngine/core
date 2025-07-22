@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const PowerUnit PowerUnit::W("W");
@@ -20,7 +23,7 @@ const PowerUnit PowerUnit::kcal_Per_day("kcal/day");
 const PowerUnit PowerUnit::J_Per_s("J/s");
 const PowerUnit PowerUnit::BTU_Per_hr("BTU/hr");
 
-template class SEScalarQuantity<PowerUnit>;
+template class BIOGEARS_API SEScalarQuantity<PowerUnit>;
 
 PowerUnit::PowerUnit(const char* u)
   : PowerUnit(std::string { u })
@@ -34,23 +37,6 @@ PowerUnit::PowerUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 PowerUnit::~PowerUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarPower::SEScalarPower()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarPower::~SEScalarPower()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarPowerData* SEScalarPower::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPowerData* data(new CDM::ScalarPowerData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool PowerUnit::IsValidUnit(const char* unit)

@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
@@ -81,8 +81,8 @@ public:
     : SEEventHandler()
   {
   }
-  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) { }
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) { }
+  void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time = nullptr) override { }
+  void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr) override { }
 };
 
 //--------------------------------------------------------------------------------------------------
@@ -144,7 +144,7 @@ int HowToEngineUse()
 
   // There are specific events that can occur while the engine runs and you submit various actions
   // You can either poll/query the patient object to see if it is in a specific state
-  bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CardiacArrest);
+  bg->GetPatient().IsEventActive(SEPatientEventType::CardiacArrest);
   // You can also derive a callback class that will be called whenever an Event is entered or exited by the patient
   MyEventHandler myEventHandler(bg->GetLogger());
   bg->SetEventHandler(&myEventHandler);
@@ -154,8 +154,8 @@ int HowToEngineUse()
   // So it's a good idea to cache this pointer so you can reuse it when asking at various time steps
   // You can find all substances defined in xml files in the substances directory of your working directory
   // Names are in those xml files. ALL substance xml files are loaded into a substance managers when the engine is created
-  SESubstance* O2 = bg->GetSubstanceManager().GetSubstance("Oxygen");
-  SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
+  SESubstance* O2 = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Oxygen);
+  SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance(StandardSubstances::CarbonDioxide);
 
   // The tracker is responsible for advancing the engine time AND outputting the data requests below at each time step
   // If you do not wish to write data to a file, you do not need to make any data requests
@@ -261,7 +261,7 @@ int HowToEngineUse()
   bg->GetLogger()->Info(asprintf( "OxygenSaturation : %f", bg->GetBloodChemistrySystem()->GetOxygenSaturation()));
   bg->GetLogger()->Info(asprintf( "ArterialBlood pH : %f", bg->GetBloodChemistrySystem()->GetArterialBloodPH()));
   //  You should save off the SESubstanceQuantity* if you will need it more than once
-  bg->GetLogger()->Info(asprintf( "Lactate Concentration : %f %s", bg->GetSubstanceManager().GetSubstance("Lactate")->GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL), "mg_Per_dL"));
+  bg->GetLogger()->Info(asprintf( "Lactate Concentration : %f %s", bg->GetSubstanceManager().GetSubstance(StandardSubstances::Lactate)->GetBloodConcentration(MassPerVolumeUnit::mg_Per_dL), "mg_Per_dL"));
   bg->GetLogger()->Info(asprintf( "Core Body Temperature : %f %s", bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "C"));
 
   // Save the state of the engine

@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 
-#include <biogears/cdm/Serializer.h>
 #include <biogears/engine/Controller/BioGears.h>
 
 

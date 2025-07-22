@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/physiology/SETissueSystem.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
+#include <biogears/cdm/properties/SEScalarTemperature.h>
 
 namespace biogears {
 struct error_functor;
@@ -26,7 +27,7 @@ class SELiquidCompartment;
 class SELiquidSubstanceQuantity;
 class BioGears;
 class SEScalarFraction;
-class SEScalarTemperature;
+
 
 /**
 * @brief

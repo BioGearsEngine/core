@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
@@ -69,13 +69,13 @@ int HowToBolusDrug()
   bg->AdvanceModelTime(50, TimeUnit::s);
 
   // Get the Succinylcholine substance from the substance manager
-  const SESubstance* succs = bg->GetSubstanceManager().GetSubstance("Succinylcholine");
+  const SESubstance* succs = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Succinylcholine);
 
   // Create a substance bolus action to administer the substance
   SESubstanceBolus bolus(*succs);
   bolus.GetConcentration().SetValue(4820, MassPerVolumeUnit::ug_Per_mL);
   bolus.GetDose().SetValue(20, VolumeUnit::mL);
-  bolus.SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  bolus.SetAdminRoute(SEBolusAdministration::Intravenous);
   // BioGears also supports Intramuscular as an admin route as well
   bg->ProcessAction(bolus);
   bg->GetLogger()->Info("Giving the patient Succinylcholine.");

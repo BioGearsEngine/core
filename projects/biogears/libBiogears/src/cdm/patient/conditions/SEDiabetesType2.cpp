@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEDiabetesType2::SEDiabetesType2()
@@ -23,12 +24,12 @@ SEDiabetesType2::SEDiabetesType2()
 //-----------------------------------------------------------------------------
 SEDiabetesType2::~SEDiabetesType2()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEDiabetesType2::Clear()
+void SEDiabetesType2::Invalidate()
 {
-  SEPatientCondition::Clear();
+  SEPatientCondition::Invalidate();
   SAFE_DELETE(m_InsulinProductionSeverity);
   SAFE_DELETE(m_InsulinResistanceSeverity);
 }
@@ -37,30 +38,7 @@ bool SEDiabetesType2::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasInsulinProductionSeverity() && HasInsulinResistanceSeverity();
 }
-//-----------------------------------------------------------------------------
-bool SEDiabetesType2::Load(const CDM::DiabetesType2Data& in)
-{
-  SEPatientCondition::Load(in);
-  GetInsulinProductionSeverity().Load(in.InsulinProductionSeverity());
-  GetInsulinResistanceSeverity().Load(in.InsulinResistanceSeverity());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::DiabetesType2Data* SEDiabetesType2::Unload() const
-{
-  CDM::DiabetesType2Data* data(new CDM::DiabetesType2Data());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEDiabetesType2::Unload(CDM::DiabetesType2Data& data) const
-{
-  SEPatientCondition::Unload(data);
-  if (m_InsulinProductionSeverity != nullptr)
-    data.InsulinProductionSeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_InsulinProductionSeverity->Unload()));
-  if (m_InsulinResistanceSeverity != nullptr)
-    data.InsulinResistanceSeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_InsulinResistanceSeverity->Unload()));
-}
+
 //-----------------------------------------------------------------------------
 bool SEDiabetesType2::HasInsulinProductionSeverity() const
 {

@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
@@ -43,7 +43,7 @@ int HowToHemorrhage()
   // Create the engine and load the patient
   std::unique_ptr<PhysiologyEngine> bg = CreateBioGearsEngine("HowToHemorrhage.log");
   bg->GetLogger()->Info("HowToHemorrhage");
-  if (!bg->LoadState("./states/StandardMale@0s.xml")) {
+  if (!bg->InitializeEngine("./patients/StandardMale.xml")) {
     bg->GetLogger()->Error("Could not load state, check the error");
     return 1;
   }
@@ -72,7 +72,6 @@ int HowToHemorrhage()
   bg->GetLogger()->Info(asprintf("Diastolic Pressure : %f %s", bg->GetCardiovascularSystem()->GetDiastolicArterialPressure(PressureUnit::mmHg), "mmHg"));
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
 
-  return 0;
 
   //We are going to create a hemorrhage in two different ways.  One way will be to specify the location and a severity on a scale of 0-1.
   //The other way will be to parse an injury code and derive the location and severity
@@ -135,7 +134,7 @@ int HowToHemorrhage()
   // Patient is stabilizing, but not great
 
   // Let's administer a saline drip, we need to get saline from the substance maganer
-  SESubstanceCompound* saline = bg->GetSubstanceManager().GetCompound("Saline");
+  SESubstanceCompound* saline = bg->GetSubstanceManager().GetCompound(StandardSubstances::Saline);
   SESubstanceCompoundInfusion iVSaline(*saline);
   iVSaline.GetBagVolume().SetValue(500, VolumeUnit::mL); //the total volume in the bag of Saline
   iVSaline.GetRate().SetValue(100, VolumePerTimeUnit::mL_Per_min); //The rate to admnister the compound in the bag in this case saline
@@ -153,6 +152,8 @@ int HowToHemorrhage()
   bg->GetLogger()->Info(asprintf("Heart Rate : %f %s", bg->GetCardiovascularSystem()->GetHeartRate(FrequencyUnit::Per_min), "bpm"));
   ;
   bg->GetLogger()->Info("Finished");
+
+  return 0;
 }
 
 void ParseMCIS(SEHemorrhage& hem, std::vector<unsigned int>& mcis)

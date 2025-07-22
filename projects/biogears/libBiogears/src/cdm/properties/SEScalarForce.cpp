@@ -11,13 +11,16 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarForce.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const ForceUnit ForceUnit::N("N");
 const ForceUnit ForceUnit::lbf("lbf");
 const ForceUnit ForceUnit::dyn("dyn");
 
-template class SEScalarQuantity<ForceUnit>;
+template class BIOGEARS_API SEScalarQuantity<ForceUnit>;
 
 ForceUnit::ForceUnit(const char* u)
   : ForceUnit(std::string { u })
@@ -31,23 +34,6 @@ ForceUnit::ForceUnit(const std::string& u)
 //-----------------------------------------------------------------------------
 ForceUnit::~ForceUnit()
 {
-}
-//-----------------------------------------------------------------------------
-SEScalarForce::SEScalarForce()
-{
-}
-//-----------------------------------------------------------------------------
-SEScalarForce::~SEScalarForce()
-{
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarForceData* SEScalarForce::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarForceData* data(new CDM::ScalarForceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-----------------------------------------------------------------------------
 bool ForceUnit::IsValidUnit(const char* unit)

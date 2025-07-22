@@ -21,8 +21,12 @@ specific language governing permissions and limitations under the License.
 
 namespace biogears {
 
+class TimeUnit;
+template <typename Unit>
+class SEScalarQuantity;
+using SEScalarTime =  SEScalarQuantity<TimeUnit>;
+
 class Logger;
-class SEScalarTime;
 class IOManager;
 
 class BIOGEARS_API Loggable {
@@ -152,13 +156,13 @@ private:
 inline std::ostream& operator<<(std::ostream& os, Logger::LogLevel level)
 {
   os << ((Logger::eAll == level)           ? "ALL"
-           : (Logger::eFatal== level)     ? "FATAL"
+           : (Logger::eFatal == level)     ? "FATAL"
            : (Logger::eDebug == level)     ? "DEBUG"
            : (Logger::eError == level)     ? "ERROR"
-           : (Logger::eException== level) ? "EXECPTION"
+           : (Logger::eException == level) ? "EXECPTION"
            : (Logger::eWarning == level)   ? "WARNING"
            : (Logger::eInfo == level)      ? "INFO"
-                                          : "UNKNWON");
+                                           : "UNKNWON");
   return os;
 }
 inline std::string ToString(Logger::LogLevel level)
@@ -167,10 +171,10 @@ inline std::string ToString(Logger::LogLevel level)
     : (Logger::eFatal == level)     ? "FATAL"
     : (Logger::eDebug == level)     ? "DEBUG"
     : (Logger::eError == level)     ? "ERROR"
-    : (Logger::eException== level) ? "EXECPTION"
+    : (Logger::eException == level) ? "EXECPTION"
     : (Logger::eWarning == level)   ? "WARNING"
     : (Logger::eInfo == level)      ? "INFO"
-                                   : "UNKNWON";
+                                    : "UNKNWON";
 }
 
 inline Logger::LogLevel FromString(std::string str)

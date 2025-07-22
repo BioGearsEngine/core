@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>

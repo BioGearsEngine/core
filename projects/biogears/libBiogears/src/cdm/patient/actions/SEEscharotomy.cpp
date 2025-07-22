@@ -11,7 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEEscharotomy.h>
 
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include "io/cdm/PatientActions.h"
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
@@ -21,50 +22,28 @@ SEEscharotomy::SEEscharotomy()
 {
   m_Location = ""; //User input, location of escharotomy, check for compartment syndrome at location occurs later
 }
-
+//-------------------------------------------------------------------------------
 SEEscharotomy::~SEEscharotomy()
 {
-  Clear();
+  Invalidate();
 }
-
-void SEEscharotomy::Clear()
+//-------------------------------------------------------------------------------
+void SEEscharotomy::Invalidate()
 {
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   m_Location = "";
 }
-
+//-------------------------------------------------------------------------------
 bool SEEscharotomy::IsValid() const
 {
   const std::vector<std::string> validCmpts { "LeftArm", "LeftLeg", "RightArm", "RightLeg", "Trunk" };
   return SEPatientAction::IsValid() && HasLocation() && std::find(validCmpts.begin(), validCmpts.end(), GetLocation()) != validCmpts.end();
 }
-
+//-------------------------------------------------------------------------------
 bool SEEscharotomy::IsActive() const
 {
   return IsValid();
 }
-
-bool SEEscharotomy::Load(const CDM::EscharotomyData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  m_Location = in.Location();
-  return true;
-}
-
-CDM::EscharotomyData* SEEscharotomy::Unload() const
-{
-  CDM::EscharotomyData* data(new CDM::EscharotomyData());
-  Unload(*data);
-  return data;
-}
-
-void SEEscharotomy::Unload(CDM::EscharotomyData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (HasLocation())
-    data.Location(m_Location);
-}
-
 //-------------------------------------------------------------------------------
 std::string SEEscharotomy::GetLocation() const
 {
@@ -91,7 +70,6 @@ void SEEscharotomy::SetLocation(const std::string& name)
   m_Location = name;
 }
 //-------------------------------------------------------------------------------
-
 void SEEscharotomy::ToString(std::ostream& str) const
 {
   str << "Patient Action : Escharotomy";

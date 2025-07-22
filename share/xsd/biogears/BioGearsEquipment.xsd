@@ -34,8 +34,8 @@ specific language governing permissions and limitations under the License.
     <xs:complexContent>
       <xs:extension base="ElectroCardioGramData">
         <xs:sequence>
-          <xs:element name="HeartRythmTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
-          <xs:element name="HeartRythmPeriod" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="HeartRhythmTime" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="HeartRhythmPeriod" type="ScalarTimeData" minOccurs="1" maxOccurs="1"/>
           <xs:element name="Waveforms" type="ElectroCardioGramInterpolatorData" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>

@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEAcuteRespiratoryDistress.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -20,62 +21,41 @@ SEAcuteRespiratoryDistress::SEAcuteRespiratoryDistress()
 {
   m_Severity = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEAcuteRespiratoryDistress::~SEAcuteRespiratoryDistress()
 {
-  Clear();
+  Invalidate();
 }
-
-void SEAcuteRespiratoryDistress::Clear()
+//-------------------------------------------------------------------------------
+void SEAcuteRespiratoryDistress::Invalidate()
 {
 
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
-
+//-------------------------------------------------------------------------------
 bool SEAcuteRespiratoryDistress::IsValid() const
 {
   return SEPatientAction::IsValid() && HasSeverity();
 }
-
+//-------------------------------------------------------------------------------
 bool SEAcuteRespiratoryDistress::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
 }
-
-bool SEAcuteRespiratoryDistress::Load(const CDM::AcuteRespiratoryDistressData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-
-CDM::AcuteRespiratoryDistressData* SEAcuteRespiratoryDistress::Unload() const
-{
-  CDM::AcuteRespiratoryDistressData* data(new CDM::AcuteRespiratoryDistressData());
-  Unload(*data);
-  return data;
-}
-
-void SEAcuteRespiratoryDistress::Unload(CDM::AcuteRespiratoryDistressData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-}
-
+//-------------------------------------------------------------------------------
 bool SEAcuteRespiratoryDistress::HasSeverity() const
 {
   return m_Severity == nullptr ? false : m_Severity->IsValid();
 }
-
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEAcuteRespiratoryDistress::GetSeverity()
 {
   if (m_Severity == nullptr)
     m_Severity = new SEScalar0To1();
   return *m_Severity;
 }
-
+//-------------------------------------------------------------------------------
 void SEAcuteRespiratoryDistress::ToString(std::ostream& str) const
 {
   str << "Patient Action : Acute Respiratory Distress";

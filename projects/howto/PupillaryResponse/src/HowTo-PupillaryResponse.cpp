@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
 #include <biogears/cdm/properties/SEScalarOsmolarity.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
@@ -50,7 +50,7 @@ int HowToPupillaryResponse()
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
 
-  SESubstance* morphine = bg->GetSubstanceManager().GetSubstance("Morphine");
+  SESubstance* morphine = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Morphine);
   morphine->GetPlasmaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_L);
 
   // Create a substance bolus action to administer the substance

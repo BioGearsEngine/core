@@ -130,8 +130,8 @@ void CommonDataModelTest::LargeFlowTransportTest(const std::string& sTestDirecto
       }
     }
     file.close();
-    outTrk.Clear();
-    m_Circuits.Clear();
+    outTrk.Invalidate();
+    m_Circuits.Invalidate();
   } else {
     m_Logger->Error("Unable to Load BioGears Substances!");
   }
@@ -307,8 +307,8 @@ void CommonDataModelTest::LiquidTransportTest(const std::string& rptDirectory)
       time += deltaT_s;
     }
     file.close();
-    outTrk.Clear();
-    m_Circuits.Clear();
+    outTrk.Invalidate();
+    m_Circuits.Invalidate();
   } else {
     m_Logger->Error("Unable to Load BioGears Substances!");
   }
@@ -484,8 +484,8 @@ void CommonDataModelTest::GasTransportTest(const std::string& rptDirectory)
       time += deltaT_s;
     }
     file.close();
-    outTrk.Clear();
-    m_Circuits.Clear();
+    outTrk.Invalidate();
+    m_Circuits.Invalidate();
   } else {
     m_Logger->Error("Unable to Load BioGears Substances!");
   }

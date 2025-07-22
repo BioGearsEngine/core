@@ -12,12 +12,12 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEGastrointestinalSystem.h>
 
 #include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace std {
 template class map<const biogears::SESubstance*, biogears::SEDrugTransitState*>;
@@ -42,12 +42,12 @@ SEGastrointestinalSystem::SEGastrointestinalSystem(Logger* logger)
 //-------------------------------------------------------------------------------
 SEGastrointestinalSystem::~SEGastrointestinalSystem()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEGastrointestinalSystem::Clear()
+void SEGastrointestinalSystem::Invalidate()
 {
-  SESystem::Clear();
+  SESystem::Invalidate();
   SAFE_DELETE(m_ChymeAbsorptionRate);
   SAFE_DELETE(m_StomachContents);
 }
@@ -70,37 +70,6 @@ const SEScalar* SEGastrointestinalSystem::GetScalar(const std::string& name)
       return GetStomachContents().GetScalar(prop);
   }
   return nullptr;
-}
-//-------------------------------------------------------------------------------
-bool SEGastrointestinalSystem::Load(const CDM::GastrointestinalSystemData& in)
-{
-  SESystem::Load(in);
-  if (in.ChymeAbsorptionRate().present())
-    GetChymeAbsorptionRate().Load(in.ChymeAbsorptionRate().get());
-  if (in.StomachContents().present())
-    GetStomachContents().Load(in.StomachContents().get());
-
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::GastrointestinalSystemData* SEGastrointestinalSystem::Unload() const
-{
-  CDM::GastrointestinalSystemData* data = new CDM::GastrointestinalSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEGastrointestinalSystem::Unload(CDM::GastrointestinalSystemData& data) const
-{
-  SESystem::Unload(data);
-  if (m_ChymeAbsorptionRate != nullptr)
-    data.ChymeAbsorptionRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_ChymeAbsorptionRate->Unload()));
-  if (m_StomachContents != nullptr)
-    data.StomachContents(std::unique_ptr<CDM::NutritionData>(m_StomachContents->Unload()));
-  for (auto itr : m_DrugTransitStates) {
-    if (itr.second != nullptr)
-      data.DrugTransitStates().push_back(std::unique_ptr<CDM::DrugTransitStateData>(itr.second->Unload()));
-  }
 }
 //-------------------------------------------------------------------------------
 bool SEGastrointestinalSystem::HasChymeAbsorptionRate() const
@@ -200,10 +169,10 @@ SEDrugTransitState::SEDrugTransitState(const SESubstance& sub)
 //-------------------------------------------------------------------------------
 SEDrugTransitState::~SEDrugTransitState()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEDrugTransitState::Clear()
+void SEDrugTransitState::Invalidate()
 {
   m_LumenSolidMasses.clear();
   m_LumenDissolvedMasses.clear();
@@ -212,58 +181,11 @@ void SEDrugTransitState::Clear()
   SAFE_DELETE(m_TotalMassMetabolized);
 }
 //-------------------------------------------------------------------------------
-bool SEDrugTransitState::Load(const CDM::DrugTransitStateData& in)
-{
-  m_LumenDissolvedMasses.clear();
-  for (auto disMass : in.LumenDissolvedMasses()) {
-    SEScalarMass dMass;
-    dMass.Load(disMass);
-    m_LumenDissolvedMasses.push_back(dMass);
-  }
-  m_LumenSolidMasses.clear();
-  for (auto solMass : in.LumenSolidMasses()) {
-    SEScalarMass sMass;
-    sMass.Load(solMass);
-    m_LumenSolidMasses.push_back(sMass);
-  }
-  m_EnterocyteMasses.clear();
-  for (auto entMass : in.EnterocyteMasses()) {
-    SEScalarMass eMass;
-    eMass.Load(entMass);
-    m_EnterocyteMasses.push_back(eMass);
-  }
-  GetTotalMassExcreted().Load(in.MassExcreted());
-  GetTotalMassMetabolized().Load(in.MassMetabolized());
-  return true;
-}
-CDM::DrugTransitStateData* SEDrugTransitState::Unload() const
-{
-  CDM::DrugTransitStateData* data = new CDM::DrugTransitStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEDrugTransitState::Unload(CDM::DrugTransitStateData& data) const
-{
-  for (auto tdMass : m_LumenDissolvedMasses) {
-    data.LumenDissolvedMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(tdMass.Unload()));
-  }
-  for (auto tsMass : m_LumenSolidMasses) {
-    data.LumenSolidMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(tsMass.Unload()));
-  }
-  for (auto eMass : m_EnterocyteMasses) {
-    data.EnterocyteMasses().push_back(std::unique_ptr<CDM::ScalarMassData>(eMass.Unload()));
-  }
-  data.MassMetabolized(std::unique_ptr<CDM::ScalarMassData>(m_TotalMassMetabolized->Unload()));
-  data.MassExcreted(std::unique_ptr<CDM::ScalarMassData>(m_TotalMassExcreted->Unload()));
-  data.Substance(m_Substance->GetName());
-}
-//-------------------------------------------------------------------------------
-bool SEDrugTransitState::Initialize(SEScalarMass& dose, CDM::enumOralAdministration::value route)
+bool SEDrugTransitState::Initialize(SEScalarMass& dose, SEOralAdministrationType route)
 {
   std::vector<double> zeroMassVec(m_NumTransitMasses); // All zeros, correct number of elements
   bool trSolSet = SetLumenSolidMasses(zeroMassVec, MassUnit::ug);
-  if (route == CDM::enumOralAdministration::Gastrointestinal) {
+  if (route == SEOralAdministrationType::Gastrointestinal) {
     m_LumenSolidMasses[0].Set(dose); // If pill swallowed, put all the mass as solid in to stomach at initialization
   }
   // If route is transmucosal, we leave everything at 0 because we assume that no drug has been dissolved in saliva and swallowed at first time step

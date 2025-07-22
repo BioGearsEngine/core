@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEForcedInhale.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
@@ -24,15 +25,20 @@ SEForcedInhale::SEForcedInhale()
 //-------------------------------------------------------------------------------
 SEForcedInhale::~SEForcedInhale()
 {
-  Clear();
-}
-//-------------------------------------------------------------------------------
-void SEForcedInhale::Clear()
-{
-  SEConsciousRespirationCommand::Clear();
   SAFE_DELETE(m_InspiratoryCapacityFraction);
   SAFE_DELETE(m_Period);
 }
+//-------------------------------------------------------------------------------
+void SEForcedInhale::Invalidate()
+{
+  SEConsciousRespirationCommand::Invalidate();
+  if (m_InspiratoryCapacityFraction) {
+    m_InspiratoryCapacityFraction->Invalidate();
+  }
+  if (m_Period) {
+    m_Period->Invalidate();
+  }
+  }
 //-------------------------------------------------------------------------------
 bool SEForcedInhale::IsValid() const
 {
@@ -42,30 +48,6 @@ bool SEForcedInhale::IsValid() const
 bool SEForcedInhale::IsActive() const
 {
   return SEConsciousRespirationCommand::IsActive();
-}
-//-------------------------------------------------------------------------------
-bool SEForcedInhale::Load(const CDM::ForcedInhaleData& in, std::default_random_engine *rd)
-{
-  SEConsciousRespirationCommand::Load(in);
-  GetInspiratoryCapacityFraction().Load(in.InspiratoryCapacityFraction(), rd);
-  GetPeriod().Load(in.Period(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ForcedInhaleData* SEForcedInhale::Unload() const
-{
-  CDM::ForcedInhaleData* data(new CDM::ForcedInhaleData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEForcedInhale::Unload(CDM::ForcedInhaleData& data) const
-{
-  SEConsciousRespirationCommand::Unload(data);
-  if (m_InspiratoryCapacityFraction != nullptr)
-    data.InspiratoryCapacityFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_InspiratoryCapacityFraction->Unload()));
-  if (m_Period != nullptr)
-    data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEForcedInhale::HasInspiratoryCapacityFraction() const
@@ -104,7 +86,7 @@ void SEForcedInhale::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
-bool SEForcedInhale::operator==( const SEForcedInhale& rhs) const
+bool SEForcedInhale::operator==(const SEForcedInhale& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_InspiratoryCapacityFraction && rhs.m_InspiratoryCapacityFraction) ? m_InspiratoryCapacityFraction->operator==(*rhs.m_InspiratoryCapacityFraction) : m_InspiratoryCapacityFraction == rhs.m_InspiratoryCapacityFraction;
@@ -112,7 +94,7 @@ bool SEForcedInhale::operator==( const SEForcedInhale& rhs) const
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEForcedInhale::operator!=( const SEForcedInhale& rhs) const
+bool SEForcedInhale::operator!=(const SEForcedInhale& rhs) const
 {
   return !(*this == rhs);
 }

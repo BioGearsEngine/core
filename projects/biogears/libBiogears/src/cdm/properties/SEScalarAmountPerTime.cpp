@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 AmountPerTimeUnit AmountPerTimeUnit::mol_Per_day("mol/day");
@@ -20,7 +23,7 @@ AmountPerTimeUnit AmountPerTimeUnit::mmol_Per_min("mmol/min");
 AmountPerTimeUnit AmountPerTimeUnit::pmol_Per_min("pmol/min");
 AmountPerTimeUnit AmountPerTimeUnit::umol_Per_min("umol/min");
 
-template class SEScalarQuantity<AmountPerTimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<AmountPerTimeUnit>;
 ;
 
 AmountPerTimeUnit::AmountPerTimeUnit(const char* u)
@@ -35,23 +38,6 @@ AmountPerTimeUnit::AmountPerTimeUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 AmountPerTimeUnit::~AmountPerTimeUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarAmountPerTime::SEScalarAmountPerTime()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarAmountPerTime::~SEScalarAmountPerTime()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarAmountPerTimeData* SEScalarAmountPerTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAmountPerTimeData* data(new CDM::ScalarAmountPerTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool AmountPerTimeUnit::IsValidUnit(const char* unit)

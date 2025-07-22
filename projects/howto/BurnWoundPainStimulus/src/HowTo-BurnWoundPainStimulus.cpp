@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <iostream>
 
 // Include the various types you will be using in your code
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -23,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
@@ -134,7 +135,7 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
     m_bg->GetLogger()->Error("Could not load state, check the error");
     throw std::runtime_error("Could not load state, check the error");
   }
-  SESubstance* epi = m_bg->GetSubstanceManager().GetSubstance("Epinephrine");
+  SESubstance* epi = m_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Epinephrine);
 
   //Create CSV results file and set up data that we want to be tracked (tracking done in AdvanceModelTime)
   int docTBSA = (int)(tbsa);
@@ -163,9 +164,9 @@ BurnThread::BurnThread(const std::string logFile, double tbsa)
   m_bg->GetEngineTrack()->GetDataTrack().Probe("bagVolumeAlbumin_mL", m_ivBagVolumeAlbumin_mL);
 
   //Load substances and compounds
-  SESubstanceCompound* ringers = m_bg->GetSubstanceManager().GetCompound("RingersLactate");
-  SESubstanceCompound* albumex = m_bg->GetSubstanceManager().GetCompound("Albuminex_4PCT");
-  SESubstance* ketamine = m_bg->GetSubstanceManager().GetSubstance("Ketamine");
+  SESubstanceCompound* ringers = m_bg->GetSubstanceManager().GetCompound(StandardSubstances::RingersLactate);
+  SESubstanceCompound* albumex = m_bg->GetSubstanceManager().GetCompound(StandardSubstances::Albuminex_4PCT);
+  SESubstance* ketamine = m_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Ketamine);
   //Create infusion and bolus actions
   m_ringers = new SESubstanceCompoundInfusion(*ringers);
   m_albumex = new SESubstanceCompoundInfusion(*albumex);
@@ -193,7 +194,7 @@ BurnThread::~BurnThread()
 
 void BurnThread::AdministerKetamine(double& bolus)
 {
-  m_ketamineBolus->SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  m_ketamineBolus->SetAdminRoute(SEBolusAdministration::Intravenous);
   m_ketamineBolus->GetConcentration().SetValue(1.0, MassPerVolumeUnit::mg_Per_mL);
   m_ketamineBolus->GetDose().SetValue(bolus, VolumeUnit::mL);
   m_mutex.lock();
@@ -231,7 +232,7 @@ void BurnThread::AdvanceTime()
       if (m_ivBagVolume_mL < 0.0) {
         m_bg->GetLogger()->Info("Ringers Lactate IV bag is empty \n");
         m_ivBagVolume_mL = 0.0;
-        m_ringers->Clear();
+        m_ringers->Invalidate();
       }
     }
     m_bg->GetEngineTrack()->TrackData(m_bg->GetSimulationTime(TimeUnit::s));
@@ -448,20 +449,20 @@ void BurnThread::FluidLoading(double tbsa)
         }
       }
       // escharotomy, uncomment below for escharotomy, should happen at next hour checkpoint
-      if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal)
-          || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm)
-          || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg)
-          || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightArm)
-          || m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg)) {
-        if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_Abdominal)) {
+      if (m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeAbdominal)
+          || m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeLeftArm)
+          || m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeLeftLeg)
+          || m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeRightArm)
+          || m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeRightLeg)) {
+        if (m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeAbdominal)) {
           m_escharotomy->SetLocation("Trunk");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftArm)) {
+        } else if (m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeLeftArm)) {
           m_escharotomy->SetLocation("LeftArm");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_LeftLeg)) {
+        } else if (m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeLeftLeg)) {
           m_escharotomy->SetLocation("LeftLeg");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightArm)) {
+        } else if (m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeRightArm)) {
           m_escharotomy->SetLocation("RightArm");
-        } else if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::CompartmentSyndrome_RightLeg)) {
+        } else if (m_bg->GetPatient().IsEventActive(SEPatientEventType::CompartmentSyndromeRightLeg)) {
           m_escharotomy->SetLocation("RightLeg");
         } else {
           return;
@@ -488,7 +489,7 @@ void BurnThread::FluidLoading(double tbsa)
     }
 
     //exit checks:
-    if (m_bg->GetPatient().IsEventActive(CDM::enumPatientEvent::IrreversibleState)) {
+    if (m_bg->GetPatient().IsEventActive(SEPatientEventType::IrreversibleState)) {
       //m_bg->GetLogger()->Info(std::stringstream() << "oh no!");
       m_bg->GetLogger()->Info("///////////////////////////////////////////////////////////////");
       m_runThread = false;

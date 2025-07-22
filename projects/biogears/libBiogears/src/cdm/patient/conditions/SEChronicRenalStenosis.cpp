@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicRenalStenosis.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEChronicRenalStenosis::SEChronicRenalStenosis()
@@ -23,12 +24,12 @@ SEChronicRenalStenosis::SEChronicRenalStenosis()
 //-------------------------------------------------------------------------------
 SEChronicRenalStenosis::~SEChronicRenalStenosis()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEChronicRenalStenosis::Clear()
+void SEChronicRenalStenosis::Invalidate()
 {
-  SEPatientCondition::Clear();
+  SEPatientCondition::Invalidate();
   SAFE_DELETE(m_LeftKidneySeverity);
   SAFE_DELETE(m_RightKidneySeverity);
 }
@@ -36,32 +37,6 @@ void SEChronicRenalStenosis::Clear()
 bool SEChronicRenalStenosis::IsValid() const
 {
   return SEPatientCondition::IsValid() && (HasLeftKidneySeverity() || HasRightKidneySeverity());
-}
-//-------------------------------------------------------------------------------
-bool SEChronicRenalStenosis::Load(const CDM::ChronicRenalStenosisData& in)
-{
-  SEPatientCondition::Load(in);
-  if (in.LeftKidneySeverity().present())
-    GetLeftKidneySeverity().Load(in.LeftKidneySeverity().get());
-  if (in.RightKidneySeverity().present())
-    GetRightKidneySeverity().Load(in.RightKidneySeverity().get());
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ChronicRenalStenosisData* SEChronicRenalStenosis::Unload() const
-{
-  CDM::ChronicRenalStenosisData* data(new CDM::ChronicRenalStenosisData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEChronicRenalStenosis::Unload(CDM::ChronicRenalStenosisData& data) const
-{
-  SEPatientCondition::Unload(data);
-  if (HasLeftKidneySeverity())
-    data.LeftKidneySeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_LeftKidneySeverity->Unload()));
-  if (HasRightKidneySeverity())
-    data.RightKidneySeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_RightKidneySeverity->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEChronicRenalStenosis::HasLeftKidneySeverity() const

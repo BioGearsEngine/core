@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatConductance.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const HeatConductanceUnit HeatConductanceUnit::W_Per_K("W/K");
@@ -18,7 +21,7 @@ const HeatConductanceUnit HeatConductanceUnit::W_Per_C("W/degC");
 const HeatConductanceUnit HeatConductanceUnit::kcal_Per_K_s("kcal/K s");
 const HeatConductanceUnit HeatConductanceUnit::kcal_Per_C_s("kcal/degC s");
 
-template class SEScalarQuantity<HeatConductanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatConductanceUnit>;
 
 HeatConductanceUnit::HeatConductanceUnit(const char* u)
   : HeatConductanceUnit(std::string { u })
@@ -32,23 +35,6 @@ HeatConductanceUnit::HeatConductanceUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 HeatConductanceUnit::~HeatConductanceUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatConductance::SEScalarHeatConductance()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatConductance::~SEScalarHeatConductance()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatConductanceData* SEScalarHeatConductance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatConductanceData* data(new CDM::ScalarHeatConductanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool HeatConductanceUnit::IsValidUnit(const char* unit)

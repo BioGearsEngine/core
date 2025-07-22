@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SEBronchoconstriction.h>
+
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 
 namespace biogears {
@@ -22,12 +24,12 @@ SEBronchoconstriction::SEBronchoconstriction()
 //-------------------------------------------------------------------------------
 SEBronchoconstriction::~SEBronchoconstriction()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEBronchoconstriction::Clear()
+void SEBronchoconstriction::Invalidate()
 {
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -39,27 +41,6 @@ bool SEBronchoconstriction::IsValid() const
 bool SEBronchoconstriction::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEBronchoconstriction::Load(const CDM::BronchoconstrictionData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::BronchoconstrictionData* SEBronchoconstriction::Unload() const
-{
-  CDM::BronchoconstrictionData* data(new CDM::BronchoconstrictionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEBronchoconstriction::Unload(CDM::BronchoconstrictionData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEBronchoconstriction::HasSeverity() const

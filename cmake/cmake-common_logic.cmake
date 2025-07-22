@@ -32,14 +32,14 @@ set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP  "Generated")
 ####
 function(verify_package package)
   cmake_parse_arguments(_l
-    REQUIRED 
+    "REQUIRED;QUIET"
     ""
     ""
      ${ARGN})
   find_package(${package} CONFIG ${_l_UNPARSED_ARGUMENTS} QUIET)
   if(NOT ${package}_FOUND)
     find_package(${package} ${_l_UNPARSED_ARGUMENTS} QUIET)
-    if(NOT ${package}_FOUND)
+    if(NOT ${package}_FOUND AND NOT _l_QUIET)
       message(WARNING "The following packages ${package} were not found."
         "For native compilations setting CMAKE_PREFIX_PATH can solve this problem"
         "For cross complilation try expanding your CMAKE_FIND_ROOT_PATH"

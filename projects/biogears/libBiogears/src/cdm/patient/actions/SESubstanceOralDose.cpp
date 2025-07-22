@@ -1,36 +1,37 @@
-/**************************************************************************************
-Copyright 2015 Applied Research Associates, Inc.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the License
-at:
-http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software distributed under
-the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
-**************************************************************************************/
+///**************************************************************************************
+//Copyright 2015 Applied Research Associates, Inc.
+//Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+//this file except in compliance with the License. You may obtain a copy of the License
+//at:
+//http://www.apache.org/licenses/LICENSE-2.0
+//Unless required by applicable law or agreed to in writing, software distributed under
+//the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+//CONDITIONS OF ANY KIND, either express or implied. See the License for the
+//specific language governing permissions and limitations under the License.
+//**************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
+//
 #include <biogears/cdm/substance/SESubstance.h>
-#include <biogears/schema/cdm/Properties.hxx>
-
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+//
 namespace biogears {
 SESubstanceOralDose::SESubstanceOralDose(const SESubstance& substance)
   : SESubstanceAdministration()
   , m_Substance(substance)
 {
-  m_AdminRoute = (CDM::enumOralAdministration::value)-1;
+  m_AdminRoute = (SEOralAdministrationType)-1;
   m_Dose = nullptr;
 }
 //-------------------------------------------------------------------------------
 SESubstanceOralDose::~SESubstanceOralDose()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SESubstanceOralDose::Clear()
+void SESubstanceOralDose::Invalidate()
 {
-  SESubstanceAdministration::Clear();
-  m_AdminRoute = (CDM::enumOralAdministration::value)-1;
+  SESubstanceAdministration::Invalidate();
+  m_AdminRoute = (SEOralAdministrationType)-1;
   SAFE_DELETE(m_Dose);
 }
 //-------------------------------------------------------------------------------
@@ -46,44 +47,19 @@ bool SESubstanceOralDose::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceOralDose::Load(const CDM::SubstanceOralDoseData& in, std::default_random_engine *rd)
-{
-  SESubstanceAdministration::Load(in);
-  GetDose().Load(in.Dose(), rd);
-  m_AdminRoute = in.AdminRoute();
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceOralDoseData* SESubstanceOralDose::Unload() const
-{
-  CDM::SubstanceOralDoseData* data(new CDM::SubstanceOralDoseData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceOralDose::Unload(CDM::SubstanceOralDoseData& data) const
-{
-  SESubstanceAdministration::Unload(data);
-  if (m_Dose != nullptr)
-    data.Dose(std::unique_ptr<CDM::ScalarMassData>(m_Dose->Unload()));
-  if (HasAdminRoute())
-    data.AdminRoute(m_AdminRoute);
-  data.Substance(m_Substance.GetName());
-}
-//-------------------------------------------------------------------------------
-CDM::enumOralAdministration::value SESubstanceOralDose::GetAdminRoute() const
+SEOralAdministrationType SESubstanceOralDose::GetAdminRoute() const
 {
   return m_AdminRoute;
 }
 //-------------------------------------------------------------------------------
-void SESubstanceOralDose::SetAdminRoute(CDM::enumOralAdministration::value route)
+void SESubstanceOralDose::SetAdminRoute(SEOralAdministrationType route)
 {
   m_AdminRoute = route;
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceOralDose::HasAdminRoute() const
 {
-  return m_AdminRoute == ((CDM::enumOralAdministration::value)-1) ? false : true;
+  return m_AdminRoute == SEOralAdministrationType::Invalid ? false : true;
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceOralDose::HasDose() const
@@ -131,8 +107,8 @@ bool SESubstanceOralDose::operator!=(const SESubstanceOralDose& rhs) const
 // Oral Transmucosal State methods
 SETransmucosalState::SETransmucosalState(const SESubstance& sub)
   : m_Substance(&sub)
-  ,m_NumBuccalRegions(7) // Hard-coded for current model implementation!
-  ,m_NumSublingualRegions(7) // Hard-coded for current model implementation!
+  , m_NumBuccalRegions(7) // Hard-coded for current model implementation!
+  , m_NumSublingualRegions(7) // Hard-coded for current model implementation!
 {
   m_MouthSolidMass = nullptr;
   m_SalivaConcentration = nullptr;
@@ -140,10 +116,10 @@ SETransmucosalState::SETransmucosalState(const SESubstance& sub)
 //-------------------------------------------------------------------------------
 SETransmucosalState::~SETransmucosalState()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SETransmucosalState::Clear()
+void SETransmucosalState::Invalidate()
 {
   SAFE_DELETE(m_MouthSolidMass);
   SAFE_DELETE(m_SalivaConcentration);
@@ -161,46 +137,7 @@ bool SETransmucosalState::Initialize(SEScalarMass& dose)
   bool subSet = SetSublingualConcentrations(initSublingual, MassPerVolumeUnit::ug_Per_mL);
   return (bucSet && subSet);
 }
-//-------------------------------------------------------------------------------
-bool SETransmucosalState::Load(const CDM::TransmucosalStateData& in, std::default_random_engine *rd)
-{
 
-  GetMouthSolidMass().Load(in.MouthSolidMass());
-  GetSalivaConcentration().Load(in.SalivaConcentration());
-  m_BuccalConcentrations.clear();
-  for (auto brData : in.BuccalConcentrations()) {
-    SEScalarMassPerVolume buc;
-    buc.Load(brData, rd);
-    m_BuccalConcentrations.push_back(buc);
-  }
-  m_SublingualConcentrations.clear();
-  for (auto slData : in.SublingualConcentrations()) {
-    SEScalarMassPerVolume sl;
-    sl.Load(slData, rd);
-    m_SublingualConcentrations.push_back(sl);
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::TransmucosalStateData* SETransmucosalState::Unload() const
-{
-  CDM::TransmucosalStateData* data = new CDM::TransmucosalStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETransmucosalState::Unload(CDM::TransmucosalStateData& data) const
-{
-  data.MouthSolidMass(std::unique_ptr<CDM::ScalarMassData>(m_MouthSolidMass->Unload()));
-  data.SalivaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_SalivaConcentration->Unload()));
-  for (auto bcData : m_BuccalConcentrations) {
-    data.BuccalConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(bcData.Unload()));
-  }
-  for (auto slData : m_SublingualConcentrations) {
-    data.SublingualConcentrations().push_back(std::unique_ptr<CDM::ScalarMassPerVolumeData>(slData.Unload()));
-  }
-  data.Substance(m_Substance->GetName());
-}
 //-------------------------------------------------------------------------------
 SEScalarMass& SETransmucosalState::GetMouthSolidMass()
 {
@@ -293,7 +230,7 @@ bool SETransmucosalState::SetSublingualConcentrations(std::vector<double>& slMas
   return true;
 }
 //-------------------------------------------------------------------------------
-
+#pragma warning(disable : 4661)
 bool SETransmucosalState::operator==(const SETransmucosalState& rhs) const
 {
 

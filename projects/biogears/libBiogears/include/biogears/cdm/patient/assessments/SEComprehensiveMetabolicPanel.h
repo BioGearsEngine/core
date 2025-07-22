@@ -12,12 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
-#include <biogears/schema/cdm/PatientAssessments.hxx>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 
 namespace biogears {
 class SEBloodChemistrySystem;
-class SEScalarMassPerVolume;
-class SEScalarAmountPerVolume;
 namespace io {
   class PatientAssessments;
 }
@@ -32,13 +32,7 @@ public:
   const char* classname() const override { return TypeTag(); }
 
   virtual void Reset() override; // reset values
-  virtual void Clear() override; // clear memory
-
-  virtual bool Load(const CDM::ComprehensiveMetabolicPanelData& in);
-  virtual CDM::ComprehensiveMetabolicPanelData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::ComprehensiveMetabolicPanelData& data);
+  virtual void Invalidate() override; // clear memory
 
 public:
   bool HasAlbumin() const;

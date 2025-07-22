@@ -11,13 +11,16 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::mL_Per_min_m2("mL/min m^2");
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::mL_Per_s_m2("mL/s m^2");
 const VolumePerTimeAreaUnit VolumePerTimeAreaUnit::L_Per_min_m2("L/min m^2");
 
-template class SEScalarQuantity<VolumePerTimeAreaUnit>;
+template class BIOGEARS_API SEScalarQuantity<VolumePerTimeAreaUnit>;
 
 VolumePerTimeAreaUnit::VolumePerTimeAreaUnit(const char* u)
   : VolumePerTimeAreaUnit(std::string { u })
@@ -31,25 +34,6 @@ VolumePerTimeAreaUnit::VolumePerTimeAreaUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 VolumePerTimeAreaUnit::~VolumePerTimeAreaUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarVolumePerTimeArea::SEScalarVolumePerTimeArea()
-{
-
-}
-//-------------------------------------------------------------------------------
-SEScalarVolumePerTimeArea::~SEScalarVolumePerTimeArea()
-{
-
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarVolumePerTimeAreaData* SEScalarVolumePerTimeArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarVolumePerTimeAreaData* data(new CDM::ScalarVolumePerTimeAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool VolumePerTimeAreaUnit::IsValidUnit(const char* unit)

@@ -755,7 +755,7 @@ void BioGearsEngineTest::AcidBaseBloodGasTest(BioGears& bg, bloodType bloodCompa
   SESubstanceManager& subMgr = bg.GetSubstances();
   SaturationCalculator& c = bg.GetSaturationCalculator();
   SECompartmentManager& cmptMgr = bg.GetCompartments();
-  cmptMgr.Clear();
+  cmptMgr.Invalidate();
 
   SETestCase& testCase = testSuite.CreateTestCase();
   switch (bloodCompartment) {

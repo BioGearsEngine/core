@@ -17,8 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachine.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGears.hxx>
-#include <biogears/schema/biogears/BioGearsEquipment.hxx>
+#include <biogears/cdm/properties/SEScalarVolume.h>
 
 namespace biogears {
 class BioGears;
@@ -53,18 +52,12 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  void Invalidate() override;
 
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsAnesthesiaMachineData& in);
-  virtual CDM::BioGearsAnesthesiaMachineData* Unload() const override;
-
 protected:
-  virtual void Unload(CDM::BioGearsAnesthesiaMachineData& data) const;
-
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
   void SetUp() override;
 
@@ -79,7 +72,7 @@ public:
 
   // Extending some functionality to these base class methods
   // We will update the BioGears Airway mode when these are called
-  void SetConnection(CDM::enumAnesthesiaMachineConnection::value c) override;
+  void SetConnection(SEAnesthesiaMachineConnection c) override;
   void InvalidateConnection() override;
 
 private:
@@ -93,11 +86,11 @@ private:
   void CheckReliefValve();
 
   // Serializable member variables (Set in Initialize and in schema)
-  bool m_inhaling;
-  SEScalarTime m_inspirationTime;
-  SEScalar m_O2InletVolumeFraction;
-  SEScalarTime m_currentbreathingCycleTime;
-  SEScalarTime m_totalBreathingCycleTime;
+  bool m_Inhaling;
+  SEScalarTime m_InspirationTime;
+  SEScalar m_OxygenInletVolumeFraction;
+  SEScalarTime m_CurrentBreathingCycleTime;
+  SEScalarTime m_TotalBreathingCycleTime;
 
   // Stateless member variable (Set in SetUp())
   double m_dt_s;

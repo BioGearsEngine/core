@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarLengthPerTimePressure.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::m_Per_s_mmHg("m/s mmHg");
@@ -18,7 +21,7 @@ const LengthPerTimePressureUnit LengthPerTimePressureUnit::cm_Per_s_mmHg("cm/s m
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::m_Per_min_mmHg("m/min mmHg");
 const LengthPerTimePressureUnit LengthPerTimePressureUnit::cm_Per_min_mmHg("cm/min mmHg");
 
-template class SEScalarQuantity<LengthPerTimePressureUnit>;
+template class BIOGEARS_API SEScalarQuantity<LengthPerTimePressureUnit>;
 
 LengthPerTimePressureUnit::LengthPerTimePressureUnit(const char* u)
   : LengthPerTimePressureUnit(std::string { u })
@@ -32,23 +35,6 @@ LengthPerTimePressureUnit::LengthPerTimePressureUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 LengthPerTimePressureUnit::~LengthPerTimePressureUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarLengthPerTimePressure::SEScalarLengthPerTimePressure()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarLengthPerTimePressure::~SEScalarLengthPerTimePressure()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarLengthPerTimePressureData* SEScalarLengthPerTimePressure::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarLengthPerTimePressureData* data(new CDM::ScalarLengthPerTimePressureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool LengthPerTimePressureUnit::IsValidUnit(const char* unit)

@@ -11,12 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarMassPerMass.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const MassPerMassUnit MassPerMassUnit::ug_Per_kg("ug/kg");
 const MassPerMassUnit MassPerMassUnit::mg_Per_g("mg/g");
 
-template class SEScalarQuantity<MassPerMassUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassPerMassUnit>;
 
 MassPerMassUnit::MassPerMassUnit(const char* u)
   : MassPerMassUnit(std::string { u })
@@ -30,22 +33,6 @@ MassPerMassUnit::MassPerMassUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 MassPerMassUnit::~MassPerMassUnit()
 {
-} //-------------------------------------------------------------------------------
-SEScalarMassPerMass::SEScalarMassPerMass()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarMassPerMass::~SEScalarMassPerMass()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerMassData* SEScalarMassPerMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerMassData* data(new CDM::ScalarMassPerMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool MassPerMassUnit::IsValidUnit(const char* unit)

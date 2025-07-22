@@ -11,8 +11,12 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
 
+#include "io/cdm/PatientActions.h"
+
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
+#include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/utils/GeneralMath.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
@@ -20,7 +24,7 @@ SESubstanceBolus::SESubstanceBolus(const SESubstance& substance)
   : SESubstanceAdministration()
   , m_Substance(substance)
 {
-  m_AdminRoute = (CDM::enumBolusAdministration::value)-1;
+  m_AdminRoute = (SEBolusAdministration)-1;
   m_AdminTime = nullptr;
   m_Dose = nullptr;
   m_Concentration = nullptr;
@@ -28,13 +32,13 @@ SESubstanceBolus::SESubstanceBolus(const SESubstance& substance)
 //-------------------------------------------------------------------------------
 SESubstanceBolus::~SESubstanceBolus()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SESubstanceBolus::Clear()
+void SESubstanceBolus::Invalidate()
 {
-  SESubstanceAdministration::Clear();
-  m_AdminRoute = (CDM::enumBolusAdministration::value)-1;
+  SESubstanceAdministration::Invalidate();
+  m_AdminRoute = (SEBolusAdministration)-1;
   SAFE_DELETE(m_AdminTime);
   SAFE_DELETE(m_Dose);
   SAFE_DELETE(m_Concentration);
@@ -51,39 +55,6 @@ bool SESubstanceBolus::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceBolus::Load(const CDM::SubstanceBolusData& in, std::default_random_engine *rd)
-{
-  SESubstanceAdministration::Load(in);
-  if (in.AdminTime().present()) {
-    GetAdminTime().Load(in.AdminTime().get(), rd);
-  }
-  GetDose().Load(in.Dose());
-  GetConcentration().Load(in.Concentration(), rd);
-  m_AdminRoute = in.AdminRoute();
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceBolusData* SESubstanceBolus::Unload() const
-{
-  CDM::SubstanceBolusData* data(new CDM::SubstanceBolusData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceBolus::Unload(CDM::SubstanceBolusData& data) const
-{
-  SESubstanceAdministration::Unload(data);
-  if (m_Dose != nullptr)
-    data.Dose(std::unique_ptr<CDM::ScalarVolumeData>(m_Dose->Unload()));
-  if (m_Concentration != nullptr)
-    data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Concentration->Unload()));
-  if (HasAdminRoute())
-    data.AdminRoute(m_AdminRoute);
-  if (HasAdminTime())
-    data.AdminTime(std::unique_ptr<CDM::ScalarTimeData>(m_AdminTime->Unload()));
-  data.Substance(m_Substance.GetName());
-}
-//-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasAdminTime() const
 {
   return m_AdminTime == nullptr ? false : m_AdminTime->IsValid();
@@ -96,24 +67,24 @@ SEScalarTime& SESubstanceBolus::GetAdminTime()
   return *m_AdminTime;
 }
 //-------------------------------------------------------------------------------
-CDM::enumBolusAdministration::value SESubstanceBolus::GetAdminRoute() const
+SEBolusAdministration SESubstanceBolus::GetAdminRoute() const
 {
   return m_AdminRoute;
 }
 //-------------------------------------------------------------------------------
-void SESubstanceBolus::SetAdminRoute(CDM::enumBolusAdministration::value route)
+void SESubstanceBolus::SetAdminRoute(SEBolusAdministration route)
 {
   m_AdminRoute = route;
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasAdminRoute() const
 {
-  return m_AdminRoute == ((CDM::enumBolusAdministration::value)-1) ? false : true;
+  return m_AdminRoute == SEBolusAdministration::Invalid ? false : true;
 }
 //-------------------------------------------------------------------------------
 void SESubstanceBolus::InvalidateAdminRoute()
 {
-  m_AdminRoute = (CDM::enumBolusAdministration::value)-1;
+  m_AdminRoute = (SEBolusAdministration)-1;
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceBolus::HasDose() const
@@ -172,27 +143,6 @@ SESubstanceBolusState::~SESubstanceBolusState()
 {
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceBolusState::Load(const CDM::SubstanceBolusStateData& in, std::default_random_engine *rd)
-{
-  m_ElapsedTime.Load(in.ElapsedTime(), rd);
-  m_AdministeredDose.Load(in.AdministeredDose(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceBolusStateData* SESubstanceBolusState::Unload() const
-{
-  CDM::SubstanceBolusStateData* data = new CDM::SubstanceBolusStateData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceBolusState::Unload(CDM::SubstanceBolusStateData& data) const
-{
-  data.Substance(m_Substance.GetName());
-  data.ElapsedTime(std::unique_ptr<CDM::ScalarTimeData>(m_ElapsedTime.Unload()));
-  data.AdministeredDose(std::unique_ptr<CDM::ScalarVolumeData>(m_AdministeredDose.Unload()));
-}
-//-------------------------------------------------------------------------------
 bool SESubstanceBolus::operator==(const SESubstanceBolus& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
@@ -211,9 +161,9 @@ bool SESubstanceBolus::operator!=(const SESubstanceBolus& rhs) const
 //-------------------------------------------------------------------------------
 bool SESubstanceBolusState::operator==(const SESubstanceBolusState& rhs) const
 {
-  bool equivilant =  m_ElapsedTime == rhs.m_ElapsedTime;
-  equivilant &=  m_AdministeredDose == rhs.m_AdministeredDose;
-  equivilant &=  m_Substance == rhs.m_Substance;
+  bool equivilant = m_ElapsedTime == rhs.m_ElapsedTime;
+  equivilant &= m_AdministeredDose == rhs.m_AdministeredDose;
+  equivilant &= m_Substance == rhs.m_Substance;
   return equivilant;
 }
 //-------------------------------------------------------------------------------

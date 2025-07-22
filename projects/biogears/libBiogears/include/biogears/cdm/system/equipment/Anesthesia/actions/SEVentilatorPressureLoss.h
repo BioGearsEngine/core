@@ -11,7 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
+
 
 namespace biogears {
 class SEScalar0To1;
@@ -27,18 +27,11 @@ public:
   static constexpr const char* TypeTag() { return "SEVentilatorPressureLoss"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override;
+  virtual void Invalidate() override;
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
 
-  virtual bool Load(const CDM::VentilatorPressureLossData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::VentilatorPressureLossData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::VentilatorPressureLossData& data) const;
-
-public:
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
 

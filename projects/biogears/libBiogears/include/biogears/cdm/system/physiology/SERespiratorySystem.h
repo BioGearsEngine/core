@@ -12,23 +12,17 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalar0To1.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarFlowCompliance.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
 
 namespace biogears {
-class SEScalarPressure;
-class PressureUnit;
-class SEScalarFraction;
-class SEScalar0To1;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
-class SEScalarFlowCompliance;
-class FlowComplianceUnit;
-class SEScalarFlowResistance;
-class FlowResistanceUnit;
-class SEScalarFrequency;
-class FrequencyUnit;
-class SEScalarVolume;
-class VolumeUnit;
 namespace io {
   class Physiology;
 }
@@ -44,21 +38,15 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override; // Deletes all members
+  void Invalidate() override; // Deletes all members
 
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
-
-  bool Load(const CDM::RespiratorySystemData& in);
-  CDM::RespiratorySystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SERespiratorySystem const&) const;
   bool operator!=(SERespiratorySystem const&) const;
-
-protected:
-  void Unload(CDM::RespiratorySystemData& data) const;
 
 public:
   bool HasAlveolarArterialGradient() const;

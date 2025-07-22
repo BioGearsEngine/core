@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarInversePressure.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const InversePressureUnit InversePressureUnit::Inverse_Pa("1/Pa");
@@ -18,7 +21,7 @@ const InversePressureUnit InversePressureUnit::Inverse_mmHg("1/mmHg");
 const InversePressureUnit InversePressureUnit::Inverse_cmH2O("1/cmH2O");
 const InversePressureUnit InversePressureUnit::Inverse_atm("1/atm");
 
-template class SEScalarQuantity<InversePressureUnit>;
+template class BIOGEARS_API SEScalarQuantity<InversePressureUnit>;
 
 InversePressureUnit::InversePressureUnit(const char* u)
   : InversePressureUnit(std::string { u })
@@ -31,23 +34,6 @@ InversePressureUnit::InversePressureUnit(const std::string& u)
 } //-------------------------------------------------------------------------------
 InversePressureUnit::~InversePressureUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarInversePressure::SEScalarInversePressure()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarInversePressure::~SEScalarInversePressure()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarInversePressureData* SEScalarInversePressure::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarInversePressureData* data(new CDM::ScalarInversePressureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool InversePressureUnit::IsValidUnit(const char* unit)

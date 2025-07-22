@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 
+#include "io/cdm/Substance.h"
+
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -30,32 +32,12 @@ SESubstanceFraction::SESubstanceFraction(SESubstance const& substance, SEScalarF
 //-------------------------------------------------------------------------------
 SESubstanceFraction::~SESubstanceFraction()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SESubstanceFraction::Clear()
+void SESubstanceFraction::Invalidate()
 {
   SAFE_DELETE(m_FractionAmount);
-}
-//-------------------------------------------------------------------------------
-bool SESubstanceFraction::Load(const CDM::SubstanceFractionData& in)
-{
-  GetFractionAmount().Load(in.FractionAmount());
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceFractionData* SESubstanceFraction::Unload() const
-{
-  CDM::SubstanceFractionData* data = new CDM::SubstanceFractionData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceFraction::Unload(CDM::SubstanceFractionData& data) const
-{
-  data.Name(m_Substance.GetName());
-  if (HasFractionAmount())
-    data.FractionAmount(std::unique_ptr<CDM::ScalarFractionData>(m_FractionAmount->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceFraction::HasFractionAmount() const

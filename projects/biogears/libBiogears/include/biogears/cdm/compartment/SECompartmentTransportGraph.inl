@@ -29,14 +29,14 @@ SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::SECompartmentTra
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
 SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::~SECompartmentTransportGraph()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
 
 template <COMPARTMENT_TRANSPORT_GRAPH_TEMPLATE>
-void SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::Clear()
+void SECompartmentTransportGraph<COMPARTMENT_TRANSPORT_GRAPH_TYPES>::Invalidate()
 {
-  SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::Clear();
+  SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::Invalidate();
   for (auto& itr : m_TargetEdgeMap)
     delete itr.second;
   for (auto& itr : m_SourceEdgeMap)

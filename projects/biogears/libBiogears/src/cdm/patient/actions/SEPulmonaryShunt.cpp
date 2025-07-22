@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEPulmonaryShunt.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -20,55 +21,34 @@ SEPulmonaryShunt::SEPulmonaryShunt()
 {
   m_FlowRateScaling = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEPulmonaryShunt::~SEPulmonaryShunt()
 {
-  Clear();
+  Invalidate();
 }
-
-void SEPulmonaryShunt::Clear()
+//-------------------------------------------------------------------------------
+void SEPulmonaryShunt::Invalidate()
 {
 
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_FlowRateScaling);
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryShunt::IsValid() const
 {
   return SEPatientAction::IsValid() && HasFlowRateScale();
 }
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryShunt::IsActive() const
 {
   return IsValid() ? !m_FlowRateScaling->IsZero() : false;
 }
-
-bool SEPulmonaryShunt::Load(const CDM::PulmonaryShuntData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetFlowRateScale().Load(in.FlowRateScaling(), rd);
-  return true;
-}
-
-CDM::PulmonaryShuntData* SEPulmonaryShunt::Unload() const
-{
-  CDM::PulmonaryShuntData* data(new CDM::PulmonaryShuntData());
-  Unload(*data);
-  return data;
-}
-
-void SEPulmonaryShunt::Unload(CDM::PulmonaryShuntData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_FlowRateScaling != nullptr)
-    data.FlowRateScaling(std::unique_ptr<CDM::Scalar0To1Data>(m_FlowRateScaling->Unload()));
-}
-
+//-------------------------------------------------------------------------------
 bool SEPulmonaryShunt::HasFlowRateScale() const
 {
   return m_FlowRateScaling == nullptr ? false : m_FlowRateScaling->IsValid();
 }
-
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEPulmonaryShunt::GetFlowRateScale()
 {
   if (m_FlowRateScaling == nullptr)
@@ -88,7 +68,7 @@ bool SEPulmonaryShunt::operator!=(const SEPulmonaryShunt& rhs) const
 {
   return !(*this == rhs);
 }
-
+//-------------------------------------------------------------------------------
 void SEPulmonaryShunt::ToString(std::ostream& str) const
 {
   str << "Patient Action : Pulmonary Shunt";
@@ -98,4 +78,5 @@ void SEPulmonaryShunt::ToString(std::ostream& str) const
   HasFlowRateScale() ? str << *m_FlowRateScaling : str << "Not Set";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
 }

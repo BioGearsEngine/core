@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/system/environment/SEEnvironmentalConditions.h>
 #include <biogears/cdm/system/environment/conditions/SEEnvironmentCondition.h>
-#include <biogears/schema/cdm/EnvironmentConditions.hxx>
 
 namespace biogears {
 namespace io {
@@ -25,24 +24,18 @@ public:
   SEInitialEnvironment(SESubstanceManager& substances);
   virtual ~SEInitialEnvironment();
 
-  virtual void Clear();
+  virtual void Invalidate() override ;
 
-  virtual bool IsValid() const;
-
-  virtual bool Load(const CDM::InitialEnvironmentData& in);
-  virtual CDM::InitialEnvironmentData* Unload() const;
+  virtual bool IsValid() const override ;
 
   bool operator==(SEInitialEnvironment const& rhs) const;
   bool operator!=(SEInitialEnvironment const& rhs) const;
   bool operator==(SECondition const&) const override;
   bool operator!=(SECondition const&) const override;
 
-protected:
-  virtual void Unload(CDM::InitialEnvironmentData& data) const;
-
 public:
-  virtual std::string GetName() const { return "InitialEnvironment"; }
-  virtual const char* GetName_cStr() const { return "InitialEnvironment"; }
+  virtual std::string GetName() const  override { return "InitialEnvironment"; }
+  virtual const char* GetName_cStr() const  override { return "InitialEnvironment"; }
 
   virtual bool HasConditions() const;
   virtual SEEnvironmentalConditions& GetConditions();
@@ -55,7 +48,7 @@ public:
   virtual bool HasConditionsFile() const;
   virtual void InvalidateConditionsFile();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SESubstanceManager& m_Substances;

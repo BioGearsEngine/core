@@ -13,7 +13,7 @@
 
   <Action xsi:type="AsthmaAttackData">
     <Comment>Insult: Severe acute asthma attack</Comment>
-    <Severity value="0.7" deviation="0.45"/>
+    <Severity value="0.7" deviation="0.2"/>
   </Action>
 
   <Action xsi:type="AdvanceTimeData">

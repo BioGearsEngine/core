@@ -29,11 +29,11 @@ SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::SECompartmentGraph(const std::strin
 template <COMPARTMENT_GRAPH_TEMPLATE>
 SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::~SECompartmentGraph()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
 template <COMPARTMENT_GRAPH_TEMPLATE>
-void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::Clear()
+void SECompartmentGraph<COMPARTMENT_GRAPH_TYPES>::Invalidate()
 {
   m_Compartments.clear();
   m_CompartmentLinks.clear();

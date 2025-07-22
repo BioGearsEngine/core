@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const FrequencyUnit FrequencyUnit::Per_min("1/min");
@@ -18,7 +21,7 @@ const FrequencyUnit FrequencyUnit::Per_s("1/s");
 const FrequencyUnit FrequencyUnit::Hz("Hz");
 const FrequencyUnit FrequencyUnit::Per_hr("1/hr");
 
-template class SEScalarQuantity<FrequencyUnit>;
+template class BIOGEARS_API SEScalarQuantity<FrequencyUnit>;
 
 FrequencyUnit::FrequencyUnit(const char* u)
   : FrequencyUnit(std::string { u })
@@ -32,23 +35,6 @@ FrequencyUnit::FrequencyUnit(const std::string& u)
 //-----------------------------------------------------------------------------
 FrequencyUnit::~FrequencyUnit()
 {
-}
-//-----------------------------------------------------------------------------
-SEScalarFrequency::SEScalarFrequency()
-{
-}
-//-----------------------------------------------------------------------------
-SEScalarFrequency::~SEScalarFrequency()
-{
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarFrequencyData* SEScalarFrequency::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarFrequencyData* data(new CDM::ScalarFrequencyData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-----------------------------------------------------------------------------
 bool FrequencyUnit::IsValidUnit(const char* unit)

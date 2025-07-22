@@ -10,8 +10,11 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-#include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
+
+#include "io/cdm/Circuit.h"
+#include <biogears/cdm/circuit/SECircuitManager.h>
+#include <biogears/cdm/circuit/SECircuitLedger.h>
 
 namespace std {
 template class vector<biogears::SEThermalCircuitNode*>;
@@ -22,7 +25,7 @@ template class map<const biogears::SEThermalCircuitNode*, size_t>;
 
 namespace biogears {
 
-template class SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>;
+template class SECircuit<SEThermalCircuitNode, SEThermalCircuitPath>;
 
 SEThermalCircuit::SEThermalCircuit(const char* name, SECircuitManager& mgr)
   : SEThermalCircuit(std::string { name }, mgr)
@@ -30,15 +33,16 @@ SEThermalCircuit::SEThermalCircuit(const char* name, SECircuitManager& mgr)
 }
 //-------------------------------------------------------------------------------
 SEThermalCircuit::SEThermalCircuit(const std::string& name, SECircuitManager& mgr)
-  : SECircuit<CDM::ThermalCircuitData, SEThermalCircuitNode, CDM::ThermalCircuitNodeData, SEThermalCircuitPath, CDM::ThermalCircuitPathData>(name, mgr.GetLogger())
+  : SECircuit<SEThermalCircuitNode, SEThermalCircuitPath>(name, mgr.GetLogger())
   , m_Mgr(mgr)
 {
 }
 //-------------------------------------------------------------------------------
 SEThermalCircuit::~SEThermalCircuit()
 {
-  Clear();
+  Invalidate();
 }
+
 //-------------------------------------------------------------------------------
 SEThermalCircuitNode& SEThermalCircuit::CreateNode(const char* name)
 {

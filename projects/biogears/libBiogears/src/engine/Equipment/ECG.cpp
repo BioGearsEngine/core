@@ -11,16 +11,19 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Controller/BioGears.h>
 
-#include <biogears/engine/Equipment/ECG.h>
-#include <biogears/engine/Systems/Cardiovascular.h>
-#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include "io/cdm/ElectroCardioGram.h"
+#include "io/cdm/Property.h"
+#include <biogears/schema/cdm/ElectroCardioGram.hxx>
+
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolationWaveform.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
+#include <biogears/engine/Equipment/ECG.h>
+#include <biogears/engine/Systems/Cardiovascular.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+#include <biogears/engine/Controller/BioGears.h>
 
 namespace biogears {
 /*
@@ -39,20 +42,20 @@ ECG::ECG(BioGears& bg)
   , m_data(bg)
   , m_Waveforms(bg.GetLogger())
 {
-  Clear();
+  Invalidate();
 }
 
 ECG::~ECG()
 {
-  Clear();
+  Invalidate();
 }
 
 //--------------------------------------------------------------------------------------------------
 /// \brief Cleans up any memory this class is responsible for
 //--------------------------------------------------------------------------------------------------
-void ECG::Clear()
+void ECG::Invalidate()
 {
-  SEElectroCardioGram::Clear();
+  SEElectroCardioGram::Invalidate();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -72,20 +75,22 @@ void ECG::Initialize()
 
   m_HeartRhythmTime.SetValue(0, TimeUnit::s);
   m_HeartRhythmPeriod.SetValue(0, TimeUnit::s);
-  CDM_COPY(m_data.GetConfiguration().GetECGInterpolator(), (&m_Waveforms));
+
+  CDM_ELECTRO_CARDIOGRAM_COPY(ElectroCardioGramInterpolator, *m_data.GetConfiguration().GetECGInterpolator(), m_Waveforms)
+
   // You can uncomment this code to compare the original waveform to the interpolated waveform and make sure you are capturing the data properly
-  /* Code to write out the ECG data in a format easy to view in plotting tools 
-  std::vector<double> original_s = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
-  std::vector<double> original_mV = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
-  DataTrack Original;  
+  /* Code to write out the ECG data in a format easy to view in plotting tools
+  std::vector<double> original_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
+  std::vector<double> original_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
+  DataTrack Original;
   for (size_t i = 0; i < original_s.size(); i++)
     Original.Track("Original_ECG",original_s[i], original_mV[i]);
   Original.WriteTrackToFile("OriginalECG.csv");
 */
   m_Waveforms.Interpolate(m_data.GetTimeStep());
   /* Code to write out the Interpolated ECG data in a format easy to view in plotting tools
-  std::vector<double> interpolated_s = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetTime();
-  std::vector<double> interpolated_mV = m_Waveforms.GetWaveform(3, CDM::enumHeartRhythm::NormalSinus).GetData().GetElectricPotential();
+  std::vector<double> interpolated_s = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetTime();
+  std::vector<double> interpolated_mV = m_Waveforms.GetWaveform(3, SEHeartRhythm::NormalSinus).GetData().GetElectricPotential();
   DataTrack Interpolated;
   for (size_t i = 0; i < interpolated_s.size(); i++)
     Interpolated.Track("Interpolated_ECG", interpolated_s[i], interpolated_mV[i]);
@@ -94,30 +99,6 @@ void ECG::Initialize()
   m_Waveforms.SetLeadElectricPotential(3, GetLead3ElectricPotential());
 }
 
-bool ECG::Load(const CDM::BioGearsElectroCardioGramData& in)
-{
-  if (!SEElectroCardioGram::Load(in))
-    return false;
-  BioGearsSystem::LoadState();
-  m_HeartRhythmTime.Load(in.HeartRythmTime());
-  m_HeartRhythmPeriod.Load(in.HeartRythmPeriod());
-  m_Waveforms.Load(in.Waveforms());
-  m_Waveforms.SetLeadElectricPotential(3, GetLead3ElectricPotential());
-  return true;
-}
-CDM::BioGearsElectroCardioGramData* ECG::Unload() const
-{
-  CDM::BioGearsElectroCardioGramData* data = new CDM::BioGearsElectroCardioGramData();
-  Unload(*data);
-  return data;
-}
-void ECG::Unload(CDM::BioGearsElectroCardioGramData& data) const
-{
-  SEElectroCardioGram::Unload(data);
-  data.HeartRythmTime(std::unique_ptr<CDM::ScalarTimeData>(m_HeartRhythmTime.Unload()));
-  data.HeartRythmPeriod(std::unique_ptr<CDM::ScalarTimeData>(m_HeartRhythmPeriod.Unload()));
-  data.Waveforms(std::unique_ptr<CDM::ElectroCardioGramInterpolatorData>(m_Waveforms.Unload()));
-}
 
 void ECG::SetUp()
 {
@@ -158,8 +139,8 @@ void ECG::Process()
     m_HeartRhythmPeriod.SetValue(1 / m_data.GetCardiovascular().GetHeartRate(FrequencyUnit::Per_s), TimeUnit::s);
     // Currently we  have one data set for all currently supported Heart Rhythms
     // Eventually we will support multiple rhythmic data
-    if (m_data.GetCardiovascular().GetHeartRhythm() == CDM::enumHeartRhythm::NormalSinus)
-      m_Waveforms.StartNewCycle(CDM::enumHeartRhythm::NormalSinus);
+    if (m_data.GetCardiovascular().GetHeartRhythm() == SEHeartRhythm::NormalSinus)
+      m_Waveforms.StartNewCycle(SEHeartRhythm::NormalSinus);
     else {
       m_ss << m_data.GetCardiovascular().GetHeartRhythm() << " is not a supported Heart Rhythm for ECG";
       Error(m_ss);

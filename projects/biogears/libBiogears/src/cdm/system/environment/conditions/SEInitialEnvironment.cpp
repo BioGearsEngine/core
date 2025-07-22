@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/conditions/SEInitialEnvironment.h>
 
+#include "io/cdm/Environment.h"
+#include "io/cdm/EnvironmentConditions.h"
+
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
@@ -34,12 +37,12 @@ SEInitialEnvironment::SEInitialEnvironment(SESubstanceManager& substances)
 //-----------------------------------------------------------------------------
 SEInitialEnvironment::~SEInitialEnvironment()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEInitialEnvironment::Clear()
+void SEInitialEnvironment::Invalidate()
 {
-  SEEnvironmentCondition::Clear();
+  SEEnvironmentCondition::Invalidate();
   InvalidateConditionsFile();
   SAFE_DELETE(m_Conditions);
 }
@@ -48,32 +51,7 @@ bool SEInitialEnvironment::IsValid() const
 {
   return SEEnvironmentCondition::IsValid() && (HasConditions() || HasConditionsFile());
 }
-//-----------------------------------------------------------------------------
-bool SEInitialEnvironment::Load(const CDM::InitialEnvironmentData& in)
-{
-  SEEnvironmentCondition::Load(in);
-  if (in.ConditionsFile().present())
-    SetConditionsFile(in.ConditionsFile().get());
-  if (in.Conditions().present())
-    GetConditions().Load(in.Conditions().get());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::InitialEnvironmentData* SEInitialEnvironment::Unload() const
-{
-  CDM::InitialEnvironmentData* data = new CDM::InitialEnvironmentData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEInitialEnvironment::Unload(CDM::InitialEnvironmentData& data) const
-{
-  SEEnvironmentCondition::Unload(data);
-  if (HasConditions())
-    data.Conditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(m_Conditions->Unload()));
-  else if (HasConditionsFile())
-    data.ConditionsFile(m_ConditionsFile);
-}
+
 //-----------------------------------------------------------------------------
 bool SEInitialEnvironment::HasConditions() const
 {
@@ -159,7 +137,7 @@ void SEInitialEnvironment::ToString(std::ostream& str) const
     }
     if (m_Conditions->HasAmbientAerosol()) {
       for (SESubstanceConcentration* sc : m_Conditions->GetAmbientAerosols()) {
-        str << "\n\tSubstance : " << sc->GetSubstance().GetName() << " Concentration " << sc->GetConcentration();
+        str << "\n\tSubstance : " << sc->GetSubstance().Name << " Concentration " << sc->GetConcentration();
       }
     }
   }

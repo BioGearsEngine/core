@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SECompartmentSubstanceDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
@@ -24,12 +27,12 @@ SECompartmentSubstanceDataRequest::SECompartmentSubstanceDataRequest(const SEDec
 //-----------------------------------------------------------------------------
 SECompartmentSubstanceDataRequest::~SECompartmentSubstanceDataRequest()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SECompartmentSubstanceDataRequest::Clear()
+void SECompartmentSubstanceDataRequest::Invalidate()
 {
-  SECompartmentDataRequest::Clear();
+  SECompartmentDataRequest::Invalidate();
   m_Substance = nullptr;
 }
 //-----------------------------------------------------------------------------
@@ -45,20 +48,7 @@ size_t SECompartmentSubstanceDataRequest::HashCode() const
   return m_Hash;
 }
 //-----------------------------------------------------------------------------
-bool SECompartmentSubstanceDataRequest::Load(const CDM::CompartmentSubstanceDataRequestData& in, const SESubstanceManager& substances)
-{
-  SECompartmentDataRequest::Load(in);
-  if (in.Substance().present())
-    SetSubstance(substances.GetSubstance(in.Substance().get()));
-  return true;
-}
-//-----------------------------------------------------------------------------
-void SECompartmentSubstanceDataRequest::Unload(CDM::CompartmentSubstanceDataRequestData& data) const
-{
-  SECompartmentDataRequest::Unload(data);
-  if (HasSubstance())
-    data.Substance(m_Substance->GetName());
-}
+
 //-----------------------------------------------------------------------------
 SESubstance* SECompartmentSubstanceDataRequest::GetSubstance() const
 {
@@ -111,6 +101,7 @@ void SECompartmentSubstanceDataRequest::Set(const std::string& cmpt, SESubstance
   m_Hash = 0;
 }
 //-------------------------------------------------------------------------------
+#pragma warning(disable : 4661)
 bool SECompartmentSubstanceDataRequest ::operator==(SECompartmentSubstanceDataRequest const& rhs) const
 {
   if (this == &rhs)

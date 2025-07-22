@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
@@ -21,76 +22,53 @@ SEForcedExhale::SEForcedExhale()
   m_ExpiratoryReserveVolumeFraction = nullptr;
   m_Period = nullptr;
 }
-
+//-------------------------------------------------------------------------------
 SEForcedExhale::~SEForcedExhale()
 {
-  Clear();
+  Invalidate();
 }
-
-void SEForcedExhale::Clear()
+//-------------------------------------------------------------------------------
+void SEForcedExhale::Invalidate()
 {
-  SEConsciousRespirationCommand::Clear();
+  SEConsciousRespirationCommand::Invalidate();
   SAFE_DELETE(m_ExpiratoryReserveVolumeFraction);
   SAFE_DELETE(m_Period);
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedExhale::IsValid() const
 {
   return SEConsciousRespirationCommand::IsValid() && HasExpiratoryReserveVolumeFraction() && HasPeriod();
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedExhale::IsActive() const
 {
   return SEConsciousRespirationCommand::IsActive();
 }
-
-bool SEForcedExhale::Load(const CDM::ForcedExhaleData& in, std::default_random_engine *rd)
-{
-  SEConsciousRespirationCommand::Load(in);
-  
-  GetExpiratoryReserveVolumeFraction().Load(in.ExpiratoryReserveVolumeFraction(), rd);
-  GetPeriod().Load(in.Period(), rd);
-  return true;
-}
-
-CDM::ForcedExhaleData* SEForcedExhale::Unload() const
-{
-  CDM::ForcedExhaleData* data(new CDM::ForcedExhaleData());
-  Unload(*data);
-  return data;
-}
-
-void SEForcedExhale::Unload(CDM::ForcedExhaleData& data) const
-{
-  SEConsciousRespirationCommand::Unload(data);
-  if (m_ExpiratoryReserveVolumeFraction != nullptr)
-    data.ExpiratoryReserveVolumeFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_ExpiratoryReserveVolumeFraction->Unload()));
-  if (m_Period != nullptr)
-    data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
-}
-
+//-------------------------------------------------------------------------------
 bool SEForcedExhale::HasExpiratoryReserveVolumeFraction() const
 {
   return m_ExpiratoryReserveVolumeFraction == nullptr ? false : m_ExpiratoryReserveVolumeFraction->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalar0To1& SEForcedExhale::GetExpiratoryReserveVolumeFraction()
 {
   if (m_ExpiratoryReserveVolumeFraction == nullptr)
     m_ExpiratoryReserveVolumeFraction = new SEScalar0To1();
   return *m_ExpiratoryReserveVolumeFraction;
 }
-
+//-------------------------------------------------------------------------------
 bool SEForcedExhale::HasPeriod() const
 {
   return m_Period == nullptr ? false : m_Period->IsValid();
 }
+//-------------------------------------------------------------------------------
 SEScalarTime& SEForcedExhale::GetPeriod()
 {
   if (m_Period == nullptr)
     m_Period = new SEScalarTime();
   return *m_Period;
 }
-
+//-------------------------------------------------------------------------------
 void SEForcedExhale::ToString(std::ostream& str) const
 {
   str << "Forced Exhale";
@@ -102,4 +80,5 @@ void SEForcedExhale::ToString(std::ostream& str) const
   HasPeriod() ? str << *m_Period : str << "NaN";
   str << std::flush;
 }
+//-------------------------------------------------------------------------------
 }

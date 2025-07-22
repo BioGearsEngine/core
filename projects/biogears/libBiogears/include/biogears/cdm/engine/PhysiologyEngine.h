@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/container/Tree.h>
 #include <biogears/exports.h>
-#include <biogears/schema/cdm/EngineState.hxx>
 
 namespace biogears {
 class SEEventHandler;
@@ -80,22 +79,6 @@ public:
   virtual bool LoadState(const std::string& file, const SEScalarTime* simTime = nullptr) = 0;
   virtual bool LoadState(char const* buffer, size_t size) = 0;
 
-  //!-------------------------------------------------------------------------------------------------
-  //! \brief
-  //! Reset engine and set it to the state in the provided file.
-  //! You may provided a Simulation Time to be used if desired.
-  //! It will be reflected in the GetSimulationTime method.
-  //! Return value indicates engine was able to load provided state file.
-  //! Engine will be in a cleared state if this method fails.
-  //!-------------------------------------------------------------------------------------------------
-  virtual bool LoadState(const CDM::PhysiologyEngineStateData& state, const SEScalarTime* simTime = nullptr) = 0;
-
-  //!-------------------------------------------------------------------------------------------------
-  //! \brief
-  //! State object will be returned.
-  //! Engine will be in a cleared state if this method fails.
-  //!-------------------------------------------------------------------------------------------------
-  virtual std::unique_ptr<CDM::PhysiologyEngineStateData> GetStateData() = 0;
   //!-------------------------------------------------------------------------------------------------
   //! \brief
   //! Save the current state of the engine.

@@ -133,7 +133,7 @@ static_assert(Anglef(1.f) + Anglef(2.f) == 3.f, "");
 static_assert(0.f + 1.0_f_i + 2.0_f_j + 3.0_f_k == Quaternionf(0.f, 1.f, 2.f, 3.f), "");
 static_assert(Quaternionf(1.f, 2.f, 3.f, 4.f).real() + Quaternionf(1.f, 2.f, 3.f, 4.f).pure() == Quaternionf(1.f, 2.f, 3.f, 4.f), "");
 static_assert((Quaternionf(1.f, 1.f, 1.f, 1.f) * Quaternionf(1.f, 1.f, 1.f, 1.f).conj()).w() == 4.0f, "");
-#endif()
+#endif
 
 //------------------------------------------------------------------------------
 auto azimuth_uncert_from_quat(const Quaternionf& q

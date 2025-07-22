@@ -77,7 +77,7 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::Process(CircuitType& circuit
   //Reset all Polarized Elements to be shorted.
   for (PathType* p : circuit.GetPolarizedElementPaths()) {
     if (p->HasNextPolarizedState())
-      p->SetNextPolarizedState(CDM::enumOpenClosed::Closed);
+      p->SetNextPolarizedState(SEOpenClosed::Closed);
   }
 
     //When we parse everything into our Ax=b matrices/vectors for the linear solver,
@@ -157,7 +157,7 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::ParseIn()
   for (PathType* p : m_circuit->GetPaths()) {
     //Set aside the pressure sources, since the Flow through them will be directly solved by adding them to the bottom of the matrix.
     //We have to do this outside of the KCL loop below because we only want to account for each one once.
-    if (p->HasNextPotentialSource() || (p->NumberOfNextElements() < 1) || (p->HasNextValve() && p->GetNextValve() == CDM::enumOpenClosed::Closed) || (p->HasNextSwitch() && p->GetNextSwitch() == CDM::enumOpenClosed::Closed)) {
+    if (p->HasNextPotentialSource() || (p->NumberOfNextElements() < 1) || (p->HasNextValve() && p->GetNextValve() == SEOpenClosed::Closed) || (p->HasNextSwitch() && p->GetNextSwitch() == SEOpenClosed::Closed)) {
       m_potentialSources[p] = numNodes + idx++;
     }
   }
@@ -189,7 +189,7 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::ParseIn()
       NodeType* nSrc = &p->GetSourceNode();
       NodeType* nTgt = &p->GetTargetNode();
 
-      if (p->HasNextPolarizedState() && p->GetNextPolarizedState() == CDM::enumOpenClosed::Open) { //Polarized elements that are open are done exactly the same as a open switch.
+      if (p->HasNextPolarizedState() && p->GetNextPolarizedState() == SEOpenClosed::Open) { //Polarized elements that are open are done exactly the same as a open switch.
         //We'll check to see if the resulting pressure difference is valid later.
         //Model as an open switch
         double dMultiplier = 1.0 / OPEN_RESISTANCE;
@@ -201,7 +201,7 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::ParseIn()
       //Each Path has only one Element (or none at all) and each type is handled differently.
       //The variables in the x vector are the unknown Node Pressures and Flows for Pressure Sources.
       if (p->HasNextSwitch()) {
-        if (p->GetNextSwitch() == CDM::enumOpenClosed::Open) {
+        if (p->GetNextSwitch() == SEOpenClosed::Open) {
           //Model as a resistor with a ridiculously high resistance (basically an open circuit)
           double dMultiplier = 1.0 / OPEN_RESISTANCE;
           PopulateAMatrix(*n, *p, dMultiplier);
@@ -303,7 +303,7 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::ParseIn()
       } else if (p->HasNextValve()) {
         //Valves are done exactly the same as switches.
         //We'll check to see if the resulting flow and pressure difference is valid later.
-        if (p->GetNextValve() == CDM::enumOpenClosed::Open) {
+        if (p->GetNextValve() == SEOpenClosed::Open) {
           //Model as a resistor with a ridiculously high resistance (basically an open circuit)
           double dMultiplier = 1.0 / OPEN_RESISTANCE;
           PopulateAMatrix(*n, *p, dMultiplier);
@@ -552,7 +552,7 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::CalculateFluxes()
   for (PathType* p : m_circuit->GetPaths()) {
     if (p->HasNextFluxSource()) {
       Override<FluxUnit>(p->GetNextFluxSource(), p->GetNextFlux());
-    } else if ((p->HasNextSwitch() && p->GetNextSwitch() == CDM::enumOpenClosed::Open) || (p->HasNextValve() && p->GetNextValve() == CDM::enumOpenClosed::Open) || (p->HasNextPolarizedState() && p->GetNextPolarizedState() == CDM::enumOpenClosed::Open)) {
+    } else if ((p->HasNextSwitch() && p->GetNextSwitch() == SEOpenClosed::Open) || (p->HasNextValve() && p->GetNextValve() == SEOpenClosed::Open) || (p->HasNextPolarizedState() && p->GetNextPolarizedState() == SEOpenClosed::Open)) {
       ValueOverride<FluxUnit>(p->GetNextFlux(), 0, m_FluxUnit);
     } else if (p->HasNextResistance()) {
       //I = V/R
@@ -625,12 +625,12 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::CalculateQuantities()
         //dStartingPressDiff is at time = T + deltaT
         double dEndingPressDiff = std::abs(p->GetSourceNode().GetNextPotential().GetValue(m_PotentialUnit) - p->GetTargetNode().GetNextPotential().GetValue(m_PotentialUnit));
 
-        if (p->GetPolarizedState() == CDM::enumOpenClosed::Open) {
+        if (p->GetPolarizedState() == SEOpenClosed::Open) {
           //If this was a shorted polarized element last time-step, we need to make the starting difference zero
           //Otherwise, it will possibly think it was already charged to a certain point
           dStartingPressDiff = 0.0;
         }
-        if (p->GetNextPolarizedState() == CDM::enumOpenClosed::Open) {
+        if (p->GetNextPolarizedState() == SEOpenClosed::Open) {
           //If it is currently a shorted polarized element, we need to make the starting difference zero
           //This will make it go to the non-charged volume
           dEndingPressDiff = 0.0;
@@ -678,8 +678,8 @@ bool SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::CheckAndModifyValves()
   }
 
   for (PathType* p : m_circuit->GetValvePaths()) {
-    if ((p->GetNextValve() == CDM::enumOpenClosed::Closed && p->GetNextFlux().GetValue(m_FluxUnit) < -ZERO_APPROX)
-      || (p->GetNextValve() == CDM::enumOpenClosed::Open && (p->GetSourceNode().GetNextPotential().GetValue(m_PotentialUnit) - p->GetTargetNode().GetNextPotential().GetValue(m_PotentialUnit)) > ZERO_APPROX)) {
+    if ((p->GetNextValve() == SEOpenClosed::Closed && p->GetNextFlux().GetValue(m_FluxUnit) < -ZERO_APPROX)
+      || (p->GetNextValve() == SEOpenClosed::Open && (p->GetSourceNode().GetNextPotential().GetValue(m_PotentialUnit) - p->GetTargetNode().GetNextPotential().GetValue(m_PotentialUnit)) > ZERO_APPROX)) {
       p->FlipNextValve();
       if (IsCurrentValveStateUnique()) {
         return false;
@@ -689,7 +689,7 @@ bool SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::CheckAndModifyValves()
   }
 
   for (PathType* p : m_circuit->GetPolarizedElementPaths()) {
-    if (p->GetNextPolarizedState() == CDM::enumOpenClosed::Closed && (p->GetSourceNode().GetNextPotential().GetValue(m_PotentialUnit) - p->GetTargetNode().GetNextPotential().GetValue(m_PotentialUnit)) < -ZERO_APPROX) {
+    if (p->GetNextPolarizedState() == SEOpenClosed::Closed && (p->GetSourceNode().GetNextPotential().GetValue(m_PotentialUnit) - p->GetTargetNode().GetNextPotential().GetValue(m_PotentialUnit)) < -ZERO_APPROX) {
       p->FlipNextPolarizedState();
       if (IsCurrentValveStateUnique()) {
         return false;
@@ -722,12 +722,12 @@ bool SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::IsCurrentValveStateUnique()
   /// the polarized element combinations.  This is the order in which we want to evaluate the states
   /// so this bit order is important.
   for (PathType* pValve : m_circuit->GetValvePaths()) {
-    if (pValve->GetNextValve() == CDM::enumOpenClosed::Closed)
+    if (pValve->GetNextValve() == SEOpenClosed::Closed)
       currentState |= index;
     index = index << static_cast<uint64_t>(1);
   }
   for (PathType* pPolarizedElement : m_circuit->GetPolarizedElementPaths()) {
-    if (pPolarizedElement->GetNextPolarizedState() == CDM::enumOpenClosed::Closed)
+    if (pPolarizedElement->GetNextPolarizedState() == SEOpenClosed::Closed)
       currentState |= index;
     index = index << static_cast<uint64_t>(1);
   }

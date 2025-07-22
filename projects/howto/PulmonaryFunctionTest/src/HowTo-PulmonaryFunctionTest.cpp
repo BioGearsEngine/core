@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 // Include the various types you will be using in your code
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>

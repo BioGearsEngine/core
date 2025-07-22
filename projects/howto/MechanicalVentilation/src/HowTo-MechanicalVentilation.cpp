@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>
 #include <biogears/cdm/patient/conditions/SEImpairedAlveolarExchange.h>
 #include <biogears/cdm/patient/conditions/SELobarPneumonia.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -53,31 +53,31 @@ public:
     , m_Logger(logger)
   {
   }
-  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr)
+  virtual void HandlePatientEvent(biogears::SEPatientEventType type, bool active, const SEScalarTime* time = nullptr)
   {
     switch (type) {
-    case CDM::enumPatientEvent::AcuteLungInjury: {
+    case biogears::SEPatientEventType::AcuteLungInjury: {
       if (active)
         m_Logger->Info("Do something for MildAcuteRespiratoryDistress");
       else
         m_Logger->Info("Stop doing something for MildAcuteRespiratoryDistress");
       break;
     }
-    case CDM::enumPatientEvent::AcuteRespiratoryDistress: {
+    case biogears::SEPatientEventType::AcuteRespiratoryDistress: {
       if (active)
         m_Logger->Info("Do something for ModerateAcuteRespiratoryDistress");
       else
         m_Logger->Info("Stop doing something for ModerateAcuteRespiratoryDistress");
       break;
     }
-    case CDM::enumPatientEvent::SevereAcuteRespiratoryDistress: {
+    case biogears::SEPatientEventType::SevereAcuteRespiratoryDistress: {
       if (active)
         m_Logger->Info("Do something for SevereAcuteRespiratoryDistress");
       else
         m_Logger->Info("Stop doing something for SevereAcuteRespiratoryDistress");
       break;
     }
-    case CDM::enumPatientEvent::CardiogenicShock: {
+    case biogears::SEPatientEventType::CardiogenicShock: {
       if (active)
         m_Logger->Info("Do something for CardiogenicShock");
       else
@@ -88,7 +88,7 @@ public:
       return; //Unhandled Event
     }
   }
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr)
+  virtual void HandleAnesthesiaMachineEvent(biogears::SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr)
   {
   }
 };
@@ -195,10 +195,10 @@ int HowToMechanicalVentialtion()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePatientDataRequest().Set("VitalCapacity", VolumeUnit::L);
   //Compartment data
   //Arteriole bicarbonate
-  SESubstance* HCO3 = bg->GetSubstanceManager().GetSubstance("Bicarbonate");
+  SESubstance* HCO3 = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Bicarbonate);
   bg->GetEngineTrack()->GetDataRequestManager().CreateLiquidCompartmentDataRequest().Set(BGE::VascularCompartment::Aorta, *HCO3, "Concentration", MassPerVolumeUnit::ug_Per_mL);
   //Lactate - this should have a relationship to lactic acid
-  SESubstance* Lactate = bg->GetSubstanceManager().GetSubstance("Lactate");
+  SESubstance* Lactate = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Lactate);
   bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*Lactate, "BloodConcentration", MassPerVolumeUnit::ug_Per_mL);
 
   bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename("HowToMechanicalVentilation.csv");
@@ -258,12 +258,11 @@ int HowToMechanicalVentialtion()
   // Set the severity (a fraction between 0 and 1)
   SETensionPneumothorax pneumo;
   // You can have a Closed or Open Tension Pneumothorax
-  pneumo.SetType(CDM::enumPneumothoraxType::Open);
-  //pneumo.SetType(CDM::enumPneumothoraxType::Open);
+  pneumo.SetType(SEPneumothoraxType::Open);
   pneumo.GetSeverity().SetValue(0.3);
   // It can be on the Left or right side
-  pneumo.SetSide(CDM::enumSide::Right);
-  //pneumo.SetSide(CDM::enumSide::Left);
+  pneumo.SetSide(SESide::Right);
+  //pneumo.SetSide(SESide::Left);
   bg->ProcessAction(pneumo);
 
   bg->AdvanceModelTime(60.0, TimeUnit::s);
@@ -281,7 +280,7 @@ int HowToMechanicalVentialtion()
   //TBI
   //See HowTo-BrainInjury for an example of getting the Glasgow Scale
   SEBrainInjury tbi;
-  tbi.SetType(CDM::enumBrainInjuryType::Diffuse); // Can also be LeftFocal or RightFocal, and you will get pupillary effects in only one eye
+  tbi.SetType(SEBrainInjuryType::Diffuse); // Can also be LeftFocal or RightFocal, and you will get pupillary effects in only one eye
   tbi.GetSeverity().SetValue(0.2);
   bg->ProcessAction(tbi);
 
@@ -305,12 +304,12 @@ int HowToMechanicalVentialtion()
   //Succs
   //Make the patient stop breathing
   // Get the Succinylcholine substance from the substance manager
-  const SESubstance* succs = bg->GetSubstanceManager().GetSubstance("Succinylcholine");
+  const SESubstance* succs = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Succinylcholine);
   // Create a substance bolus action to administer the substance
   SESubstanceBolus bolus(*succs);
   bolus.GetConcentration().SetValue(4820, MassPerVolumeUnit::ug_Per_mL);
   bolus.GetDose().SetValue(20, VolumeUnit::mL);
-  bolus.SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  bolus.SetAdminRoute(SEBolusAdministration::Intravenous);
   bg->ProcessAction(bolus);
 
   bg->AdvanceModelTime(60.0, TimeUnit::s);
@@ -318,11 +317,11 @@ int HowToMechanicalVentialtion()
   //Mechanical Ventilation
   // Create an SEMechanicalVentilation object
   SEMechanicalVentilation mechVent;
-  mechVent.SetState(CDM::enumOnOff::On); // Turn it on
+  mechVent.SetState(SEOnOff::On); // Turn it on
     // Grab the substance fractions so we can quickly modify them
-  SESubstanceFraction& O2frac = mechVent.GetGasFraction(*bg->GetSubstanceManager().GetSubstance("Oxygen"));
-  SESubstanceFraction& CO2frac = mechVent.GetGasFraction(*bg->GetSubstanceManager().GetSubstance("CarbonDioxide"));
-  SESubstanceFraction& N2frac = mechVent.GetGasFraction(*bg->GetSubstanceManager().GetSubstance("Nitrogen"));
+  SESubstanceFraction& O2frac = mechVent.GetGasFraction(*bg->GetSubstanceManager().GetSubstance(StandardSubstances::Oxygen));
+  SESubstanceFraction& CO2frac = mechVent.GetGasFraction(*bg->GetSubstanceManager().GetSubstance(StandardSubstances::CarbonDioxide));
+  SESubstanceFraction& N2frac = mechVent.GetGasFraction(*bg->GetSubstanceManager().GetSubstance(StandardSubstances::Nitrogen));
 
   //We'll mimic inputs from real-time sensors by just driving the mechanical ventilation pressure using a sinusoid
   //Pressure waveform parameters

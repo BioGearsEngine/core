@@ -12,22 +12,23 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPatientAssessmentRequest.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEPatientAssessmentRequest::SEPatientAssessmentRequest()
   : SEPatientAction()
 {
-  m_Type = (CDM::enumPatientAssessment::value)-1;
+  m_Type = SEPatientAssessmentType::Invalid;
 }
 //-------------------------------------------------------------------------------
 SEPatientAssessmentRequest::~SEPatientAssessmentRequest()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEPatientAssessmentRequest::Clear()
+void SEPatientAssessmentRequest::Invalidate()
 {
-  SEPatientAction::Clear();
-  m_Type = (CDM::enumPatientAssessment::value)-1;
+  SEPatientAction::Invalidate();
+  m_Type = SEPatientAssessmentType::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEPatientAssessmentRequest::IsValid() const
@@ -40,45 +41,24 @@ bool SEPatientAssessmentRequest::IsActive() const
   return IsValid();
 }
 //-------------------------------------------------------------------------------
-bool SEPatientAssessmentRequest::Load(const CDM::PatientAssessmentRequestData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  m_Type = in.Type();
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PatientAssessmentRequestData* SEPatientAssessmentRequest::Unload() const
-{
-  CDM::PatientAssessmentRequestData* data(new CDM::PatientAssessmentRequestData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEPatientAssessmentRequest::Unload(CDM::PatientAssessmentRequestData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (HasType())
-    data.Type(m_Type);
-}
-//-------------------------------------------------------------------------------
-CDM::enumPatientAssessment::value SEPatientAssessmentRequest::GetType() const
+SEPatientAssessmentType SEPatientAssessmentRequest::GetType() const
 {
   return m_Type;
 }
 //-------------------------------------------------------------------------------
-void SEPatientAssessmentRequest::SetType(CDM::enumPatientAssessment::value Type)
+void SEPatientAssessmentRequest::SetType(SEPatientAssessmentType Type)
 {
   m_Type = Type;
 }
 //-------------------------------------------------------------------------------
 bool SEPatientAssessmentRequest::HasType() const
 {
-  return m_Type == ((CDM::enumPatientAssessment::value)-1) ? false : true;
+  return m_Type == SEPatientAssessmentType::Invalid ? false : true;
 }
 //-------------------------------------------------------------------------------
 void SEPatientAssessmentRequest::InvalidateType()
 {
-  m_Type = (CDM::enumPatientAssessment::value)-1;
+  m_Type = SEPatientAssessmentType::Invalid;
 }
 //-------------------------------------------------------------------------------
 void SEPatientAssessmentRequest::ToString(std::ostream& str) const

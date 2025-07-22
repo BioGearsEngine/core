@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEUrinate.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEUrinate::SEUrinate()
   : SEPatientAction()
@@ -20,12 +21,12 @@ SEUrinate::SEUrinate()
 //-------------------------------------------------------------------------------
 SEUrinate::~SEUrinate()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEUrinate::Clear()
+void SEUrinate::Invalidate()
 {
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
 }
 //-------------------------------------------------------------------------------
 bool SEUrinate::IsValid() const
@@ -36,24 +37,6 @@ bool SEUrinate::IsValid() const
 bool SEUrinate::IsActive() const
 {
   return IsValid();
-}
-//-------------------------------------------------------------------------------
-bool SEUrinate::Load(const CDM::UrinateData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::UrinateData* SEUrinate::Unload() const
-{
-  CDM::UrinateData* data(new CDM::UrinateData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEUrinate::Unload(CDM::UrinateData& data) const
-{
-  SEPatientAction::Unload(data);
 }
 //-------------------------------------------------------------------------------
 void SEUrinate::ToString(std::ostream& str) const

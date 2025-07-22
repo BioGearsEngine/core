@@ -31,13 +31,7 @@ protected:
 public:
   virtual ~SEThermalCircuitNode();
 
-  virtual void Clear(); //clear memory
-
-  virtual bool Load(const CDM::ThermalCircuitNodeData& in);
-  virtual CDM::ThermalCircuitNodeData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::ThermalCircuitNodeData& data) const;
+  virtual void Invalidate(); //clear memory
 
 public:
   virtual bool HasTemperature() const;

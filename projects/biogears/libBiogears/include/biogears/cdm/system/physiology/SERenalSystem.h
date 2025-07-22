@@ -11,32 +11,23 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include "biogears/cdm/properties/SEScalarVolumePerTimePressure.h"
+#include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
+#include <biogears/cdm/properties/SEScalarArea.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimePressureArea.h>
+#include <biogears/cdm/properties/SEScalarOsmolarity.h>
+#include <biogears/cdm/properties/SEScalarOsmolality.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+
 
 namespace biogears {
-class SEScalarPressure;
-class PressureUnit;
-class SEScalarFraction;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
-class SEScalarFlowResistance;
-class FlowResistanceUnit;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarVolumePerTimePressure;
-class VolumePerTimePressureUnit;
-class SEScalarArea;
-class AreaUnit;
-class SEScalarVolumePerTimePressureArea;
-class VolumePerTimePressureAreaUnit;
-class SEScalarOsmolarity;
-class OsmolarityUnit;
-class SEScalarOsmolality;
-class OsmolalityUnit;
-class SEScalarMassPerVolume;
-class MassPerVolumeUnit;
 namespace io {
   class Physiology;
 }
@@ -52,21 +43,15 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override; // Deletes all members
+  void Invalidate() override; // Deletes all members
 
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
-
-  bool Load(const CDM::RenalSystemData& in);
-  CDM::RenalSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SERenalSystem const&) const;
   bool operator!=(SERenalSystem const&) const;
-
-protected:
-  void Unload(CDM::RenalSystemData& data) const;
 
 public:
   bool HasBladderPressure() const;

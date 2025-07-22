@@ -13,53 +13,32 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SESerializeState.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
+#include "io/cdm/Actions.h"
+#include "io/cdm/Scenario.h"
+
 namespace biogears {
 SESerializeState::SESerializeState()
   : SEAction()
 {
   m_Filename = "";
-  m_Type = (CDM::enumSerializationType::value)-1;
+  m_Type = SESerializationType::Invalid;
 }
 //-----------------------------------------------------------------------------
 SESerializeState::~SESerializeState()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SESerializeState::Clear()
+void SESerializeState::Invalidate()
 {
-  SEAction::Clear();
+  SEAction::Invalidate();
   m_Filename = "";
-  m_Type = (CDM::enumSerializationType::value)-1;
+  m_Type = SESerializationType::Invalid;
 }
 //-----------------------------------------------------------------------------
 bool SESerializeState::IsValid() const
 {
   return HasFilename() && HasType();
-}
-//-----------------------------------------------------------------------------
-bool SESerializeState::Load(const CDM::SerializeStateData& in, std::default_random_engine *rd)
-{
-
-  SEAction::Load(in);
-  SetType(in.Type());
-  SetFilename(in.Filename());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SerializeStateData* SESerializeState::Unload() const
-{
-  CDM::SerializeStateData* data = new CDM::SerializeStateData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESerializeState::Unload(CDM::SerializeStateData& data) const
-{
-  SEAction::Unload(data);
-  data.Filename(m_Filename);
-  if (HasType())
-    data.Type(m_Type);
 }
 //-----------------------------------------------------------------------------
 void SESerializeState::ToString(std::ostream& str) const
@@ -70,24 +49,24 @@ void SESerializeState::ToString(std::ostream& str) const
   str << "Filename : " << m_Filename;
 }
 //-----------------------------------------------------------------------------
-CDM::enumSerializationType::value SESerializeState::GetType() const
+SESerializationType SESerializeState::GetType() const
 {
   return m_Type;
 }
 //-----------------------------------------------------------------------------
-void SESerializeState::SetType(CDM::enumSerializationType::value Type)
+void SESerializeState::SetType(SESerializationType Type)
 {
   m_Type = Type;
 }
 //-----------------------------------------------------------------------------
 bool SESerializeState::HasType() const
 {
-  return m_Type == ((CDM::enumSerializationType::value)-1) ? false : true;
+  return m_Type == SESerializationType::Invalid ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SESerializeState::InvalidateType()
 {
-  m_Type = (CDM::enumSerializationType::value)-1;
+  m_Type = SESerializationType::Invalid;
 }
 //-----------------------------------------------------------------------------
 bool SESerializeState::HasFilename() const
@@ -99,7 +78,7 @@ std::string SESerializeState::GetFilename() const
 {
   return m_Filename;
 }
-  //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 const char* SESerializeState::GetFilename_cStr() const
 {
   return m_Filename.c_str();
@@ -126,7 +105,7 @@ bool SESerializeState::operator==(SESerializeState const& rhs) const
     return true;
 
   return m_Filename == rhs.m_Filename
-    && m_Type == m_Type;
+    && m_Type == rhs.m_Type;
 }
 bool SESerializeState::operator!=(SESerializeState const& rhs) const
 {

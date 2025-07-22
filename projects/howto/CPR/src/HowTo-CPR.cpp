@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/actions/SECardiacArrest.h>
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
@@ -42,14 +42,14 @@ public:
   MyListener(Logger* logger)
     : SEEventHandler()
     , log(logger) {};
-  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time) override
+  void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time) override
   {
     std::stringstream ss;
     ss << "Recieved Patient Event : " << type;
     log->Info(ss);
   }
 
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time) override
+  void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time) override
   {
     std::stringstream ss;
     ss <<  "Recieved Anesthesia Machine Event : " << type;

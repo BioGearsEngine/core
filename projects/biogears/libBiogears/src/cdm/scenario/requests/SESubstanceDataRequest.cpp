@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SESubstanceDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
@@ -25,12 +27,12 @@ SESubstanceDataRequest::SESubstanceDataRequest(const SEDecimalFormat* dfault)
 //-----------------------------------------------------------------------------
 SESubstanceDataRequest::~SESubstanceDataRequest()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SESubstanceDataRequest::Clear()
+void SESubstanceDataRequest::Invalidate()
 {
-  SEDataRequest::Clear();
+  SEDataRequest::Invalidate();
   m_Compartment = "";
   m_Substance = nullptr;
 }
@@ -47,30 +49,7 @@ size_t SESubstanceDataRequest::HashCode() const
   return m_Hash;
 }
 //-----------------------------------------------------------------------------
-bool SESubstanceDataRequest::Load(const CDM::SubstanceDataRequestData& in, const SESubstanceManager& substances)
-{
-  SEDataRequest::Load(in);
-  if (in.Compartment().present())
-    SetCompartment(in.Compartment().get());
-  SetSubstance(substances.GetSubstance(in.Substance()));
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceDataRequestData* SESubstanceDataRequest::Unload() const
-{
-  CDM::SubstanceDataRequestData* data = new CDM::SubstanceDataRequestData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstanceDataRequest::Unload(CDM::SubstanceDataRequestData& data) const
-{
-  SEDataRequest::Unload(data);
-  if (HasCompartment())
-    data.Compartment(m_Compartment);
-  if (HasSubstance())
-    data.Substance(m_Substance->GetName());
-}
+
 //-----------------------------------------------------------------------------
 const char* SESubstanceDataRequest::GetCompartment() const
 {

@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 
 //Project Includes
 #include <biogears/schema/cdm/Properties.hxx>
+#include "io/cdm/Property.h"
 
 namespace biogears {
 RunningAverage::RunningAverage()
@@ -24,24 +25,6 @@ RunningAverage::RunningAverage()
 
 RunningAverage::~RunningAverage()
 {
-}
-
-bool RunningAverage::Load(const CDM::RunningAverageData& in)
-{
-  m_Sum = in.sum();
-  m_NumSamples = in.numSamples();
-  return true;
-}
-CDM::RunningAverageData* RunningAverage::Unload() const
-{
-  CDM::RunningAverageData* data = new CDM::RunningAverageData();
-  Unload(*data);
-  return data;
-}
-void RunningAverage::Unload(CDM::RunningAverageData& data) const
-{
-  data.sum(m_Sum);
-  data.numSamples(m_NumSamples);
 }
 
 void RunningAverage::Reset()

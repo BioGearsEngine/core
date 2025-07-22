@@ -11,12 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineAction.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
-
+namespace io {
+  class AnesthesiaActions;
+}
 class BIOGEARS_API SEOxygenTankPressureLoss : public SEAnesthesiaMachineAction {
+  friend io::AnesthesiaActions;
+
 public:
   SEOxygenTankPressureLoss();
   virtual ~SEOxygenTankPressureLoss() override;
@@ -24,25 +27,18 @@ public:
   static constexpr const char* TypeTag() { return "SEOxygenTankPressureLoss"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override;
+  virtual void Invalidate() override;
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
   virtual void SetActive(bool b);
 
-  virtual bool Load(const CDM::OxygenTankPressureLossData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::OxygenTankPressureLossData* Unload() const override;
-
   bool operator==(SEOxygenTankPressureLoss const& rhs) const;
   bool operator!=(SEOxygenTankPressureLoss const& rhs) const;
 
-protected:
-  virtual void Unload(CDM::OxygenTankPressureLossData& data) const;
-
-public:
   virtual void ToString(std::ostream& str) const override;
 
 protected:
-  CDM::enumOnOff::value m_State;
+  SEOnOff m_State;
 };
 }

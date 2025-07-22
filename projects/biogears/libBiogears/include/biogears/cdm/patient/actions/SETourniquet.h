@@ -11,15 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <random>
 
 namespace biogears {
-class SEScalarVolumePerTime;
 namespace io {
   class PatientActions;
 }
@@ -33,16 +33,10 @@ public:
   static constexpr const char* TypeTag() { return "SETourniquet"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Invalidate() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
-
-  virtual bool Load(const CDM::TourniquetData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::TourniquetData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::TourniquetData& data) const;
 
 public:
   virtual const char* GetCompartment_cStr() const;
@@ -53,17 +47,16 @@ public:
   virtual void InvalidateCompartment();
 
   virtual bool HasTourniquetLevel() const;
-  virtual CDM::enumTourniquetApplicationLevel GetTourniquetLevel();
-  virtual void SetTourniquetLevel(CDM::enumTourniquetApplicationLevel::value level);
+  virtual SETourniquetApplicationType GetTourniquetLevel();
+  virtual void SetTourniquetLevel(SETourniquetApplicationType level);
 
   virtual void ToString(std::ostream& str) const override;
-  
+
   bool operator==(const SETourniquet& rhs) const;
   bool operator!=(const SETourniquet& rhs) const;
 
 protected:
   std::string m_Compartment;
-  CDM::enumTourniquetApplicationLevel::value m_TourniquetLevel;
- 
+  SETourniquetApplicationType m_TourniquetLevel;
 };
 }

@@ -12,21 +12,19 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API SEScalarFraction : public SEScalar {
 
 public:
   SEScalarFraction(double value, bool readOnly = false);
+  SEScalarFraction(SEScalarFraction const& obj);
   SEScalarFraction();
 
   virtual ~SEScalarFraction(); 
 
   bool operator==(const SEScalarFraction&) const;
   bool operator!=(const SEScalarFraction&) const;
-
-  CDM::ScalarFractionData* Unload() const;
 
   using SEScalar::GetValue;
   double GetValue(const NoUnit& unitless) const;

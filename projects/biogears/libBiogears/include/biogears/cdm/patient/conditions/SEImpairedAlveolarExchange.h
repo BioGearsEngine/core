@@ -11,11 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
+#include <biogears/cdm/properties/SEScalarArea.h>
 
 namespace biogears {
-class SEScalarArea;
-class AreaUnit;
 class SEScalar0To1;
 namespace io {
   class PatientConditions;
@@ -27,24 +25,17 @@ public:
   SEImpairedAlveolarExchange();
   virtual ~SEImpairedAlveolarExchange();
 
-  virtual void Clear();
+  virtual void Invalidate() override ;
 
-  virtual bool IsValid() const;
-
-  virtual bool Load(const CDM::ImpairedAlveolarExchangeData& in);
-  virtual CDM::ImpairedAlveolarExchangeData* Unload() const;
+  virtual bool IsValid() const override ;
 
   bool operator==(SEImpairedAlveolarExchange const&) const;
   bool operator!=(SEImpairedAlveolarExchange const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::ImpairedAlveolarExchangeData& data) const;
-
-public:
-  virtual std::string GetName() const { return "ImpairedAlveolarExchange"; }
-  virtual const char* GetName_cStr() const { return "ImpairedAlveolarExchange"; }
+  virtual std::string GetName() const  override { return "ImpairedAlveolarExchange"; }
+  virtual const char* GetName_cStr() const  override { return "ImpairedAlveolarExchange"; }
 
   virtual bool HasImpairedSurfaceArea() const;
   virtual SEScalarArea& GetImpairedSurfaceArea();
@@ -54,7 +45,7 @@ public:
   virtual SEScalar0To1& GetImpairedFraction();
   virtual double GetImpairedFraction() const;
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SEScalarArea* m_ImpairedSurfaceArea;

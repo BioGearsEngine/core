@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SECompleteBloodCount::SECompleteBloodCount()
@@ -36,12 +37,12 @@ SECompleteBloodCount::SECompleteBloodCount()
 //-------------------------------------------------------------------------------
 SECompleteBloodCount::~SECompleteBloodCount()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SECompleteBloodCount::Clear()
+void SECompleteBloodCount::Invalidate()
 {
-  SEPatientAssessment::Clear();
+  SEPatientAssessment::Invalidate();
   SAFE_DELETE(m_Hematocrit);
   SAFE_DELETE(m_Hemoglobin);
   SAFE_DELETE(m_LymphocyteCellCount);
@@ -68,45 +69,6 @@ void SECompleteBloodCount::Reset()
   INVALIDATE_PROPERTY(m_LymphocyteCellCount);
   INVALIDATE_PROPERTY(m_RedBloodCellCount);
   INVALIDATE_PROPERTY(m_WhiteBloodCellCount);
-}
-//-------------------------------------------------------------------------------
-bool SECompleteBloodCount::Load(const CDM::CompleteBloodCountData& in)
-{
-  SEPatientAssessment::Load(in);
-  // TODO Implement Load Complete Blood Count
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::CompleteBloodCountData* SECompleteBloodCount::Unload()
-{
-  CDM::CompleteBloodCountData* data = new CDM::CompleteBloodCountData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SECompleteBloodCount::Unload(CDM::CompleteBloodCountData& data)
-{
-  SEPatientAssessment::Unload(data);
-  if (HasHematocrit())
-    data.Hematocrit(std::unique_ptr<CDM::ScalarFractionData>(m_Hematocrit->Unload()));
-  if (HasHemoglobin())
-    data.Hemoglobin(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Hemoglobin->Unload()));
-  if (HasLymphocyteCellCount())
-    data.LymphocyteCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_LymphocyteCellCount->Unload()));
-  if (HasPlateletCount())
-    data.PlateletCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_PlateletCount->Unload()));
-  if (HasMeanCorpuscularHemoglobin())
-    data.MeanCorpuscularHemoglobin(std::unique_ptr<CDM::ScalarMassPerAmountData>(m_MeanCorpuscularHemoglobin->Unload()));
-  if (HasMeanCorpuscularHemoglobinConcentration())
-    data.MeanCorpuscularHemoglobinConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_MeanCorpuscularHemoglobinConcentration->Unload()));
-  if (HasMeanCorpuscularVolume())
-    data.MeanCorpuscularVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_MeanCorpuscularVolume->Unload()));
-  if (HasNeutrophilCount())
-    data.NeutrophilCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_NeutrophilCellCount->Unload()));
-  if (HasRedBloodCellCount())
-    data.RedBloodCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_RedBloodCellCount->Unload()));
-  if (HasWhiteBloodCellCount())
-    data.WhiteBloodCellCount(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_WhiteBloodCellCount->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SECompleteBloodCount::HasHematocrit() const

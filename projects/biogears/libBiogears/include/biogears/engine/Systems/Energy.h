@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 namespace biogears {
 class SEPatient;
@@ -55,18 +55,12 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  void Invalidate() override;
 
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsEnergySystemData& in);
-  virtual CDM::BioGearsEnergySystemData* Unload() const override;
-
 protected:
-  virtual void Unload(CDM::BioGearsEnergySystemData& data) const;
-
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
   void SetUp() override;
 

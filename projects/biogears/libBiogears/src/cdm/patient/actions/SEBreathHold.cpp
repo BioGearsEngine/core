@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 
@@ -24,12 +25,12 @@ SEBreathHold::SEBreathHold()
 //-------------------------------------------------------------------------------
 SEBreathHold::~SEBreathHold()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEBreathHold::Clear()
+void SEBreathHold::Invalidate()
 {
-  SEConsciousRespirationCommand::Clear();
+  SEConsciousRespirationCommand::Invalidate();
   SAFE_DELETE(m_Period);
 }
 //-------------------------------------------------------------------------------
@@ -41,27 +42,6 @@ bool SEBreathHold::IsValid() const
 bool SEBreathHold::IsActive() const
 {
   return SEConsciousRespirationCommand::IsActive();
-}
-//-------------------------------------------------------------------------------
-bool SEBreathHold::Load(const CDM::BreathHoldData& in, std::default_random_engine *rd)
-{
-  SEConsciousRespirationCommand::Load(in);
-  GetPeriod().Load(in.Period(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::BreathHoldData* SEBreathHold::Unload() const
-{
-  CDM::BreathHoldData* data(new CDM::BreathHoldData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEBreathHold::Unload(CDM::BreathHoldData& data) const
-{
-  SEConsciousRespirationCommand::Unload(data);
-  if (m_Period != nullptr)
-    data.Period(std::unique_ptr<CDM::ScalarTimeData>(m_Period->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEBreathHold::HasPeriod() const

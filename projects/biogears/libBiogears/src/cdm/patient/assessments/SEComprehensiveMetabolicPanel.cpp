@@ -15,6 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SEComprehensiveMetabolicPanel::SEComprehensiveMetabolicPanel()
@@ -37,12 +38,12 @@ SEComprehensiveMetabolicPanel::SEComprehensiveMetabolicPanel()
 //-------------------------------------------------------------------------------
 SEComprehensiveMetabolicPanel::~SEComprehensiveMetabolicPanel()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEComprehensiveMetabolicPanel::Clear()
+void SEComprehensiveMetabolicPanel::Invalidate()
 {
-  SEPatientAssessment::Clear();
+  SEPatientAssessment::Invalidate();
   SAFE_DELETE(m_Albumin);
   SAFE_DELETE(m_ALP);
   SAFE_DELETE(m_ALT);
@@ -77,53 +78,7 @@ void SEComprehensiveMetabolicPanel::Reset()
   INVALIDATE_PROPERTY(m_TotalBilirubin);
   INVALIDATE_PROPERTY(m_TotalProtein);
 }
-//-------------------------------------------------------------------------------
-bool SEComprehensiveMetabolicPanel::Load(const CDM::ComprehensiveMetabolicPanelData& in)
-{
-  SEPatientAssessment::Load(in);
-  // TODO
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ComprehensiveMetabolicPanelData* SEComprehensiveMetabolicPanel::Unload()
-{
-  CDM::ComprehensiveMetabolicPanelData* data = new CDM::ComprehensiveMetabolicPanelData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEComprehensiveMetabolicPanel::Unload(CDM::ComprehensiveMetabolicPanelData& data)
-{
-  SEPatientAssessment::Unload(data);
-  if (HasAlbumin())
-    data.Albumin(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Albumin->Unload()));
-  if (HasALP())
-    data.ALP(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_ALP->Unload()));
-  if (HasALT())
-    data.ALT(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_ALT->Unload()));
-  if (HasAST())
-    data.AST(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_AST->Unload()));
-  if (HasBUN())
-    data.BUN(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BUN->Unload()));
-  if (HasCalcium())
-    data.Calcium(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Calcium->Unload()));
-  if (HasChloride())
-    data.Chloride(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_Chloride->Unload()));
-  if (HasCO2())
-    data.CO2(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_CO2->Unload()));
-  if (HasCreatinine())
-    data.Creatinine(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Creatinine->Unload()));
-  if (HasGlucose())
-    data.Glucose(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Glucose->Unload()));
-  if (HasPotassium())
-    data.Potassium(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_Potassium->Unload()));
-  if (HasSodium())
-    data.Sodium(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_Sodium->Unload()));
-  if (HasTotalBilirubin())
-    data.TotalBilirubin(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TotalBilirubin->Unload()));
-  if (HasTotalProtein())
-    data.TotalProtein(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TotalProtein->Unload()));
-}
+
 //-------------------------------------------------------------------------------
 bool SEComprehensiveMetabolicPanel::HasAlbumin() const
 {

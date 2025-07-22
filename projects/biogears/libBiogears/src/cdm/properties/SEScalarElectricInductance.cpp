@@ -11,12 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarElectricInductance.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const ElectricInductanceUnit ElectricInductanceUnit::H("H");
 
-template class SEScalarQuantity<ElectricInductanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<ElectricInductanceUnit>;
 ElectricInductanceUnit::ElectricInductanceUnit(const char* u)
   : ElectricInductanceUnit(std::string { u })
 {
@@ -29,23 +31,6 @@ ElectricInductanceUnit::ElectricInductanceUnit(const std::string& u)
 //-----------------------------------------------------------------------------
 ElectricInductanceUnit ::~ElectricInductanceUnit()
 {
-}
-//-----------------------------------------------------------------------------
-SEScalarElectricInductance::SEScalarElectricInductance()
-{
-}
-//-----------------------------------------------------------------------------
-SEScalarElectricInductance::~SEScalarElectricInductance()
-{
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarElectricInductanceData* SEScalarElectricInductance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricInductanceData* data(new CDM::ScalarElectricInductanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-----------------------------------------------------------------------------
 bool ElectricInductanceUnit::IsValidUnit(const char* unit)

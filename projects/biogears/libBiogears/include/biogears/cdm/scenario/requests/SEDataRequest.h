@@ -15,34 +15,28 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEDecimalFormat.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
-#include <biogears/schema/cdm/DataRequests.hxx>
 
 namespace biogears {
 class SESubstanceManager;
 class SEDecimalFormat;
 class SEDataRequestManager;
 namespace io {
-  class Scenario;
+  class DataRequests;
 }
 class BIOGEARS_API SEDataRequest : public SEDecimalFormat {
   friend class SEDataRequestManager;
-  friend io::Scenario;
+  friend io::DataRequests;
 
 
 public:
   SEDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEDataRequest() override;
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate(); //clear memory
 
-  virtual bool Load(const CDM::DataRequestData& in);
-  virtual CDM::DataRequestData* Unload() const;
-
+  
   bool operator==(SEDataRequest const&) const;
   bool operator!=(SEDataRequest const&) const;
-
-protected:
-  virtual void Unload(CDM::DataRequestData& data) const;
 
 public:
   virtual size_t HashCode() const = 0;

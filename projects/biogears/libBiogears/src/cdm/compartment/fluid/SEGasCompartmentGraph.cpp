@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentGraph.h>
 
+#include "io/cdm/Compartment.h"
 #include <biogears/cdm/compartment/SECompartmentGraph.inl>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/SECompartmentNodes.inl>
@@ -20,6 +21,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/utils/Logger.h>
 #include <biogears/schema/cdm/Compartment.hxx>
+
 
 namespace std {
 template class vector<biogears::SEGasTransportVertex*>;
@@ -42,44 +44,7 @@ SEGasCompartmentGraph::SEGasCompartmentGraph(const std::string& name, Logger* lo
 SEGasCompartmentGraph::~SEGasCompartmentGraph()
 {
 }
-//-----------------------------------------------------------------------------
-bool SEGasCompartmentGraph::Load(const CDM::GasCompartmentGraphData& in, SECompartmentManager& cmptMgr)
-{
-  m_Name = in.Name();
-  for (auto name : in.Compartment()) {
-    SEGasCompartment* cmpt = cmptMgr.GetGasCompartment(name);
-    if (cmpt == nullptr) {
-      Error("Could not find compartment " + std::string { name } + " for graph " + m_Name);
-      return false;
-    }
-    AddCompartment(*cmpt);
-  }
-  for (auto name : in.Link()) {
-    SEGasCompartmentLink* link = cmptMgr.GetGasLink(name);
-    if (link == nullptr) {
-      Error("Could not find link " + std::string { name } + " for graph " + m_Name);
-      return false;
-    }
-    AddLink(*link);
-  }
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::GasCompartmentGraphData* SEGasCompartmentGraph::Unload()
-{
-  CDM::GasCompartmentGraphData* data = new CDM::GasCompartmentGraphData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEGasCompartmentGraph::Unload(CDM::GasCompartmentGraphData& data)
-{
-  data.Name(m_Name);
-  for (SEGasCompartment* cmpt : m_Compartments)
-    data.Compartment().push_back(cmpt->GetName());
-  for (SEGasCompartmentLink* link : m_CompartmentLinks)
-    data.Link().push_back(link->GetName());
-}
+
 //-----------------------------------------------------------------------------
 void SEGasCompartmentGraph::BalanceByIntensive()
 {

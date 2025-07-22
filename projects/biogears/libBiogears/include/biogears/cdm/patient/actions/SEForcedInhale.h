@@ -12,7 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 
 #include <random>
 
@@ -30,13 +31,10 @@ public:
   SEForcedInhale();
   virtual ~SEForcedInhale();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate(); //clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
-
-  virtual bool Load(const CDM::ForcedInhaleData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ForcedInhaleData* Unload() const;
 
   virtual bool HasInspiratoryCapacityFraction() const;
   virtual SEScalar0To1& GetInspiratoryCapacityFraction();
@@ -48,9 +46,6 @@ public:
   
   bool operator==( const SEForcedInhale& rhs) const;
   bool operator!=( const SEForcedInhale& rhs) const;
-
-protected:
-  virtual void Unload(CDM::ForcedInhaleData& data) const;
 
 protected:
   SEScalar0To1* m_InspiratoryCapacityFraction;

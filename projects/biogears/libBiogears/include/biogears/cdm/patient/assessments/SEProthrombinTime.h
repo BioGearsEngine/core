@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
-#include <biogears/schema/cdm/PatientAssessments.hxx>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
 
 namespace biogears {
 class SEBloodChemistry;
@@ -32,14 +32,8 @@ public:
   static constexpr const char* TypeTag() { return "SEProthrombinTime"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset(); // reset values
-  virtual void Clear(); // clear memory
-
-  virtual bool Load(const CDM::ProthrombinTimeData& in);
-  virtual CDM::ProthrombinTimeData* Unload();
-
-protected:
-  virtual void Unload(CDM::ProthrombinTimeData& data);
+  virtual void Reset() override ; // reset values
+  virtual void Invalidate() override ; // clear memory
 
 public:
   virtual bool HasInternationalNormalizedRatio();

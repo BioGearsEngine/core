@@ -121,7 +121,7 @@ void BioGearsEngineTest::AcuteInflammationTest(const std::string& rptDirectory)
   //Circuit Construction
   SEFluidCircuit* bgCircuit = &circuits.CreateFluidCircuit("BgCircuit");
   SELiquidCompartmentGraph* bgGraph = &bg.GetCompartments().CreateLiquidGraph("BgGraph");
-  bgGraph->Clear();
+  bgGraph->Invalidate();
   bgGraph->StateChange();
   //Nodes
   SEFluidCircuitNode& nAorta1 = bgCircuit->CreateNode("nAorta1");

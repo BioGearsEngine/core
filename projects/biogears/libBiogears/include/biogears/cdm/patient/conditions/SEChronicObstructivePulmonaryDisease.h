@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/exports.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
@@ -29,24 +28,19 @@ public:
   SEChronicObstructivePulmonaryDisease();
   virtual ~SEChronicObstructivePulmonaryDisease();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate() override; //clear memory
 
-  virtual bool IsValid() const;
-
-  virtual bool Load(const CDM::ChronicObstructivePulmonaryDiseaseData& in);
-  virtual CDM::ChronicObstructivePulmonaryDiseaseData* Unload() const;
+  virtual bool IsValid() const override ;
 
   bool operator==(SEChronicObstructivePulmonaryDisease const&) const;
   bool operator!=(SEChronicObstructivePulmonaryDisease const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::ChronicObstructivePulmonaryDiseaseData& data) const;
 
 public:
-  virtual std::string GetName() const { return "ChronicObstructivePulmonaryDisease"; }
-  virtual const char* GetName_cStr() const { return "ChronicObstructivePulmonaryDisease"; }
+  virtual std::string GetName() const override { return "ChronicObstructivePulmonaryDisease"; }
+  virtual const char* GetName_cStr() const  override { return "ChronicObstructivePulmonaryDisease"; }
 
   virtual bool HasBronchitisSeverity() const;
   virtual SEScalar0To1& GetBronchitisSeverity();
@@ -54,7 +48,7 @@ public:
   virtual bool HasEmphysemaSeverity() const;
   virtual SEScalar0To1& GetEmphysemaSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_BronchitisSeverity;

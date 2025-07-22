@@ -11,11 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const ElectricResistanceUnit ElectricResistanceUnit::Ohm("ohm");
 
-template class SEScalarQuantity<ElectricResistanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<ElectricResistanceUnit>;
 
 ElectricResistanceUnit::ElectricResistanceUnit(const char* u)
   : ElectricResistanceUnit(std::string { u })
@@ -29,23 +32,6 @@ ElectricResistanceUnit::ElectricResistanceUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 ElectricResistanceUnit::~ElectricResistanceUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarElectricResistance::SEScalarElectricResistance()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarElectricResistance::~SEScalarElectricResistance()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarElectricResistanceData* SEScalarElectricResistance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricResistanceData* data(new CDM::ScalarElectricResistanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool ElectricResistanceUnit::IsValidUnit(const char* unit)
@@ -80,17 +66,6 @@ bool ElectricResistanceUnit::operator==(const ElectricResistanceUnit& obj) const
 }
 //-------------------------------------------------------------------------------
 bool ElectricResistanceUnit::operator!=(const ElectricResistanceUnit& obj) const
-{
-  return !(*this == obj);
-}
-//-------------------------------------------------------------------------------
-
-bool SEScalarElectricResistance::operator==(const SEScalarElectricResistance& obj) const
-{
-  return SEScalarQuantity::operator==(obj);
-}
-//-------------------------------------------------------------------------------
-bool SEScalarElectricResistance::operator!=(const SEScalarElectricResistance& obj) const
 {
   return !(*this == obj);
 }

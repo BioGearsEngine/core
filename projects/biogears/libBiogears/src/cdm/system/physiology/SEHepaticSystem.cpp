@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SEHepaticSystem.h>
 
+#include "io/cdm/Physiology.h"
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -30,13 +31,13 @@ SEHepaticSystem::SEHepaticSystem(Logger* logger)
 
 SEHepaticSystem::~SEHepaticSystem()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
 
-void SEHepaticSystem::Clear()
+void SEHepaticSystem::Invalidate()
 {
-  SESystem::Clear();
+  SESystem::Invalidate();
 
   SAFE_DELETE(m_KetoneProductionRate);
   SAFE_DELETE(m_HepaticGluconeogenesisRate);
@@ -54,36 +55,6 @@ const SEScalar* SEHepaticSystem::GetScalar(const std::string& name)
   if (name == idHepaticGluconeogenesisRate)
     return &GetHepaticGluconeogenesisRate();
   return nullptr;
-}
-//-------------------------------------------------------------------------------
-
-bool SEHepaticSystem::Load(const CDM::HepaticSystemData& in)
-{
-  SESystem::Load(in);
-
-  if (in.KetoneProductionRate().present())
-    GetKetoneProductionRate().Load(in.KetoneProductionRate().get());
-  if (in.HepaticGluconeogenesisRate().present())
-    GetHepaticGluconeogenesisRate().Load(in.HepaticGluconeogenesisRate().get());
-
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::HepaticSystemData* SEHepaticSystem::Unload() const
-{
-  CDM::HepaticSystemData* data = new CDM::HepaticSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEHepaticSystem::Unload(CDM::HepaticSystemData& data) const
-{
-  SESystem::Unload(data);
-
-  if (m_KetoneProductionRate != nullptr)
-    data.KetoneProductionRate(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_KetoneProductionRate->Unload()));
-  if (m_HepaticGluconeogenesisRate != nullptr)
-    data.HepaticGluconeogenesisRate(std::unique_ptr<CDM::ScalarMassPerTimeData>(m_HepaticGluconeogenesisRate->Unload()));
 }
 //-------------------------------------------------------------------------------
 

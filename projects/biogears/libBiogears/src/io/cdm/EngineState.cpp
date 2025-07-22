@@ -7,12 +7,12 @@
 
 namespace biogears {
 namespace io {
-  void EngineState::Marshall(const CDM::PhysiologyEngineStateData& in, PhysiologyEngine& out)
+  void EngineState::UnMarshall(const CDM::PhysiologyEngineStateData& in, PhysiologyEngine& out)
   {
     return;
   }
   //----------------------------------------------------------------------------------
-  void EngineState::UnMarshall(const PhysiologyEngine& in, CDM::PhysiologyEngineStateData& out)
+  void EngineState::Marshall(const PhysiologyEngine& in, CDM::PhysiologyEngineStateData& out)
   {
     return;
   }

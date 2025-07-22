@@ -11,9 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Energy.h>
 
+#include "io/cdm/Physiology.h"
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuit.h>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
+#include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/properties/SEScalar0To1.h>
@@ -49,7 +53,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
 
 namespace biogears {
 auto Energy::make_unique(BioGears& bg) -> std::unique_ptr<Energy>
@@ -62,17 +65,17 @@ Energy::Energy(BioGears& bg)
   , m_data(bg)
   , m_circuitCalculator(GetLogger())
 {
-  Clear();
+  Invalidate();
 }
 
 Energy::~Energy()
 {
-  Clear();
+  Invalidate();
 }
 
-void Energy::Clear()
+void Energy::Invalidate()
 {
-  SEEnergySystem::Clear();
+  SEEnergySystem::Invalidate();
   m_Patient = nullptr;
   m_PatientActions = nullptr;
   m_AortaHCO3 = nullptr;
@@ -102,7 +105,7 @@ void Energy::Initialize()
   BioGearsSystem::Initialize();
 
   GetTotalMetabolicRate().Set(m_Patient->GetBasalMetabolicRate());
-  //Initialization of other system variables
+  // Initialization of other system variables
   /// \cite herman2008physics
   GetCoreTemperature().SetValue(37.0, TemperatureUnit::C);
   GetSkinTemperatureTorso().SetValue(34.4, TemperatureUnit::C);
@@ -127,41 +130,12 @@ void Energy::Initialize()
   GetPotassiumLostToSweat().SetValue(0.0, MassUnit::mg);
   GetSodiumLostToSweat().SetValue(0.0, MassUnit::mg);
 
-  //Running average quantities used to trigger events
-  m_BloodpH.Sample(7.4); //Initialize
-  m_BicarbonateMolarity_mmol_Per_L.Sample(24.0); //Initialize
+  // Running average quantities used to trigger events
+  m_BloodpH.Sample(7.4); // Initialize
+  m_BicarbonateMolarity_mmol_Per_L.Sample(24.0); // Initialize
 
   m_previousWeightPack_kg = 0.0;
   m_packOn = false;
-}
-
-bool Energy::Load(const CDM::BioGearsEnergySystemData& in)
-{
-  if (!SEEnergySystem::Load(in)) {
-    return false;
-  }
-
-  m_BloodpH.Load(in.BloodpH());
-  m_BicarbonateMolarity_mmol_Per_L.Load(in.BicarbonateMolarity_mmol_Per_L());
-  m_packOn = in.PackOn();
-  m_previousWeightPack_kg = in.PreviousWeightPack_kg();
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsEnergySystemData* Energy::Unload() const
-{
-  CDM::BioGearsEnergySystemData* data = new CDM::BioGearsEnergySystemData();
-  Unload(*data);
-  return data;
-}
-void Energy::Unload(CDM::BioGearsEnergySystemData& data) const
-{
-  SEEnergySystem::Unload(data);
-
-  data.BloodpH(std::unique_ptr<CDM::RunningAverageData>(m_BloodpH.Unload()));
-  data.BicarbonateMolarity_mmol_Per_L(std::unique_ptr<CDM::RunningAverageData>(m_BicarbonateMolarity_mmol_Per_L.Unload()));
-  data.PackOn(m_packOn);
-  data.PreviousWeightPack_kg(m_previousWeightPack_kg);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -184,11 +158,11 @@ void Energy::SetUp()
   m_SkinSodium = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstances().GetSodium());
   m_SkinChloride = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstances().GetChloride());
   m_SkinPotassium = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::SkinExtracellular)->GetSubstanceQuantity(m_data.GetSubstances().GetPotassium());
-  //Circuit elements
-  //Circuits
+  // Circuit elements
+  // Circuits
   m_TemperatureCircuit = &m_data.GetCircuits().GetTemperatureCircuit();
   m_InternalTemperatureCircuit = &m_data.GetCircuits().GetInternalTemperatureCircuit();
-  //Nodes
+  // Nodes
   m_coreNode = m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalCore);
   m_skinNodes.clear();
   m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalTorsoSkin));
@@ -197,7 +171,7 @@ void Energy::SetUp()
   m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalRightArmSkin));
   m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalLeftLegSkin));
   m_skinNodes.push_back(m_InternalTemperatureCircuit->GetNode(BGE::InternalTemperatureNode::InternalRightLegSkin));
-  //Paths
+  // Paths
   m_temperatureGroundToCorePath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalCore);
   m_skinExtravascularToSweatingGroundPath = m_data.GetCircuits().GetActiveCardiovascularCircuit().GetPath(BGE::TissuePath::SkinSweating);
   m_coreToSkinPaths.clear();
@@ -229,7 +203,7 @@ void Energy::PreProcess()
   m_data.GetDataTrack().Probe("CTSresistance", m_Test);
   CalculateSweatRate();
   UpdateHeatResistance();
-  //ManageEnergyDeficit();
+  // ManageEnergyDeficit();
   Exercise();
 }
 
@@ -265,7 +239,7 @@ void Energy::Exercise()
   if (m_PatientActions->HasExercise()) {
     switch (exercise->GetExerciseType()) {
     case SEExercise::GENERIC: {
-      //Model Code
+      // Model Code
       SEExercise::SEGeneric genericEx = exercise->GetGenericExercise();
       if (genericEx.Intensity.IsValid()) {
         exerciseIntensity = genericEx.Intensity.GetValue();
@@ -276,7 +250,7 @@ void Energy::Exercise()
           exerciseIntensity = 1;
           Warning("Desired work rate over max work rate. Desired work rate can be a value between 0 and 1200 W. Proceeding with max work rate.");
         }
-        genericEx.DesiredWorkRate.Clear();
+        genericEx.DesiredWorkRate.Invalidate();
       } else {
         Warning("Generic Exercise call with no severity. Action ignored.");
       }
@@ -284,7 +258,7 @@ void Energy::Exercise()
       break;
     }
     case SEExercise::RUNNING: {
-      //Model Code
+      // Model Code
       SEExercise::SERunning runningEx = exercise->GetRunningExercise();
       speedRun_m_Per_s = runningEx.SpeedRun.GetValue(LengthPerTimeUnit::m_Per_s);
       const double speedRun_mph = speedRun_m_Per_s * 2.23694;
@@ -307,7 +281,7 @@ void Energy::Exercise()
       break;
     }
     case SEExercise::CYCLING: {
-      //Model Code
+      // Model Code
       SEExercise::SECycling cyclingEx = exercise->GetCyclingExercise();
       cadenceCycle_Per_Min = cyclingEx.CadenceCycle.GetValue(FrequencyUnit::Per_min);
       powerCycle_W = cyclingEx.PowerCycle.GetValue(PowerUnit::W);
@@ -330,7 +304,7 @@ void Energy::Exercise()
       break;
     }
     case SEExercise::STRENGTH_TRAINING: {
-      //Model Code
+      // Model Code
       SEExercise::SEStrengthTraining strengthEx = exercise->GetStrengthExercise();
       weightStrength_kg = strengthEx.WeightStrength.GetValue(MassUnit::kg);
       repetitionsStrength_number = strengthEx.RepsStrength.GetValue();
@@ -341,7 +315,7 @@ void Energy::Exercise()
       break;
     }
     case SEExercise::NONE:
-      //No actual exercise - included to extend "full range of switch possibilities"
+      // No actual exercise - included to extend "full range of switch possibilities"
       break;
     }
 
@@ -441,52 +415,52 @@ void Energy::CalculateVitalSigns()
   GetSkinTemperature().SetValue(meanSkinTemp_degC, TemperatureUnit::C);
   std::stringstream ss;
 
-  //Hypothermia check
+  // Hypothermia check
   double coreTempIrreversible_degC = 15.0; /// \cite Stocks2004HumanPhysiologicalResponseCold
 
-  if (coreTemperature_degC > 32.0 && coreTemperature_degC < 35.0 ) /// \cite mallet2001hypothermia
+  if (coreTemperature_degC > 32.0 && coreTemperature_degC < 35.0) /// \cite mallet2001hypothermia
   {
     /// \event Patient: Core temperature has fallen below 35 degrees Celsius. Patient is hypothermic.
-    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, true, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::MildHypothermia, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::ModerateHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::SevereHypothermia, false, m_data.GetSimulationTime());
   }
   if (coreTemperature_degC > 28.2 && coreTemperature_degC < 31.5) /// \cite mallet2001hypothermia
   {
     /// \event Patient: Core temperature has fallen below 35 degrees Celsius. Patient is hypothermic.
-    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, true, m_data.GetSimulationTime());
-  } 
+    m_Patient->SetEvent(SEPatientEventType::MildHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::SevereHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::ModerateHypothermia, true, m_data.GetSimulationTime());
+  }
   if (coreTemperature_degC < 28.0) /// \cite mallet2001hypothermia
   {
-    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::ModerateHypothermia, false, m_data.GetSimulationTime());
-    m_Patient->SetEvent(CDM::enumPatientEvent::SevereHypothermia, true, m_data.GetSimulationTime());
-  } 
-      /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
+    m_Patient->SetEvent(SEPatientEventType::MildHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::ModerateHypothermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::SevereHypothermia, true, m_data.GetSimulationTime());
+  }
+  /// \irreversible State: Core temperature has fallen below 20 degrees Celsius.
   if (coreTemperature_degC < coreTempIrreversible_degC) {
     ss << "Core temperature is " << coreTemperature_degC << ". This is below 15 degrees C, patient is experiencing extreme hypothermia.";
     Warning(ss);
     if (!m_PatientActions->HasOverride()) {
-      m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+      m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
     } else {
-      if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-        m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+      if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+        m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
       }
     }
-  } 
-  
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::MildHypothermia) && coreTemperature_degC > 35.2) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::MildHypothermia, false, m_data.GetSimulationTime());
   }
-  //Hyperthermia check
+
+  if (m_Patient->IsEventActive(SEPatientEventType::MildHypothermia) && coreTemperature_degC > 35.2) {
+    m_Patient->SetEvent(SEPatientEventType::MildHypothermia, false, m_data.GetSimulationTime());
+  }
+  // Hyperthermia check
   if (coreTemperature_degC > 38.8) // Note: Hyperthermia threshold varies; we'll use 38.8
   {
     /// \event Patient: Core temperature has exceeded 38.8 degrees Celsius. Patient is hyperthermic.
-    m_Patient->SetEvent(CDM::enumPatientEvent::Hyperthermia, true, m_data.GetSimulationTime());
-  } else if (m_Patient->IsEventActive(CDM::enumPatientEvent::Hyperthermia) && coreTemperature_degC < 38.0) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::Hyperthermia, false, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::Hyperthermia, true, m_data.GetSimulationTime());
+  } else if (m_Patient->IsEventActive(SEPatientEventType::Hyperthermia) && coreTemperature_degC < 38.0) {
+    m_Patient->SetEvent(SEPatientEventType::Hyperthermia, false, m_data.GetSimulationTime());
   }
 
   /// \todo Move to blood chemistry
@@ -498,8 +472,8 @@ void Energy::CalculateVitalSigns()
   double lowPh = 6.5; // \cite Edge2006AcidosisConscious
   m_BloodpH.Sample(m_data.GetBloodChemistry().GetArterialBloodPH().GetValue());
   m_BicarbonateMolarity_mmol_Per_L.Sample(m_AortaHCO3->GetMolarity(AmountPerVolumeUnit::mmol_Per_L));
-  //Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  // Only check these at the end of a cardiac cycle and reset at start of cardiac cycle
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
     double bloodPH = m_BloodpH.Value();
     double bloodBicarbonate_mmol_Per_L = m_BicarbonateMolarity_mmol_Per_L.Value();
 
@@ -513,20 +487,20 @@ void Energy::CalculateVitalSigns()
         ss << " Arterial blood PH is " << bloodPH << ". This is below 6.5, patient is experiencing extreme metabolic acidosis and is in an irreversible state.";
         Warning(ss);
         if (!m_PatientActions->HasOverride()) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       } else if (bloodPH > 7.38 && bloodBicarbonate_mmol_Per_L > 23.0) {
         /// \event The patient has exited the state state of metabolic acidosis
-        m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAcidosis, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::MetabolicAcidosis, false, m_data.GetSimulationTime());
       }
 
       if (bloodPH > 7.45 && bloodBicarbonate_mmol_Per_L > 26.0) {
         /// \event The patient is in a state of metabolic alkalosis
-        m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAlkalosis, true, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::MetabolicAlkalosis, true, m_data.GetSimulationTime());
       }
 
       /// \irreversible State: arterial blood pH has increased above 8.5.
@@ -534,17 +508,17 @@ void Energy::CalculateVitalSigns()
         ss << " Arterial blood PH is " << bloodPH << ". This is above 8.5, patient is experiencing extreme metabolic Alkalosis and is in an irreversible state.";
         Warning(ss);
         if (!m_PatientActions->HasOverride()) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       }
 
       else if (bloodPH < 7.42 && bloodBicarbonate_mmol_Per_L < 25.0) {
         /// \event The patient has exited the state of metabolic alkalosis
-        m_Patient->SetEvent(CDM::enumPatientEvent::MetabolicAlkalosis, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::MetabolicAlkalosis, false, m_data.GetSimulationTime());
       }
     }
     // Reset the running averages. Why do we need running averages here? Does the aorta pH fluctuate that much?
@@ -569,19 +543,19 @@ void Energy::CalculateMetabolicHeatGeneration()
   double coreTemperature_degC = m_coreNode->GetTemperature(TemperatureUnit::C);
   double coreTemperatureLow_degC = m_data.GetConfiguration().GetCoreTemperatureLow(TemperatureUnit::C);
   double coreTemperatureLowDelta_degC = m_data.GetConfiguration().GetDeltaCoreTemperatureLow(TemperatureUnit::C);
-  double coreTemperatureHigh_degC = 40.0; //TODO: This should use the config property why doesn't it?
+  double coreTemperatureHigh_degC = 40.0; // TODO: This should use the config property why doesn't it?
   double totalMetabolicRateNew_Kcal_Per_day = 0.0;
   double totalMetabolicRateNew_W = 0.0;
-  //The summit metabolism is the maximum amount of power the human body can generate due to shivering/response to the cold.
+  // The summit metabolism is the maximum amount of power the human body can generate due to shivering/response to the cold.
   double summitMetabolism_W = 21.0 * std::pow(m_Patient->GetWeight(MassUnit::kg), 0.75); /// \cite herman2008physics
   double currentMetabolicRate_kcal_Per_day = GetTotalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_kcal_Per_day = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::kcal_Per_day);
   double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate().GetValue(PowerUnit::W);
 
-  if (coreTemperature_degC < 34.0) //Hypothermic state inducing metabolic depression (decline of metabolic heat generation)
+  if (coreTemperature_degC < 34.0) // Hypothermic state inducing metabolic depression (decline of metabolic heat generation)
   {
     double tot_W = GetTotalMetabolicRate().GetValue(PowerUnit::W);
-    double scaleMR = 0.00001;    // need the scaling factor to reduce the rate of decrease 
+    double scaleMR = 0.00001; // need the scaling factor to reduce the rate of decrease
     totalMetabolicRateNew_W = tot_W - tot_W * scaleMR * (1 - std::pow(0.94, 34.0 - coreTemperature_degC));
 
     // if we are below basal rate, then the rate of decrease needs to dimish much slower
@@ -590,26 +564,26 @@ void Energy::CalculateMetabolicHeatGeneration()
       totalMetabolicRateNew_W = tot_W - tot_W * scaleMR * (1 - std::pow(0.94, 34.0 - coreTemperature_degC));
     }
 
-    //tot_W *= std::pow(0.94, 34.0 - coreTemperature_degC);
-    //totalMetabolicRateNew_W = summitMetabolism_W * std::pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
+    // tot_W *= std::pow(0.94, 34.0 - coreTemperature_degC);
+    // totalMetabolicRateNew_W = summitMetabolism_W * std::pow(0.94, 34.0 - coreTemperature_degC); //The metabolic heat generated will drop by 6% for every degree below 34 C
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W); /// \cite mallet2002hypothermia
-  } else if (coreTemperature_degC >= 34.0 && coreTemperature_degC < 36.8) //Patient is increasing heat generation via shivering. This caps out at the summit metabolism
+  } else if (coreTemperature_degC >= 34.0 && coreTemperature_degC < 36.8) // Patient is increasing heat generation via shivering. This caps out at the summit metabolism
   {
-    m_Patient->SetEvent(CDM::enumPatientEvent::Shivering, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::Shivering, true, m_data.GetSimulationTime());
     double basalMetabolicRate_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W);
-    double scaleMR = 0.1;   //scaling factor to validate metabolic rate during shivering, the old model was far too rapid
+    double scaleMR = 0.1; // scaling factor to validate metabolic rate during shivering, the old model was far too rapid
     totalMetabolicRateNew_W = basalMetabolicRate_W + (summitMetabolism_W - basalMetabolicRate_W) * scaleMR * (coreTemperatureLow_degC - coreTemperature_degC) / coreTemperatureLowDelta_degC;
-    totalMetabolicRateNew_W = std::min(totalMetabolicRateNew_W, summitMetabolism_W); //Bounded at the summit metabolism so further heat generation doesn't continue for continue drops below 34 C.
+    totalMetabolicRateNew_W = std::min(totalMetabolicRateNew_W, summitMetabolism_W); // Bounded at the summit metabolism so further heat generation doesn't continue for continue drops below 34 C.
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_W, PowerUnit::W);
-  } else if (coreTemperature_degC >= 36.8 && coreTemperature_degC < 40 && !m_PatientActions->HasExercise()) //Basic Metabolic rate
+  } else if (coreTemperature_degC >= 36.8 && coreTemperature_degC < 40 && !m_PatientActions->HasExercise()) // Basic Metabolic rate
   {
     double TotalMetabolicRateSetPoint_kcal_Per_day = basalMetabolicRate_kcal_Per_day;
-    double MetabolicRateGain = 0.0001; //Used to ramp the metabolic rate from its current value to the basal value if the patient meets the basal criteria
+    double MetabolicRateGain = 0.0001; // Used to ramp the metabolic rate from its current value to the basal value if the patient meets the basal criteria
     double TotalMetabolicRateProduced_kcal_Per_day = currentMetabolicRate_kcal_Per_day + MetabolicRateGain * (TotalMetabolicRateSetPoint_kcal_Per_day - currentMetabolicRate_kcal_Per_day);
     GetTotalMetabolicRate().SetValue(TotalMetabolicRateProduced_kcal_Per_day, PowerUnit::kcal_Per_day);
-  } else if (coreTemperature_degC > 40.0 && !m_PatientActions->HasExercise()) //Core temperature greater than 40.0. If not exercising, then the hyperthermia leads to increased metabolism
+  } else if (coreTemperature_degC > 40.0 && !m_PatientActions->HasExercise()) // Core temperature greater than 40.0. If not exercising, then the hyperthermia leads to increased metabolism
   {
-    totalMetabolicRateNew_Kcal_Per_day = basalMetabolicRate_kcal_Per_day * std::pow(1.11, coreTemperature_degC - coreTemperatureHigh_degC); //The metabolic heat generated will increase by 11% for every degree above 40.0 C
+    totalMetabolicRateNew_Kcal_Per_day = basalMetabolicRate_kcal_Per_day * std::pow(1.11, coreTemperature_degC - coreTemperatureHigh_degC); // The metabolic heat generated will increase by 11% for every degree above 40.0 C
     GetTotalMetabolicRate().SetValue(totalMetabolicRateNew_Kcal_Per_day, PowerUnit::kcal_Per_day); /// \cite pate2001thermal
   }
 
@@ -737,7 +711,7 @@ void Energy::UpdateHeatResistance()
     double weightedAvgSegmentedTemperature_C = normalSkinTemperature_C;
     double burnTemperature = GetBurnSkinTemperature().GetValue(TemperatureUnit::C);
     SEThermalCircuitPath* metabolicHeatPath;
-    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
       SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
       std::vector<std::string> burnComptVector = burnAction->GetCompartments();
       // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
@@ -788,19 +762,63 @@ void Energy::UpdateHeatResistance()
         alphaScale = lastAlpha + rampGain * (targetAlpha - lastAlpha);
       }
     }
+    if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Fracture)) {
+      SEThermalCircuitPath* fractureHeatPath;
+      SEFracture* fracture = m_data.GetActions().GetPatientActions().GetFracture();
+      SEFracturedBone bone = fracture->GetFracturedBone();
+      SEFractureType type = fracture->GetFractureType();
+      SESide side = fracture->GetSide();
+
+      bool isFractureValid = true;
+
+      double typeThermalEffect = 0.0;
+
+      // Only support comminuted for now
+      switch (type) {
+      case SEFractureType::Comminuted:
+        typeThermalEffect = 0.3;
+        break;
+      default:
+        typeThermalEffect = 0.2;
+        break;
+      }
+        
+      switch (bone) {
+      case SEFracturedBone::Radius:
+        if (side == SESide::Left) {
+          fractureHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalLeftArmSkin);
+        } else if (side == SESide::Right) {
+          fractureHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalRightArmSkin);
+        }
+        break;
+      case SEFracturedBone::Tibia:
+        if (side == SESide::Left) {
+          fractureHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalLeftLegSkin);
+        } else if (side == SESide::Right) {
+          fractureHeatPath = m_InternalTemperatureCircuit->GetPath(BGE::InternalTemperaturePath::GroundToInternalRightLegSkin);
+        }
+      default:
+        isFractureValid = false;
+        break;
+      }
+      if (isFractureValid) {
+        double currHeat = fractureHeatPath->GetHeatSource().GetValue(PowerUnit::J_Per_s);
+        fractureHeatPath->GetNextHeatSource().IncrementValue(currHeat * 0.1 * (typeThermalEffect), PowerUnit::J_Per_s);
+      }
+    }
 
     // The heat transfer resistance from the core to the skin is inversely proportional to the skin blood flow.
     // When skin blood flow increases, then heat transfer resistance decreases leading to more heat transfer from core to skin.
     // The opposite occurs for skin blood flow decrease.
     double coreToSkinResistance_K_Per_W = 1.0 / (alphaScale * bloodDensity_kg_Per_m3 * bloodSpecificHeat_J_Per_K_kg * segmentedSkinBloodFlows[index]);
-    
+
     coreToSkinResistance_K_Per_W = BLIM(coreToSkinResistance_K_Per_W, 0.0001, 20.0);
     coreToSkinPath->GetNextResistance().SetValue(coreToSkinResistance_K_Per_W, HeatResistanceUnit::K_Per_W);
     index += 1;
   }
   if (isAnySegmentBurned) { // Tracking the burned skin temperature as a function of time after burn initiated
     SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
-    double timeSinceBurn = m_data.GetSimulationTime().GetValue()  - burnAction->GetTimeOfBurn();
+    double timeSinceBurn = m_data.GetSimulationTime().GetValue() - burnAction->GetTimeOfBurn();
     if (timeSinceBurn != 0.0) {
       double t = timeSinceBurn;
       double burnTemperature = (30.3 * std::exp(-1.0 * std::pow(t - 7.81, 2) / 11.7)) + GetSkinTemperature(TemperatureUnit::C);
@@ -827,11 +845,11 @@ void Energy::CalculateBasalMetabolicRate()
   double PatientAge_yr = patient.GetAge(TimeUnit::yr);
   double PatientHeight_cm = patient.GetHeight(LengthUnit::cm);
 
-  //The basal metabolic rate is determined from the Harris-Benedict formula, with differences dependent on sex, age, height and mass
+  // The basal metabolic rate is determined from the Harris-Benedict formula, with differences dependent on sex, age, height and mass
   /// \cite roza1984metabolic
   double patientBMR_kcal_Per_day = 0.0;
-  if (patient.GetGender() == CDM::enumSex::Male) {
-    patientBMR_kcal_Per_day = 88.632 + 13.397 * PatientMass_kg + 4.799 * PatientHeight_cm - 5.677 * PatientAge_yr;
+  if (patient.GetSex() == SESex::Male) {
+    patientBMR_kcal_Per_day = 88.362 + 13.397 * PatientMass_kg + 4.799 * PatientHeight_cm - 5.677 * PatientAge_yr;
   } else {
     patientBMR_kcal_Per_day = 447.593 + 9.247 * PatientMass_kg + 3.098 * PatientHeight_cm - 4.330 * PatientAge_yr;
   }
@@ -860,10 +878,10 @@ void Energy::CalculateBasalMetabolicRate()
 void Energy::ManageEnergyDeficit()
 {
   if (m_PatientActions->HasHemorrhage()) {
-    double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8; //We say in tissue that say brain takes up 20%, and we just care about the other tissues for this process
+    double basalTissueEnergyDemand_W = m_Patient->GetBasalMetabolicRate(PowerUnit::W) * 0.8; // We say in tissue that say brain takes up 20%, and we just care about the other tissues for this process
     double volFraction = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_Patient->GetBloodVolumeBaseline(VolumeUnit::mL);
     ULIM(volFraction, 1.0);
-    double minVolFraction = 0.5; //i.e. half of blood volume lost
+    double minVolFraction = 0.5; // i.e. half of blood volume lost
     double maxDeficitMultiplier = 0.5;
     double energyDeficit_W = basalTissueEnergyDemand_W * GeneralMath::LinearInterpolator(1.0, minVolFraction, 0.0, maxDeficitMultiplier, volFraction);
     GetEnergyDeficit().SetValue(energyDeficit_W, PowerUnit::W);
@@ -945,22 +963,22 @@ void Energy::OverrideControlLoop()
 
   constexpr double maxAcheivedExerciseOverride = 100;
   constexpr double minAcheivedExerciseOverride = 0;
-  constexpr double maxCoreTempOverride = 200.0; //degC
-  constexpr double minCoreTempOverride = 0.0; //degC
+  constexpr double maxCoreTempOverride = 200.0; // degC
+  constexpr double minCoreTempOverride = 0.0; // degC
   constexpr double maxCreatinineOverride = 100.0; // mol_Per_s
   constexpr double minCreatinineOverride = 0.0; // mol_Per_s
-  constexpr double maxExerciseMAPOverride = 200.0; //mmHg
-  constexpr double minExerciseMAPOverride = 0.0; //mmHg
+  constexpr double maxExerciseMAPOverride = 200.0; // mmHg
+  constexpr double minExerciseMAPOverride = 0.0; // mmHg
   constexpr double maxFatigueOverride = 100.0;
   constexpr double minFatigueOverride = 0.0;
-  constexpr double maxLactateOverride = 200.0; //mol per s
-  constexpr double minLactateOverride = 0.0; //mol per s
-  constexpr double maxSkinTempOverride = 200.0; //degC
-  constexpr double minSkinTempOverride = 0.0; //degC
+  constexpr double maxLactateOverride = 200.0; // mol per s
+  constexpr double minLactateOverride = 0.0; // mol per s
+  constexpr double maxSkinTempOverride = 200.0; // degC
+  constexpr double minSkinTempOverride = 0.0; // degC
   constexpr double maxSweatRateOverride = 50.0; // g per s
   constexpr double minSweatRateOverride = 0.0; // g per s
-  constexpr double maxTotalMetabolicOverride = 5000.0; //kcal/day
-  constexpr double minTotalMetabolicOverride = 0.0; //kcal/day
+  constexpr double maxTotalMetabolicOverride = 5000.0; // kcal/day
+  constexpr double minTotalMetabolicOverride = 0.0; // kcal/day
   constexpr double maxTotalWorkOverride = 100.0;
   constexpr double minTotalWorkOverride = 0.0;
   constexpr double maxSodiumSweatOverride = 500.0; // g
@@ -970,20 +988,20 @@ void Energy::OverrideControlLoop()
   constexpr double maxChlorideSweatOverride = 500.0; // g
   constexpr double minChlorideSweatOverride = 0.0; // g
 
-  double currentAcheivedExerciseOverride = 0; //gets changed in next step
-  double currentCoreTempOverride = 0; //gets changed in next step
-  double currentCreatinineOverride = 0; //gets changed in next step
-  double currentExerciseMAPOverride = 0; //gets changed in next step
-  double currentFatigueOverride = 0; //gets changed in next step
-  double currentLactateOverride = 0; //gets changed in next step
-  double currentSkinTempOverride = 0; //gets changed in next step
-  double currentSweatRateOverride = 0; //gets changed in next step
-  double currentTotalMetabolicOverride = 0; //gets changed in next step
-  double currentTotalWorkOverride = 0; //gets changed in next step
-  double currentSodiumSweatOverride = 0.0; //gets changed in next step
-  double currentPotassiumSweatOverride = 0.0; //gets changed in next step
+  double currentAcheivedExerciseOverride = 0; // gets changed in next step
+  double currentCoreTempOverride = 0; // gets changed in next step
+  double currentCreatinineOverride = 0; // gets changed in next step
+  double currentExerciseMAPOverride = 0; // gets changed in next step
+  double currentFatigueOverride = 0; // gets changed in next step
+  double currentLactateOverride = 0; // gets changed in next step
+  double currentSkinTempOverride = 0; // gets changed in next step
+  double currentSweatRateOverride = 0; // gets changed in next step
+  double currentTotalMetabolicOverride = 0; // gets changed in next step
+  double currentTotalWorkOverride = 0; // gets changed in next step
+  double currentSodiumSweatOverride = 0.0; // gets changed in next step
+  double currentPotassiumSweatOverride = 0.0; // gets changed in next step
 
-  double currentChlorideSweatOverride = 0.0; //gets changed in next step
+  double currentChlorideSweatOverride = 0.0; // gets changed in next step
 
   if (override->HasAchievedExerciseLevelOverride()) {
     currentAcheivedExerciseOverride = override->GetAchievedExerciseLevelOverride().GetValue();
@@ -1027,94 +1045,94 @@ void Energy::OverrideControlLoop()
 
   if ((currentAcheivedExerciseOverride < minAcheivedExerciseOverride
        || currentAcheivedExerciseOverride > maxAcheivedExerciseOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Achieved Exercise Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentCoreTempOverride < minCoreTempOverride
        || currentCoreTempOverride > maxCoreTempOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Core Temperature Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentCreatinineOverride < minCreatinineOverride
        || currentCreatinineOverride > maxCreatinineOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Creatinine Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentExerciseMAPOverride < minExerciseMAPOverride
        || currentExerciseMAPOverride > maxExerciseMAPOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Exercise Mean Arterial Pressure Delta Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentFatigueOverride < minFatigueOverride
        || currentFatigueOverride > maxFatigueOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Fatigue Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentLactateOverride < minLactateOverride
        || currentLactateOverride > maxLactateOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Lactate Production Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentSkinTempOverride < minSkinTempOverride
        || currentSkinTempOverride > maxSkinTempOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Skin Temperature Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentSweatRateOverride < minSweatRateOverride
        || currentSweatRateOverride > maxSweatRateOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Sweat Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentTotalMetabolicOverride < minTotalMetabolicOverride
        || currentTotalMetabolicOverride > maxTotalMetabolicOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Total Metabolic Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentTotalWorkOverride < minTotalWorkOverride
        || currentTotalWorkOverride > maxTotalWorkOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Total Work Rate Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentSodiumSweatOverride < minSodiumSweatOverride
        || currentSodiumSweatOverride > maxSodiumSweatOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Sodium Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentPotassiumSweatOverride < minPotassiumSweatOverride
        || currentPotassiumSweatOverride > maxPotassiumSweatOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Potassium Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   if ((currentChlorideSweatOverride < minChlorideSweatOverride
        || currentChlorideSweatOverride > maxChlorideSweatOverride)
-      && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+      && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Chloride Lost to Sweat Override (Energy) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   return;
 }

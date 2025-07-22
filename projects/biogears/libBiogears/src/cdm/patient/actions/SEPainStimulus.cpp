@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEPainStimulus::SEPainStimulus()
   : SEPatientAction()
@@ -23,13 +24,13 @@ SEPainStimulus::SEPainStimulus()
 //-----------------------------------------------------------------------------
 SEPainStimulus::~SEPainStimulus()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEPainStimulus::Clear()
+void SEPainStimulus::Invalidate()
 {
 
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_Severity);
   SAFE_DELETE(m_HalfLife);
   m_Location.clear();
@@ -43,37 +44,6 @@ bool SEPainStimulus::IsValid() const
 bool SEPainStimulus::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
-}
-//-----------------------------------------------------------------------------
-bool SEPainStimulus::Load(const CDM::PainStimulusData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  if (in.HalfLife().present()) {
-    GetHalfLife().Load(in.HalfLife().get(), rd);
-  } else {
-    GetHalfLife().Invalidate();
-  }
-  m_Location = in.Location();
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::PainStimulusData* SEPainStimulus::Unload() const
-{
-  CDM::PainStimulusData* data(new CDM::PainStimulusData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEPainStimulus::Unload(CDM::PainStimulusData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-  if (HasHalfLife())
-    data.HalfLife(std::unique_ptr<CDM::ScalarTimeData>(m_HalfLife->Unload()));
-  if (HasLocation())
-    data.Location(m_Location);
 }
 //-----------------------------------------------------------------------------
 bool SEPainStimulus::HasSeverity() const

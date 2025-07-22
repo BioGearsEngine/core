@@ -11,42 +11,27 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
 
+#include "io/cdm/Environment.h"
+#include "io/cdm/EnvironmentActions.h"
+
 namespace biogears {
-SEEnvironmentAction::SEEnvironmentAction()
-  : SEAction()
+SEEnvironmentAction::SEEnvironmentAction(Logger* logger)
+  : SEAction(logger)
 {
 }
 
 SEEnvironmentAction::~SEEnvironmentAction()
 {
-  Clear();
+  Invalidate();
 }
 
-void SEEnvironmentAction::Clear()
+void SEEnvironmentAction::Invalidate()
 {
-  SEAction::Clear();
+  SEAction::Invalidate();
 }
 
 bool SEEnvironmentAction::IsValid() const
 {
   return SEAction::IsValid();
-}
-
-bool SEEnvironmentAction::Load(const CDM::EnvironmentActionData& in)
-{
-  SEAction::Load(in);
-  return true;
-}
-
-CDM::EnvironmentActionData* SEEnvironmentAction::Unload() const
-{
-  CDM::EnvironmentActionData* data = new CDM::EnvironmentActionData();
-  Unload(*data);
-  return data;
-}
-
-void SEEnvironmentAction::Unload(CDM::EnvironmentActionData& data) const
-{
-  SEAction::Unload(data);
 }
 }

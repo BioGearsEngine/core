@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Patient xmlns="uri:/mil/tatrc/physiology/datamodel" contentVersion="Biogears_7.5.0+85" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="uri:/mil/tatrc/physiology/datamodel BioGearsDataModel.xsd">
+<<<<<<< HEAD
   <Name>Male_25_Normal</Name>
+=======
+  <Name>Male_44_Normal</Name>
+>>>>>>> b609a3f6 (abaird - making sure that the patient name and file name are the same to reduce state generation confusion)
   <Sex>Male</Sex>
   <Age readOnly="false" unit="yr" value="44"/>
   <Weight readOnly="false" unit="lb" value="170"/>

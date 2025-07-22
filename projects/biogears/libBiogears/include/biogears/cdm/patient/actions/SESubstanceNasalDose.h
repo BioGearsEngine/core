@@ -12,11 +12,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/patient/actions/SESubstanceAdministration.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 
@@ -32,13 +32,10 @@ public:
   SESubstanceNasalDose(const SESubstance& substance);
   virtual ~SESubstanceNasalDose();
 
-  virtual void Clear(); // clear memory
+  virtual void Invalidate(); // clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
-
-  virtual bool Load(const CDM::SubstanceNasalDoseData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::SubstanceNasalDoseData* Unload() const;
 
   virtual bool HasDose() const;
   virtual SEScalarMass& GetDose();
@@ -49,9 +46,6 @@ public:
 
   bool operator==(const SESubstanceNasalDose& rhs) const;
   bool operator!=(const SESubstanceNasalDose& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceNasalDoseData& data) const;
 
 private:
   SEScalarMass* m_Dose;
@@ -64,16 +58,14 @@ class BIOGEARS_API SENasalState {
 public:
   SENasalState(const SESubstance& sub);
   ~SENasalState();
-  virtual void Clear();
-
-  virtual bool Load(const CDM::NasalStateData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::NasalStateData* Unload() const;
+  virtual void Invalidate();
 
   bool Initialize(SEScalarMass& dose);
 
   SEScalarMass& GetTotalNasalDose();
-  //SEScalarMassPerVolume& GetVenaCavaConcentration();
+  // SEScalarMassPerVolume& GetVenaCavaConcentration();
 
+ 
   std::vector<SEScalarMass>& GetUnreleasedNasalMasses();
   std::vector<SEScalarMass>& GetReleasedNasalMasses();
 
@@ -86,15 +78,15 @@ public:
   bool operator==(const SENasalState& rhs) const;
   bool operator!=(const SENasalState& rhs) const;
 
-
 private:
-  virtual void Unload(CDM::NasalStateData& data) const;
   // Nasal specific values
   const SESubstance* m_Substance;
   SEScalarMass* m_TotalNasalDose;
-  //SEScalarMassPerVolume* m_VenaCavaConcentration;
+  // SEScalarMassPerVolume* m_VenaCavaConcentration;
+
   std::vector<SEScalarMass> m_UnreleasedDrugMasses;
   std::vector<SEScalarMass> m_ReleasedDrugMasses;
+
   size_t m_NumUnreleasedMasses;
   size_t m_NumReleasedMasses;
 };

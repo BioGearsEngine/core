@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarTimeMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::s_g_Per_L("s g/L");
@@ -20,7 +23,7 @@ const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::s_ug_Per_mL("s ug/mL");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::min_ug_Per_mL("min ug/mL");
 const TimeMassPerVolumeUnit TimeMassPerVolumeUnit::hr_ug_Per_mL("hr ug/mL");
 
-template class SEScalarQuantity<TimeMassPerVolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<TimeMassPerVolumeUnit>;
 
 TimeMassPerVolumeUnit::TimeMassPerVolumeUnit(const char* u)
   : TimeMassPerVolumeUnit(std::string { u })
@@ -34,23 +37,6 @@ TimeMassPerVolumeUnit::TimeMassPerVolumeUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 TimeMassPerVolumeUnit::~TimeMassPerVolumeUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarTimeMassPerVolume::SEScalarTimeMassPerVolume()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarTimeMassPerVolume::~SEScalarTimeMassPerVolume()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarTimeMassPerVolumeData* SEScalarTimeMassPerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarTimeMassPerVolumeData* data(new CDM::ScalarTimeMassPerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool TimeMassPerVolumeUnit::IsValidUnit(const char* unit)

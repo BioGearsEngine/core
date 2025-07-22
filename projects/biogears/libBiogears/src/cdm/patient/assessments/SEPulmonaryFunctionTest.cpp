@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SEPulmonaryFunctionTest::SEPulmonaryFunctionTest()
@@ -41,12 +42,12 @@ SEPulmonaryFunctionTest::SEPulmonaryFunctionTest()
 //-------------------------------------------------------------------------------
 SEPulmonaryFunctionTest::~SEPulmonaryFunctionTest()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEPulmonaryFunctionTest::Clear()
+void SEPulmonaryFunctionTest::Invalidate()
 {
-  SEPatientAssessment::Clear();
+  SEPatientAssessment::Invalidate();
   SAFE_DELETE(m_ExpiratoryReserveVolume);
   SAFE_DELETE(m_ForcedVitalCapacity);
   SAFE_DELETE(m_ForcedExpiratoryVolume);
@@ -83,53 +84,7 @@ void SEPulmonaryFunctionTest::Reset()
 
   INVALIDATE_PROPERTY(m_LungVolumePlot);
 }
-//-------------------------------------------------------------------------------
-bool SEPulmonaryFunctionTest::Load(const CDM::PulmonaryFunctionTestData& in)
-{
-  SEPatientAssessment::Load(in);
-  // TODO
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PulmonaryFunctionTestData* SEPulmonaryFunctionTest::Unload()
-{
-  CDM::PulmonaryFunctionTestData* data = new CDM::PulmonaryFunctionTestData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEPulmonaryFunctionTest::Unload(CDM::PulmonaryFunctionTestData& data)
-{
-  SEPatientAssessment::Unload(data);
-  if (m_ExpiratoryReserveVolume != nullptr)
-    data.ExpiratoryReserveVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ExpiratoryReserveVolume->Unload()));
-  if (m_ForcedVitalCapacity != nullptr)
-    data.ForcedVitalCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_ForcedVitalCapacity->Unload()));
-  if (m_ForcedExpiratoryVolume != nullptr)
-    data.ForcedExpiratoryVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ForcedExpiratoryVolume->Unload()));
-  if (m_ForcedExpiratoryFlow != nullptr)
-    data.ForcedExpiratoryFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_ForcedExpiratoryFlow->Unload()));
-  if (m_FunctionalResidualCapacity != nullptr)
-    data.FunctionalResidualCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_FunctionalResidualCapacity->Unload()));
-  if (m_InspiratoryCapacity != nullptr)
-    data.InspiratoryCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_InspiratoryCapacity->Unload()));
-  if (m_InspiratoryReserveVolume != nullptr)
-    data.InspiratoryReserveVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_InspiratoryReserveVolume->Unload()));
-  if (m_MaximumVoluntaryVentilation != nullptr)
-    data.MaximumVoluntaryVentilation(std::unique_ptr<CDM::ScalarVolumeData>(m_MaximumVoluntaryVentilation->Unload()));
-  if (m_PeakExpiratoryFlow != nullptr)
-    data.PeakExpiratoryFlow(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_PeakExpiratoryFlow->Unload()));
-  if (m_ResidualVolume != nullptr)
-    data.ResidualVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_ResidualVolume->Unload()));
-  if (m_SlowVitalCapacity != nullptr)
-    data.SlowVitalCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_SlowVitalCapacity->Unload()));
-  if (m_TotalLungCapacity != nullptr)
-    data.TotalLungCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_TotalLungCapacity->Unload()));
-  if (m_VitalCapacity != nullptr)
-    data.VitalCapacity(std::unique_ptr<CDM::ScalarVolumeData>(m_VitalCapacity->Unload()));
-  if (m_LungVolumePlot != nullptr)
-    data.LungVolumePlot(std::unique_ptr<CDM::FunctionVolumeVsTimeData>(m_LungVolumePlot->Unload()));
-}
+
 //-------------------------------------------------------------------------------
 bool SEPulmonaryFunctionTest::HasExpiratoryReserveVolume()
 {

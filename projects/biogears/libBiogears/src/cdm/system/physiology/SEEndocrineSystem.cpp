@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/physiology/SEEndocrineSystem.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/properties/SEScalarAmountPerTime.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
@@ -29,13 +31,13 @@ SEEndocrineSystem::SEEndocrineSystem(Logger* logger)
 
 SEEndocrineSystem::~SEEndocrineSystem()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
 
-void SEEndocrineSystem::Clear()
+void SEEndocrineSystem::Invalidate()
 {
-  SESystem::Clear();
+  SESystem::Invalidate();
   SAFE_DELETE(m_InsulinSynthesisRate);
   SAFE_DELETE(m_GlucagonSynthesisRate);
 }
@@ -52,35 +54,6 @@ const SEScalar* SEEndocrineSystem::GetScalar(const std::string& name)
   if (name == idGlucagonSynthesisRate)
     return &GetGlucagonSynthesisRate();
   return nullptr;
-}
-//-------------------------------------------------------------------------------
-
-bool SEEndocrineSystem::Load(const CDM::EndocrineSystemData& in)
-{
-  SESystem::Load(in);
-  if (in.InsulinSynthesisRate().present())
-    GetInsulinSynthesisRate().Load(in.InsulinSynthesisRate().get());
-  if (in.GlucagonSynthesisRate().present())
-    GetGlucagonSynthesisRate().Load(in.GlucagonSynthesisRate().get());
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::EndocrineSystemData* SEEndocrineSystem::Unload() const
-{
-  CDM::EndocrineSystemData* data = new CDM::EndocrineSystemData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEEndocrineSystem::Unload(CDM::EndocrineSystemData& data) const
-{
-  if (m_InsulinSynthesisRate != nullptr)
-    data.InsulinSynthesisRate(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_InsulinSynthesisRate->Unload()));
-  if (m_GlucagonSynthesisRate != nullptr)
-    data.GlucagonSynthesisRate(std::unique_ptr<CDM::ScalarAmountPerTimeData>(m_GlucagonSynthesisRate->Unload()));
-  SESystem::Unload(data);
 }
 //-------------------------------------------------------------------------------
 

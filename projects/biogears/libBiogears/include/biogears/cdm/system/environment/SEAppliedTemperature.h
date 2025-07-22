@@ -11,16 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include "biogears/cdm/properties/SEScalarFraction.h"
+#include <biogears/cdm/enums/SEEnvironmentEnums.h>
 #include <biogears/cdm/system/environment/actions/SEEnvironmentAction.h>
-
-CDM_BIND_DECL(AppliedTemperatureData)
+#include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarArea.h>
 
 namespace biogears {
 class SEScalar;
-class SEScalarTemperature;
-class TemperatureUnit;
-class SEScalarArea;
-class AreaUnit;
 namespace io {
   class Environment;
 }
@@ -31,18 +28,11 @@ public:
   SEAppliedTemperature(const SEAppliedTemperature& other) = delete;
   virtual ~SEAppliedTemperature();
 
-  virtual void Clear();
-
-  virtual bool Load(const CDM::AppliedTemperatureData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::AppliedTemperatureData* Unload() const;
+  virtual void Invalidate();
 
   bool operator==(SEAppliedTemperature const&) const;
   bool operator!=(SEAppliedTemperature const&) const;
 
-protected:
-  virtual void Unload(CDM::AppliedTemperatureData& data) const;
-
-public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
@@ -58,15 +48,17 @@ public:
   virtual SEScalarFraction& GetSurfaceAreaFraction();
   virtual double GetSurfaceAreaFraction() const;
 
-  virtual CDM::enumOnOff::value GetState() const;
-  virtual void SetState(CDM::enumOnOff::value onOff);
+  virtual SEOnOff GetState() const;
+  virtual void SetState(SEOnOff onOff);
 
   virtual void ToString(std::ostream& str) const;
+
+  virtual bool IsValid() const;
 
 protected:
   SEScalarTemperature* m_Temperature;
   SEScalarArea* m_SurfaceArea;
   SEScalarFraction* m_SurfaceAreaFraction;
-  CDM::enumOnOff::value m_State;
+  SEOnOff m_State;
 };
 }

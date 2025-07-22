@@ -13,16 +13,12 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
-
-CDM_BIND_DECL(AnesthesiaMachineOxygenBottleData)
+#include <biogears/cdm/properties/SEScalarVolume.h>
 
 namespace biogears {
 class SEAnesthesiaMachine;
 class SESubstanceManager;
 class SEScalar;
-class SEScalarVolume;
-class VolumeUnit;
 namespace io {
   class Anesthesia;
 }
@@ -36,15 +32,7 @@ public:
   SEAnesthesiaMachineOxygenBottle(Logger* logger);
   virtual ~SEAnesthesiaMachineOxygenBottle();
 
-  virtual void Clear();
-
-  virtual bool Load(const CDM::AnesthesiaMachineOxygenBottleData& in);
-  virtual CDM::AnesthesiaMachineOxygenBottleData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::AnesthesiaMachineOxygenBottleData& data) const;
-
-  virtual void Merge(const SEAnesthesiaMachineOxygenBottle& from);
+  virtual void Invalidate();
 
 public:
   virtual const SEScalar* GetScalar(const char* name);
@@ -58,6 +46,9 @@ public:
 
   bool operator==(SEAnesthesiaMachineOxygenBottle const& rhs) const;
   bool operator!=(SEAnesthesiaMachineOxygenBottle const& rhs) const;
+
+protected:
+  virtual void Merge(const SEAnesthesiaMachineOxygenBottle& from);
 
 protected:
   SEScalarVolume* m_Volume;

@@ -10,56 +10,43 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
-
 #include <biogears/cdm/substance/SESubstanceTissuePharmacokinetics.h>
+
+#include "io/cdm/Substance.h"
 
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
+SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(SESubstanceTissuePharmacokinetics const& obj)
+  : Loggable(obj.GetLogger())
+  , m_Name(obj.GetName())
+  , m_PartitionCoefficient(std::make_unique<SEScalar>(*obj.m_PartitionCoefficient).release())
+{
+}
 SESubstanceTissuePharmacokinetics::SESubstanceTissuePharmacokinetics(const std::string& name, Logger* logger)
   : Loggable(logger)
   , m_Name(name)
+  , m_PartitionCoefficient(std::make_unique<SEScalar>().release())
 {
-  m_PartitionCoefficient = nullptr;
 }
 //-----------------------------------------------------------------------------
+
 SESubstanceTissuePharmacokinetics::~SESubstanceTissuePharmacokinetics()
 {
-  Clear();
-}
-//-----------------------------------------------------------------------------
-void SESubstanceTissuePharmacokinetics::Clear()
-{
-  ;
+  Invalidate();
   SAFE_DELETE(m_PartitionCoefficient)
 }
 //-----------------------------------------------------------------------------
-bool SESubstanceTissuePharmacokinetics::Load(const CDM::SubstanceTissuePharmacokineticsData& in)
+void SESubstanceTissuePharmacokinetics::Invalidate()
 {
-  Clear();
-  if (in.PartitionCoefficient().present())
-    GetPartitionCoefficient().Load(in.PartitionCoefficient().get());
-  return true;
+  m_PartitionCoefficient->Invalidate();
 }
-//-----------------------------------------------------------------------------
-CDM::SubstanceTissuePharmacokineticsData* SESubstanceTissuePharmacokinetics::Unload() const
-{
-  CDM::SubstanceTissuePharmacokineticsData* data = new CDM::SubstanceTissuePharmacokineticsData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstanceTissuePharmacokinetics::Unload(CDM::SubstanceTissuePharmacokineticsData& data) const
-{
-  data.Name(m_Name);
-  if (m_PartitionCoefficient != nullptr)
-    data.PartitionCoefficient(std::unique_ptr<CDM::ScalarData>(m_PartitionCoefficient->Unload()));
-}
+
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceTissuePharmacokinetics::GetScalar(const char* name)
 {
-  return GetScalar(std::string{ name });
+  return GetScalar(std::string { name });
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstanceTissuePharmacokinetics::GetScalar(const std::string& name)
@@ -100,14 +87,14 @@ double SESubstanceTissuePharmacokinetics::GetPartitionCoefficient() const
 }
 //-----------------------------------------------------------------------------
 //-------------------------------------------------------------------------------
-bool SESubstanceTissuePharmacokinetics::operator==( const SESubstanceTissuePharmacokinetics& rhs) const
+bool SESubstanceTissuePharmacokinetics::operator==(const SESubstanceTissuePharmacokinetics& rhs) const
 {
   bool equivilant = m_Name == rhs.m_Name;
   equivilant &= (m_PartitionCoefficient && rhs.m_PartitionCoefficient) ? m_PartitionCoefficient->operator==(*rhs.m_PartitionCoefficient) : m_PartitionCoefficient == rhs.m_PartitionCoefficient;
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SESubstanceTissuePharmacokinetics::operator!=( const SESubstanceTissuePharmacokinetics& rhs) const
+bool SESubstanceTissuePharmacokinetics::operator!=(const SESubstanceTissuePharmacokinetics& rhs) const
 {
   return !(*this == rhs);
 }

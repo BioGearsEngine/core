@@ -32,11 +32,8 @@ protected:
 public:
   virtual ~SEGasSubstanceQuantity();
 
-  virtual void Clear() override;
   virtual void Invalidate() override;
-
-  virtual bool Load(const CDM::GasSubstanceQuantityData& in);
-  virtual CDM::GasSubstanceQuantityData* Unload() override;
+  virtual void MakeInvalid() override;
 
   bool operator==(SEGasTransportSubstance const&) const override;
   bool operator!=(SEGasTransportSubstance const&) const override;
@@ -44,9 +41,6 @@ public:
   bool operator!=(SESubstanceQuantity const&) const override;
   bool operator==(const SEGasSubstanceQuantity&) const;
   bool operator!=(const SEGasSubstanceQuantity&) const;
-
-protected:
-  virtual void Unload(CDM::GasSubstanceQuantityData& data);
 
 public:
   virtual void SetToZero();

@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEAnesthesiaMachineConfiguration.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
@@ -33,12 +36,12 @@ SEAnesthesiaMachineConfiguration::SEAnesthesiaMachineConfiguration(SESubstanceMa
 //-----------------------------------------------------------------------------
 SEAnesthesiaMachineConfiguration::~SEAnesthesiaMachineConfiguration()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEAnesthesiaMachineConfiguration::Clear()
+void SEAnesthesiaMachineConfiguration::Invalidate()
 {
-  SEAnesthesiaMachineAction::Clear();
+  SEAnesthesiaMachineAction::Invalidate();
   InvalidateConfigurationFile();
   SAFE_DELETE(m_Configuration);
 }
@@ -47,32 +50,7 @@ bool SEAnesthesiaMachineConfiguration::IsValid() const
 {
   return SEAnesthesiaMachineAction::IsValid() && (HasConfiguration() || HasConfigurationFile());
 }
-//-----------------------------------------------------------------------------
-bool SEAnesthesiaMachineConfiguration::Load(const CDM::AnesthesiaMachineConfigurationData& in, std::default_random_engine *rd)
-{
-  SEAnesthesiaMachineAction::Load(in);
-  if (in.ConfigurationFile().present())
-    SetConfigurationFile(in.ConfigurationFile().get());
-  if (in.Configuration().present())
-    GetConfiguration().Load(in.Configuration().get());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::AnesthesiaMachineConfigurationData* SEAnesthesiaMachineConfiguration::Unload() const
-{
-  CDM::AnesthesiaMachineConfigurationData* data = new CDM::AnesthesiaMachineConfigurationData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEAnesthesiaMachineConfiguration::Unload(CDM::AnesthesiaMachineConfigurationData& data) const
-{
-  SEAnesthesiaMachineAction::Unload(data);
-  if (HasConfiguration())
-    data.Configuration(std::unique_ptr<CDM::AnesthesiaMachineData>(m_Configuration->Unload()));
-  else if (HasConfigurationFile())
-    data.ConfigurationFile(m_ConfigurationFile);
-}
+
 //-----------------------------------------------------------------------------
 bool SEAnesthesiaMachineConfiguration::HasConfiguration() const
 {

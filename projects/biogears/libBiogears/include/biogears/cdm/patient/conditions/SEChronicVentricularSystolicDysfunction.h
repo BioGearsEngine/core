@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/exports.h>
 #include <biogears/cdm/patient/conditions/SEChronicHeartFailure.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class BIOGEARS_API SEChronicVentricularSystolicDysfunction : public SEChronicHeartFailure {
@@ -23,26 +22,19 @@ public:
   SEChronicVentricularSystolicDysfunction();
   virtual ~SEChronicVentricularSystolicDysfunction();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate() override ; //clear memory
 
-  virtual bool IsValid() const;
-
-  virtual bool Load(const CDM::ChronicVentricularSystolicDysfunctionData& in);
-  virtual CDM::ChronicVentricularSystolicDysfunctionData* Unload() const;
+  virtual bool IsValid() const override ;
 
   bool operator==(SEChronicVentricularSystolicDysfunction const&) const;
   bool operator!=(SEChronicVentricularSystolicDysfunction const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const;
+  virtual std::string GetName() const  override { return "ChronicVentricularSystolicDysfunction"; }
+  virtual const char* GetName_cStr() const  override { return "ChronicVentricularSystolicDysfunction"; }
 
-public:
-  virtual std::string GetName() const { return "ChronicVentricularSystolicDysfunction"; }
-  virtual const char* GetName_cStr() const { return "ChronicVentricularSystolicDysfunction"; }
-
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
 };

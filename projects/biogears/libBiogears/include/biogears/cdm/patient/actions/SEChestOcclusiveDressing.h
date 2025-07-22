@@ -12,7 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+
 
 #include <random>
 
@@ -29,19 +30,17 @@ public:
   static constexpr const char* TypeTag() { return "SEChestOcclusiveDressing"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Invalidate() override; //clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
-  virtual void SetActive(bool b);
+  
+  void SetActive(bool b);
 
-  virtual bool Load(const CDM::ChestOcclusiveDressingData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ChestOcclusiveDressingData* Unload() const override;
-
-  virtual CDM::enumSide::value GetSide() const;
-  virtual void SetSide(CDM::enumSide::value LeftOrRight);
-  virtual bool HasSide() const;
-  virtual void InvalidateSide();
+  SESide GetSide() const;
+  void SetSide(SESide LeftOrRight);
+  bool HasSide() const;
+  void InvalidateSide();
 
   virtual void ToString(std::ostream& str) const override;
     
@@ -49,11 +48,7 @@ public:
   bool operator!=( const SEChestOcclusiveDressing& rhs) const;
 
 protected:
-  virtual void Unload(CDM::ChestOcclusiveDressingData& data) const;
-
-
-protected:
-  CDM::enumSide::value m_Side;
-  CDM::enumOnOff::value m_State;
+  SESide m_Side;
+  SEOnOff m_State;
 };
 }

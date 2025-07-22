@@ -14,35 +14,25 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-CDM_BIND_DECL(ConditionData);
-
 namespace biogears {
 class SESubstanceManager;
 namespace io {
-  class Scenario;
+  class Conditions;
 }
 } // namespace biogears
 
 namespace biogears {
 class BIOGEARS_API SECondition : public Loggable {
-  friend io::Scenario;
+  friend io::Conditions;
 
 public:
   SECondition();
   virtual ~SECondition();
 
-  virtual void Clear(); // Deletes all members
-
-  static SECondition* newFromBind(const CDM::ConditionData& condition, SESubstanceManager& substances);
-
-  virtual bool Load(const CDM::ConditionData& in);
-  virtual CDM::ConditionData* Unload() const;
+  virtual void Invalidate(); // Deletes all members
 
   virtual bool operator==(SECondition const&) const = 0;
   virtual bool operator!=(SECondition const&) const = 0;
-
-protected:
-  void Unload(CDM::ConditionData& data) const;
 
 public:
   /** Test if the action has all data it needs */
@@ -71,6 +61,9 @@ inline std::ostream& operator<<(std::ostream& out, const SECondition& a)
 }
 } // namespace biogears
 
+#pragma warning(disable : 4661)
+
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SECondition*>;
+extern template class vector<biogears::SECondition*>;
 }
+#pragma warning(default : 4661)

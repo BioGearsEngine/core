@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SESodaLimeFailure.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,12 +26,12 @@ SESodaLimeFailure::SESodaLimeFailure()
 //-------------------------------------------------------------------------------
 SESodaLimeFailure::~SESodaLimeFailure()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SESodaLimeFailure::Clear()
+void SESodaLimeFailure::Invalidate()
 {
-  SEAnesthesiaMachineAction::Clear();
+  SEAnesthesiaMachineAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -41,27 +44,7 @@ bool SESodaLimeFailure::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-//-------------------------------------------------------------------------------
-bool SESodaLimeFailure::Load(const CDM::SodaLimeFailureData& in, std::default_random_engine *rd)
-{
-  SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SodaLimeFailureData* SESodaLimeFailure::Unload() const
-{
-  CDM::SodaLimeFailureData* data = new CDM::SodaLimeFailureData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESodaLimeFailure::Unload(CDM::SodaLimeFailureData& data) const
-{
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-}
+
 //-------------------------------------------------------------------------------
 bool SESodaLimeFailure::HasSeverity() const
 {

@@ -12,21 +12,29 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <memory>
+#include <random>
 
 #include "biogears/cdm/CommonDataModel.h"
 #include <biogears/exports.h>
 
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 
-#define CDM_PATIENT_NUTRITION_UNMARSHAL_HELPER(in, out, func)                        \
+#define CDM_PATIENT_NUTRITION_PTR_MARSHALL_HELPER(in, out, func)                         \
   if (in.m_##func) {                                                                 \
     out.func(std::make_unique<std::remove_reference<decltype(out.func())>::type>()); \
-    io::PatientNutrition::UnMarshall(*in.m_##func, out.func());                      \
+    io::PatientNutrition::Marshall(*in.m_##func, out.func());                        \
   }
 
-#define CDM_OPTIONAL_PATIENT_NUTRITION_UNMARSHAL_HELPER(in, out, func) \
-  if (in.m_##func) {                                                   \
-    io::PatientNutrition::UnMarshall(*in.m_##func, out.func());        \
+#define CDM_OPTIONAL_PATIENT_NUTRITION_PTR_MARSHALL_HELPER(in, out, func) \
+  if (in.m_##func) {                                                  \
+    io::PatientNutrition::Marshall(*in.m_##func, out.func());         \
+  }
+
+#define CDM_PATIENT_NUTRITION_COPY(type, in, out)  \
+  {                                                \
+    CDM::type##Data middle;                      \
+    io::PatientNutrition::Marshall(in, middle);    \
+    io::PatientNutrition::UnMarshall(middle, out); \
   }
 
 namespace biogears {
@@ -35,32 +43,32 @@ class SENutrition;
 namespace io {
   class BIOGEARS_PRIVATE_API PatientNutrition {
   public:
-    //template <typename SE, typename XSD>  option
+    // template <typename SE, typename XSD>  option
     template <typename SE, typename XSD>
-    static void Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
+    static void UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out);
     template <typename SE, typename XSD>
-    static void UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
-    //class SENutrition
-    static void Marshall(const CDM::NutritionData& in, SENutrition& out);
-    static void UnMarshall(const SENutrition& in, CDM::NutritionData& out);
+    static void Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out);
+    // class SENutrition
+    static void UnMarshall(const CDM::NutritionData& in, SENutrition& out, std::default_random_engine* rd = nullptr);
+    static void Marshall(const SENutrition& in, CDM::NutritionData& out);
   };
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void PatientNutrition::Marshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
+  void PatientNutrition::UnMarshall(xsd::cxx::tree::optional<XSD> const& option_in, SE& out)
   {
     if (!option_in.present()) {
-      out.Clear();
+      out.Invalidate();
     } else {
-      Marshall(option_in.get(), out);
+      UnMarshall(option_in.get(), out);
     }
   }
   //----------------------------------------------------------------------------------
   template <typename SE, typename XSD>
-  void PatientNutrition::UnMarshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
+  void PatientNutrition::Marshall(const SE& in, xsd::cxx::tree::optional<XSD>& option_out)
   {
     auto item = std::make_unique<XSD>();
-    UnMarshall(in, *item);
+    Marshall(in, *item);
     option_out.set(*item);
   }
 } // Namespace IO
-} //Namespace Biogears
+} // Namespace Biogears

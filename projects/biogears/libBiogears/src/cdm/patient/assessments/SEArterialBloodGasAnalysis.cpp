@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/schema/cdm/Properties.hxx>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SEArterialBloodGasAnalysis::SEArterialBloodGasAnalysis()
@@ -31,12 +32,12 @@ SEArterialBloodGasAnalysis::SEArterialBloodGasAnalysis()
 //-------------------------------------------------------------------------------
 SEArterialBloodGasAnalysis::~SEArterialBloodGasAnalysis()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEArterialBloodGasAnalysis::Clear()
+void SEArterialBloodGasAnalysis::Invalidate()
 {
-  SEPatientAssessment::Clear();
+  SEPatientAssessment::Invalidate();
   SAFE_DELETE(m_pH);
   SAFE_DELETE(m_PartialPressureOxygen);
   SAFE_DELETE(m_PartialPressureCarbonDioxide);
@@ -55,36 +56,7 @@ void SEArterialBloodGasAnalysis::Reset()
   INVALIDATE_PROPERTY(m_StandardBicarbonate);
   INVALIDATE_PROPERTY(m_OxygenSaturation);
 }
-//-------------------------------------------------------------------------------
-bool SEArterialBloodGasAnalysis::Load(const CDM::ArterialBloodGasAnalysisData& in)
-{
-  SEPatientAssessment::Load(in);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ArterialBloodGasAnalysisData* SEArterialBloodGasAnalysis::Unload()
-{
-  CDM::ArterialBloodGasAnalysisData* data = new CDM::ArterialBloodGasAnalysisData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEArterialBloodGasAnalysis::Unload(CDM::ArterialBloodGasAnalysisData& data)
-{
-  SEPatientAssessment::Unload(data);
-  if (m_pH != nullptr)
-    data.pH(std::unique_ptr<CDM::ScalarData>(m_pH->Unload()));
-  if (m_PartialPressureOxygen != nullptr)
-    data.PartialPressureOxygen(std::unique_ptr<CDM::ScalarPressureData>(m_PartialPressureOxygen->Unload()));
-  if (m_PartialPressureCarbonDioxide != nullptr)
-    data.PartialPressureCarbonDioxide(std::unique_ptr<CDM::ScalarPressureData>(m_PartialPressureCarbonDioxide->Unload()));
-  if (m_BaseExcess != nullptr)
-    data.BaseExcess(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_BaseExcess->Unload()));
-  if (m_StandardBicarbonate != nullptr)
-    data.StandardBicarbonate(std::unique_ptr<CDM::ScalarAmountPerVolumeData>(m_StandardBicarbonate->Unload()));
-  if (m_OxygenSaturation != nullptr)
-    data.OxygenSaturation(std::unique_ptr<CDM::ScalarData>(m_OxygenSaturation->Unload()));
-}
+
 //-------------------------------------------------------------------------------
 bool SEArterialBloodGasAnalysis::HaspH()
 {

@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEConsumeNutrients.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
@@ -25,12 +26,12 @@ namespace biogears {
   //-----------------------------------------------------------------------------
   SEConsumeNutrients::~SEConsumeNutrients()
   {
-    Clear();
+    Invalidate();
   }
   //-----------------------------------------------------------------------------
-  void SEConsumeNutrients::Clear()
+  void SEConsumeNutrients::Invalidate()
   {
-    SEPatientAction::Clear();
+    SEPatientAction::Invalidate();
     SAFE_DELETE(m_Nutrition);
     InvalidateNutritionFile();
   }
@@ -45,35 +46,9 @@ namespace biogears {
     return IsValid();
   }
   //-----------------------------------------------------------------------------
-  bool SEConsumeNutrients::Load(const CDM::ConsumeNutrientsData& in, std::default_random_engine *rd)
-  {
-    SEPatientAction::Load(in);
-    if (in.Nutrition().present())
-      GetNutrition().Load(in.Nutrition().get(), rd);
-    else if (in.NutritionFile().present())
-      SetNutritionFile(in.NutritionFile().get());
-    return true;
-  }
-  //-----------------------------------------------------------------------------
-  CDM::ConsumeNutrientsData* SEConsumeNutrients::Unload() const
-  {
-    CDM::ConsumeNutrientsData* data(new CDM::ConsumeNutrientsData());
-    Unload(*data);
-    return data;
-  }
-  //-----------------------------------------------------------------------------
-  void SEConsumeNutrients::Unload(CDM::ConsumeNutrientsData& data) const
-  {
-    SEPatientAction::Unload(data);
-    if (HasNutrition())
-      data.Nutrition(std::unique_ptr<CDM::NutritionData>(m_Nutrition->Unload()));
-    if (HasNutritionFile())
-      data.NutritionFile(m_NutritionFile);
-  }
-  //-----------------------------------------------------------------------------
   bool SEConsumeNutrients::HasNutrition() const
   {
-    return m_Nutrition != nullptr;
+    return m_Nutrition != nullptr && m_Nutrition->IsValid();
   }
   //-----------------------------------------------------------------------------
   SENutrition& SEConsumeNutrients::GetNutrition()

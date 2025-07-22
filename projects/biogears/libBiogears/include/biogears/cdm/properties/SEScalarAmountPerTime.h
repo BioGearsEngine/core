@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API AmountPerTimeUnit : public CCompoundUnit {
@@ -38,17 +37,8 @@ public:
   static AmountPerTimeUnit umol_Per_min;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<AmountPerTimeUnit>;
-
-class BIOGEARS_API SEScalarAmountPerTime : public SEScalarQuantity<AmountPerTimeUnit> {
-
-public:
-  SEScalarAmountPerTime();
-  virtual ~SEScalarAmountPerTime();
-
-  CDM::ScalarAmountPerTimeData* Unload() const override;
-
-  using SEScalarQuantity<AmountPerTimeUnit>::SetValue;
-  using SEScalarQuantity<AmountPerTimeUnit>::GetValue;
-};
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<AmountPerTimeUnit>;
+using SEScalarAmountPerTime  = SEScalarQuantity<AmountPerTimeUnit>;
+#pragma warning(default : 4661)
 }

@@ -42,11 +42,9 @@ protected:
 public:
   virtual ~SELiquidSubstanceQuantity();
 
-  virtual void Clear() override;
   virtual void Invalidate() override;
+  virtual void MakeInvalid() override;
 
-  virtual bool Load(const CDM::LiquidSubstanceQuantityData& in);
-  virtual CDM::LiquidSubstanceQuantityData* Unload() override;
 
   bool operator==(SELiquidTransportSubstance const&) const override;
   bool operator!=(SELiquidTransportSubstance const&) const override;
@@ -55,8 +53,6 @@ public:
   bool operator==(SELiquidSubstanceQuantity const&) const;
   bool operator!=(SELiquidSubstanceQuantity const&) const;
 
-protected:
-  virtual void Unload(CDM::LiquidSubstanceQuantityData& data);
 
 public:
   virtual void SetToZero();

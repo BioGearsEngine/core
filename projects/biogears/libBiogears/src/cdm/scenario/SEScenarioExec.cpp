@@ -11,6 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEScenarioExec.h>
 
+#include "io/biogears/BioGears.h"
+#include "io/cdm/DataRequests.h"
+#include "io/cdm/Scenario.h"
+
 #include <biogears/filesystem/path.h>
 
 #include <biogears/cdm/Serializer.h>
@@ -26,12 +30,15 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/SEScenarioAutoSerialization.h>
 #include <biogears/cdm/scenario/SEScenarioInitialParameters.h>
 #include <biogears/cdm/utils/TimingProfile.h>
+#include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/Scenario.hxx>
 
 #include <algorithm>
 #include <random>
 #include <vector>
+
+#pragma warning(disable : 4661)
 namespace biogears {
 SEScenarioExec::SEScenarioExec(PhysiologyEngine& engine)
   : Loggable(engine.GetLogger())
@@ -56,10 +63,13 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const char* resultsFile
 //-----------------------------------------------------------------------------
 bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resultsFile, SEScenarioCustomExec* cExec)
 {
-  auto scenarioData = std::unique_ptr<CDM::ScenarioData>(scenario.Unload());
+  auto scenarioData = std::make_unique<CDM::ScenarioData>();
+  io::Scenario::Marshall(scenario, *scenarioData);
   auto memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
 
-  if (!memory_safe_scenario->Load(*scenarioData)) {
+  try {
+    io::Scenario::UnMarshall(*scenarioData, *memory_safe_scenario);
+  } catch (CommonDataModelException /* ex*/) {
     return false;
   }
   try {
@@ -76,26 +86,28 @@ bool SEScenarioExec::Execute(SEScenario const& scenario, const std::string& resu
       // When we know the physiolgoy engine is good to go and not try to cashe state.
 
       memory_safe_scenario = std::make_unique<SEScenario>(m_Engine.GetSubstanceManager());
-      if (!memory_safe_scenario->Load(*scenarioData)) {
+      try {
+        io::Scenario::UnMarshall(*scenarioData, *memory_safe_scenario);
+      } catch (CommonDataModelException /* ex*/) {
         return false;
       }
-
       // WE ARE OVERWRITING ANY DATA REQUESTS IN THE STATE WITH WHATS IN THE SCENARIO!!!
       // Make a copy of the data requests, not this clears out data requests from the engine
-      CDM::DataRequestManagerData* drData = memory_safe_scenario->GetDataRequestManager().Unload();
-      m_Engine.GetEngineTrack()->GetDataRequestManager().Load(*drData, m_Engine.GetSubstanceManager());
-      delete drData;
+      auto drData = std::make_unique<CDM::DataRequestManagerData>();
+      io::DataRequests::Marshall(memory_safe_scenario->GetDataRequestManager(), *drData);
+      io::DataRequests::UnMarshall(*drData, m_Engine.GetSubstanceManager(), m_Engine.GetEngineTrack()->GetDataRequestManager());
+
       // if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
     } else if (scenarioData->InitialParameters().present()) {
 
-      m_Engine.GetEngineTrack()->GetDataRequestManager().Load(scenarioData->DataRequests().get(), m_Engine.GetSubstanceManager());
+      io::DataRequests::UnMarshall(scenarioData->DataRequests().get(), m_Engine.GetSubstanceManager(), m_Engine.GetEngineTrack()->GetDataRequestManager());
 
       // if (!m_Engine.GetEngineTrack()->GetDataRequestManager().HasResultsFilename())
       m_Engine.GetEngineTrack()->GetDataRequestManager().SetResultsFilename(resultsFile);
 
       auto& params = memory_safe_scenario->GetInitialParameters();
-      m_Engine.SetTrackStabilizationFlag(params.TrackingStabilization() == CDM::enumOnOff::On);
+      m_Engine.SetTrackStabilizationFlag(params.TrackingStabilization());
 
       // Do we have any conditions
       std::vector<const SECondition*> conditions;
@@ -186,10 +198,11 @@ bool SEScenarioExec::Execute(const std::string& scenarioFile, const std::string&
     }
 
     SEScenario scenario(m_Engine.GetSubstanceManager());
-    if (!scenario.Load(*scenarioData)) {
+    try {
+      io::Scenario::UnMarshall(*scenarioData, scenario);
+    } catch (CommonDataModelException /* ex*/) {
       return false;
     }
-
     bool success = Execute(scenario, rFile, cExec);
     return success;
   } catch (CommonDataModelException& ex) {
@@ -274,13 +287,14 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
               serializationTime_s = 0;
               serializationFileName.str("");
               serializationFileName << serializationFileNameBase;
-              if (scenario.GetAutoSerialization().GetPeriodTimeStamps() == CDM::enumOnOff::On)
+              if (scenario.GetAutoSerialization().GetPeriodTimeStamps() == SEOnOff::On)
                 serializationFileName << "@" << m_Engine.GetSimulationTime(TimeUnit::s);
               serializationFileName << ".xml";
               m_Engine.SaveStateToFile(serializationFileName.str());
-              if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
-                m_Engine.LoadState(*m_Engine.GetStateData());
-                m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
+              if (scenario.GetAutoSerialization().GetReloadState() == SEOnOff::On) {
+                {
+                  CDM_BIOGEARS_COPY(BioGearsState, dynamic_cast<BioGearsEngine&>(m_Engine), dynamic_cast<BioGearsEngine&>(m_Engine))
+                } m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
               }
             }
           }
@@ -289,8 +303,8 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
             serializationFileName.str("");
             serializationFileName << serializationFileNameBase << "-" << actionName << "-@" << m_Engine.GetSimulationTime(TimeUnit::s) << ".xml";
             m_Engine.SaveStateToFile(serializationFileName.str());
-            if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
-              m_Engine.LoadState(*m_Engine.GetStateData());
+            if (scenario.GetAutoSerialization().GetReloadState() == SEOnOff::On) {
+              CDM_BIOGEARS_COPY(BioGearsState, dynamic_cast<BioGearsEngine&>(m_Engine), dynamic_cast<BioGearsEngine&>(m_Engine))
               m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
             }
           }
@@ -311,7 +325,7 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
           profiler.Reset("Status");
           Info(m_ss);
         }
-        if (m_Engine.GetPatient().IsEventActive(CDM::enumPatientEvent::IrreversibleState))
+        if (m_Engine.GetPatient().IsEventActive(SEPatientEventType::IrreversibleState))
           return false; // Patient is for all intents and purposes dead, or out at least out of its methodology bounds, quit running
       }
       continue;
@@ -322,7 +336,7 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
       break;
     }
 
-    if (scenario.GetAutoSerialization().IsValid() && scenario.GetAutoSerialization().GetAfterActions() == CDM::enumOnOff::On) { // If we are testing force serialization after any action with this
+    if (scenario.GetAutoSerialization().IsValid() && scenario.GetAutoSerialization().GetAfterActions() == SEOnOff::On) { // If we are testing force serialization after any action with this
       // Pull out the action type/name for file naming
       m_ss << *a;
       size_t start = m_ss.str().find(": ") + 2;
@@ -333,18 +347,18 @@ bool SEScenarioExec::ProcessActions(SEScenario& scenario)
       serializationFileName.str("");
       serializationFileName << serializationFileNameBase << "-" << actionName << "-@" << m_Engine.GetSimulationTime(TimeUnit::s) << ".xml";
       m_Engine.SaveStateToFile(serializationFileName.str());
-      if (scenario.GetAutoSerialization().GetReloadState() == CDM::enumOnOff::On) {
-        m_Engine.LoadState(*m_Engine.GetStateData());
+      if (scenario.GetAutoSerialization().GetReloadState() == SEOnOff::On) {
+        CDM_BIOGEARS_COPY(BioGearsState, dynamic_cast<BioGearsEngine&>(m_Engine), dynamic_cast<BioGearsEngine&>(m_Engine))
         m_Engine.SaveStateToFile(serializationFileName.str() + ".Reloaded.xml");
       }
       serializeAction = true; // Serialize after the next time step
     }
 
-    if (m_Engine.GetPatient().IsEventActive(CDM::enumPatientEvent::IrreversibleState))
+    if (m_Engine.GetPatient().IsEventActive(SEPatientEventType::IrreversibleState))
       return false; // Patient is for all intents and purposes dead, or out at least out of its methodology bounds, quit running
   }
   m_ss << "It took " << profiler.GetElapsedTime_s("Total") << "s to run this simulation";
-  profiler.Clear();
+  profiler.Invalidate();
   Info(m_ss);
 
   return !err;

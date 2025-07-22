@@ -12,6 +12,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/Systems/Respiratory.h>
 
+#include "io/cdm/Physiology.h"
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/circuit/fluid/SEFluidCircuit.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitPath.h>
@@ -48,7 +51,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
 
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4305 4244) // Disable some warning messages
@@ -71,18 +74,18 @@ Respiratory::Respiratory(BioGears& bg)
   , m_GasTransporter(VolumePerTimeUnit::L_Per_s, VolumeUnit::L, VolumeUnit::L, NoUnit::unitless, GetLogger())
   , m_AerosolTransporter(VolumePerTimeUnit::mL_Per_s, VolumeUnit::mL, MassUnit::ug, MassPerVolumeUnit::ug_Per_mL, GetLogger())
 {
-  Clear();
+  Invalidate();
   m_TuningFile = "";
 }
 
 Respiratory::~Respiratory()
 {
-  Clear();
+  Invalidate();
 }
 
-void Respiratory::Clear()
+void Respiratory::Invalidate()
 {
-  SERespiratorySystem::Clear();
+  SERespiratorySystem::Invalidate();
   m_Patient = nullptr;
   m_PatientActions = nullptr;
 
@@ -99,6 +102,7 @@ void Respiratory::Clear()
   m_LeftLungExtravascular = nullptr;
   m_RightLungExtravascular = nullptr;
   m_Trachea = nullptr;
+  m_pleuralCavity = nullptr;
   m_AortaO2 = nullptr;
   m_AortaCO2 = nullptr;
   m_MechanicalVentilatorConnection = nullptr;
@@ -143,8 +147,8 @@ void Respiratory::Clear()
   m_GroundToConnection = nullptr;
 
   m_BloodPHRunningAverage.Reset();
-  m_ArterialO2Average_mmHg.Reset();
-  m_ArterialCO2Average_mmHg.Reset();
+  m_ArterialOxygenAverage_mmHg.Reset();
+  m_ArterialCarbonDioxideAverage_mmHg.Reset();
 
   m_OverrideRRBaseline_Per_min = 0.0;
 }
@@ -176,6 +180,7 @@ void Respiratory::Initialize()
   m_VentilationFrequency_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
   m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
   m_DriverPressureMin_cmH2O = m_DefaultDrivePressure_cmH2O;
+
 
   //The peak driver pressure is the pressure above the default pressure
   m_PeakRespiratoryDrivePressure_cmH2O = m_Patient->GetRespiratoryDriverAmplitudeBaseline(PressureUnit::cmH2O);
@@ -224,7 +229,7 @@ void Respiratory::Initialize()
   GetRespirationCyclePercentComplete().SetValue(0.0);
   GetRespirationDriverFrequency().SetValue(RespirationRate_Per_min, FrequencyUnit::Per_min);
   GetRespirationDriverPressure().SetValue(m_PeakRespiratoryDrivePressure_cmH2O, PressureUnit::cmH2O);
-  GetCarricoIndex().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
+  GetCarricoIndex().SetValue(m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg) / m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2().GetDefinition()).GetFractionAmount().GetValue(), PressureUnit::mmHg);
   GetInspiratoryExpiratoryRatio().SetValue(0.5);
   GetMeanPleuralPressure().SetValue(AbsolutePleuralPressure_mmHg - EnvironmentPressure_mmHg, PressureUnit::mmHg);
   GetTotalAlveolarVentilation().SetValue(RespirationRate_Per_min * (TidalVolume_L - DeadSpace_L), VolumePerTimeUnit::L_Per_min);
@@ -237,111 +242,6 @@ void Respiratory::Initialize()
 
   //Get the fluid mechanics to a good starting point
   TuneCircuit();
-}
-
-bool Respiratory::Load(const CDM::BioGearsRespiratorySystemData& in)
-{
-  if (!SERespiratorySystem::Load(in))
-    return false;
-
-  m_InitialExpiratoryReserveVolume_L = in.InitialExpiratoryReserveVolume_L();
-  m_InitialFunctionalResidualCapacity_L = in.InitialFunctionalResidualCapacity_L();
-  m_InitialInspiratoryCapacity_L = in.InitialInspiratoryCapacity_L();
-  m_InitialResidualVolume_L = in.InitialResidualVolume_L();
-
-  m_bNotBreathing = in.NotBreathing();
-  m_TopBreathTotalVolume_L = in.TopBreathTotalVolume_L();
-  m_TopBreathAlveoliVolume_L = in.TopBreathAlveoliVolume_L();
-  m_TopBreathDeadSpaceVolume_L = in.TopBreathDeadSpaceVolume_L();
-  m_TopBreathPleuralPressure_cmH2O = in.TopBreathPleuralPressure_cmH2O();
-  m_LastCardiacCycleBloodPH = in.LastCardiacCycleBloodPH();
-  m_PreviousTotalLungVolume_L = in.PreviousTotalLungVolume_L();
-  m_BloodPHRunningAverage.Load(in.BloodPHRunningAverage());
-
-  m_BreathingCycle = in.BreathingCycle();
-  m_ArterialO2PartialPressure_mmHg = in.ArterialOxygenPressure_mmHg();
-  m_ArterialCO2PartialPressure_mmHg = in.ArterialCarbonDioxidePressure_mmHg();
-  m_BreathingCycleTime_s = in.BreathingCycleTime_s();
-  m_BreathTimeExhale_min = in.BreathTimeExhale_min();
-  m_DefaultDrivePressure_cmH2O = in.DefaultDrivePressure_cmH2O();
-  m_DriverPressure_cmH2O = in.DriverPressure_cmH2O();
-  m_DriverPressureMin_cmH2O = in.DriverPressureMin_cmH2O();
-  m_ElapsedBreathingCycleTime_min = in.ElapsedBreathingCycleTime_min();
-  m_IEscaleFactor = in.IEscaleFactor();
-  m_InstantaneousFunctionalResidualCapacity_L = in.InstantaneousFunctionalResidualCapacity_L();
-  m_MaxDriverPressure_cmH2O = in.MaxDriverPressure_cmH2O();
-  m_PeakRespiratoryDrivePressure_cmH2O = in.PeakRespiratoryDrivePressure_cmH2O();
-
-  m_VentilationFrequency_Per_min = in.VentilationFrequency_Per_min();
-  m_ArterialO2Average_mmHg.Load(in.ArterialOxygenAverage_mmHg());
-  m_ArterialCO2Average_mmHg.Load(in.ArterialCarbonDioxideAverage_mmHg());
-
-  m_ConsciousBreathing = in.ConsciousBreathing();
-  m_ConsciousRespirationPeriod_s = in.ConsciousRespirationPeriod_s();
-  m_ConsciousRespirationRemainingPeriod_s = in.ConsciousRespirationRemainingPeriod_s();
-  m_ExpiratoryReserveVolumeFraction = in.ExpiratoryReserveVolumeFraction();
-  m_InspiratoryCapacityFraction = in.InspiratoryCapacityFraction();
-  m_ConsciousStartPressure_cmH2O = in.ConsciousStartPressure_cmH2O();
-  m_ConsciousEndPressure_cmH2O = in.ConsciousEndPressure_cmH2O();
-
-  m_HadAirwayObstruction = in.HadAirwayObstruction();
-  m_HadBronchoconstriction = in.HadBronchoconstriction();
-
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsRespiratorySystemData* Respiratory::Unload() const
-{
-  CDM::BioGearsRespiratorySystemData* data = new CDM::BioGearsRespiratorySystemData();
-  Unload(*data);
-  return data;
-}
-void Respiratory::Unload(CDM::BioGearsRespiratorySystemData& data) const
-{
-  SERespiratorySystem::Unload(data);
-
-  data.InitialExpiratoryReserveVolume_L(m_InitialExpiratoryReserveVolume_L);
-  data.InitialFunctionalResidualCapacity_L(m_InitialFunctionalResidualCapacity_L);
-  data.InitialInspiratoryCapacity_L(m_InitialInspiratoryCapacity_L);
-  data.InitialResidualVolume_L(m_InitialResidualVolume_L);
-
-  data.NotBreathing(m_bNotBreathing);
-  data.TopBreathTotalVolume_L(m_TopBreathTotalVolume_L);
-  data.TopBreathAlveoliVolume_L(m_TopBreathAlveoliVolume_L);
-  data.TopBreathDeadSpaceVolume_L(m_TopBreathDeadSpaceVolume_L);
-  data.TopBreathPleuralPressure_cmH2O(m_TopBreathPleuralPressure_cmH2O);
-  data.LastCardiacCycleBloodPH(m_LastCardiacCycleBloodPH);
-  data.PreviousTotalLungVolume_L(m_PreviousTotalLungVolume_L);
-  data.BloodPHRunningAverage(std::unique_ptr<CDM::RunningAverageData>(m_BloodPHRunningAverage.Unload()));
-
-  data.BreathingCycle(m_BreathingCycle);
-  data.ArterialOxygenPressure_mmHg(m_ArterialO2PartialPressure_mmHg);
-  data.ArterialCarbonDioxidePressure_mmHg(m_ArterialCO2PartialPressure_mmHg);
-  data.BreathingCycleTime_s(m_BreathingCycleTime_s);
-  data.BreathTimeExhale_min(m_BreathTimeExhale_min);
-  data.DefaultDrivePressure_cmH2O(m_DefaultDrivePressure_cmH2O);
-  data.DriverPressure_cmH2O(m_DriverPressure_cmH2O);
-  data.DriverPressureMin_cmH2O(m_DriverPressureMin_cmH2O);
-  data.ElapsedBreathingCycleTime_min(m_ElapsedBreathingCycleTime_min);
-  data.IEscaleFactor(m_IEscaleFactor);
-  data.InstantaneousFunctionalResidualCapacity_L(m_InstantaneousFunctionalResidualCapacity_L);
-  data.MaxDriverPressure_cmH2O(m_MaxDriverPressure_cmH2O);
-  data.PeakRespiratoryDrivePressure_cmH2O(m_PeakRespiratoryDrivePressure_cmH2O);
-
-  data.VentilationFrequency_Per_min(m_VentilationFrequency_Per_min);
-  data.ArterialOxygenAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialO2Average_mmHg.Unload()));
-  data.ArterialCarbonDioxideAverage_mmHg(std::unique_ptr<CDM::RunningAverageData>(m_ArterialCO2Average_mmHg.Unload()));
-
-  data.ConsciousBreathing(m_ConsciousBreathing);
-  data.ConsciousRespirationPeriod_s(m_ConsciousRespirationPeriod_s);
-  data.ConsciousRespirationRemainingPeriod_s(m_ConsciousRespirationRemainingPeriod_s);
-  data.ExpiratoryReserveVolumeFraction(m_ExpiratoryReserveVolumeFraction);
-  data.InspiratoryCapacityFraction(m_InspiratoryCapacityFraction);
-  data.ConsciousStartPressure_cmH2O(m_ConsciousStartPressure_cmH2O);
-  data.ConsciousEndPressure_cmH2O(m_ConsciousEndPressure_cmH2O);
-
-  data.HadAirwayObstruction(m_HadAirwayObstruction);
-  data.HadBronchoconstriction(m_HadBronchoconstriction);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -380,6 +280,7 @@ void Respiratory::SetUp()
   m_LeftLung = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::LeftLung);
   m_RightLung = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::RightLung);
   m_Lungs = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Lungs);
+  m_pleuralCavity = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::PleuralCavity);
   m_LeftLungExtravascular = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::LeftLungIntracellular);
   m_RightLungExtravascular = m_data.GetCompartments().GetLiquidCompartment(BGE::ExtravascularCompartment::RightLungIntracellular);
   m_Trachea = m_data.GetCompartments().GetGasCompartment(BGE::PulmonaryCompartment::Trachea);
@@ -534,7 +435,7 @@ void Respiratory::PreProcess()
   ConsciousRespiration();
   NasalCannula();
   MechanicalVentilation();
-
+  AdjustPleuralCavity();
   RespiratoryDriver();
 }
 
@@ -743,7 +644,7 @@ void Respiratory::ProcessAerosolSubstances()
 
     // Apply the BronchioleModifier dilation effect
     // This is all just tuned to Albuterol - it'll work for other substances, and can be tuned using the other parameters (especially BronchioleModifier)
-    if (subQ->GetSubstance().GetState() == CDM::enumSubstanceState::Liquid) {
+    if (subQ->GetSubstance().GetState() == SESubstanceState::Liquid) {
       // Sum the Bronchiole Effects
       // Must be positive
       double bronchioleModifier = subQ->GetSubstance().GetAerosolization().GetBronchioleModifier().GetValue();
@@ -804,7 +705,7 @@ void Respiratory::MechanicalVentilation()
   if (m_data.GetActions().GetPatientActions().HasMechanicalVentilation()) {
     SEMechanicalVentilation* mv = m_data.GetActions().GetPatientActions().GetMechanicalVentilation();
     // You only get here if action is On
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::MechanicalVentilator);
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::MechanicalVentilator);
 
     //Set the substance volume fractions ********************************************
     std::vector<SESubstanceFraction*> gasFractions = mv->GetGasFractions();
@@ -856,9 +757,9 @@ void Respiratory::MechanicalVentilation()
       //Pressure is same as ambient
       m_GroundToConnection->GetNextPressureSource().SetValue(0.0, PressureUnit::cmH2O);
     }
-  } else if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::MechanicalVentilator) {
+  } else if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::MechanicalVentilator) {
     // Was just turned off
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
   }
 }
 
@@ -875,7 +776,7 @@ void Respiratory::NasalCannula()
   if (m_data.GetActions().GetPatientActions().HasNasalCannula()) {
     SENasalCannula* nc = m_data.GetActions().GetPatientActions().GetNasalCannula();
     // You only get here if action is On
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::NasalCannula);
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::NasalCannula);
 
     double flow_L_Per_min = 0.0;
     SEFluidCircuit* RespirationCircuit = &m_data.GetCircuits().GetActiveRespiratoryCircuit();
@@ -897,9 +798,9 @@ void Respiratory::NasalCannula()
     double tankResistance_cmH2O_s_Per_L = tankPressure_cmH2O / (flow_L_Per_min / 60.0);
     OxygenTankToNosepiece->GetNextResistance().SetValue(tankResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
 
-  } else if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::NasalCannula) {
+  } else if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::NasalCannula) {
     // Was just turned off
-    m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+    m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
   }
 }
 //--------------------------------------------------------------------------------------------------
@@ -918,14 +819,14 @@ void Respiratory::RespiratoryDriver()
   ///\ToDo:  Running averages were mostly used for chemoreceptors that have been moved to Nervous.
   /// ToDo:  However, they are still used in some calculations in CalculateVitals.  Should we move/consolidate these?
   //Keep a running average of the Arterial Partial Pressures
-  m_ArterialO2Average_mmHg.Sample(m_AortaO2->GetPartialPressure(PressureUnit::mmHg));
-  m_ArterialCO2Average_mmHg.Sample(m_AortaCO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialOxygenAverage_mmHg.Sample(m_AortaO2->GetPartialPressure(PressureUnit::mmHg));
+  m_ArterialCarbonDioxideAverage_mmHg.Sample(m_AortaCO2->GetPartialPressure(PressureUnit::mmHg));
   //Reset at start of cardiac cycle
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
-    m_ArterialO2PartialPressure_mmHg = m_ArterialO2Average_mmHg.Value();
-    m_ArterialCO2PartialPressure_mmHg = m_ArterialCO2Average_mmHg.Value();
-    m_ArterialO2Average_mmHg.Reset();
-    m_ArterialCO2Average_mmHg.Reset();
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
+    m_ArterialO2PartialPressure_mmHg = m_ArterialOxygenAverage_mmHg.Value();
+    m_ArterialCO2PartialPressure_mmHg = m_ArterialCarbonDioxideAverage_mmHg.Value();
+    m_ArterialOxygenAverage_mmHg.Reset();
+    m_ArterialCarbonDioxideAverage_mmHg.Reset();
   }
 
 #ifdef TUNING
@@ -997,7 +898,7 @@ void Respiratory::RespiratoryDriver()
 
     Apnea();
 
-    if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::AnesthesiaMachine || m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::MechanicalVentilator) {
+    if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::AnesthesiaMachine || m_data.GetAirwayMode() == SEBioGearsAirwayMode::MechanicalVentilator) {
       m_DriverPressure_cmH2O = m_DefaultDrivePressure_cmH2O;
       m_BreathingCycleTime_s = m_ElapsedBreathingCycleTime_min * 60.0; //Set driver cycle to match elapsed cycle (dictated by ventilator) so that when we turn machine off we re-start spontaneous breathing in a good place
     }
@@ -1027,7 +928,7 @@ void Respiratory::ProcessDriverActions()
 {
   // Process Cardiac Arrest action
   double cardiacArrestEffect = 1.0;
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::CardiacArrest)) {
+  if (m_Patient->IsEventActive(SEPatientEventType::CardiacArrest)) {
     cardiacArrestEffect = 0.0;
   }
   //Process drug effects--adjust them based on neuromuscular block level
@@ -1060,10 +961,10 @@ void Respiratory::ProcessDriverActions()
     auto& inflammation = m_data.GetBloodChemistry().GetInflammatoryResponse();
     double baselineRR_Per_min = m_Patient->GetRespirationRateBaseline(FrequencyUnit::Per_min);
     double sigmoidInput = 1.0 - m_data.GetBloodChemistry().GetInflammatoryResponse().GetTissueIntegrity().GetValue();
-    if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Infection)) {
+    if (inflammation.HasInflammationSource(SEInflammationSource::Infection)) {
       infectionModifier = baselineRR_Per_min * std::pow(sigmoidInput, 2.0) / (std::pow(sigmoidInput, 2.0) + std::pow(0.4, 2));
     }
-    if (inflammation.HasInflammationSource(CDM::enumInflammationSource::Hemorrhage)) {
+    if (inflammation.HasInflammationSource(SEInflammationSource::Hemorrhage)) {
       double volumeEffect = m_data.GetCardiovascular().GetBloodVolume(VolumeUnit::mL) / m_data.GetPatient().GetBloodVolumeBaseline(VolumeUnit::mL);
       volumeEffect = std::min(volumeEffect, 1.0);
       sigmoidInput = 1.0 - volumeEffect;
@@ -1278,15 +1179,15 @@ void Respiratory::Intubation()
   }
 
   if (m_PatientActions->HasIntubation()) {
-    m_data.SetIntubation(CDM::enumOnOff::On);
+    m_data.SetIntubation(SEOnOff::On);
     SEIntubation* intubation = m_PatientActions->GetIntubation();
     switch (intubation->GetType()) {
-    case CDM::enumIntubationType::Tracheal: {
+    case SEIntubationType::Tracheal: {
       // The proper way to intubate
       // Airway mode handles this case by default
       break;
     }
-    case CDM::enumIntubationType::Esophageal: {
+    case SEIntubationType::Esophageal: {
       // Allow air flow between Airway and Stomach
       ///\todo Make this a modifier (i.e. multiplier), instead of setting it directly
       m_MouthToStomach->GetNextResistance().SetValue(1.2, FlowResistanceUnit::cmH2O_s_Per_L);
@@ -1295,11 +1196,11 @@ void Respiratory::Intubation()
       m_MouthToTrachea->GetNextResistance().SetValue(m_dDefaultOpenResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       break;
     }
-    case CDM::enumIntubationType::RightMainstem: {
+    case SEIntubationType::RightMainstem: {
       m_TracheaToLeftBronchi->GetNextResistance().SetValue(m_dRespOpenResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       break;
     }
-    case CDM::enumIntubationType::LeftMainstem: {
+    case SEIntubationType::LeftMainstem: {
       m_TracheaToRightBronchi->GetNextResistance().SetValue(m_dRespOpenResistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       break;
     }
@@ -1307,7 +1208,7 @@ void Respiratory::Intubation()
       break;
     }
   } else {
-    m_data.SetIntubation(CDM::enumOnOff::Off);
+    m_data.SetIntubation(SEOnOff::Off);
   }
 }
 
@@ -1336,14 +1237,16 @@ void Respiratory::Pneumothorax()
     // Maximum flow resistance for the chest cavity or alveoli leak
     double dPneumoMaxFlowResistance_cmH2O_s_Per_L = m_dDefaultOpenResistance_cmH2O_s_Per_L;
     // Flow resistance for the decompression needle, if used
-    double dNeedleFlowResistance_cmH2O_s_Per_L = 15.0;
+    double dNeedleFlowResistance_cmH2O_s_Per_L = 15.0/13.0;
+    // Flow resistance for the chest tube, if used
+    double dChestTubeFlowResistance_cmH2O_s_Per_L = 15.0;
     // Increase in pleural pressure restricts blood return to heart.  Model this by increasing vena cava->right heart resistance
     SEFluidCircuitPath* venousReturn = m_data.GetCircuits().GetCardiovascularCircuit().GetPath(BGE::CardiovascularPath::VenaCavaToRightAtrium1);
     double nextVenousResistance = venousReturn->GetResistanceBaseline(FlowResistanceUnit::mmHg_s_Per_mL);
     double normalPleuralPressure_mmHg = -4.2;
     double venousResistanceModifier = GeneralMath::LinearInterpolator(normalPleuralPressure_mmHg, 3.0, 1.0, 4.0, GetMeanPleuralPressure(PressureUnit::mmHg));
     venousResistanceModifier = std::max(1.0, venousResistanceModifier);
-    nextVenousResistance *= venousResistanceModifier;
+    nextVenousResistance *= 2.1*venousResistanceModifier;
     venousReturn->GetNextResistance().SetValue(nextVenousResistance, FlowResistanceUnit::mmHg_s_Per_mL);
 
     if (m_PatientActions->HasLeftOpenTensionPneumothorax()) {
@@ -1351,15 +1254,18 @@ void Respiratory::Pneumothorax()
       double severity = m_PatientActions->GetLeftOpenTensionPneumothorax()->GetSeverity().GetValue();
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0 && !m_PatientActions->HasLeftChestOcclusiveDressing()) {
-        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
+        resistance_cmH2O_s_Per_L = -544.44 * severity + 554.44; //dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToLeftChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       if (severity == 0) {
-        m_EnvironmentToLeftChestLeak->SetNextValve(CDM::enumOpenClosed::Open);
+        m_EnvironmentToLeftChestLeak->SetNextValve(SEOpenClosed::Open);
       }
       if (m_PatientActions->HasLeftNeedleDecompression()) {
         DoLeftNeedleDecompression(dNeedleFlowResistance_cmH2O_s_Per_L);
+      }
+      if (m_PatientActions->HasLeftChestTube()) {
+        DoLeftChestTube(dChestTubeFlowResistance_cmH2O_s_Per_L);
       }
     }
 
@@ -1368,17 +1274,22 @@ void Respiratory::Pneumothorax()
       double severity = m_PatientActions->GetRightOpenTensionPneumothorax()->GetSeverity().GetValue();
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0 && !m_PatientActions->HasRightChestOcclusiveDressing()) {
-        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
+        resistance_cmH2O_s_Per_L = -544.44 * severity + 554.44; //dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_EnvironmentToRightChestLeak->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       if (severity == 0) {
-        m_EnvironmentToRightChestLeak->SetNextValve(CDM::enumOpenClosed::Open);
+        m_EnvironmentToRightChestLeak->SetNextValve(SEOpenClosed::Open);
       }
 
       if (m_PatientActions->HasRightNeedleDecompression()) {
         DoRightNeedleDecompression(dNeedleFlowResistance_cmH2O_s_Per_L);
       }
+
+      if (m_PatientActions->HasRightChestTube()) {
+        DoRightChestTube(dChestTubeFlowResistance_cmH2O_s_Per_L);
+      }
+
     }
 
     if (m_PatientActions->HasLeftClosedTensionPneumothorax()) {
@@ -1386,17 +1297,22 @@ void Respiratory::Pneumothorax()
       double severity = m_PatientActions->GetLeftClosedTensionPneumothorax()->GetSeverity().GetValue();
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0) {
-        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
+        resistance_cmH2O_s_Per_L = -544.44 * severity + 554.44; //dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_LeftAlveoliLeakToLeftPleuralCavity->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       if (severity == 0) {
-        m_LeftAlveoliLeakToLeftPleuralCavity->SetNextValve(CDM::enumOpenClosed::Open);
+        m_LeftAlveoliLeakToLeftPleuralCavity->SetNextValve(SEOpenClosed::Open);
       }
 
       if (m_PatientActions->HasLeftNeedleDecompression()) {
         DoLeftNeedleDecompression(dNeedleFlowResistance_cmH2O_s_Per_L);
       }
+
+      if (m_PatientActions->HasLeftChestTube()) {
+        DoLeftChestTube(dChestTubeFlowResistance_cmH2O_s_Per_L);
+      }
+
     }
 
     if (m_PatientActions->HasRightClosedTensionPneumothorax()) {
@@ -1404,35 +1320,40 @@ void Respiratory::Pneumothorax()
       double severity = m_PatientActions->GetRightClosedTensionPneumothorax()->GetSeverity().GetValue();
       double resistance_cmH2O_s_Per_L = dPneumoMaxFlowResistance_cmH2O_s_Per_L;
       if (severity > 0.0) {
-        resistance_cmH2O_s_Per_L = dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
+        resistance_cmH2O_s_Per_L = -544.44 * severity + 554.44; //dPneumoMinFlowResistance_cmH2O_s_Per_L / std::pow(severity, 2.0);
       }
       resistance_cmH2O_s_Per_L = std::min(resistance_cmH2O_s_Per_L, dPneumoMaxFlowResistance_cmH2O_s_Per_L);
       m_RightAlveoliLeakToRightPleuralCavity->GetNextResistance().SetValue(resistance_cmH2O_s_Per_L, FlowResistanceUnit::cmH2O_s_Per_L);
       if (severity == 0) {
-        m_RightAlveoliLeakToRightPleuralCavity->SetNextValve(CDM::enumOpenClosed::Open);
+        m_RightAlveoliLeakToRightPleuralCavity->SetNextValve(SEOpenClosed::Open);
       }
 
       if (m_PatientActions->HasRightNeedleDecompression()) {
         DoRightNeedleDecompression(dNeedleFlowResistance_cmH2O_s_Per_L);
       }
+      if (m_PatientActions->HasRightChestTube()) {
+        DoRightChestTube(dChestTubeFlowResistance_cmH2O_s_Per_L);
+      }
     }
 
     //Check for interventions without insult
     if (!m_PatientActions->HasLeftClosedTensionPneumothorax() && !m_PatientActions->HasLeftOpenTensionPneumothorax()) {
-      if (m_PatientActions->HasLeftChestOcclusiveDressing() || m_PatientActions->HasLeftNeedleDecompression()) {
+      if (m_PatientActions->HasLeftChestOcclusiveDressing() || m_PatientActions->HasLeftNeedleDecompression() || m_PatientActions->HasLeftChestTube()) {
         /// \error Patient: Cannot perform an intervention if Tension Pneumothorax is not present on that side.
         Error("Cannot perform an intervention if Tension Pneumothorax is not present on that side.");
         m_PatientActions->RemoveLeftChestOcclusiveDressing();
         m_PatientActions->RemoveLeftNeedleDecompression();
+        m_PatientActions->RemoveLeftChestTube();
         return;
       }
     }
     if (!m_PatientActions->HasRightClosedTensionPneumothorax() && !m_PatientActions->HasRightOpenTensionPneumothorax()) {
-      if (m_PatientActions->HasRightChestOcclusiveDressing() || m_PatientActions->HasRightNeedleDecompression()) {
+      if (m_PatientActions->HasRightChestOcclusiveDressing() || m_PatientActions->HasRightNeedleDecompression() || m_PatientActions->HasRightChestTube()) {
         /// \error Patient: Cannot perform an intervention if Tension Pneumothorax is not present on that side.
         Error("Cannot perform an intervention if Tension Pneumothorax is not present on that side.");
         m_PatientActions->RemoveRightChestOcclusiveDressing();
         m_PatientActions->RemoveRightNeedleDecompression();
+        m_PatientActions->RemoveRightChestTube();
         return;
       }
     }
@@ -1451,6 +1372,13 @@ void Respiratory::Pneumothorax()
       Error("Cannot perform a Chest Occlusive Dressing intervention if Tension Pneumothorax is not present");
       m_PatientActions->RemoveLeftChestOcclusiveDressing();
       m_PatientActions->RemoveRightChestOcclusiveDressing();
+      return;
+    }
+    if (m_PatientActions->HasChestTube()) {
+      /// \error Patient: can't process a chest occlusive dressing if no pneumothorax is present
+      Error("Cannot perform a Chest Tube intervention if Tension Pneumothorax is not present");
+      m_PatientActions->RemoveLeftChestTube();
+      m_PatientActions->RemoveRightChestTube();
       return;
     }
   }
@@ -1553,6 +1481,24 @@ void Respiratory::ProcessConsciousRespiration(SEConsciousRespirationCommand& cmd
 
 //--------------------------------------------------------------------------------------------------
 /// \brief
+/// Right Side Needle Decompression
+///
+/// \param  dFlowResistance - Resistance value for air flow through the needle
+///
+/// \details
+/// Used for right side needle decompression. this is an intervention (action) used to treat right
+/// side tension pneumothorax
+//--------------------------------------------------------------------------------------------------
+void Respiratory::DoRightNeedleDecompression(double dFlowResistance)
+{
+  //Leak flow resistance that is scaled in proportion to Lung resistance, depending on severity
+  double dScalingFactor = 0.5; //Tuning parameter to allow gas flow due to needle decompression using lung resistance as reference
+  double dFlowResistanceRightNeedle = dScalingFactor * dFlowResistance;
+  m_RightPleuralCavityToEnvironment->GetNextResistance().SetValue(dFlowResistanceRightNeedle, FlowResistanceUnit::cmH2O_s_Per_L);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
 /// Left Side Needle Decompression
 ///
 /// \param  dFlowResistance - Resistance value for air flow through the needle
@@ -1579,12 +1525,71 @@ void Respiratory::DoLeftNeedleDecompression(double dFlowResistance)
 /// Used for right side needle decompression. this is an intervention (action) used to treat right
 /// side tension pneumothorax
 //--------------------------------------------------------------------------------------------------
-void Respiratory::DoRightNeedleDecompression(double dFlowResistance)
+void Respiratory::DoRightChestTube(double ctFlowResistance)
 {
   //Leak flow resistance that is scaled in proportion to Lung resistance, depending on severity
   double dScalingFactor = 0.5; //Tuning parameter to allow gas flow due to needle decompression using lung resistance as reference
-  double dFlowResistanceRightNeedle = dScalingFactor * dFlowResistance;
+  double dFlowResistanceRightNeedle = dScalingFactor * ctFlowResistance;
   m_RightPleuralCavityToEnvironment->GetNextResistance().SetValue(dFlowResistanceRightNeedle, FlowResistanceUnit::cmH2O_s_Per_L);
+
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// Left Side Needle Decompression
+///
+/// \param  dFlowResistance - Resistance value for air flow through the needle
+///
+/// \details
+/// Used for left side needle decompression. this is an intervention (action) used to treat left
+/// side tension pneumothorax
+//--------------------------------------------------------------------------------------------------
+void Respiratory::DoLeftChestTube(double ctFlowResistance)
+{
+  //Leak flow resistance that is scaled in proportion to Lung resistance, depending on severity
+  double dScalingFactor = 0.5; //Tuning parameter to allow gas flow due to needle decompression using lung resistance as reference
+  double dFlowResistanceLeftNeedle = dScalingFactor * ctFlowResistance;
+  m_LeftPleuralCavityToEnvironment->GetNextResistance().SetValue(dFlowResistanceLeftNeedle, FlowResistanceUnit::cmH2O_s_Per_L);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// \brief
+/// adjust pleural cavity pressure after injury
+///
+///
+/// \details
+/// Need a way to return pressure after a surgical proceedure. Since we don't consider the biomechanics 
+/// of the lungs expansion reducing the volume in the pleural space after chest tube, we will 
+/// manually move volume to ground as a result of the proceedure
+//--------------------------------------------------------------------------------------------------
+void Respiratory::AdjustPleuralCavity()
+{
+  if (m_PatientActions->HasRightChestTube()) {
+
+    double cavityPressure = m_RightPleuralCavity->GetPressure().GetValue(PressureUnit::cmH2O);
+
+    //lets reduce plueral pressure slowly
+    m_RightPleuralCavity->GetNextPressure().SetReadOnly(false);
+    m_RightPleuralCavity->GetNextVolume().SetReadOnly(false);
+
+    if (m_RightPleuralCavity->GetVolume().GetValue(VolumeUnit::mL) > 550.0) {
+      m_RightPleuralCavity->GetNextVolume().DecrementValue(0.1, VolumeUnit::mL);
+    }
+  }
+
+   if (m_PatientActions->HasLeftChestTube()) {
+
+    double cavityPressure = m_LeftPleuralCavity->GetPressure().GetValue(PressureUnit::cmH2O);
+
+    //lets reduce plueral pressure slowly
+    m_LeftPleuralCavity->GetNextPressure().SetReadOnly(false);
+    m_LeftPleuralCavity->GetNextVolume().SetReadOnly(false);
+
+    if (m_LeftPleuralCavity->GetVolume().GetValue(VolumeUnit::mL) > 550.0) {
+      m_LeftPleuralCavity->GetNextVolume().DecrementValue(0.1, VolumeUnit::mL);
+    }
+  }
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1812,28 +1817,28 @@ void Respiratory::CalculateVitalSigns()
   double arterialPartialPressureO2_mmHg = m_data.GetBloodChemistry().GetArterialOxygenPressure(PressureUnit::mmHg);
   double fractionInspiredO2 = 0.0;
   switch (m_data.GetAirwayMode()) {
-  case CDM::enumBioGearsAirwayMode::Free:
-    fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+  case SEBioGearsAirwayMode::Free:
+    fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2().GetDefinition()).GetFractionAmount().GetValue();
     break;
-  case CDM::enumBioGearsAirwayMode::AnesthesiaMachine:
+  case SEBioGearsAirwayMode::AnesthesiaMachine:
     fractionInspiredO2 = m_data.GetAnesthesiaMachine().GetOxygenFraction().GetValue();
     break;
-  case CDM::enumBioGearsAirwayMode::MechanicalVentilator:
+  case SEBioGearsAirwayMode::MechanicalVentilator:
     fractionInspiredO2 = m_data.GetActions().GetPatientActions().GetMechanicalVentilation()->GetGasFraction(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
     break;
-  case CDM::enumBioGearsAirwayMode::Inhaler:
+  case SEBioGearsAirwayMode::Inhaler:
     //Unclear what O2 fraction in an inhaler is, let this case flow into default for now.
   default:
     //Use environment as default
-    fractionInspiredO2 = fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2()).GetFractionAmount().GetValue();
+    fractionInspiredO2 = fractionInspiredO2 = m_data.GetEnvironment().GetConditions().GetAmbientGas(m_data.GetSubstances().GetO2().GetDefinition()).GetFractionAmount().GetValue();
   }
   GetCarricoIndex().SetValue(arterialPartialPressureO2_mmHg / fractionInspiredO2, PressureUnit::mmHg);
 
   /// \event Patient: Start of exhale/inhale
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfExhale))
-    m_Patient->SetEvent(CDM::enumPatientEvent::StartOfExhale, false, m_data.GetSimulationTime());
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfInhale))
-    m_Patient->SetEvent(CDM::enumPatientEvent::StartOfInhale, false, m_data.GetSimulationTime());
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfExhale))
+    m_Patient->SetEvent(SEPatientEventType::StartOfExhale, false, m_data.GetSimulationTime());
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfInhale))
+    m_Patient->SetEvent(SEPatientEventType::StartOfInhale, false, m_data.GetSimulationTime());
 
   //Record values at the breathing inflection points (i.e. switch between inhale and exhale)
   // Temporal tolerance to avoid accidental entry in the the inhalation and exhalation code blocks
@@ -1844,13 +1849,13 @@ void Respiratory::CalculateVitalSigns()
 
   if (m_BreathingCycle && ((GetTotalLungVolume(VolumeUnit::L) - m_PreviousTotalLungVolume_L) > ZERO_APPROX)
       && (m_ElapsedBreathingCycleTime_min > dTimeTol)) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::StartOfInhale, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::StartOfInhale, true, m_data.GetSimulationTime());
     // Calculate Respiration Rate and track time and update cycle flag
     double RespirationRate_Per_min = 0.0;
     RespirationRate_Per_min = 1.0 / m_ElapsedBreathingCycleTime_min;
     if (m_data.GetActions().GetPatientActions().HasOverride()
         && m_data.GetActions().GetPatientActions().GetOverride()->HasRespirationRateOverride()
-        && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == CDM::enumOnOff::Off) {
+        && m_data.GetActions().GetPatientActions().GetOverride()->GetOverrideConformance() == SEOnOff::Off) {
       RespirationRate_Per_min = m_data.GetActions().GetPatientActions().GetOverride()->GetRespirationRateOverride(FrequencyUnit::Per_min);
     }
 
@@ -1897,9 +1902,10 @@ void Respiratory::CalculateVitalSigns()
   } else if (!m_BreathingCycle
              && (m_PreviousTotalLungVolume_L - GetTotalLungVolume(VolumeUnit::L) > ZERO_APPROX)
              && (m_ElapsedBreathingCycleTime_min > dTimeTol)) {
-    m_Patient->SetEvent(CDM::enumPatientEvent::StartOfExhale, true, m_data.GetSimulationTime());
+    m_Patient->SetEvent(SEPatientEventType::StartOfExhale, true, m_data.GetSimulationTime());
     m_BreathTimeExhale_min = m_ElapsedBreathingCycleTime_min;
     m_BreathingCycle = true;
+    
     m_TopBreathTotalVolume_L = GetTotalLungVolume(VolumeUnit::L);
     m_TopBreathAlveoliVolume_L = m_RightAlveoli->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftAlveoli->GetNextVolume().GetValue(VolumeUnit::L);
     m_TopBreathDeadSpaceVolume_L = m_RightBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_LeftBronchi->GetNextVolume().GetValue(VolumeUnit::L) + m_Trachea->GetVolume(VolumeUnit::L);
@@ -1909,24 +1915,24 @@ void Respiratory::CalculateVitalSigns()
       //Check for acute lung injury and acute respiratory distress
       if (GetCarricoIndex().GetValue(PressureUnit::mmHg) < 100.0) {
         /// \event Patient: Severe ARDS: Carrico Index is below 100 mmHg
-        m_Patient->SetEvent(CDM::enumPatientEvent::SevereAcuteRespiratoryDistress, true, m_data.GetSimulationTime()); /// \cite ranieriacute
-        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteRespiratoryDistress, false, m_data.GetSimulationTime()); /// \cite ranieriacute
-        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteLungInjury, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::SevereAcuteRespiratoryDistress, true, m_data.GetSimulationTime()); /// \cite ranieriacute
+        m_Patient->SetEvent(SEPatientEventType::AcuteRespiratoryDistress, false, m_data.GetSimulationTime()); /// \cite ranieriacute
+        m_Patient->SetEvent(SEPatientEventType::AcuteLungInjury, false, m_data.GetSimulationTime());
       } else if (GetCarricoIndex().GetValue(PressureUnit::mmHg) < 200.0) {
         /// \event Patient: Acute Respiratory Distress: Carrico Index is below 200 mmHg
-        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteRespiratoryDistress, true, m_data.GetSimulationTime()); /// \cite ranieriacute
-        m_Patient->SetEvent(CDM::enumPatientEvent::SevereAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
-        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteLungInjury, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::AcuteRespiratoryDistress, true, m_data.GetSimulationTime()); /// \cite ranieriacute
+        m_Patient->SetEvent(SEPatientEventType::SevereAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::AcuteLungInjury, false, m_data.GetSimulationTime());
       } else if (GetCarricoIndex().GetValue(PressureUnit::mmHg) < 300.0) {
         /// \event Patient: Acute Lung Injury: Carrico Index is below 300 mmHg
-        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteLungInjury, true, m_data.GetSimulationTime()); /// \cite ranieriacute
-        m_Patient->SetEvent(CDM::enumPatientEvent::SevereAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
-        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::AcuteLungInjury, true, m_data.GetSimulationTime()); /// \cite ranieriacute
+        m_Patient->SetEvent(SEPatientEventType::SevereAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::AcuteRespiratoryDistress, false, m_data.GetSimulationTime());
       } else {
         /// \event Patient: End ARDS: Carrico Index is above 305 mmHg
-        m_Patient->SetEvent(CDM::enumPatientEvent::SevereAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
-        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteRespiratoryDistress, false, m_data.GetSimulationTime());
-        m_Patient->SetEvent(CDM::enumPatientEvent::AcuteLungInjury, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::SevereAcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::AcuteRespiratoryDistress, false, m_data.GetSimulationTime());
+        m_Patient->SetEvent(SEPatientEventType::AcuteLungInjury, false, m_data.GetSimulationTime());
       }
     }
   }
@@ -1940,12 +1946,12 @@ void Respiratory::CalculateVitalSigns()
   }
 
   //at the end check to see if they are not breathing and update respiration rate, dont update if anesthesia machine is connected
-  if (m_bNotBreathing && m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::Free) {
+  if (m_bNotBreathing && m_data.GetAirwayMode() == SEBioGearsAirwayMode::Free) {
     GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
   }
 
     //there is an issue with the driver logic where the elapsed breathing time doesn't update when you set anesthesia to zero
-  if (m_data.GetAirwayMode() == CDM::enumBioGearsAirwayMode::AnesthesiaMachine && m_data.GetAnesthesiaMachine().GetRespiratoryRate().GetValue() == 0) {
+  if (m_data.GetAirwayMode() == SEBioGearsAirwayMode::AnesthesiaMachine && m_data.GetAnesthesiaMachine().GetRespiratoryRate().GetValue() == 0) {
     GetRespirationRate().SetValue(0.0, FrequencyUnit::Per_min);
   }
 
@@ -1957,7 +1963,7 @@ void Respiratory::CalculateVitalSigns()
   //Keep a running average of the pH
   m_BloodPHRunningAverage.Sample(m_data.GetBloodChemistry().GetArterialBloodPH().GetValue());
   //Reset at start of cardiac cycle
-  if (m_Patient->IsEventActive(CDM::enumPatientEvent::StartOfCardiacCycle)) {
+  if (m_Patient->IsEventActive(SEPatientEventType::StartOfCardiacCycle)) {
     m_LastCardiacCycleBloodPH = m_BloodPHRunningAverage.Value();
     m_BloodPHRunningAverage.Reset();
   }
@@ -1968,24 +1974,24 @@ void Respiratory::CalculateVitalSigns()
     if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) < 8) {
       /// \event Patient: Bradypnea: Respiration rate is below 10 breaths per minute
       /// The patient has bradypnea.
-      m_Patient->SetEvent(CDM::enumPatientEvent::Bradypnea, true, m_data.GetSimulationTime()); /// \cite overdyk2007continuous
+      m_Patient->SetEvent(SEPatientEventType::Bradypnea, true, m_data.GetSimulationTime()); /// \cite overdyk2007continuous
     } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) >= 10) // offset by 2
     {
       /// \event Patient: End Bradypnea Event. The respiration rate has risen above 10.
       /// The patient is no longer considered to have bradypnea.
-      m_Patient->SetEvent(CDM::enumPatientEvent::Bradypnea, false, m_data.GetSimulationTime());
+      m_Patient->SetEvent(SEPatientEventType::Bradypnea, false, m_data.GetSimulationTime());
     }
 
     //Tachypnea
     if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) > 20) {
       /// \event Patient: Tachypnea: Respiration rate is above 20 breaths per minute.
       /// The patient has tachypnea.
-      m_Patient->SetEvent(CDM::enumPatientEvent::Tachypnea, true, m_data.GetSimulationTime()); /// \cite
-    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) <= 18) // offset by 2 // && m_Patient->GetEventDuration(CDM::enumPatientEvent::Tachypnea, TimeUnit::s) > 5 for time based segmentation
+      m_Patient->SetEvent(SEPatientEventType::Tachypnea, true, m_data.GetSimulationTime()); /// \cite
+    } else if (GetRespirationRate().GetValue(FrequencyUnit::Per_min) <= 18) // offset by 2 // && m_Patient->GetEventDuration(SEPatientEventType::Tachypnea, TimeUnit::s) > 5 for time based segmentation
     {
       /// \event Patient: End Tachypnea Event. The respiration rate has fallen below 19.5.
       /// The patient is no longer considered to have tachypnea.
-      m_Patient->SetEvent(CDM::enumPatientEvent::Tachypnea, false, m_data.GetSimulationTime());
+      m_Patient->SetEvent(SEPatientEventType::Tachypnea, false, m_data.GetSimulationTime());
     }
 
     double highPh = 8.5;
@@ -1994,7 +2000,7 @@ void Respiratory::CalculateVitalSigns()
     if (m_LastCardiacCycleBloodPH < 7.35 && m_ArterialCO2PartialPressure_mmHg > 47.0) {
       /// \event Patient: Respiratory Acidosis: event is triggered when blood pH is below 7.36
       /// The patient has respiratory acidosis.
-      m_Patient->SetEvent(CDM::enumPatientEvent::RespiratoryAcidosis, true, m_data.GetSimulationTime());
+      m_Patient->SetEvent(SEPatientEventType::RespiratoryAcidosis, true, m_data.GetSimulationTime());
 
       /// \event Patient: arterial blood ph has dropped below 6.5.
       if (m_LastCardiacCycleBloodPH < lowPh) {
@@ -2002,24 +2008,24 @@ void Respiratory::CalculateVitalSigns()
         Warning(ss);
         /// \irreversible Extreme respiratory Acidosis: blood pH below 6.5.
         if (!m_PatientActions->HasOverride()) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       }
     } else if (m_LastCardiacCycleBloodPH >= 7.38 && m_ArterialCO2PartialPressure_mmHg < 44.0) {
       /// \event Patient: End Respiratory Acidosis Event. The pH value has risen above 7.38.
       /// The patient is no longer considered to have respiratory acidosis.
-      m_Patient->SetEvent(CDM::enumPatientEvent::RespiratoryAcidosis, false, m_data.GetSimulationTime());
+      m_Patient->SetEvent(SEPatientEventType::RespiratoryAcidosis, false, m_data.GetSimulationTime());
     }
 
     ////Respiratory Alkalosis
     if (m_LastCardiacCycleBloodPH > 7.45 && m_ArterialCO2PartialPressure_mmHg < 37.0) {
       /// \event Patient: Respiratory Alkalosis: event is triggered when blood pH is above 7.45
       /// The patient has respiratory alkalosis.
-      m_Patient->SetEvent(CDM::enumPatientEvent::RespiratoryAlkalosis, true, m_data.GetSimulationTime());
+      m_Patient->SetEvent(SEPatientEventType::RespiratoryAlkalosis, true, m_data.GetSimulationTime());
 
       /// \event Patient: arterial blood ph has gotten above 8.5.
       if (m_LastCardiacCycleBloodPH > highPh) {
@@ -2027,17 +2033,17 @@ void Respiratory::CalculateVitalSigns()
         Warning(ss);
         /// \irreversible Extreme respiratory Alkalosis: blood pH above 8.5.
         if (!m_PatientActions->HasOverride()) {
-          m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
         } else {
-          if (m_PatientActions->GetOverride()->GetOverrideConformance() == CDM::enumOnOff::On) {
-            m_Patient->SetEvent(CDM::enumPatientEvent::IrreversibleState, true, m_data.GetSimulationTime());
+          if (m_PatientActions->GetOverride()->GetOverrideConformance() == SEOnOff::On) {
+            m_Patient->SetEvent(SEPatientEventType::IrreversibleState, true, m_data.GetSimulationTime());
           }
         }
       }
     } else if (m_LastCardiacCycleBloodPH <= 7.43 && m_ArterialCO2PartialPressure_mmHg > 39.0) {
       /// \event Patient: End Respiratory Alkalosis Event. The pH value has has fallen below 7.45.
       /// The patient is no longer considered to have respiratory alkalosis.
-      m_Patient->SetEvent(CDM::enumPatientEvent::RespiratoryAlkalosis, false, m_data.GetSimulationTime());
+      m_Patient->SetEvent(SEPatientEventType::RespiratoryAlkalosis, false, m_data.GetSimulationTime());
     }
   }
 
@@ -2425,7 +2431,7 @@ void Respiratory::ProcessOverride()
     GetPulmonaryResistance().SetValue(override->GetPulmonaryResistanceOverride(FlowResistanceUnit::cmH2O_s_Per_L), FlowResistanceUnit::cmH2O_s_Per_L);
   }
   if (override->HasRespirationRateOverride()) {
-    if (override->GetOverrideConformance() == CDM::enumOnOff::Off) {
+    if (override->GetOverrideConformance() == SEOnOff::Off) {
       GetRespirationRate().SetValue(override->GetRespirationRateOverride(FrequencyUnit::Per_min), FrequencyUnit::Per_min);
     }
   }
@@ -2514,55 +2520,55 @@ void Respiratory::OverrideControlLoop()
     currentTotalPulmonaryVentilationOverride = override->GetTotalPulmonaryVentilationOverride(VolumePerTimeUnit::L_Per_min);
   }
 
-  if ((currentExpiratoryFlowOverride < minExpiratoryFlowOverride || currentExpiratoryFlowOverride > maxExpiratoryFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentExpiratoryFlowOverride < minExpiratoryFlowOverride || currentExpiratoryFlowOverride > maxExpiratoryFlowOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Expiratory Flow Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentInspiratoryFlowOverride < minInspiratoryFlowOverride || currentInspiratoryFlowOverride > maxInspiratoryFlowOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentInspiratoryFlowOverride < minInspiratoryFlowOverride || currentInspiratoryFlowOverride > maxInspiratoryFlowOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Inspiratory Flow Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentPulmonaryComplianceOverride < minPulmonaryComplianceOverride || currentPulmonaryComplianceOverride > maxPulmonaryComplianceOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentPulmonaryComplianceOverride < minPulmonaryComplianceOverride || currentPulmonaryComplianceOverride > maxPulmonaryComplianceOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Pulmonary Compliance Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentPulmonaryResistanceOverride < minPulmonaryResistanceOverride || currentPulmonaryResistanceOverride > maxPulmonaryResistanceOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentPulmonaryResistanceOverride < minPulmonaryResistanceOverride || currentPulmonaryResistanceOverride > maxPulmonaryResistanceOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Pulmonary Resistance Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentRROverride < minRROverride || currentRROverride > maxRROverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentRROverride < minRROverride || currentRROverride > maxRROverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Respiration Rate Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentTVOverride < minTVOverride || currentTVOverride > maxTVOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentTVOverride < minTVOverride || currentTVOverride > maxTVOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Tidal Volume (Respiratory) Override set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentTargetPulmonaryVentilationOverride < minTargetPulmonaryVentilationOverride || currentTargetPulmonaryVentilationOverride > maxTargetPulmonaryVentilationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentTargetPulmonaryVentilationOverride < minTargetPulmonaryVentilationOverride || currentTargetPulmonaryVentilationOverride > maxTargetPulmonaryVentilationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Target Pulmonary Ventilation Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentTotalAlveolarVentilationOverride < minTotalAlveolarVentilationOverride || currentTotalAlveolarVentilationOverride > maxTotalAlveolarVentilationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentTotalAlveolarVentilationOverride < minTotalAlveolarVentilationOverride || currentTotalAlveolarVentilationOverride > maxTotalAlveolarVentilationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Total Alveolar Ventilation Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentTotalLungVolumeOverride < minTotalLungVolumeOverride || currentTotalLungVolumeOverride > maxTotalLungVolumeOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentTotalLungVolumeOverride < minTotalLungVolumeOverride || currentTotalLungVolumeOverride > maxTotalLungVolumeOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Total Lung Volume Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentTotalPulmonaryVentilationOverride < minTotalPulmonaryVentilationOverride || currentTotalPulmonaryVentilationOverride > maxTotalPulmonaryVentilationOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentTotalPulmonaryVentilationOverride < minTotalPulmonaryVentilationOverride || currentTotalPulmonaryVentilationOverride > maxTotalPulmonaryVentilationOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Total Pulmonary Ventilation Override (Respiratory) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   return;
 }

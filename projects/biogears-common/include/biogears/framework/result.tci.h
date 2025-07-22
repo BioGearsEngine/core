@@ -306,7 +306,7 @@ T Result<T, E>::unwrap() {
   static_assert(!std::is_same<T, E>::value, "Result and Error can not be the same type.");
   assert(is_ok());
   return dump_ok();
-};
+}; 
 
 template<typename T, typename E>
 E Result<T, E>::unwrap_err() {

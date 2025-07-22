@@ -11,11 +11,19 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
+#include "io/cdm/Compartment.h"
 #include <biogears/cdm/compartment/fluid/SEFluidCompartment.inl>
 #include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
+#include <biogears/cdm/utils/GeneralMath.h>
+
+namespace std {
+template class vector<biogears::SELiquidCompartment*>;
+template class map<string, biogears::SELiquidCompartment*>;
+}
 
 namespace biogears {
 
@@ -33,56 +41,22 @@ SELiquidCompartment::SELiquidCompartment(const std::string& name, Logger* logger
 //-----------------------------------------------------------------------------
 SELiquidCompartment::~SELiquidCompartment()
 {
-  Clear();
-}
-//-----------------------------------------------------------------------------
-void SELiquidCompartment::Clear()
-{
-  SEFluidCompartment::Clear();
   SAFE_DELETE(m_pH);
   SAFE_DELETE(m_WaterVolumeFraction);
+}
+//-----------------------------------------------------------------------------
+void SELiquidCompartment::Invalidate()
+{
+  SEFluidCompartment::Invalidate();
+  if (m_pH && !m_pH->IsReadOnly()) {
+    m_pH->Invalidate();
+  };
+  if (m_WaterVolumeFraction && !m_WaterVolumeFraction->IsReadOnly()) {
+    m_WaterVolumeFraction->Invalidate();
+  };
   m_Children.clear();
 }
-//-----------------------------------------------------------------------------
-bool SELiquidCompartment::Load(const CDM::LiquidCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits)
-{
-  if (!SEFluidCompartment::Load(in, circuits))
-    return false;
-  if (in.Child().empty()) {
-    for (const CDM::LiquidSubstanceQuantityData& d : in.SubstanceQuantity()) {
-      SESubstance* sub = subMgr.GetSubstance(d.Substance());
-      if (sub == nullptr) {
-        Error("Could not find a substance for " + std::string { d.Substance() });
-        return false;
-      }
-      CreateSubstanceQuantity(*sub).Load(d);
-      ;
-    }
-    if (in.pH().present())
-      GetPH().Load(in.pH().get());
-    if (in.WaterVolumeFraction().present())
-      GetWaterVolumeFraction().Load(in.WaterVolumeFraction().get());
-  }
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::LiquidCompartmentData* SELiquidCompartment::Unload()
-{
-  CDM::LiquidCompartmentData* data = new CDM::LiquidCompartmentData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SELiquidCompartment::Unload(CDM::LiquidCompartmentData& data)
-{
-  SEFluidCompartment::Unload(data);
-  for (SELiquidSubstanceQuantity* subQ : m_SubstanceQuantities)
-    data.SubstanceQuantity().push_back(std::unique_ptr<CDM::LiquidSubstanceQuantityData>(subQ->Unload()));
-  if (HasPH())
-    data.pH(std::unique_ptr<CDM::ScalarData>(GetPH().Unload()));
-  if (HasWaterVolumeFraction())
-    data.WaterVolumeFraction(std::unique_ptr<CDM::ScalarFractionData>(GetWaterVolumeFraction().Unload()));
-}
+
 //-----------------------------------------------------------------------------
 const SEScalar* SELiquidCompartment::GetScalar(const char* name)
 {
@@ -111,7 +85,7 @@ void SELiquidCompartment::StateChange()
 void SELiquidCompartment::Balance(BalanceLiquidBy by)
 {
   for (SELiquidSubstanceQuantity* subQ : m_SubstanceQuantities) {
-    if (by == BalanceLiquidBy::PartialPressure && subQ->GetSubstance().GetState() != CDM::enumSubstanceState::Gas)
+    if (by == BalanceLiquidBy::PartialPressure && subQ->GetSubstance().GetState() != SESubstanceState::Gas)
       continue;
 
     // Partial pressures only make sense for gases in liquids

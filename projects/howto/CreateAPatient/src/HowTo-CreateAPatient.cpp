@@ -13,12 +13,13 @@ specific language governing permissions and limitations under the License.
 
 
 // Include the various types you will be using in your code
+#include <biogears/cdm/enums/SEPatientEnums.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/patient/assessments/SEPulmonaryFunctionTest.h>
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 
@@ -41,7 +42,7 @@ int HowToCreateAPatient()
   //Patient Gender is the only thing that is absolutely required to be set.
   //All value not explicitly set based or standard values or calculations.
   //If you do something out of bounds or set something you're not allowed to, it will alert you with a warning/error.
-  patient.SetGender(CDM::enumSex::Male);
+  patient.SetSex(biogears::SESex::Male);
   patient.GetAge().SetValue(44, TimeUnit::yr);
   patient.GetWeight().SetValue(170, MassUnit::lb);
   patient.GetHeight().SetValue(71, LengthUnit::inch);
@@ -50,18 +51,6 @@ int HowToCreateAPatient()
   patient.GetHeartRateBaseline().SetValue(72, FrequencyUnit::Per_min);
   patient.GetRespirationRateBaseline().SetValue(16, FrequencyUnit::Per_min);
   patient.GetSystolicArterialPressureBaseline().SetValue(114, PressureUnit::mmHg);
-
-  // You can save off the patient if you want to use it later
-  CDM::PatientData* pData = patient.Unload();
-  // Write out the stable patient state
-  std::ofstream stream("./patients/HowToCreateAPatient.xml");
-  // Write out the xml file
-  xml_schema::namespace_infomap map;
-  map[""].name = "uri:/mil/tatrc/physiology/datamodel";
-  //TODO: What constructor are these from
-  // Patient(stream, *pData, map);
-  stream.close();
-  SAFE_DELETE(pData);
 
   if (!bg->InitializeEngine(patient)) {
     bg->GetLogger()->Error("Could not load state, check the error");

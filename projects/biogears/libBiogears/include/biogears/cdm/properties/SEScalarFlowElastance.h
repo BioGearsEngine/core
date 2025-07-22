@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API FlowElastanceUnit : public CCompoundUnit {
@@ -35,16 +34,8 @@ public:
   static const FlowElastanceUnit Pa_Per_m3;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<FlowElastanceUnit>;
-
-class BIOGEARS_API SEScalarFlowElastance : public SEScalarQuantity<FlowElastanceUnit> {
-public:
-  SEScalarFlowElastance();
-  virtual ~SEScalarFlowElastance();
-
-  CDM::ScalarFlowElastanceData* Unload() const override;
-
-  using SEScalarQuantity<FlowElastanceUnit>::SetValue;
-  using SEScalarQuantity<FlowElastanceUnit>::GetValue;
-};
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<FlowElastanceUnit>;
+using SEScalarFlowElastance  = SEScalarQuantity<FlowElastanceUnit>;
+#pragma warning(default : 4661)
 }

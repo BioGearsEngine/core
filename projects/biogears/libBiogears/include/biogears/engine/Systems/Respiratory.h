@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGears.hxx>
 
 namespace biogears {
 class SEPulmonaryFunctionTest;
@@ -71,17 +70,11 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  void Invalidate() override;
 
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsRespiratorySystemData& in);
-  virtual CDM::BioGearsRespiratorySystemData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::BioGearsRespiratorySystemData& data) const;
 
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
   void SetUp() override;
@@ -135,6 +128,9 @@ private:
   // Pneumothorax
   void DoLeftNeedleDecompression(double dFlowResistance);
   void DoRightNeedleDecompression(double dFlowResistance);
+  void DoLeftChestTube(double ctFlowResistance);
+  void DoRightChestTube(double ctFlowResistance);
+  void AdjustPleuralCavity();
   // Aerosol Deposition and various Effects
   void ProcessAerosolSubstances();
 
@@ -168,8 +164,8 @@ private:
   bool m_BreathingCycle;
   double m_ArterialO2PartialPressure_mmHg;
   double m_ArterialCO2PartialPressure_mmHg;
-  RunningAverage m_ArterialO2Average_mmHg;
-  RunningAverage m_ArterialCO2Average_mmHg;
+  RunningAverage m_ArterialOxygenAverage_mmHg;
+  RunningAverage m_ArterialCarbonDioxideAverage_mmHg;
   double m_BreathingCycleTime_s;
   double m_BreathTimeExhale_min;
   double m_DefaultDrivePressure_cmH2O;
@@ -231,6 +227,7 @@ private:
   SEGasCompartment* m_RightLung;
   SEGasCompartment* m_Lungs;
   SEGasCompartment* m_Trachea;
+  SEGasCompartment* m_pleuralCavity;
   SEGasSubstanceQuantity* m_TracheaO2;
   SEGasSubstanceQuantity* m_TracheaCO2;
   SELiquidSubstanceQuantity* m_AortaO2;

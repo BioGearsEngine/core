@@ -11,7 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 
+#include "io/cdm/Property.h"
+    
 namespace biogears {
 const PressureUnit PressureUnit::Pa("Pa");
 const PressureUnit PressureUnit::mmHg("mmHg");
@@ -19,7 +22,7 @@ const PressureUnit PressureUnit::cmH2O("cmH2O");
 const PressureUnit PressureUnit::psi("psi");
 const PressureUnit PressureUnit::atm("atm");
 
-template class SEScalarQuantity<PressureUnit>;
+template class BIOGEARS_API SEScalarQuantity<PressureUnit>;
 
 PressureUnit::PressureUnit(const char* u)
   : PressureUnit(std::string { u })
@@ -33,23 +36,6 @@ PressureUnit::PressureUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 PressureUnit::~PressureUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarPressure::SEScalarPressure()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarPressure::~SEScalarPressure()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarPressureData* SEScalarPressure::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPressureData* data(new CDM::ScalarPressureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool PressureUnit::IsValidUnit(const char* unit)

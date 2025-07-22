@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/cdm/AnesthesiaActions.hxx>
 
 namespace biogears {
 namespace io {
@@ -23,17 +22,10 @@ public:
   SEAnesthesiaMachineAction();
   virtual ~SEAnesthesiaMachineAction();
 
-  virtual void Clear();
+  virtual void Invalidate();
 
   virtual bool IsValid() const;
 
-  virtual bool Load(const CDM::AnesthesiaMachineActionData& in);
-  virtual CDM::AnesthesiaMachineActionData* Unload() const;
-
-protected:
-  virtual void Unload(CDM::AnesthesiaMachineActionData& data) const;
-
-public:
   virtual void ToString(std::ostream& str) const = 0;
 };
 }

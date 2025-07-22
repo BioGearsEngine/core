@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstance.h>
 
+#include "io/cdm/Substance.h"
+
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
 #include <biogears/cdm/properties/SEScalarElectricResistance.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
@@ -31,79 +33,220 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/substance/SESubstancePharmacokinetics.h>
 
 namespace biogears {
+
+SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition const& obj)
+  : Name(obj.Name)
+  , Classification(obj.Classification)
+  , State(obj.State)
+  , Density(obj.Density)
+  , MolarMass(obj.MolarMass)
+  , MaximumDiffusionFlux(obj.MaximumDiffusionFlux)
+  , MichaelisCoefficient(obj.MichaelisCoefficient)
+  , MembraneResistance(obj.MembraneResistance)
+  , AreaUnderCurve(obj.AreaUnderCurve)
+  , AlveolarTransfer(obj.AlveolarTransfer)
+  , DiffusingCapacity(obj.DiffusingCapacity)
+  , RelativeDiffusionCoefficient(obj.RelativeDiffusionCoefficient)
+  , SolubilityCoefficient(obj.SolubilityCoefficient)
+  , ClearanceDefinition(obj.ClearanceDefinition)
+  , Aerosolization(obj.Aerosolization)
+  , Pharmacokinetics(obj.Pharmacokinetics)
+  , Pharmacodynamics(obj.Pharmacodynamics)
+{};
+//-----------------------------------------------------------------------------
+SESubstanceDefinition::SESubstanceDefinition(SESubstanceDefinition&& obj)
+  : Name(std::exchange(obj.Name, ""))
+  , Classification(std::exchange(obj.Classification, SESubstanceClass::Invalid))
+  , State(std::exchange(obj.State, SESubstanceState::Invalid))
+  , Density(std::move(obj.Density))
+  , MolarMass(std::move(obj.MolarMass))
+  , MaximumDiffusionFlux(std::move(obj.MaximumDiffusionFlux))
+  , MichaelisCoefficient(std::move(obj.MichaelisCoefficient))
+  , MembraneResistance(std::move(obj.MembraneResistance))
+  , AreaUnderCurve(std::move(obj.AreaUnderCurve))
+  , AlveolarTransfer(std::move(obj.AlveolarTransfer))
+  , DiffusingCapacity(std::move(obj.DiffusingCapacity))
+  , RelativeDiffusionCoefficient(std::move(obj.RelativeDiffusionCoefficient))
+  , SolubilityCoefficient(std::move(obj.SolubilityCoefficient))
+  , ClearanceDefinition(std::move(obj.ClearanceDefinition))
+  , Aerosolization(std::move(obj.Aerosolization))
+  , Pharmacokinetics(std::move(obj.Pharmacokinetics))
+  , Pharmacodynamics(std::move(obj.Pharmacodynamics))
+{
+}
+//-----------------------------------------------------------------------------
+SESubstanceDefinition ::~SESubstanceDefinition()
+{
+}
+//-----------------------------------------------------------------------------
+SESubstanceDefinition::SESubstanceDefinition(Logger* logger)
+  : ClearanceDefinition()
+  , Aerosolization(logger)
+  , Pharmacokinetics(logger)
+  , Pharmacodynamics(logger)
+  , Name("")
+  , Classification(SESubstanceClass::Invalid)
+  , State(SESubstanceState::Invalid)
+  , Density()
+  , MolarMass()
+  , MaximumDiffusionFlux()
+  , MichaelisCoefficient()
+  , MembraneResistance()
+  , AreaUnderCurve()
+  , AlveolarTransfer()
+  , DiffusingCapacity()
+  , RelativeDiffusionCoefficient()
+  , SolubilityCoefficient() {};
+//-----------------------------------------------------------------------------
+SESubstanceDefinition::SESubstanceDefinition(SESubstanceClearanceDefinition definition, Logger* logger)
+  : ClearanceDefinition(definition)
+  , Aerosolization(logger)
+  , Pharmacokinetics(logger)
+  , Pharmacodynamics(logger)
+  , Name()
+  , Classification()
+  , State()
+  , Density()
+  , MolarMass()
+  , MaximumDiffusionFlux()
+  , MichaelisCoefficient()
+  , MembraneResistance()
+  , AreaUnderCurve()
+  , AlveolarTransfer()
+  , DiffusingCapacity()
+  , RelativeDiffusionCoefficient()
+  , SolubilityCoefficient() {};
+//-------------------------------------------------------------------------------
+
+SESubstanceDefinition& SESubstanceDefinition::operator=(SESubstanceDefinition const& rhs)
+{
+  if (this != &rhs) {
+
+    Name = rhs.Name;
+    Classification = rhs.Classification;
+    State = rhs.State;
+    Density = rhs.Density;
+    MolarMass = rhs.MolarMass;
+    MaximumDiffusionFlux = rhs.MaximumDiffusionFlux;
+    MichaelisCoefficient = rhs.MichaelisCoefficient;
+    MembraneResistance = rhs.MembraneResistance;
+    AreaUnderCurve = rhs.AreaUnderCurve;
+    AlveolarTransfer = rhs.AlveolarTransfer;
+    DiffusingCapacity = rhs.DiffusingCapacity;
+    RelativeDiffusionCoefficient = rhs.RelativeDiffusionCoefficient;
+    SolubilityCoefficient = rhs.SolubilityCoefficient;
+    ClearanceDefinition = rhs.ClearanceDefinition;
+    Aerosolization = rhs.Aerosolization;
+    Pharmacokinetics = rhs.Pharmacokinetics;
+    Pharmacodynamics = rhs.Pharmacodynamics;
+  }
+  return *this;
+}
+SESubstanceDefinition& SESubstanceDefinition::operator=(SESubstanceDefinition&& rhs)
+{
+  if (this != &rhs) {
+    Name =   rhs.Name;
+    Classification =   rhs.Classification;
+    State =   rhs.State;
+    Density =   rhs.Density;
+    MolarMass =   rhs.MolarMass;
+    MaximumDiffusionFlux =   rhs.MaximumDiffusionFlux;
+    MichaelisCoefficient =   rhs.MichaelisCoefficient;
+    MembraneResistance =   rhs.MembraneResistance;
+    AreaUnderCurve =   rhs.AreaUnderCurve;
+    AlveolarTransfer =   rhs.AlveolarTransfer;
+    DiffusingCapacity =   rhs.DiffusingCapacity;
+    RelativeDiffusionCoefficient =   rhs.RelativeDiffusionCoefficient;
+    SolubilityCoefficient =   rhs.SolubilityCoefficient;
+    ClearanceDefinition =   rhs.ClearanceDefinition;
+    Aerosolization =   rhs.Aerosolization;
+    Pharmacokinetics =   rhs.Pharmacokinetics;
+    Pharmacodynamics = rhs.Pharmacodynamics;
+  }
+  return *this;
+}
+//-------------------------------------------------------------------------------
+
+bool SESubstanceDefinition::operator==(SESubstanceDefinition const& rhs) const
+{
+  if (this == &rhs)
+    return true;
+
+  return Name == rhs.Name
+          && Classification == rhs.Classification
+          && State == rhs.State
+#if defined(BIOGEARS_RIGOROUS_EQUIVILANCE_CHECKS) && !defined(BIOGEARS_LINIENT_SESUBSTANCE_DEFINITION_CHECKS)
+          && Density == rhs.Density
+          && MolarMass == rhs.MolarMass
+          && MaximumDiffusionFlux == rhs.MaximumDiffusionFlux
+          && MichaelisCoefficient == rhs.MichaelisCoefficient
+          && MembraneResistance == rhs.MembraneResistance
+          && AreaUnderCurve == rhs.AreaUnderCurve
+          && AlveolarTransfer == rhs.AlveolarTransfer
+          && DiffusingCapacity == rhs.DiffusingCapacity
+          && RelativeDiffusionCoefficient == rhs.RelativeDiffusionCoefficient
+          && SolubilityCoefficient == rhs.SolubilityCoefficient
+          && ClearanceDefinition == rhs.ClearanceDefinition
+          && Aerosolization == rhs.Aerosolization
+          && Pharmacokinetics == rhs.Pharmacokinetics
+          && Pharmacodynamics == rhs.Pharmacodynamics)
+#endif
+    ;
+}
+bool SESubstanceDefinition::operator!=(SESubstanceDefinition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//-----------------------------------------------------------------------------
 SESubstance::SESubstance(Logger* logger)
   : Loggable(logger)
+  , m_def(logger)
+  , m_Clearance(logger)
+  , m_BloodConcentration()
+  , m_EffectSiteConcentration()
+  , m_MassInBody()
+  , m_MassInBlood()
+  , m_MassInTissue()
+  , m_PlasmaConcentration()
+  , m_SystemicMassCleared()
+  , m_TissueConcentration()
+  , m_EndTidalFraction()
+  , m_EndTidalPressure()
 {
-  m_Name = "";
-  m_State = (CDM::enumSubstanceState::value)-1;
-  m_Classification = (CDM::enumSubstanceClass::value)-1;
-  m_Density = nullptr;
-  m_MolarMass = nullptr;
-
-  m_MaximumDiffusionFlux = nullptr;
-  m_MichaelisCoefficient = nullptr;
-  m_MembraneResistance = nullptr;
-
-  m_Aerosolization = nullptr;
-  m_AreaUnderCurve = nullptr;
-  m_BloodConcentration = nullptr;
-  m_EffectSiteConcentration = nullptr;
-  m_MassInBody = nullptr;
-  m_MassInBlood = nullptr;
-  m_MassInTissue = nullptr;
-  m_PlasmaConcentration = nullptr;
-  m_SystemicMassCleared = nullptr;
-  m_TissueConcentration = nullptr;
-
-  m_AlveolarTransfer = nullptr;
-  m_DiffusingCapacity = nullptr;
-  m_EndTidalFraction = nullptr;
-  m_EndTidalPressure = nullptr;
-  m_SolubilityCoefficient = nullptr;
-  m_RelativeDiffusionCoefficient = nullptr;
-
-  m_Clearance = nullptr;
-  m_Pharmacokinetics = nullptr;
-  m_Pharmacodynamics = nullptr;
+}
+//-----------------------------------------------------------------------------
+SESubstance::SESubstance(SESubstanceDefinition definition)
+  : Loggable(definition.Aerosolization.GetLogger())
+  , m_def(definition)
+  , m_Clearance(definition.ClearanceDefinition, definition.Aerosolization.GetLogger())
+  , m_BloodConcentration()
+  , m_EffectSiteConcentration()
+  , m_MassInBody()
+  , m_MassInBlood()
+  , m_MassInTissue()
+  , m_PlasmaConcentration()
+  , m_SystemicMassCleared()
+  , m_TissueConcentration()
+  , m_EndTidalFraction()
+  , m_EndTidalPressure()
+{
 }
 //-----------------------------------------------------------------------------
 SESubstance::~SESubstance()
 {
-  Clear();
 }
 //-----------------------------------------------------------------------------
-void SESubstance::Clear()
+void SESubstance::Invalidate()
 {
-  m_Name = "";
-  m_State = (CDM::enumSubstanceState::value)-1;
-  m_Classification = (CDM::enumSubstanceClass::value)-1;
-  SAFE_DELETE(m_Density);
-  SAFE_DELETE(m_MolarMass);
-
-  SAFE_DELETE(m_MaximumDiffusionFlux);
-  SAFE_DELETE(m_MichaelisCoefficient);
-  SAFE_DELETE(m_MembraneResistance);
-  SAFE_DELETE(m_AreaUnderCurve);
-  SAFE_DELETE(m_BloodConcentration);
-  SAFE_DELETE(m_EffectSiteConcentration);
-  SAFE_DELETE(m_MassInBody);
-  SAFE_DELETE(m_MassInBlood);
-  SAFE_DELETE(m_MassInTissue);
-  SAFE_DELETE(m_PlasmaConcentration);
-  SAFE_DELETE(m_SystemicMassCleared);
-  SAFE_DELETE(m_TissueConcentration);
-
-  SAFE_DELETE(m_AlveolarTransfer);
-  SAFE_DELETE(m_DiffusingCapacity);
-  SAFE_DELETE(m_EndTidalFraction);
-  SAFE_DELETE(m_EndTidalPressure);
-  SAFE_DELETE(m_SolubilityCoefficient);
-  SAFE_DELETE(m_RelativeDiffusionCoefficient);
-
-  SAFE_DELETE(m_Aerosolization);
-  SAFE_DELETE(m_Clearance);
-  SAFE_DELETE(m_Pharmacokinetics);
-  SAFE_DELETE(m_Pharmacodynamics);
+  m_BloodConcentration.Invalidate();
+  m_EffectSiteConcentration.Invalidate();
+  m_MassInBody.Invalidate();
+  m_MassInBlood.Invalidate();
+  m_MassInTissue.Invalidate();
+  m_PlasmaConcentration.Invalidate();
+  m_SystemicMassCleared.Invalidate();
+  m_TissueConcentration.Invalidate();
+  
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SESubstance::GetScalar(const char* name)
@@ -173,681 +316,463 @@ const SEScalar* SESubstance::GetScalar(const std::string& name)
   return nullptr;
 }
 //-----------------------------------------------------------------------------
-bool SESubstance::Load(const CDM::SubstanceData& in)
-{
-  Clear();
-  m_Name = in.Name();
-
-  if (in.State().present())
-    m_State = in.State().get();
-  if (in.Classification().present())
-    m_Classification = in.Classification().get();
-  if (in.Density().present())
-    GetDensity().Load(in.Density().get());
-  if (in.MolarMass().present())
-    GetMolarMass().Load(in.MolarMass().get());
-
-  if (in.MaximumDiffusionFlux().present())
-    GetMaximumDiffusionFlux().Load(in.MaximumDiffusionFlux().get());
-  if (in.MichaelisCoefficient().present())
-    GetMichaelisCoefficient().Load(in.MichaelisCoefficient().get());
-  if (in.MembraneResistance().present())
-    GetMembraneResistance().Load(in.MembraneResistance().get());
-  if (in.AreaUnderCurve().present())
-    GetAreaUnderCurve().Load(in.AreaUnderCurve().get());
-  if (in.BloodConcentration().present())
-    GetBloodConcentration().Load(in.BloodConcentration().get());
-  if (in.EffectSiteConcentration().present())
-    GetEffectSiteConcentration().Load(in.EffectSiteConcentration().get());
-  if (in.MassInBody().present())
-    GetMassInBody().Load(in.MassInBody().get());
-  if (in.MassInBlood().present())
-    GetMassInBlood().Load(in.MassInBlood().get());
-  if (in.MassInTissue().present())
-    GetMassInTissue().Load(in.MassInTissue().get());
-  if (in.PlasmaConcentration().present())
-    GetPlasmaConcentration().Load(in.PlasmaConcentration().get());
-  if (in.SystemicMassCleared().present())
-    GetSystemicMassCleared().Load(in.SystemicMassCleared().get());
-  if (in.TissueConcentration().present())
-    GetTissueConcentration().Load(in.TissueConcentration().get());
-
-  if (in.AlveolarTransfer().present())
-    GetAlveolarTransfer().Load(in.AlveolarTransfer().get());
-  if (in.DiffusingCapacity().present())
-    GetDiffusingCapacity().Load(in.DiffusingCapacity().get());
-  if (in.EndTidalFraction().present())
-    GetEndTidalFraction().Load(in.EndTidalFraction().get());
-  if (in.EndTidalPressure().present())
-    GetEndTidalPressure().Load(in.EndTidalPressure().get());
-  if (in.RelativeDiffusionCoefficient().present())
-    GetRelativeDiffusionCoefficient().Load(in.RelativeDiffusionCoefficient().get());
-  if (in.SolubilityCoefficient().present())
-    GetSolubilityCoefficient().Load(in.SolubilityCoefficient().get());
-
-  if (in.Aerosolization().present())
-    GetAerosolization().Load(in.Aerosolization().get());
-  if (in.Clearance().present())
-    GetClearance().Load(in.Clearance().get());
-  if (in.Pharmacokinetics().present())
-    GetPK().Load(in.Pharmacokinetics().get());
-  if (in.Pharmacodynamics().present())
-    GetPD().Load(in.Pharmacodynamics().get());
-
-  if (HasClearance() && HasPK() && GetPK().HasPhysicochemicals() && GetClearance().HasFractionUnboundInPlasma() && !GetClearance().GetFractionUnboundInPlasma().Equals(GetPK().GetPhysicochemicals().GetFractionUnboundInPlasma())) {
-    Fatal("Multiple FractionUnboundInPlasma values specified, but not the same. These must match at this time.");
-  }
-
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceData* SESubstance::Unload() const
-{
-  CDM::SubstanceData* data = new CDM::SubstanceData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstance::Unload(CDM::SubstanceData& data) const
-{
-  if (HasName()) {
-    data.Name(m_Name);
-  } else {
-    data.Name("Unknown Substance");
-  }
-  if (HasState())
-    data.State(m_State);
-  if (HasClassification())
-    data.Classification(m_Classification);
-  if (HasDensity())
-    data.Density(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Density->Unload()));
-  if (HasMolarMass())
-    data.MolarMass(std::unique_ptr<CDM::ScalarMassPerAmountData>(m_MolarMass->Unload()));
-
-  if (HasMaximumDiffusionFlux())
-    data.MaximumDiffusionFlux(std::unique_ptr<CDM::ScalarMassPerAreaTimeData>(m_MaximumDiffusionFlux->Unload()));
-  if (HasMichaelisCoefficient())
-    data.MichaelisCoefficient(std::unique_ptr<CDM::ScalarData>(m_MichaelisCoefficient->Unload()));
-  if (HasMembraneResistance())
-    data.MembraneResistance(std::unique_ptr<CDM::ScalarElectricResistanceData>(m_MembraneResistance->Unload()));
-  if (HasAreaUnderCurve())
-    data.AreaUnderCurve(std::unique_ptr<CDM::ScalarTimeMassPerVolumeData>(m_AreaUnderCurve->Unload()));
-  if (HasBloodConcentration())
-    data.BloodConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_BloodConcentration->Unload()));
-  if (HasEffectSiteConcentration())
-    data.EffectSiteConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_EffectSiteConcentration->Unload()));
-  if (HasMassInBody())
-    data.MassInBody(std::unique_ptr<CDM::ScalarMassData>(m_MassInBody->Unload()));
-  if (HasMassInBlood())
-    data.MassInBlood(std::unique_ptr<CDM::ScalarMassData>(m_MassInBlood->Unload()));
-  if (HasMassInTissue())
-    data.MassInTissue(std::unique_ptr<CDM::ScalarMassData>(m_MassInTissue->Unload()));
-  if (HasPlasmaConcentration())
-    data.PlasmaConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_PlasmaConcentration->Unload()));
-  if (HasSystemicMassCleared())
-    data.SystemicMassCleared(std::unique_ptr<CDM::ScalarMassData>(m_SystemicMassCleared->Unload()));
-  if (HasTissueConcentration())
-    data.TissueConcentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_TissueConcentration->Unload()));
-
-  if (HasAlveolarTransfer())
-    data.AlveolarTransfer(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_AlveolarTransfer->Unload()));
-  if (HasDiffusingCapacity())
-    data.DiffusingCapacity(std::unique_ptr<CDM::ScalarVolumePerTimePressureData>(m_DiffusingCapacity->Unload()));
-  if (HasEndTidalFraction())
-    data.EndTidalFraction(std::unique_ptr<CDM::ScalarFractionData>(m_EndTidalFraction->Unload()));
-  if (HasEndTidalPressure())
-    data.EndTidalPressure(std::unique_ptr<CDM::ScalarPressureData>(m_EndTidalPressure->Unload()));
-  if (HasSolubilityCoefficient())
-    data.SolubilityCoefficient(std::unique_ptr<CDM::ScalarInversePressureData>(m_SolubilityCoefficient->Unload()));
-  if (HasRelativeDiffusionCoefficient())
-    data.RelativeDiffusionCoefficient(std::unique_ptr<CDM::ScalarData>(m_RelativeDiffusionCoefficient->Unload()));
-
-  if (HasAerosolization())
-    data.Aerosolization(std::unique_ptr<CDM::SubstanceAerosolizationData>(m_Aerosolization->Unload()));
-  if (HasClearance())
-    data.Clearance(std::unique_ptr<CDM::SubstanceClearanceData>(m_Clearance->Unload()));
-  if (HasPK())
-    data.Pharmacokinetics(std::unique_ptr<CDM::SubstancePharmacokineticsData>(m_Pharmacokinetics->Unload()));
-  if (HasPD())
-    data.Pharmacodynamics(std::unique_ptr<CDM::SubstancePharmacodynamicsData>(m_Pharmacodynamics->Unload()));
-};
-//-----------------------------------------------------------------------------
 std::string SESubstance::GetName() const
 {
-  return m_Name;
+  return m_def.Name;
 }
 //-----------------------------------------------------------------------------
 const char* SESubstance::GetName_cStr() const
 {
-  return m_Name.c_str();
+  return m_def.Name.c_str();
 }
 //-----------------------------------------------------------------------------
 void SESubstance::SetName(const char* name)
 {
-  m_Name = name;
+  m_def.Name = name;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::SetName(const std::string& name)
 {
-  m_Name = name;
+  m_def.Name = name;
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasName() const
 {
-  return m_Name.empty() ? false : true;
+  return m_def.Name.empty() ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::InvalidateName()
 {
-  m_Name = "";
+  m_def.Name = "";
 }
 //-----------------------------------------------------------------------------
-CDM::enumSubstanceState::value SESubstance::GetState() const
+SESubstanceState SESubstance::GetState() const
 {
-  return m_State;
+  return m_def.State;
 }
 //-----------------------------------------------------------------------------
-void SESubstance::SetState(CDM::enumSubstanceState::value state)
+void SESubstance::SetState(SESubstanceState state)
 {
-  m_State = state;
+  m_def.State = state;
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasState() const
 {
-  return m_State == ((CDM::enumSubstanceState::value)-1) ? false : true;
+  return m_def.State == SESubstanceState::Invalid;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::InvalidateState()
 {
-  m_State = (CDM::enumSubstanceState::value)-1;
+  m_def.State = SESubstanceState::Invalid;
 }
 //-----------------------------------------------------------------------------
-CDM::enumSubstanceClass::value SESubstance::GetClassification() const
+SESubstanceClass SESubstance::GetClassification() const
 {
-  return m_Classification;
+  return m_def.Classification;
 }
 //-----------------------------------------------------------------------------
-void SESubstance::SetClassification(CDM::enumSubstanceClass::value subClass)
+void SESubstance::SetClassification(SESubstanceClass subClass)
 {
-  m_Classification = subClass;
+  m_def.Classification = subClass;
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasClassification() const
 {
-  return m_Classification == ((CDM::enumSubstanceClass::value)-1) ? false : true;
+  return m_def.Classification != SESubstanceClass::Invalid;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::InvalidateClassification()
 {
-  m_Classification = (CDM::enumSubstanceClass::value)-1;
+  m_def.Classification = SESubstanceClass::Invalid;
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasDensity() const
 {
-  return (m_Density == nullptr) ? false : m_Density->IsValid();
+  return m_def.Density.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetDensity()
 {
-  if (m_Density == nullptr)
-    m_Density = new SEScalarMassPerVolume();
-  return *m_Density;
+  return m_def.Density;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetDensity(const MassPerVolumeUnit& unit) const
 {
-  if (m_Density == nullptr)
-    return SEScalar::dNaN();
-  return m_Density->GetValue(unit);
+  return m_def.Density.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasMolarMass() const
 {
-  return (m_MolarMass == nullptr) ? false : m_MolarMass->IsValid();
+  return m_def.MolarMass.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerAmount& SESubstance::GetMolarMass()
 {
-  if (m_MolarMass == nullptr)
-    m_MolarMass = new SEScalarMassPerAmount();
-  return *m_MolarMass;
+  return m_def.MolarMass;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetMolarMass(const MassPerAmountUnit& unit) const
 {
-  if (m_MolarMass == nullptr)
-    return SEScalar::dNaN();
-  return m_MolarMass->GetValue(unit);
+
+  return m_def.MolarMass.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasMaximumDiffusionFlux() const
 {
-  return (m_MaximumDiffusionFlux == nullptr) ? false : m_MaximumDiffusionFlux->IsValid();
+  return m_def.MaximumDiffusionFlux.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerAreaTime& SESubstance::GetMaximumDiffusionFlux()
 {
-  if (m_MaximumDiffusionFlux == nullptr)
-    m_MaximumDiffusionFlux = new SEScalarMassPerAreaTime();
-  return *m_MaximumDiffusionFlux;
+
+  return m_def.MaximumDiffusionFlux;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetMaximumDiffusionFlux(const MassPerAreaTimeUnit& unit) const
 {
-  if (m_MaximumDiffusionFlux == nullptr)
-    return SEScalar::dNaN();
-  return m_MaximumDiffusionFlux->GetValue(unit);
+
+  return m_def.MaximumDiffusionFlux.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasMichaelisCoefficient() const
 {
-  return (m_MichaelisCoefficient == nullptr) ? false : m_MichaelisCoefficient->IsValid();
+  return m_def.MichaelisCoefficient.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalar& SESubstance::GetMichaelisCoefficient()
 {
-  if (m_MichaelisCoefficient == nullptr)
-    m_MichaelisCoefficient = new SEScalar();
-  return *m_MichaelisCoefficient;
+
+  return m_def.MichaelisCoefficient;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetMichaelisCoefficient() const
 {
-  if (m_MichaelisCoefficient == nullptr)
-    return SEScalar::dNaN();
-  return m_MichaelisCoefficient->GetValue();
+
+  return m_def.MichaelisCoefficient.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasMembraneResistance() const
 {
-  return (m_MembraneResistance == nullptr) ? false : m_MembraneResistance->IsValid();
+  return m_def.MembraneResistance.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarElectricResistance& SESubstance::GetMembraneResistance()
 {
-  if (m_MembraneResistance == nullptr)
-    m_MembraneResistance = new SEScalarElectricResistance();
-  return *m_MembraneResistance;
+
+  return m_def.MembraneResistance;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetMembraneResistance(const ElectricResistanceUnit& unit) const
 {
-  if (m_MembraneResistance == nullptr)
-    return SEScalarElectricResistance::dNaN();
-  return m_MembraneResistance->GetValue(unit);
+
+  return m_def.MembraneResistance.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasAerosolization() const
 {
-  return (m_Aerosolization != nullptr && m_Aerosolization->IsValid());
+  return (m_def.Aerosolization.IsValid());
 }
 //-----------------------------------------------------------------------------
 SESubstanceAerosolization& SESubstance::GetAerosolization()
 {
-  if (m_Aerosolization == nullptr)
-    m_Aerosolization = new SESubstanceAerosolization(GetLogger());
-  return *m_Aerosolization;
+  return m_def.Aerosolization;
 }
 //-----------------------------------------------------------------------------
 const SESubstanceAerosolization* SESubstance::GetAerosolization() const
 {
-  return m_Aerosolization;
+  return &m_def.Aerosolization;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::RemoveAerosolization()
 {
-  SAFE_DELETE(m_Aerosolization);
+  m_def.Aerosolization.Invalidate();
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasAreaUnderCurve() const
 {
-  return (m_AreaUnderCurve == nullptr) ? false : m_AreaUnderCurve->IsValid();
+  return m_def.AreaUnderCurve.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarTimeMassPerVolume& SESubstance::GetAreaUnderCurve()
 {
-  if (m_AreaUnderCurve == nullptr)
-    m_AreaUnderCurve = new SEScalarTimeMassPerVolume();
-  return *m_AreaUnderCurve;
+  return m_def.AreaUnderCurve;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetAreaUnderCurve(const TimeMassPerVolumeUnit& unit) const
 {
-  if (m_AreaUnderCurve == nullptr)
-    return SEScalar::dNaN();
-  return m_AreaUnderCurve->GetValue(unit);
+  return m_def.AreaUnderCurve.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasBloodConcentration() const
 {
-  return (m_BloodConcentration == nullptr) ? false : m_BloodConcentration->IsValid();
+  return m_BloodConcentration.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetBloodConcentration()
 {
-  if (m_BloodConcentration == nullptr)
-    m_BloodConcentration = new SEScalarMassPerVolume();
-  return *m_BloodConcentration;
+  return m_BloodConcentration;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetBloodConcentration(const MassPerVolumeUnit& unit) const
 {
-  if (m_BloodConcentration == nullptr)
-    return SEScalar::dNaN();
-  return m_BloodConcentration->GetValue(unit);
+  return m_BloodConcentration.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasEffectSiteConcentration() const
 {
-  return (m_EffectSiteConcentration == nullptr) ? false : m_EffectSiteConcentration->IsValid();
+  return m_EffectSiteConcentration.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetEffectSiteConcentration()
 {
-  if (m_EffectSiteConcentration == nullptr)
-    m_EffectSiteConcentration = new SEScalarMassPerVolume();
-  return *m_EffectSiteConcentration;
+
+  return m_EffectSiteConcentration;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetEffectSiteConcentration(const MassPerVolumeUnit& unit) const
 {
-  if (m_EffectSiteConcentration == nullptr)
-    return SEScalar::dNaN();
-  return m_EffectSiteConcentration->GetValue(unit);
+
+  return m_EffectSiteConcentration.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasMassInBody() const
 {
-  return (m_MassInBody == nullptr) ? false : m_MassInBody->IsValid();
+  return m_MassInBody.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMass& SESubstance::GetMassInBody()
 {
-  if (m_MassInBody == nullptr)
-    m_MassInBody = new SEScalarMass();
-  return *m_MassInBody;
+  return m_MassInBody;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetMassInBody(const MassUnit& unit) const
 {
-  if (m_MassInBody == nullptr)
-    return SEScalar::dNaN();
-  return m_MassInBody->GetValue(unit);
+  return m_MassInBody.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasMassInBlood() const
 {
-  return (m_MassInBlood == nullptr) ? false : m_MassInBlood->IsValid();
+  return m_MassInBlood.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMass& SESubstance::GetMassInBlood()
 {
-  if (m_MassInBlood == nullptr)
-    m_MassInBlood = new SEScalarMass();
-  return *m_MassInBlood;
+  return m_MassInBlood;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetMassInBlood(const MassUnit& unit) const
 {
-  if (m_MassInBlood == nullptr)
-    return SEScalar::dNaN();
-  return m_MassInBlood->GetValue(unit);
+  return m_MassInBlood.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasMassInTissue() const
 {
-  return (m_MassInTissue == nullptr) ? false : m_MassInTissue->IsValid();
+  return m_MassInTissue.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMass& SESubstance::GetMassInTissue()
 {
-  if (m_MassInTissue == nullptr)
-    m_MassInTissue = new SEScalarMass();
-  return *m_MassInTissue;
+  return m_MassInTissue;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetMassInTissue(const MassUnit& unit) const
 {
-  if (m_MassInTissue == nullptr)
-    return SEScalar::dNaN();
-  return m_MassInTissue->GetValue(unit);
+  return m_MassInTissue.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasPlasmaConcentration() const
 {
-  return (m_PlasmaConcentration == nullptr) ? false : m_PlasmaConcentration->IsValid();
+  return m_PlasmaConcentration.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetPlasmaConcentration()
 {
-  if (m_PlasmaConcentration == nullptr)
-    m_PlasmaConcentration = new SEScalarMassPerVolume();
-  return *m_PlasmaConcentration;
+  return m_PlasmaConcentration;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetPlasmaConcentration(const MassPerVolumeUnit& unit) const
 {
-  if (m_PlasmaConcentration == nullptr)
-    return SEScalar::dNaN();
-  return m_PlasmaConcentration->GetValue(unit);
+  return m_PlasmaConcentration.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasSystemicMassCleared() const
 {
-  return (m_SystemicMassCleared == nullptr) ? false : m_SystemicMassCleared->IsValid();
+  return m_SystemicMassCleared.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMass& SESubstance::GetSystemicMassCleared()
 {
-  if (m_SystemicMassCleared == nullptr)
-    m_SystemicMassCleared = new SEScalarMass();
-  return *m_SystemicMassCleared;
+  return m_SystemicMassCleared;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetSystemicMassCleared(const MassUnit& unit) const
 {
-  if (m_SystemicMassCleared == nullptr)
-    return SEScalar::dNaN();
-  return m_SystemicMassCleared->GetValue(unit);
+  return m_SystemicMassCleared.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasTissueConcentration() const
 {
-  return (m_TissueConcentration == nullptr) ? false : m_TissueConcentration->IsValid();
+  return m_TissueConcentration.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstance::GetTissueConcentration()
 {
-  if (m_TissueConcentration == nullptr)
-    m_TissueConcentration = new SEScalarMassPerVolume();
-  return *m_TissueConcentration;
+  return m_TissueConcentration;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetTissueConcentration(const MassPerVolumeUnit& unit) const
 {
-  if (m_TissueConcentration == nullptr)
-    return SEScalar::dNaN();
-  return m_TissueConcentration->GetValue(unit);
+  return m_TissueConcentration.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasAlveolarTransfer() const
 {
-  return m_AlveolarTransfer == nullptr ? false : m_AlveolarTransfer->IsValid();
+  return m_def.AlveolarTransfer.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarVolumePerTime& SESubstance::GetAlveolarTransfer()
 {
-  if (m_AlveolarTransfer == nullptr)
-    m_AlveolarTransfer = new SEScalarVolumePerTime();
-  return *m_AlveolarTransfer;
+  return m_def.AlveolarTransfer;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetAlveolarTransfer(const VolumePerTimeUnit& unit) const
 {
-  if (m_AlveolarTransfer == nullptr)
-    return SEScalar::dNaN();
-  return m_AlveolarTransfer->GetValue(unit);
+  return m_def.AlveolarTransfer.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasDiffusingCapacity() const
 {
-  return m_DiffusingCapacity == nullptr ? false : m_DiffusingCapacity->IsValid();
+  return m_def.DiffusingCapacity.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarVolumePerTimePressure& SESubstance::GetDiffusingCapacity()
 {
-  if (m_DiffusingCapacity == nullptr)
-    m_DiffusingCapacity = new SEScalarVolumePerTimePressure();
-  return *m_DiffusingCapacity;
+  return m_def.DiffusingCapacity;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetDiffusingCapacity(const VolumePerTimePressureUnit& unit) const
 {
-  if (m_DiffusingCapacity == nullptr)
-    return SEScalar::dNaN();
-  return m_DiffusingCapacity->GetValue(unit);
+  return m_def.DiffusingCapacity.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasEndTidalFraction() const
 {
-  return (m_EndTidalFraction == nullptr) ? false : m_EndTidalFraction->IsValid();
+  return m_EndTidalFraction.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarFraction& SESubstance::GetEndTidalFraction()
 {
-  if (m_EndTidalFraction == nullptr)
-    m_EndTidalFraction = new SEScalarFraction();
-  return *m_EndTidalFraction;
+  return m_EndTidalFraction;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetEndTidalFraction() const
 {
-  if (m_EndTidalFraction == nullptr)
-    return SEScalar::dNaN();
-  return m_EndTidalFraction->GetValue();
+  return m_EndTidalFraction.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasEndTidalPressure() const
 {
-  return (m_EndTidalPressure == nullptr) ? false : m_EndTidalPressure->IsValid();
+  return m_EndTidalPressure.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarPressure& SESubstance::GetEndTidalPressure()
 {
-  if (m_EndTidalPressure == nullptr)
-    m_EndTidalPressure = new SEScalarPressure();
-  return *m_EndTidalPressure;
+  return m_EndTidalPressure;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetEndTidalPressure(const PressureUnit& unit) const
 {
-  if (m_EndTidalPressure == nullptr)
-    return SEScalar::dNaN();
-  return m_EndTidalPressure->GetValue(unit);
+  return m_EndTidalPressure.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasRelativeDiffusionCoefficient() const
 {
-  return (m_RelativeDiffusionCoefficient == nullptr) ? false : m_RelativeDiffusionCoefficient->IsValid();
+  return m_def.RelativeDiffusionCoefficient.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalar& SESubstance::GetRelativeDiffusionCoefficient()
 {
-  if (m_RelativeDiffusionCoefficient == nullptr)
-    m_RelativeDiffusionCoefficient = new SEScalar();
-  return *m_RelativeDiffusionCoefficient;
+  return m_def.RelativeDiffusionCoefficient;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetRelativeDiffusionCoefficient() const
 {
-  if (m_RelativeDiffusionCoefficient == nullptr)
-    return SEScalar::dNaN();
-  return m_RelativeDiffusionCoefficient->GetValue();
+  return m_def.RelativeDiffusionCoefficient.GetValue();
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasSolubilityCoefficient() const
 {
-  return (m_SolubilityCoefficient == nullptr) ? false : m_SolubilityCoefficient->IsValid();
+  return m_def.SolubilityCoefficient.IsValid();
 }
 //-----------------------------------------------------------------------------
 SEScalarInversePressure& SESubstance::GetSolubilityCoefficient()
 {
-  if (m_SolubilityCoefficient == nullptr)
-    m_SolubilityCoefficient = new SEScalarInversePressure();
-  return *m_SolubilityCoefficient;
+  return m_def.SolubilityCoefficient;
 }
 //-----------------------------------------------------------------------------
 double SESubstance::GetSolubilityCoefficient(const InversePressureUnit& unit) const
 {
-  if (m_SolubilityCoefficient == nullptr)
-    return SEScalar::dNaN();
-  return m_SolubilityCoefficient->GetValue(unit);
+  return m_def.SolubilityCoefficient.GetValue(unit);
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasClearance() const
 {
-  return (m_Clearance != nullptr && m_Clearance->IsValid());
+  return m_Clearance.IsValid();
 }
 //-----------------------------------------------------------------------------
 SESubstanceClearance& SESubstance::GetClearance()
 {
-  if (m_Clearance == nullptr)
-    m_Clearance = new SESubstanceClearance(GetLogger());
-  return *m_Clearance;
+  return m_Clearance;
 }
 //-----------------------------------------------------------------------------
 const SESubstanceClearance* SESubstance::GetClearance() const
 {
-  return m_Clearance;
+  return &m_Clearance;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::RemoveClearance()
 {
-  SAFE_DELETE(m_Clearance);
+  m_Clearance.Invalidate();
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasPK() const
 {
-  return (m_Pharmacokinetics != nullptr && m_Pharmacokinetics->IsValid());
+  return (m_def.Pharmacokinetics.IsValid());
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacokinetics& SESubstance::GetPK()
 {
-  if (m_Pharmacokinetics == nullptr)
-    m_Pharmacokinetics = new SESubstancePharmacokinetics(GetLogger());
-  return *m_Pharmacokinetics;
+  return m_def.Pharmacokinetics;
 }
 //-----------------------------------------------------------------------------
 const SESubstancePharmacokinetics* SESubstance::GetPK() const
 {
-  return m_Pharmacokinetics;
+  return &m_def.Pharmacokinetics;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::RemovePK()
 {
-  SAFE_DELETE(m_Pharmacokinetics);
+  m_def.Pharmacokinetics.Invalidate();
 }
 //-----------------------------------------------------------------------------
 bool SESubstance::HasPD() const
 {
-  return (m_Pharmacodynamics != nullptr && m_Pharmacodynamics->IsValid());
+  return (m_def.Pharmacodynamics.IsValid());
 }
 //-----------------------------------------------------------------------------
 SESubstancePharmacodynamics& SESubstance::GetPD()
 {
-  if (m_Pharmacodynamics == nullptr)
-    m_Pharmacodynamics = new SESubstancePharmacodynamics(GetLogger());
-  return *m_Pharmacodynamics;
+  return m_def.Pharmacodynamics;
 }
 //-----------------------------------------------------------------------------
 const SESubstancePharmacodynamics* SESubstance::GetPD() const
 {
-  return m_Pharmacodynamics;
+  return &m_def.Pharmacodynamics;
 }
 //-----------------------------------------------------------------------------
 void SESubstance::RemovePD()
 {
-  SAFE_DELETE(m_Pharmacodynamics);
+  m_def.Pharmacodynamics.Invalidate();
 }
 //-------------------------------------------------------------------------------
 bool SESubstance::operator==(const SESubstance& rhs) const
@@ -856,44 +781,34 @@ bool SESubstance::operator==(const SESubstance& rhs) const
   if (this == &rhs)
     return true;
 
-   bool equivilant =m_Name == rhs.m_Name
-    ;equivilant&= m_Classification == rhs.m_Classification
-    ;equivilant&= m_State == rhs.m_State
- 
-    ;equivilant&= ((m_Density && rhs.m_Density) ? m_Density->operator==(*rhs.m_Density) : m_Density == rhs.m_Density)
-    ;equivilant&= ((m_MolarMass && rhs.m_MolarMass) ? m_MolarMass->operator==(*rhs.m_MolarMass) : m_MolarMass == rhs.m_MolarMass)
-
-    ;equivilant&= ((m_MaximumDiffusionFlux && rhs.m_MaximumDiffusionFlux) ? m_MaximumDiffusionFlux->operator==(*rhs.m_MaximumDiffusionFlux) : m_MaximumDiffusionFlux == rhs.m_MaximumDiffusionFlux)
-    ;equivilant&= ((m_MichaelisCoefficient && rhs.m_MichaelisCoefficient) ? m_MichaelisCoefficient->operator==(*rhs.m_MichaelisCoefficient) : m_MichaelisCoefficient == rhs.m_MichaelisCoefficient)
-    ;equivilant&= ((m_MembraneResistance && rhs.m_MembraneResistance) ? m_MembraneResistance->operator==(*rhs.m_MembraneResistance) : m_MembraneResistance == rhs.m_MembraneResistance)
-
-    ;equivilant&= ((m_Aerosolization && rhs.m_Aerosolization) ? m_Aerosolization->operator==(*rhs.m_Aerosolization) : m_Aerosolization == rhs.m_Aerosolization)
-    ;equivilant&= ((m_AreaUnderCurve && rhs.m_AreaUnderCurve) ? m_AreaUnderCurve->operator==(*rhs.m_AreaUnderCurve) : m_AreaUnderCurve == rhs.m_AreaUnderCurve)
-    ;equivilant&= ((m_BloodConcentration && rhs.m_BloodConcentration) ? m_BloodConcentration->operator==(*rhs.m_BloodConcentration) : m_BloodConcentration == rhs.m_BloodConcentration)
-    ;equivilant&= ((m_EffectSiteConcentration && rhs.m_EffectSiteConcentration) ? m_EffectSiteConcentration->operator==(*rhs.m_EffectSiteConcentration) : m_EffectSiteConcentration == rhs.m_EffectSiteConcentration)
-    ;equivilant&= ((m_MassInBody && rhs.m_MassInBody) ? m_MassInBody->operator==(*rhs.m_MassInBody) : m_MassInBody == rhs.m_MassInBody)
-    ;equivilant&= ((m_MassInBlood && rhs.m_MassInBlood) ? m_MassInBlood->operator==(*rhs.m_MassInBlood) : m_MassInBlood == rhs.m_MassInBlood)
-    ;equivilant&= ((m_MassInTissue && rhs.m_MassInTissue) ? m_MassInTissue->operator==(*rhs.m_MassInTissue) : m_MassInTissue == rhs.m_MassInTissue)
-    ;equivilant&= ((m_PlasmaConcentration && rhs.m_PlasmaConcentration) ? m_PlasmaConcentration->operator==(*rhs.m_PlasmaConcentration) : m_PlasmaConcentration == rhs.m_PlasmaConcentration)
-    ;equivilant&= ((m_SystemicMassCleared && rhs.m_SystemicMassCleared) ? m_SystemicMassCleared->operator==(*rhs.m_SystemicMassCleared) : m_SystemicMassCleared == rhs.m_SystemicMassCleared)
-    ;equivilant&= ((m_TissueConcentration && rhs.m_TissueConcentration) ? m_TissueConcentration->operator==(*rhs.m_TissueConcentration) : m_TissueConcentration == rhs.m_TissueConcentration)
-
-    ;equivilant&= ((m_AlveolarTransfer && rhs.m_AlveolarTransfer) ? m_AlveolarTransfer->operator==(*rhs.m_AlveolarTransfer) : m_AlveolarTransfer == rhs.m_AlveolarTransfer)
-    ;equivilant&= ((m_DiffusingCapacity && rhs.m_DiffusingCapacity) ? m_DiffusingCapacity->operator==(*rhs.m_DiffusingCapacity) : m_DiffusingCapacity == rhs.m_DiffusingCapacity)
-    ;equivilant&= ((m_EndTidalFraction && rhs.m_EndTidalFraction) ? m_EndTidalFraction->operator==(*rhs.m_EndTidalFraction) : m_EndTidalFraction == rhs.m_EndTidalFraction)
-    ;equivilant&= ((m_EndTidalPressure && rhs.m_EndTidalPressure) ? m_EndTidalPressure->operator==(*rhs.m_EndTidalPressure) : m_EndTidalPressure == rhs.m_EndTidalPressure)
-    ;equivilant&= ((m_RelativeDiffusionCoefficient && rhs.m_RelativeDiffusionCoefficient) ? m_RelativeDiffusionCoefficient->operator==(*rhs.m_RelativeDiffusionCoefficient) : m_RelativeDiffusionCoefficient == rhs.m_RelativeDiffusionCoefficient)
-    ;equivilant&= ((m_SolubilityCoefficient && rhs.m_SolubilityCoefficient) ? m_SolubilityCoefficient->operator==(*rhs.m_SolubilityCoefficient) : m_SolubilityCoefficient == rhs.m_SolubilityCoefficient)
- 
-    ;equivilant&= ((m_Clearance && rhs.m_Clearance) ? m_Clearance->operator==(*rhs.m_Clearance) : m_Clearance == rhs.m_Clearance)
-    ;equivilant&= ((m_Pharmacokinetics && rhs.m_Pharmacokinetics) ? m_Pharmacokinetics->operator==(*rhs.m_Pharmacokinetics) : m_Pharmacokinetics == rhs.m_Pharmacokinetics)
-    ;equivilant&= ((m_Pharmacodynamics && rhs.m_Pharmacodynamics) ? m_Pharmacodynamics->operator==(*rhs.m_Pharmacodynamics) : m_Pharmacodynamics == rhs.m_Pharmacodynamics)
-    ;
+  bool equivilant = m_def == rhs.m_def;
+#if defined(BIOGEARS_RIGOROUS_EQUIVILANCE_CHECKS) && !defined(BIOGEARS_LINIENT_SESUBSTANCE_CHECKS)
+  equivilant &= m_MassInBody == rhs.m_MassInBody;
+  equivilant &= m_MassInBlood == rhs.m_MassInBlood;
+  equivilant &= m_MassInTissue == rhs.m_MassInTissue;
+  equivilant &= m_EndTidalFraction == rhs.m_EndTidalFraction;
+  equivilant &= m_EndTidalPressure == rhs.m_EndTidalPressure;
+  equivilant &= m_Clearance == rhs.m_Clearance;
+#endif
   return equivilant;
 }
-//-------------------------------------------------------------------------------
 bool SESubstance::operator!=(const SESubstance& rhs) const
 {
   return !(*this == rhs);
+}
+//-------------------------------------------------------------------------------
+bool SESubstance::operator==(SESubstanceDefinition const& rhs) const
+{
+  return this->m_def == rhs;
+}
+bool SESubstance::operator!=(SESubstanceDefinition const& rhs) const
+{
+  return !(*this == rhs);
+}
+//------------------------------------------------------------------------------
+SESubstanceDefinition const& SESubstance::GetDefinition() const
+{
+  // TODO: Refactor PTRs in all member components to simplify true Copies
+  return m_def;
 }
 }

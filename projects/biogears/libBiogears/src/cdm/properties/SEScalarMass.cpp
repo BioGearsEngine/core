@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const MassUnit MassUnit::g("g");
@@ -19,7 +22,7 @@ const MassUnit MassUnit::mg("mg");
 const MassUnit MassUnit::kg("kg");
 const MassUnit MassUnit::lb("lb");
 
-template class SEScalarQuantity<MassUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassUnit>;
 
 MassUnit::MassUnit(const char* u)
   : MassUnit(std::string { u })
@@ -33,29 +36,6 @@ MassUnit::MassUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 MassUnit::~MassUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarMass::SEScalarMass()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarMass::SEScalarMass(double value, MassUnit const& unit)
-  : SEScalarQuantity(value,unit)
-{
-
-}
-//-------------------------------------------------------------------------------
-SEScalarMass::~SEScalarMass()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarMassData* SEScalarMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassData* data(new CDM::ScalarMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool MassUnit::IsValidUnit(const char* unit)

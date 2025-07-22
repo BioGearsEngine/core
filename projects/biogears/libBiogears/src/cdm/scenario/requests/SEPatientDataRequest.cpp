@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEPatientDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
 namespace biogears {
 SEPatientDataRequest::SEPatientDataRequest(const SEDecimalFormat* dfault)
   : SEDataRequest(dfault)
@@ -19,31 +21,14 @@ SEPatientDataRequest::SEPatientDataRequest(const SEDecimalFormat* dfault)
 
 SEPatientDataRequest::~SEPatientDataRequest()
 {
-  Clear();
+  Invalidate();
 }
 
-void SEPatientDataRequest::Clear()
+void SEPatientDataRequest::Invalidate()
 {
-  SEDataRequest::Clear();
+  SEDataRequest::Invalidate();
 }
 
-bool SEPatientDataRequest::Load(const CDM::PatientDataRequestData& in)
-{
-  SEDataRequest::Load(in);
-  return true;
-}
-
-CDM::PatientDataRequestData* SEPatientDataRequest::Unload() const
-{
-  CDM::PatientDataRequestData* data = new CDM::PatientDataRequestData();
-  Unload(*data);
-  return data;
-}
-
-void SEPatientDataRequest::Unload(CDM::PatientDataRequestData& data) const
-{
-  SEDataRequest::Unload(data);
-}
 
 size_t SEPatientDataRequest::HashCode() const 
 {

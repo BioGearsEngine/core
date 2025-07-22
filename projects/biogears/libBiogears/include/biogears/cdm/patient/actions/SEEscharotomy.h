@@ -12,7 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+
 
 #include <random>
 
@@ -22,6 +23,7 @@ namespace io {
 }
 class BIOGEARS_API SEEscharotomy : public SEPatientAction {
   friend io::PatientActions;
+
 public:
   SEEscharotomy();
   virtual ~SEEscharotomy() override;
@@ -29,16 +31,10 @@ public:
   static constexpr const char* TypeTag() { return "SEEscharotomy"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Invalidate() override; // clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
-
-  virtual bool Load(const CDM::EscharotomyData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::EscharotomyData* Unload() const override;
-
-protected:
-  virtual void Unload(CDM::EscharotomyData& data) const;
 
 public:
   virtual std::string GetLocation() const;

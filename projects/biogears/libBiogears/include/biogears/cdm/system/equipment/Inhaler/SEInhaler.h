@@ -11,20 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/biogears/BioGearsEquipment.hxx>
-#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 namespace biogears {
 class Serializer;
 class SESubstance;
 class SESubstanceManager;
 class SEInhalerConfiguration;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarMass;
-class MassUnit;
-class SEScalarFraction;
 
 namespace io {
   class Inhaler;
@@ -43,7 +40,7 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  void Invalidate() override;
 
   /** @name GetScalar
    *   @brief - A reflextion type call that will return the Scalar associated
@@ -56,13 +53,9 @@ public:
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
 
-  bool Load(const CDM::InhalerData& in);
-  CDM::InhalerData* Unload() const override;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
 protected:
-  void Unload(CDM::InhalerData& data) const;
-
   /** @name StateChange
    *   @brief - This method is called when ever there is a state change
    *            Specically a new file has been loaded, configuration action, or the system reset
@@ -75,8 +68,8 @@ protected:
 public:
   bool Load(const std::string& file);
 
-  CDM::enumOnOff::value GetState() const;
-  void SetState(CDM::enumOnOff::value name);
+  SEOnOff GetState() const;
+  void SetState(SEOnOff name);
   bool HasState() const;
   void InvalidateState();
 
@@ -102,7 +95,7 @@ public:
 protected:
   std::stringstream m_ss;
 
-  CDM::enumOnOff::value m_State;
+  SEOnOff m_State;
   SEScalarMass* m_MeteredDose;
   SEScalarFraction* m_NozzleLoss;
   SEScalarVolume* m_SpacerVolume;

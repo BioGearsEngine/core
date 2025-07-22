@@ -25,16 +25,21 @@ SECompartmentNodes<COMPARTMENT_NODE_TYPES>::SECompartmentNodes(Logger* logger)
 template <COMPARTMENT_NODE_TEMPLATE>
 SECompartmentNodes<COMPARTMENT_NODE_TYPES>::~SECompartmentNodes()
 {
-  Clear();
+  SAFE_DELETE(m_Quantity);
+  SAFE_DELETE(m_Potential);
 }
 
 template <COMPARTMENT_NODE_TEMPLATE>
-void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::Clear()
+void SECompartmentNodes<COMPARTMENT_NODE_TYPES>::Invalidate()
 {
   m_QuantityNodes.clear();
   m_AllNodes.clear();
-  SAFE_DELETE(m_Quantity);
-  SAFE_DELETE(m_Potential);
+  if (m_Quantity && m_Quantity->IsValid()) {
+    m_Quantity->Invalidate();
+  }
+  if (m_Potential && m_Potential->IsValid()) {
+    m_Potential->Invalidate();
+  }
 }
 
 template <COMPARTMENT_NODE_TEMPLATE>

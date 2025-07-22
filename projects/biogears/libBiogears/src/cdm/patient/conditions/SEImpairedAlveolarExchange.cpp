@@ -13,6 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarArea.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEImpairedAlveolarExchange::SEImpairedAlveolarExchange()
@@ -24,10 +25,10 @@ SEImpairedAlveolarExchange::SEImpairedAlveolarExchange()
 //-----------------------------------------------------------------------------
 SEImpairedAlveolarExchange::~SEImpairedAlveolarExchange()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEImpairedAlveolarExchange::Clear()
+void SEImpairedAlveolarExchange::Invalidate()
 {
   SAFE_DELETE(m_ImpairedSurfaceArea);
   SAFE_DELETE(m_ImpairedFraction);
@@ -37,30 +38,7 @@ bool SEImpairedAlveolarExchange::IsValid() const
 {
   return HasImpairedFraction() || HasImpairedSurfaceArea();
 }
-//-----------------------------------------------------------------------------
-bool SEImpairedAlveolarExchange::Load(const CDM::ImpairedAlveolarExchangeData& in)
-{
-  if (in.ImpairedSurfaceArea().present())
-    GetImpairedSurfaceArea().Load(in.ImpairedSurfaceArea().get());
-  if (in.ImpairedFraction().present())
-    GetImpairedFraction().Load(in.ImpairedFraction().get());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ImpairedAlveolarExchangeData* SEImpairedAlveolarExchange::Unload() const
-//-----------------------------------------------------------------------------
-{
-  CDM::ImpairedAlveolarExchangeData* data = new CDM::ImpairedAlveolarExchangeData();
-  Unload(*data);
-  return data;
-}
-void SEImpairedAlveolarExchange::Unload(CDM::ImpairedAlveolarExchangeData& data) const
-{
-  if (HasImpairedSurfaceArea())
-    data.ImpairedSurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_ImpairedSurfaceArea->Unload()));
-  if (HasImpairedFraction())
-    data.ImpairedFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_ImpairedFraction->Unload()));
-}
+
 //-----------------------------------------------------------------------------
 bool SEImpairedAlveolarExchange::HasImpairedSurfaceArea() const
 {

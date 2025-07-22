@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/exports.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
@@ -29,29 +28,22 @@ public:
   SEDiabetesType1();
   virtual ~SEDiabetesType1();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate() override; //clear memory
 
-  virtual bool IsValid() const;
-
-  virtual bool Load(const CDM::DiabetesType1Data& in);
-  virtual CDM::DiabetesType1Data* Unload() const;
+  virtual bool IsValid() const override;
 
   bool operator==(SEDiabetesType1 const&) const;
   bool operator!=(SEDiabetesType1 const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::DiabetesType1Data& data) const;
-
-public:
-  virtual std::string GetName() const { return "DiabetesType1"; }
-  virtual const char* GetName_cStr() const { return "DiabetesType1"; }
+  virtual std::string GetName() const  override { return "DiabetesType1"; }
+  virtual const char* GetName_cStr() const  override { return "DiabetesType1"; }
 
   virtual bool HasInsulinProductionSeverity() const;
   virtual SEScalar0To1& GetInsulinProductionSeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SEScalar0To1* m_InsulinProductionSeverity;

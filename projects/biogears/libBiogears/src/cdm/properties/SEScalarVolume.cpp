@@ -1,5 +1,5 @@
-/**************************************************************************************
-Copyright 2015 Applied Research Associates, Inc.
+; /**************************************************************************************
+ Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the License
 at:
@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const VolumeUnit VolumeUnit::L("L");
@@ -19,7 +22,7 @@ const VolumeUnit VolumeUnit::mL("mL");
 const VolumeUnit VolumeUnit::uL("uL");
 const VolumeUnit VolumeUnit::m3("m^3");
 
-template class SEScalarQuantity<VolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<VolumeUnit>;
 
 VolumeUnit::VolumeUnit(const char* u)
   : VolumeUnit(std::string { u })
@@ -33,23 +36,6 @@ VolumeUnit::VolumeUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 VolumeUnit::~VolumeUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarVolume::SEScalarVolume()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarVolume::~SEScalarVolume()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarVolumeData* SEScalarVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarVolumeData* data(new CDM::ScalarVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool VolumeUnit::IsValidUnit(const char* unit)

@@ -11,11 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarElectricCapacitance.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const ElectricCapacitanceUnit ElectricCapacitanceUnit::F("F");
 
-template class SEScalarQuantity<ElectricCapacitanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<ElectricCapacitanceUnit>;
 
 ElectricCapacitanceUnit::ElectricCapacitanceUnit(const char* u)
   : ElectricCapacitanceUnit(std::string { u })
@@ -29,21 +32,6 @@ ElectricCapacitanceUnit::ElectricCapacitanceUnit(const std::string& u)
 //-----------------------------------------------------------------------------
 ElectricCapacitanceUnit::~ElectricCapacitanceUnit()
 {
-}
-//-----------------------------------------------------------------------------
-SEScalarElectricCapacitance::SEScalarElectricCapacitance(){
-}
-//-----------------------------------------------------------------------------
-SEScalarElectricCapacitance::~SEScalarElectricCapacitance(){
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarElectricCapacitanceData* SEScalarElectricCapacitance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricCapacitanceData* data(new CDM::ScalarElectricCapacitanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-----------------------------------------------------------------------------
 bool ElectricCapacitanceUnit::IsValidUnit(const char* unit)

@@ -16,6 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <Eigen/Dense>
 
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
 
 namespace biogears {
 template <typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit>
@@ -176,7 +178,7 @@ void SESubstanceTransporter<GraphType, FluxUnit, QuantityUnit, ExtensiveUnit, In
       auto* q = v->GetTransportSubstances()[s];
       if (q->HasExtensive()) {
         if (!v->HasQuantity()) {
-          q->Invalidate();
+          q->MakeInvalid();
           continue;
         }
         double newIntensiveVlaue = xVector(i);

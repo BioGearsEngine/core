@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const MassPerTimeUnit MassPerTimeUnit::g_Per_s("g/s");
@@ -22,7 +25,7 @@ const MassPerTimeUnit MassPerTimeUnit::ug_Per_s("ug/s");
 const MassPerTimeUnit MassPerTimeUnit::kg_Per_s("kg/s");
 const MassPerTimeUnit MassPerTimeUnit::ug_Per_min("ug/min");
 
-template class SEScalarQuantity<MassPerTimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassPerTimeUnit>;
 
 MassPerTimeUnit::MassPerTimeUnit(const char* u)
   : MassPerTimeUnit(std::string { u })
@@ -36,23 +39,6 @@ MassPerTimeUnit::MassPerTimeUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 MassPerTimeUnit::~MassPerTimeUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarMassPerTime::SEScalarMassPerTime()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarMassPerTime::~SEScalarMassPerTime()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerTimeData* SEScalarMassPerTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerTimeData* data(new CDM::ScalarMassPerTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool MassPerTimeUnit::IsValidUnit(const char* unit)

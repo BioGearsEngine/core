@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SETubeCuffLeak.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,12 +26,12 @@ SETubeCuffLeak::SETubeCuffLeak()
 //-------------------------------------------------------------------------------
 SETubeCuffLeak::~SETubeCuffLeak()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SETubeCuffLeak::Clear()
+void SETubeCuffLeak::Invalidate()
 {
-  SEAnesthesiaMachineAction::Clear();
+  SEAnesthesiaMachineAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -41,27 +44,7 @@ bool SETubeCuffLeak::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-//-------------------------------------------------------------------------------
-bool SETubeCuffLeak::Load(const CDM::TubeCuffLeakData& in, std::default_random_engine *rd)
-{
-  SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::TubeCuffLeakData* SETubeCuffLeak::Unload() const
-{
-  CDM::TubeCuffLeakData* data = new CDM::TubeCuffLeakData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETubeCuffLeak::Unload(CDM::TubeCuffLeakData& data) const
-{
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-}
+
 //-------------------------------------------------------------------------------
 bool SETubeCuffLeak::HasSeverity() const
 {

@@ -10,6 +10,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEScalarAmountPerVolume.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 AmountPerVolumeUnit AmountPerVolumeUnit::mol_Per_L("mol/L");
@@ -19,7 +22,7 @@ AmountPerVolumeUnit AmountPerVolumeUnit::mmol_Per_mL("mmol/mL");
 AmountPerVolumeUnit AmountPerVolumeUnit::ct_Per_L("ct/L");
 AmountPerVolumeUnit AmountPerVolumeUnit::ct_Per_uL("ct/uL");
 
-template class SEScalarQuantity<AmountPerVolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<AmountPerVolumeUnit>;
 
 AmountPerVolumeUnit::AmountPerVolumeUnit(const char* u)
   : AmountPerVolumeUnit(std::string { u })
@@ -33,23 +36,6 @@ AmountPerVolumeUnit::AmountPerVolumeUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 AmountPerVolumeUnit::~AmountPerVolumeUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarAmountPerVolume::SEScalarAmountPerVolume()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarAmountPerVolume::~SEScalarAmountPerVolume()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarAmountPerVolumeData* SEScalarAmountPerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAmountPerVolumeData* data(new CDM::ScalarAmountPerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool AmountPerVolumeUnit::IsValidUnit(const char* unit)

@@ -11,13 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerMass.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
+
 namespace biogears {
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::J_Per_K_kg("J/K kg");
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kJ_Per_K_kg("kJ/K kg");
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kcal_Per_K_kg("kcal/K kg");
 const HeatCapacitancePerMassUnit HeatCapacitancePerMassUnit::kcal_Per_C_kg("kcal/degC kg");
 
-template class SEScalarQuantity<HeatCapacitancePerMassUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatCapacitancePerMassUnit>;
 
 HeatCapacitancePerMassUnit::HeatCapacitancePerMassUnit(const char* u)
   : HeatCapacitancePerMassUnit(std::string { u })
@@ -31,23 +35,6 @@ HeatCapacitancePerMassUnit::HeatCapacitancePerMassUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 HeatCapacitancePerMassUnit::~HeatCapacitancePerMassUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatCapacitancePerMass::SEScalarHeatCapacitancePerMass()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatCapacitancePerMass::~SEScalarHeatCapacitancePerMass()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatCapacitancePerMassData* SEScalarHeatCapacitancePerMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatCapacitancePerMassData* data(new CDM::ScalarHeatCapacitancePerMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool HeatCapacitancePerMassUnit::IsValidUnit(const char* unit)

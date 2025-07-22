@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
@@ -25,6 +25,7 @@ namespace io {
 }
 class BIOGEARS_API SEPainStimulus : public SEPatientAction {
   friend io::PatientActions;
+
 public:
   SEPainStimulus();
   virtual ~SEPainStimulus() override;
@@ -32,13 +33,10 @@ public:
   static constexpr const char* TypeTag() { return "SEPainStimulus"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override;
+  virtual void Invalidate() override;
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
-
-  virtual bool Load(const CDM::PainStimulusData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::PainStimulusData* Unload() const override;
 
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
@@ -53,12 +51,9 @@ public:
   virtual void SetLocation(const std::string& name);
 
   virtual void ToString(std::ostream& str) const override;
-     
-  bool operator==( const SEPainStimulus& rhs) const;
-  bool operator!=( const SEPainStimulus& rhs) const;
 
-protected:
-  virtual void Unload(CDM::PainStimulusData& data) const;
+  bool operator==(const SEPainStimulus& rhs) const;
+  bool operator!=(const SEPainStimulus& rhs) const;
 
 protected:
   SEScalar0To1* m_Severity;

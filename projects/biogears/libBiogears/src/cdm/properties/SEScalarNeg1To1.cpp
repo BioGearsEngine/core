@@ -11,25 +11,25 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarNeg1To1.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 SEScalarNeg1To1::SEScalarNeg1To1()
   : SEScalar()
 {
 }
+SEScalarNeg1To1::SEScalarNeg1To1(SEScalarNeg1To1 const& obj)
+  : SEScalar(obj.m_value, obj.m_readOnly)
+{
+
+}
 //-------------------------------------------------------------------------------
 SEScalarNeg1To1::~SEScalarNeg1To1()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarNeg1To1Data* SEScalarNeg1To1::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarNeg1To1Data* data(new CDM::ScalarNeg1To1Data());
-  SEScalar::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 double SEScalarNeg1To1::GetValue(const NoUnit& unitless) const
 {

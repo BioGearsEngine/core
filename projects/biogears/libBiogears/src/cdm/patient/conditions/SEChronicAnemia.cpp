@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicAnemia.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEChronicAnemia::SEChronicAnemia()
@@ -22,39 +23,18 @@ SEChronicAnemia::SEChronicAnemia()
 //-------------------------------------------------------------------------------
 SEChronicAnemia::~SEChronicAnemia()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEChronicAnemia::Clear()
+void SEChronicAnemia::Invalidate()
 {
-  SEPatientCondition::Clear();
+  SEPatientCondition::Invalidate();
   SAFE_DELETE(m_ReductionFactor);
 }
 //-------------------------------------------------------------------------------
 bool SEChronicAnemia::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasReductionFactor();
-}
-//-------------------------------------------------------------------------------
-bool SEChronicAnemia::Load(const CDM::ChronicAnemiaData& in)
-{
-  SEPatientCondition::Load(in);
-  GetReductionFactor().Load(in.ReductionFactor());
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ChronicAnemiaData* SEChronicAnemia::Unload() const
-{
-  CDM::ChronicAnemiaData* data(new CDM::ChronicAnemiaData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEChronicAnemia::Unload(CDM::ChronicAnemiaData& data) const
-{
-  SEPatientCondition::Unload(data);
-  if (m_ReductionFactor != nullptr)
-    data.ReductionFactor(std::unique_ptr<CDM::Scalar0To1Data>(m_ReductionFactor->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEChronicAnemia::HasReductionFactor() const

@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEConsciousRespiration.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/patient/actions/SEBreathHold.h>
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 #include <biogears/cdm/patient/actions/SEForcedExhale.h>
@@ -28,13 +29,13 @@ SEConsciousRespiration::SEConsciousRespiration()
 
 SEConsciousRespiration::~SEConsciousRespiration()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
 
-void SEConsciousRespiration::Clear()
+void SEConsciousRespiration::Invalidate()
 {
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   if (m_ClearCommands)
     DELETE_VECTOR(m_Commands);
 }
@@ -51,62 +52,6 @@ bool SEConsciousRespiration::IsActive() const
   return SEPatientAction::IsActive();
 }
 //-------------------------------------------------------------------------------
-
-bool SEConsciousRespiration::Load(const CDM::ConsciousRespirationData& in, const SESubstanceManager& substances, std::default_random_engine *rd)
-{
-  // Set this before our super class tells us to Clear if the action wants us to keep our current data
-  m_ClearCommands = !in.AppendToPrevious();
-  SEPatientAction::Load(in);
-  m_ClearCommands = true;
-  CDM::ConsciousRespirationCommandData* command;
-  for (unsigned int i = 0; i < in.Command().size(); i++) {
-    command = (CDM::ConsciousRespirationCommandData*)&in.Command()[i];
-
-    CDM::BreathHoldData* bh = dynamic_cast<CDM::BreathHoldData*>(command);
-    if (bh != nullptr) {
-      AddBreathHold().Load(*bh, rd);
-      continue;
-    }
-
-    CDM::ForcedInhaleData* fi = dynamic_cast<CDM::ForcedInhaleData*>(command);
-    if (fi != nullptr) {
-      AddForcedInhale().Load(*fi, rd);
-      continue;
-    }
-
-    CDM::ForcedExhaleData* fe = dynamic_cast<CDM::ForcedExhaleData*>(command);
-    if (fe != nullptr) {
-      AddForcedExhale().Load(*fe, rd);
-      continue;
-    }
-
-    CDM::UseInhalerData* si = dynamic_cast<CDM::UseInhalerData*>(command);
-    if (si != nullptr) {
-      AddUseInhaler().Load(*si, rd);
-      continue;
-    }
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::ConsciousRespirationData* SEConsciousRespiration::Unload() const
-{
-  CDM::ConsciousRespirationData* data(new CDM::ConsciousRespirationData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEConsciousRespiration::Unload(CDM::ConsciousRespirationData& data) const
-{
-  SEPatientAction::Unload(data);
-  data.AppendToPrevious(false);
-  for (SEConsciousRespirationCommand* cmd : m_Commands)
-    data.Command().push_back(std::unique_ptr<CDM::ConsciousRespirationCommandData>(cmd->Unload()));
-}
-//-------------------------------------------------------------------------------
-
 SEConsciousRespirationCommand* SEConsciousRespiration::GetActiveCommand()
 {
   if (!m_Commands.empty())

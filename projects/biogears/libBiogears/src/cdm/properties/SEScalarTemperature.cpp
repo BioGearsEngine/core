@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarTemperature.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const TemperatureUnit TemperatureUnit::F("degF");
@@ -18,7 +21,7 @@ const TemperatureUnit TemperatureUnit::C("degC");
 const TemperatureUnit TemperatureUnit::K("K");
 const TemperatureUnit TemperatureUnit::R("degR");
 
-template class SEScalarQuantity<TemperatureUnit>;
+template class BIOGEARS_API SEScalarQuantity<TemperatureUnit>;
 
 TemperatureUnit::TemperatureUnit(const char* u)
   : TemperatureUnit(std::string{ u })
@@ -32,15 +35,7 @@ TemperatureUnit::TemperatureUnit(const std::string& u)
   : CCompoundUnit(u)
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarTemperatureData* SEScalarTemperature::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarTemperatureData* data(new CDM::ScalarTemperatureData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool TemperatureUnit::IsValidUnit(const char* unit)
 {
@@ -80,17 +75,6 @@ const TemperatureUnit& TemperatureUnit::GetCompoundUnit(const std::string& unit)
   return GetCompoundUnit(unit.c_str());
 }
 //-------------------------------------------------------------------------------
-double SEScalarTemperature::GetValue(const TemperatureUnit& unit) const
-{
-  if (std::isnan(m_value))
-    throw CommonDataModelException("Value is NaN");
-  if (std::isinf(m_value))
-    return m_value;
-  if (m_unit == &unit)
-    return m_value;
-  return Convert(m_value, *m_unit, unit);
-}
-//-------------------------------------------------------------------------------
 bool TemperatureUnit::operator==(const TemperatureUnit& obj) const
 {
   return CCompoundUnit::operator==(obj);
@@ -100,10 +84,5 @@ bool TemperatureUnit::operator!=(const TemperatureUnit& obj) const
 {
   return !(*this == obj);
 }
-//-------------------------------------------------------------------------------
-SEScalarTemperature::SEScalarTemperature()
-:SEScalarQuantity()
-{}
-SEScalarTemperature::~SEScalarTemperature(){}
 //-------------------------------------------------------------------------------
 }

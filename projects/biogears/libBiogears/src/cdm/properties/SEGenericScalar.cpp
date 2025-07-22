@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEGenericScalar.h>
 
+#include "io/cdm/Property.h"
+
 namespace biogears {
 //-------------------------------------------------------------------------------
 SEGenericScalar::SEGenericScalar(Logger* logger)

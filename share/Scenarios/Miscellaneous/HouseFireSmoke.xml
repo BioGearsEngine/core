@@ -108,7 +108,7 @@
 
 	<Action xsi:type="EnvironmentChangeData">
 		<Conditions>
-    <Name>LocalEnvironment</Name>
+    <Name>HouseFireSmokeEnvironment</Name>
 			<AmbientGas Name="Nitrogen">
         <FractionAmount value="0.79"/>
       </AmbientGas>

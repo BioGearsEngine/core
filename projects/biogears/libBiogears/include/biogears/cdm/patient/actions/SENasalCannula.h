@@ -12,12 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 
 #include <random>
 
 namespace biogears {
-class SEScalarVolumePerTime;
 namespace io {
   class PatientActions;
 }
@@ -31,13 +31,10 @@ public:
   static constexpr const char* TypeTag() { return "SENasalCannula"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override;
+  virtual void Invalidate() override;
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
-
-  virtual bool Load(const CDM::NasalCannulaData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::NasalCannulaData* Unload() const override;
 
   virtual bool HasFlowRate() const;
   virtual SEScalarVolumePerTime& GetFlowRate();
@@ -46,9 +43,6 @@ public:
 
   bool operator==(const SENasalCannula& rhs) const;
   bool operator!=(const SENasalCannula& rhs) const;
-
-protected:
-  virtual void Unload(CDM::NasalCannulaData& data) const;
 
 protected:
   SEScalarVolumePerTime* m_FlowRate;

@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
@@ -27,23 +28,20 @@ SESubstanceCompoundInfusion::SESubstanceCompoundInfusion(const SESubstanceCompou
 //-------------------------------------------------------------------------------
 SESubstanceCompoundInfusion::~SESubstanceCompoundInfusion()
 {
-  Clear();
+  SAFE_DELETE(m_Rate);
+  SAFE_DELETE(m_BagVolume);
 }
 //-------------------------------------------------------------------------------
-void SESubstanceCompoundInfusion::Clear()
+void SESubstanceCompoundInfusion::Invalidate()
 {
-  SESubstanceAdministration::Clear();
-  m_Rate = nullptr;
-  m_BagVolume = nullptr;
+  SESubstanceAdministration::Invalidate();
+  if (m_Rate) {
+    m_Rate->Invalidate();
+  }
+  if (m_BagVolume) {
+    m_BagVolume->Invalidate();
+  }
   // m_Compound=nullptr; Keeping mapping!!
-}
-//-------------------------------------------------------------------------------
-bool SESubstanceCompoundInfusion::Load(const CDM::SubstanceCompoundInfusionData& in, std::default_random_engine *rd)
-{
-  SESubstanceAdministration::Load(in);
-  GetRate().Load(in.Rate(), rd);
-  GetBagVolume().Load(in.BagVolume(), rd);
-  return true;
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::IsValid() const
@@ -54,23 +52,6 @@ bool SESubstanceCompoundInfusion::IsValid() const
 bool SESubstanceCompoundInfusion::IsActive() const
 {
   return IsValid() ? !m_Rate->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceCompoundInfusionData* SESubstanceCompoundInfusion::Unload() const
-{
-  CDM::SubstanceCompoundInfusionData* data(new CDM::SubstanceCompoundInfusionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceCompoundInfusion::Unload(CDM::SubstanceCompoundInfusionData& data) const
-{
-  SESubstanceAdministration::Unload(data);
-  if (m_Rate != nullptr)
-    data.Rate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_Rate->Unload()));
-  if (m_BagVolume != nullptr)
-    data.BagVolume(std::unique_ptr<CDM::ScalarVolumeData>(m_BagVolume->Unload()));
-  data.SubstanceCompound(m_Compound.GetName());
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceCompoundInfusion::HasRate() const

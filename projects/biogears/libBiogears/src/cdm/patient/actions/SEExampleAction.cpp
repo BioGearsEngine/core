@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEExampleAction.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,13 +24,13 @@ SEExampleAction::SEExampleAction()
 //-------------------------------------------------------------------------------
 SEExampleAction::~SEExampleAction()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEExampleAction::Clear()
+void SEExampleAction::Invalidate()
 {
 
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -41,27 +42,6 @@ bool SEExampleAction::IsValid() const
 bool SEExampleAction::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEExampleAction::Load(const CDM::ExampleActionData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ExampleActionData* SEExampleAction::Unload() const
-{
-  CDM::ExampleActionData* data(new CDM::ExampleActionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEExampleAction::Unload(CDM::ExampleActionData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEExampleAction::HasSeverity() const

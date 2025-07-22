@@ -74,7 +74,7 @@
   </DataRequests>
     
 	<Actions>
-  <Action xsi:type="AdvanceTimeData">
+    <Action xsi:type="AdvanceTimeData">
         <Time value="50" unit="s"/>       
     </Action>	
     <!-- Turn on heating -->
@@ -88,7 +88,7 @@
         <Time value="5" unit="min"/>       
     </Action>
     <!-- Turn off heating and turn on cooling -->
-	<Action xsi:type="ThermalApplicationData" AppendToPrevious="true">
+	  <Action xsi:type="ThermalApplicationData" AppendToPrevious="true">
 	    <ActiveHeating>
 	      <Power value="0" unit="BTU/hr"/> 		
 	    </ActiveHeating>
@@ -122,7 +122,7 @@
         <Time value="5" unit="min"/>       
     </Action>
 	<!-- Do all three simultaneously -->
-	<Action xsi:type="ThermalApplicationData" AppendToPrevious="true">
+	  <Action xsi:type="ThermalApplicationData" AppendToPrevious="true">
 	    <ActiveHeating>
 			  <Power value="500" unit="BTU/hr"/> 
 			  <SurfaceAreaFraction value="0.2" unit="unitless"/>  		
@@ -137,7 +137,7 @@
 			  <SurfaceAreaFraction value="1.0" unit="unitless"/> 			
 	    </AppliedTemperature>
     </Action>	
-	<Action xsi:type="AdvanceTimeData">
+	  <Action xsi:type="AdvanceTimeData">
         <Time value="5" unit="min"/>       
     </Action>
     <!-- Turn everything off -->
@@ -157,4 +157,3 @@
     </Action>
   </Actions>
 </Scenario>
-

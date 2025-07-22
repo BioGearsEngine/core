@@ -12,12 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/cdm/properties/SEScalarForce.h>
 
 #include <random>
 
 namespace biogears {
-class SEScalarForce;
 namespace io {
   class PatientActions;
 }
@@ -28,13 +28,10 @@ public:
   SEChestCompressionForce();
   virtual ~SEChestCompressionForce();
 
-  virtual void Clear() override; //clear memory
+  virtual void Invalidate() override; //clear memory
 
   virtual bool IsValid() const override;
   virtual bool IsActive() const override;
-
-  virtual bool Load(const CDM::ChestCompressionForceData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ChestCompressionForceData* Unload() const override;
 
   virtual bool HasForce() const;
   virtual SEScalarForce& GetForce();
@@ -43,9 +40,6 @@ public:
 
   bool operator==( const SEChestCompressionForce& rhs) const;
   bool operator!=( const SEChestCompressionForce& rhs) const;
-
-protected:
-  virtual void Unload(CDM::ChestCompressionForceData& data) const;
 
 protected:
   SEScalarForce* m_Force;

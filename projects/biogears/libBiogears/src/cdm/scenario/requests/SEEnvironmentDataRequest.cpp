@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEEnvironmentDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
 #include <biogears/schema/cdm/Environment.hxx>
 
 namespace biogears {
@@ -21,30 +23,12 @@ SEEnvironmentDataRequest::SEEnvironmentDataRequest(const SEDecimalFormat* dfault
 
 SEEnvironmentDataRequest::~SEEnvironmentDataRequest()
 {
-  Clear();
+  Invalidate();
 }
 
-void SEEnvironmentDataRequest::Clear()
+void SEEnvironmentDataRequest::Invalidate()
 {
-  SEDataRequest::Clear();
-}
-
-bool SEEnvironmentDataRequest::Load(const CDM::EnvironmentDataRequestData& in)
-{
-  SEDataRequest::Load(in);
-  return true;
-}
-
-CDM::EnvironmentDataRequestData* SEEnvironmentDataRequest::Unload() const
-{
-  CDM::EnvironmentDataRequestData* data = new CDM::EnvironmentDataRequestData();
-  Unload(*data);
-  return data;
-}
-
-void SEEnvironmentDataRequest::Unload(CDM::EnvironmentDataRequestData& data) const
-{
-  SEDataRequest::Unload(data);
+  SEDataRequest::Invalidate();
 }
 
 size_t SEEnvironmentDataRequest::HashCode() const

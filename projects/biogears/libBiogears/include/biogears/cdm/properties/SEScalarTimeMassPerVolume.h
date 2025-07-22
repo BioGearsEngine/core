@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API TimeMassPerVolumeUnit : public CCompoundUnit {
@@ -38,16 +37,8 @@ public:
   static const TimeMassPerVolumeUnit hr_ug_Per_mL;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<TimeMassPerVolumeUnit>;
-
-class BIOGEARS_API SEScalarTimeMassPerVolume : public SEScalarQuantity<TimeMassPerVolumeUnit> {
-public:
-  SEScalarTimeMassPerVolume();
-  virtual ~SEScalarTimeMassPerVolume();
-
-  CDM::ScalarTimeMassPerVolumeData* Unload() const override;
-
-  using SEScalarQuantity<TimeMassPerVolumeUnit>::SetValue;
-  using SEScalarQuantity<TimeMassPerVolumeUnit>::GetValue;
-};
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<TimeMassPerVolumeUnit>;
+using SEScalarTimeMassPerVolume  = SEScalarQuantity<TimeMassPerVolumeUnit>;
+#pragma warning(default : 4661)
 }

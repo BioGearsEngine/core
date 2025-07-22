@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SEPsychomotorVigilanceTask::SEPsychomotorVigilanceTask()
@@ -24,12 +25,12 @@ SEPsychomotorVigilanceTask::SEPsychomotorVigilanceTask()
 //-------------------------------------------------------------------------------
 SEPsychomotorVigilanceTask::~SEPsychomotorVigilanceTask()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEPsychomotorVigilanceTask::Clear()
+void SEPsychomotorVigilanceTask::Invalidate()
 {
-  SEPatientAssessment::Clear();
+  SEPatientAssessment::Invalidate();
   SAFE_DELETE(m_AttentionLapses);
   SAFE_DELETE(m_ReactionTime);
 }
@@ -40,34 +41,7 @@ void SEPsychomotorVigilanceTask::Reset()
   INVALIDATE_PROPERTY(m_AttentionLapses);
   INVALIDATE_PROPERTY(m_ReactionTime);
 }
-//-------------------------------------------------------------------------------
-bool SEPsychomotorVigilanceTask::Load(const CDM::PsychomotorVigilanceTaskData& in)
-{
-  SEPatientAssessment::Load(in);
-  if (in.AttentionLapses().present()) {
-    GetAttentionLapses().Load(in.AttentionLapses().get());
-  }
-  if (in.ReactionTime().present()) {
-    GetReactionTime().Load(in.ReactionTime().get());
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::PsychomotorVigilanceTaskData* SEPsychomotorVigilanceTask::Unload()
-{
-  CDM::PsychomotorVigilanceTaskData* data = new CDM::PsychomotorVigilanceTaskData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEPsychomotorVigilanceTask::Unload(CDM::PsychomotorVigilanceTaskData& data)
-{
-  SEPatientAssessment::Unload(data);
-  if (HasAttentionLapses())
-    data.AttentionLapses(std::unique_ptr<CDM::ScalarData>(m_AttentionLapses->Unload()));
-  if (HasReactionTime())
-    data.ReactionTime(std::unique_ptr<CDM::ScalarTimeData>(m_ReactionTime->Unload()));
-}
+
 //-------------------------------------------------------------------------------
 bool SEPsychomotorVigilanceTask::HasAttentionLapses()
 {

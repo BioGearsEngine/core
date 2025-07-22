@@ -10,6 +10,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEPatientCondition::SEPatientCondition()
@@ -19,27 +20,17 @@ SEPatientCondition::SEPatientCondition()
 //-------------------------------------------------------------------------------
 SEPatientCondition::~SEPatientCondition()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEPatientCondition::Clear()
+void SEPatientCondition::Invalidate()
 {
-  SECondition::Clear();
+  SECondition::Invalidate();
 }
 //-------------------------------------------------------------------------------
 bool SEPatientCondition::IsValid() const
 {
   return SECondition::IsValid();
 }
-//-------------------------------------------------------------------------------
-bool SEPatientCondition::Load(const CDM::PatientConditionData& in)
-{
-  SECondition::Load(in);
-  return true;
-}
-//-------------------------------------------------------------------------------
-void SEPatientCondition::Unload(CDM::PatientConditionData& data) const
-{
-  SECondition::Unload(data);
-}
+
 }

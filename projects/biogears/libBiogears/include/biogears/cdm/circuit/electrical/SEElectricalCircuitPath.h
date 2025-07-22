@@ -25,6 +25,9 @@ class SECircuitManager;
 namespace io {
   class Circuit;
 }
+#pragma warning(disable : 4661)
+extern template class SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge>;
+
 class BIOGEARS_API SEElectricalCircuitPath : public SECircuitPath<SEScalarElectricCurrent, SEScalarElectricResistance, SEScalarElectricCapacitance, SEScalarElectricInductance, SEScalarElectricPotential, SEScalarElectricCharge> {
   friend class SECircuitManager;
   friend io::Circuit;
@@ -36,13 +39,7 @@ protected:
 public:
   virtual ~SEElectricalCircuitPath();
 
-  virtual void Clear(); //clear memory
-
-  bool Load(const CDM::ElectricalCircuitPathData& in);
-  CDM::ElectricalCircuitPathData* Unload() const;
-
-protected:
-  void Unload(CDM::ElectricalCircuitPathData& data) const;
+  virtual void Invalidate(); //clear memory
 
 public:
   virtual SEElectricalCircuitNode& GetSourceNode() const { return m_ElectricalSourceNode; }
@@ -111,4 +108,5 @@ protected:
   SEElectricalCircuitNode& m_ElectricalSourceNode;
   SEElectricalCircuitNode& m_ElectricalTargetNode;
 };
+#pragma warning(default : 4661)
 }

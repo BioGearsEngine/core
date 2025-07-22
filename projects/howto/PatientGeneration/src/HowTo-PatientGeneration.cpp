@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceOralDose.h>
 #include <biogears/cdm/patient/assessments/SEUrinalysis.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
@@ -180,7 +180,7 @@ void PatientRun::refresh_treatment()
       _refresh_state = RefreshState::NOREPINEPHRINE_TITRATE;
       _Saline_bag->GetBagVolume().SetValue(250, VolumeUnit::mL);
       _Saline_bag->GetRate().SetValue(250, VolumePerTimeUnit::mL_Per_hr);
-      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
+      if (ua.GetBloodResult() == biogears::SEPresenceIndicator::Positive
           || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
         //Because body fluids are so low apply an additional 1000nl bolus over the hour
         _Saline_bag->GetBagVolume().SetValue(1250, VolumeUnit::mL);
@@ -208,7 +208,7 @@ void PatientRun::refresh_treatment()
        << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
        << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
        << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
-       << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
+       << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Lactate))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
        << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
        << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity();
     _bg->GetLogger()->Info(ss);
@@ -258,7 +258,7 @@ void PatientRun::egdt_treatment()
 
         auto is_septic = _bg->GetCardiovascularSystem()->GetMeanArterialPressure(PressureUnit::mmHg) < 65.
                         || _bg->GetCardiovascularSystem()->GetSystolicArterialPressure(PressureUnit::mmHg) <= 90;
-        auto is_not_euvolaemic = ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
+        auto is_not_euvolaemic = ua.GetBloodResult() == biogears::SEPresenceIndicator::Positive
                                  || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20;
 
         if (is_septic && is_not_euvolaemic) {
@@ -372,7 +372,7 @@ void PatientRun::egdt_treatment()
 
       _Saline_bag->GetBagVolume().SetValue(500, VolumeUnit::mL); 
       _Saline_bag->GetRate().SetValue(1000, VolumePerTimeUnit::mL_Per_hr);
-      if (ua.GetBloodResult() == CDM::enumPresenceIndicator::Positive
+      if (ua.GetBloodResult() == biogears::SEPresenceIndicator::Positive
           || _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_hr) < 20) {
         //Because body fluids are so low apply an additional 500ml bolus over the hour
         _Saline_bag->GetBagVolume().SetValue(1000, VolumeUnit::mL);
@@ -406,7 +406,7 @@ void PatientRun::egdt_treatment()
        << "\n\tRespiration Rate : " << _bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min) << "bpm"
        << "\n\tMean Urine Output : " << _bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min) << VolumePerTimeUnit::mL_Per_min
        << "\n\tTemperature : " << _bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C) << "deg C"
-       << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
+       << "\n\tBlood Lactate : " << _bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Lactate))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L) << AmountPerVolumeUnit::mmol_Per_L
        << "\n\tBacteria Count (Blood) : " << _bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()
        << "\n\tAntibiotic Activity : " << _bg->GetDrugSystem()->GetAntibioticActivity();
     _bg->GetLogger()->Info(ss);
@@ -492,11 +492,11 @@ void PatientRun::run()
   _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("CoreTemperature", TemperatureUnit::C);
   _bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("SkinTemperature", TemperatureUnit::C);
 
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Bicarbonate"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Creatinine"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Lactate"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Piperacillin"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
-  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance("Tazobactam"), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Bicarbonate), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Creatinine), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Lactate), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Piperacillin), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
+  _bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Tazobactam), "BloodConcentration", MassPerVolumeUnit::mg_Per_dL);
 
   _bg->GetEngineTrack()->GetDataRequestManager().SetResultsFilename(long_name + ".csv");
   _bg->GetEngineTrack()->GetDataRequestManager().SetSamplesPerSecond(1. / (5. * 60.));
@@ -511,17 +511,17 @@ void PatientRun::run()
   _bg->ProcessAction(infection);
   auto& substances = _bg->GetSubstanceManager();
 
-  SESubstanceCompound* PiperacillinTazobactam = _bg->GetSubstanceManager().GetCompound("PiperacillinTazobactam");
+  SESubstanceCompound* PiperacillinTazobactam = _bg->GetSubstanceManager().GetCompound(StandardSubstances::PiperacillinTazobactam);
   _PiperacillinTazobactam_bag = std::make_unique<SESubstanceCompoundInfusion>(*PiperacillinTazobactam).release();
   _PiperacillinTazobactam_bag->GetRate().SetValue(0.75, VolumePerTimeUnit::mL_Per_min);
   _PiperacillinTazobactam_bag->GetBagVolume().SetValue(0, VolumeUnit::mL);
 
-  SESubstanceCompound* Saline = _bg->GetSubstanceManager().GetCompound("Saline");
+  SESubstanceCompound* Saline = _bg->GetSubstanceManager().GetCompound(StandardSubstances::Saline);
   _Saline_bag = std::make_unique<SESubstanceCompoundInfusion>(*Saline).release();
   _Saline_bag->GetRate().SetValue(10, VolumePerTimeUnit::mL_Per_min);
   _Saline_bag->GetBagVolume().SetValue(0, VolumeUnit::mL);
 
-  SESubstanceCompound* SalinelowDrip = _bg->GetSubstanceManager().GetCompound("SalineSlowDrip");
+  SESubstanceCompound* SalinelowDrip = _bg->GetSubstanceManager().GetCompound(StandardSubstances::SalineSlowDrip);
   _maintenance_bag = std::make_unique<SESubstanceCompoundInfusion>(*SalinelowDrip).release();
   _maintenance_bag->GetRate().SetValue(10, VolumePerTimeUnit::mL_Per_min);
   _maintenance_bag->GetBagVolume().SetValue(0, VolumeUnit::mL);
@@ -595,13 +595,13 @@ PatientRun& PatientRun::infection_severity(std::string severity)
 {
   std::transform(severity.begin(), severity.end(), severity.begin(), [](unsigned char c) { return std::tolower(c); });
   if (severity == "mild") {
-    _infection_severity = CDM::enumInfectionSeverity::value::Mild;
+    _infection_severity = SEInfectionSeverity::Mild;
     _infection_severity_str = "Mild";
   } else if (severity == "") {
-    _infection_severity = CDM::enumInfectionSeverity::value::Moderate;
+    _infection_severity = SEInfectionSeverity::Moderate;
     _infection_severity_str = "Moderate";
   } else if (severity == "severe") {
-    _infection_severity = CDM::enumInfectionSeverity::value::Severe;
+    _infection_severity = SEInfectionSeverity::Severe;
     _infection_severity_str = "Severe";
   }
   return *this;

@@ -19,7 +19,6 @@
 #include "exec/Driver.h"
 #include "utils/Executor.h"
 
-#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
@@ -114,19 +113,15 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
       return static_cast<int>(ExecutionErrors::SCENARIO_IO_ERROR);
     }
     using biogears::filesystem::path;
-    using mil::tatrc::physiology::datamodel::ScenarioData;
-    std::unique_ptr<ScenarioData> scenario;
+    auto scenario = std::make_unique<SEScenario>(eng->GetSubstanceManager());
     try {
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      auto obj = biogears::Serializer::ReadFile(resolved_filepath,
-                                      eng->GetLogger());
-      scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+      scenario->Load(resolved_filepath);
+          
       if (scenario == nullptr) {
         throw std::runtime_error("Unable to load " + ex.Scenario());
       }
-      if (scenario->Actions().RandomSeed().present()) {
-        std::cout << "Using seed=" << scenario->Actions().RandomSeed() << std::endl;
-      }
+    
     } catch (std::runtime_error e) {
       std::cout << e.what() << std::endl;
       return static_cast<int>(ExecutionErrors::SCENARIO_PARSE_ERROR);
@@ -134,15 +129,14 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
       std::cout << e << std::endl;
       return static_cast<int>(ExecutionErrors::SCENARIO_PARSE_ERROR);
     }
-    biogears::SEPatient patient { sce.GetLogger() };
-    if (scenario->EngineStateFile().present()) {
-      sce.SetEngineStateFile(scenario->EngineStateFile().get());
-    } else if (scenario->InitialParameters()->PatientFile().present()) {
-      sce.GetInitialParameters().SetPatientFile(scenario->InitialParameters()->PatientFile().get());
-    } else if (scenario->InitialParameters()->Patient().present()) {
-      ex.Patient(scenario->InitialParameters()->Patient().get().Name());
-      patient.Load(scenario->InitialParameters()->Patient().get());
-      sce.GetInitialParameters().SetPatient(patient);
+
+    if (scenario->HasEngineStateFile()) {
+      sce.SetEngineStateFile(scenario->GetEngineStateFile());
+    } else if (scenario->HasInitialParameters()  && scenario->GetInitialParameters().HasPatientFile()) {
+      sce.GetInitialParameters().SetPatientFile(scenario->GetInitialParameters().GetPatientFile());
+    } else if (scenario->HasInitialParameters()  && scenario->GetInitialParameters().HasPatient()) {
+      ex.Patient(scenario->GetInitialParameters().GetPatient().GetName());
+      sce.GetInitialParameters().SetPatient(scenario->GetInitialParameters().GetPatient());
     } else {
       std::cerr << "A Patient or State file is required to run " << ex.Scenario() << std::endl;
       return static_cast<int>(ExecutionErrors::PATIENT_IO_ERROR);

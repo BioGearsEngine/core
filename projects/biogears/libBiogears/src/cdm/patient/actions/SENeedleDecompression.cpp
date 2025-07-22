@@ -12,24 +12,25 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SENeedleDecompression.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SENeedleDecompression::SENeedleDecompression()
   : SEPatientAction()
 {
-  m_State = CDM::enumOnOff::Off;
-  m_Side = (CDM::enumSide::value)-1;
+  m_State = SEOnOff::Off;
+  m_Side = SESide::Invalid;
 }
 //-------------------------------------------------------------------------------
 SENeedleDecompression::~SENeedleDecompression()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SENeedleDecompression::Clear()
+void SENeedleDecompression::Invalidate()
 {
-  SEPatientAction::Clear();
-  m_State = CDM::enumOnOff::Off;
-  m_Side = (CDM::enumSide::value)-1;
+  SEPatientAction::Invalidate();
+  m_State = SEOnOff::Off;
+  m_Side = SESide::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SENeedleDecompression::IsValid() const
@@ -39,55 +40,32 @@ bool SENeedleDecompression::IsValid() const
 //-------------------------------------------------------------------------------
 bool SENeedleDecompression::IsActive() const
 {
-  return IsValid() && m_State == CDM::enumOnOff::On;
+  return IsValid() && m_State == SEOnOff::On;
 }
 //-------------------------------------------------------------------------------
 void SENeedleDecompression::SetActive(bool b)
 {
-  m_State = b ? CDM::enumOnOff::On : CDM::enumOnOff::Off;
+  m_State = b ? SEOnOff::On : SEOnOff::Off;
 }
 //-------------------------------------------------------------------------------
-bool SENeedleDecompression::Load(const CDM::NeedleDecompressionData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  m_Side = in.Side();
-  m_State = in.State();
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::NeedleDecompressionData* SENeedleDecompression::Unload() const
-{
-  CDM::NeedleDecompressionData* data(new CDM::NeedleDecompressionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SENeedleDecompression::Unload(CDM::NeedleDecompressionData& data) const
-{
-  SEPatientAction::Unload(data);
-  data.State(m_State);
-  if (HasSide())
-    data.Side(m_Side);
-}
-//-------------------------------------------------------------------------------
-CDM::enumSide::value SENeedleDecompression::GetSide() const
+SESide SENeedleDecompression::GetSide() const
 {
   return m_Side;
 }
 //-------------------------------------------------------------------------------
-void SENeedleDecompression::SetSide(CDM::enumSide::value Side)
+void SENeedleDecompression::SetSide(SESide Side)
 {
   m_Side = Side;
 }
 //-------------------------------------------------------------------------------
 bool SENeedleDecompression::HasSide() const
 {
-  return m_Side == ((CDM::enumSide::value)-1) ? false : true;
+  return m_Side == SESide::Invalid ? false : true;
 }
 //-------------------------------------------------------------------------------
 void SENeedleDecompression::InvalidateSide()
 {
-  m_Side = (CDM::enumSide::value)-1;
+  m_Side = SESide::Invalid;
 }
 //-------------------------------------------------------------------------------
 void SENeedleDecompression::ToString(std::ostream& str) const

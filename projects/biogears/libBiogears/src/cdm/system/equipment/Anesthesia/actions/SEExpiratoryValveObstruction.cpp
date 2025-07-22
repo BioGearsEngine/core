@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveObstruction.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,12 +26,12 @@ SEExpiratoryValveObstruction::SEExpiratoryValveObstruction()
 //-------------------------------------------------------------------------------
 SEExpiratoryValveObstruction::~SEExpiratoryValveObstruction()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEExpiratoryValveObstruction::Clear()
+void SEExpiratoryValveObstruction::Invalidate()
 {
-  SEAnesthesiaMachineAction::Clear();
+  SEAnesthesiaMachineAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -40,27 +43,6 @@ bool SEExpiratoryValveObstruction::IsValid() const
 bool SEExpiratoryValveObstruction::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEExpiratoryValveObstruction::Load(const CDM::ExpiratoryValveObstructionData& in, std::default_random_engine *rd)
-{
-  SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ExpiratoryValveObstructionData* SEExpiratoryValveObstruction::Unload() const
-{
-  CDM::ExpiratoryValveObstructionData* data = new CDM::ExpiratoryValveObstructionData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEExpiratoryValveObstruction::Unload(CDM::ExpiratoryValveObstructionData& data) const
-{
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEExpiratoryValveObstruction::HasSeverity() const

@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineOxygenBottle.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/container/Tree.tci.h>
@@ -28,36 +31,13 @@ SEAnesthesiaMachineOxygenBottle::SEAnesthesiaMachineOxygenBottle(Logger* logger)
 
 SEAnesthesiaMachineOxygenBottle::~SEAnesthesiaMachineOxygenBottle()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
 
-void SEAnesthesiaMachineOxygenBottle::Clear()
+void SEAnesthesiaMachineOxygenBottle::Invalidate()
 {
   SAFE_DELETE(m_Volume);
-}
-//-------------------------------------------------------------------------------
-
-bool SEAnesthesiaMachineOxygenBottle::Load(const CDM::AnesthesiaMachineOxygenBottleData& in)
-{
-  if (in.Volume().present())
-    GetVolume().Load(in.Volume().get());
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::AnesthesiaMachineOxygenBottleData* SEAnesthesiaMachineOxygenBottle::Unload() const
-{
-  CDM::AnesthesiaMachineOxygenBottleData* data = new CDM::AnesthesiaMachineOxygenBottleData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEAnesthesiaMachineOxygenBottle::Unload(CDM::AnesthesiaMachineOxygenBottleData& data) const
-{
-  if (m_Volume != nullptr)
-    data.Volume(std::unique_ptr<CDM::ScalarVolumeData>(m_Volume->Unload()));
 }
 //-------------------------------------------------------------------------------
 

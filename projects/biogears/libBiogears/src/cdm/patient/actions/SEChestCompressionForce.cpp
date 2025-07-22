@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEChestCompressionForce.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarForce.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,12 +24,12 @@ SEChestCompressionForce::SEChestCompressionForce()
 //-------------------------------------------------------------------------------
 SEChestCompressionForce::~SEChestCompressionForce()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEChestCompressionForce::Clear()
+void SEChestCompressionForce::Invalidate()
 {
-  SEChestCompression::Clear();
+  SEChestCompression::Invalidate();
   SAFE_DELETE(m_Force);
 }
 //-------------------------------------------------------------------------------
@@ -40,27 +41,6 @@ bool SEChestCompressionForce::IsValid() const
 bool SEChestCompressionForce::IsActive() const
 {
   return IsValid() ? !m_Force->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEChestCompressionForce::Load(const CDM::ChestCompressionForceData& in, std::default_random_engine *rd)
-{
-  SEChestCompression::Load(in);
-  GetForce().Load(in.Force(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ChestCompressionForceData* SEChestCompressionForce::Unload() const
-{
-  CDM::ChestCompressionForceData* data(new CDM::ChestCompressionForceData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEChestCompressionForce::Unload(CDM::ChestCompressionForceData& data) const
-{
-  SEChestCompression::Unload(data);
-  if (m_Force != nullptr)
-    data.Force(std::unique_ptr<CDM::ScalarForceData>(m_Force->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEChestCompressionForce::HasForce() const

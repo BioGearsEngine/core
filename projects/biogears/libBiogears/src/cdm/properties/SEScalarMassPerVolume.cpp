@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 
@@ -29,7 +32,7 @@ const MassPerVolumeUnit MassPerVolumeUnit::mg_Per_dL("mg/dL");
 const MassPerVolumeUnit MassPerVolumeUnit::kg_Per_mL("kg/mL");
 const MassPerVolumeUnit MassPerVolumeUnit::kg_Per_L("kg/L");
 
-template class SEScalarQuantity<MassPerVolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<MassPerVolumeUnit>;
 
 MassPerVolumeUnit::MassPerVolumeUnit(const char* u)
   : MassPerVolumeUnit(std::string { u })
@@ -44,15 +47,7 @@ MassPerVolumeUnit::MassPerVolumeUnit(const std::string& u)
 MassPerVolumeUnit::~MassPerVolumeUnit()
 {
 }
-//-------------------------------------------------------------------------------
-CDM::ScalarMassPerVolumeData* SEScalarMassPerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarMassPerVolumeData* data(new CDM::ScalarMassPerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool MassPerVolumeUnit::IsValidUnit(const char* unit)
 {
@@ -130,24 +125,6 @@ const MassPerVolumeUnit& MassPerVolumeUnit::GetCompoundUnit(const char* unit)
 const MassPerVolumeUnit& MassPerVolumeUnit::GetCompoundUnit(const std::string& unit)
 {
   return GetCompoundUnit(unit.c_str());
-}
-//-------------------------------------------------------------------------------
-SEScalarMassPerVolume::SEScalarMassPerVolume()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarMassPerVolume::SEScalarMassPerVolume(const SEScalarMassPerVolume& obj)
-  : SEScalarQuantity<MassPerVolumeUnit>(obj)
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarMassPerVolume::SEScalarMassPerVolume(double v, const MassPerVolumeUnit& u)
-  : SEScalarQuantity<MassPerVolumeUnit>(v, u)
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarMassPerVolume::~SEScalarMassPerVolume()
-{
 }
 //-------------------------------------------------------------------------------
 bool MassPerVolumeUnit::operator==(const MassPerVolumeUnit& obj) const

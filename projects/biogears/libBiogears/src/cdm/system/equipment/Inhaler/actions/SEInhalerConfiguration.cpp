@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Inhaler/actions/SEInhalerConfiguration.h>
 
+#include "io/cdm/Inhaler.h"
+#include "io/cdm/InhalerActions.h"
+
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
@@ -29,12 +32,12 @@ SEInhalerConfiguration::SEInhalerConfiguration(SESubstanceManager& substances)
 //-----------------------------------------------------------------------------
 SEInhalerConfiguration::~SEInhalerConfiguration()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEInhalerConfiguration::Clear()
+void SEInhalerConfiguration::Invalidate()
 {
-  SEInhalerAction::Clear();
+  SEInhalerAction::Invalidate();
   InvalidateConfigurationFile();
   SAFE_DELETE(m_Configuration);
 }
@@ -42,32 +45,6 @@ void SEInhalerConfiguration::Clear()
 bool SEInhalerConfiguration::IsValid() const
 {
   return SEInhalerAction::IsValid() && (HasConfiguration() || HasConfigurationFile());
-}
-//-----------------------------------------------------------------------------
-bool SEInhalerConfiguration::Load(const CDM::InhalerConfigurationData& in, std::default_random_engine *rd)
-{
-  SEInhalerAction::Load(in);
-  if (in.ConfigurationFile().present())
-    SetConfigurationFile(in.ConfigurationFile().get());
-  if (in.Configuration().present())
-    GetConfiguration().Load(in.Configuration().get());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::InhalerConfigurationData* SEInhalerConfiguration::Unload() const
-{
-  CDM::InhalerConfigurationData* data = new CDM::InhalerConfigurationData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEInhalerConfiguration::Unload(CDM::InhalerConfigurationData& data) const
-{
-  SEInhalerAction::Unload(data);
-  if (HasConfiguration())
-    data.Configuration(std::unique_ptr<CDM::InhalerData>(m_Configuration->Unload()));
-  else if (HasConfigurationFile())
-    data.ConfigurationFile(m_ConfigurationFile);
 }
 //-----------------------------------------------------------------------------
 bool SEInhalerConfiguration::HasConfiguration() const
@@ -100,7 +77,7 @@ std::string SEInhalerConfiguration::GetConfigurationFile() const
 //-----------------------------------------------------------------------------
 void SEInhalerConfiguration::SetConfigurationFile(const char* fileName)
 {
-  SetConfigurationFile(std::string{ fileName });
+  SetConfigurationFile(std::string { fileName });
 }
 //-----------------------------------------------------------------------------
 void SEInhalerConfiguration::SetConfigurationFile(const std::string& fileName)
@@ -154,7 +131,6 @@ bool SEInhalerConfiguration::operator==(SEInhalerConfiguration const& rhs) const
           ? m_Configuration->operator==(*rhs.m_Configuration)
           : m_Configuration == rhs.m_Configuration)
     && m_Substances == rhs.m_Substances;
-
 }
 //-----------------------------------------------------------------------------
 bool SEInhalerConfiguration::operator!=(SEInhalerConfiguration const& rhs) const

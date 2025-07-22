@@ -11,9 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/patient/actions/SEUseInhaler.h>
+
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
-
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEUseInhaler::SEUseInhaler()
   : SEConsciousRespirationCommand()
@@ -22,12 +23,12 @@ SEUseInhaler::SEUseInhaler()
 //-------------------------------------------------------------------------------
 SEUseInhaler::~SEUseInhaler()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEUseInhaler::Clear()
+void SEUseInhaler::Invalidate()
 {
-  SEConsciousRespirationCommand::Clear();
+  SEConsciousRespirationCommand::Invalidate();
 }
 //-------------------------------------------------------------------------------
 bool SEUseInhaler::IsValid() const
@@ -38,24 +39,6 @@ bool SEUseInhaler::IsValid() const
 bool SEUseInhaler::IsActive() const
 {
   return SEConsciousRespirationCommand::IsActive();
-}
-//-------------------------------------------------------------------------------
-bool SEUseInhaler::Load(const CDM::UseInhalerData& in, std::default_random_engine *rd)
-{
-  SEConsciousRespirationCommand::Load(in);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::UseInhalerData* SEUseInhaler::Unload() const
-{
-  CDM::UseInhalerData* data(new CDM::UseInhalerData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEUseInhaler::Unload(CDM::UseInhalerData& data) const
-{
-  SEConsciousRespirationCommand::Unload(data);
 }
 //-------------------------------------------------------------------------------
 void SEUseInhaler::ToString(std::ostream& str) const

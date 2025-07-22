@@ -11,11 +11,14 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatCapacitancePerAmount.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const HeatCapacitancePerAmountUnit HeatCapacitancePerAmountUnit::J_Per_K_mol("J/K mol");
 
-template class SEScalarQuantity<HeatCapacitancePerAmountUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatCapacitancePerAmountUnit>;
 
 HeatCapacitancePerAmountUnit::HeatCapacitancePerAmountUnit(const char* u)
   : HeatCapacitancePerAmountUnit(std::string { u })
@@ -29,23 +32,6 @@ HeatCapacitancePerAmountUnit::HeatCapacitancePerAmountUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 HeatCapacitancePerAmountUnit::~HeatCapacitancePerAmountUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatCapacitancePerAmount::SEScalarHeatCapacitancePerAmount()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatCapacitancePerAmount::~SEScalarHeatCapacitancePerAmount()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatCapacitancePerAmountData* SEScalarHeatCapacitancePerAmount::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatCapacitancePerAmountData* data(new CDM::ScalarHeatCapacitancePerAmountData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool HeatCapacitancePerAmountUnit::IsValidUnit(const char* unit)

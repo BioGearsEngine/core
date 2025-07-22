@@ -22,9 +22,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/system/physiology/SERespiratorySystem.h>
 
-#include <biogears/engine/Controller/BioGears.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+#include <biogears/engine/Controller/BioGears.h>
+
+#include "io/cdm/Inhaler.h"
 
 namespace biogears {
 /*
@@ -32,33 +33,31 @@ namespace biogears {
 Constructors
 ========================
 */
-
 auto Inhaler::make_unique(BioGears& bg) -> std::unique_ptr<Inhaler>
 {
   return std::unique_ptr<Inhaler>(new Inhaler(bg));
 }
-
+//--------------------------------------------------------------------------------------------------
 Inhaler::Inhaler(BioGears& bg)
   : SEInhaler(bg.GetSubstances())
   , m_data(bg)
 {
-  Clear();
+  Invalidate();
 }
-
+//--------------------------------------------------------------------------------------------------
 Inhaler::~Inhaler()
 {
-  Clear();
+  Invalidate();
 }
-
-void Inhaler::Clear()
+//--------------------------------------------------------------------------------------------------
+void Inhaler::Invalidate()
 {
-  SEInhaler::Clear();
+  SEInhaler::Invalidate();
   m_Mouthpiece = nullptr;
   m_AerosolMouthpiece = nullptr;
   m_AmbientEnv = nullptr;
   m_InhalerDrug = nullptr;
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Initializes system properties to valid homeostatic values.
@@ -67,24 +66,6 @@ void Inhaler::Initialize()
 {
   BioGearsSystem::Initialize();
   m_InhalerDrug = nullptr;
-}
-
-bool Inhaler::Load(const CDM::BioGearsInhalerData& in)
-{
-  if (!SEInhaler::Load(in))
-    return false;
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsInhalerData* Inhaler::Unload() const
-{
-  CDM::BioGearsInhalerData* data = new CDM::BioGearsInhalerData();
-  Unload(*data);
-  return data;
-}
-void Inhaler::Unload(CDM::BioGearsInhalerData& data) const
-{
-  SEInhaler::Unload(data);
 }
 
 void Inhaler::SetUp()
@@ -96,7 +77,7 @@ void Inhaler::SetUp()
   m_Mouthpiece = m_data.GetCompartments().GetGasCompartment(BGE::InhalerCompartment::Mouthpiece);
   m_AerosolMouthpiece = m_data.GetCompartments().GetLiquidCompartment(BGE::InhalerCompartment::Mouthpiece);
 
-  if (m_State == CDM::enumOnOff::On) {
+  if (m_State == SEOnOff::On) {
     if (m_Substance == nullptr) {
       Fatal("State is on, but without a substance");
     } else {
@@ -125,7 +106,7 @@ void Inhaler::SetUp()
 void Inhaler::PreProcess()
 {
   if (m_data.GetActions().GetInhalerActions().HasConfiguration()) {
-    CDM::enumOnOff::value state = GetState();
+    SEOnOff state = GetState();
     SEInhalerConfiguration* config = m_data.GetActions().GetInhalerActions().GetConfiguration();
     ProcessConfiguration(*config);
     m_data.GetActions().GetInhalerActions().RemoveConfiguration();
@@ -145,24 +126,24 @@ void Inhaler::PreProcess()
   }
 
   // ### HANDLE INHALER-BASED UPDATES
-  if (m_State == CDM::enumOnOff::On) {
+  if (m_State == SEOnOff::On) {
     //  Check to see if there is a substantial mass of substance on the inhaler node.
     //  If not, we'll disconnect the inhaler.
     double dCInhalerSubstanceMass_ug = m_InhalerDrug->GetMass(MassUnit::ug);
     if (SEScalar::IsZero(dCInhalerSubstanceMass_ug, 1e-7)) {
       Info("Inhaler removed!");
       m_InhalerDrug = nullptr;
-      m_State = CDM::enumOnOff::Off;
-      m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Free);
+      m_State = SEOnOff::Off;
+      m_data.SetAirwayMode(SEBioGearsAirwayMode::Free);
     }
   }
 }
+//--------------------------------------------------------------------------------------------------
 
 void Inhaler::StateChange()
 {
   SEInhaler::StateChange();
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Administer Substance Using Inhaler
@@ -174,12 +155,11 @@ void Inhaler::StateChange()
 /// \details
 /// This method initializes substance values in the inhaler when actuated.  It is called once
 /// per actuation.
-//--------------------------------------------------------------------------------------------------
 void Inhaler::Administer()
 {
   // Check to see if the inhaler is already on. We should not run this method unless the
   //  inhaler is currently off and about to be activated.
-  if (m_State == CDM::enumOnOff::On) {
+  if (m_State == SEOnOff::On) {
     /// \error: Already processing a Substance Inhalation, ignoring this command.
     Error("Already processing a Substance Inhalation, ignoring this command");
     return;
@@ -187,8 +167,8 @@ void Inhaler::Administer()
 
   // Alert the user that the inhaler is actuated
   Info("Inhaler actuated!");
-  m_State = CDM::enumOnOff::On;
-  m_data.SetAirwayMode(CDM::enumBioGearsAirwayMode::Inhaler);
+  m_State = SEOnOff::On;
+  m_data.SetAirwayMode(SEBioGearsAirwayMode::Inhaler);
 
   // Initialize pressure in the inhaler node to ambient
   double dAmbientPressure = m_AmbientEnv->GetPressure(PressureUnit::cmH2O);
@@ -244,7 +224,6 @@ void Inhaler::Administer()
   }
   m_InhalerDrug->Balance(BalanceLiquidBy::Mass);
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Inhaler system process function
@@ -255,7 +234,6 @@ void Inhaler::Administer()
 void Inhaler::Process()
 {
 }
-
 //--------------------------------------------------------------------------------------------------
 /// \brief
 /// Inhaler system postprocess function
@@ -266,4 +244,5 @@ void Inhaler::Process()
 void Inhaler::PostProcess()
 {
 }
+//--------------------------------------------------------------------------------------------------
 }

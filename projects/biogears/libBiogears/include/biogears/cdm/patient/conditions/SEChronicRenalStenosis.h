@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/exports.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
@@ -29,24 +28,18 @@ public:
   SEChronicRenalStenosis();
   virtual ~SEChronicRenalStenosis();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate() override; //clear memory
 
-  virtual bool IsValid() const;
-
-  virtual bool Load(const CDM::ChronicRenalStenosisData& in);
-  virtual CDM::ChronicRenalStenosisData* Unload() const;
+  virtual bool IsValid() const override;
 
   bool operator==(SEChronicRenalStenosis const&) const;
   bool operator!=(SEChronicRenalStenosis const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::ChronicRenalStenosisData& data) const;
-
 public:
-  virtual std::string GetName() const { return "ChronicRenalStenosis"; }
-  virtual const char* GetName_cStr() const { return "ChronicRenalStenosis"; }
+  virtual std::string GetName() const override { return "ChronicRenalStenosis"; }
+  virtual const char* GetName_cStr() const override { return "ChronicRenalStenosis"; }
 
   virtual bool HasLeftKidneySeverity() const;
   virtual SEScalar0To1& GetLeftKidneySeverity();
@@ -54,7 +47,7 @@ public:
   virtual bool HasRightKidneySeverity() const;
   virtual SEScalar0To1& GetRightKidneySeverity();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override;
 
 protected:
   SEScalar0To1* m_LeftKidneySeverity;

@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEChronicObstructivePulmonaryDisease.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEChronicObstructivePulmonaryDisease::SEChronicObstructivePulmonaryDisease()
@@ -23,12 +24,12 @@ SEChronicObstructivePulmonaryDisease::SEChronicObstructivePulmonaryDisease()
 //-----------------------------------------------------------------------------
 SEChronicObstructivePulmonaryDisease::~SEChronicObstructivePulmonaryDisease()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEChronicObstructivePulmonaryDisease::Clear()
+void SEChronicObstructivePulmonaryDisease::Invalidate()
 {
-  SEPatientCondition::Clear();
+  SEPatientCondition::Invalidate();
   SAFE_DELETE(m_BronchitisSeverity);
   SAFE_DELETE(m_EmphysemaSeverity);
 }
@@ -37,30 +38,7 @@ bool SEChronicObstructivePulmonaryDisease::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasBronchitisSeverity() && HasEmphysemaSeverity();
 }
-//-----------------------------------------------------------------------------
-bool SEChronicObstructivePulmonaryDisease::Load(const CDM::ChronicObstructivePulmonaryDiseaseData& in)
-{
-  SEPatientCondition::Load(in);
-  GetBronchitisSeverity().Load(in.BronchitisSeverity());
-  GetEmphysemaSeverity().Load(in.EmphysemaSeverity());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ChronicObstructivePulmonaryDiseaseData* SEChronicObstructivePulmonaryDisease::Unload() const
-{
-  CDM::ChronicObstructivePulmonaryDiseaseData* data(new CDM::ChronicObstructivePulmonaryDiseaseData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEChronicObstructivePulmonaryDisease::Unload(CDM::ChronicObstructivePulmonaryDiseaseData& data) const
-{
-  SEPatientCondition::Unload(data);
-  if (m_BronchitisSeverity != nullptr)
-    data.BronchitisSeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_BronchitisSeverity->Unload()));
-  if (m_EmphysemaSeverity != nullptr)
-    data.EmphysemaSeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_EmphysemaSeverity->Unload()));
-}
+
 //-----------------------------------------------------------------------------
 bool SEChronicObstructivePulmonaryDisease::HasBronchitisSeverity() const
 {

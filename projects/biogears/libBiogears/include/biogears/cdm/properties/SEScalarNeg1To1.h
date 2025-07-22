@@ -12,19 +12,17 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalar.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API SEScalarNeg1To1 : public SEScalar {
 
 public:
   SEScalarNeg1To1();
+  SEScalarNeg1To1(SEScalarNeg1To1 const& obj);
   virtual ~SEScalarNeg1To1();    
 
   bool operator==(const SEScalarNeg1To1&) const;
   bool operator!=(const SEScalarNeg1To1&) const;
-
-  CDM::ScalarNeg1To1Data* Unload() const override;
 
   using SEScalar::GetValue;
   double GetValue(const NoUnit& unitless) const;

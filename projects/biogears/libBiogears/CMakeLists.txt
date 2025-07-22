@@ -5,7 +5,7 @@ message(STATUS "  Configuring libbiogears")
 
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/include/biogears/config.h.in contents)
 string(CONFIGURE "${contents}" contents @ONLY)
-FILE(GENERATE OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/../generated/$<CONFIG>/biogears/config.h 
+FILE(GENERATE OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/../${GENERATED_PREFIX}/biogears/config.h 
               CONTENT   "${contents}"
      NEWLINE_STYLE LF)
 
@@ -62,7 +62,7 @@ if(Biogears_BUILD_STATIC)
    if(biogears_USE_OVERRIDE_CONTROL)
       target_compile_definitions( libbiogears PRIVATE BIOGEARS_USE_OVERRIDE_CONTROL)
    endif()
-  if(UNITTEST_biogears-core)
+  if(Biogears_BUILD_TEST)
      target_compile_definitions( libbiogears PUBLIC ENABLE_UNIT_TEST_API)
   endif()
   if(WIN32)
@@ -139,7 +139,7 @@ else()
     CXX_STANDARD 20
     )
   set_target_properties(libbiogears PROPERTIES SOVERSION "${Biogears_LIB_VERSION}")
-  if(UNITTEST_biogears-core)
+  if(Biogears_BUILD_TEST)
      target_compile_definitions( libbiogears PUBLIC ENABLE_UNIT_TEST_API)
   endif()
   ###############################################################################

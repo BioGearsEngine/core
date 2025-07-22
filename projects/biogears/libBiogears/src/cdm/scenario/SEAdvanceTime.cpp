@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 
+#include "io/cdm/Actions.h"
+
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/schema/cdm/Actions.hxx>
 
@@ -23,39 +25,21 @@ SEAdvanceTime::SEAdvanceTime()
 //-----------------------------------------------------------------------------
 SEAdvanceTime::~SEAdvanceTime()
 {
-  Clear();
+  Invalidate();
+  SAFE_DELETE(m_Time);
 }
 //-----------------------------------------------------------------------------
-void SEAdvanceTime::Clear()
+void SEAdvanceTime::Invalidate()
 {
-  SEAction::Clear();
-  SAFE_DELETE(m_Time);
+  SEAction::Invalidate();
+  if (m_Time) {
+    m_Time->Invalidate();
+  }
 }
 //-----------------------------------------------------------------------------
 bool SEAdvanceTime::IsValid() const
 {
   return HasTime() && m_Time->IsValid();
-}
-//-----------------------------------------------------------------------------
-bool SEAdvanceTime::Load(const CDM::AdvanceTimeData& in, std::default_random_engine *rd)
-{
-  SEAction::Load(in);
-  GetTime().Load(in.Time(), rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::AdvanceTimeData* SEAdvanceTime::Unload() const
-{
-  CDM::AdvanceTimeData* data = new CDM::AdvanceTimeData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEAdvanceTime::Unload(CDM::AdvanceTimeData& data) const
-{
-  SEAction::Unload(data);
-  if (HasTime())
-    data.Time(std::unique_ptr<CDM::ScalarTimeData>(m_Time->Unload()));
 }
 //-----------------------------------------------------------------------------
 void SEAdvanceTime::ToString(std::ostream& str) const

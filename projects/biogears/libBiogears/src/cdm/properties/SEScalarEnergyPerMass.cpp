@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarEnergyPerMass.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const EnergyPerMassUnit EnergyPerMassUnit::J_Per_kg("J/kg");
@@ -18,7 +21,7 @@ const EnergyPerMassUnit EnergyPerMassUnit::kJ_Per_kg("kJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::mJ_Per_kg("mJ/kg");
 const EnergyPerMassUnit EnergyPerMassUnit::kcal_Per_kg("kcal/kg");
 
-template class SEScalarQuantity<EnergyPerMassUnit>;
+template class BIOGEARS_API SEScalarQuantity<EnergyPerMassUnit>;
 
 EnergyPerMassUnit::EnergyPerMassUnit(const char* u)
   : EnergyPerMassUnit(std::string { u })
@@ -31,23 +34,6 @@ EnergyPerMassUnit::EnergyPerMassUnit(const std::string& u)
 }
 EnergyPerMassUnit::~EnergyPerMassUnit()
 {
-}
-//-----------------------------------------------------------------------------
-SEScalarEnergyPerMass::SEScalarEnergyPerMass()
-{
-}
-//-----------------------------------------------------------------------------
-SEScalarEnergyPerMass::~SEScalarEnergyPerMass()
-{
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarEnergyPerMassData* SEScalarEnergyPerMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarEnergyPerMassData* data(new CDM::ScalarEnergyPerMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-----------------------------------------------------------------------------
 bool EnergyPerMassUnit::IsValidUnit(const char* unit)

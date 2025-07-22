@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 #pragma push_macro("Time")
@@ -22,7 +25,7 @@ const TimeUnit TimeUnit::day("day");
 const TimeUnit TimeUnit::yr("yr");
 #pragma pop_macro("Time")
 
-template class SEScalarQuantity<TimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<TimeUnit>;
 
 TimeUnit::TimeUnit(const char* u)
   : TimeUnit(std::string { u })
@@ -36,23 +39,6 @@ TimeUnit::TimeUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 TimeUnit::~TimeUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarTime::SEScalarTime()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarTime::~SEScalarTime()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarTimeData* SEScalarTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarTimeData* data(new CDM::ScalarTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool TimeUnit::IsValidUnit(const char* unit)

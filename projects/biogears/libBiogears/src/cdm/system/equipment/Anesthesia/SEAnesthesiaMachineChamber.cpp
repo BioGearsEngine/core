@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/SEAnesthesiaMachineChamber.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -20,7 +23,7 @@ SEAnesthesiaMachineChamber::SEAnesthesiaMachineChamber(SESubstanceManager& subst
   : Loggable(substances.GetLogger())
   , m_Substances(substances)
 {
-  m_State = (CDM::enumOnOff::value)-1;
+  m_State = SEOnOff::Invalid;
   m_SubstanceFraction = nullptr;
   m_Substance = nullptr;
 }
@@ -28,53 +31,15 @@ SEAnesthesiaMachineChamber::SEAnesthesiaMachineChamber(SESubstanceManager& subst
 
 SEAnesthesiaMachineChamber::~SEAnesthesiaMachineChamber()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
 
-void SEAnesthesiaMachineChamber::Clear()
+void SEAnesthesiaMachineChamber::Invalidate()
 {
-  m_State = (CDM::enumOnOff::value)-1;
+  m_State = SEOnOff::Invalid;
   SAFE_DELETE(m_SubstanceFraction);
   m_Substance = nullptr;
-}
-//-------------------------------------------------------------------------------
-
-bool SEAnesthesiaMachineChamber::Load(const CDM::AnesthesiaMachineChamberData& in)
-{
-  if (in.State().present())
-    SetState(in.State().get());
-  if (in.SubstanceFraction().present())
-    GetSubstanceFraction().Load(in.SubstanceFraction().get());
-  if (in.Substance().present()) {
-    m_Substance = m_Substances.GetSubstance(in.Substance().get());
-    if (m_Substance == nullptr) {
-      std::stringstream ss;
-      ss << "Do not have substance : " << in.Substance().get();
-      Error(ss);
-      return false;
-    }
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-
-CDM::AnesthesiaMachineChamberData* SEAnesthesiaMachineChamber::Unload() const
-{
-  CDM::AnesthesiaMachineChamberData* data = new CDM::AnesthesiaMachineChamberData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-
-void SEAnesthesiaMachineChamber::Unload(CDM::AnesthesiaMachineChamberData& data) const
-{
-  if (HasState())
-    data.State(m_State);
-  if (m_SubstanceFraction != nullptr)
-    data.SubstanceFraction(std::unique_ptr<CDM::ScalarFractionData>(m_SubstanceFraction->Unload()));
-  if (HasSubstance())
-    data.Substance(m_Substance->GetName());
 }
 //-------------------------------------------------------------------------------
 
@@ -110,24 +75,24 @@ const SEScalar* SEAnesthesiaMachineChamber::GetScalar(const std::string& name)
 }
 //-------------------------------------------------------------------------------
 
-CDM::enumOnOff::value SEAnesthesiaMachineChamber::GetState() const
+SEOnOff SEAnesthesiaMachineChamber::GetState() const
 {
   return m_State;
 }
 //-------------------------------------------------------------------------------
-void SEAnesthesiaMachineChamber::SetState(CDM::enumOnOff::value state)
+void SEAnesthesiaMachineChamber::SetState(SEOnOff state)
 {
   m_State = state;
 }
 //-------------------------------------------------------------------------------
 bool SEAnesthesiaMachineChamber::HasState() const
 {
-  return m_State == ((CDM::enumOnOff::value)-1) ? false : true;
+  return m_State == (SEOnOff::Invalid) ? false : true;
 }
 //-------------------------------------------------------------------------------
 void SEAnesthesiaMachineChamber::InvalidateState()
 {
-  m_State = (CDM::enumOnOff::value)-1;
+  m_State = SEOnOff::Invalid;
 }
 //-------------------------------------------------------------------------------
 

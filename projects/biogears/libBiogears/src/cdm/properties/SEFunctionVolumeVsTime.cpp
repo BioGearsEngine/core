@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEFunctionVolumeVsTime.h>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 
@@ -24,39 +26,14 @@ SEFunctionVolumeVsTime::SEFunctionVolumeVsTime()
 
 SEFunctionVolumeVsTime::~SEFunctionVolumeVsTime()
 {
-  Clear();
+  Invalidate();
 }
 
-void SEFunctionVolumeVsTime::Clear()
+void SEFunctionVolumeVsTime::Invalidate()
 {
-  SEFunction::Clear();
+  SEFunction::Invalidate();
   m_TimeUnit = nullptr;
   m_VolumeUnit = nullptr;
-}
-
-bool SEFunctionVolumeVsTime::Load(const CDM::FunctionVolumeVsTimeData& in)
-{
-  if (!SEFunction::Load(in))
-    return false;
-  m_TimeUnit = &TimeUnit::GetCompoundUnit(in.IndependentUnit().get());
-  m_VolumeUnit = &VolumeUnit::GetCompoundUnit(in.DependentUnit().get());
-  return IsValid();
-}
-
-CDM::FunctionVolumeVsTimeData* SEFunctionVolumeVsTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::FunctionVolumeVsTimeData* data(new CDM::FunctionVolumeVsTimeData());
-  Unload(*data);
-  return data;
-}
-
-void SEFunctionVolumeVsTime::Unload(CDM::FunctionVolumeVsTimeData& data) const
-{
-  SEFunction::Unload(data);
-  data.IndependentUnit(m_TimeUnit->GetString());
-  data.DependentUnit(m_VolumeUnit->GetString());
 }
 
 double SEFunctionVolumeVsTime::GetTimeValue(unsigned int index, const TimeUnit& unit)
@@ -101,12 +78,21 @@ void SEFunctionVolumeVsTime::SetVolumeUnit(const VolumeUnit& unit)
   m_VolumeUnit = &unit;
 }
 //-------------------------------------------------------------------------------
+//!  
+//!  operator==(const SEFunctionVlumeVsTime&(
+//!  \param SEunctionVolumeVsTime -- RHS of equlaity operator
+//!  \returns bool -- True if both sides are Invalid else True only if booth sides are valid and all terms are equal. 
+
 bool SEFunctionVolumeVsTime::operator==(const SEFunctionVolumeVsTime& rhs) const
 {
-  bool equivilant = (m_TimeUnit && rhs.m_TimeUnit) ? m_TimeUnit->operator==(*rhs.m_TimeUnit) : m_TimeUnit == rhs.m_TimeUnit;
-  equivilant &= (m_VolumeUnit && rhs.m_VolumeUnit) ? m_VolumeUnit->operator==(*rhs.m_VolumeUnit) : m_VolumeUnit == rhs.m_VolumeUnit;
-  equivilant &= SEFunction::operator==(rhs);
-  return equivilant;
+  bool equivilant = rhs.IsValid() || IsValid();
+  if (equivilant) {
+    equivilant = (m_TimeUnit && rhs.m_TimeUnit) ? m_TimeUnit->operator==(*rhs.m_TimeUnit) : m_TimeUnit == rhs.m_TimeUnit;
+    equivilant &= (m_VolumeUnit && rhs.m_VolumeUnit) ? m_VolumeUnit->operator==(*rhs.m_VolumeUnit) : m_VolumeUnit == rhs.m_VolumeUnit;
+    equivilant &= SEFunction::operator==(rhs);
+    return equivilant;
+  }
+  return !equivilant;
 }
 //-------------------------------------------------------------------------------
 bool SEFunctionVolumeVsTime::operator!=(const SEFunctionVolumeVsTime& rhs) const

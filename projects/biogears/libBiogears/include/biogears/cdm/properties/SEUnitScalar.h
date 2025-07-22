@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 
+#include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/cdm/properties/SEScalar.h>
 
 namespace biogears {
@@ -27,7 +28,7 @@ public:
   virtual const CCompoundUnit* GetUnit() const = 0;
   virtual const CCompoundUnit* GetCompoundUnit(const char* unit) const = 0;
   virtual const CCompoundUnit* GetCompoundUnit(const std::string& unit) const = 0;
-  virtual double GetValue() const = 0;
+  virtual double GetValue() const override = 0;
   virtual double GetValue(const char* unit) const = 0;
   virtual double GetValue(const std::string& unit) const = 0;
 

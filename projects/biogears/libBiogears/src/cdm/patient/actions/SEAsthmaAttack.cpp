@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEAsthmaAttack.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,12 +24,12 @@ SEAsthmaAttack::SEAsthmaAttack()
 //-------------------------------------------------------------------------------
 SEAsthmaAttack::~SEAsthmaAttack()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEAsthmaAttack::Clear()
+void SEAsthmaAttack::Invalidate()
 {
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -40,27 +41,6 @@ bool SEAsthmaAttack::IsValid() const
 bool SEAsthmaAttack::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEAsthmaAttack::Load(const CDM::AsthmaAttackData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::AsthmaAttackData* SEAsthmaAttack::Unload() const
-{
-  CDM::AsthmaAttackData* data(new CDM::AsthmaAttackData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEAsthmaAttack::Unload(CDM::AsthmaAttackData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEAsthmaAttack::HasSeverity() const

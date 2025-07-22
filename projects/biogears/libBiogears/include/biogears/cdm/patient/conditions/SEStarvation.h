@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 namespace biogears {
 namespace io {
@@ -25,30 +24,23 @@ public:
   SEStarvation();
   virtual ~SEStarvation();
 
-  virtual void Clear();
+  virtual void Invalidate() override ;
 
-  virtual bool IsValid() const;
-
-  virtual bool Load(const CDM::StarvationData& in);
-  virtual CDM::StarvationData* Unload() const;
+  virtual bool IsValid() const override ;
 
   bool operator==(SEStarvation const&) const;
   bool operator!=(SEStarvation const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-
-protected:
-  virtual void Unload(CDM::StarvationData& data) const;
-
 public:
-  virtual std::string GetName() const { return "Starvation"; }
-  virtual const char* GetName_cStr() const { return "Starvation"; }
+  virtual std::string GetName() const  override { return "Starvation"; }
+  virtual const char* GetName_cStr() const  override { return "Starvation"; }
 
   virtual bool HasTimeSinceMeal() const;
   virtual SEScalarTime& GetTimeSinceMeal();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SEScalarTime* m_TimeSinceMeal;

@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarVolumePerTimeMass.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::L_Per_s_g("L/s g");
@@ -19,7 +22,7 @@ const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_min_kg("mL/min kg");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::mL_Per_s_kg("mL/s kg");
 const VolumePerTimeMassUnit VolumePerTimeMassUnit::uL_Per_min_kg("uL/min kg");
 
-template class SEScalarQuantity<VolumePerTimeMassUnit>;
+template class BIOGEARS_API SEScalarQuantity<VolumePerTimeMassUnit>;
 
 VolumePerTimeMassUnit::VolumePerTimeMassUnit(const char* u)
   : VolumePerTimeMassUnit(std::string { u })
@@ -33,25 +36,6 @@ VolumePerTimeMassUnit::~VolumePerTimeMassUnit()
 VolumePerTimeMassUnit::VolumePerTimeMassUnit(const std::string& u)
   : CCompoundUnit(u)
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarVolumePerTimeMass::SEScalarVolumePerTimeMass()
-{
-
-}
-//-------------------------------------------------------------------------------
-SEScalarVolumePerTimeMass::~SEScalarVolumePerTimeMass()
-{
-
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarVolumePerTimeMassData* SEScalarVolumePerTimeMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarVolumePerTimeMassData* data(new CDM::ScalarVolumePerTimeMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool VolumePerTimeMassUnit::IsValidUnit(const char* unit)

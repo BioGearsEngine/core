@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarLength.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const LengthUnit LengthUnit::m("m");
@@ -20,7 +23,7 @@ const LengthUnit LengthUnit::um("um");
 const LengthUnit LengthUnit::inch("in");
 const LengthUnit LengthUnit::ft("ft");
 
-template class SEScalarQuantity<LengthUnit>;
+template class BIOGEARS_API SEScalarQuantity<LengthUnit>;
 
 LengthUnit::LengthUnit(const char* u)
   : LengthUnit(std::string { u })
@@ -34,23 +37,6 @@ LengthUnit::LengthUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 LengthUnit::~LengthUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarLength::SEScalarLength()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarLength::~SEScalarLength()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarLengthData* SEScalarLength::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarLengthData* data(new CDM::ScalarLengthData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool LengthUnit::IsValidUnit(const char* unit)

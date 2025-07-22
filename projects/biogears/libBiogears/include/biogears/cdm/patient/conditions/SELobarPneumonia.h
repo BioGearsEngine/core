@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
@@ -26,24 +25,17 @@ public:
   SELobarPneumonia();
   virtual ~SELobarPneumonia();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate() override ; //clear memory
 
-  virtual bool IsValid() const;
-
-  virtual bool Load(const CDM::LobarPneumoniaData& in);
-  virtual CDM::LobarPneumoniaData* Unload() const;
+  virtual bool IsValid() const override ;
 
   bool operator==(SELobarPneumonia const&) const;
   bool operator!=(SELobarPneumonia const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::LobarPneumoniaData& data) const;
-
-public:
-  virtual std::string GetName() const { return "LobarPneumonia"; }
-  virtual const char* GetName_cStr() const { return "LobarPneumonia"; }
+  virtual std::string GetName() const  override { return "LobarPneumonia"; }
+  virtual const char* GetName_cStr() const  override { return "LobarPneumonia"; }
 
   virtual bool HasSeverity() const;
   virtual SEScalar0To1& GetSeverity();
@@ -54,7 +46,7 @@ public:
   virtual bool HasRightLungAffected() const;
   virtual SEScalar0To1& GetRightLungAffected();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SEScalar0To1* m_Severity;

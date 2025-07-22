@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/environment/SEEnvironment.h>
 
+#include "io/cdm/Environment.h"
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
@@ -52,12 +54,12 @@ SEEnvironment::SEEnvironment(SESubstanceManager& substances)
 //-------------------------------------------------------------------------------
 SEEnvironment::~SEEnvironment()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEEnvironment::Clear()
+void SEEnvironment::Invalidate()
 {
-  SESystem::Clear();
+  SESystem::Invalidate();
   m_Name = "";
   SAFE_DELETE(m_Conditions);
   SAFE_DELETE(m_ConvectiveHeatLoss);
@@ -113,47 +115,6 @@ const SEScalar* SEEnvironment::GetScalar(const std::string& name)
   return nullptr;
 }
 //-------------------------------------------------------------------------------
-bool SEEnvironment::Load(const CDM::EnvironmentData& in)
-{
-  SESystem::Load(in);
-  if (in.Name().present()) {
-    m_Name = in.Name().get();
-  } else {
-    m_Name = "Local Environment";
-  }
-  if (in.Conditions().present()) {
-    GetConditions().Load(in.Conditions().get());
-  }
-
-  if (in.ConvectiveHeatLoss().present()) {
-    GetConvectiveHeatLoss().Load(in.ConvectiveHeatLoss().get());
-  }
-  if (in.ConvectiveHeatTranferCoefficient().present()) {
-    GetConvectiveHeatTranferCoefficient().Load(in.ConvectiveHeatTranferCoefficient().get());
-  }
-  if (in.EvaporativeHeatLoss().present()) {
-    GetEvaporativeHeatLoss().Load(in.EvaporativeHeatLoss().get());
-  }
-  if (in.EvaporativeHeatTranferCoefficient().present()) {
-    GetEvaporativeHeatTranferCoefficient().Load(in.EvaporativeHeatTranferCoefficient().get());
-  }
-  if (in.RadiativeHeatLoss().present()) {
-    GetRadiativeHeatLoss().Load(in.RadiativeHeatLoss().get());
-  }
-  if (in.RadiativeHeatTranferCoefficient().present()) {
-    GetRadiativeHeatTranferCoefficient().Load(in.RadiativeHeatTranferCoefficient().get());
-  }
-  if (in.RespirationHeatLoss().present()) {
-    GetRespirationHeatLoss().Load(in.RespirationHeatLoss().get());
-  }
-  if (in.SkinHeatLoss().present()) {
-    GetSkinHeatLoss().Load(in.SkinHeatLoss().get());
-  }
-
-  StateChange();
-  return true;
-}
-//-------------------------------------------------------------------------------
 bool SEEnvironment::Load(const char* patientFile)
 {
   return Load(std::string(patientFile));
@@ -183,54 +144,9 @@ bool SEEnvironment::Load(const std::string& given)
     Error(ss);
     return false;
   }
-  return Load(*pData);
+  io::Environment::UnMarshall(*pData, *this);
+  return true;
 }
-//-------------------------------------------------------------------------------
-CDM::EnvironmentData* SEEnvironment::Unload() const
-{
-  CDM::EnvironmentData* data = new CDM::EnvironmentData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEEnvironment::Unload(CDM::EnvironmentData& data) const
-{
-  SESystem::Unload(data);
-  if (HasName()) {
-    data.Name(m_Name);
-  } else {
-    data.Name("Unknown Environment");
-  }
-
-  if (HasConditions()) {
-    data.Conditions(std::unique_ptr<CDM::EnvironmentalConditionsData>(m_Conditions->Unload()));
-  }
-
-  if (m_ConvectiveHeatLoss != nullptr) {
-    data.ConvectiveHeatLoss(std::unique_ptr<CDM::ScalarPowerData>(m_ConvectiveHeatLoss->Unload()));
-  }
-  if (m_ConvectiveHeatTranferCoefficient != nullptr) {
-    data.ConvectiveHeatTranferCoefficient(std::unique_ptr<CDM::ScalarHeatConductancePerAreaData>(m_ConvectiveHeatTranferCoefficient->Unload()));
-  }
-  if (m_EvaporativeHeatLoss != nullptr) {
-    data.EvaporativeHeatLoss(std::unique_ptr<CDM::ScalarPowerData>(m_EvaporativeHeatLoss->Unload()));
-  }
-  if (m_EvaporativeHeatTranferCoefficient != nullptr) {
-    data.EvaporativeHeatTranferCoefficient(std::unique_ptr<CDM::ScalarHeatConductancePerAreaData>(m_EvaporativeHeatTranferCoefficient->Unload()));
-  }
-  if (m_RadiativeHeatLoss != nullptr) {
-    data.RadiativeHeatLoss(std::unique_ptr<CDM::ScalarPowerData>(m_RadiativeHeatLoss->Unload()));
-  }
-  if (m_RadiativeHeatTranferCoefficient != nullptr) {
-    data.RadiativeHeatTranferCoefficient(std::unique_ptr<CDM::ScalarHeatConductancePerAreaData>(m_RadiativeHeatTranferCoefficient->Unload()));
-  }
-  if (m_RespirationHeatLoss != nullptr) {
-    data.RespirationHeatLoss(std::unique_ptr<CDM::ScalarPowerData>(m_RespirationHeatLoss->Unload()));
-  }
-  if (m_SkinHeatLoss != nullptr) {
-    data.SkinHeatLoss(std::unique_ptr<CDM::ScalarPowerData>(m_SkinHeatLoss->Unload()));
-  }
-};
 //-------------------------------------------------------------------------------
 bool SEEnvironment::ProcessChange(const SEInitialEnvironment& change)
 {
@@ -492,6 +408,20 @@ double SEEnvironment::GetSkinHeatLoss(const PowerUnit& unit) const
 Tree<const char*> SEEnvironment::GetPhysiologyRequestGraph() const
 {
   return { "" };
+}
+//-----------------------------------------------------------------------------
+bool SEEnvironment::IsValid() const
+{
+  return !m_Name.empty()
+    && (m_ConvectiveHeatLoss
+        || m_ConvectiveHeatTranferCoefficient
+        || m_EvaporativeHeatLoss
+        || m_EvaporativeHeatTranferCoefficient
+        || m_RadiativeHeatLoss
+        || m_RadiativeHeatTranferCoefficient
+        || m_RespirationHeatLoss
+        || m_SkinHeatLoss
+        || m_Conditions);
 }
 //-----------------------------------------------------------------------------
 bool SEEnvironment::operator==(SEEnvironment const& rhs) const

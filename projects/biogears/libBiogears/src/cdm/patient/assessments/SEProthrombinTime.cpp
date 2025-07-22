@@ -14,6 +14,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/schema/cdm/Properties.hxx>
+#include "io/cdm/PatientAssessments.h"
 
 namespace biogears {
 SEProthrombinTime::SEProthrombinTime()
@@ -23,12 +24,12 @@ SEProthrombinTime::SEProthrombinTime()
 //-------------------------------------------------------------------------------
 SEProthrombinTime::~SEProthrombinTime()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEProthrombinTime::Clear()
+void SEProthrombinTime::Invalidate()
 {
-  SEPatientAssessment::Clear();
+  SEPatientAssessment::Invalidate();
   SAFE_DELETE(m_InternationalNormalizedRatio);
 }
 //-------------------------------------------------------------------------------
@@ -36,29 +37,6 @@ void SEProthrombinTime::Reset()
 {
   SEPatientAssessment::Reset();
   INVALIDATE_PROPERTY(m_InternationalNormalizedRatio);
-}
-//-------------------------------------------------------------------------------
-bool SEProthrombinTime::Load(const CDM::ProthrombinTimeData& in)
-{
-  SEPatientAssessment::Load(in);
-  if (in.InternationalNormalizedRatio().present()) {
-    GetInternationalNormalizedRatio().Load(in.InternationalNormalizedRatio().get());
-  }
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ProthrombinTimeData* SEProthrombinTime::Unload()
-{
-  CDM::ProthrombinTimeData* data = new CDM::ProthrombinTimeData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEProthrombinTime::Unload(CDM::ProthrombinTimeData& data)
-{
-  SEPatientAssessment::Unload(data);
-  if (m_InternationalNormalizedRatio != nullptr)
-    data.InternationalNormalizedRatio(std::unique_ptr<CDM::ScalarData>(m_InternationalNormalizedRatio->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEProthrombinTime::HasInternationalNormalizedRatio()

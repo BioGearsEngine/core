@@ -24,29 +24,22 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/scenario/requests/SEThermalCompartmentDataRequest.h>
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
 
-CDM_BIND_DECL(DataRequestManagerData)
 
 namespace biogears {
 namespace io {
-  class Scenario;
+  class DataRequests;
 }
 class BIOGEARS_API SEDataRequestManager : public Loggable {
-  friend io::Scenario;
+  friend io::DataRequests;
 
 public:
   SEDataRequestManager(Logger* logger);
   ~SEDataRequestManager();
 
-  void Clear();
-
-  bool Load(const CDM::DataRequestManagerData& in, SESubstanceManager& subMgr);
-  CDM::DataRequestManagerData* Unload() const;
+  void Invalidate();
 
   bool operator==(SEDataRequestManager const&) const;
   bool operator!=(SEDataRequestManager const&) const;
-
-protected:
-  void Unload(CDM::DataRequestManagerData& data) const;
 
 public:
   bool HasResultsFilename() const;
@@ -79,6 +72,9 @@ public:
   virtual SEDecimalFormat& GetOverrideDecimalFormatting();
   virtual void RemoveOverrideDecimalFormatting();
 
+ 
+  void CreateDataRequest(std::unique_ptr<SEDataRequest> request);
+
   SEEnvironmentDataRequest& CreateEnvironmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   SEEquipmentDataRequest& CreateEquipmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   SEPatientDataRequest& CreatePatientDataRequest(const SEDecimalFormat* dfault = nullptr);
@@ -90,8 +86,6 @@ public:
   SEThermalCompartmentDataRequest& CreateThermalCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   SETissueCompartmentDataRequest& CreateTissueCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
 
-  void CreateFromBind(const CDM::DataRequestData& input, SESubstanceManager& subMgr);
-
 protected:
   double m_SamplesPerSecond;
   std::vector<SEDataRequest*> m_Requests;
@@ -102,6 +96,5 @@ protected:
   SEDecimalFormat* m_OverrideDecimalFormatting;
 
   bool DuplicateRequest(SEDataRequest* request);
-  static SEDataRequest* newFromBind(const CDM::DataRequestData& dataRequest, SESubstanceManager& substances, const SEDecimalFormat* dfault = nullptr);
 };
 }

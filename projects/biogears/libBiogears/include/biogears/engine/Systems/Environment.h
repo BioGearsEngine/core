@@ -14,9 +14,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/properties/SEScalarHeatCapacitance.h>
+#include <biogears/cdm/properties/SEScalarHeatResistance.h>
 #include <biogears/cdm/system/environment/SEEnvironment.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsEnvironment.hxx>
 #include "Saturation.h"
 
 namespace biogears {
@@ -53,18 +54,12 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  void Invalidate() override;
 
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsEnvironmentData& in);
-  virtual CDM::BioGearsEnvironmentData* Unload() const override;
-
 protected:
-  virtual void Unload(CDM::BioGearsEnvironmentData& data) const;
-
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
   void SetUp() override;
 

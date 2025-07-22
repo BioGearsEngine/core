@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
@@ -28,12 +29,12 @@ SESubstanceInfusion::SESubstanceInfusion(const SESubstance& substance)
 //-------------------------------------------------------------------------------
 SESubstanceInfusion::~SESubstanceInfusion()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SESubstanceInfusion::Clear()
+void SESubstanceInfusion::Invalidate()
 {
-  SESubstanceAdministration::Clear();
+  SESubstanceAdministration::Invalidate();
   m_Rate = nullptr;
   m_Concentration = nullptr;
 }
@@ -46,31 +47,6 @@ bool SESubstanceInfusion::IsValid() const
 bool SESubstanceInfusion::IsActive() const
 {
   return IsValid() ? !m_Rate->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SESubstanceInfusion::Load(const CDM::SubstanceInfusionData& in, std::default_random_engine *rd)
-{
-  SESubstanceAdministration::Load(in);
-  GetRate().Load(in.Rate(), rd);
-  GetConcentration().Load(in.Concentration(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceInfusionData* SESubstanceInfusion::Unload() const
-{
-  CDM::SubstanceInfusionData* data(new CDM::SubstanceInfusionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceInfusion::Unload(CDM::SubstanceInfusionData& data) const
-{
-  SESubstanceAdministration::Unload(data);
-  if (m_Rate != nullptr)
-    data.Rate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_Rate->Unload()));
-  if (m_Concentration != nullptr)
-    data.Concentration(std::unique_ptr<CDM::ScalarMassPerVolumeData>(m_Concentration->Unload()));
-  data.Substance(m_Substance.GetName());
 }
 //-------------------------------------------------------------------------------
 bool SESubstanceInfusion::HasRate() const

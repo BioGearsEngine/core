@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/conditions/SEPatientCondition.h>
 #include <biogears/exports.h>
-#include <biogears/schema/cdm/PatientConditions.hxx>
 
 namespace biogears {
 class SEScalar0To1;
@@ -29,29 +28,22 @@ public:
   SEDehydration();
   virtual ~SEDehydration();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate() override ; //clear memory
 
-  virtual bool IsValid() const;
-
-  virtual bool Load(const CDM::DehydrationData& in);
-  virtual CDM::DehydrationData* Unload() const;
+  virtual bool IsValid() const override ;
 
   bool operator==(SEDehydration const&) const;
   bool operator!=(SEDehydration const&) const;
   bool operator==(SECondition const& rhs) const override;
   bool operator!=(SECondition const& rhs) const override;
 
-protected:
-  virtual void Unload(CDM::DehydrationData& data) const;
-
-public:
-  virtual std::string GetName() const { return "Dehydration"; }
-  virtual const char* GetName_cStr() const { return "Dehydration"; }
+  virtual std::string GetName() const  override { return "Dehydration"; }
+  virtual const char* GetName_cStr() const  override { return "Dehydration"; }
 
   virtual bool HasDehydrationFraction() const;
   virtual SEScalar0To1& GetDehydrationFraction();
 
-  virtual void ToString(std::ostream& str) const;
+  virtual void ToString(std::ostream& str) const override ;
 
 protected:
   SEScalar0To1* m_DehydrationFraction;

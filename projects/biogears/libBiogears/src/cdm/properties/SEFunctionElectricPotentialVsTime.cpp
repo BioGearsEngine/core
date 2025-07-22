@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/utils/GeneralMath.h>
@@ -26,40 +28,17 @@ SEFunctionElectricPotentialVsTime::SEFunctionElectricPotentialVsTime()
 
 SEFunctionElectricPotentialVsTime::~SEFunctionElectricPotentialVsTime()
 {
-  Clear();
+  Invalidate();
 }
 
-void SEFunctionElectricPotentialVsTime::Clear()
+void SEFunctionElectricPotentialVsTime::Invalidate()
 {
-  SEFunction::Clear();
+  SEFunction::Invalidate();
   m_TimeUnit = nullptr;
   m_ElectricPotentialUnit = nullptr;
 }
 
-bool SEFunctionElectricPotentialVsTime::Load(const CDM::FunctionElectricPotentialVsTimeData& in)
-{
-  if (!SEFunction::Load(in))
-    return false;
-  m_TimeUnit = &TimeUnit::GetCompoundUnit(in.IndependentUnit().get());
-  m_ElectricPotentialUnit = &ElectricPotentialUnit::GetCompoundUnit(in.DependentUnit().get());
-  return IsValid();
-}
 
-CDM::FunctionElectricPotentialVsTimeData* SEFunctionElectricPotentialVsTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::FunctionElectricPotentialVsTimeData* data(new CDM::FunctionElectricPotentialVsTimeData());
-  Unload(*data);
-  return data;
-}
-
-void SEFunctionElectricPotentialVsTime::Unload(CDM::FunctionElectricPotentialVsTimeData& data) const
-{
-  SEFunction::Unload(data);
-  data.IndependentUnit(m_TimeUnit->GetString());
-  data.DependentUnit(m_ElectricPotentialUnit->GetString());
-}
 
 double SEFunctionElectricPotentialVsTime::GetTimeValue(unsigned int index, const TimeUnit& unit)
 {

@@ -33,7 +33,7 @@ public:
   SECompartmentNodes(Logger* logger);
   virtual ~SECompartmentNodes();
 
-  virtual void Clear();
+  virtual void Invalidate();
   virtual void StateChange(); //analyze and cache for optimization
 
   virtual bool HasMapping() const { return !m_AllNodes.empty(); }
@@ -62,9 +62,12 @@ protected:
   PotentialScalar* m_Potential;
 };
 
-BG_EXT template class BIOGEARS_API SECompartmentNodes<ELECTRICAL_COMPARTMENT_NODE>;
-BG_EXT template class BIOGEARS_API SECompartmentNodes<FLUID_COMPARTMENT_NODE>;
-BG_EXT template class BIOGEARS_API SECompartmentNodes<THERMAL_COMPARTMENT_NODE>;
+#pragma warning(disable : 4661)
+
+extern template class SECompartmentNodes<ELECTRICAL_COMPARTMENT_NODE>;
+extern template class SECompartmentNodes<FLUID_COMPARTMENT_NODE>;
+extern template class SECompartmentNodes<THERMAL_COMPARTMENT_NODE>;
+#pragma warning(default : 4661)
 
 }
 #include <biogears/cdm/compartment/SECompartmentNodes.inl>

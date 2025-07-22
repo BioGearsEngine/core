@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 // Include the various types you will be using in your code
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceFraction.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/environment/SEActiveHeating.h>
@@ -68,9 +68,9 @@ int HowToEnvironmentChange()
   }
 
   // Get some substances out we will use
-  SESubstance* N2 = bg->GetSubstanceManager().GetSubstance("Nitrogen");
-  SESubstance* O2 = bg->GetSubstanceManager().GetSubstance("Oxygen");
-  SESubstance* CO2 = bg->GetSubstanceManager().GetSubstance("CarbonDioxide");
+  auto& N2 = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Nitrogen)->GetDefinition();
+  auto&  O2 = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Oxygen)->GetDefinition();
+  auto& CO2 = bg->GetSubstanceManager().GetSubstance(StandardSubstances::CarbonDioxide)->GetDefinition();
 
   // The tracker is responsible for advancing the engine time and outputting the data requests below at each time step
 
@@ -111,7 +111,7 @@ int HowToEnvironmentChange()
   // The core temperature follows the skin temperature, and the metabolic rate increases due to shivering.
   SEEnvironmentChange env(bg->GetSubstanceManager());
   SEEnvironmentalConditions& conditions = env.GetConditions();
-  conditions.SetSurroundingType(CDM::enumSurroundingType::Water);
+  conditions.SetSurroundingType(SESurroundingType::Water);
   conditions.GetAirVelocity().SetValue(0, LengthPerTimeUnit::m_Per_s);
   conditions.GetAmbientTemperature().SetValue(10.0, TemperatureUnit::C);
   conditions.GetAtmosphericPressure().SetValue(760., PressureUnit::mmHg);
@@ -120,9 +120,9 @@ int HowToEnvironmentChange()
   conditions.GetMeanRadiantTemperature().SetValue(22.0, TemperatureUnit::C);
   conditions.GetRelativeHumidity().SetValue(1.0);
   conditions.GetRespirationAmbientTemperature().SetValue(22.0, TemperatureUnit::C);
-  conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(0.7901);
-  conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.2095);
-  conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
+  conditions.GetAmbientGas(N2).GetFractionAmount().SetValue(0.7901);
+  conditions.GetAmbientGas(O2).GetFractionAmount().SetValue(0.2095);
+  conditions.GetAmbientGas(CO2).GetFractionAmount().SetValue(4.0E-4);
   bg->ProcessAction(env);
   bg->AdvanceModelTime(30, TimeUnit::s);
 
@@ -140,7 +140,7 @@ int HowToEnvironmentChange()
 
   // The patient is removed from the water and returns to the normal environment.
   // The skin temperature rises, leading to a subsequent rise in core temperature
-  conditions.SetSurroundingType(CDM::enumSurroundingType::Air);
+  conditions.SetSurroundingType(SESurroundingType::Air);
   conditions.GetAirVelocity().SetValue(0.1, LengthPerTimeUnit::m_Per_s);
   conditions.GetAmbientTemperature().SetValue(22.0, TemperatureUnit::C);
   conditions.GetAtmosphericPressure().SetValue(760., PressureUnit::mmHg);
@@ -149,9 +149,9 @@ int HowToEnvironmentChange()
   conditions.GetMeanRadiantTemperature().SetValue(22.0, TemperatureUnit::C);
   conditions.GetRelativeHumidity().SetValue(0.6);
   conditions.GetRespirationAmbientTemperature().SetValue(19, TemperatureUnit::C);
-  conditions.GetAmbientGas(*N2).GetFractionAmount().SetValue(0.7896);
-  conditions.GetAmbientGas(*O2).GetFractionAmount().SetValue(0.21);
-  conditions.GetAmbientGas(*CO2).GetFractionAmount().SetValue(4.0E-4);
+  conditions.GetAmbientGas(N2).GetFractionAmount().SetValue(0.7896);
+  conditions.GetAmbientGas(O2).GetFractionAmount().SetValue(0.21);
+  conditions.GetAmbientGas(CO2).GetFractionAmount().SetValue(4.0E-4);
   bg->ProcessAction(env);
   bg->AdvanceModelTime(60, TimeUnit::s);
 

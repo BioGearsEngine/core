@@ -11,26 +11,20 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/exports.h>
+
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
+#include <biogears/cdm/properties/SEScalarFlowResistance.h>
+#include <biogears/cdm/properties/SEScalarFrequency.h>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+#include <biogears/cdm/properties/SEScalarPressureTimePerVolumeArea.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTimeArea.h>
+#include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/cdm/Physiology.hxx>
 
 namespace biogears {
-class SEScalarPressure;
-class PressureUnit;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarVolumePerTimeArea;
-class VolumePerTimeAreaUnit;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
-class SEScalarFraction;
-class FractionUnit;
-class SEScalarFrequency;
-class FrequencyUnit;
-class SEScalarFlowResistance;
-class FlowResistanceUnit;
-class SEScalarPressureTimePerVolumeArea;
-class PressureTimePerVolumeAreaUnit;
 namespace io {
   class Physiology;
 }
@@ -46,21 +40,15 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override; //! Deletes all members
+  void Invalidate() override; //! Deletes all members
 
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
-
-  bool Load(const CDM::CardiovascularSystemData& in);
-  CDM::CardiovascularSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SECardiovascularSystem const&) const;
   bool operator!=(SECardiovascularSystem const&) const;
-
-protected:
-  void Unload(CDM::CardiovascularSystemData& data) const;
 
 public:
   bool HasArterialPressure() const;
@@ -119,8 +107,8 @@ public:
   SEScalarFrequency& GetHeartRate();
   double GetHeartRate(const FrequencyUnit& unit) const;
 
-  CDM::enumHeartRhythm::value GetHeartRhythm() const;
-  void SetHeartRhythm(CDM::enumHeartRhythm::value Rhythm);
+  SEHeartRhythm GetHeartRhythm() const;
+  void SetHeartRhythm(SEHeartRhythm Rhythm);
   bool HasHeartRhythm() const;
   void InvalidateHeartRhythm();
 
@@ -219,7 +207,7 @@ protected:
   SEScalarPressure* m_ExtremityPressureRightLeg;
   SEScalarFraction* m_HeartEjectionFraction;
   SEScalarFrequency* m_HeartRate;
-  CDM::enumHeartRhythm::value m_HeartRhythm;
+  SEHeartRhythm m_HeartRhythm;
   SEScalarVolume* m_HeartStrokeVolume;
   SEScalarPressure* m_IntracranialPressure;
   SEScalarPressure* m_MeanArterialPressure;

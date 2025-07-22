@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #pragma once
 #include <biogears/cdm/scenario/SECondition.h>
-#include <biogears/schema/cdm/EnvironmentConditions.hxx>
 
 namespace biogears {
 namespace io {
@@ -24,20 +23,14 @@ public:
   SEEnvironmentCondition();
   virtual ~SEEnvironmentCondition();
 
-  virtual void Clear();
+  using SECondition::Invalidate;
 
-  virtual bool IsValid() const;
+  using SECondition::IsValid;
 
-  virtual bool Load(const CDM::EnvironmentConditionData& in);
-  virtual CDM::EnvironmentConditionData* Unload() const;
-
-  bool operator==(SECondition const&) const = 0;
-  bool operator!=(SECondition const&) const = 0;
-
-protected:
-  virtual void Unload(CDM::EnvironmentConditionData& data) const;
+  bool operator==(SECondition const&) const override = 0;
+  bool operator!=(SECondition const&) const override = 0;
 
 public:
-  virtual void ToString(std::ostream& str) const = 0;
+  virtual void ToString(std::ostream& str) const  override = 0;
 };
 }

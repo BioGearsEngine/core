@@ -11,12 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarPressureTimePerArea.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::mmHg_Per_mL_m2("mmHg/mL m^2");
 const PressureTimePerAreaUnit PressureTimePerAreaUnit::cmH2O_Per_mL_m2("cmH2O/mL m^2");
 
-template class SEScalarQuantity<PressureTimePerAreaUnit>;
+template class BIOGEARS_API SEScalarQuantity<PressureTimePerAreaUnit>;
 
 PressureTimePerAreaUnit::~PressureTimePerAreaUnit(){
 
@@ -30,23 +33,6 @@ PressureTimePerAreaUnit::PressureTimePerAreaUnit(const char* u)
 PressureTimePerAreaUnit::PressureTimePerAreaUnit(const std::string& u)
   : CCompoundUnit(u)
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarPressureTimePerArea::SEScalarPressureTimePerArea()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarPressureTimePerArea::~SEScalarPressureTimePerArea()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarPressureTimePerAreaData* SEScalarPressureTimePerArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPressureTimePerAreaData* data(new CDM::ScalarPressureTimePerAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool PressureTimePerAreaUnit::IsValidUnit(const char* unit)

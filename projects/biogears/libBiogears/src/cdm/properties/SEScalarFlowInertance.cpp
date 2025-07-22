@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarFlowInertance.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const FlowInertanceUnit FlowInertanceUnit::mmHg_s2_Per_mL("mmHg s^2/mL");
@@ -19,7 +22,7 @@ const FlowInertanceUnit FlowInertanceUnit::cmH2O_s2_Per_mL("cmH2O s^2/mL");
 const FlowInertanceUnit FlowInertanceUnit::cmH2O_s2_Per_L("cmH2O s^2/L");
 const FlowInertanceUnit FlowInertanceUnit::Pa_s2_Per_m3("Pa s^2/m^3");
 
-template class SEScalarQuantity<FlowInertanceUnit>;
+template class BIOGEARS_API SEScalarQuantity<FlowInertanceUnit>;
 
 FlowInertanceUnit::FlowInertanceUnit(const char* u)
   : FlowInertanceUnit(std::string { u })
@@ -33,23 +36,6 @@ FlowInertanceUnit::FlowInertanceUnit(const std::string& u)
 //-----------------------------------------------------------------------------
 FlowInertanceUnit::~FlowInertanceUnit()
 {
-}
-//-----------------------------------------------------------------------------
-SEScalarFlowInertance::SEScalarFlowInertance()
-{
-}
-//-----------------------------------------------------------------------------
-SEScalarFlowInertance::~SEScalarFlowInertance()
-{
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarFlowInertanceData* SEScalarFlowInertance::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarFlowInertanceData* data(new CDM::ScalarFlowInertanceData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-----------------------------------------------------------------------------
 bool FlowInertanceUnit::IsValidUnit(const char* unit)

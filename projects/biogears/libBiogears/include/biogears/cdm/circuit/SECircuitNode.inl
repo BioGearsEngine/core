@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #pragma once
 // Project Includes
 #include <biogears/cdm/circuit/SECircuitNode.h>
-#include <biogears/schema/cdm/Circuit.hxx>
 
 namespace biogears {
 template <CIRCUIT_NODE_TEMPLATE>
@@ -36,11 +35,11 @@ SECircuitNode<CIRCUIT_NODE_TYPES>::SECircuitNode(const std::string& name, Logger
 template <CIRCUIT_NODE_TEMPLATE>
 SECircuitNode<CIRCUIT_NODE_TYPES>::~SECircuitNode()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
 template <CIRCUIT_NODE_TEMPLATE>
-void SECircuitNode<CIRCUIT_NODE_TYPES>::Clear()
+void SECircuitNode<CIRCUIT_NODE_TYPES>::Invalidate()
 {
   SAFE_DELETE(m_Potential);
   SAFE_DELETE(m_NextPotential);
@@ -48,19 +47,7 @@ void SECircuitNode<CIRCUIT_NODE_TYPES>::Clear()
   SAFE_DELETE(m_NextQuantity);
   SAFE_DELETE(m_QuantityBaseline);
 }
-//-------------------------------------------------------------------------------
-template <CIRCUIT_NODE_TEMPLATE>
-bool SECircuitNode<CIRCUIT_NODE_TYPES>::Load(const CDM::CircuitNodeData& in)
-{
-  Clear();
-  return true;
-}
-//-------------------------------------------------------------------------------
-template <CIRCUIT_NODE_TEMPLATE>
-void SECircuitNode<CIRCUIT_NODE_TYPES>::Unload(CDM::CircuitNodeData& data) const
-{
-  data.Name(m_Name);
-}
+
 //-------------------------------------------------------------------------------
 template <CIRCUIT_NODE_TEMPLATE>
 std::string SECircuitNode<CIRCUIT_NODE_TYPES>::GetName() const

@@ -13,7 +13,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 
 #include <biogears/exports.h>
-CDM_BIND_DECL(RunningAverageData);
 
 namespace biogears {
 namespace io {
@@ -25,13 +24,6 @@ public:
   RunningAverage();
   virtual ~RunningAverage();
 
-  bool Load(const CDM::RunningAverageData& in);
-  CDM::RunningAverageData* Unload() const;
-
-protected:
-  void Unload(CDM::RunningAverageData& data) const;
-
-public:
   /** Reset Counter info */
   void Reset();
   /** Add value to Sample list and return the new average */
@@ -39,7 +31,7 @@ public:
   /** Return the average value */
   double Value();
 
-  unsigned int NumSamples() { return m_NumSamples; }
+  unsigned int NumSamples() const { return m_NumSamples; }
 
 protected:
   double m_Sum;

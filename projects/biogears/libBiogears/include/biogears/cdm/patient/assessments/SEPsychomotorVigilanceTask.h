@@ -12,12 +12,12 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
-#include <biogears/schema/cdm/PatientAssessments.hxx>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
+#include <biogears/cdm/properties/SEScalarTime.h>
 
 namespace biogears {
 class SENervousSystem;
 class SEScalar;
-class SEScalarTime;
 
 namespace io {
   class PatientAssessments;
@@ -33,14 +33,8 @@ public:
   static constexpr const char* TypeTag() { return "SEArterialBloodGasAnalysis"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Reset(); // reset values
-  virtual void Clear(); // clear memory
-
-  virtual bool Load(const CDM::PsychomotorVigilanceTaskData& in);
-  virtual CDM::PsychomotorVigilanceTaskData* Unload();
-
-protected:
-  virtual void Unload(CDM::PsychomotorVigilanceTaskData& data);
+  virtual void Reset() override ; // reset values
+  virtual void Invalidate() override ; // clear memory
 
 public:
   bool HasAttentionLapses();
@@ -49,7 +43,7 @@ public:
   bool HasReactionTime();
   SEScalarTime& GetReactionTime();
 
-  bool operator==(SEPsychomotorVigilanceTask  const&) const;
+  bool operator==(SEPsychomotorVigilanceTask const&) const;
   bool operator!=(SEPsychomotorVigilanceTask const&) const;
 
 protected:

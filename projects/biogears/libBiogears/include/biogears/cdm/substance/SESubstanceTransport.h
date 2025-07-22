@@ -11,16 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#ifdef MSVC
-#pragma warning(disable : 4503)
-#endif
 
-#include "biogears/cdm/properties/SEScalarFraction.h"
-#include "biogears/cdm/properties/SEScalarMass.h"
-#include "biogears/cdm/properties/SEScalarMassPerVolume.h"
-#include "biogears/cdm/properties/SEScalarVolume.h"
-#include "biogears/cdm/properties/SEScalarVolumePerTime.h"
+#include <biogears/cdm/properties/SEScalarFraction.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+#include <biogears/cdm/properties/SEScalarMass.h>
+#include <biogears/cdm/properties/SEScalarMassPerVolume.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 
 #include <map>
 #include <vector>
@@ -30,22 +29,22 @@ specific language governing permissions and limitations under the License.
 #define TRANSPORT_VERTEX_TYPES QuantityScalar, ExtensiveScalar, IntensiveScalar
 #define TRANSPORT_EDGE_TYPES FluxScalar, QuantityScalar, ExtensiveScalar, IntensiveScalar
 
+#pragma warning(disable : 4661)
 namespace biogears {
 
 template <typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportAmount ;
+class SESubstanceTransportAmount;
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportVertex ;
+class SESubstanceTransportVertex;
 template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportEdge ;
+class SESubstanceTransportEdge;
 template <typename FluxScalar, typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
-class SESubstanceTransportGraph ;
-template <SUBSTANCE_TRANSPORTER_TEMPLATE>
+class SESubstanceTransportGraph;
+template <typename GraphType, typename FluxUnit, typename QuantityUnit, typename ExtensiveUnit, typename IntensiveUnit>
 class SESubstanceTransporter;
 
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
 bool operator==(SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& lhs, SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& rhs);
-
 
 template <typename ExtensiveScalar, typename IntensiveScalar>
 class SESubstanceTransportAmount {
@@ -55,7 +54,7 @@ class SESubstanceTransportAmount {
 public:
   virtual ~SESubstanceTransportAmount() { }
 
-  virtual void Invalidate() = 0;
+  virtual void MakeInvalid() = 0;
 
   virtual bool HasExtensive() const = 0;
   virtual ExtensiveScalar& GetExtensive() = 0;
@@ -66,8 +65,9 @@ public:
   virtual bool operator==(SESubstanceTransportAmount const&) const = 0;
   virtual bool operator!=(SESubstanceTransportAmount const&) const = 0;
 };
-BG_EXT template class BIOGEARS_API SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;
-BG_EXT template class BIOGEARS_API SESubstanceTransportAmount<SEScalarMass, SEScalarMassPerVolume>;
+
+extern template class SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;
+extern template class SESubstanceTransportAmount<SEScalarMass, SEScalarMassPerVolume>;
 
 using SEGasTransportSubstance = SESubstanceTransportAmount<SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportSubstance = SESubstanceTransportAmount<SEScalarMass, SEScalarMassPerVolume>;
@@ -78,7 +78,7 @@ template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveS
 class SESubstanceTransportVertex {
   template <SUBSTANCE_TRANSPORTER_TEMPLATE>
   friend class SESubstanceTransporter;
- 
+
   friend bool operator==<>(SESubstanceTransportVertex const& lhs, SESubstanceTransportVertex const& rhs);
 
 public:
@@ -92,7 +92,7 @@ protected:
   virtual QuantityScalar& GetQuantity() = 0;
 
   virtual std::vector<SESubstanceTransportAmount<TRANSPORT_AMOUNT_TYPES>*>& GetTransportSubstances() = 0;
-  virtual std::vector<SESubstanceTransportAmount<TRANSPORT_AMOUNT_TYPES>*> const & GetTransportSubstances() const= 0;
+  virtual std::vector<SESubstanceTransportAmount<TRANSPORT_AMOUNT_TYPES>*> const& GetTransportSubstances() const = 0;
 };
 
 template <typename QuantityScalar, typename ExtensiveScalar, typename IntensiveScalar>
@@ -123,8 +123,8 @@ bool operator!=(SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES> const& lhs, S
 using SEGasTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportVertex = SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
-BG_EXT template class BIOGEARS_API SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
-BG_EXT template class BIOGEARS_API SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
+extern template class SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+extern template class SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
 BG_EXT template bool BIOGEARS_API operator==(SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction> const& lhs, SESubstanceTransportVertex<SEScalarVolume, SEScalarVolume, SEScalarFraction> const& rhs);
 BG_EXT template bool BIOGEARS_API operator==(SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume> const& lhs, SESubstanceTransportVertex<SEScalarVolume, SEScalarMass, SEScalarMassPerVolume> const& rhs);
@@ -153,8 +153,8 @@ protected:
   virtual SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES>& GetTargetVertex() = 0;
 };
 
-BG_EXT template class BIOGEARS_API SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
-BG_EXT template class BIOGEARS_API SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
+extern template class SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+extern template class SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
 using SEGasTransportEdge = SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportEdge = SESubstanceTransportEdge<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
@@ -175,8 +175,8 @@ protected:
   virtual const std::vector<SESubstanceTransportEdge<TRANSPORT_EDGE_TYPES>*>* GetTargetEdges(const SESubstanceTransportVertex<TRANSPORT_VERTEX_TYPES>& v) const = 0;
 };
 
-BG_EXT template class BIOGEARS_API SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
-BG_EXT template class BIOGEARS_API SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
+extern template class SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
+extern template class SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
 
 using SEGasTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarVolume, SEScalarFraction>;
 using SELiquidTransportGraph = SESubstanceTransportGraph<SEScalarVolumePerTime, SEScalarVolume, SEScalarMass, SEScalarMassPerVolume>;
@@ -199,8 +199,8 @@ protected:
   const IntensiveUnit& m_IntensiveUnit;
 };
 
-BG_EXT template class BIOGEARS_API SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;
-BG_EXT template class BIOGEARS_API SESubstanceTransporter<SELiquidTransportGraph, VolumePerTimeUnit, VolumeUnit, MassUnit, MassPerVolumeUnit>;
+extern template class SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;
+extern template class SESubstanceTransporter<SELiquidTransportGraph, VolumePerTimeUnit, VolumeUnit, MassUnit, MassPerVolumeUnit>;
 
 using SEGasTransporter = SESubstanceTransporter<SEGasTransportGraph, VolumePerTimeUnit, VolumeUnit, VolumeUnit, NoUnit>;
 using SELiquidTransporter = SESubstanceTransporter<SELiquidTransportGraph, VolumePerTimeUnit, VolumeUnit, MassUnit, MassPerVolumeUnit>;
@@ -208,10 +208,12 @@ using SELiquidTransporter = SESubstanceTransporter<SELiquidTransportGraph, Volum
 } // namespace biogears
 
 namespace std {
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportVertex*>;
-BG_EXT template class BIOGEARS_API vector<biogears::SEGasTransportEdge*>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, size_t>;
-BG_EXT template class BIOGEARS_API map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
+extern template class vector<biogears::SEGasTransportVertex*>;
+extern template class vector<biogears::SEGasTransportEdge*>;
+extern template class map<const biogears::SEGasTransportVertex*, size_t>;
+extern template class map<const biogears::SEGasTransportVertex*, vector<biogears::SEGasTransportEdge*>*>;
 }
 
 #include <biogears/cdm/substance/SESubstanceTransport.inl>
+
+#pragma warning(default : 4661)

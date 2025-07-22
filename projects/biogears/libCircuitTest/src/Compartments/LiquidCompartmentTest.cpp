@@ -622,7 +622,7 @@ void CommonDataModelTest::TestLiquidCircuitVolumesPressuresAndFlows(SETestSuite&
   TimingProfile pTimer;
   pTimer.Start("Test");
 
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
   SEFluidCircuit& circuit = m_Circuits.CreateFluidCircuit("TestCircuit");
   // Left Nodes
   SEFluidCircuitNode& l1 = circuit.CreateNode("Left1");

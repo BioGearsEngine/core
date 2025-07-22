@@ -12,10 +12,10 @@ specific language governing permissions and limitations under the License..
 
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/schema/cdm/Substance.hxx>
+
 #include <biogears/exports.h>
 
-CDM_BIND_DECL(SubstanceFractionData)
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 
 namespace biogears {
 class SESubstance;
@@ -35,10 +35,7 @@ public:
   SESubstanceFraction(SESubstance const&, SEScalarFraction const& );
   virtual ~SESubstanceFraction();
 
-  virtual void Clear();
-
-  virtual bool Load(const CDM::SubstanceFractionData& in);
-  virtual CDM::SubstanceFractionData* Unload() const;
+  virtual void Invalidate();
 
   virtual bool HasFractionAmount() const;
   virtual SEScalarFraction& GetFractionAmount();
@@ -48,9 +45,6 @@ public:
   
   bool operator==( const SESubstanceFraction& rhs) const;
   bool operator!=( const SESubstanceFraction& rhs) const;
-
-protected:
-  virtual void Unload(CDM::SubstanceFractionData& data) const;
 
 protected:
   SESubstance const& m_Substance;

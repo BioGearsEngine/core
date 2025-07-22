@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatResistanceArea.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::rsi("rsi");
@@ -18,7 +20,7 @@ const HeatResistanceAreaUnit HeatResistanceAreaUnit::clo("clo");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::rValue("rValue");
 const HeatResistanceAreaUnit HeatResistanceAreaUnit::tog("tog");
 
-template class SEScalarQuantity<HeatResistanceAreaUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatResistanceAreaUnit>;
 
 HeatResistanceAreaUnit::HeatResistanceAreaUnit(const char* u)
   : HeatResistanceAreaUnit(std::string { u })
@@ -31,24 +33,6 @@ HeatResistanceAreaUnit::HeatResistanceAreaUnit(const std::string& u)
 }
 //-------------------------------------------------------------------------------
 HeatResistanceAreaUnit::~HeatResistanceAreaUnit(){
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatResistanceArea::SEScalarHeatResistanceArea()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatResistanceArea::~SEScalarHeatResistanceArea()
-{
-}
-
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatResistanceAreaData* SEScalarHeatResistanceArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatResistanceAreaData* data(new CDM::ScalarHeatResistanceAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool HeatResistanceAreaUnit::IsValidUnit(const char* unit)

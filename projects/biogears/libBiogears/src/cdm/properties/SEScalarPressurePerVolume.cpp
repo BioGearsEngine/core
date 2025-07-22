@@ -11,12 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarPressurePerVolume.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const PressurePerVolumeUnit PressurePerVolumeUnit::mmHg_Per_mL("mmHg/mL");
 const PressurePerVolumeUnit PressurePerVolumeUnit::cmH2O_Per_mL("cmH2O/mL");
 
-template class SEScalarQuantity<PressurePerVolumeUnit>;
+template class BIOGEARS_API SEScalarQuantity<PressurePerVolumeUnit>;
 
 PressurePerVolumeUnit::PressurePerVolumeUnit(const char* u)
   : PressurePerVolumeUnit(std::string { u })
@@ -30,23 +33,6 @@ PressurePerVolumeUnit::PressurePerVolumeUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 PressurePerVolumeUnit::~PressurePerVolumeUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarPressurePerVolume::SEScalarPressurePerVolume()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarPressurePerVolume::~SEScalarPressurePerVolume(){
-
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarPressurePerVolumeData* SEScalarPressurePerVolume::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarPressurePerVolumeData* data(new CDM::ScalarPressurePerVolumeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool PressurePerVolumeUnit::IsValidUnit(const char* unit)

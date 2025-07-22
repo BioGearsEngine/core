@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/conditions/SEChronicVentricularSystolicDysfunction.h>
 
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEChronicVentricularSystolicDysfunction::SEChronicVentricularSystolicDysfunction()
@@ -20,35 +21,17 @@ SEChronicVentricularSystolicDysfunction::SEChronicVentricularSystolicDysfunction
 //-----------------------------------------------------------------------------
 SEChronicVentricularSystolicDysfunction::~SEChronicVentricularSystolicDysfunction()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEChronicVentricularSystolicDysfunction::Clear()
+void SEChronicVentricularSystolicDysfunction::Invalidate()
 {
-  SEChronicHeartFailure::Clear();
+  SEChronicHeartFailure::Invalidate();
 }
 //-----------------------------------------------------------------------------
 bool SEChronicVentricularSystolicDysfunction::IsValid() const
 {
   return SEChronicHeartFailure::IsValid();
-}
-//-----------------------------------------------------------------------------
-bool SEChronicVentricularSystolicDysfunction::Load(const CDM::ChronicVentricularSystolicDysfunctionData& in)
-{
-  SEChronicHeartFailure::Load(in);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ChronicVentricularSystolicDysfunctionData* SEChronicVentricularSystolicDysfunction::Unload() const
-{
-  CDM::ChronicVentricularSystolicDysfunctionData* data(new CDM::ChronicVentricularSystolicDysfunctionData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEChronicVentricularSystolicDysfunction::Unload(CDM::ChronicVentricularSystolicDysfunctionData& data) const
-{
-  SEChronicHeartFailure::Unload(data);
 }
 //-----------------------------------------------------------------------------
 void SEChronicVentricularSystolicDysfunction::ToString(std::ostream& str) const

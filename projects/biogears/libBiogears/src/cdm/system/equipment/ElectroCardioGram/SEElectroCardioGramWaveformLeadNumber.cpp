@@ -1,4 +1,7 @@
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramWaveformLeadNumber.h>
+
+#include "io/cdm/ElectroCardioGram.h"
+
 #include <biogears/string/manipulation.h>
 
 namespace biogears {
@@ -7,7 +10,7 @@ SEElectroCardioGramWaveformLeadNumber::SEElectroCardioGramWaveformLeadNumber(Log
   , m_value(1)
 {
 }
-SEElectroCardioGramWaveformLeadNumber::SEElectroCardioGramWaveformLeadNumber(Logger*, int lead)
+SEElectroCardioGramWaveformLeadNumber::SEElectroCardioGramWaveformLeadNumber(int lead, Logger*)
   : m_value(1)
 {
   SetValue(lead);
@@ -17,25 +20,7 @@ SEElectroCardioGramWaveformLeadNumber::SEElectroCardioGramWaveformLeadNumber(Log
 SEElectroCardioGramWaveformLeadNumber::~SEElectroCardioGramWaveformLeadNumber()
 {
 }
-//-------------------------------------------------------------------------------
-bool SEElectroCardioGramWaveformLeadNumber::Load(const CDM::ElectroCardioGramWaveformLeadNumberData& in)
-{
 
-  m_value = static_cast<int>(in);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ElectroCardioGramWaveformLeadNumberData* SEElectroCardioGramWaveformLeadNumber::Unload() const
-{
-  auto data = new CDM::ElectroCardioGramWaveformLeadNumberData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEElectroCardioGramWaveformLeadNumber::Unload(CDM::ElectroCardioGramWaveformLeadNumberData& data) const
-{
-  data = m_value;
-}
 //-------------------------------------------------------------------------------
 int SEElectroCardioGramWaveformLeadNumber::GetValue() const
 {

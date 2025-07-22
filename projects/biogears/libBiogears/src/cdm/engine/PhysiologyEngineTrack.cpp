@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 
+#include "io/cdm/EngineConfiguration.h"
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
@@ -181,14 +182,14 @@ PhysiologyEngineTrack& PhysiologyEngineTrack::operator=(PhysiologyEngineTrack&& 
 }
 PhysiologyEngineTrack::~PhysiologyEngineTrack()
 {
-  Clear();
+  Invalidate();
 }
 
-void PhysiologyEngineTrack::Clear()
+void PhysiologyEngineTrack::Invalidate()
 {
   ResetFile();
   m_ForceConnection = false;
-  DELETE_MAP_SECOND(m_Request2Scalar);
+  DELETE_MAP_OF_POINTERS(m_Request2Scalar);
 }
 
 void PhysiologyEngineTrack::ResetFile()

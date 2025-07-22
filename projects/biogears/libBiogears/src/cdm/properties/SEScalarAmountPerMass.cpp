@@ -9,14 +9,19 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
+#include <biogears/exports.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
 
 #include <biogears/cdm/properties/SEScalarAmountPerMass.h>
 
+#include "io/cdm/Property.h"
+
 namespace biogears {
+template class BIOGEARS_API SEScalarQuantity<AmountPerMassUnit>;
+
 AmountPerMassUnit AmountPerMassUnit::ct_Per_g("ct/g");
 AmountPerMassUnit AmountPerMassUnit::ct_Per_ug("ct/ug");
-
-template class SEScalarQuantity<AmountPerMassUnit>;
 
 //-----------------------------------------------------------------------------
 AmountPerMassUnit::AmountPerMassUnit(const char* u)
@@ -30,24 +35,6 @@ AmountPerMassUnit::AmountPerMassUnit(const std::string& u)
 }
 //-----------------------------------------------------------------------------
 AmountPerMassUnit::~AmountPerMassUnit(){
-}
-//-----------------------------------------------------------------------------
-SEScalarAmountPerMass::SEScalarAmountPerMass()
-  : SEScalarQuantity()
-{
-}
-//-----------------------------------------------------------------------------
-SEScalarAmountPerMass::~SEScalarAmountPerMass()
-{
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarAmountPerMassData* SEScalarAmountPerMass::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAmountPerMassData* data(new CDM::ScalarAmountPerMassData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-----------------------------------------------------------------------------
 bool AmountPerMassUnit::IsValidUnit(const char* unit)

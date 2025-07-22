@@ -14,13 +14,11 @@ specific language governing permissions and limitations under the License.
 #include <biogears/exports.h>
 
 #include <biogears/cdm/CommonDataModel.h>
-#include <biogears/schema/cdm/Substance.hxx>
-
-CDM_BIND_DECL(SubstancePhysicochemicalData)
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 
 namespace biogears {
-  class SEScalar;
-  class SEScalarFraction;
+class SEScalar;
+class SEScalarFraction;
 namespace io {
   class Substance;
 }
@@ -28,17 +26,15 @@ class BIOGEARS_API SESubstancePhysicochemical : public Loggable {
   friend io::Substance;
 
 public:
+  SESubstancePhysicochemical(SESubstancePhysicochemical const& obj);
   SESubstancePhysicochemical(Logger* logger);
   virtual ~SESubstancePhysicochemical();
 
-  virtual void Clear();
+  virtual void Invalidate();
   virtual bool IsValid() const;
 
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
-
-  virtual bool Load(const CDM::SubstancePhysicochemicalData& in);
-  virtual CDM::SubstancePhysicochemicalData* Unload() const;
 
   virtual bool HasPrimaryPKA() const;
   virtual SEScalar& GetPrimaryPKA();
@@ -48,8 +44,8 @@ public:
   virtual SEScalar& GetSecondaryPKA();
   virtual double GetSecondaryPKA() const;
 
-  virtual CDM::enumSubstanceBindingProtein::value GetBindingProtein() const;
-  virtual void SetBindingProtein(CDM::enumSubstanceBindingProtein::value state);
+  virtual SESubstanceBindingProtein GetBindingProtein() const;
+  virtual void SetBindingProtein(SESubstanceBindingProtein state);
   virtual bool HasBindingProtein() const;
   virtual void InvalidateBindingProtein();
 
@@ -61,8 +57,8 @@ public:
   virtual SEScalarFraction& GetFractionUnboundInPlasma();
   virtual double GetFractionUnboundInPlasma() const;
 
-  virtual CDM::enumSubstanceIonicState::value GetIonicState() const;
-  virtual void SetIonicState(CDM::enumSubstanceIonicState::value state);
+  virtual SESubstanceIonicState GetIonicState() const;
+  virtual void SetIonicState(SESubstanceIonicState state);
   virtual bool HasIonicState() const;
   virtual void InvalidateIonicState();
 
@@ -76,20 +72,18 @@ public:
 
   virtual bool HasPolarSurfaceArea() const;
   virtual SEScalar& GetPolarSurfaceArea();
-  virtual double GetPolarSurfaceArea() const;       
-  
-  bool operator==( const SESubstancePhysicochemical& rhs) const;
-  bool operator!=( const SESubstancePhysicochemical& rhs) const;
+  virtual double GetPolarSurfaceArea() const;
 
-protected:
-  virtual void Unload(CDM::SubstancePhysicochemicalData& data) const;
+  SESubstancePhysicochemical& operator=(const SESubstancePhysicochemical& rhs);
+  bool operator==(const SESubstancePhysicochemical& rhs) const;
+  bool operator!=(const SESubstancePhysicochemical& rhs) const;
 
 protected:
   std::vector<SEScalar*> m_AcidDissociationConstants;
-  CDM::enumSubstanceBindingProtein::value m_BindingProtein;
+  SESubstanceBindingProtein m_BindingProtein;
   SEScalar* m_BloodPlasmaRatio;
   SEScalarFraction* m_FractionUnboundInPlasma;
-  CDM::enumSubstanceIonicState::value m_IonicState;
+  SESubstanceIonicState m_IonicState;
   SEScalar* m_LogP;
   SEScalar* m_HydrogenBondCount;
   SEScalar* m_PolarSurfaceArea;

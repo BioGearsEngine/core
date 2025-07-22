@@ -18,25 +18,29 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/substance/SESubstanceTransport.h>
-#include <biogears/schema/cdm/Compartment.hxx>
 
-#include <vector>
+
 #include <map>
 #include <string>
+#include <vector>
 
 namespace biogears {
 class SETissueCompartment;
 class SECompartmentManager;
+class SESubstanceManager;
 class SELiquidSubstanceQuantity;
 namespace io {
   class Compartment;
 }
+
+
+#pragma warning(disable : 4661)
+extern template class SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity>;
 class BIOGEARS_API SELiquidCompartment : public SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> {
   friend class SETissueCompartment;
   friend class SECompartmentManager;
   friend class SELiquidSubstanceQuantity;
   friend io::Compartment;
-
 
 protected:
   SELiquidCompartment(const char* name, Logger* logger);
@@ -45,18 +49,12 @@ protected:
 public:
   virtual ~SELiquidCompartment();
 
-  virtual void Clear() override;
-
-  virtual bool Load(const CDM::LiquidCompartmentData& in, SESubstanceManager& subMgr, SECircuitManager* circuits = nullptr);
-  virtual CDM::LiquidCompartmentData* Unload() override;
+  virtual void Invalidate() override;
 
   bool operator==(SELiquidCompartment const&) const;
   bool operator!=(SELiquidCompartment const&) const;
   bool operator==(SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> const&) const override;
   bool operator!=(SEFluidCompartment<SELiquidCompartmentLink, SELiquidTransportVertex, SELiquidTransportSubstance, SELiquidSubstanceQuantity> const&) const override;
-
-protected:
-  virtual void Unload(CDM::LiquidCompartmentData& data);
 
 public:
   virtual const SEScalar* GetScalar(const char* name) override;
@@ -87,9 +85,12 @@ protected:
   std::vector<SELiquidCompartment*> m_Children;
   std::vector<SELiquidCompartment*> m_Leaves;
 };
-}      //namespace biogears
+#pragma warning(default : 4661)
+} // namespace biogears
+#pragma warning(disable : 4661)
 
-namespace std{
-BG_EXT template class BIOGEARS_API vector<biogears::SELiquidCompartment*>;
-BG_EXT template class BIOGEARS_API map<string, biogears::SELiquidCompartment*>;
+namespace std {
+extern template class vector<biogears::SELiquidCompartment*>;
+extern template class map<string, biogears::SELiquidCompartment*>;
 }
+#pragma warning(default : 4661)

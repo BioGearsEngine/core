@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
@@ -75,7 +75,7 @@ BioGearsThread::BioGearsThread(const std::string& logfile)
 {
   // Create our engine with the standard patient
   m_bg = CreateBioGearsEngine(logfile);
-  SESubstanceCompound* saline = m_bg->GetSubstanceManager().GetCompound("Saline");
+  SESubstanceCompound* saline = m_bg->GetSubstanceManager().GetCompound(StandardSubstances::Saline);
 
   if (!m_bg->LoadState("./states/StandardMale@0s.xml")) {
     m_bg->GetLogger()->Error("Could not load state, check the error");

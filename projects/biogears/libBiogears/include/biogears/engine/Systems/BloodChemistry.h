@@ -14,11 +14,14 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
 #include <biogears/cdm/patient/SEPatient.h>
+#include <biogears/cdm/enums/SEPropertyEnums.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/utils/RunningAverage.h>
 #include <biogears/engine/Controller/BioGearsSystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
 
 namespace biogears {
 class SEArterialBloodGasAnalysis;
@@ -59,18 +62,12 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  void Invalidate() override;
 
   // Set members to a stable homeostatic state
   void Initialize() override;
 
-  // Load a state
-  bool Load(const CDM::BioGearsBloodChemistrySystemData& in);
-  CDM::BioGearsBloodChemistrySystemData* Unload() const override;
-
 protected:
-  void Unload(CDM::BioGearsBloodChemistrySystemData& data) const;
-
   // Set pointers and other member variables common to both homeostatic initialization and loading a state
   void SetUp() override;
 
@@ -93,22 +90,21 @@ protected:
   void CheckViralSymptoms();
   void CheckBloodSubstanceLevels();
   void InflammatoryResponse();
-  void ManageSIRS();		//SIRS = Systemic Inflammatory Response Syndrome
+  void ManageSIRS(); // SIRS = Systemic Inflammatory Response Syndrome
 
-
-  //Override
+  // Override
   void ProcessOverride();
   void OverrideControlLoop();
 
   // Serializable member variables (Set in Initialize and in schema)
-  RunningAverage m_ArterialOxygen_mmHg;
-  RunningAverage m_ArterialCarbonDioxide_mmHg;
+  RunningAverage m_ArterialOxygenAverage_mmHg;
+  RunningAverage m_ArterialCarbonDioxideAverage_mmHg;
 
   // Patient
   SEPatient* m_Patient;
   SEPatientActionCollection* m_PatientActions;
 
-  //substances
+  // substances
   SESubstance* m_Ondansetron;
 
   // Stateless member variable (Set in SetUp())
@@ -152,7 +148,7 @@ protected:
   SELiquidSubstanceQuantity* m_venaCavaTriacylglycerol;
   SELiquidSubstanceQuantity* m_venaCavaUrea;
 
-  //radiation model parameters, first sets are growing within the marrow and thymus
+  // radiation model parameters, first sets are growing within the marrow and thymus
   double m_progenitorLymphocytes_ct;
   double m_progenitorLymphocytes_wd_ct;
   double m_progenitorLymphocytes_d_ct;
@@ -162,14 +158,14 @@ protected:
   double m_maturingLymphocytes_d_ct;
   double m_maturingLymphocytes_hd_ct;
 
-  //circulating counts
+  // circulating counts
   double m_Lymphocytes_ct;
   double m_Lymphocytes_d_ct;
   double m_Lymphocytes_hd_ct;
-  //track radiation
+  // track radiation
   double m_radAbsorbed_Gy;
 
-  //Initialize HTR concentrations
+  // Initialize HTR concentrations
   double m_donorRBC_ct;
   double m_patientRBC_ct;
   double m_2Agglutinate_ct;

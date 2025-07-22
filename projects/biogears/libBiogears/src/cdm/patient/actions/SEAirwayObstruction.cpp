@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEAirwayObstruction.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,13 +24,13 @@ SEAirwayObstruction::SEAirwayObstruction()
 //-------------------------------------------------------------------------------
 SEAirwayObstruction::~SEAirwayObstruction()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEAirwayObstruction::Clear()
+void SEAirwayObstruction::Invalidate()
 {
 
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -41,27 +42,6 @@ bool SEAirwayObstruction::IsValid() const
 bool SEAirwayObstruction::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEAirwayObstruction::Load(const CDM::AirwayObstructionData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::AirwayObstructionData* SEAirwayObstruction::Unload() const
-{
-  CDM::AirwayObstructionData* data(new CDM::AirwayObstructionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEAirwayObstruction::Unload(CDM::AirwayObstructionData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEAirwayObstruction::HasSeverity() const

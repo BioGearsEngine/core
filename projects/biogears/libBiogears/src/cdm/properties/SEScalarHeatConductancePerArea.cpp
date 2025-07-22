@@ -11,13 +11,16 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_K("W/m^2 K");
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::W_Per_m2_C("W/m^2 degC");
 const HeatConductancePerAreaUnit HeatConductancePerAreaUnit::BTU_Per_hr_ft2_C("BTU/hr ft^2 degC");
 
-template class SEScalarQuantity<HeatConductancePerAreaUnit>;
+template class BIOGEARS_API SEScalarQuantity<HeatConductancePerAreaUnit>;
 
 HeatConductancePerAreaUnit::HeatConductancePerAreaUnit(const char* u)
   : HeatConductancePerAreaUnit(std::string { u })
@@ -31,23 +34,6 @@ HeatConductancePerAreaUnit::HeatConductancePerAreaUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 HeatConductancePerAreaUnit::~HeatConductancePerAreaUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatConductancePerArea::SEScalarHeatConductancePerArea()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarHeatConductancePerArea::~SEScalarHeatConductancePerArea()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarHeatConductancePerAreaData* SEScalarHeatConductancePerArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarHeatConductancePerAreaData* data(new CDM::ScalarHeatConductancePerAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool HeatConductancePerAreaUnit::IsValidUnit(const char* unit)

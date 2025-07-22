@@ -41,7 +41,9 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
+#include "io/cdm/Environment.h"
+#include "io/biogears/BioGearsEnvironment.h"
 
 namespace biogears {
 auto Environment::make_unique(BioGears& bg) -> std::unique_ptr<Environment>
@@ -53,17 +55,17 @@ Environment::Environment(BioGears& bg)
   : SEEnvironment(bg.GetSubstances())
   , m_data(bg)
 {
-  Clear();
+  Invalidate();
 }
 
 Environment::~Environment()
 {
-  Clear();
+  Invalidate();
 }
 
-void Environment::Clear()
+void Environment::Invalidate()
 {
-  SEEnvironment::Clear();
+  SEEnvironment::Invalidate();
   m_Patient = nullptr;
   m_PatientActions = nullptr;
   m_EnvironmentActions = nullptr;
@@ -108,27 +110,6 @@ void Environment::Initialize()
   double patientHeight_m = m_Patient->GetHeight(LengthUnit::m);
   double pi = 3.14159;
   m_PatientEquivalentDiameter_m = std::pow(Convert(patientMass_g / patientDensity_g_Per_mL, VolumeUnit::mL, VolumeUnit::m3) / (pi * patientHeight_m), 0.5);
-}
-
-bool Environment::Load(const CDM::BioGearsEnvironmentData& in)
-{
-  if (!SEEnvironment::Load(in))
-    return false;
-  BioGearsSystem::LoadState();
-  m_PatientEquivalentDiameter_m = in.PatientEquivalentDiameter_m();
-  StateChange();
-  return true;
-}
-CDM::BioGearsEnvironmentData* Environment::Unload() const
-{
-  CDM::BioGearsEnvironmentData* data = new CDM::BioGearsEnvironmentData();
-  Unload(*data);
-  return data;
-}
-void Environment::Unload(CDM::BioGearsEnvironmentData& data) const
-{
-  SEEnvironment::Unload(data);
-  data.PatientEquivalentDiameter_m(m_PatientEquivalentDiameter_m);
 }
 
 void Environment::SetUp()
@@ -189,7 +170,7 @@ void Environment::SetUp()
 /// \details
 /// This is called any time the environment change action/condition.  It sets the ambient node
 /// values needed for the fluid systems.
-//--------------------------------------------------------------------------------------------------
+
 void Environment::StateChange()
 {
   using namespace std::string_literals;
@@ -227,14 +208,19 @@ void Environment::StateChange()
 
   // Add aerosols to the environment
   for (auto s : GetConditions().GetAmbientAerosols()) {
-    SESubstance& sub = s->GetSubstance();
-    if (!sub.HasAerosolization()) {
-      Error("Ignoring environment aerosol as it does not have any aerosol data : "s + sub.GetName());
+    auto sub = s->GetSubstance();
+    if (!sub.Aerosolization.IsValid()) {
+      Error("Ignoring environment aerosol as it does not have any aerosol data : "s + sub.Name);
       continue;
     }
     m_data.GetSubstances().AddActiveSubstance(sub);
     SELiquidSubstanceQuantity* subQ = m_AmbientAerosols->GetSubstanceQuantity(sub);
-    subQ->GetConcentration().Set(s->GetConcentration());
+    if (subQ) {
+        subQ->GetConcentration().Set(s->GetConcentration());
+    } else {
+      Error("aerosol "s + sub.Name + " is not present in AmbientAerosols"s);
+      continue;
+    }
   }
 }
 
@@ -350,10 +336,10 @@ void Environment::ProcessActions()
   //Set the temperature source to zero
   m_ActiveTemperaturePath->GetNextTemperatureSource().SetValue(0.0, TemperatureUnit::K);
   //Open the switch
-  m_ActiveSwitchPath->SetNextSwitch(CDM::enumOpenClosed::Open);
+  m_ActiveSwitchPath->SetNextSwitch(SEOpenClosed::Open);
 
   //Check for actions that modify environment resistances
-  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+  if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
     //In the event of a burn, modify the skin to clothing, clothing to enclosure (radiation), and clothing to environment (convection)
     //paths based on the burn surface area fraction.  Reducing skin to clothing resistance assumes that burn patient will have large
     //surface area uncovered. We calculate change in evaporative resistance in CalcEvaporation since that involves adjustment of funtion level parameters
@@ -386,7 +372,7 @@ void Environment::ProcessActions()
     const double burnRampGain = 1.0e-5;
     for (SEThermalCircuitPath* skinToClothing : m_SkinToClothingPaths) {
       double burnSurfaceAreaFraction = 0.0;
-      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+      if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
         SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
         std::vector<std::string> burnComptVector = burnAction->GetCompartments();
         // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head
@@ -528,7 +514,7 @@ void Environment::ProcessActions()
     m_ActiveTemperaturePath->GetNextTemperatureSource().SetValue(dAppliedTemperature_K, TemperatureUnit::K);
 
     //Close the switch
-    m_ActiveSwitchPath->SetNextSwitch(CDM::enumOpenClosed::Closed);
+    m_ActiveSwitchPath->SetNextSwitch(SEOpenClosed::Closed);
   }
 }
 
@@ -583,7 +569,7 @@ void Environment::CalculateSupplementalValues()
   m_dHeatOfVaporizationOfWater_J_Per_kg = dHeatOfVaporizationOfWater_JPerMol / 0.0180153; //1 mol of water = 0.0180153 kg
 
   //Water convective heat transfer properties
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     double dWaterTemperature_C = GetConditions().GetAmbientTemperature(TemperatureUnit::C);
     double dT = Convert(dWaterTemperature_C, TemperatureUnit::C, TemperatureUnit::K) / 298.15;
 
@@ -604,7 +590,7 @@ void Environment::CalculateSupplementalValues()
 //--------------------------------------------------------------------------------------------------
 void Environment::CalculateRadiation()
 {
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     //Submerged - therefore, no radiation
 
     //Invalidate the coefficient
@@ -663,7 +649,7 @@ void Environment::CalculateConvection()
 {
   double dConvectiveHeatTransferCoefficient_WPerM2_K = 0.0;
 
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     //Submerged - therefore, convection is most important
     double dClothingTemperature_K = m_ClothingNode->GetTemperature().GetValue(TemperatureUnit::K);
     double dWaterTemperature_K = GetConditions().GetAmbientTemperature(TemperatureUnit::K);
@@ -721,7 +707,7 @@ void Environment::CalculateConvection()
 //--------------------------------------------------------------------------------------------------
 void Environment::CalculateEvaporation()
 {
-  if (GetConditions().GetSurroundingType() == CDM::enumSurroundingType::Water) {
+  if (GetConditions().GetSurroundingType() == SESurroundingType::Water) {
     //Submerged - therefore, no evaporation
     //Invalidate the coefficient
     GetEvaporativeHeatTranferCoefficient().Invalidate();
@@ -757,12 +743,12 @@ void Environment::CalculateEvaporation()
       double skinWettednessDiffusion = 0.06;
 
       auto& inflamationSources = m_data.GetBloodChemistry().GetInflammatoryResponse().GetInflammationSources();
-      auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), CDM::enumInflammationSource::Burn);
+      auto burn_inflamation = std::find(inflamationSources.begin(), inflamationSources.end(), SEInflammationSource::Burn);
       if (burn_inflamation != inflamationSources.end()) {
         if (m_data.GetActions().GetPatientActions().HasBurnWound()) {
           bool isBurnWoundLocal = false;
           double localBurnIntensity = 0.0;
-          if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(CDM::enumInflammationSource::Burn)) {
+          if (m_data.GetBloodChemistry().GetInflammatoryResponse().HasInflammationSource(SEInflammationSource::Burn)) {
             SEBurnWound* burnAction = m_data.GetActions().GetPatientActions().GetBurnWound();
             std::vector<std::string> burnComptVector = burnAction->GetCompartments();
             // Check if burn is on specific compartment. Skip head since burns cannot currently be initialized on the head

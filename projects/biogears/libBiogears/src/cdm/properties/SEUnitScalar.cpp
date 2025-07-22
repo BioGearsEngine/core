@@ -12,6 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEUnitScalar.h>
 
+#include "io/cdm/Property.h"
+
 namespace biogears {
 SEUnitScalar::SEUnitScalar(bool ro)
   : SEScalar(NaN,ro)
@@ -20,7 +22,7 @@ SEUnitScalar::SEUnitScalar(bool ro)
 
 //------------------------------------------------------------------------------
 SEUnitScalar::SEUnitScalar(const SEUnitScalar& obj)
-  : SEScalar(obj)
+  : SEScalar(obj.m_value, obj.m_readOnly)
 {
 }
 //------------------------------------------------------------------------------

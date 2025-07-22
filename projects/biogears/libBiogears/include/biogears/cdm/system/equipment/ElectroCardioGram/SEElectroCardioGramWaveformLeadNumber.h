@@ -15,10 +15,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
-#include <biogears/schema/cdm/ElectroCardioGram.hxx>
-
-CDM_BIND_DECL(ElectroCardioGramInterpolationWaveformData)
 
 namespace biogears {
 
@@ -33,11 +29,8 @@ class BIOGEARS_API SEElectroCardioGramWaveformLeadNumber : public Loggable {
 
 public:
   SEElectroCardioGramWaveformLeadNumber(Logger* logger);
-  SEElectroCardioGramWaveformLeadNumber(Logger* logger, int value);
+  SEElectroCardioGramWaveformLeadNumber(int value, Logger* logger = nullptr);
   ~SEElectroCardioGramWaveformLeadNumber() override;
-
-  bool Load(const CDM::ElectroCardioGramWaveformLeadNumberData& in);
-  CDM::ElectroCardioGramWaveformLeadNumberData* Unload() const;
 
   operator int&();
   operator int() const;
@@ -45,9 +38,6 @@ public:
   SEElectroCardioGramWaveformLeadNumber& operator=(SEElectroCardioGramWaveformLeadNumber const&);
   bool operator==(SEElectroCardioGramWaveformLeadNumber const&) const;
   bool operator!=(SEElectroCardioGramWaveformLeadNumber const&) const;
-
-protected:
-  void Unload(CDM::ElectroCardioGramWaveformLeadNumberData& data) const;
 
 public:
   int GetValue() const;

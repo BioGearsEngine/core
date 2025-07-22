@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEDehydration.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEDehydration::SEDehydration()
@@ -22,39 +23,18 @@ SEDehydration::SEDehydration()
 //-----------------------------------------------------------------------------
 SEDehydration::~SEDehydration()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEDehydration::Clear()
+void SEDehydration::Invalidate()
 {
-  SEPatientCondition::Clear();
+  SEPatientCondition::Invalidate();
   SAFE_DELETE(m_DehydrationFraction);
 }
 //-----------------------------------------------------------------------------
 bool SEDehydration::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasDehydrationFraction();
-}
-//-----------------------------------------------------------------------------
-bool SEDehydration::Load(const CDM::DehydrationData& in)
-{
-  SEPatientCondition::Load(in);
-  GetDehydrationFraction().Load(in.DehydrationFraction());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::DehydrationData* SEDehydration::Unload() const
-{
-  CDM::DehydrationData* data(new CDM::DehydrationData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEDehydration::Unload(CDM::DehydrationData& data) const
-{
-  SEPatientCondition::Unload(data);
-  if (m_DehydrationFraction != nullptr)
-    data.DehydrationFraction(std::unique_ptr<CDM::Scalar0To1Data>(m_DehydrationFraction->Unload()));
 }
 //-----------------------------------------------------------------------------
 bool SEDehydration::HasDehydrationFraction() const

@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEChestCompression::SEChestCompression()
   : SEPatientAction()
@@ -19,12 +20,12 @@ SEChestCompression::SEChestCompression()
 //-------------------------------------------------------------------------------
 SEChestCompression::~SEChestCompression()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEChestCompression::Clear()
+void SEChestCompression::Invalidate()
 {
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
 }
 //-------------------------------------------------------------------------------
 bool SEChestCompression::IsValid() const
@@ -35,24 +36,6 @@ bool SEChestCompression::IsValid() const
 bool SEChestCompression::IsActive() const
 {
   return IsValid();
-}
-//-------------------------------------------------------------------------------
-bool SEChestCompression::Load(const CDM::ChestCompressionData& in)
-{
-  SEPatientAction::Load(in);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ChestCompressionData* SEChestCompression::Unload() const
-{
-  CDM::ChestCompressionData* data(new CDM::ChestCompressionData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEChestCompression::Unload(CDM::ChestCompressionData& data) const
-{
-  SEPatientAction::Unload(data);
 }
 //-------------------------------------------------------------------------------
 void SEChestCompression::ToString(std::ostream& str) const

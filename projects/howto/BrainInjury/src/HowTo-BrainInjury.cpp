@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEBrainInjury.h>
 #include <biogears/cdm/patient/actions/SEPupillaryResponse.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
 #include <biogears/cdm/system/physiology/SENervousSystem.h>
@@ -93,7 +93,7 @@ int HowToBrainInjury()
   // Create an SEBrainInjury object
   // Set the severity (a fraction between 0 and 1; for maximal injury, use 1.)
   SEBrainInjury tbi;
-  tbi.SetType(CDM::enumBrainInjuryType::Diffuse); // Can also be LeftFocal or RightFocal, and you will get pupillary effects in only one eye
+  tbi.SetType(SEBrainInjuryType::Diffuse); // Can also be LeftFocal or RightFocal, and you will get pupillary effects in only one eye
   tbi.GetSeverity().SetValue(0.2);
   bg->ProcessAction(tbi);
   bg->GetLogger()->Info("Giving the patient a brain injury.");

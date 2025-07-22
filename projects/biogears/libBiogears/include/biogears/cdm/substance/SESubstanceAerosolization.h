@@ -13,7 +13,10 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
-#include <biogears/schema/cdm/Substance.hxx>
+
+#include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
+#include <biogears/cdm/enums/SESubstanceEnums.h>
 
 namespace biogears {
 class SEScalar;
@@ -25,21 +28,20 @@ namespace io {
 }
 class BIOGEARS_API SESubstanceAerosolization : public Loggable {
   friend io::Substance;
+
 public:
-  SESubstanceAerosolization(Logger* logger);
+  SESubstanceAerosolization(SESubstanceAerosolization const& obj);
+  SESubstanceAerosolization(Logger* logger = nullptr);
   virtual ~SESubstanceAerosolization();
 
-  virtual void Clear();
+  virtual void Invalidate();
   virtual bool IsValid() const;
 
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  virtual bool Load(const CDM::SubstanceAerosolizationData& in);
-  virtual CDM::SubstanceAerosolizationData* Unload() const;
-
-  bool operator==( const SESubstanceAerosolization& rhs) const;
-  bool operator!=( const SESubstanceAerosolization& rhs) const;
+  bool operator==(const SESubstanceAerosolization& rhs) const;
+  bool operator!=(const SESubstanceAerosolization& rhs) const;
 
 public:
   virtual bool HasBronchioleModifier() const;
@@ -52,15 +54,11 @@ public:
 
   virtual bool HasParticulateSizeDistribution() const;
   virtual SEHistogramFractionVsLength& GetParticulateSizeDistribution();
-  virtual const SEHistogramFractionVsLength* GetParticulateSizeDistribution() const;
+  virtual const SEHistogramFractionVsLength GetParticulateSizeDistribution() const;
 
 protected:
-  virtual void Unload(CDM::SubstanceAerosolizationData& data) const;
-
-
-protected:
-  SEScalarNeg1To1* m_BronchioleModifier;
-  SEScalar0To1* m_InflammationCoefficient;
-  SEHistogramFractionVsLength* m_ParticulateSizeDistribution;
+  SEScalarNeg1To1 m_BronchioleModifier;
+  SEScalar0To1 m_InflammationCoefficient;
+  SEHistogramFractionVsLength m_ParticulateSizeDistribution;
 };
 }

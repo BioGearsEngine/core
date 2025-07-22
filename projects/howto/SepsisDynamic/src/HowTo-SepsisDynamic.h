@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
 
 namespace biogears {
 class SEInfection;

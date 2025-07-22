@@ -11,9 +11,11 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <map>
-#include <vector>
 #include <algorithm>
+#include <concepts>
+#include <map>
+#include <type_traits>
+#include <vector>
 
 namespace biogears {
 #define BLIM(input, min, max) (input = (input > max) ? max : ((input < min) ? min : input))
@@ -58,12 +60,40 @@ inline size_t _Hash_value(_InIt _Begin, _InIt _End)
   if (from.Has##name())   \
     Get##name().Merge(*from.m_##name);
 
-#define CDM_COPY(from, to)       \
-  {                              \
-    auto* bind = from->Unload(); \
-    to->Load(*bind);             \
-    delete bind;                 \
-  }
+template <class ContainerType>
+concept Container = requires(ContainerType a) {
+  requires std::regular<ContainerType>;
+  requires std::swappable<ContainerType>;
+  requires std::destructible<typename ContainerType::value_type>;
+  requires std::same_as<typename ContainerType::reference, typename ContainerType::value_type&>;
+  requires std::same_as<typename ContainerType::const_reference, const typename ContainerType::value_type&>;
+  requires std::forward_iterator<typename ContainerType::iterator>;
+  requires std::forward_iterator<typename ContainerType::const_iterator>;
+  requires std::signed_integral<typename ContainerType::difference_type>;
+  requires std::same_as<typename ContainerType::difference_type, typename std::iterator_traits<typename ContainerType::iterator>::difference_type>;
+  requires std::same_as<typename ContainerType::difference_type, typename std::iterator_traits<typename ContainerType::const_iterator>::difference_type>;
+  {
+    a.begin()
+  } -> std::same_as<typename ContainerType::iterator>;
+  {
+    a.end()
+  } -> std::same_as<typename ContainerType::iterator>;
+  {
+    a.cbegin()
+  } -> std::same_as<typename ContainerType::const_iterator>;
+  {
+    a.cend()
+  } -> std::same_as<typename ContainerType::const_iterator>;
+  {
+    a.size()
+  } -> std::same_as<typename ContainerType::size_type>;
+  {
+    a.max_size()
+  } -> std::same_as<typename ContainerType::size_type>;
+  {
+    a.empty()
+  } -> std::same_as<bool>;
+};
 
 template <class T>
 inline void Copy(const std::vector<T*>& from, std::vector<T*>& to)
@@ -109,12 +139,25 @@ inline void DELETE_VECTOR(std::vector<T>& vec)
   }
   vec.clear();
 }
-//This will delete all of the second items in a map and then clear the map to destroy all dangling pointers
-template <class T, class K>
-inline void DELETE_MAP_SECOND(std::map<T, K>& map)
+
+template <typename ContainerType>
+  requires Container<ContainerType> && std::is_pointer_v<typename ContainerType::value_type>
+inline void DELETE_CONTAINER_OF_POINTERS(ContainerType& container)
 {
-  for (typename std::map<T, K>::iterator it = map.begin(); it != map.end(); ++it) {
-    delete it->second;
+  for (auto& element : container) {
+    delete element;
+    element = nullptr;
+  }
+  container.clear();
+}
+// Th
+// This will delete all of the second items in a map and then clear the map to destroy all dangling pointers
+template <class T, class K>
+inline void DELETE_MAP_OF_POINTERS(std::map<T, K>& map)
+{
+  for (auto& [key,value] : map) {
+    delete value;
+    value = nullptr;
   }
   map.clear();
 }

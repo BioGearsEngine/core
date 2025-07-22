@@ -13,8 +13,8 @@ specific language governing permissions and limitations under the License.
 #pragma once
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Patient.hxx>
-#include <biogears/schema/cdm/Anesthesia.hxx>
+#include <biogears/cdm/enums/SEPatientEnums.h>
+#include <biogears/cdm/enums/SEAnesthesiaEnums.h>
 #include <biogears/cdm/utils/Logger.h>
 
 namespace CDM = mil::tatrc::physiology::datamodel;
@@ -25,7 +25,7 @@ public:
   SEEventHandler() = default;
   virtual ~SEEventHandler() = default;
 
-  virtual void HandlePatientEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
-  virtual void HandleAnesthesiaMachineEvent(CDM::enumAnesthesiaMachineEvent::value type, bool active, const SEScalarTime* time = nullptr) = 0;
+  virtual void HandlePatientEvent(SEPatientEventType type, bool active, const SEScalarTime* time = nullptr) = 0;
+  virtual void HandleAnesthesiaMachineEvent(SEAnesthesiaMachineEvent type, bool active, const SEScalarTime* time = nullptr) = 0;
 };
 }

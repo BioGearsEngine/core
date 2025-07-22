@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVentilatorPressureLoss.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,12 +26,12 @@ SEVentilatorPressureLoss::SEVentilatorPressureLoss()
 //-------------------------------------------------------------------------------
 SEVentilatorPressureLoss::~SEVentilatorPressureLoss()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEVentilatorPressureLoss::Clear()
+void SEVentilatorPressureLoss::Invalidate()
 {
-  SEAnesthesiaMachineAction::Clear();
+  SEAnesthesiaMachineAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -41,27 +44,7 @@ bool SEVentilatorPressureLoss::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-//-------------------------------------------------------------------------------
-bool SEVentilatorPressureLoss::Load(const CDM::VentilatorPressureLossData& in, std::default_random_engine *rd)
-{
-  SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::VentilatorPressureLossData* SEVentilatorPressureLoss::Unload() const
-{
-  CDM::VentilatorPressureLossData* data = new CDM::VentilatorPressureLossData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEVentilatorPressureLoss::Unload(CDM::VentilatorPressureLossData& data) const
-{
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-}
+
 //-------------------------------------------------------------------------------
 bool SEVentilatorPressureLoss::HasSeverity() const
 {

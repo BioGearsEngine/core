@@ -10,6 +10,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarVolumePerTimePressure.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears
 {
@@ -18,7 +21,7 @@ namespace biogears
   const VolumePerTimePressureUnit VolumePerTimePressureUnit::L_Per_min_mmHg("L/min mmHg");
   const VolumePerTimePressureUnit VolumePerTimePressureUnit::mL_Per_min_mmHg("mL/min mmHg");
 
-  template class SEScalarQuantity<VolumePerTimePressureUnit>;
+  template class BIOGEARS_API SEScalarQuantity<VolumePerTimePressureUnit>;
 
   VolumePerTimePressureUnit::~VolumePerTimePressureUnit() 
   {
@@ -33,23 +36,6 @@ namespace biogears
   VolumePerTimePressureUnit::VolumePerTimePressureUnit(const std::string& u)
     : CCompoundUnit(u)
   {
-  }
-  //-------------------------------------------------------------------------------
-  SEScalarVolumePerTimePressure::SEScalarVolumePerTimePressure()
-  {
-  }
-  //-------------------------------------------------------------------------------
-  SEScalarVolumePerTimePressure::~SEScalarVolumePerTimePressure()
-  {
-  }
-  //-------------------------------------------------------------------------------
-  CDM::ScalarVolumePerTimePressureData* SEScalarVolumePerTimePressure::Unload() const
-  {
-    if (!IsValid())
-      return nullptr;
-    CDM::ScalarVolumePerTimePressureData* data(new CDM::ScalarVolumePerTimePressureData());
-    SEScalarQuantity::Unload(*data);
-    return data;
   }
   //-------------------------------------------------------------------------------
   bool VolumePerTimePressureUnit::IsValidUnit(const char* unit)

@@ -30,7 +30,7 @@ protected:
 public:
   virtual ~SECompartmentGraph();
 
-  virtual void Clear();
+  virtual void Invalidate();
 
 public:
   virtual std::string GetName() const;

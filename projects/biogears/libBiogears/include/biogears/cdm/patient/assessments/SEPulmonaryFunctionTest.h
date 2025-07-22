@@ -12,13 +12,13 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/assessments/SEPatientAssessment.h>
-#include <biogears/schema/cdm/PatientAssessments.hxx>
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
+#include <biogears/cdm/properties/SEScalarVolumePerTime.h>
+#include <biogears/cdm/properties/SEScalarVolume.h>
 
 namespace biogears {
 class SEPatient;
 class SERespiratorySystem;
-class SEScalarVolume;
-class SEScalarVolumePerTime;
 class SEFunctionVolumeVsTime;
 namespace io {
   class PatientAssessments;
@@ -34,13 +34,7 @@ public:
   const char* classname() const override { return TypeTag(); }
 
   virtual void Reset() override;
-  virtual void Clear() override;
-
-  virtual bool Load(const CDM::PulmonaryFunctionTestData& in);
-  virtual CDM::PulmonaryFunctionTestData* Unload() override;
-
-protected:
-  virtual void Unload(CDM::PulmonaryFunctionTestData& data);
+  virtual void Invalidate() override;
 
 public:
   virtual int GetNumberOfPlotPoints() { return m_NumberOfPlotPoints; }

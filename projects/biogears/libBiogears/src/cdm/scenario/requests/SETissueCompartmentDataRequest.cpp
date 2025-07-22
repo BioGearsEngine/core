@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SETissueCompartmentDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/utils/EnumHashSpecialization.h>
 
@@ -22,36 +24,18 @@ SETissueCompartmentDataRequest::SETissueCompartmentDataRequest(const SEDecimalFo
 //-------------------------------------------------------------------------------
 SETissueCompartmentDataRequest::~SETissueCompartmentDataRequest()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SETissueCompartmentDataRequest::Clear()
+void SETissueCompartmentDataRequest::Invalidate()
 {
-  SECompartmentDataRequest::Clear();
+  SECompartmentDataRequest::Invalidate();
 }
 //-------------------------------------------------------------------------------
 size_t SETissueCompartmentDataRequest::HashCode()
 {
   size_t h = SECompartmentDataRequest::HashCode();
   return h;
-}
-//-------------------------------------------------------------------------------
-bool SETissueCompartmentDataRequest::Load(const CDM::TissueCompartmentDataRequestData& in)
-{
-  SECompartmentDataRequest::Load(in);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::TissueCompartmentDataRequestData* SETissueCompartmentDataRequest::Unload() const
-{
-  CDM::TissueCompartmentDataRequestData* data = new CDM::TissueCompartmentDataRequestData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SETissueCompartmentDataRequest::Unload(CDM::TissueCompartmentDataRequestData& data) const
-{
-  SECompartmentDataRequest::Unload(data);
 }
 //-------------------------------------------------------------------------------
 bool SETissueCompartmentDataRequest ::operator==(SETissueCompartmentDataRequest const& rhs) const

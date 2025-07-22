@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
 #include <biogears/cdm/properties/SEScalar.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
@@ -26,42 +28,16 @@ SEDataRequest::SEDataRequest(const SEDecimalFormat* dfault)
 //-------------------------------------------------------------------------------
 SEDataRequest::~SEDataRequest()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEDataRequest::Clear()
+void SEDataRequest::Invalidate()
 {
   m_Name = "";
   m_RequestedUnit = "";
   m_Unit = nullptr;
 }
-//-------------------------------------------------------------------------------
-bool SEDataRequest::Load(const CDM::DataRequestData& in)
-{
 
-  SEDecimalFormat::Load(in);
-  m_Name = in.Name();
-  if (in.Unit().present())
-    m_RequestedUnit = in.Unit().get();
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::DataRequestData* SEDataRequest::Unload() const
-{
-  CDM::DataRequestData* data = new CDM::DataRequestData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEDataRequest::Unload(CDM::DataRequestData& data) const
-{
-  SEDecimalFormat::Unload(data);
-  data.Name(m_Name);
-  if (HasUnit())
-    data.Unit(m_Unit->GetString());
-  else if (HasRequestedUnit())
-    data.Unit(m_RequestedUnit);
-}
 //-------------------------------------------------------------------------------
 std::string SEDataRequest::GetName() const
 {

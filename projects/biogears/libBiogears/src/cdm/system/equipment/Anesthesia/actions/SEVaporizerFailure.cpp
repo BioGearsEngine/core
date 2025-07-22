@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEVaporizerFailure.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,12 +26,12 @@ SEVaporizerFailure::SEVaporizerFailure()
 //-------------------------------------------------------------------------------
 SEVaporizerFailure::~SEVaporizerFailure()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEVaporizerFailure::Clear()
+void SEVaporizerFailure::Invalidate()
 {
-  SEAnesthesiaMachineAction::Clear();
+  SEAnesthesiaMachineAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -41,27 +44,7 @@ bool SEVaporizerFailure::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
 }
-//-------------------------------------------------------------------------------
-bool SEVaporizerFailure::Load(const CDM::VaporizerFailureData& in, std::default_random_engine *rd)
-{
-  SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::VaporizerFailureData* SEVaporizerFailure::Unload() const
-{
-  CDM::VaporizerFailureData* data = new CDM::VaporizerFailureData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEVaporizerFailure::Unload(CDM::VaporizerFailureData& data) const
-{
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-}
+
 //-------------------------------------------------------------------------------
 bool SEVaporizerFailure::HasSeverity() const
 {

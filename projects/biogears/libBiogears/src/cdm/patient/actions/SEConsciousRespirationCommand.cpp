@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SEConsciousRespirationCommand.h>
 
+#include "io/cdm/PatientActions.h"
 namespace biogears {
 SEConsciousRespirationCommand::SEConsciousRespirationCommand()
 {
@@ -20,25 +21,12 @@ SEConsciousRespirationCommand::SEConsciousRespirationCommand()
 //-------------------------------------------------------------------------------
 SEConsciousRespirationCommand::~SEConsciousRespirationCommand()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEConsciousRespirationCommand::Clear()
+void SEConsciousRespirationCommand::Invalidate()
 {
   m_Comment = "";
-}
-//-------------------------------------------------------------------------------
-bool SEConsciousRespirationCommand::Load(const CDM::ConsciousRespirationCommandData& in)
-{
-  if (in.Comment().present())
-    m_Comment = in.Comment().get();
-  return true;
-}
-//-------------------------------------------------------------------------------
-void SEConsciousRespirationCommand::Unload(CDM::ConsciousRespirationCommandData& data) const
-{
-  if (HasComment())
-    data.Comment(m_Comment);
 }
 //-------------------------------------------------------------------------------
 bool SEConsciousRespirationCommand::IsValid() const

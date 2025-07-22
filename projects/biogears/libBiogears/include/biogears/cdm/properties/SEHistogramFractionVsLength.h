@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEHistogram.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class LengthUnit;
@@ -22,21 +21,20 @@ namespace io {
 class BIOGEARS_API SEHistogramFractionVsLength : public SEHistogram {
 public:
   friend io::Property;
+  SEHistogramFractionVsLength(SEHistogramFractionVsLength const&);
   SEHistogramFractionVsLength();
   virtual ~SEHistogramFractionVsLength();
 
-  virtual void Clear() override;
+  virtual void Invalidate() override;
 
   virtual bool IsVaild() const;
 
-  virtual bool Load(const CDM::HistogramFractionVsLengthData& in);
-  virtual CDM::HistogramFractionVsLengthData* Unload() const override;
         
+  SEHistogramFractionVsLength& operator=(const SEHistogramFractionVsLength&);
+
   bool operator==(const SEHistogramFractionVsLength&) const;
   bool operator!=(const SEHistogramFractionVsLength&) const;
 
-protected:
-  virtual void Unload(CDM::HistogramFractionVsLengthData& data) const;
 
 public:
   virtual double GetFractionValue(unsigned int index) const;

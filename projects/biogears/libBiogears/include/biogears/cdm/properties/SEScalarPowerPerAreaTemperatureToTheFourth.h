@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API PowerPerAreaTemperatureToTheFourthUnit : public CCompoundUnit {
@@ -33,16 +32,8 @@ public:
   static const PowerPerAreaTemperatureToTheFourthUnit W_Per_m2_K4;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
-
-class BIOGEARS_API SEScalarPowerPerAreaTemperatureToTheFourth : public SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit> {
-public:
-  SEScalarPowerPerAreaTemperatureToTheFourth();
-  virtual ~SEScalarPowerPerAreaTemperatureToTheFourth();
-
-  CDM::ScalarPowerPerAreaTemperatureToTheFourthData* Unload() const override;
-
-  using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::SetValue;
-  using SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>::GetValue;
-};
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
+using SEScalarPowerPerAreaTemperatureToTheFourth  = SEScalarQuantity<PowerPerAreaTemperatureToTheFourthUnit>;
+#pragma warning(default : 4661)
 }

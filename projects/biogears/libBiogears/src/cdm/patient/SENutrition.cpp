@@ -11,13 +11,17 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/SENutrition.h>
 
+#include "io/cdm/Patient.h"
+#include "io/cdm/PatientNutrition.h"
+
 #include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarMass.h>
 #include <biogears/cdm/properties/SEScalarMassPerTime.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
+#include <biogears/io/io-manager.h>
 #include <biogears/schema/cdm/PatientNutrition.hxx>
 #include <biogears/schema/cdm/Properties.hxx>
-#include <biogears/io/io-manager.h>
+
 #ifdef BIOGEARS_IO_PRESENT
 #include <biogears/io/directories/nutrition.h>
 #endif
@@ -37,10 +41,10 @@ SENutrition::SENutrition(Logger* logger)
 //-----------------------------------------------------------------------------
 SENutrition::~SENutrition()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SENutrition::Clear()
+void SENutrition::Invalidate()
 {
   m_Name = "";
   SAFE_DELETE(m_Carbohydrate);
@@ -73,56 +77,6 @@ void SENutrition::Increment(const SENutrition& from)
     GetSodium().Increment(*from.m_Sodium);
   if (from.HasWater())
     GetWater().Increment(*from.m_Water);
-}
-//-----------------------------------------------------------------------------
-bool SENutrition::Load(const CDM::NutritionData& in, std::default_random_engine *rd)
-{
-  Clear();
-
-  if (in.Name().present()) {
-    m_Name = in.Name().get();
-  } else {
-    m_Name = "Standard Meal";
-  }
-  if (in.Carbohydrate().present())
-    GetCarbohydrate().Load(in.Carbohydrate().get(), rd);
-  if (in.Fat().present())
-    GetFat().Load(in.Fat().get(), rd);
-  if (in.Protein().present())
-    GetProtein().Load(in.Protein().get(), rd);
-  if (in.Calcium().present())
-    GetCalcium().Load(in.Calcium().get(), rd);
-  if (in.Sodium().present())
-    GetSodium().Load(in.Sodium().get(), rd);
-  if (in.Water().present())
-    GetWater().Load(in.Water().get(), rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::NutritionData* SENutrition::Unload() const
-{
-  CDM::NutritionData* data = new CDM::NutritionData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SENutrition::Unload(CDM::NutritionData& data) const
-{
-  if (!m_Name.empty()) {
-    data.Name(m_Name);
-  }
-  if (m_Carbohydrate != nullptr)
-    data.Carbohydrate(std::unique_ptr<CDM::ScalarMassData>(m_Carbohydrate->Unload()));
-  if (m_Fat != nullptr)
-    data.Fat(std::unique_ptr<CDM::ScalarMassData>(m_Fat->Unload()));
-  if (m_Protein != nullptr)
-    data.Protein(std::unique_ptr<CDM::ScalarMassData>(m_Protein->Unload()));
-  if (m_Calcium != nullptr)
-    data.Calcium(std::unique_ptr<CDM::ScalarMassData>(m_Calcium->Unload()));
-  if (m_Sodium != nullptr)
-    data.Sodium(std::unique_ptr<CDM::ScalarMassData>(m_Sodium->Unload()));
-  if (m_Water != nullptr)
-    data.Water(std::unique_ptr<CDM::ScalarVolumeData>(m_Water->Unload()));
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SENutrition::GetScalar(const char* name)
@@ -176,7 +130,8 @@ bool SENutrition::Load(const std::string& given)
     Error(ss);
     return false;
   }
-  return Load(*pData);
+  io::PatientNutrition::UnMarshall(*pData, *this);
+  return true;
 }
 //-----------------------------------------------------------------------------
 std::string SENutrition::GetName() const
@@ -339,6 +294,18 @@ double SENutrition::GetWeight(const MassUnit& unit) const
   if (HasWater())
     w += Convert(GetWater(VolumeUnit::mL), MassUnit::g, unit);
   return w;
+}
+//-----------------------------------------------------------------------------
+bool SENutrition::IsValid() const {
+  //Todo: Refine the meaning if IsValid nutrition. Is it a meal with all members at least at Zero 
+  //      or is it a meal with a Name and at least one member.
+  return HasName()
+    && (HasCarbohydrate()
+    || HasFat()
+    || HasProtein()
+    || HasCalcium()
+    || HasSodium()
+    || HasWater());
 }
 //-----------------------------------------------------------------------------
 void SENutrition::ToString(std::ostream& str) const

@@ -12,24 +12,26 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/patient/actions/SETourniquet.h>
 
+#include "io/cdm/PatientActions.h"
+
 namespace biogears {
 SETourniquet::SETourniquet()
   : SEPatientAction()
 {
   m_Compartment = ""; //User input, location of Tourniquet
-  m_TourniquetLevel = (CDM::enumTourniquetApplicationLevel::value)-1;
+  m_TourniquetLevel = SETourniquetApplicationType::Invalid;
 }
 //-----------------------------------------------------------------------------
 SETourniquet::~SETourniquet()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SETourniquet::Clear()
+void SETourniquet::Invalidate()
 {
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   m_Compartment = "";
-  m_TourniquetLevel = (CDM::enumTourniquetApplicationLevel::value)-1;
+  m_TourniquetLevel = SETourniquetApplicationType::Invalid;
 }
 //-----------------------------------------------------------------------------
 bool SETourniquet::IsValid() const
@@ -41,31 +43,7 @@ bool SETourniquet::IsValid() const
 //-----------------------------------------------------------------------------
 bool SETourniquet::IsActive() const
 {
-  return IsValid() ? !(m_TourniquetLevel == (CDM::enumTourniquetApplicationLevel::None)) : false;
-}//-----------------------------------------------------------------------------
-bool SETourniquet::Load(const CDM::TourniquetData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  m_TourniquetLevel = in.TourniquetLevel();
-  m_Compartment = in.Compartment();
-
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::TourniquetData* SETourniquet::Unload() const
-{
-  CDM::TourniquetData* data(new CDM::TourniquetData());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SETourniquet::Unload(CDM::TourniquetData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (HasCompartment())
-    data.Compartment(m_Compartment);
-  if (HasTourniquetLevel())
-    data.TourniquetLevel(m_TourniquetLevel);
+  return IsValid() ? !(m_TourniquetLevel == (SETourniquetApplicationType::NotApplied)) : false;
 }
 //-----------------------------------------------------------------------------
 const char* SETourniquet::GetCompartment_cStr() const
@@ -100,22 +78,22 @@ void SETourniquet::InvalidateCompartment()
 //-----------------------------------------------------------------------------
 bool SETourniquet::HasTourniquetLevel() const
 {
-  return m_TourniquetLevel == ((CDM::enumTourniquetApplicationLevel::value)-1) ? false : true;
+  return m_TourniquetLevel == SETourniquetApplicationType::Invalid ? false : true;
 }
 //-----------------------------------------------------------------------------
-CDM::enumTourniquetApplicationLevel SETourniquet::GetTourniquetLevel()
+SETourniquetApplicationType SETourniquet::GetTourniquetLevel()
 {
   return m_TourniquetLevel;
 }
 //-----------------------------------------------------------------------------
-void SETourniquet::SetTourniquetLevel(CDM::enumTourniquetApplicationLevel::value level)
+void SETourniquet::SetTourniquetLevel(SETourniquetApplicationType level)
 {
   m_TourniquetLevel = level;
 }
 //-----------------------------------------------------------------------------
 void SETourniquet::ToString(std::ostream& str) const
 {
-  if (m_TourniquetLevel == CDM::enumTourniquetApplicationLevel::None) {
+  if (m_TourniquetLevel == SETourniquetApplicationType::NotApplied) {
     str << "Patient Action : Remove tourniquet";
     if (HasComment())
       str << "\n\tComment: ";

@@ -17,7 +17,6 @@ specific language governing permissions and limitations under the License.
 #include <string>
 #include <map>
 
-CDM_BIND_DECL(DecimalFormatData)
 
 namespace biogears {
 namespace io {
@@ -37,12 +36,6 @@ public:
   virtual void Reset();
   virtual void Set(const SEDecimalFormat& f);
 
-  virtual bool Load(const CDM::DecimalFormatData& in);
-  virtual CDM::DecimalFormatData* Unload();
-
-protected:
-  virtual void Unload(CDM::DecimalFormatData& to) const;
-
 public:
   void SetPrecision(std::streamsize p);
   std::streamsize GetPrecision();
@@ -61,6 +54,9 @@ protected:
 };
   }//namespace biogears
 
-namespace std{
-BG_EXT template class BIOGEARS_API map<std::string, biogears::SEDecimalFormat>;
+#pragma warning(disable : 4661)
+
+  namespace std{
+extern template class map<std::string, biogears::SEDecimalFormat>;
 }
+#pragma warning(default : 4661)

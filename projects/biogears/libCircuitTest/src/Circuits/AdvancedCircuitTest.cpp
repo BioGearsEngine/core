@@ -169,7 +169,7 @@ void CommonDataModelTest::ElectricalCircuitTest(const std::string& sTestDirector
     }
   }
   trk1.WriteTrackToFile(sOutputFile.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 void CommonDataModelTest::FluidCircuitTest(const std::string& sTestDirectory)
@@ -233,7 +233,7 @@ void CommonDataModelTest::FluidCircuitTest(const std::string& sTestDirectory)
     }
   }
   trk1.WriteTrackToFile(sOutputFile.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 void CommonDataModelTest::ThermalCircuitTest(const std::string& sTestDirectory)
@@ -309,7 +309,7 @@ void CommonDataModelTest::ThermalCircuitTest(const std::string& sTestDirectory)
     }
   }
   trk1.WriteTrackToFile(sOutputFile.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -418,7 +418,7 @@ void CommonDataModelTest::CombinedCircuitTest(const std::string& sTestDirectory)
   }
   std::string sOutputFile = sTestDirectory + "/CombinedCircuit.csv";
   trk1.WriteTrackToFile(sOutputFile.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 void CommonDataModelTest::InterCircuitComparisonTest(const std::string& sTestDirectory)
@@ -485,7 +485,7 @@ void CommonDataModelTest::InterCircuitComparisonTest(const std::string& sTestDir
   }
   std::string sOutputFile = sTestDirectory + "/InterCircuitComparison.csv";
   trk1.WriteTrackToFile(sOutputFile.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 void CommonDataModelTest::InterCircuitIndividualTest(const std::string& sTestDirectory)
@@ -571,7 +571,7 @@ void CommonDataModelTest::InterCircuitIndividualTest(const std::string& sTestDir
   std::string sOutputFile2 = sTestDirectory + "/InterCircuitIndividual2.csv";
   trk1.WriteTrackToFile(sOutputFile.c_str());
   trk2.WriteTrackToFile(sOutputFile2.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -700,7 +700,7 @@ void CommonDataModelTest::CircuitErrorTest(const std::string& sTestDirectory)
   // None, as of yet, moving to templates enforced a lot of stuff
   Path2.GetNextCompliance().SetValue(25, FlowComplianceUnit::m3_Per_Pa);
   Path2.HasValidElements();
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -800,7 +800,7 @@ void CommonDataModelTest::DynamicallyChangingCircuitTest(const std::string& sTes
   }
   std::string sOutputFile = sTestDirectory + "/DynamicallyChangingCircuit.csv";
   trk1.WriteTrackToFile(sOutputFile.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -873,7 +873,7 @@ void CommonDataModelTest::NonZeroReferencePositive(const std::string& sTestDirec
   }
   std::string sOutputFile = sTestDirectory + "/NonZeroReferencePositive.csv";
   trk1.WriteTrackToFile(sOutputFile.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -945,7 +945,7 @@ void CommonDataModelTest::NonZeroReferenceNegative(const std::string& sTestDirec
   }
   std::string sOutputFile = sTestDirectory + "/NonZeroReferenceNegative.csv";
   trk1.WriteTrackToFile(sOutputFile.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -982,7 +982,7 @@ void CommonDataModelTest::PolarizedCapacitorTest(const std::string& sTestDirecto
   //Paths
   SEFluidCircuitPath& Path2 = fluidCircuit->CreatePath(Node2, Node1, "Path2");
   Path2.GetNextCompliance().SetValue(1, FlowComplianceUnit::m3_Per_Pa);
-  Path2.SetNextPolarizedState(CDM::enumOpenClosed::Closed);
+  Path2.SetNextPolarizedState(SEOpenClosed::Closed);
   Path2.GetSourceNode().GetNextVolume().SetValue(0, VolumeUnit::m3);
   SEFluidCircuitPath& Path3 = fluidCircuit->CreatePath(Node2, Node3, "Path3");
   Path3.GetNextResistance().SetValue(1, FlowResistanceUnit::Pa_s_Per_m3);
@@ -1019,7 +1019,7 @@ void CommonDataModelTest::PolarizedCapacitorTest(const std::string& sTestDirecto
   }
   std::string sOutputFile = sTestDirectory + "/PolarizedCapacitor.csv";
   trk1.WriteTrackToFile(sOutputFile.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 void CommonDataModelTest::PreChargeComplianceZeroVolume(const std::string& sTestDirectory)
@@ -1064,7 +1064,7 @@ void CommonDataModelTest::PreChargeComplianceZeroVolume(const std::string& sTest
   }
   std::string sOutputFile1 = sTestDirectory + "/PreChargeComplianceZeroVolume.csv";
   trk1.WriteTrackToFile(sOutputFile1.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 void CommonDataModelTest::PreChargeComplianceNonZeroVolume(const std::string& sTestDirectory)
@@ -1109,7 +1109,7 @@ void CommonDataModelTest::PreChargeComplianceNonZeroVolume(const std::string& sT
   }
   std::string sOutputFile2 = sTestDirectory + "/PreChargeComplianceNonZeroVolume.csv";
   trk1.WriteTrackToFile(sOutputFile2.c_str());
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 
 void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory)
@@ -1380,6 +1380,6 @@ void CommonDataModelTest::CircuitLockingTest(const std::string& sOutputDirectory
 
   std::string sOutputFile = sOutputDirectory + "/CircuitLockingTestReport.xml";
   testReport.WriteFile(sOutputFile);
-  m_Circuits.Clear();
+  m_Circuits.Invalidate();
 }
 }

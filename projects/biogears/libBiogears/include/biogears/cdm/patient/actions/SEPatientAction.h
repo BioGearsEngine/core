@@ -11,9 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
 #include <biogears/cdm/scenario/SEAction.h>
-#include <biogears/schema/cdm/Actions.hxx>
-#include <biogears/schema/cdm/PatientActions.hxx>
 
 #include <random>
 
@@ -23,18 +22,12 @@ public:
   SEPatientAction();
   virtual ~SEPatientAction();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate(); // clear memory
 
   virtual bool IsValid() const;
 
-  virtual bool Load(const CDM::PatientActionData& in);
-  virtual CDM::PatientActionData* Unload() const = 0;
-
   bool operator==(const SEPatientAction& rhs) const;
   bool operator!=(const SEPatientAction& rhs) const;
-
-protected:
-  virtual void Unload(CDM::PatientActionData& data) const;
 
 public:
   using SEAction::ToString;

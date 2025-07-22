@@ -14,31 +14,25 @@ specific language governing permissions and limitations under the License.
 #include <string>
 
 #include <biogears/cdm/scenario/requests/SEDataRequest.h>
-#include <biogears/schema/cdm/Environment.hxx>
 
 namespace biogears {
 class SEDataRequestManager;
 namespace io {
-  class Scenario;
+  class DataRequests;
 }
 class BIOGEARS_API SEEquipmentDataRequest : public SEDataRequest {
   friend class SEDataRequestManager;
-  friend io::Scenario;
+  friend io::DataRequests;
 
 public:
   SEEquipmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SEEquipmentDataRequest();
 
-  virtual void Clear() override; //clear memory
+  virtual void Invalidate() override; //clear memory
   size_t HashCode() const override;
-  virtual bool Load(const CDM::EquipmentDataRequestData& in);
-  virtual CDM::EquipmentDataRequestData* Unload() const override;
-
+  
   bool operator==(SEEquipmentDataRequest const&) const;
   bool operator!=(SEEquipmentDataRequest const&) const;
-
-protected:
-  virtual void Unload(CDM::EquipmentDataRequestData& data) const;
 
 public:
   virtual const char* GetType() const;

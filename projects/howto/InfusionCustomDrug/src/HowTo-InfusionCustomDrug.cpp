@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEDrugSystem.h>
 #include <biogears/cdm/system/physiology/SEEnergySystem.h>
@@ -42,7 +42,7 @@ bool mixSubstanceCompound(std::unique_ptr<biogears::PhysiologyEngine>& engine, s
 {
   SESubstance* new_substance = engine->GetSubstanceManager().GetSubstance(substance);
   if (new_substance) {
-    auto substance_concentration = SESubstanceConcentration(*new_substance);
+    auto substance_concentration = SESubstanceConcentration(new_substance->GetDefinition());
     substance_concentration.GetConcentration().SetValue(10.0, MassPerVolumeUnit::mg_Per_mL);
     compound->GetComponents().push_back(substance_concentration);
 
@@ -102,14 +102,14 @@ int HowToInfusionDrug()
   bg->GetEngineTrack()->GetDataRequestManager().CreatePhysiologyDataRequest().Set("UrineOsmolarity", OsmolalityUnit::mOsm_Per_kg);
 
   auto customCompound = makeSubstanceCompound(bg);
-  auto mixSuccess = mixSubstanceCompound(bg,customCompound,"Saline", 2.17, MassPerVolumeUnit::kg_Per_L );
-  mixSuccess &= mixSubstanceCompound(bg, customCompound, "Albumin", 10.0, MassPerVolumeUnit::mg_Per_mL);
-  mixSuccess &= mixSubstanceCompound(bg, customCompound, "Morphine", 10.0, MassPerVolumeUnit::mg_Per_mL);
+  auto mixSuccess = mixSubstanceCompound(bg,customCompound,StandardSubstances::Saline, 2.17, MassPerVolumeUnit::kg_Per_L );
+  mixSuccess &= mixSubstanceCompound(bg, customCompound, StandardSubstances::Albumin, 10.0, MassPerVolumeUnit::mg_Per_mL);
+  mixSuccess &= mixSubstanceCompound(bg, customCompound, StandardSubstances::Morphine, 10.0, MassPerVolumeUnit::mg_Per_mL);
 
   if (!mixSuccess) {
-    bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*bg->GetSubstanceManager().GetSubstance("Saline"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-    bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*bg->GetSubstanceManager().GetSubstance("Albumin"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
-    bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*bg->GetSubstanceManager().GetSubstance("Morphine"), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+    bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*bg->GetSubstanceManager().GetSubstance(StandardSubstances::Saline), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+    bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*bg->GetSubstanceManager().GetSubstance(StandardSubstances::Albumin), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
+    bg->GetEngineTrack()->GetDataRequestManager().CreateSubstanceDataRequest().Set(*bg->GetSubstanceManager().GetSubstance(StandardSubstances::Morphine), "PlasmaConcentration", MassPerVolumeUnit::ug_Per_L);
 
     auto compound_name = registerCompoundbiogears(bg, std::move(customCompound)); //< BG takes ownership of customCompound here and will delete it once it is removed (DLL Boundry issue need to create a make_compound function to avoid that in biogears)
     infuseCompound(bg, compound_name, 1.0, VolumeUnit::L, 100., VolumePerTimeUnit::mL_Per_hr);

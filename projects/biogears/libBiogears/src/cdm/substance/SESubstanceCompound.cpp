@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 
+#include "io/cdm/Substance.h"
+
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -19,7 +21,7 @@ namespace biogears {
 SESubstanceCompound::SESubstanceCompound(const std::string& name, Logger* logger)
   : Loggable(logger)
   , m_Name(name)
-  , m_Classification((CDM::enumSubstanceClass::value)-1)
+  , m_Classification(SESubstanceClass::Invalid)
 {
 }
 SESubstanceCompound::SESubstanceCompound(const char* name, Logger* logger)
@@ -33,7 +35,7 @@ SESubstanceCompound::SESubstanceCompound(Logger* logger)
 //-----------------------------------------------------------------------------
 SESubstanceCompound::~SESubstanceCompound()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
 std::unique_ptr<SESubstanceCompound> SESubstanceCompound::make_unique(const std::string& name, Logger* logger)
@@ -41,61 +43,12 @@ std::unique_ptr<SESubstanceCompound> SESubstanceCompound::make_unique(const std:
   return std::make_unique<SESubstanceCompound>(name, logger);
 }
 //-----------------------------------------------------------------------------
-void SESubstanceCompound::Clear()
+void SESubstanceCompound::Invalidate()
 {
   m_Name = "";
-  m_Classification = (CDM::enumSubstanceClass::value)-1;
+  m_Classification = (SESubstanceClass)-1;
 }
-//-----------------------------------------------------------------------------
-bool SESubstanceCompound::Load(const CDM::SubstanceCompoundData& in, const SESubstanceManager& subMgr)
-{
-  Clear();
-  m_Name = in.Name();
-  if (in.Classification().present())
-    m_Classification = in.Classification().get();
-  if (in.BloodRHFactor().present())
-    m_RhFactor = in.BloodRHFactor().get();
 
-  std::string err;
-
-  SESubstance* substance = nullptr;
-  CDM::SubstanceConcentrationData* ccData;
-  for (unsigned int i = 0; i < in.Component().size(); i++) {
-    ccData = (CDM::SubstanceConcentrationData*)&in.Component().at(i);
-    substance = subMgr.GetSubstance(ccData->Name());
-    if (substance == nullptr) {
-      /// \error Could not load find substance compound component for specified substance
-      err = "Could not load find substance compound component : ";
-      err += ccData->Name();
-      Error(err, "SESubstanceCompound::Load");
-      return false;
-    }
-    m_Components.emplace_back(*substance);
-    m_Components.back().Load(*ccData);
-  }
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::SubstanceCompoundData* SESubstanceCompound::Unload() const
-{
-  CDM::SubstanceCompoundData* data = new CDM::SubstanceCompoundData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SESubstanceCompound::Unload(CDM::SubstanceCompoundData& data) const
-{
-  if (HasName())
-    data.Name(m_Name);
-  if (HasClassification())
-    data.Classification(m_Classification);
-  if (HasRhFactor())
-    data.BloodRHFactor(m_RhFactor);
-
-  for (auto& component : m_Components) {
-    data.Component().push_back(*component.Unload());
-  }
-};
 //-----------------------------------------------------------------------------
 std::string SESubstanceCompound::GetName() const
 {
@@ -127,24 +80,24 @@ void SESubstanceCompound::InvalidateName()
   m_Name = "";
 }
 //-----------------------------------------------------------------------------
-CDM::enumSubstanceClass::value SESubstanceCompound::GetClassification() const
+SESubstanceClass SESubstanceCompound::GetClassification() const
 {
   return m_Classification;
 }
 //-----------------------------------------------------------------------------
-void SESubstanceCompound::SetClassification(CDM::enumSubstanceClass::value subClass)
+void SESubstanceCompound::SetClassification(SESubstanceClass subClass)
 {
   m_Classification = subClass;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::HasClassification() const
 {
-  return m_Classification == ((CDM::enumSubstanceClass::value)-1) ? false : true;
+  return m_Classification == SESubstanceClass::Invalid ? false : true;
 }
 //-----------------------------------------------------------------------------
 void SESubstanceCompound::InvalidateClassification()
 {
-  m_Classification = (CDM::enumSubstanceClass::value)-1;
+  m_Classification = (SESubstanceClass)-1;
 }
 //-----------------------------------------------------------------------------
 bool SESubstanceCompound::GetRhFactor() const
@@ -170,7 +123,7 @@ bool SESubstanceCompound::HasComponent() const
 bool SESubstanceCompound::HasComponent(const SESubstance& substance) const
 {
   for (auto const& q : m_Components) {
-    if (&substance == &q.GetSubstance()) {
+    if (substance == q.GetSubstance()) {
       return true;
     }
   }
@@ -191,21 +144,39 @@ const std::vector<SESubstanceConcentration> SESubstanceCompound::GetComponents()
   return cCompounds;
 }
 //-----------------------------------------------------------------------------
-SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance& substance)
+SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstance const& substance)
 {
   for (auto& sq : m_Components) {
-    if (&substance == &sq.GetSubstance())
+    if (substance == sq.GetSubstance())
       return sq;
   }
-  // auto concentration = SESubstanceConcentration { substance, 0, MassPerVolumeUnit::ug_Per_mL };
+  m_Components.emplace_back(substance.GetDefinition(), 0, MassPerVolumeUnit::ug_Per_mL);
+  return m_Components.back();
+}
+//-----------------------------------------------------------------------------
+SESubstanceConcentration SESubstanceCompound::GetComponent(SESubstance const& substance) const
+{
+  for (auto& sq : m_Components) {
+    if (substance == sq.GetSubstance())
+      return sq;
+  }
+  throw CommonDataModelException();
+}
+//-----------------------------------------------------------------------------
+SESubstanceConcentration& SESubstanceCompound::GetComponent(SESubstanceDefinition const& substance)
+{
+  for (auto& sq : m_Components) {
+    if (substance == sq.GetSubstance())
+      return sq;
+  }
   m_Components.emplace_back(substance, 0, MassPerVolumeUnit::ug_Per_mL);
   return m_Components.back();
 }
 //-----------------------------------------------------------------------------
-const SESubstanceConcentration SESubstanceCompound::GetComponent(SESubstance& substance) const
+SESubstanceConcentration SESubstanceCompound::GetComponent(SESubstanceDefinition const& substance) const
 {
   for (auto& sq : m_Components) {
-    if (&substance == &sq.GetSubstance())
+    if (substance == sq.GetSubstance())
       return sq;
   }
   throw CommonDataModelException();
@@ -215,7 +186,7 @@ void SESubstanceCompound::RemoveComponent(const SESubstance& substance)
 {
   unsigned int i = 0;
   for (auto& sq : m_Components) {
-    if (&substance == &sq.GetSubstance()) {
+    if (substance == sq.GetSubstance()) {
       m_Components.erase(m_Components.begin() + i);
     }
     i++;

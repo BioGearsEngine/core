@@ -14,7 +14,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/exports.h>
 
-CDM_BIND_DECL(PatientAssessmentData)
+#include <biogears/cdm/enums/SEPatientAssessmentEnums.h>
+
 namespace biogears {
 /**
  * @brief
@@ -30,13 +31,7 @@ public:
   virtual const char* classname() const = 0;
 
   virtual void Reset();
-  virtual void Clear();
-
-  virtual bool Load(const CDM::PatientAssessmentData& in);
-  virtual CDM::PatientAssessmentData* Unload();
-
-protected:
-  virtual void Unload(CDM::PatientAssessmentData& data);
+  virtual void Invalidate();
 
 public:
 };

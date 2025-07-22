@@ -137,7 +137,7 @@ TEST_F(TEST_FIXTURE_NAME, ExternalTemperature_Circuit)
   SEThermalCircuitPath& AbsoluteReferenceToActivePath = exthermal.CreatePath(Ground, Active, BGE::ExternalTemperaturePath::GroundToActive);
   AbsoluteReferenceToActivePath.GetNextTemperatureSource().SetValue(0.0, TemperatureUnit::K);
   SEThermalCircuitPath& ActiveToClothing = exthermal.CreatePath(Active, Clothing, BGE::ExternalTemperaturePath::ActiveToClothing);
-  ActiveToClothing.SetNextSwitch(CDM::enumOpenClosed::Open);
+  ActiveToClothing.SetNextSwitch(SEOpenClosed::Open);
 
   exthermal.SetNextAndCurrentFromBaselines();
   exthermal.StateChange();

@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEHemorrhage.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/SEEventHandler.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
@@ -40,9 +40,9 @@ int HowToVasopressinShockTherapy()
 
   //Set up substances.  Initialized vasopressin plasma concentration to 0.  Note that saline is technically a compound--this is
   //so the engine knows to look for multiple components within the same substance file (i.e. Na, Cl, etc)
-  SESubstance* vas = bg->GetSubstanceManager().GetSubstance("Vasopressin");
+  SESubstance* vas = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Vasopressin);
   vas->GetPlasmaConcentration().SetValue(0.0, MassPerVolumeUnit::ug_Per_L);
-  SESubstanceCompound* sal = bg->GetSubstanceManager().GetCompound("Saline");
+  SESubstanceCompound* sal = bg->GetSubstanceManager().GetCompound(StandardSubstances::Saline);
 
   //Each infusion is managed by a separate object
   //This object is the vasopressin infusion.  It requires a concentration and an admin rate.  The infusion will continue unabated until the

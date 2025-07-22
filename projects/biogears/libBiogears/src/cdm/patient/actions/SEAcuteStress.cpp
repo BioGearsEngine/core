@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEAcuteStress.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,13 +24,13 @@ SEAcuteStress::SEAcuteStress()
 //-------------------------------------------------------------------------------
 SEAcuteStress::~SEAcuteStress()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEAcuteStress::Clear()
+void SEAcuteStress::Invalidate()
 {
 
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -41,27 +42,6 @@ bool SEAcuteStress::IsValid() const
 bool SEAcuteStress::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEAcuteStress::Load(const CDM::AcuteStressData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::AcuteStressData* SEAcuteStress::Unload() const
-{
-  CDM::AcuteStressData* data(new CDM::AcuteStressData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEAcuteStress::Unload(CDM::AcuteStressData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEAcuteStress::HasSeverity() const

@@ -28,10 +28,10 @@ SEActiveCooling::SEActiveCooling(Logger* logger)
 //-----------------------------------------------------------------------------
 SEActiveCooling::~SEActiveCooling()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEActiveCooling::Clear()
+void SEActiveCooling::Invalidate()
 {
   SAFE_DELETE(m_Power);
   SAFE_DELETE(m_SurfaceArea);
@@ -40,7 +40,7 @@ void SEActiveCooling::Clear()
 //-----------------------------------------------------------------------------
 void SEActiveCooling::Reset()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
 const SEScalar* SEActiveCooling::GetScalar(const char* name)
@@ -57,33 +57,6 @@ const SEScalar* SEActiveCooling::GetScalar(const std::string& name)
   if (name.compare("SurfaceAreaFraction") == 0)
     return &GetSurfaceAreaFraction();
   return nullptr;
-}
-//-----------------------------------------------------------------------------
-bool SEActiveCooling::Load(const CDM::ActiveCoolingData& in, std::default_random_engine *rd)
-{
-  GetPower().Load(in.Power(), rd);
-  if (in.SurfaceArea().present())
-    GetSurfaceArea().Load(in.SurfaceArea().get(), rd);
-  if (in.SurfaceAreaFraction().present())
-    GetSurfaceAreaFraction().Load(in.SurfaceAreaFraction().get(), rd);
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ActiveCoolingData* SEActiveCooling::Unload() const
-{
-  CDM::ActiveCoolingData* data = new CDM::ActiveCoolingData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEActiveCooling::Unload(CDM::ActiveCoolingData& data) const
-{
-  if (HasPower())
-    data.Power(std::unique_ptr<CDM::ScalarPowerData>(m_Power->Unload()));
-  if (HasSurfaceArea())
-    data.SurfaceArea(std::unique_ptr<CDM::ScalarAreaData>(m_SurfaceArea->Unload()));
-  if (HasSurfaceAreaFraction())
-    data.SurfaceAreaFraction(std::unique_ptr<CDM::ScalarFractionData>(m_SurfaceAreaFraction->Unload()));
 }
 //-----------------------------------------------------------------------------
 bool SEActiveCooling::HasPower() const
@@ -153,6 +126,13 @@ void SEActiveCooling::ToString(std::ostream& str) const
   str << "\n\tSurfaceAreaFraction :";
   HasSurfaceAreaFraction() ? str << *m_SurfaceAreaFraction : str << "NaN";
   str << std::flush;
+}
+//-----------------------------------------------------------------------------
+bool SEActiveCooling::IsValid() const
+{
+  return m_Power
+    || m_SurfaceArea
+    || m_SurfaceAreaFraction;
 }
 //-----------------------------------------------------------------------------
 bool SEActiveCooling::operator==(SEActiveCooling const& rhs) const

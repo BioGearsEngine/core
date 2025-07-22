@@ -11,12 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarOsmolality.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const OsmolalityUnit OsmolalityUnit::Osm_Per_kg("Osm/kg");
 const OsmolalityUnit OsmolalityUnit::mOsm_Per_kg("mOsm/kg");
 
-template class SEScalarQuantity<OsmolalityUnit>;
+template class BIOGEARS_API SEScalarQuantity<OsmolalityUnit>;
 
 OsmolalityUnit::OsmolalityUnit(const char* u)
   : OsmolalityUnit(std::string { u })
@@ -31,23 +34,7 @@ OsmolalityUnit::OsmolalityUnit(const std::string& u)
 OsmolalityUnit::~OsmolalityUnit()
 {
 }
-//-------------------------------------------------------------------------------
-SEScalarOsmolality::SEScalarOsmolality()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarOsmolality::~SEScalarOsmolality()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarOsmolalityData* SEScalarOsmolality::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarOsmolalityData* data(new CDM::ScalarOsmolalityData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
+
 //-------------------------------------------------------------------------------
 bool OsmolalityUnit::IsValidUnit(const char* unit)
 {

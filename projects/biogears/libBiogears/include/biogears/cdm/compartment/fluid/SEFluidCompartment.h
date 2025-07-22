@@ -1,3 +1,4 @@
+
 /**************************************************************************************
 Copyright 2015 Applied Research Associates, Inc.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -11,7 +12,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <map>
+#include <string>
 #include <vector>
+
 // Project Includes
 #include <biogears/cdm/CommonDataModel.h>
 #include <biogears/cdm/circuit/fluid/SEFluidCircuitNode.h>
@@ -20,15 +24,10 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolume.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
-#include <biogears/schema/cdm/Compartment.hxx>
 
 namespace biogears {
 
 class SESubstance;
-class SEScalarPressure;
-class PressureUnit;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
 
 namespace io {
   class Compartment;
@@ -40,6 +39,7 @@ class SEFluidCompartmentLink;
 #define FLUID_COMPARTMENT_TEMPLATE typename LinkType, typename VertexType, typename TransportSubstanceType, typename SubstanceQuantityType
 #define FLUID_COMPARTMENT_TYPES LinkType, VertexType, TransportSubstanceType, SubstanceQuantityType
 
+#pragma warning(disable : 4661)
 template <FLUID_COMPARTMENT_TEMPLATE>
 class SEFluidCompartment : public SECompartment, public VertexType {
   friend io::Compartment;
@@ -54,16 +54,11 @@ protected:
 public:
   virtual ~SEFluidCompartment();
 
-  void Clear() override;
-
-  virtual bool Load(const CDM::FluidCompartmentData& in, SECircuitManager* circuits = nullptr);
-  CDM::FluidCompartmentData* Unload() override = 0;
+  void Invalidate() override;
 
   virtual bool operator==(SEFluidCompartment const&) const = 0;
   virtual bool operator!=(SEFluidCompartment const&) const = 0;
 
-protected:
-  virtual void Unload(CDM::FluidCompartmentData& data);
 
 public:
   std::string GetName() const override;
@@ -118,7 +113,7 @@ protected:
   virtual double CalculateOutFlow_mL_Per_s() const;
 
   virtual std::vector<TransportSubstanceType*>& GetTransportSubstances() override { return m_TransportSubstances; }
-  virtual std::vector<TransportSubstanceType*>const & GetTransportSubstances() const override { return m_TransportSubstances; }
+  virtual std::vector<TransportSubstanceType*> const& GetTransportSubstances() const override { return m_TransportSubstances; }
 
   SEScalarVolumePerTime* m_InFlow;
   SEScalarVolumePerTime* m_OutFlow;
@@ -134,4 +129,5 @@ protected:
   std::vector<SEFluidCompartment*> m_FluidChildren;
   SECompartmentNodes<FLUID_COMPARTMENT_NODE> m_Nodes;
 };
+#pragma warning(default : 4661)
 }

@@ -12,7 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEPatientAction.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/cdm/properties/SEScalarPressure.h>
+
 
 #include <random>
 
@@ -30,30 +31,23 @@ public:
   static constexpr const char* TypeTag() { return "SEIntubation"; };
   const char* classname() const override { return TypeTag(); }
 
-  virtual void Clear() override; //clear memory
+  virtual void Invalidate() override; // clear memory
 
   virtual bool IsValid() const override;
-  
-  virtual bool IsActive() const override;
-  
 
-  virtual bool Load(const CDM::IntubationData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::IntubationData* Unload() const override;
-  
-  virtual CDM::enumIntubationType::value GetType() const;
-  virtual void SetType(CDM::enumIntubationType::value t);
+  virtual bool IsActive() const override;
+
+  virtual SEIntubationType GetType() const;
+  virtual void SetType(SEIntubationType t);
   virtual bool HasType() const;
   virtual void InvalidateType();
 
   virtual void ToString(std::ostream& str) const override;
-          
-  bool operator==( const SEIntubation& rhs) const;
-  bool operator!=( const SEIntubation& rhs) const;
+
+  bool operator==(const SEIntubation& rhs) const;
+  bool operator!=(const SEIntubation& rhs) const;
 
 protected:
-  virtual void Unload(CDM::IntubationData& data) const;
-
-protected:
-  CDM::enumIntubationType::value m_Type;
+  SEIntubationType m_Type;
 };
 }

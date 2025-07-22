@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SEBrainInjury.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -19,20 +20,20 @@ SEBrainInjury::SEBrainInjury()
   : SEPatientAction()
 {
   m_Severity = nullptr;
-  m_Type = (CDM::enumBrainInjuryType::value)-1;
+  m_Type = SEBrainInjuryType::Invalid;
 }
 //-------------------------------------------------------------------------------
 SEBrainInjury::~SEBrainInjury()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEBrainInjury::Clear()
+void SEBrainInjury::Invalidate()
 {
 
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_Severity);
-  m_Type = (CDM::enumBrainInjuryType::value)-1;
+  m_Type = SEBrainInjuryType::Invalid;
 }
 //-------------------------------------------------------------------------------
 bool SEBrainInjury::IsValid() const
@@ -43,30 +44,6 @@ bool SEBrainInjury::IsValid() const
 bool SEBrainInjury::IsActive() const
 {
   return IsValid() ? !m_Severity->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEBrainInjury::Load(const CDM::BrainInjuryData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  m_Type = in.Type();
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::BrainInjuryData* SEBrainInjury::Unload() const
-{
-  CDM::BrainInjuryData* data(new CDM::BrainInjuryData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEBrainInjury::Unload(CDM::BrainInjuryData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
-  if (HasType())
-    data.Type(m_Type);
 }
 //-------------------------------------------------------------------------------
 bool SEBrainInjury::HasSeverity() const
@@ -81,24 +58,24 @@ SEScalar0To1& SEBrainInjury::GetSeverity()
   return *m_Severity;
 }
 //-------------------------------------------------------------------------------
-CDM::enumBrainInjuryType::value SEBrainInjury::GetType() const
+SEBrainInjuryType SEBrainInjury::GetType() const
 {
   return m_Type;
 }
 //-------------------------------------------------------------------------------
-void SEBrainInjury::SetType(CDM::enumBrainInjuryType::value Type)
+void SEBrainInjury::SetType(SEBrainInjuryType Type)
 {
   m_Type = Type;
 }
 //-------------------------------------------------------------------------------
 bool SEBrainInjury::HasType() const
 {
-  return m_Type == ((CDM::enumBrainInjuryType::value)-1) ? false : true;
+  return m_Type == SEBrainInjuryType::Invalid ? false : true;
 }
 //-------------------------------------------------------------------------------
 void SEBrainInjury::InvalidateType()
 {
-  m_Type = (CDM::enumBrainInjuryType::value)-1;
+  m_Type = SEBrainInjuryType::Invalid;
 }
 //-------------------------------------------------------------------------------
 void SEBrainInjury::ToString(std::ostream& str) const
@@ -113,7 +90,7 @@ void SEBrainInjury::ToString(std::ostream& str) const
   str << std::flush;
 }
 //-------------------------------------------------------------------------------
-bool SEBrainInjury::operator==( const SEBrainInjury& rhs) const
+bool SEBrainInjury::operator==(const SEBrainInjury& rhs) const
 {
   bool equivilant = m_Comment == rhs.m_Comment;
   equivilant &= (m_Severity && rhs.m_Severity) ? m_Severity->operator==(*rhs.m_Severity) : m_Severity == rhs.m_Severity;
@@ -121,7 +98,7 @@ bool SEBrainInjury::operator==( const SEBrainInjury& rhs) const
   return equivilant;
 }
 //-------------------------------------------------------------------------------
-bool SEBrainInjury::operator!=( const SEBrainInjury& rhs) const
+bool SEBrainInjury::operator!=(const SEBrainInjury& rhs) const
 {
   return !(*this == rhs);
 }

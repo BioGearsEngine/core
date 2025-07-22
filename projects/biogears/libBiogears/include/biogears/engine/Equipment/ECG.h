@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
-#include <biogears/schema/biogears/BioGearsEnvironment.hxx>
 #include <biogears/engine/Controller/BioGears.h>  
 #include <biogears/engine/Controller/BioGearsSystem.h>
 
@@ -47,18 +46,12 @@ public:
   BIOGEARS_API const char* classname() const override { return TypeTag(); }
   BIOGEARS_API size_t hash_code() const override { return TypeHash(); }
 
-  BIOGEARS_API void Clear() override;
+  BIOGEARS_API void Invalidate() override;
 
   // Set members to a stable homeostatic state
   BIOGEARS_API void Initialize() override;
 
-  // Load a state
-  virtual bool Load(const CDM::BioGearsElectroCardioGramData& in);
-  virtual CDM::BioGearsElectroCardioGramData* Unload() const override;
-
 protected:
-  virtual void Unload(CDM::BioGearsElectroCardioGramData& data) const;
-
   // Set pointers and other member varialbes common to both homeostatic initialization and loading a state
   BIOGEARS_API void SetUp() override;
 

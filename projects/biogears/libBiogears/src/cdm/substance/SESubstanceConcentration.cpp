@@ -11,65 +11,51 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/substance/SESubstanceConcentration.h>
 
+#include "io/cdm/Substance.h"
+
 #include <biogears/cdm/properties/SEScalarMassPerVolume.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 
 namespace biogears {
-SESubstanceConcentration::SESubstanceConcentration(SESubstance const& substance)
-  : Loggable(substance.GetLogger())
-  , m_Substance(&substance)
+SESubstanceConcentration::SESubstanceConcentration(SESubstanceDefinition substance)
+  : Loggable(substance.Aerosolization.GetLogger())
+  , m_Substance(substance)
 {
-
 }
 //-------------------------------------------------------------------------------
-SESubstanceConcentration::SESubstanceConcentration(SESubstance const& substance, SEScalarMassPerVolume const& concentration)
-  : Loggable(substance.GetLogger())
-  , m_Substance(&substance)
+SESubstanceConcentration::SESubstanceConcentration(SESubstanceDefinition substance, SEScalarMassPerVolume const& concentration)
+  : Loggable(substance.Aerosolization.GetLogger())
+  , m_Substance(substance)
   , m_Concentration(concentration)
 {
 }
 //-------------------------------------------------------------------------------
-SESubstanceConcentration::SESubstanceConcentration(SESubstance const& substance, double concentration, const MassPerVolumeUnit& unit)
-  : Loggable(substance.GetLogger())
-  , m_Substance(&substance)
+SESubstanceConcentration::SESubstanceConcentration(SESubstanceDefinition substance, double concentration, const MassPerVolumeUnit& unit)
+  : Loggable(substance.Aerosolization.GetLogger())
+  , m_Substance(substance)
   , m_Concentration(concentration, unit)
 {
 }
 //-------------------------------------------------------------------------------
 SESubstanceConcentration::~SESubstanceConcentration()
 {
-  Clear();
 }
 //-------------------------------------------------------------------------------
-void SESubstanceConcentration::Clear()
+void SESubstanceConcentration::Invalidate()
 {
-  m_Concentration.Clear();
+  m_Concentration.Invalidate();
 }
-//-------------------------------------------------------------------------------
-bool SESubstanceConcentration::Load(const CDM::SubstanceConcentrationData& in)
-{
-  Clear();
-  GetConcentration().Load(in.Concentration());
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::SubstanceConcentrationData* SESubstanceConcentration::Unload() const
-{
-  CDM::SubstanceConcentrationData* data = new CDM::SubstanceConcentrationData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SESubstanceConcentration::Unload(CDM::SubstanceConcentrationData& data) const
-{
-  data.Name(m_Substance->GetName());
-  data.Concentration(*m_Concentration.Unload());
-}
+
 //-------------------------------------------------------------------------------
 bool SESubstanceConcentration::HasConcentration() const
 {
   return m_Concentration.IsValid();
+}
+//-------------------------------------------------------------------------------
+SEScalarMassPerVolume SESubstanceConcentration::GetConcentration() const
+{
+  return m_Concentration;
 }
 //-------------------------------------------------------------------------------
 SEScalarMassPerVolume& SESubstanceConcentration::GetConcentration()
@@ -82,10 +68,11 @@ double SESubstanceConcentration::GetConcentration(const MassPerVolumeUnit& unit)
   return m_Concentration.GetValue(unit);
 }
 //-------------------------------------------------------------------------------
-SESubstance& SESubstanceConcentration::GetSubstance() const
+SESubstanceDefinition const& SESubstanceConcentration::GetSubstance() const
 {
-  return const_cast<SESubstance&>(*m_Substance);
+  return m_Substance;
 }
+
 //-------------------------------------------------------------------------------
 bool SESubstanceConcentration::operator==(SESubstanceConcentration const& rhs) const
 {

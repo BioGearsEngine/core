@@ -1,9 +1,12 @@
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 
+#include <biogears/cdm/properties/SEScalarTime.h>
+#include <biogears/cdm/properties/SEScalarElectricResistance.h>
+
+#include <biogears/schema/BioGearsDataModel.hxx>
 
 #include <memory>
-
 
 namespace biogears {
 std::unique_ptr<PhysiologyEngine> CreateBioGearsEngine(Logger* logger)

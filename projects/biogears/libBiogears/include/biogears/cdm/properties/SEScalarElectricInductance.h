@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/properties/SEScalarQuantity.h>
-#include <biogears/schema/cdm/Properties.hxx>
 
 namespace biogears {
 class BIOGEARS_API ElectricInductanceUnit : public CCompoundUnit {
@@ -33,17 +32,8 @@ public:
   static const ElectricInductanceUnit H;
 };
 
-BG_EXT template class BIOGEARS_API SEScalarQuantity<ElectricInductanceUnit>;
-
-class BIOGEARS_API SEScalarElectricInductance : public SEScalarQuantity<ElectricInductanceUnit> {
-public:
-  SEScalarElectricInductance();
-  virtual ~SEScalarElectricInductance() ;
-
-  CDM::ScalarElectricInductanceData* Unload() const override;   
-
-  using SEScalarQuantity<ElectricInductanceUnit>::SetValue;
-  using SEScalarQuantity<ElectricInductanceUnit>::GetValue;
-
-};
+#pragma warning(disable : 4661)
+extern template class SEScalarQuantity<ElectricInductanceUnit>;
+using SEScalarElectricInductance  = SEScalarQuantity<ElectricInductanceUnit>;
+#pragma warning(default : 4661)
 }

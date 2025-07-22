@@ -143,7 +143,11 @@ STRING(APPEND VS_DEBUGGER_ENV_PATH "%PATH%")
 
 LIST(APPEND VS_DEBUGGER_ENVIRONMENT_LIST "${VS_DEBUGGER_ENV_PATH}")
 message(STATUS "VS_DEBUGGER_ENVIRONMENT_LIST=${VS_DEBUGGER_ENVIRONMENT_LIST}")
-# add_subdirectory(unit)
+
+
+add_subdirectory(unit)
+
+
 add_subdirectory(biogears-common)
 add_subdirectory(biogears)
 add_subdirectory(test_driver)

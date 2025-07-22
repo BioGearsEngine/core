@@ -12,6 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 
 #include <biogears/cdm/properties/SEScalar0To1.h>
+#include "io/cdm/PatientConditions.h"
 
 namespace biogears {
 SEDiabetesType1::SEDiabetesType1()
@@ -22,12 +23,12 @@ SEDiabetesType1::SEDiabetesType1()
 //-----------------------------------------------------------------------------
 SEDiabetesType1::~SEDiabetesType1()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEDiabetesType1::Clear()
+void SEDiabetesType1::Invalidate()
 {
-  SEPatientCondition::Clear();
+  SEPatientCondition::Invalidate();
   SAFE_DELETE(m_InsulinProductionSeverity);
 }
 //-----------------------------------------------------------------------------
@@ -35,27 +36,7 @@ bool SEDiabetesType1::IsValid() const
 {
   return SEPatientCondition::IsValid() && HasInsulinProductionSeverity();
 }
-//-----------------------------------------------------------------------------
-bool SEDiabetesType1::Load(const CDM::DiabetesType1Data& in)
-{
-  SEPatientCondition::Load(in);
-  GetInsulinProductionSeverity().Load(in.InsulinProductionSeverity());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::DiabetesType1Data* SEDiabetesType1::Unload() const
-{
-  CDM::DiabetesType1Data* data(new CDM::DiabetesType1Data());
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEDiabetesType1::Unload(CDM::DiabetesType1Data& data) const
-{
-  SEPatientCondition::Unload(data);
-  if (m_InsulinProductionSeverity != nullptr)
-    data.InsulinProductionSeverity(std::unique_ptr<CDM::Scalar0To1Data>(m_InsulinProductionSeverity->Unload()));
-}
+
 //-----------------------------------------------------------------------------
 bool SEDiabetesType1::HasInsulinProductionSeverity() const
 {

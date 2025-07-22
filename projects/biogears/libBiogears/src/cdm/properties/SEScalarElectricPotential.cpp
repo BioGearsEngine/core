@@ -11,12 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const ElectricPotentialUnit ElectricPotentialUnit::V("V");
 const ElectricPotentialUnit ElectricPotentialUnit::mV("mV");
 
-template class SEScalarQuantity<ElectricPotentialUnit>;
+template class BIOGEARS_API SEScalarQuantity<ElectricPotentialUnit>;
 
 ElectricPotentialUnit::ElectricPotentialUnit(const char* u)
   : ElectricPotentialUnit(std::string { u })
@@ -27,25 +30,10 @@ ElectricPotentialUnit::ElectricPotentialUnit(const std::string& u)
   : CCompoundUnit(u)
 {
 }
-//-----------------------------------------------------------------------------
-ElectricPotentialUnit::~ElectricPotentialUnit()
-{
-}
+ElectricPotentialUnit::~ElectricPotentialUnit() {
 
-//-----------------------------------------------------------------------------
-SEScalarElectricPotential::~SEScalarElectricPotential()
-{
 }
-//-----------------------------------------------------------------------------
-CDM::ScalarElectricPotentialData* SEScalarElectricPotential::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarElectricPotentialData* data(new CDM::ScalarElectricPotentialData());
-  SEScalarQuantity::Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
 bool ElectricPotentialUnit::IsValidUnit(const char* unit)
 {
   if (strcmp(V.GetString(), unit) == 0)

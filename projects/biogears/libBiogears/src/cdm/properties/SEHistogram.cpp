@@ -13,126 +13,112 @@ specific language governing permissions and limitations under the License.
 
 #include <iostream>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEScalar.h> //Utils
 
 namespace biogears {
 static std::stringstream err;
 
+SEHistogram::SEHistogram(SEHistogram const& obj)
+  : m_Dependent(obj.m_Dependent)
+  , m_Independent(obj.m_Independent)
+{
+}
+//-------------------------------------------------------------------------------
 SEHistogram::SEHistogram()
   : SEProperty()
 {
 }
-
+//-------------------------------------------------------------------------------
 SEHistogram::~SEHistogram()
 {
-  Clear();
+  Invalidate();
 }
-
-void SEHistogram::Clear()
+//-------------------------------------------------------------------------------
+void SEHistogram::Invalidate()
 {
   m_Dependent.clear();
   m_Independent.clear();
 }
-
+//-------------------------------------------------------------------------------
 bool SEHistogram::IsValid() const
 {
   if (m_Dependent.size() == 0 || m_Independent.size() == 0) {
-    std::cerr << "Histogram: No data provided." << std::endl; //todo make properties have a logger
+    std::cerr << "Histogram: No data provided." << std::endl; // todo make properties have a logger
     return false;
   }
   if (m_Dependent.size() + 1 != m_Independent.size()) {
-    std::cerr << "Histogram: Size mismatch between boundaries and bins." << std::endl; //todo make properties have a logger
+    std::cerr << "Histogram: Size mismatch between boundaries and bins." << std::endl; // todo make properties have a logger
     return false;
   }
   return true;
 }
 
-void SEHistogram::Invalidate()
-{
-  Clear();
-}
-
-bool SEHistogram::Load(const CDM::HistogramData& in)
-{
-  Clear();
-  for (unsigned int i = 0; i < in.Dependent().DoubleList().size(); i++)
-    m_Dependent.push_back(in.Dependent().DoubleList()[i]);
-  for (unsigned int i = 0; i < in.Independent().DoubleList().size(); i++)
-    m_Independent.push_back(in.Independent().DoubleList()[i]);
-  return IsValid();
-}
-
-CDM::HistogramData* SEHistogram::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::HistogramData* data(new CDM::HistogramData());
-  Unload(*data);
-  return data;
-}
-
-void SEHistogram::Unload(CDM::HistogramData& data) const
-{
-  data.Dependent(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  data.Dependent().DoubleList(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  data.Independent(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  data.Independent().DoubleList(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  for (unsigned int i = 0; i < m_Dependent.size(); i++)
-    data.Dependent().DoubleList().push_back(m_Dependent[i]);
-  for (unsigned int i = 0; i < m_Independent.size(); i++)
-    data.Independent().DoubleList().push_back(m_Independent[i]);
-}
-
+//-------------------------------------------------------------------------------
 unsigned int SEHistogram::NumberOfBins() const
 {
   if (IsValid())
     return static_cast<unsigned int>(m_Dependent.size());
   return 0;
 }
-
+//-------------------------------------------------------------------------------
 unsigned int SEHistogram::NumberOfBoundaries() const
 {
   if (IsValid())
     return static_cast<unsigned int>(m_Independent.size());
   return 0;
 }
-
+//-------------------------------------------------------------------------------
 double SEHistogram::GetDependentValue(unsigned int index) const
 {
   if (index >= m_Dependent.size())
     throw CommonDataModelException("Dependent index out of bounds");
   return m_Dependent[index];
 }
-
+//-------------------------------------------------------------------------------
 std::vector<double>& SEHistogram::GetDependent()
 {
   return m_Dependent;
 }
+//-------------------------------------------------------------------------------
 const std::vector<double>& SEHistogram::GetDependent() const
 {
   return m_Dependent;
 }
-
+//-------------------------------------------------------------------------------
 double SEHistogram::GetIndependentValue(unsigned int index) const
 {
   if (index >= m_Independent.size())
     throw CommonDataModelException("Independent index out of bounds");
   return m_Independent[index];
 }
-
+//-------------------------------------------------------------------------------
 std::vector<double>& SEHistogram::GetIndependent()
 {
   return m_Independent;
 }
+//-------------------------------------------------------------------------------
 const std::vector<double>& SEHistogram::GetIndependent() const
 {
   return m_Independent;
 }
 //-------------------------------------------------------------------------------
+SEHistogram& SEHistogram::operator=(const SEHistogram& rhs)
+{
+
+  if (this != &rhs) {
+    m_Dependent = rhs.m_Dependent;
+    m_Independent = rhs.m_Independent;
+  }
+
+  return *this;
+}
+//-------------------------------------------------------------------------------
 bool SEHistogram::operator==(const SEHistogram& obj) const
 {
   return m_Independent == obj.m_Independent
-    &&  m_Dependent == obj.m_Dependent;
+    && m_Dependent == obj.m_Dependent;
 }
 //-------------------------------------------------------------------------------
 bool SEHistogram::operator!=(const SEHistogram& obj) const

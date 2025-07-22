@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/scenario/requests/SEEquipmentDataRequest.h>
 
+#include "io/cdm/DataRequests.h"
+
 #include <biogears/schema/cdm/Environment.hxx>
 
 namespace biogears {
@@ -22,35 +24,15 @@ SEEquipmentDataRequest::SEEquipmentDataRequest(const SEDecimalFormat* dfault)
 //-----------------------------------------------------------------------------
 SEEquipmentDataRequest::~SEEquipmentDataRequest()
 {
-  Clear();
+  Invalidate();
 }
 //-----------------------------------------------------------------------------
-void SEEquipmentDataRequest::Clear()
+void SEEquipmentDataRequest::Invalidate()
 {
-  SEDataRequest::Clear();
+  SEDataRequest::Invalidate();
   m_Type = "";
 }
-//-----------------------------------------------------------------------------
-bool SEEquipmentDataRequest::Load(const CDM::EquipmentDataRequestData& in)
-{
-  SEDataRequest::Load(in);
-  SetType(in.Type());
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::EquipmentDataRequestData* SEEquipmentDataRequest::Unload() const
-{
-  CDM::EquipmentDataRequestData* data = new CDM::EquipmentDataRequestData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEEquipmentDataRequest::Unload(CDM::EquipmentDataRequestData& data) const
-{
-  SEDataRequest::Unload(data);
-  if (HasType())
-    data.Type(m_Type);
-}
+
 //-----------------------------------------------------------------------------
 bool SEEquipmentDataRequest::HasType() const
 {

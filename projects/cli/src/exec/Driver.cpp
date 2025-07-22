@@ -18,6 +18,7 @@
 #include <iostream>
 #include <mutex>
 #include <system_error>
+#include <strstream>
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
 #define WIN32_LEAN_AND_MEAN
@@ -30,13 +31,13 @@
 
 #include "../utils/Executor.h"
 
-#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/SEPatient.h>
 #include <biogears/cdm/utils/DataTrack.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
+#include <biogears/cdm/Serializer.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/io/io-manager.h>
 
@@ -58,6 +59,8 @@
 #include <biogears/schema/cdm/Scenario.hxx>
 #include <biogears/string/manipulation.h>
 #include <xsd/cxx/tree/exceptions.hxx>
+
+
 
 #if defined(BIOGEARS_SUBPROCESS_SUPPORT)
 inline std::string fmt_localtime()
@@ -99,6 +102,7 @@ Driver::Driver(char* exe_name, size_t thread_count)
   , _thread_count(0)
   , _process_count(0)
   , _total_work(0)
+  , _content_buffer(5 * 1024 * 1024,'\0')
 {
   biogears::filesystem::path p { exe_name };
   _relative_path = p.parent_path();
@@ -302,14 +306,35 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
         return;
       }
-      obj = Serializer::ReadBuffer((XMLByte*)content, content_size, &logger);
+
+      auto xmlObj = biogears::Serializer::ReadBuffer((XMLByte*)content, content_size, &logger);
+      if (dynamic_cast<ScenarioData*>(xmlObj.get())) {
+        scenario = std::unique_ptr<CDM::ScenarioData>(dynamic_cast<ScenarioData*>(xmlObj.release()));
+      }
+      else {
+        std::cerr << exec.Scenario() << " did not contain a valid CDM::ScenarioData file\n";
+        return;
+      }
+      
 #endif
     } else {
       std::cout << "Reading " << exec.Scenario() << std::endl;
-      obj = Serializer::ReadFile(resolved_filepath,
-                                 &logger);
+      size_t content_size = 0;
+      memset(&_content_buffer.front(), '\0', 5 * 1024 * 1024);
+
+      content_size = io.read_resource_file(resolved_filepath.ToString().c_str(), &_content_buffer.front(), 5 * 1024 * 1024);
+      if (content_size == 0) {
+        std::cerr << "Failed to open Scenarios/" << exec.Scenario() << " skipping\n";
+        return;
+      }
+      
+      std::istringstream is = std::istringstream(std::string(&_content_buffer.front(), content_size));
+      ::xml_schema::properties properties;
+      properties.schema_location("uri:/mil/tatrc/physiology/datamodel", "xsd/BioGearsDataModel.xsd");
+      properties.no_namespace_schema_location();
+      scenario = CDM::Scenario(is, 0, properties);
     }
-    scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+   
     if (scenario == nullptr) {
       throw std::runtime_error(exec.Scenario() + " is not a valid Scenario file.");
     }
@@ -410,6 +435,7 @@ void Driver::queue_Scenario(Executor exec, bool as_subprocess)
         return;
       }
     } 
+
     //Historically biogears auto falls back on a assumed directory structure
     //If the given exist in patients/ and is a directory we will treat it as
     //if ALL was given but for the provided directory
@@ -754,12 +780,27 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   }
   scenario_stream.close();
 
-  auto split_scenario_path = filesystem::path(trimed_scenario_path);
-  auto scenario_no_extension = split(split_scenario_path.back(), '.').front();
+  std::string patient_no_extension = "";
+  std::string scenario_no_extension = "";
+  filesystem::path split_scenario_path = "";
 
-  std::string trimed_patient_path(trim(ex.Patient()));
-  auto split_patient_path = filesystem::path(trimed_patient_path);
-  auto patient_no_extension = split(split_patient_path.back(), '.').front();
+  if (ex.State().size()) {  
+      split_scenario_path = filesystem::path(trimed_scenario_path);
+      scenario_no_extension = split(split_scenario_path.back(), '.').front();
+
+      std::string trimed_patient_path(trim(ex.State()));
+      auto split_patient_path = filesystem::path(trimed_patient_path);
+      patient_no_extension = split(split_patient_path.back(), '.').front();
+  }
+
+  if (ex.Patient().size()) {
+      split_scenario_path = filesystem::path(trimed_scenario_path);
+      scenario_no_extension = split(split_scenario_path.back(), '.').front();
+
+      std::string trimed_patient_path(trim(ex.Patient()));
+      auto split_patient_path = filesystem::path(trimed_patient_path);
+      patient_no_extension = split(split_patient_path.back(), '.').front();
+  }
 
   // NOTE: This loses non relative prefixes as the split will eat the leading path_separator
   filesystem::path parent_dir = split_scenario_path.parent_path();
@@ -768,7 +809,7 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
   //   ex.Name(ex.Name() + "-" + patient_no_extension);
   // }
 
-  std::string base_file_name = (multi_patient_run) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
+  std::string base_file_name = (multi_patient_run && patient_no_extension.size() ) ? scenario_no_extension + "-" + patient_no_extension : scenario_no_extension;
   std::string console_file = base_file_name + ".log";
   std::string log_file = base_file_name + "Results.log";
   std::string results_file = base_file_name + "Results.csv";
@@ -779,14 +820,15 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
     ex.Computed("");
   }
   filesystem::path logfilepath = filesystem::path(ex.Computed()) / parent_dir / console_file;
-  Logger file_logger(logfilepath);
+
   try {
-    file_logger.SetConsoleLogLevel(Logger::eWarning);
-    file_logger.SetConsoleConversionPattern("[{%H:%M}] " + ex.Name() + " <:priority:> :message::endline:");
+
     console_logger.SetConsoleConversionPattern("[{%H:%M}] :message::endline:");
     console_logger.FormatMessages(true);
 
-    eng = std::make_unique<BioGearsEngine>(&file_logger);
+    eng = std::make_unique<BioGearsEngine>(logfilepath);
+    eng->GetLogger()->SetConsoleLogLevel(Logger::eWarning);
+    eng->GetLogger()->SetConsoleConversionPattern("[{%H:%M}] " + ex.Name() + " <:priority:> :message::endline:");
   } catch (std::exception e) {
     std::cout << e.what();
     _thread_count -= 1;
@@ -805,7 +847,11 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
 
   if (!ex.Patient().empty()) {
     sce.GetInitialParameters().SetPatientFile(ex.Patient());
-  } else if (!ex.Scenario().empty()) {
+  } 
+  else if (!ex.State().empty()) {
+    sce.SetEngineStateFile(ex.State());
+  }
+  else if (!ex.Scenario().empty()) {
     sce.GetInitialParameters().SetPatientFile(ex.Scenario());
   } else {
     auto logger = eng->GetLogger();
@@ -818,18 +864,13 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       return;
     }
     using biogears::filesystem::path;
-    using mil::tatrc::physiology::datamodel::ScenarioData;
-    std::unique_ptr<ScenarioData> scenario;
+    auto scenario = std::make_unique<SEScenario>(eng->GetSubstanceManager());
     try {
       std::cout << "Reading " << ex.Scenario() << std::endl;
-      auto obj = Serializer::ReadFile(resolved_filepath,
-                                      eng->GetLogger());
-      scenario.reset(reinterpret_cast<ScenarioData*>(obj.release()));
+     scenario->Load(resolved_filepath);
+    
       if (scenario == nullptr) {
         throw std::runtime_error(ex.Scenario() + " is not a valid Scenario file.");
-      }
-      if (scenario->Actions().RandomSeed().present()) {
-        std::cout << "Using seed=" << scenario->Actions().RandomSeed() << std::endl;
       }
     } catch (std::runtime_error e) {
       std::cout << "Error while processing " << ex.Scenario() << "\n";
@@ -847,10 +888,9 @@ void Driver::async_execute(biogears::Executor& ex, bool multi_patient_run)
       return;
     }
 
-    biogears::SEPatient patient { sce.GetLogger() };
-    ex.Patient(scenario->InitialParameters()->Patient().get().Name());
-    patient.Load(scenario->InitialParameters()->Patient().get());
-    sce.GetInitialParameters().SetPatient(patient);
+    
+    ex.Patient(scenario->GetInitialParameters().GetPatient().GetName());
+    sce.GetInitialParameters().SetPatient(scenario->GetInitialParameters().GetPatient());
   }
 
   console_logger.Info("Starting " + ex.Name());

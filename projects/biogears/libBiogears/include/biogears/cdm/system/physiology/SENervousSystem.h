@@ -17,7 +17,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarFrequency.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
+
 
 namespace biogears {
 class TimeUnit;
@@ -36,21 +37,15 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override; // Deletes all members
+  void Invalidate() override; // Deletes all members
 
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override;
-
-  bool Load(const CDM::NervousSystemData& in);
-  CDM::NervousSystemData* Unload() const override;
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SENervousSystem const&) const;
   bool operator!=(SENervousSystem const&) const;
-
-protected:
-  void Unload(CDM::NervousSystemData& data) const;
 
 public:
   bool HasComplianceScale() const;
@@ -110,8 +105,8 @@ public:
   SEScalarTime& GetSleepTime();
   double GetSleepTime(const TimeUnit& unit) const;
 
-  CDM::enumSleepState::value GetSleepState() const;
-  void SetSleepState(CDM::enumSleepState::value sleep);
+  SESleepState GetSleepState() const;
+  void SetSleepState(SESleepState sleep);
   void InvalidateSleepState();
   bool HasSleepState() const;
 
@@ -146,7 +141,7 @@ protected:
   SEScalar* m_ResistanceScaleSplanchnic;
   SEScalarTime* m_SleepTime;
   SEScalarTime* m_WakeTime;
-  CDM::enumSleepState::value m_SleepState;
+  SESleepState m_SleepState;
   SEScalar* m_BiologicalDebt;
   SEScalarTime* m_ReactionTime;
   SEScalar* m_AttentionLapses;

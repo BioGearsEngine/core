@@ -127,7 +127,7 @@ void BioGearsEngineTest::InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tr
   }
 
   SESubstanceBolus injection(succs);
-  injection.SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  injection.SetAdminRoute(SEBolusAdministration::Intravenous);
   injection.GetConcentration().SetValue(4820, MassPerVolumeUnit::ug_Per_mL);
   injection.GetDose().SetValue(30, VolumeUnit::mL);
   bg->ProcessAction(injection);
@@ -148,13 +148,13 @@ void BioGearsEngineTest::InjectSuccsState(PhysiologyEngine* bg, HowToTracker& tr
   tracker.AdvanceModelTime(15);
 
   SEAnesthesiaMachineConfiguration amConfig(bg->GetSubstanceManager());
-  amConfig.GetConfiguration().SetConnection(CDM::enumAnesthesiaMachineConnection::Mask);
+  amConfig.GetConfiguration().SetConnection(SEAnesthesiaMachineConnection::Mask);
   amConfig.GetConfiguration().GetInletFlow().SetValue(5, VolumePerTimeUnit::L_Per_min);
   amConfig.GetConfiguration().GetInspiratoryExpiratoryRatio().SetValue(0.5);
   amConfig.GetConfiguration().GetOxygenFraction().SetValue(0.4);
-  amConfig.GetConfiguration().SetOxygenSource(CDM::enumAnesthesiaMachineOxygenSource::Wall);
+  amConfig.GetConfiguration().SetOxygenSource(SEAnesthesiaMachineOxygenSource::Wall);
   amConfig.GetConfiguration().GetPositiveEndExpiredPressure().SetValue(3.0, PressureUnit::cmH2O);
-  amConfig.GetConfiguration().SetPrimaryGas(CDM::enumAnesthesiaMachinePrimaryGas::Nitrogen);
+  amConfig.GetConfiguration().SetPrimaryGas(SEAnesthesiaMachinePrimaryGas::Nitrogen);
   amConfig.GetConfiguration().GetReliefValvePressure().SetValue(20, PressureUnit::cmH2O);
   amConfig.GetConfiguration().GetRespiratoryRate().SetValue(16.0, FrequencyUnit::Per_min);
   amConfig.GetConfiguration().GetVentilatorPressure().SetValue(10, PressureUnit::cmH2O);
@@ -184,16 +184,16 @@ void BioGearsEngineTest::SerializationTest(const std::string& sTestDirectory)
 
   SECompartmentDataRequest* cmptRequest;
   cmptRequest = new SECompartmentDataRequest();
-  cmptRequest->Set("Aorta", CDM::enumCompartmentType::Liquid, *O2, "PartialPressure", PressureUnit::mmHg);
+  cmptRequest->Set("Aorta", SECompartmentType::Liquid, *O2, "PartialPressure", PressureUnit::mmHg);
   tracker.m_Requests.push_back(cmptRequest);
   cmptRequest = new SECompartmentDataRequest();
-  cmptRequest->Set("Carina", CDM::enumCompartmentType::Gas, *O2, "PartialPressure", PressureUnit::cmH2O);
+  cmptRequest->Set("Carina", SECompartmentType::Gas, *O2, "PartialPressure", PressureUnit::cmH2O);
   tracker.m_Requests.push_back(cmptRequest);
   cmptRequest = new SECompartmentDataRequest();
-  cmptRequest->Set("Aorta", CDM::enumCompartmentType::Liquid, *CO2, "PartialPressure", PressureUnit::mmHg);
+  cmptRequest->Set("Aorta", SECompartmentType::Liquid, *CO2, "PartialPressure", PressureUnit::mmHg);
   tracker.m_Requests.push_back(cmptRequest);
   cmptRequest = new SECompartmentDataRequest();
-  cmptRequest->Set("Carina", CDM::enumCompartmentType::Gas, *CO2, "PartialPressure", PressureUnit::cmH2O);
+  cmptRequest->Set("Carina", SECompartmentType::Gas, *CO2, "PartialPressure", PressureUnit::cmH2O);
   tracker.m_Requests.push_back(cmptRequest);
   
 

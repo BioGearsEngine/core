@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/patient/actions/SENasalCannula.h>
 
+#include "io/cdm/PatientActions.h"
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>
 #include <biogears/schema/cdm/Properties.hxx>
@@ -25,13 +26,13 @@ SENasalCannula::SENasalCannula()
 //-------------------------------------------------------------------------------
 SENasalCannula::~SENasalCannula()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SENasalCannula::Clear()
+void SENasalCannula::Invalidate()
 {
 
-  SEPatientAction::Clear();
+  SEPatientAction::Invalidate();
   SAFE_DELETE(m_FlowRate);
 }
 //-------------------------------------------------------------------------------
@@ -43,27 +44,6 @@ bool SENasalCannula::IsValid() const
 bool SENasalCannula::IsActive() const
 {
   return IsValid() ? ! (m_FlowRate->GetValue(VolumePerTimeUnit::mL_Per_min) <= ZERO_APPROX) : false;
-}
-//-------------------------------------------------------------------------------
-bool SENasalCannula::Load(const CDM::NasalCannulaData& in, std::default_random_engine *rd)
-{
-  SEPatientAction::Load(in);
-  GetFlowRate().Load(in.FlowRate(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::NasalCannulaData* SENasalCannula::Unload() const
-{
-  CDM::NasalCannulaData* data(new CDM::NasalCannulaData());
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SENasalCannula::Unload(CDM::NasalCannulaData& data) const
-{
-  SEPatientAction::Unload(data);
-  if (m_FlowRate != nullptr)
-    data.FlowRate(std::unique_ptr<CDM::ScalarVolumePerTimeData>(m_FlowRate->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SENasalCannula::HasFlowRate() const

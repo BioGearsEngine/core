@@ -12,49 +12,32 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-#include <biogears/cdm/CommonDataModel.h>
+
 #include <biogears/exports.h>
 
-#include <biogears/schema/cdm/Patient.hxx>
-
-CDM_BIND_DECL(PatientData)
+#include <biogears/cdm/CommonDataModel.h>
+#include <biogears/cdm/enums/SEPatientEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
 
 namespace biogears {
 
 class SEEventHandler;
 class SENutrition;
-class SEScalar;
-class TimeUnit;
-class SEScalarMass;
-class MassUnit;
-class SEScalarLength;
-class LengthUnit;
-class SEScalarArea;
-class AreaUnit;
-class SEScalarPower;
-class PowerUnit;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarMassPerVolume;
-class MassPerVolumeUnit;
-class SEScalarFraction;
-class SEScalarPressure;
-class PressureUnit;
-class SEScalarFrequency;
-class FrequencyUnit;
-class SEScalarNeg1To1;
-class SEScalarVolumePerTime;
-class VolumePerTimeUnit;
 
 namespace io {
   class Patient;
 }
 } // namespace biogears
+
+#pragma warning(disable : 4661)
+
 namespace std {
-BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, bool>;
-BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, void (*)(bool)>;
-BG_EXT template class BIOGEARS_API map<CDM::enumPatientEvent::value, double>;
+extern template class map<biogears::SEPatientEventType, bool>;
+extern template class map<biogears::SEPatientEventType, void (*)(bool)>;
+extern template class map<biogears::SEPatientEventType, double>;
 }
+#pragma warning(default : 4661)
+
 namespace biogears {
 class BIOGEARS_API SEPatient : public Loggable {
   friend io::Patient;
@@ -63,14 +46,10 @@ public:
   SEPatient(Logger* logger);
   virtual ~SEPatient();
 
-  virtual void Clear();
-
-  virtual bool Load(const CDM::PatientData& in);
+  virtual void Invalidate();
 
   bool Load(const char* patientFile);
   bool Load(const std::string& patientFile);
-
-  virtual CDM::PatientData* Unload() const;
 
   /** @name GetScalar
    *   @brief - A reflextion type call that will return the Scalar associated
@@ -83,11 +62,11 @@ public:
   virtual const SEScalar* GetScalar(const char* name);
   virtual const SEScalar* GetScalar(const std::string& name);
 
-  virtual const std::map<CDM::enumPatientEvent::value, bool>& GetEventStates() const { return m_EventState; }
-  virtual void SetEvent(CDM::enumPatientEvent::value type, bool active, const SEScalarTime& time);
-  virtual void SetEventCallback(CDM::enumPatientEvent::value type, void (*callback)(bool));
-  virtual bool IsEventActive(CDM::enumPatientEvent::value state) const;
-  virtual double GetEventDuration(CDM::enumPatientEvent::value type, const TimeUnit& unit) const;
+  virtual const std::map<SEPatientEventType, bool>& GetEventStates() const { return m_EventState; }
+  virtual void SetEvent(SEPatientEventType type, bool active, const SEScalarTime& time);
+  virtual void SetEventCallback(SEPatientEventType type, void (*callback)(bool));
+  virtual bool IsEventActive(SEPatientEventType state) const;
+  virtual double GetEventDuration(SEPatientEventType type, const TimeUnit& unit) const;
   virtual void UpdateEvents(const SEScalarTime& timeStep);
   /** @name ForwardEvents
    *  @brief - Set a callback class to invoke when any event changes
@@ -112,13 +91,8 @@ public:
   virtual bool HasAnnotation() const;
   virtual void InvalidateAnnotation();
 
-  virtual CDM::enumSex::value GetGender() const;
-  virtual void SetGender(CDM::enumSex::value sex);
-  virtual bool HasGender() const;
-  virtual void InvalidateGender();
-
-  virtual CDM::enumSex::value GetSex() const;
-  virtual void SetSex(CDM::enumSex::value sex);
+  virtual SESex GetSex() const;
+  virtual void SetSex(SESex sex);
   virtual bool HasSex() const;
   virtual void InvalidateSex();
 
@@ -142,8 +116,8 @@ public:
   virtual SEScalarPower& GetBasalMetabolicRate();
   virtual double GetBasalMetabolicRate(const PowerUnit& unit) const;
 
-  virtual CDM::enumBloodType::value GetBloodType() const;
-  virtual void SetBloodType(CDM::enumBloodType::value bloodAntigen);
+  virtual SEBloodType GetBloodType() const;
+  virtual void SetBloodType(SEBloodType bloodAntigen);
   virtual bool HasBloodType() const;
   virtual void InvalidateBloodType();
 
@@ -268,21 +242,19 @@ public:
   bool operator!=(SEPatient const& rhs) const;
 
 protected:
-  virtual void Unload(CDM::PatientData& data) const;
-
-  virtual void CalculateWeightByBMI(const CDM::ScalarData& bmi);
-  virtual void CalculateHeightByBMI(const CDM::ScalarData& bmi);
+  virtual void CalculateWeightByBMI(const double& bmi);
+  virtual void CalculateHeightByBMI(const double& bmi);
 
 protected:
   std::stringstream m_ss;
   mutable SEEventHandler* m_EventHandler;
-  std::map<CDM::enumPatientEvent::value, bool> m_EventState;
-  std::map<CDM::enumPatientEvent::value, void (*)(bool)> m_EventCallbacks;
-  std::map<CDM::enumPatientEvent::value, double> m_EventDuration_s;
+  std::map<SEPatientEventType, bool> m_EventState;
+  std::map<SEPatientEventType, void (*)(bool)> m_EventCallbacks;
+  std::map<SEPatientEventType, double> m_EventDuration_s;
 
   std::string m_Name;
   std::string m_Annotation;
-  CDM::enumSex::value m_Gender;
+  SESex m_Sex;
   SEScalarTime* m_Age;
   SEScalarMass* m_Weight;
   SEScalarLength* m_Height;
@@ -291,7 +263,7 @@ protected:
   SEScalarMass* m_LeanBodyMass;
   SEScalarPower* m_MaxWorkRate;
   SEScalarMass* m_MuscleMass;
-  CDM::enumBloodType::value m_BloodType;
+  SEBloodType m_BloodType;
   bool m_BloodRh; // true meaning rh positive and false meaning rh negative
 
   SEScalarArea* m_AlveoliSurfaceArea;

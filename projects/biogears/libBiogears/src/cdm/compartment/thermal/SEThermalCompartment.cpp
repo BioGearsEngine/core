@@ -11,6 +11,7 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/compartment/thermal/SEThermalCompartment.h>
 
+#include "io/cdm/Compartment.h"
 #include <biogears/cdm/circuit/SECircuitManager.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 #include <biogears/cdm/compartment/thermal/SEThermalCompartmentLink.h>
@@ -36,74 +37,32 @@ SEThermalCompartment::SEThermalCompartment(const std::string& name, Logger* logg
 //-----------------------------------------------------------------------------
 SEThermalCompartment::~SEThermalCompartment()
 {
-  Clear();
-}
-//-----------------------------------------------------------------------------
-void SEThermalCompartment::Clear()
-{
-  SECompartment::Clear();
   SAFE_DELETE(m_HeatTransferRateIn);
   SAFE_DELETE(m_HeatTransferRateOut);
   SAFE_DELETE(m_Heat);
   SAFE_DELETE(m_Temperature);
+}
+//-----------------------------------------------------------------------------
+void SEThermalCompartment::Invalidate()
+{
+  SECompartment::Invalidate();
+  if (m_HeatTransferRateIn && !m_HeatTransferRateIn->IsReadOnly()) {
+    m_HeatTransferRateIn->Invalidate();
+  }
+  if (m_HeatTransferRateOut && !m_HeatTransferRateIn->IsReadOnly()) {
+    m_HeatTransferRateOut->Invalidate();
+  }
+  if (m_Heat && !m_HeatTransferRateIn->IsReadOnly()) {
+    m_Heat->Invalidate();
+  }
+  if (m_Temperature && !m_HeatTransferRateIn->IsReadOnly()) {
+    m_Temperature->Invalidate();
+  }
   m_Links.clear();
   m_Children.clear();
-  m_Nodes.Clear();
+  m_Nodes.Invalidate();
 }
-//-----------------------------------------------------------------------------
-bool SEThermalCompartment::Load(const CDM::ThermalCompartmentData& in, SECircuitManager* circuits)
-{
-  if (!SECompartment::Load(in, circuits))
-    return false;
-  // Not Loading In/Out HeatTransferRate, those are calculated on demand
-  if (!in.Child().empty())
-    return true;
-  else if (!in.Node().empty()) {
-    if (circuits == nullptr) {
-      Error("Compartment is mapped to circuit nodes, but no circuit manager was provided, cannot load");
-      return false;
-    }
-    for (auto name : in.Node()) {
-      SEThermalCircuitNode* node = circuits->GetThermalNode(name);
-      if (node == nullptr) {
-        Error("Compartment is mapped to circuit node, " + std::string { name } + ", but provided circuit manager did not have that node");
-        return false;
-      }
-      MapNode(*node);
-    }
-  } else { // Only load these if you don't have children or nodes
-    if (in.Heat().present())
-      GetHeat().Load(in.Heat().get());
-    if (in.Temperature().present())
-      GetTemperature().Load(in.Temperature().get());
-  }
-  return true;
-}
-//-----------------------------------------------------------------------------
-CDM::ThermalCompartmentData* SEThermalCompartment::Unload()
-{
-  CDM::ThermalCompartmentData* data = new CDM::ThermalCompartmentData();
-  Unload(*data);
-  return data;
-}
-//-----------------------------------------------------------------------------
-void SEThermalCompartment::Unload(CDM::ThermalCompartmentData& data)
-{
-  SECompartment::Unload(data);
-  for (SEThermalCompartment* child : m_Children)
-    data.Child().push_back(child->GetName());
-  for (SEThermalCircuitNode* nodes : m_Nodes.GetNodes())
-    data.Node().push_back(nodes->GetName());
-  // Even if you have children or nodes, I am unloading everything, this makes the xml actually usefull...
-  if (HasHeatTransferRateIn())
-    data.HeatTransferRateIn(std::unique_ptr<CDM::ScalarPowerData>(GetHeatTransferRateIn().Unload()));
-  if (HasHeatTransferRateOut())
-    data.HeatTransferRateOut(std::unique_ptr<CDM::ScalarPowerData>(GetHeatTransferRateOut().Unload()));
-  if (HasHeat())
-    data.Heat(std::unique_ptr<CDM::ScalarEnergyData>(GetHeat().Unload()));
-  if (HasTemperature())
-    data.Temperature(std::unique_ptr<CDM::ScalarTemperatureData>(GetTemperature().Unload()));
-}
+
 //-----------------------------------------------------------------------------
 const SEScalar* SEThermalCompartment::GetScalar(const char* name)
 {

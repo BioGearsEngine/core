@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/system/equipment/Anesthesia/actions/SEExpiratoryValveLeak.h>
 
+#include "io/cdm/Anesthesia.h"
+#include "io/cdm/AnesthesiaActions.h"
+
 #include <biogears/cdm/properties/SEScalar0To1.h>
 #include <biogears/schema/cdm/Properties.hxx>
 
@@ -23,12 +26,12 @@ SEExpiratoryValveLeak::SEExpiratoryValveLeak()
 //-------------------------------------------------------------------------------
 SEExpiratoryValveLeak::~SEExpiratoryValveLeak()
 {
-  Clear();
+  Invalidate();
 }
 //-------------------------------------------------------------------------------
-void SEExpiratoryValveLeak::Clear()
+void SEExpiratoryValveLeak::Invalidate()
 {
-  SEAnesthesiaMachineAction::Clear();
+  SEAnesthesiaMachineAction::Invalidate();
   SAFE_DELETE(m_Severity);
 }
 //-------------------------------------------------------------------------------
@@ -40,27 +43,6 @@ bool SEExpiratoryValveLeak::IsValid() const
 bool SEExpiratoryValveLeak::IsActive() const
 {
   return HasSeverity() ? !m_Severity->IsZero() : false;
-}
-//-------------------------------------------------------------------------------
-bool SEExpiratoryValveLeak::Load(const CDM::ExpiratoryValveLeakData& in, std::default_random_engine *rd)
-{
-  SEAnesthesiaMachineAction::Load(in);
-  GetSeverity().Load(in.Severity(), rd);
-  return true;
-}
-//-------------------------------------------------------------------------------
-CDM::ExpiratoryValveLeakData* SEExpiratoryValveLeak::Unload() const
-{
-  CDM::ExpiratoryValveLeakData* data = new CDM::ExpiratoryValveLeakData();
-  Unload(*data);
-  return data;
-}
-//-------------------------------------------------------------------------------
-void SEExpiratoryValveLeak::Unload(CDM::ExpiratoryValveLeakData& data) const
-{
-  SEAnesthesiaMachineAction::Unload(data);
-  if (m_Severity != nullptr)
-    data.Severity(std::unique_ptr<CDM::Scalar0To1Data>(m_Severity->Unload()));
 }
 //-------------------------------------------------------------------------------
 bool SEExpiratoryValveLeak::HasSeverity() const

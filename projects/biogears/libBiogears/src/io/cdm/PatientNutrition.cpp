@@ -10,47 +10,35 @@
 
 namespace biogears {
 namespace io {
-  //class SENutrition
-  void PatientNutrition::Marshall(const CDM::NutritionData& in, SENutrition& out)
+  // class SENutrition
+  void PatientNutrition::UnMarshall(const CDM::NutritionData& in, SENutrition& out, std::default_random_engine* rd)
   {
-    out.Clear();
+    out.Invalidate();
 
     if (in.Name().present()) {
       out.m_Name = in.Name().get();
     } else {
       out.m_Name = "Standard Meal";
     }
-    io::Property::Marshall(in.Carbohydrate(), out.GetCarbohydrate());
-    io::Property::Marshall(in.Fat(), out.GetFat());
-    io::Property::Marshall(in.Protein(), out.GetProtein());
-    io::Property::Marshall(in.Calcium(), out.GetCalcium());
-    io::Property::Marshall(in.Sodium(), out.GetSodium());
-    io::Property::Marshall(in.Water(), out.GetWater());
+    io::Property::UnMarshall(in.Carbohydrate(), out.GetCarbohydrate(), rd);
+    io::Property::UnMarshall(in.Fat(), out.GetFat(), rd);
+    io::Property::UnMarshall(in.Protein(), out.GetProtein(), rd);
+    io::Property::UnMarshall(in.Calcium(), out.GetCalcium(), rd);
+    io::Property::UnMarshall(in.Sodium(), out.GetSodium(), rd);
+    io::Property::UnMarshall(in.Water(), out.GetWater(), rd);
   }
   //----------------------------------------------------------------------------------
-  void PatientNutrition::UnMarshall(const SENutrition& in, CDM::NutritionData& out)
+  void PatientNutrition::Marshall(const SENutrition& in, CDM::NutritionData& out)
   {
     if (!in.m_Name.empty()) {
       out.Name(in.m_Name);
     }
-    if (in.m_Carbohydrate != nullptr) {
-      io::Property::UnMarshall(*in.m_Carbohydrate, out.Carbohydrate());
-    }
-    if (in.m_Fat != nullptr) {
-      io::Property::UnMarshall(*in.m_Fat, out.Fat());
-    }
-    if (in.m_Protein != nullptr) {
-      io::Property::UnMarshall(*in.m_Protein, out.Protein());
-    }
-    if (in.m_Calcium != nullptr) {
-      io::Property::UnMarshall(*in.m_Calcium, out.Calcium());
-    }
-    if (in.m_Sodium != nullptr) {
-      io::Property::UnMarshall(*in.m_Sodium, out.Sodium());
-    }
-    if (in.m_Water != nullptr) {
-      io::Property::UnMarshall(*in.m_Water, out.Water());
-    }
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Carbohydrate)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Fat)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Protein)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Calcium)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Sodium)
+    CDM_OPTIONAL_PROPERTY_PTR_MARSHALL_HELPER(in, out, Water)
   }
   //----------------------------------------------------------------------------------
 }

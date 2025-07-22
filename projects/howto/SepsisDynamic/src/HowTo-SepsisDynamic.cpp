@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEInfection.h>
 #include <biogears/cdm/patient/actions/SESubstanceCompoundInfusion.h>
 #include <biogears/cdm/patient/actions/SESubstanceInfusion.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
@@ -132,10 +132,10 @@ DynamicSepsis::DynamicSepsis(const std::string& logfile, int infectionInput)
 
 
   //Load substances we might use
-  SESubstanceCompound* antibiotic = m_bg->GetSubstanceManager().GetCompound("PiperacillinTazobactam");
-  SESubstanceCompound* saline = m_bg->GetSubstanceManager().GetCompound("Saline");
-  SESubstanceCompound* ringers = m_bg->GetSubstanceManager().GetCompound("RingersLactate");
-  SESubstance* norepinephrine = m_bg->GetSubstanceManager().GetSubstance("Norepinephrine");
+  SESubstanceCompound* antibiotic = m_bg->GetSubstanceManager().GetCompound(StandardSubstances::PiperacillinTazobactam);
+  SESubstanceCompound* saline = m_bg->GetSubstanceManager().GetCompound(StandardSubstances::Saline);
+  SESubstanceCompound* ringers = m_bg->GetSubstanceManager().GetCompound(StandardSubstances::RingersLactate);
+  SESubstance* norepinephrine = m_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Norepinephrine);
   // Create and initialize our actions (infusion constructed in BioGearsThread)
   m_antibiotic = new SESubstanceCompoundInfusion(*antibiotic);
   m_saline = new SESubstanceCompoundInfusion(*saline);
@@ -196,7 +196,7 @@ void DynamicSepsis::UpdateMIC(double mic)
 {
   m_septicInfection = new SEInfection(); //This will not override current infection because inflammation model is already active
   m_septicInfection->SetLocation("Gut"); //Assume stomach infection--will not change outcome
-  m_septicInfection->SetSeverity(CDM::enumInfectionSeverity::Severe); //Again, this will not change model outcome, as inflammation is already active
+  m_septicInfection->SetSeverity(SEInfectionSeverity::Severe); //Again, this will not change model outcome, as inflammation is already active
   m_septicInfection->GetMinimumInhibitoryConcentration().SetValue(mic, MassPerVolumeUnit::mg_Per_L);
   m_mutex.lock();
   m_bg->ProcessAction(*m_septicInfection);
@@ -217,7 +217,7 @@ void DynamicSepsis::Status()
   m_bg->GetLogger()->Info(asprintf("Respiration Rate : %f %s", m_bg->GetRespiratorySystem()->GetRespirationRate(FrequencyUnit::Per_min), "bpm"));
   m_bg->GetLogger()->Info(asprintf("Mean Urine Output : %f %s", m_bg->GetRenalSystem()->GetMeanUrineOutput(VolumePerTimeUnit::mL_Per_min), "mL_Per_min"));
   m_bg->GetLogger()->Info(asprintf("Temperature : %f %s", m_bg->GetEnergySystem()->GetCoreTemperature(TemperatureUnit::C), "deg C"));
-  m_bg->GetLogger()->Info(asprintf("Blood Lactate : %f %s", m_bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_bg->GetSubstanceManager().GetSubstance("Lactate"))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L), "mmol_Per_L"));
+  m_bg->GetLogger()->Info(asprintf("Blood Lactate : %f %s", m_bg->GetCompartments().GetLiquidCompartment(BGE::VascularCompartment::Aorta)->GetSubstanceQuantity(*m_bg->GetSubstanceManager().GetSubstance(StandardSubstances::Lactate))->GetMolarity(AmountPerVolumeUnit::mmol_Per_L), "mmol_Per_L"));
   m_bg->GetLogger()->Info(asprintf("Bacteria Count (Blood) : %f", m_bg->GetBloodChemistrySystem()->GetInflammatoryResponse().GetBloodPathogen().GetValue()));
   m_bg->GetLogger()->Info(asprintf("Antibiotic Activity : %f", m_bg->GetDrugSystem()->GetAntibioticActivity()));
 

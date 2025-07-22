@@ -10,14 +10,23 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEHistogramFractionVsLength.h>
-//Standard Includes
-#include <numeric>
+// Standard Includes
 #include <iostream>
-//Project Includes
+#include <numeric>
+// Project Includes
+
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarLength.h>
 
 namespace biogears {
+SEHistogramFractionVsLength::SEHistogramFractionVsLength(SEHistogramFractionVsLength const& obj)
+  : SEHistogram(obj)
+  , m_LengthUnit(obj.m_LengthUnit)
+{
+
+}
 SEHistogramFractionVsLength::SEHistogramFractionVsLength()
   : SEHistogram()
   , m_LengthUnit(nullptr)
@@ -26,12 +35,12 @@ SEHistogramFractionVsLength::SEHistogramFractionVsLength()
 
 SEHistogramFractionVsLength::~SEHistogramFractionVsLength()
 {
-  Clear();
+  Invalidate();
 }
 
-void SEHistogramFractionVsLength::Clear()
+void SEHistogramFractionVsLength::Invalidate()
 {
-  SEHistogram::Clear();
+  SEHistogram::Invalidate();
   m_LengthUnit = nullptr;
 }
 
@@ -46,29 +55,6 @@ bool SEHistogramFractionVsLength::IsVaild() const
     return false;
   }
   return true;
-}
-
-bool SEHistogramFractionVsLength::Load(const CDM::HistogramFractionVsLengthData& in)
-{
-  if (!SEHistogram::Load(in))
-    return false;
-  m_LengthUnit = &LengthUnit::GetCompoundUnit(in.IndependentUnit().get());
-  return IsValid();
-}
-
-CDM::HistogramFractionVsLengthData* SEHistogramFractionVsLength::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::HistogramFractionVsLengthData* data(new CDM::HistogramFractionVsLengthData());
-  Unload(*data);
-  return data;
-}
-
-void SEHistogramFractionVsLength::Unload(CDM::HistogramFractionVsLengthData& data) const
-{
-  SEHistogram::Unload(data);
-  data.IndependentUnit(m_LengthUnit->GetString());
 }
 
 double SEHistogramFractionVsLength::GetLengthValue(unsigned int index, const LengthUnit& unit) const
@@ -109,6 +95,16 @@ std::vector<double>& SEHistogramFractionVsLength::GetFraction()
 const std::vector<double>& SEHistogramFractionVsLength::GetFraction() const
 {
   return m_Dependent;
+}
+//-------------------------------------------------------------------------------
+SEHistogramFractionVsLength& SEHistogramFractionVsLength::operator=(const SEHistogramFractionVsLength& rhs)
+{
+  if (this != &rhs) {
+    m_LengthUnit = rhs.m_LengthUnit;
+    SEHistogram::operator=(rhs);
+  }
+
+  return *this;
 }
 //-------------------------------------------------------------------------------
 bool SEHistogramFractionVsLength::operator==(const SEHistogramFractionVsLength& rhs) const

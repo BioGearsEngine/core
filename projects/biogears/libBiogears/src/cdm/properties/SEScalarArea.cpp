@@ -11,12 +11,15 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarArea.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const AreaUnit AreaUnit::cm2("cm^2");
 const AreaUnit AreaUnit::m2("m^2");
 
-template class SEScalarQuantity<AreaUnit>;
+template class BIOGEARS_API SEScalarQuantity<AreaUnit>;
 
 AreaUnit::AreaUnit(const char* u)
   : AreaUnit(std::string { u })
@@ -28,24 +31,8 @@ AreaUnit::AreaUnit(const std::string& u)
 {
 }
 //-----------------------------------------------------------------------------
-AreaUnit::~AreaUnit(){
-}
-//-----------------------------------------------------------------------------
-SEScalarArea::SEScalarArea()
+AreaUnit::~AreaUnit()
 {
-}
-//-----------------------------------------------------------------------------
-SEScalarArea::~SEScalarArea()
-{
-}
-//-----------------------------------------------------------------------------
-CDM::ScalarAreaData* SEScalarArea::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarAreaData* data(new CDM::ScalarAreaData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-----------------------------------------------------------------------------
 bool AreaUnit::IsValidUnit(const char* unit)

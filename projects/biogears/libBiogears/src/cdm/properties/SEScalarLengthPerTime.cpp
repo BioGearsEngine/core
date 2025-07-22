@@ -11,6 +11,9 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #include <biogears/cdm/properties/SEScalarLengthPerTime.h>
+#include <biogears/cdm/properties/SEScalarQuantity.inl>
+
+#include "io/cdm/Property.h"
 
 namespace biogears {
 const LengthPerTimeUnit LengthPerTimeUnit::m_Per_s("m/s");
@@ -20,7 +23,7 @@ const LengthPerTimeUnit LengthPerTimeUnit::cm_Per_min("cm/min");
 const LengthPerTimeUnit LengthPerTimeUnit::ft_Per_s("ft/s");
 const LengthPerTimeUnit LengthPerTimeUnit::ft_Per_min("ft/min");
 
-template class SEScalarQuantity<LengthPerTimeUnit>;
+template class BIOGEARS_API SEScalarQuantity<LengthPerTimeUnit>;
 
 LengthPerTimeUnit::LengthPerTimeUnit(const char* u)
   : CCompoundUnit(u)
@@ -34,23 +37,6 @@ LengthPerTimeUnit::LengthPerTimeUnit(const std::string& u)
 //-------------------------------------------------------------------------------
 LengthPerTimeUnit::~LengthPerTimeUnit()
 {
-}
-//-------------------------------------------------------------------------------
-SEScalarLengthPerTime::SEScalarLengthPerTime()
-{
-}
-//-------------------------------------------------------------------------------
-SEScalarLengthPerTime::~SEScalarLengthPerTime()
-{
-}
-//-------------------------------------------------------------------------------
-CDM::ScalarLengthPerTimeData* SEScalarLengthPerTime::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::ScalarLengthPerTimeData* data(new CDM::ScalarLengthPerTimeData());
-  SEScalarQuantity::Unload(*data);
-  return data;
 }
 //-------------------------------------------------------------------------------
 bool LengthPerTimeUnit::IsValidUnit(const char* unit)

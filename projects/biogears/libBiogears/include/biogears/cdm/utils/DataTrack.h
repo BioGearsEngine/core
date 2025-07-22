@@ -42,7 +42,7 @@ public:
   DataTrack& operator=(DataTrack&&);
   ~DataTrack();
 
-  void Clear();
+  void Invalidate();
   void Reset();
 
   void UseTabDelimiter() { m_Delimiter = '\t'; }

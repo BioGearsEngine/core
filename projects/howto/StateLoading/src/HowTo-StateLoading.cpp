@@ -11,7 +11,6 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 // Include the various types you will be using in your code
-#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/scenario/SEAdvanceTime.h>

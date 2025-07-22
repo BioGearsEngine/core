@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
 #include <biogears/cdm/patient/actions/SEPainStimulus.h>
 #include <biogears/cdm/patient/actions/SESubstanceBolus.h>
-#include <biogears/cdm/properties/SEScalarTypes.h>
+#include <biogears/cdm/properties/SEProperties.h>
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/system/physiology/SEBloodChemistrySystem.h>
 #include <biogears/cdm/system/physiology/SECardiovascularSystem.h>
@@ -63,15 +63,15 @@ int HowToPainStimulus()
 
   //Set up substances.  Initialized morphine plasma concentration to 0.  Note that saline is technically a compound--this is
   //so the engine knows to look for multiple components within the same substance file (i.e. Na, Cl, etc)
-  SESubstance* epi = bg->GetSubstanceManager().GetSubstance("Epinephrine");
+  SESubstance* epi = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Epinephrine);
   // Get the Morphine substance from the substance manager
-  const SESubstance* morphine = bg->GetSubstanceManager().GetSubstance("Morphine");
+  const SESubstance* morphine = bg->GetSubstanceManager().GetSubstance(StandardSubstances::Morphine);
 
   // Create a substance bolus action to administer the substance
   SESubstanceBolus bolus(*morphine);
   bolus.GetConcentration().SetValue(1000, MassPerVolumeUnit::ug_Per_mL);
   bolus.GetDose().SetValue(10.5, VolumeUnit::mL);
-  bolus.SetAdminRoute(CDM::enumBolusAdministration::Intravenous);
+  bolus.SetAdminRoute(SEBolusAdministration::Intravenous);
 
   // Create data requests for each value that should be written to the output log as the engine is executing
   // Physiology System Names are defined on the System Objects

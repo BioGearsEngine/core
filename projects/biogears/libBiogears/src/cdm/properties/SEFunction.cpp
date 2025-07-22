@@ -11,7 +11,10 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/cdm/properties/SEFunction.h>
 
+#include "io/cdm/Property.h"
+
 #include <biogears/cdm/properties/SEScalar.h> //Utils
+
 
 namespace biogears {
 static std::stringstream err;
@@ -23,10 +26,10 @@ SEFunction::SEFunction()
 
 SEFunction::~SEFunction()
 {
-  Clear();
+  Invalidate();
 }
 
-void SEFunction::Clear()
+void SEFunction::Invalidate()
 {
   m_Dependent.clear();
   m_Independent.clear();
@@ -41,41 +44,6 @@ bool SEFunction::IsValid() const
   return true;
 }
 
-void SEFunction::Invalidate()
-{
-  Clear();
-}
-
-bool SEFunction::Load(const CDM::FunctionData& in)
-{
-  Clear();
-  for (unsigned int i = 0; i < in.Dependent().DoubleList().size(); i++)
-    m_Dependent.push_back(in.Dependent().DoubleList()[i]);
-  for (unsigned int i = 0; i < in.Independent().DoubleList().size(); i++)
-    m_Independent.push_back(in.Independent().DoubleList()[i]);
-  return IsValid();
-}
-
-CDM::FunctionData* SEFunction::Unload() const
-{
-  if (!IsValid())
-    return nullptr;
-  CDM::FunctionData* data(new CDM::FunctionData());
-  Unload(*data);
-  return data;
-}
-
-void SEFunction::Unload(CDM::FunctionData& data) const
-{
-  data.Dependent(std::unique_ptr<CDM::DoubleArray>(new CDM::DoubleArray()));
-  data.Dependent().DoubleList(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  data.Independent(std::unique_ptr<CDM::DoubleArray>(new CDM::DoubleArray()));
-  data.Independent().DoubleList(std::unique_ptr<CDM::DoubleList>(new CDM::DoubleList()));
-  for (unsigned int i = 0; i < m_Dependent.size(); i++) {
-    data.Dependent().DoubleList().push_back(m_Dependent[i]);
-    data.Independent().DoubleList().push_back(m_Independent[i]);
-  }
-}
 
 unsigned int SEFunction::Length()
 {

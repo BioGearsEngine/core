@@ -16,7 +16,8 @@ specific language governing permissions and limitations under the License.
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartment.h>
 
-namespace BGE = mil::tatrc::physiology::biogears;
+#include "io/biogears/BioGears.h"
+#include "io/biogears/BioGearsConfiguration.h"
 
 namespace biogears {
 BioGearsScenarioInitialParameters::BioGearsScenarioInitialParameters(SESubstanceManager& subMgr)
@@ -40,6 +41,6 @@ const BioGearsConfiguration* BioGearsScenarioInitialParameters::GetConfiguration
 }
 void BioGearsScenarioInitialParameters::SetConfiguration(const BioGearsConfiguration& config)
 {
-  CDM_COPY((&config), (&GetConfiguration()));
+  CDM_BIOGEARS_ENGINE_CONFIGURATION_COPY(BioGearsConfiguration, config, *dynamic_cast<BioGearsConfiguration*>(m_Configuration));
 }
 }

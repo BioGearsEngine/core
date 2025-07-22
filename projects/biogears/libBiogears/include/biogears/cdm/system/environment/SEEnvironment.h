@@ -11,24 +11,22 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
+#include <biogears/cdm/enums/SEEnvironmentEnums.h>
 #include <biogears/cdm/system/SESystem.h>
-#include <biogears/schema/cdm/Environment.hxx>
+#include <biogears/cdm/properties/SEScalarPower.h>
+#include <biogears/cdm/properties/SEScalarHeatConductancePerArea.h>
 
 namespace biogears {
+
 class SESubstance;
 class SESubstanceFraction;
 class SESubstanceManager;
 class SEEnvironmentalConditions;
 class SEEnvironmentChange;
 class SEInitialEnvironment;
+class SEAppliedTemperature;
 class SEActiveHeating;
 class SEActiveCooling;
-class SEAppliedTemperature;
-
-class SEScalarPower;
-class PowerUnit;
-class SEScalarHeatConductancePerArea;
-class HeatConductancePerAreaUnit;
 namespace io {
   class Environment;
 }
@@ -44,16 +42,14 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override;
+  void Invalidate() override;
 
-  bool Load(const CDM::EnvironmentData& in);
   bool Load(const char* environmentFile);
   bool Load(const std::string& environmentFile);
 
   bool operator==(SEEnvironment const&) const;
   bool operator!=(SEEnvironment const&) const;
 
-  CDM::EnvironmentData* Unload() const override;
   Tree<const char*> GetPhysiologyRequestGraph() const override;
   /** @name ProcessChange
    * @brief - Will change this class as directed by the Action
@@ -119,8 +115,7 @@ public:
   SEScalarPower& GetSkinHeatLoss();
   double GetSkinHeatLoss(const PowerUnit& unit) const;
 
-protected:
-  void Unload(CDM::EnvironmentData& data) const;
+  bool IsValid() const;
 
 protected:
   std::string m_Name;

@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/compartment/fluid/SEGasCompartment.h>
 #include <biogears/cdm/compartment/fluid/SEGasCompartmentLink.h>
 #include <biogears/cdm/compartment/fluid/SELiquidCompartmentLink.h>
+#include <biogears/cdm/compartment/substances/SELiquidSubstanceQuantity.h>
 #include <biogears/cdm/compartment/tissue/SETissueCompartment.h>
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/patient/SEPatient.h>
@@ -30,9 +31,13 @@ specific language governing permissions and limitations under the License.
 #include <ostream>
 #include <string>
 
+#pragma warning(disable : 4661)
+
 namespace std {
-  BG_EXT template class BIOGEARS_API vector<biogears::SESystem*>;
+extern template class vector<biogears::SESystem*>;
 }
+#pragma warning(default : 4661)
+
 namespace biogears {
 
 enum class CompartmentUpdate { None,
@@ -84,11 +89,13 @@ public:
   // Tissue cmpts don't have children and they don't have computed data that changes on call (like flow)
 };
 
-} //namespac biogears
+} // namespac biogears
+#pragma warning(disable : 4661)
 
 namespace std {
-BG_EXT template class BIOGEARS_API map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
+extern template class map<const biogears::SEDataRequest*, biogears::SEDataRequestScalar*>;
 } // Namespace std
+#pragma warning(default : 4661)
 
 namespace biogears {
 std::ostream& operator<<(std::ostream& os, SEDataRequestScalar& v);
@@ -104,12 +111,12 @@ public:
   PhysiologyEngineTrack& operator=(PhysiologyEngineTrack&& rhs);
   virtual ~PhysiologyEngineTrack();
 
-  void Clear(); // Remove all requests and close the results file
+  void Invalidate(); // Remove all requests and close the results file
 
   DataTrack& GetDataTrack();
-  DataTrack const & GetDataTrack() const;
-  SEDataRequestManager& GetDataRequestManager();  
-  SEDataRequestManager const & GetDataRequestManager()const; 
+  DataTrack const& GetDataTrack() const;
+  SEDataRequestManager& GetDataRequestManager();
+  SEDataRequestManager const& GetDataRequestManager() const;
 
   void ResetFile(); // Close file, so next Track Data will re hook up everything and make a new file
 

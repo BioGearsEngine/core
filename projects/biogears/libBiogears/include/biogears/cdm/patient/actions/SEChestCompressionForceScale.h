@@ -12,7 +12,8 @@ specific language governing permissions and limitations under the License.
 
 #pragma once
 #include <biogears/cdm/patient/actions/SEChestCompression.h>
-#include <biogears/schema/cdm/PatientActions.hxx>
+#include <biogears/cdm/enums/SEPatientActionsEnums.h>
+
 
 #include <random>
 
@@ -28,13 +29,10 @@ public:
   SEChestCompressionForceScale();
   virtual ~SEChestCompressionForceScale();
 
-  virtual void Clear(); //clear memory
+  virtual void Invalidate(); //clear memory
 
   virtual bool IsValid() const;
   virtual bool IsActive() const;
-
-  virtual bool Load(const CDM::ChestCompressionForceScaleData& in, std::default_random_engine *rd = nullptr);
-  virtual CDM::ChestCompressionForceScaleData* Unload() const;
 
   virtual bool HasForceScale() const;
   virtual SEScalar0To1& GetForceScale();
@@ -46,9 +44,6 @@ public:
 
   bool operator==( const SEChestCompressionForceScale& rhs) const;
   bool operator!=( const SEChestCompressionForceScale& rhs) const;
-
-protected:
-  virtual void Unload(CDM::ChestCompressionForceScaleData& data) const;
 
 protected:
   SEScalar0To1* m_ForceScale;

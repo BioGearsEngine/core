@@ -27,14 +27,9 @@ class BIOGEARS_API SELiquidCompartmentDataRequest : public SECompartmentSubstanc
 public:
   SELiquidCompartmentDataRequest(const SEDecimalFormat* dfault = nullptr);
   virtual ~SELiquidCompartmentDataRequest();
-
-  virtual bool Load(const CDM::LiquidCompartmentDataRequestData& in, const SESubstanceManager& substances);
-  virtual CDM::LiquidCompartmentDataRequestData* Unload() const;
-
+  
   bool operator==(SELiquidCompartmentDataRequest const&) const;
   bool operator!=(SELiquidCompartmentDataRequest const&) const;
 
-protected:
-  virtual void Unload(CDM::LiquidCompartmentDataRequestData& data) const;
 };
 }

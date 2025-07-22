@@ -11,29 +11,13 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 
 #pragma once
-
-#include <biogears/cdm/system/SESystem.h>
 #include <biogears/exports.h>
-#include <biogears/schema/biogears/BioGearsPhysiology.hxx>
+
+#include <biogears/cdm/enums/SEPhysiologyEnums.h>
+#include <biogears/cdm/properties/SEProperties.h>
+#include <biogears/cdm/system/SESystem.h>
 
 namespace biogears {
-class SEScalar;
-class SEScalar0To1;
-class SEScalarMass;
-class MassUnit;
-class SEScalarTime;
-class TimeUnit;
-class SEScalarMassPerVolume;
-class MassPerVolumeUnit;
-class SEScalarHeatCapacitancePerMass;
-class HeatCapacitancePerMassUnit;
-class SEScalarFraction;
-class SEScalarVolume;
-class VolumeUnit;
-class SEScalarAmountPerVolume;
-class AmountPerVolumeUnit;
-class SEScalarPressure;
-class PressureUnit;
 class SEInflammatoryResponse;
 
 namespace io {
@@ -54,22 +38,16 @@ public:
   const char* classname() const override { return TypeTag(); }
   size_t hash_code() const override { return TypeHash(); }
 
-  void Clear() override; /**< @copydoc DOXY_CDM_CLEAR */
+  void Invalidate() override; /**< @copydoc DOXY_CDM_CLEAR */
 
   const SEScalar* GetScalar(const char* name) override;
   const SEScalar* GetScalar(const std::string& name) override; /**< @copydoc DOXY_CDM_GET_SCALAR */
-
-  /**  @name Serialization */ //@{
-  bool Load(const CDM::BloodChemistrySystemData& in); /**< @copydoc DOXY_CDM_LOAD */
-  CDM::BloodChemistrySystemData* Unload() const override; /**< @copydoc DOXY_CDM_UNLOAD */
 
   Tree<const char*> GetPhysiologyRequestGraph() const override;
 
   bool operator==(SEBloodChemistrySystem const&) const;
   bool operator!=(SEBloodChemistrySystem const&) const;
 
-protected:
-  void Unload(CDM::BloodChemistrySystemData& data) const; /**< @copydoc DOXY_CDM_UNLOAD_TO */ //@}
 public:
   /**  @name BloodDensity */ //@{ @copybrief Physiology_BloodChemistrySystemData_BloodDensity
   bool HasBloodDensity() const; /**< @copydoc DOXY_CDM_HAS */
@@ -484,10 +462,7 @@ public:
   const char* classname() const { return TypeTag(); }
   size_t hash_code() const { return TypeHash(); }
 
-  void Clear();
-
-  bool Load(const CDM::InflammatoryResponseData& in);
-  CDM::InflammatoryResponseData* Unload() const;
+  void Invalidate();
   bool IsValid();
 
   void Initialize();
@@ -496,9 +471,6 @@ public:
 
   bool operator==(SEInflammatoryResponse const&) const;
   bool operator!=(SEInflammatoryResponse const&) const;
-
-protected:
-  void Unload(CDM::InflammatoryResponseData& data) const;
 
 public:
   bool HasLocalPathogen() const;
@@ -517,9 +489,9 @@ public:
   SEScalar& GetLocalNeutrophil();
   double GetLocalNeutrophil() const;
 
-  bool HasActiveTLR() const { return m_ActiveTLR == CDM::enumOnOff::value(-1) ? false : true; };
-  CDM::enumOnOff GetActiveTLR() { return m_ActiveTLR; };
-  void SetActiveTLR(CDM::enumOnOff value) { m_ActiveTLR = value; };
+  bool HasActiveTLR() const { return m_ActiveTLR == SEOnOff(-1) ? false : true; };
+  SEOnOff GetActiveTLR() { return m_ActiveTLR; };
+  void SetActiveTLR(SEOnOff value) { m_ActiveTLR = value; };
 
   bool HasAutonomicResponseLevel() const;
   SEScalar& GetAutonomicResponseLevel();
@@ -598,8 +570,8 @@ public:
   double GetInflammationTime(const TimeUnit& unit) const;
 
   bool HasInflammationSources() const;
-  std::vector<CDM::enumInflammationSource>& GetInflammationSources();
-  bool HasInflammationSource(CDM::enumInflammationSource::value src);
+  std::vector<SEInflammationSource>& GetInflammationSources();
+  bool HasInflammationSource(SEInflammationSource src);
 
   Tree<const char*> GetPhysiologyRequestGraph() const;
 
@@ -608,7 +580,7 @@ protected:
   SEScalar* m_LocalMacrophage;
   SEScalar* m_LocalNeutrophil;
   SEScalar* m_LocalBarrier;
-  CDM::enumOnOff::value m_ActiveTLR;
+  SEOnOff m_ActiveTLR;
   SEScalar* m_AutonomicResponseLevel;
   SEScalar* m_Catecholamines;
   SEScalar* m_ConstitutiveNOS;
@@ -628,6 +600,6 @@ protected:
   SEScalar* m_Trauma;
   SEScalar* m_TumorNecrosisFactor;
   SEScalarTime* m_InflammationTime;
-  std::vector<CDM::enumInflammationSource> m_InflammationSources;
+  std::vector<SEInflammationSource> m_InflammationSources;
 };
 }

@@ -11,6 +11,8 @@ specific language governing permissions and limitations under the License.
 **************************************************************************************/
 #include <biogears/engine/Systems/Endocrine.h>
 
+#include "io/cdm/Physiology.h"
+
 #include <biogears/cdm/patient/SENutrition.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType1.h>
 #include <biogears/cdm/patient/conditions/SEDiabetesType2.h>
@@ -30,7 +32,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGears.h>
-namespace BGE = mil::tatrc::physiology::biogears;
+
 
 namespace biogears {
 auto Endocrine::make_unique(BioGears& bg) -> std::unique_ptr<Endocrine>
@@ -42,17 +44,17 @@ Endocrine::Endocrine(BioGears& bg)
   : SEEndocrineSystem(bg.GetLogger())
   , m_data(bg)
 {
-  Clear();
+  Invalidate();
 }
 
 Endocrine::~Endocrine()
 {
-  Clear();
+  Invalidate();
 }
 
-void Endocrine::Clear()
+void Endocrine::Invalidate()
 {
-  SEEndocrineSystem::Clear();
+  SEEndocrineSystem::Invalidate();
   m_AortaGlucose = nullptr;
   m_AortaEpinephrine = nullptr;
   m_SplanchnicInsulin = nullptr;
@@ -65,24 +67,6 @@ void Endocrine::Clear()
 void Endocrine::Initialize()
 {
   BioGearsSystem::Initialize();
-}
-
-bool Endocrine::Load(const CDM::BioGearsEndocrineSystemData& in)
-{
-  if (!SEEndocrineSystem::Load(in))
-    return false;
-  BioGearsSystem::LoadState();
-  return true;
-}
-CDM::BioGearsEndocrineSystemData* Endocrine::Unload() const
-{
-  CDM::BioGearsEndocrineSystemData* data = new CDM::BioGearsEndocrineSystemData();
-  Unload(*data);
-  return data;
-}
-void Endocrine::Unload(CDM::BioGearsEndocrineSystemData& data) const
-{
-  SEEndocrineSystem::Unload(data);
 }
 
 void Endocrine::SetUp()
@@ -387,15 +371,15 @@ void Endocrine::OverrideControlLoop()
     currentGlucagonSynthesisOverride = override->GetGlucagonSynthesisRateOverride(AmountPerTimeUnit::pmol_Per_min);
   }
 
-  if ((currentInsulinSynthesisOverride < minInsulinSynthesisOverride || currentInsulinSynthesisOverride > maxInsulinSynthesisOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentInsulinSynthesisOverride < minInsulinSynthesisOverride || currentInsulinSynthesisOverride > maxInsulinSynthesisOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Insulin Synthesis Rate Override (Endocrine) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
-  if ((currentGlucagonSynthesisOverride < minGlucagonSynthesisOverride || currentGlucagonSynthesisOverride > maxGlucagonSynthesisOverride) && (override->GetOverrideConformance() == CDM::enumOnOff::On)) {
+  if ((currentGlucagonSynthesisOverride < minGlucagonSynthesisOverride || currentGlucagonSynthesisOverride > maxGlucagonSynthesisOverride) && (override->GetOverrideConformance() == SEOnOff::On)) {
     m_ss << "Glucagon Synthesis Rate Override (Endocrine) set outside of bounds of validated parameter override. BioGears is no longer conformant.";
     Info(m_ss);
-    override->SetOverrideConformance(CDM::enumOnOff::Off);
+    override->SetOverrideConformance(SEOnOff::Off);
   }
   return;
 }
