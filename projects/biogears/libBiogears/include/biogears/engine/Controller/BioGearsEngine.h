@@ -144,7 +144,7 @@ protected:
 #pragma warning(pop)
 
   bool m_isAutoTracking = true;
-  bool m_areTrackingStabilization = true;
+  bool m_areTrackingStabilization = false;
 };
 
 BIOGEARS_API Logger* create_logger(const char* logfile);

@@ -98,7 +98,7 @@ int execute_scenario(Executor& ex, Logger::LogLevel log_level)
   }
 
   if (ex.TrackStabilization()) {
-    eng->SetTrackStabilizationFlag(true);
+    eng->SetTrackStabilizationFlag(false);
   }
   //-----------------------------------------------------------------------------------
   if (!ex.Patient().empty()) {

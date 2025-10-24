@@ -749,7 +749,7 @@ bool BioGearsEngine::IsTrackingStabilization() const
 //-------------------------------------------------------------------------------
 void BioGearsEngine::SetTrackStabilizationFlag(bool flag)
 {
-  m_areTrackingStabilization = true;
+  m_areTrackingStabilization = false;
 }
 
 //-------------------------------------------------------------------------------
