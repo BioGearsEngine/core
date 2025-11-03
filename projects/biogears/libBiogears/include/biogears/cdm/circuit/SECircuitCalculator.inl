@@ -475,7 +475,7 @@ void SECircuitCalculator<CIRCUIT_CALCULATOR_TYPES>::Solve()
       double relative_error = absolute_error / m_bVector.norm();
       std::stringstream ss;
 
-      if (!(m_AMatrix * m_xVector).isApprox(m_bVector, 1.0e-8)) {
+      if (!(m_AMatrix * m_xVector).isApprox(m_bVector, 1.0e-11)) {
         ss << "The solver was unable to determine a solution for the circuit. Relative error = " << relative_error
            << ". Absolute error = " << absolute_error;
         ///\error Fatal: The solver was unable to determine a solution for the circuit.
