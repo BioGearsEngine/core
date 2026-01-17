@@ -12,7 +12,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/actions/SEMechanicalVentilation.h>
 
 #include "io/cdm/PatientActions.h"
-#include <biogears/cdm/Serializer.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarPressure.h>
 #include <biogears/cdm/properties/SEScalarVolumePerTime.h>

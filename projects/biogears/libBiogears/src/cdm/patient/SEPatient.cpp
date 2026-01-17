@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/patient/SEPatient.h>
 
 #include "io/cdm/Patient.h"
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 #include <biogears/cdm/properties/SEScalarArea.h>
 #include <biogears/cdm/properties/SEScalarFraction.h>
 #include <biogears/cdm/properties/SEScalarFrequency.h>

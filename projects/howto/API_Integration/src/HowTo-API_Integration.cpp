@@ -612,7 +612,7 @@ void BioGearsPlugin::run()
           try {
             _pimpl->engine->SaveStateToFile("HowTo-API_Integration_FinalState.xml");
 
-          } catch (xsd::cxx::exception e) {
+          } catch (std::exception e) {
             std::cout << e.what();
           }
           _pimpl->simulation_finished.store(true);

@@ -16,7 +16,7 @@
 #include <biogears/cdm/scenario/SEAdvanceTime.h>
 #include <biogears/cdm/scenario/SECondition.h>
 
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/patient/SEPatient.h>
 

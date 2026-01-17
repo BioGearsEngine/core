@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 #include <biogears/schema/BioGearsDataModel.hxx>
 
 //Project Includes
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 
 #include <biogears/filesystem/path.h>
 #include <biogears/io/io-manager.h>

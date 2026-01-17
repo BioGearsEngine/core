@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include "io/cdm/Property.h"
 #include "io/biogears/BioGearsConfiguration.h"
 
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>
 #include <biogears/cdm/engine/PhysiologyEngineTimedStabilization.h>
 #include <biogears/cdm/patient/SENutrition.h>

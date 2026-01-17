@@ -18,8 +18,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/properties/SEScalarTime.h>
 #include <biogears/cdm/enums/SEPhysiologyEnums.h>
 
-#include <biogears/schema/cdm/ElectroCardioGram.hxx>
-
 namespace biogears {
 
 namespace io {

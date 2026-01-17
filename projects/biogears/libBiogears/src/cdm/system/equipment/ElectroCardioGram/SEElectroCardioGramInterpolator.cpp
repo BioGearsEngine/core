@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License.
 #include "io/cdm/ElectroCardioGram.h"
 #include "io/cdm/Property.h"
 
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 #include <biogears/cdm/properties/SEFunctionElectricPotentialVsTime.h>
 #include <biogears/cdm/properties/SEScalarElectricPotential.h>
 #include <biogears/cdm/properties/SEScalarTime.h>

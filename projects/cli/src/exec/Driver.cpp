@@ -37,9 +37,10 @@
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
 #include <biogears/engine/Controller/BioGearsEngine.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenario.h>
-#include <biogears/cdm/Serializer.h>
 #include <biogears/engine/Controller/Scenario/BioGearsScenarioExec.h>
 #include <biogears/io/io-manager.h>
+
+#include "io/Serializer.h"
 
 #ifdef CMD_BIO_SUPPORT_CIRCUIT_TEST
 #include <biogears/cdm/test/CommonDataModelTest.h>

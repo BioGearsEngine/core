@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 #include "io/cdm/PatientActions.h"
 #include "io/cdm/Scenario.h"
 
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/scenario/SEPatientActionCollection.h>
 #include <biogears/cdm/scenario/SEScenario.h>

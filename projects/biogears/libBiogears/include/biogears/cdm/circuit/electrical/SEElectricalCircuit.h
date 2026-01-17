@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitNode.h>
 #include <biogears/cdm/circuit/electrical/SEElectricalCircuitPath.h>
 
-#include <biogears/schema/cdm/Circuit.hxx>
 
 #pragma warning(disable:4661)
 namespace std {

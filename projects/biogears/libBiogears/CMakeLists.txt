@@ -103,6 +103,7 @@ if(Biogears_BUILD_STATIC)
                 $<BUILD_INTERFACE:${BIO_IO_INCLUDE_DIR}> # IO
                 $<BUILD_INTERFACE:${BIO_IO_GENERATED_INCLUDE_DIR}> # IO
                 $<BUILD_INTERFACE:${BIO_IO_EMBEDED_INCLUDE_DIR}> # IO
+                $<BUILD_INTERFACE:${BIOGEARS_SOURCE_DIR}/libBiogears/src>
                 $<INSTALL_INTERFACE:include>
   )
   
@@ -163,7 +164,8 @@ else()
       PRIVATE  ${BIO_INCLUDE_DIR} ${BIO_PRIVATE_INCLUDE_DIR} ${BIO_GENERATED_INCLUDE_DIR} 
       INTERFACE 
                 $<BUILD_INTERFACE:${BIO_INCLUDE_DIR}>
-		$<BUILD_INTERFACE:${BIO_GENERATED_INCLUDE_DIR}>
+	             	$<BUILD_INTERFACE:${BIO_GENERATED_INCLUDE_DIR}>
+                $<BUILD_INTERFACE:${BIOGEARS_SOURCE_DIR}/libBiogears/src>
                 $<INSTALL_INTERFACE:include>
   )  
   set(BIO_LIBS

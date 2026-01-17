@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 #include <unordered_map>
 #include<unordered_set>
 
-#include <biogears/schema/cdm/Substance.hxx>
 
 namespace biogears {
 namespace io {

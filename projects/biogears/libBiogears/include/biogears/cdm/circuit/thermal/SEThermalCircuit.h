@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 #include <biogears/cdm/circuit/SECircuitLedger.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitNode.h>
 #include <biogears/cdm/circuit/thermal/SEThermalCircuitPath.h>
-#include <biogears/schema/cdm/Circuit.hxx>
 
 #pragma warning(disable : 4661)
 

@@ -42,8 +42,8 @@ public:
   bool operator!=(SEScenario const&) const;
 
 public:
-  bool Load(const char* scenarioFile);
-  bool Load(const std::string& scenarioFile);
+  bool Load(const char* scenarioFilePath);
+  bool Load(const std::string& scenarioFilePath);
   bool IsValid() const;
 
   virtual std::string GetName() const;

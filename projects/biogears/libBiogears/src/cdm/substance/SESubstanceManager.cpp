@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License.
 
 #include "io/cdm/Substance.h"
 
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 #include <biogears/cdm/substance/SESubstance.h>
 #include <biogears/cdm/substance/SESubstanceCompound.h>
 #include <biogears/cdm/utils/unitconversion/UnitConversionEngine.h>

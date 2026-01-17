@@ -6,7 +6,7 @@
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGram.h>
 #include <biogears/cdm/system/equipment/ElectroCardioGram/SEElectroCardioGramInterpolator.h>
 
-#include "biogears/cdm/Serializer.h"
+#include "io/Serializer.h"
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/engine/PhysiologyEngineDynamicStabilization.h>

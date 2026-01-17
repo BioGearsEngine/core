@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include "io/cdm/Patient.h"
 #include "io/cdm/PatientAssessments.h"
 
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 #include <biogears/cdm/circuit/SECircuit.h>
 #include <biogears/cdm/compartment/SECompartmentManager.h>
 #include <biogears/cdm/engine/PhysiologyEngineStabilization.h>

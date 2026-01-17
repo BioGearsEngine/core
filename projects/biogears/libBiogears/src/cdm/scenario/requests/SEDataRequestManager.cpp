@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License.
 
 #include "io/cdm/DataRequests.h"
 
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 #include <biogears/cdm/substance/SESubstanceManager.h>
 #include <biogears/cdm/utils/unitconversion/CompoundUnit.h>
 #include <biogears/engine/BioGearsPhysiologyEngine.h>
@@ -248,3 +248,4 @@ bool SEDataRequestManager::operator!=(SEDataRequestManager const& rhs) const
 }
 //-----------------------------------------------------------------------------
 }
+

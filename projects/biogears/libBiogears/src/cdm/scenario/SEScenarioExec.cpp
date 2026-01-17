@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 #include <biogears/filesystem/path.h>
 
-#include <biogears/cdm/Serializer.h>
+#include "io/Serializer.h"
 #include <biogears/cdm/engine/PhysiologyEngine.h>
 #include <biogears/cdm/engine/PhysiologyEngineConfiguration.h>
 #include <biogears/cdm/engine/PhysiologyEngineTrack.h>
